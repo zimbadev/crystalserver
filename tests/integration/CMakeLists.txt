@@ -1,0 +1,1 @@
+setup_test(crystalserver_it integration)
