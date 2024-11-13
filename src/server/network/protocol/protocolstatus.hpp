@@ -40,10 +40,6 @@ public:
 
 	static const uint64_t start;
 
-	static std::string SERVER_NAME;
-	static std::string SERVER_VERSION;
-	static std::string SERVER_DEVELOPERS;
-
 private:
 	static std::map<uint32_t, int64_t> ipConnectMap;
 };

@@ -59,7 +59,7 @@ CrystalServer::CrystalServer(
 	g_dispatcher().init();
 
 #ifdef _WIN32
-	SetConsoleTitleA(ProtocolStatus::SERVER_NAME.c_str());
+	SetConsoleTitleA(SOFTWARE_NAME);
 #endif
 }
 
@@ -102,8 +102,8 @@ int CrystalServer::run() {
 #ifndef _WIN32
 				if (getuid() == 0 || geteuid() == 0) {
 					logger.warn("{} has been executed as root user, "
-				                "please consider running it as a normal user",
-				                ProtocolStatus::SERVER_NAME);
+								"please consider running it as a normal user",
+								SOFTWARE_NAME);
 				}
 #endif
 
@@ -206,12 +206,12 @@ void CrystalServer::setupHousesRent() {
 
 void CrystalServer::logInfos() {
 #if defined(GIT_RETRIEVED_STATE) && GIT_RETRIEVED_STATE
-	logger.debug("{} - Version [{}] dated [{}]", ProtocolStatus::SERVER_NAME, SERVER_RELEASE_VERSION, GIT_COMMIT_DATE_ISO8601);
+	logger.debug("{} - Version [{}] dated [{}]", SOFTWARE_NAME, SOFTWARE_VERSION, GIT_COMMIT_DATE_ISO8601);
 	#if GIT_IS_DIRTY
 	logger.debug("DIRTY - NOT OFFICIAL RELEASE");
 	#endif
 #else
-	logger.info("{} - Version {}", ProtocolStatus::SERVER_NAME, SERVER_RELEASE_VERSION);
+	logger.info("{} - Version {}", SOFTWARE_NAME, SOFTWARE_VERSION);
 #endif
 
 	logger.debug("Compiled with {}, on {} {}, for platform {}", getCompiler(), __DATE__, __TIME__, getPlatform());
@@ -220,9 +220,8 @@ void CrystalServer::logInfos() {
 	logger.debug("Linked with {} for Lua support", LUAJIT_VERSION);
 #endif
 
-	logger.info("A server developed by: {}", ProtocolStatus::SERVER_DEVELOPERS);
-	logger.info("Visit our website for updates, support, and resources: "
-	            "https://docs.opentibiabr.com/");
+	logger.info("A server developed by: {}", SOFTWARE_DEVELOPERS);
+	logger.info("Visit our GitHub:  https://github.com/jprzimba/crystalserver");
 }
 
 /**

@@ -24,10 +24,6 @@
 #include "game/scheduling/dispatcher.hpp"
 #include "server/network/message/outputmessage.hpp"
 
-std::string ProtocolStatus::SERVER_NAME = "Crystal Server";
-std::string ProtocolStatus::SERVER_VERSION = "4.0";
-std::string ProtocolStatus::SERVER_DEVELOPERS = "Tryller";
-
 std::map<uint32_t, int64_t> ProtocolStatus::ipConnectMap;
 const uint64_t ProtocolStatus::start = OTSYS_TIME(true);
 
@@ -105,8 +101,8 @@ void ProtocolStatus::sendStatusString() {
 	serverinfo.append_attribute("port") = std::to_string(g_configManager().getNumber(LOGIN_PORT)).c_str();
 	serverinfo.append_attribute("location") = g_configManager().getString(LOCATION).c_str();
 	serverinfo.append_attribute("url") = g_configManager().getString(URL).c_str();
-	serverinfo.append_attribute("server") = ProtocolStatus::SERVER_NAME.c_str();
-	serverinfo.append_attribute("version") = ProtocolStatus::SERVER_VERSION.c_str();
+	serverinfo.append_attribute("server") = SOFTWARE_NAME;
+	serverinfo.append_attribute("version") = SOFTWARE_VERSION;
 	serverinfo.append_attribute("client") = fmt::format("{}.{}", CLIENT_VERSION_UPPER, CLIENT_VERSION_LOWER).c_str();
 
 	pugi::xml_node owner = tsqp.append_child("owner");
@@ -231,8 +227,8 @@ void ProtocolStatus::sendInfo(uint16_t requestedInfo, const std::string &charact
 
 	if (requestedInfo & REQUEST_SERVER_SOFTWARE_INFO) {
 		output->addByte(0x23); // server software info
-		output->addString(ProtocolStatus::SERVER_NAME);
-		output->addString(ProtocolStatus::SERVER_VERSION);
+		output->addString(SOFTWARE_NAME);
+		output->addString(SOFTWARE_VERSION);
 		output->addString(fmt::format("{}.{}", CLIENT_VERSION_UPPER, CLIENT_VERSION_LOWER));
 	}
 	send(output);
