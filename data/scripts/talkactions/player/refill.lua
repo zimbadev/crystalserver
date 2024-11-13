@@ -15,8 +15,41 @@ local chargeItem = {
 }
 local silverTokenID = 22516
 
+local function hasCapacityToChange(player, message)
+	local itemWeight = 0
+	local itemCount = 0
+
+	for itemName, itemData in pairs(chargeItem) do
+		local chargeableCount = player:getItemCount(itemData.noChargeID)
+		if chargeableCount >= 1 then
+			local itemType = ItemType(itemData.noChargeID)
+			itemWeight = itemWeight + itemType:getWeight()
+			itemCount = itemCount + 1
+		end
+	end
+	local playerCap = player:getFreeCapacity()
+	if playerCap >= itemWeight then
+		return true
+	else
+		local requiredCap = itemWeight - playerCap
+		local capMessage = string.format("%.2f", requiredCap / 100) .. " more cap"
+
+		local itemMessage = "item"
+		if itemCount > 1 then
+			itemMessage = "items"
+		end
+
+		player:sendTextMessage(MESSAGE_FAILURE, "You need " .. capMessage .. " to refill and carry the " .. itemMessage .. ".")
+		return false
+	end
+end
+
 function refill.onSay(player, words, param)
-	logger.debug("!refill executed")
+	local message = "You have refilled"
+	if not hasCapacityToChange(player, message) then
+		return true
+	end
+
 	local refilledItems = {}
 	local totalCost = 0
 	for itemName, itemData in pairs(chargeItem) do
