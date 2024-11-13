@@ -203,6 +203,9 @@ bool ConfigManager::load() {
 	loadFloatConfig(L, TRANSCENDANCE_CHANCE_FORMULA_A, "transcendanceChanceFormulaA", 0.0127);
 	loadFloatConfig(L, TRANSCENDANCE_CHANCE_FORMULA_B, "transcendanceChanceFormulaB", 0.1070);
 	loadFloatConfig(L, TRANSCENDANCE_CHANCE_FORMULA_C, "transcendanceChanceFormulaC", 0.0073);
+	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_DISTANCE, "combatChainSkillFormulaDistance", 0.9);
+	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_MISSILE, "combatChainSkillFormulaMissile", 0.9);
+	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_WANDS_AND_RODS, "combatChainSkillFormulaWandsAndRods", 1.0);
 
 	loadIntConfig(L, ACTIONS_DELAY_INTERVAL, "timeBetweenActions", 200);
 	loadIntConfig(L, ADVENTURERSBLESSING_LEVEL, "adventurersBlessingLevel", 21);

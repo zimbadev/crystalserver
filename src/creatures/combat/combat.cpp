@@ -1053,6 +1053,15 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 		case WEAPON_AXE:
 			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_AXE), MELEE_ATK_AXE, CONST_ANI_WHIRLWINDAXE);
 			break;
+		case WEAPON_DISTANCE:
+			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_DISTANCE), DIST_ATK_BOW, CONST_ANI_HOLY);
+			break;
+		case WEAPON_AMMO:
+			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_DISTANCE), DIST_ATK_BOW, CONST_ANI_HOLY);
+			break;
+		case WEAPON_MISSILE:
+			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_MISSILE), DIST_ATK_BOW, CONST_ANI_HOLY);
+			break;
 	}
 
 	if (weaponType == WEAPON_WAND) {
@@ -1066,7 +1075,7 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 
 		auto it = elementEffects.find(weapon->getElementType());
 		if (it != elementEffects.end()) {
-			setPlayerCombatValues(COMBAT_FORMULA_SKILL, 0, 0, 1.0, 0);
+			setPlayerCombatValues(COMBAT_FORMULA_LEVELMAGIC, 0, 0, g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_WANDS_AND_RODS), 0);
 			setParam(COMBAT_PARAM_EFFECT, it->second.first);
 			setParam(COMBAT_PARAM_CHAIN_EFFECT, it->second.second);
 		}
