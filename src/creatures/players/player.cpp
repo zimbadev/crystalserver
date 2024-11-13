@@ -5481,13 +5481,11 @@ void Player::onAddCombatCondition(ConditionType_t type) {
 			break;
 
 		case CONDITION_LESSERHEX:
-
 		case CONDITION_INTENSEHEX:
-
 		case CONDITION_GREATERHEX:
-
 			sendTextMessage(MESSAGE_FAILURE, "You are hexed.");
 			break;
+
 		case CONDITION_ROOTED:
 			sendTextMessage(MESSAGE_FAILURE, "You are rooted.");
 			break;
