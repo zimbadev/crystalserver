@@ -364,8 +364,7 @@ void CrystalServer::loadModules() {
 	modulesLoadHelper(g_events().loadFromXml(), "events/events.xml");
 	modulesLoadHelper(g_modules().loadFromXml(), "modules/modules.xml");
 
-	logger.debug("Loading datapack scripts on folder: {}/", datapackName);
-	modulesLoadHelper(g_scripts().loadScripts(datapackFolder + "/scripts/lib", true, false), datapackFolder + "/scripts/libs");
+	logger.info("Using datapack folder in: {}/", datapackFolder);
 	// Load scripts
 	modulesLoadHelper(g_scripts().loadScripts(datapackFolder + "/scripts", false, false), datapackFolder + "/scripts");
 	// Load monsters

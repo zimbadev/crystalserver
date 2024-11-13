@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<bags>
+    <!-- Explanation for the user:
+    
+    This XML file defines a collection of "bags," each containing items with specific properties.
+    
+    - `itemid`: The unique identifier for each item.
+    - `name`: The name of the item or bag.
+    - `chance`: The probability of the item dropping, relative to the `maxRange` attribute.
+       * If `chance` equals `maxRange`, the item will always drop.
+    - `maxRange`: Defines the range in which the item can drop, often used as the upper bound of a random roll.
+    - `maxAmount`: (Optional) Sets the maximum quantity of the item that can drop, if applicable.
+    - `monsterClass`: (Optional) Restricts the item drop to certain monster classes.
+    
+    Examples:
+    
+    - `<bag itemid="6571" name="Red Surprise Bag" chance="100" maxRange="1000"/>`
+      This bag has a 100 out of 1000 chance to drop, or 10%.
+    
+    - `<bag itemid="3079" name="Boots of Haste" chance="100" maxRange="2000" monsterClass="Dragon"/>`
+      This item will drop only when a "Dragon" is defeated, with a 5% drop chance (100 out of 2000).
+    
+    - `<bag itemid="3043" name="Crystal Coin" chance="100" maxAmount="100" maxRange="100"/>`
+      This bag has a 100 out of 100 chance (100%) to drop, with up to 100 Crystal Coins.
+    -->
+    <bag itemid="6571" name="Red Surprise Bag" chance="100" maxRange="1000"/>
+    <bag itemid="6570" name="Blue Surprise Bag" chance="100" maxRange="10000"/>
+    <bag itemid="3079" name="Boots of Haste" chance="100" maxRange="2000" monsterClass="Dragon"/>
+    <bag itemid="3043" name="Crystal Coin" chance="100" maxAmount="100" maxRange="100"/>
+</bags>

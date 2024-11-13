@@ -39,6 +39,12 @@ void Map::load(const std::string &identifier, const Position &pos) {
 }
 
 void Map::loadMap(const std::string &identifier, bool mainMap /*= false*/, bool loadHouses /*= false*/, bool loadMonsters /*= false*/, bool loadNpcs /*= false*/, bool loadZones /*= false*/, const Position &pos /*= Position()*/) {
+	// Only download map if is loading the main map and it is not already downloaded
+	if (mainMap && !std::filesystem::exists(identifier)) {
+		g_logger().warn("The map with identifier " + identifier + " does not exist.");
+		g_logger().error("Please extract the map from the world folder.");
+	}
+
 	// Load the map
 	load(identifier, pos);
 

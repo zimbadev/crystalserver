@@ -378,6 +378,17 @@ public:
 
 class Items {
 public:
+	struct BagItemInfo {
+		std::string name;
+		uint16_t id;
+		uint32_t chance;
+		uint32_t minAmount;
+		uint32_t maxAmount;
+		uint64_t minRange;
+		uint64_t maxRange;
+		std::string monsterClass;
+	};
+
 	using NameMap = std::unordered_multimap<std::string, uint16_t>;
 	using InventoryVector = std::vector<uint16_t>;
 
@@ -451,9 +462,32 @@ public:
 		return std::ranges::find(vector, augmentType) != vector.end();
 	}
 
+
+	std::vector<const BagItemInfo*> getAllBagItems() const {
+		std::vector<const BagItemInfo*> allBagItems;
+		for (const auto &entry : bagItems) {
+			allBagItems.push_back(&(entry.second));
+		}
+		return allBagItems;
+	}
+
+	void setItemBag(uint16_t itemId, const std::string &itemName, uint32_t chance, uint32_t minAmount, uint32_t maxAmount, uint64_t minRange, uint64_t maxRange, const std::string &monsterClass) {
+		BagItemInfo itemInfo;
+		itemInfo.name = itemName;
+		itemInfo.id = itemId;
+		itemInfo.chance = chance;
+		itemInfo.minAmount = minAmount;
+		itemInfo.maxAmount = maxAmount;
+		itemInfo.minRange = minRange;
+		itemInfo.maxRange = maxRange;
+		itemInfo.monsterClass = monsterClass;
+		bagItems[itemId] = itemInfo;
+	}
+
 private:
 	std::vector<ItemType> items;
 	std::vector<uint16_t> ladders;
 	std::unordered_map<uint16_t, uint16_t> dummys;
 	InventoryVector inventory;
+	std::unordered_map<int32_t, BagItemInfo> bagItems;
 };

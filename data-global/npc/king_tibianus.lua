@@ -211,10 +211,6 @@ keywordHandler:addKeyword({ "eremo" }, StdModule.say, {
 	npcHandler = npcHandler,
 	text = "It is said that he lives on a small island near Edron. Maybe the people there know more about him.",
 })
-keywordHandler:addKeyword({ "otbr" }, StdModule.say, {
-	npcHandler = npcHandler,
-	text = "Awesome! Please pay a visit to www.otserv.com.br!",
-})
 keywordHandler:addKeyword({ "baah" }, StdModule.say, {
 	npcHandler = npcHandler,
 	text = "Baah is awesome dude that rewrote my outfit script.",

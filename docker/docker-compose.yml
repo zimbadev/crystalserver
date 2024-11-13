@@ -1,4 +1,4 @@
-name: otbr
+name: crystalserver
 services:
   database:
     image: mariadb:latest

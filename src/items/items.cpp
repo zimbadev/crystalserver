@@ -294,6 +294,77 @@ bool Items::loadFromXml() {
 			parseItemNode(itemNode, id++);
 		}
 	}
+
+	// Load bags.xml
+	pugi::xml_document docBags;
+	auto folderBags = g_configManager().getString(CORE_DIRECTORY) + "/items/bags.xml";
+	pugi::xml_parse_result resultBags = docBags.load_file(folderBags.c_str());
+	if (!resultBags) {
+		printXMLError(__FUNCTION__, folderBags, resultBags);
+		return false;
+	}
+
+	for (auto nodeBags : docBags.child("bags").children()) {
+		auto bagItemidAttr = nodeBags.attribute("itemid");
+		if (!bagItemidAttr) {
+			g_logger().warn("[Items::loadFromXml] - No item id found, use id");
+			continue;
+		}
+
+		auto bagNameAttr = nodeBags.attribute("name");
+		if (!bagNameAttr) {
+			g_logger().warn("[Items::loadFromXml] - No item name found, use name");
+			continue;
+		}
+
+		uint16_t itemId = pugi::cast<uint16_t>(bagItemidAttr.value());
+		std::string itemName = bagNameAttr.as_string();
+
+		uint32_t chance = 0;
+		auto chanceAttr = nodeBags.attribute("chance");
+		if (chanceAttr) {
+			chance = pugi::cast<uint32_t>(chanceAttr.value());
+		}
+
+		uint32_t minAmount = 1;
+		auto minAmountAttr = nodeBags.attribute("minAmount");
+		if (minAmountAttr) {
+			minAmount = pugi::cast<uint32_t>(minAmountAttr.value());
+			if (minAmount <= 0) {
+				minAmount = 1;
+			}
+		}
+
+		uint32_t maxAmount = 1;
+		auto maxAmountAttr = nodeBags.attribute("maxAmount");
+		if (maxAmountAttr) {
+			maxAmount = pugi::cast<uint32_t>(maxAmountAttr.value());
+			if (maxAmount <= 0) {
+				maxAmount = 1;
+			}
+		}
+
+		uint64_t minRange = 0;
+		auto minRangeAttr = nodeBags.attribute("minRange");
+		if (minRangeAttr) {
+			minRange = pugi::cast<uint64_t>(minRangeAttr.value());
+		}
+
+		uint64_t maxRange = 0;
+		auto maxRangeAttr = nodeBags.attribute("maxRange");
+		if (maxRangeAttr) {
+			maxRange = pugi::cast<uint64_t>(maxRangeAttr.value());
+		}
+
+		std::string monsterClass = "";
+		auto monsterClassAttr = nodeBags.attribute("monsterClass");
+		if (monsterClassAttr) {
+			monsterClass = monsterClassAttr.as_string();
+		}
+
+		setItemBag(itemId, itemName, chance, minAmount, maxAmount, minRange, maxRange, monsterClass);
+	}
+
 	return true;
 }
 
