@@ -1202,6 +1202,7 @@ public:
 	bool isConcoctionActive(Concoction_t concotion) const;
 
 	bool checkAutoLoot(bool isBoss) const;
+	bool checkChainSystem() const;
 
 	QuickLootFilter_t getQuickLootFilter() const;
 

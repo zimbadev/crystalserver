@@ -4915,6 +4915,25 @@ bool Player::checkAutoLoot(bool isBoss) const {
 	return false;
 }
 
+bool Player::checkChainSystem() const {
+	const bool toggleChain = g_configManager().getBoolean(TOGGLE_CHAIN_SYSTEM);
+	if (!toggleChain) {
+		return false;
+	}
+
+	auto featureKV = kv()->scoped("features")->get("chainSystem");
+	if (featureKV.has_value()) {
+		auto value = featureKV->getNumber();
+		if (value == 1) {
+			return true;
+		} else if (value == 0) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
 QuickLootFilter_t Player::getQuickLootFilter() const {
 	return quickLootFilter;
 }

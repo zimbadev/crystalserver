@@ -5,6 +5,7 @@
 ### Features
   - Implemented Surprise Bags System: data/items/bags.xml ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
   - New configs to chain system at config.lua "combatChainSkillFormulaMissile" is used for weapons like assassin star/viper star and others, "combatChainSkillFormulaDistance" used for weapons like arrows/bols and "combatChainSkillFormulaWandsAndRods" used for weapons like wands/rods ([Tryller](https://github.com/jprzimba)).
+  - Players can enable the chain system using the `!chain` command. ([Tryller](https://github.com/jprzimba)).
   - Updated npc data-global/npc/hireling.lua, now it sell imbuement packages and also buy all loots inside Gold Pouch ([Tryller](https://github.com/jprzimba)).
   - Cyclopedia item summary ([phacUFPE](https://github.com/phacUFPE))
   - Add Vibrancy imbuement ([pennaor](https://github.com/pennaor))

@@ -1,5 +1,6 @@
 Features = {
 	AutoLoot = "autoloot",
+	ChainSystem = "chainSystem",
 }
 
 local function validateFeature(feature)

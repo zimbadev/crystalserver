@@ -289,7 +289,7 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 			damage.secondary.value = (getElementDamage(player, target, item) * damageModifier / 100) * damagePercent / 100;
 		}
 
-		if (g_configManager().getBoolean(TOGGLE_CHAIN_SYSTEM) && params.chainCallback) {
+		if (player->checkChainSystem() && params.chainCallback) {
 			m_combat->doCombatChain(player, target, params.aggressive);
 			g_logger().debug("Weapon::internalUseWeapon - Chain callback executed.");
 		} else {
