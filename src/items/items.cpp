@@ -478,6 +478,19 @@ bool Items::hasItemType(size_t hasId) const {
 	return false;
 }
 
+void Items::setItemBag(uint16_t itemId, const std::string &itemName, uint32_t chance, uint32_t minAmount, uint32_t maxAmount, uint64_t minRange, uint64_t maxRange, const std::string &monsterClass) {
+	BagItemInfo itemInfo;
+	itemInfo.name = itemName;
+	itemInfo.id = itemId;
+	itemInfo.chance = chance;
+	itemInfo.minAmount = minAmount;
+	itemInfo.maxAmount = maxAmount;
+	itemInfo.minRange = minRange;
+	itemInfo.maxRange = maxRange;
+	itemInfo.monsterClass = monsterClass;
+	bagItems[itemId] = itemInfo;
+}
+
 uint32_t Abilities::getHealthGain() const {
 	return healthGain * g_configManager().getFloat(RATE_HEALTH_REGEN);
 }
