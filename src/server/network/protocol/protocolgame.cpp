@@ -9335,6 +9335,10 @@ void ProtocolGame::sendHotkeyPreset() {
 }
 
 void ProtocolGame::sendTakeScreenshot(Screenshot_t screenshotType) {
+	if (!g_configManager().getBoolean(ENABLE_SCREENSHOTS)) {
+		return;
+	}
+
 	if (screenshotType == SCREENSHOT_TYPE_NONE || oldProtocol) {
 		return;
 	}
