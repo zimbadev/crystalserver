@@ -6030,22 +6030,43 @@ void Game::playerCloseImbuementWindow(uint32_t playerid) {
 	player->setImbuingItem(nullptr);
 }
 
-void Game::playerTurn(uint32_t playerId, Direction dir) {
+bool Game::playerTurn(uint32_t playerId, Direction dir) {
 	const auto &player = getPlayerByID(playerId);
-	if (!player) {
-		return;
+	if(!player || player->isRemoved()) {
+		return false;
+	}
+
+	if (internalCreatureTurn(player, dir)) {
+		player->resetIdleTime();
+		return true;
 	}
 
 	if (!g_events().eventPlayerOnTurn(player, dir)) {
-		return;
+		return false;
 	}
 
 	if (!g_callbacks().checkCallback(EventCallback_t::playerOnTurn, &EventCallback::playerOnTurn, player, dir)) {
-		return;
+		return false;
+	}
+
+	if (player->getDirection() != dir || player->getAccountType() < AccountType::ACCOUNT_TYPE_GAMEMASTER) {
+		return false;
+	}
+
+	Position pos = getNextPosition(dir, player->getPosition());
+	std::shared_ptr<Tile> tile = map.getTile(pos);
+	if (!tile) {
+		return false;
 	}
 
 	player->resetIdleTime();
-	internalCreatureTurn(player, dir);
+	ReturnValue ret = tile->queryAdd(0, player, 1, FLAG_IGNOREBLOCKITEM);
+	if (ret != RETURNVALUE_NOTENOUGHROOM && (ret != RETURNVALUE_NOTPOSSIBLE || player->getAccountType() >= AccountType::ACCOUNT_TYPE_GAMEMASTER)) {
+		return (internalTeleport(player, pos, false, FLAG_NOLIMIT) != RETURNVALUE_NOERROR);
+	}
+
+	player->sendCancelMessage(ret);
+	return false;
 }
 
 void Game::playerRequestOutfit(uint32_t playerId) {

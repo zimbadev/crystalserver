@@ -16,14 +16,14 @@
   - Monster rename functionality ([luanluciano93](https://github.com/luanluciano93)).
   - Updated monsters and npcs like Tibia RL ([Tryller](https://github.com/jprzimba)).
   - Add items from Winter Update 2023 ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
- - Add V.I.P groups ([phacUFPE](https://github.com/phacUFPE)).
+  - Add V.I.P groups ([phacUFPE](https://github.com/phacUFPE)).
+  - Click to teleport, then use CTRL + directional keys to teleport gamemaster characters ([Tryller](https://github.com/jprzimba)).
 
 ### Bug Fixes
   - Fixed chain system. Now works properly for Mages and Paladins ([Tryller](https://github.com/jprzimba)).
   - Fixed V.I.P List ([Tryller](https://github.com/jprzimba)).
   - Fixed damage reflection not working properly ([Tryller](https://github.com/jprzimba)).
   - Fixed imbuement system when the player adds imbuement or cancels imbuement and the imbuement window is open not updating ([Tryller](https://github.com/jprzimba)).
-  - Fixed when the player dies without blessing and the bag goes to the gold puch ([Tryller](https://github.com/jprzimba))
   - Optimized onPlayerSellAllLoot in npc code to avoid long freeze ([Tryller](https://github.com/jprzimba)).
   - Fixed data/scripts/talkactions/player/refill.lua, now check if player has capacity to receive items. ([Tryller](https://github.com/jprzimba)).
   - Fixed Loot pouch using in the Obtain method ([carlospess0a](https://github.com/carlospess0a)).
@@ -39,7 +39,6 @@
   - Fixed crash on moving creatures ([mehah](https://github.com/mehah)).
 
 ### Changed Features
-  - Removed old "removeBeginningWeaponAmmunition" and implemented "removeBreakWeaponsCharges" at config.lua ([Tryller](https://github.com/jprzimba)).
   - Removed "useAnyDatapackFolder" at config.lua, now it's enable by default ([Tryller](https://github.com/jprzimba)).
   - Remove map download, since we share compressed .7z map ([Tryller](https://github.com/jprzimba)).
 
