@@ -3509,7 +3509,12 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			}
 		}
 
-		lostMana = static_cast<uint64_t>(sumMana * deathLossPercent);
+		double magicLossPercent = deathLossPercent;
+		if (g_configManager().getBoolean(HALF_LOSS_MAGIC) && magicLossPercent > 0) {
+			magicLossPercent /= 2;
+		}
+	
+		lostMana = static_cast<uint64_t>(sumMana * magicLossPercent);
 
 		while (lostMana > manaSpent && magLevel > 0) {
 			lostMana -= manaSpent;
@@ -3527,7 +3532,12 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		}
 
 		// Level loss
-		auto expLoss = static_cast<uint64_t>(std::ceil((experience * deathLossPercent) / 100.));
+		double expLossPercent = deathLossPercent / 100.;
+		if (g_configManager().getBoolean(HALF_LOSS_EXP) && expLossPercent > 0) {
+			expLossPercent /= 2;
+		}
+
+		auto expLoss = static_cast<uint64_t>(std::ceil((experience * expLossPercent)));
 		g_logger().debug("[{}] - experience lost {}", __FUNCTION__, expLoss);
 
 		g_events().eventPlayerOnLoseExperience(static_self_cast<Player>(), expLoss);
@@ -3546,7 +3556,12 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 
 			sumSkillTries += skills[i].tries;
 
-			auto lostSkillTries = static_cast<uint32_t>(sumSkillTries * deathLossPercent);
+			double skillLossPercent = deathLossPercent;
+			if (g_configManager().getBoolean(HALF_LOSS_SKILL) && skillLossPercent > 0) {
+				skillLossPercent /= 2;
+			}
+			
+			auto lostSkillTries = static_cast<uint32_t>(sumSkillTries * skillLossPercent);
 			while (lostSkillTries > skills[i].tries) {
 				lostSkillTries -= skills[i].tries;
 

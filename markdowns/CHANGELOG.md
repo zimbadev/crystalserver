@@ -17,7 +17,8 @@
   - Updated monsters and npcs like Tibia RL ([Tryller](https://github.com/jprzimba)).
   - Add items from Winter Update 2023 ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
   - Add V.I.P groups ([phacUFPE](https://github.com/phacUFPE)).
-  - Click to teleport, then use CTRL + directional keys to teleport gamemaster characters ([Tryller](https://github.com/jprzimba)).
+  - Added click teleport, then use CTRL + directional keys to teleport gamemaster characters ([Tryller](https://github.com/jprzimba)).
+  - Added new feature configurable in config.lua halfLossExp, halfLossSkilla and halfLossMagicLevel ([dguprado](https://github.com/dguprado), [Tryller](https://github.com/jprzimba)).
 
 ### Bug Fixes
   - Fixed chain system. Now works properly for Mages and Paladins ([Tryller](https://github.com/jprzimba)).
