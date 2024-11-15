@@ -379,14 +379,14 @@ public:
 class Items {
 public:
 	struct BagItemInfo {
-		std::string name;
-		uint16_t id;
-		uint32_t chance;
-		uint32_t minAmount;
-		uint32_t maxAmount;
-		uint64_t minRange;
-		uint64_t maxRange;
-		std::string monsterClass;
+		std::string name = "";
+		uint16_t id = 0;
+		uint32_t chance = 0;
+		uint32_t minAmount = 0;
+		uint32_t maxAmount = 0;
+		uint64_t minRange = 0;
+		uint64_t maxRange = 0;
+		std::string monsterClass = "";
 	};
 
 	using NameMap = std::unordered_multimap<std::string, uint16_t>;
