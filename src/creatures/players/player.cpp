@@ -3509,7 +3509,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			}
 		}
 
-		double magicLossPercent = deathLossPercent;
+		double magicLossPercent = deathLossPercent  / 100.;
 		if (g_configManager().getBoolean(HALF_LOSS_MAGIC) && magicLossPercent > 0) {
 			magicLossPercent /= 2;
 		}
@@ -3556,7 +3556,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 
 			sumSkillTries += skills[i].tries;
 
-			double skillLossPercent = deathLossPercent;
+			double skillLossPercent = deathLossPercent  / 100.;
 			if (g_configManager().getBoolean(HALF_LOSS_SKILL) && skillLossPercent > 0) {
 				skillLossPercent /= 2;
 			}
