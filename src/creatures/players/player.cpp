@@ -9818,7 +9818,7 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 			sendBlessStatus();
 		}
 
-		if (getCurrentMount() != 0) {
+		if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) &&  getCurrentMount() != 0) {
 			toggleMount(true);
 		}
 

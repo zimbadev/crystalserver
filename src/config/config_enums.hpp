@@ -339,4 +339,5 @@ enum ConfigKey_t : uint16_t {
 	HALF_LOSS_EXP,
 	HALF_LOSS_SKILL,
 	HALF_LOSS_MAGIC,
+	ALWAYS_MOUNT_LOGIN,
 };

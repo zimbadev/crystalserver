@@ -149,6 +149,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_IMBUEMENT_NON_AGGRESSIVE_FIGHT_ONLY, "toggleImbuementNonAggressiveFightOnly", false);
 	loadBoolConfig(L, TOGGLE_IMBUEMENT_SHRINE_STORAGE, "toggleImbuementShrineStorage", true);
 	loadBoolConfig(L, TOGGLE_MOUNT_IN_PZ, "toggleMountInProtectionZone", false);
+	loadBoolConfig(L, ALWAYS_MOUNT_LOGIN, "playerAlwaysLoginMounted", false);
 	loadBoolConfig(L, TOGGLE_RECEIVE_REWARD, "toggleReceiveReward", false);
 	loadBoolConfig(L, TOGGLE_SAVE_ASYNC, "toggleSaveAsync", false);
 	loadBoolConfig(L, TOGGLE_SAVE_INTERVAL_CLEAN_MAP, "toggleSaveIntervalCleanMap", false);
