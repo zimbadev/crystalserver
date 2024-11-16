@@ -43,6 +43,7 @@ void ItemTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "ItemType", "isKey", ItemTypeFunctions::luaItemTypeIsKey);
 	Lua::registerMethod(L, "ItemType", "isQuiver", ItemTypeFunctions::luaItemTypeIsQuiver);
 
+	Lua::registerMethod(L, "ItemType", "isPodium", ItemTypeFunctions::luaItemTypeIsPodium);
 	Lua::registerMethod(L, "ItemType", "getType", ItemTypeFunctions::luaItemTypeGetType);
 	Lua::registerMethod(L, "ItemType", "getId", ItemTypeFunctions::luaItemTypeGetId);
 	Lua::registerMethod(L, "ItemType", "getName", ItemTypeFunctions::luaItemTypeGetName);
@@ -285,6 +286,17 @@ int ItemTypeFunctions::luaItemTypeIsQuiver(lua_State* L) {
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
 		Lua::pushBoolean(L, itemType->isQuiver());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeIsPodium(lua_State* L) {
+	// itemType:isPodium()
+	const ItemType* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		Lua::pushBoolean(L, itemType->isPodium);
 	} else {
 		lua_pushnil(L);
 	}
