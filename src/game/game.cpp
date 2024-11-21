@@ -1169,7 +1169,7 @@ bool Game::internalPlaceCreature(const std::shared_ptr<Creature> &creature, cons
 }
 
 bool Game::placeCreature(const std::shared_ptr<Creature> &creature, const Position &pos, bool extendedPos /*=false*/, bool forced /*= false*/) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (!internalPlaceCreature(creature, pos, extendedPos, forced)) {
 		return false;
 	}
@@ -1196,7 +1196,7 @@ bool Game::placeCreature(const std::shared_ptr<Creature> &creature, const Positi
 }
 
 bool Game::removeCreature(const std::shared_ptr<Creature> &creature, bool isLogout /* = true*/) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (!creature || creature->isRemoved()) {
 		return false;
 	}
@@ -1264,7 +1264,7 @@ bool Game::removeCreature(const std::shared_ptr<Creature> &creature, bool isLogo
 }
 
 void Game::executeDeath(uint32_t creatureId) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	std::shared_ptr<Creature> creature = getCreatureByID(creatureId);
 	if (creature && !creature->isRemoved()) {
 		afterCreatureZoneChange(creature, creature->getZones(), {});
@@ -1273,7 +1273,7 @@ void Game::executeDeath(uint32_t creatureId) {
 }
 
 void Game::playerTeleport(uint32_t playerId, const Position &newPosition) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const auto &player = getPlayerByID(playerId);
 	if (!player || !player->hasFlag(PlayerFlags_t::CanMapClickTeleport)) {
 		return;
@@ -1286,7 +1286,7 @@ void Game::playerTeleport(uint32_t playerId, const Position &newPosition) {
 }
 
 void Game::playerInspectItem(const std::shared_ptr<Player> &player, const Position &pos) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const std::shared_ptr<Thing> &thing = internalGetThing(player, pos, 0, 0, STACKPOS_TOPDOWN_ITEM);
 	if (!thing) {
 		player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
@@ -1303,7 +1303,7 @@ void Game::playerInspectItem(const std::shared_ptr<Player> &player, const Positi
 }
 
 void Game::playerInspectItem(const std::shared_ptr<Player> &player, uint16_t itemId, uint8_t itemCount, bool cyclopedia) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	player->sendItemInspection(itemId, itemCount, nullptr, cyclopedia);
 }
 
@@ -1357,7 +1357,7 @@ FILELOADER_ERRORS Game::loadAppearanceProtobuf(const std::string &file) {
 }
 
 void Game::playerMoveThing(uint32_t playerId, const Position &fromPos, uint16_t itemId, uint8_t fromStackPos, const Position &toPos, uint8_t count) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
@@ -1442,7 +1442,7 @@ void Game::playerMoveCreatureByID(uint32_t playerId, uint32_t movingCreatureId, 
 }
 
 void Game::playerMoveCreature(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &movingCreature, const Position &movingCreatureOrigPos, const std::shared_ptr<Tile> &toTile) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 
 	g_dispatcher().addWalkEvent([=, this] {
 		if (!player->canDoAction()) {
@@ -1598,7 +1598,7 @@ ReturnValue Game::internalMoveCreature(const std::shared_ptr<Creature> &creature
 }
 
 ReturnValue Game::internalMoveCreature(const std::shared_ptr<Creature> &creature, const std::shared_ptr<Tile> &toTile, uint32_t flags /*= 0*/) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (creature->hasCondition(CONDITION_ROOTED)) {
 		return RETURNVALUE_NOTPOSSIBLE;
 	}
@@ -2017,7 +2017,7 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 }
 
 ReturnValue Game::internalMoveItem(std::shared_ptr<Cylinder> fromCylinder, std::shared_ptr<Cylinder> toCylinder, int32_t index, const std::shared_ptr<Item> &item, uint32_t count, std::shared_ptr<Item>* movedItem, uint32_t flags /*= 0*/, const std::shared_ptr<Creature> &actor /*=nullptr*/, const std::shared_ptr<Item> &tradeItem /* = nullptr*/, bool checkTile /* = true*/) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (fromCylinder == nullptr) {
 		g_logger().error("[{}] fromCylinder is nullptr", __FUNCTION__);
 		return RETURNVALUE_NOTPOSSIBLE;
@@ -2279,7 +2279,7 @@ ReturnValue Game::internalAddItem(std::shared_ptr<Cylinder> toCylinder, const st
 }
 
 ReturnValue Game::internalAddItem(std::shared_ptr<Cylinder> toCylinder, const std::shared_ptr<Item> &item, int32_t index, uint32_t flags, bool test, uint32_t &remainderCount) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (toCylinder == nullptr) {
 		g_logger().error("[{}] fromCylinder is nullptr", __FUNCTION__);
 		return RETURNVALUE_NOTPOSSIBLE;
@@ -2367,7 +2367,7 @@ ReturnValue Game::internalAddItem(std::shared_ptr<Cylinder> toCylinder, const st
 
 ReturnValue Game::internalRemoveItem(const std::shared_ptr<Item> &items, int32_t count /*= -1*/, bool test /*= false*/, uint32_t flags /*= 0*/, bool force /*= false*/) {
 	auto item = items;
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (item == nullptr) {
 		g_logger().debug("{} - Item is nullptr", __FUNCTION__);
 		return RETURNVALUE_NOTPOSSIBLE;
@@ -2447,7 +2447,7 @@ std::tuple<ReturnValue, uint32_t, uint32_t> Game::addItemBatch(const std::shared
 		return std::make_tuple(ret, totalAdded, containersCreated);
 	}
 
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const auto &player = toCylinder->getPlayer();
 	bool dropping = false;
 	auto setupDestination = [&]() -> std::shared_ptr<Cylinder> {
@@ -2527,7 +2527,7 @@ std::tuple<ReturnValue, uint32_t, uint32_t> Game::addItemBatch(const std::shared
 }
 
 std::tuple<ReturnValue, uint32_t, uint32_t> Game::createItemBatch(const std::shared_ptr<Cylinder> &toCylinder, const std::vector<std::tuple<uint16_t, uint32_t, uint16_t>> &itemCounts, uint32_t flags /* = 0 */, bool dropOnMap /* = true */, uint32_t autoContainerId /* = 0 */) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	std::vector<std::shared_ptr<Item>> items;
 	for (const auto &[itemId, count, subType] : itemCounts) {
 		const auto &itemType = Item::items[itemId];
@@ -2561,7 +2561,7 @@ std::tuple<ReturnValue, uint32_t, uint32_t> Game::createItem(const std::shared_p
 }
 
 ReturnValue Game::internalPlayerAddItem(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, bool dropOnMap /*= true*/, Slots_t slot /*= CONST_SLOT_WHEREEVER*/) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	uint32_t remainderCount = 0;
 	ReturnValue ret;
 	if (slot == CONST_SLOT_WHEREEVER) {
@@ -2593,7 +2593,7 @@ ReturnValue Game::internalPlayerAddItem(const std::shared_ptr<Player> &player, c
 }
 
 std::shared_ptr<Item> Game::findItemOfType(const std::shared_ptr<Cylinder> &cylinder, uint16_t itemId, bool depthSearch /*= true*/, int32_t subType /*= -1*/) const {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (cylinder == nullptr) {
 		g_logger().error("[{}] Cylinder is nullptr", __FUNCTION__);
 		return nullptr;
@@ -2759,7 +2759,7 @@ void Game::addMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money, u
 }
 
 std::shared_ptr<Item> Game::transformItem(std::shared_ptr<Item> item, uint16_t newId, int32_t newCount /*= -1*/) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (item->getID() == newId && (newCount == -1 || (newCount == item->getSubType() && newCount != 0))) { // chargeless item placed on map = infinite
 		return item;
 	}
@@ -2897,7 +2897,7 @@ std::shared_ptr<Item> Game::transformItem(std::shared_ptr<Item> item, uint16_t n
 }
 
 ReturnValue Game::internalTeleport(const std::shared_ptr<Thing> &thing, const Position &newPos, bool pushMove /* = true*/, uint32_t flags /*= 0*/) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (thing == nullptr) {
 		g_logger().error("[{}] thing is nullptr", __FUNCTION__);
 		return RETURNVALUE_NOTPOSSIBLE;
@@ -3684,7 +3684,7 @@ void Game::playerStopAutoWalk(uint32_t playerId) {
 }
 
 void Game::playerUseItemEx(uint32_t playerId, const Position &fromPos, uint8_t fromStackPos, uint16_t fromItemId, const Position &toPos, uint8_t toStackPos, uint16_t toItemId) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
@@ -3829,7 +3829,7 @@ void Game::playerUseItemEx(uint32_t playerId, const Position &fromPos, uint8_t f
 }
 
 void Game::playerUseItem(uint32_t playerId, const Position &pos, uint8_t stackPos, uint8_t index, uint16_t itemId) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
@@ -3939,7 +3939,7 @@ void Game::playerUseItem(uint32_t playerId, const Position &pos, uint8_t stackPo
 }
 
 void Game::playerUseWithCreature(uint32_t playerId, const Position &fromPos, uint8_t fromStackPos, uint32_t creatureId, uint16_t itemId) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
@@ -5293,7 +5293,7 @@ void Game::internalCloseTrade(const std::shared_ptr<Player> &player) {
 }
 
 void Game::playerBuyItem(uint32_t playerId, uint16_t itemId, uint8_t count, uint16_t amount, bool ignoreCap /* = false*/, bool inBackpacks /* = false*/) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (amount == 0) {
 		return;
 	}
@@ -5349,7 +5349,7 @@ void Game::playerBuyItem(uint32_t playerId, uint16_t itemId, uint8_t count, uint
 }
 
 void Game::playerSellItem(uint32_t playerId, uint16_t itemId, uint8_t count, uint16_t amount, bool ignoreEquipped) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (amount == 0) {
 		return;
 	}
@@ -6453,14 +6453,14 @@ void Game::addCreatureCheck(const std::shared_ptr<Creature> &creature) {
 }
 
 void Game::removeCreatureCheck(const std::shared_ptr<Creature> &creature) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (creature->inCheckCreaturesVector.load()) {
 		creature->creatureCheck.store(false);
 	}
 }
 
 void Game::checkCreatures() {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	static size_t index = 0;
 
 	std::erase_if(checkCreatureLists[index], [this](const std::shared_ptr<Creature> creature) {
@@ -9489,7 +9489,7 @@ void Game::playerAnswerModalWindow(uint32_t playerId, uint32_t modalWindowId, ui
 }
 
 void Game::playerForgeFuseItems(uint32_t playerId, ForgeAction_t actionType, uint16_t firstItemId, uint8_t tier, uint16_t secondItemId, bool usedCore, bool reduceTierLoss, bool convergence) {
-	metrics::method_latency measure(__METHOD_NAME__);
+	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
