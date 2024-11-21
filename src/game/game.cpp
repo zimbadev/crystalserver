@@ -3322,22 +3322,33 @@ ObjectCategory_t Game::getObjectCategory(const ItemType &it) {
 
 uint64_t Game::getItemMarketPrice(const std::map<uint16_t, uint64_t> &itemMap, bool buyPrice) const {
 	uint64_t total = 0;
-	for (const auto &it : itemMap) {
-		if (it.first == ITEM_GOLD_COIN) {
-			total += it.second;
-		} else if (it.first == ITEM_PLATINUM_COIN) {
-			total += 100 * it.second;
-		} else if (it.first == ITEM_CRYSTAL_COIN) {
-			total += 10000 * it.second;
-		} else {
-			auto marketIt = itemsPriceMap.find(it.first);
-			if (marketIt != itemsPriceMap.end()) {
-				for (auto &[tier, price] : (*marketIt).second) {
-					total += price * it.second;
+
+	for (const auto& [itemId, itemCount] : itemMap) {
+		switch (itemId) {
+			case ITEM_GOLD_COIN:
+				total += itemCount;
+				break;
+
+			case ITEM_PLATINUM_COIN:
+				total += 100 * itemCount;
+				break;
+
+			case ITEM_CRYSTAL_COIN:
+				total += 10000 * itemCount;
+				break;
+
+			default: {
+				auto marketIt = itemsPriceMap.find(itemId);
+				if (marketIt != itemsPriceMap.end()) {
+					for (const auto& [tier, price] : marketIt->second) {
+						total += price * itemCount;
+					}
+				} else {
+					const ItemType& itemType = Item::items[itemId];
+					uint64_t price = buyPrice ? itemType.buyPrice : itemType.sellPrice;
+					total += price * itemCount;
 				}
-			} else {
-				const ItemType &iType = Item::items[it.first];
-				total += (buyPrice ? iType.buyPrice : iType.sellPrice) * it.second;
+				break;
 			}
 		}
 	}
@@ -3429,6 +3440,8 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 				ret = internalMoveItem(equipItem->getParent(), rightItem->getContainer(), 0, equipItem, equipItem->getItemCount(), nullptr);
 			}
 		} else {
+			const auto &leftItem = player->getInventoryItem(CONST_SLOT_LEFT);
+
 			const int32_t &slotPosition = equipItem->getSlotPosition();
 
 			// Checks if a two-handed item is being equipped in the left slot when the right slot is already occupied and move to backpack
