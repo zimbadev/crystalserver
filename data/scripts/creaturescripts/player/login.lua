@@ -20,6 +20,11 @@ end
 local playerLoginGlobal = CreatureEvent("PlayerLoginGlobal")
 
 function playerLoginGlobal.onLogin(player)
+	-- Disables the chain system by default unless enabled in `config.lua`.
+	if not configManager.getBoolean(configKeys.TOGGLE_CHAIN_SYSTEM) then
+		player:setFeature(Features.ChainSystem, 0)
+	end
+
 	-- Welcome
 	local loginStr
 	if player:getLastLoginSaved() == 0 then
