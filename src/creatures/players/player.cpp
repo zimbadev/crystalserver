@@ -6452,7 +6452,15 @@ bool Player::hasExtraSwing() {
 
 uint16_t Player::getSkillLevel(skills_t skill) const {
 	auto skillLevel = getLoyaltySkill(skill);
-	skillLevel = std::max<int32_t>(0, skillLevel + varSkills[skill]);
+	// Handle as float to prevent truncation when var exceeds uint16_t max limit
+	const auto &floatSkills = getFloatSkills();
+	if (floatSkills.find(skill) != floatSkills.end()) {
+		auto floatBonus = varSkills[skill] / 100.0f;
+		skillLevel += floatBonus;
+		g_logger().debug("[Player::getSkillLevel] Float Skill VarSkill: {} Level: {}", varSkills[skill], skillLevel);
+	} else {
+		skillLevel = std::max<int32_t>(0, skillLevel + varSkills[skill]);
+	}
 
 	const auto &maxValuePerSkill = getMaxValuePerSkill();
 	if (const auto it = maxValuePerSkill.find(skill);
@@ -6465,12 +6473,12 @@ uint16_t Player::getSkillLevel(skills_t skill) const {
 		skillLevel += m_wheelPlayer->getStat(WheelStat_t::MELEE);
 		skillLevel += m_wheelPlayer->getMajorStatConditional("Battle Instinct", WheelMajor_t::MELEE);
 	} else if (skill == SKILL_DISTANCE) {
-		skillLevel += m_wheelPlayer->getMajorStatConditional("Positional Tactics", WheelMajor_t::DISTANCE);
+		skillLevel += m_wheelPlayer->getMajorStatConditional("Positional Tatics", WheelMajor_t::DISTANCE);
 		skillLevel += m_wheelPlayer->getStat(WheelStat_t::DISTANCE);
 	} else if (skill == SKILL_SHIELD) {
 		skillLevel += m_wheelPlayer->getMajorStatConditional("Battle Instinct", WheelMajor_t::SHIELD);
 	} else if (skill == SKILL_MAGLEVEL) {
-		skillLevel += m_wheelPlayer->getMajorStatConditional("Positional Tactics", WheelMajor_t::MAGIC);
+		skillLevel += m_wheelPlayer->getMajorStatConditional("Positional Tatics", WheelMajor_t::MAGIC);
 		skillLevel += m_wheelPlayer->getStat(WheelStat_t::MAGIC);
 	} else if (skill == SKILL_LIFE_LEECH_AMOUNT) {
 		skillLevel += m_wheelPlayer->getStat(WheelStat_t::LIFE_LEECH);

@@ -2094,6 +2094,15 @@ const std::map<uint8_t, uint16_t> &getMaxValuePerSkill() {
 	return maxValuePerSkill;
 }
 
+const std::unordered_set<skills_t> &getFloatSkills() {
+	static const std::unordered_set<skills_t> floatSkills = {
+		SKILL_CRITICAL_HIT_DAMAGE,
+		SKILL_LIFE_LEECH_AMOUNT,
+		SKILL_MANA_LEECH_AMOUNT
+	};
+	return floatSkills;
+}
+
 float calculateEquipmentLoss(uint8_t blessingAmount, bool isContainer /* = false*/) {
 	float lossPercent = 0;
 	switch (blessingAmount) {
