@@ -16,6 +16,7 @@
   - Add Cyclopedia character titles ([Tryller](https://github.com/jprzimba)).
   - Monster rename functionality ([luanluciano93](https://github.com/luanluciano93)).
   - Updated monsters and npcs like Tibia RL ([Tryller](https://github.com/jprzimba)).
+  - Add some monsters from protocol 13.40 ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
   - Add items from Winter Update 2023 ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
   - Add V.I.P groups ([phacUFPE](https://github.com/phacUFPE)).
   - Added new feature configurable in config.lua halfLossExp, halfLossSkilla and halfLossMagicLevel ([dguprado](https://github.com/dguprado), [Tryller](https://github.com/jprzimba)).
