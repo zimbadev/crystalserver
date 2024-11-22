@@ -18,8 +18,7 @@ If you want edit the map, use the [Remere's Map Editor](https://www.mediafire.co
 You are subject to our code of conduct, read
 at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/CODE_OF_CONDUCT.md).
 
-### Quests
-You can see the complete quests lists (we are checking all quests) in [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/QUESTS.md).
+You can use your own tool to generate Monster Loot and Monster Elements at [this link](https://crystalsever.vercel.app).
 
 ### Thanks
 - [Open Tibia](https://github.com/opentibia/server) and they [contributors](https://github.com/opentibia/server/graphs/contributors).
