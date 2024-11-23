@@ -1,10 +1,10 @@
-local mType = Game.createMonsterType("Elder Bloodjaw")
+local mType = Game.createMonsterType("Echo Of Chagorz")
 local monster = {}
 
-monster.description = "an elder bloodjaw"
-monster.experience = 20980
+monster.description = "a Echo Of Chagorz"
+monster.experience = 0
 monster.outfit = {
-	lookType = 1628,
+	lookType = 1670,
 	lookHead = 0,
 	lookBody = 0,
 	lookLegs = 0,
@@ -13,24 +13,22 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-
-
-monster.health = 86000
-monster.maxHealth = 86000
-monster.race = "venom"
-monster.corpse = 43669
-monster.speed = 160
+monster.health = 90000
+monster.maxHealth = 90000
+monster.race = "undead"
+monster.corpse = 0
+monster.speed = 100
 monster.manaCost = 0
 
 monster.changeTarget = {
-	interval = 4000,
-	chance = 10,
+	interval = 2500,
+	chance = 40,
 }
 
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -44,7 +42,7 @@ monster.flags = {
 	illusionable = false,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 80,
+	staticAttackChance = 98,
 	targetDistance = 1,
 	runHealth = 0,
 	healthHidden = false,
@@ -61,24 +59,23 @@ monster.light = {
 
 monster.voices = {
 	interval = 5000,
-	chance = 30,
+	chance = 10,
 }
 
 monster.loot = {}
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1450 },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_EARTHDAMAGE, minDamage = -500, maxDamage = -1150, range = 7, radius = 4, effect = CONST_ME_GREEN_RINGS, target = true },
-	{ name = "combat", interval = 2000, chance = 11, type = COMBAT_EARTHDAMAGE, minDamage = -720, maxDamage = -900, radius = 3, shootEffect = CONST_ANI_ENVENOMEDARROW, effect = CONST_ME_GREEN_RINGS, target = true },
-	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_FIREDAMAGE, minDamage = -800, maxDamage = -1250, length = 8, effect = CONST_ME_EXPLOSIONHIT, target = false },
-	{ name = "condition", type = CONDITION_POISON, interval = 2000, chance = 15, minDamage = -400, maxDamage = -640, range = 7, radius = 7, effect = CONST_ME_HITBYPOISON, target = false },
-
+	{ name = "melee", interval = 2000, chance = 100, minDamage = -750, maxDamage = -1750 },
+	{ name = "combat", interval = 2700, chance = 37, type = COMBAT_FIREDAMAGE, minDamage = -950, maxDamage = -2000, length = 8, spread = 3, effect = CONST_ME_HITBYFIRE, target = false },
+	{ name = "combat", interval = 3300, chance = 37, type = COMBAT_PHYSICALDAMAGE, minDamage = -1100, maxDamage = -1600, length = 8, spread = 0, effect = CONST_ME_EXPLOSIONHIT, target = false },
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 104,
-	mitigation = 3.16,
+	defense = 65,
+	armor = 0,
+	mitigation = 2.0,
+	{ name = "combat", interval = 3000, chance = 35, type = COMBAT_HEALING, minDamage = 400, maxDamage = 500, effect = CONST_ME_MAGIC_BLUE, target = false },
+	{ name = "speed", interval = 2000, chance = 15, speedChange = 320, effect = CONST_ME_MAGIC_RED, target = false, duration = 5000 },
 }
 
 monster.elements = {
@@ -102,4 +99,3 @@ monster.immunities = {
 }
 
 mType:register(monster)
-
