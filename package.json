@@ -1,6 +1,6 @@
 {
   "name": "crystalserver",
-  "version": "4.0.0",
+  "version": "4.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jprzimba/crystalserver.git"

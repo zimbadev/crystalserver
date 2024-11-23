@@ -1,6 +1,6 @@
 # Changelog for Crystal Server
 
-## Version 4.0.0
+## Version 4.0
 
 ### Features
   - Implemented Surprise Bags System: data/items/bags.xml ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).

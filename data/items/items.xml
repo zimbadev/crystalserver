@@ -76646,6 +76646,55 @@ Granted by TibiaGoals.com"/>
 		<attribute key="containersize" value="10"/>
 		<attribute key="decayTo" value="0"/>
 	</item>
+	<item id="44895" article="a" name="ramp"/>
+	<item id="44896" article="a" name="ramp">
+		<attribute key="floorchange" value="north"/>
+	</item>
+	<item id="44897" article="a" name="ramp"/>
+	<item id="44898" article="a" name="ramp">
+		<attribute key="floorchange" value="west"/>
+	</item>
+	<item id="44899" article="a" name="ramp"/>
+	<item id="44900" article="a" name="ramp">
+		<attribute key="floorchange" value="east"/>
+	</item>
+	<item id="44901" article="a" name="ramp"/>
+	<item id="44902" article="a" name="ramp">
+		<attribute key="floorchange" value="south"/>
+	</item>
+	<item id="44941" article="a" name="ramp"/>
+		<item id="44942" article="a" name="ramp">
+		<attribute key="floorchange" value="north"/>
+	</item>
+	<item id="45153" article="a" name="ramp"/>
+	<item id="45154" article="a" name="ramp">
+		<attribute key="floorchange" value="north"/>
+	</item>
+	<item id="45155" article="a" name="ramp"/>
+	<item id="45156" article="a" name="ramp">
+		<attribute key="floorchange" value="west"/>
+	</item>
+	<item id="45157" article="a" name="ramp"/>
+	<item id="45158" article="a" name="ramp">
+		<attribute key="floorchange" value="east"/>
+	</item>
+	<item id="45159" article="a" name="ramp"/>
+	<item id="45160" article="a" name="ramp">
+		<attribute key="floorchange" value="south"/>
+	</item>
+	<item id="45641" article="a" name="candy necklace">
+		<attribute key="primarytype" value="amulets"/>
+		<attribute key="armor" value="2"/>
+		<attribute key="absorbpercentphysical" value="3"/>
+		<attribute key="absorbpercentenergy" value="6"/>
+		<attribute key="absorbpercentearth" value="-5"/>
+		<attribute key="weight" value="510"/>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="220"/>
+			<attribute key="slot" value="necklace"/>
+		</attribute>
+		<attribute key="description" value="This necklace provides a sugary barrier against attacks."/>
+	</item>
 	<item id="46627" article="a" name="crusher">
 		<attribute key="loottype" value="tools"/>
 		<attribute key="showCharges" value="1"/>
@@ -79340,6 +79389,160 @@ Granted by TibiaGoals.com"/>
 		<attribute key="primarytype" value="soul cores"/>
 		<attribute key="description" value="Offers a soul to the Soulpit. Combine with an exalted core to turn it into a lesser soul core."/>
 		<attribute key="weight" value="100"/>
+	</item>
+	<item id="48114" article="a" name="peppermint backpack">
+		<attribute key="containersize" value="24"/>
+		<attribute key="weight" value="1500"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="increase capacity" value="3"/>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="slot" value="backpack"/>
+		</attribute>
+	</item>
+	<item id="48116" article="a" name="gummy rotworm">
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="48255" article="a" name="lime tart">
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="48249" article="a" name="milk chocolate coin">
+		<attribute key="weight" value="10"/>
+	</item>
+	<item id="48250" article="a" name="dark chocolate coin">
+		<attribute key="weight" value="10"/>
+	</item>
+	<item id="48252" article="a" name="brigadeiro">
+		<attribute key="weight" value="10"/>
+	</item>
+	<item id="48253" article="a" name="beijinho">
+		<attribute key="weight" value="10"/>
+	</item>
+	<item id="48257" article="a" name="dead nibblemaw">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48258" article="a" name="dead nibblemaw">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48257"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48259" article="a" name="dead nibblemaw">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48258"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48260" article="a" name="dead nibblemaw">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48259"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48261" article="a" name="dead gingerbread man">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48262" article="a" name="dead gingerbread man">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48261"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48263" article="a" name="dead gingerbread man">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48262"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48264" article="a" name="dead gingerbread man">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48263"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48265" article="a" name="dead candy horror">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48266" article="a" name="dead candy horror">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48295"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48267" article="a" name="dead candy horror">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48296"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48268" article="a" name="dead candy horror">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48297"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48343" article="a" name="dead candy floss elemental">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48344" article="a" name="dead candy floss elemental">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48343"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48345" article="a" name="dead candy floss elemental">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48344"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48346" article="a" name="dead candy floss elemental">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48345"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48360" article="a" name="dead sugar cube">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48361" article="a" name="dead sugar cube">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48360"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48362" article="a" name="dead sugar cube">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48361"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48363" article="a" name="dead sugar cube">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48362"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48376" article="a" name="dead sugar cube worker">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48377" article="a" name="dead sugar cube worker">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48376"/>
+		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48378" article="a" name="dead sugar cube worker">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48377"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48379" article="a" name="dead sugar cube worker">
+		<attribute key="containerSize" value="8"/>
+		<attribute key="decayTo" value="48378"/>
+		<attribute key="duration" value="5"/>
+		<attribute key="fluidSource" value="blood"/>
 	</item>
 	<item id="48929" article="an" name="black sheep soul core">
 		<attribute key="primarytype" value="soul cores"/>
