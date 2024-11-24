@@ -76817,10 +76817,6 @@ Granted by TibiaGoals.com"/>
 		<attribute key="loottype" value="tools"/>
 		<attribute key="weight" value="30"/>
 	</item>
-	<item id="46628" article="a" name="amber crusher">
-		<attribute key="loottype" value="tools"/>
-		<attribute key="weight" value="30"/>
-	</item>
 	<item id="47368" article="an" name="amber slayer">
 		<attribute key="primarytype" value="sword weapons"/>
 		<attribute key="weaponType" value="sword"/>

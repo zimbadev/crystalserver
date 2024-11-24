@@ -101,9 +101,7 @@ int CrystalServer::run() {
 
 #ifndef _WIN32
 				if (getuid() == 0 || geteuid() == 0) {
-					logger.warn("{} has been executed as root user, "
-								"please consider running it as a normal user",
-								SOFTWARE_NAME);
+					logger.warn("{} has been executed as root user, please consider running it as a normal user", SOFTWARE_NAME);
 				}
 #endif
 
@@ -168,7 +166,7 @@ void CrystalServer::setWorldType() {
 		);
 	}
 
-	logger.debug("World type set as {}", asUpperCaseString(worldType));
+	logger.info("World type set as {}", asUpperCaseString(worldType));
 }
 
 void CrystalServer::loadMaps() const {

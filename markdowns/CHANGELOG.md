@@ -1,5 +1,16 @@
 # Changelog for Crystal Server
 
+## Version 4.1
+
+### Features
+  - Load Gamemaster, Community Manager and God outfits from groups.xml ([Tryller](https://github.com/jprzimba))
+
+## Modified files
+  - data/scripts/creaturescripts/player/login.lua
+  - data/XML/groups.xml
+
+### Bug Fixes
+
 ## Version 4.0
 
 ### Features

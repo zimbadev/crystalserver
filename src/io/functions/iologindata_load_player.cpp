@@ -289,10 +289,21 @@ void IOLoginDataLoad::loadPlayerDefaultOutfit(const std::shared_ptr<Player> &pla
 		return;
 	}
 
-	player->defaultOutfit.lookType = result->getNumber<uint16_t>("looktype");
+	const auto &group = g_game().groups.getGroup(result->getNumber<uint16_t>("group_id"));
+	if (!group) {
+		g_logger().error("Player {} has group id {} which doesn't exist", player->name, result->getNumber<uint16_t>("group_id"));
+		return;
+	}
+
 	if (g_configManager().getBoolean(WARN_UNSAFE_SCRIPTS) && player->defaultOutfit.lookType != 0 && !g_game().isLookTypeRegistered(player->defaultOutfit.lookType)) {
 		g_logger().warn("[{}] An unregistered creature looktype type with id '{}' was blocked to prevent client crash.", __FUNCTION__, player->defaultOutfit.lookType);
 		return;
+	}
+
+	if (!group || !group->outfit) {
+		player->defaultOutfit.lookType = result->getNumber<uint16_t>("looktype");
+	} else {
+		player->defaultOutfit.lookType = group->outfit;
 	}
 
 	player->defaultOutfit.lookHead = static_cast<uint8_t>(result->getNumber<uint16_t>("lookhead"));

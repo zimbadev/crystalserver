@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <groups>
-	<group id="1" name="player" access="0" maxdepotitems="0" maxvipentries="0" />
-	<group id="2" name="tutor" access="0" maxdepotitems="0" maxvipentries="200">
+	<group id="1" name="player" access="0" maxdepotitems="0" maxvipentries="0" outfit="0"/>
+	<group id="2" name="tutor" access="0" maxdepotitems="0" maxvipentries="200" outfit="0">
 		<flags>
 			<flag talkorangehelpchannel="1" />
 			<flag cannotbemuted="1" />
 		</flags>
 	</group>
-	<group id="3" name="senior tutor" access="0" maxdepotitems="0" maxvipentries="200">
+	<group id="3" name="senior tutor" access="0" maxdepotitems="0" maxvipentries="200" outfit="0">
 		<flags>
 			<flag talkorangehelpchannel="1" />
 			<flag cantalkredprivate="1" />
@@ -15,7 +15,7 @@
 			<flag cannotbemuted="1" />
 		</flags>
 	</group>
-	<group id="4" name="gamemaster" access="1" maxdepotitems="0" maxvipentries="200">
+	<group id="4" name="gamemaster" access="1" maxdepotitems="0" maxvipentries="200" outfit="75">
 		<flags>
 			<flag cannotusecombat="1" /> <!-- Is combat not allowed? Set to 0 to enable the two flags below. If set to 1 these two flags below will be ignored. -->
 			<flag cannotattackplayer="1" /> <!-- If combat is allowed (set to 0 above), attack players is not allowed? -->
@@ -59,7 +59,7 @@
 			<flag canmapclickteleport="0" />
 		</flags>
 	</group>
-	<group id="5" name="community manager" access="1" maxdepotitems="0" maxvipentries="200">
+	<group id="5" name="community manager" access="1" maxdepotitems="0" maxvipentries="200" outfit="266">
 		<flags>
 			<flag cannotusecombat="0" /> <!-- Is combat not allowed? Set to 0 to enable the two flags below. If set to 1 these two flags below will be ignored. -->
 			<flag cannotattackplayer="1" /> <!-- If combat is allowed (set to 0 above), attack players is not allowed? -->
@@ -103,7 +103,7 @@
 			<flag canmapclickteleport="0" />
 		</flags>
 	</group>
-	<group id="6" name="god" access="1" maxdepotitems="0" maxvipentries="200">
+	<group id="6" name="god" access="1" maxdepotitems="0" maxvipentries="200" outfit="302">
 		<flags>
 			<flag cannotusecombat="0" /> <!-- Is combat not allowed? Set to 0 to enable the two flags below. If set to 1 these two flags below will be ignored. -->
 			<flag cannotattackplayer="1" /> <!-- If combat is allowed (set to 0 above), attack players is not allowed? -->
