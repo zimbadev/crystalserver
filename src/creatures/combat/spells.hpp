@@ -191,6 +191,8 @@ public:
 	void setAllowOnSelf(bool s);
 	[[nodiscard]] bool getLockedPZ() const;
 	void setLockedPZ(bool b);
+	[[nodiscard]] bool getRemoveOnUse() const;
+	void setRemoveOnUse(bool n);
 
 	/**
 	 * @brief Get whether the wheel of destiny is upgraded.
@@ -260,6 +262,7 @@ protected:
 	bool needTarget = false;
 	bool allowOnSelf = true;
 	bool pzLocked = false;
+	bool removeOnUse = false;
 
 	bool whellOfDestinyUpgraded = false;
 	std::array<int32_t, static_cast<uint8_t>(WheelSpellBoost_t::TOTAL_COUNT)> wheelOfDestinyRegularBoost = { 0 };

@@ -55,6 +55,7 @@ private:
 	// Only for InstantSpells.
 	static int luaSpellWords(lua_State* L);
 	static int luaSpellNeedDirection(lua_State* L);
+	static int luaSpellRemoveOnUse(lua_State* L);
 	static int luaSpellHasParams(lua_State* L);
 	static int luaSpellHasPlayerNameParam(lua_State* L);
 	static int luaSpellNeedCasterTargetOrDirection(lua_State* L);

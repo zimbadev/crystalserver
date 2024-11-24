@@ -3,7 +3,9 @@
 ## Version 4.1
 
 ### Features
-  - Load Gamemaster, Community Manager and God outfits from groups.xml ([Tryller](https://github.com/jprzimba))
+  - Load Gamemaster, Community Manager and God outfits from groups.xml ([Tryller](https://github.com/jprzimba)).
+  - New tag for rune spells: `rune:removeOnUse(bool)`. This can be used to specify a particular rune to remove charges, even when `removeChargesFromRunes` is set to false in `config.lua`. ([Tryller](https://github.com/jprzimba))
+
 
 ## Modified files
   - data/scripts/creaturescripts/player/login.lua

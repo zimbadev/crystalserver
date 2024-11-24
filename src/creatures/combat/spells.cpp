@@ -893,6 +893,14 @@ void Spell::setMagicLevel(uint32_t lvl) {
 	magLevel = lvl;
 }
 
+bool Spell::getRemoveOnUse() const {
+	return removeOnUse;
+}
+
+void Spell::setRemoveOnUse(bool n) {
+	removeOnUse = n;
+}
+
 uint32_t Spell::getMana() const {
 	return mana;
 }
@@ -1414,10 +1422,12 @@ bool RuneSpell::executeUse(const std::shared_ptr<Player> &player, const std::sha
 	}
 
 	postCastSpell(player);
-	if (hasCharges && item && g_configManager().getBoolean(REMOVE_RUNE_CHARGES)) {
-		int32_t newCount = std::max<int32_t>(0, item->getItemCount() - 1);
-		g_game().transformItem(item, item->getID(), newCount);
-		player->updateSupplyTracker(item);
+	if (hasCharges && item) {
+		if (g_configManager().getBoolean(REMOVE_RUNE_CHARGES) || removeOnUse) {
+			int32_t newCount = std::max<int32_t>(0, item->getItemCount() - 1);
+			g_game().transformItem(item, item->getID(), newCount);
+			player->updateSupplyTracker(item);
+		}
 	}
 
 	auto worldType = g_game().getWorldType();

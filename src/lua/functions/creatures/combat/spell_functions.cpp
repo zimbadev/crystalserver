@@ -36,6 +36,7 @@ void SpellFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Spell", "groupCooldown", SpellFunctions::luaSpellGroupCooldown);
 	Lua::registerMethod(L, "Spell", "level", SpellFunctions::luaSpellLevel);
 	Lua::registerMethod(L, "Spell", "magicLevel", SpellFunctions::luaSpellMagicLevel);
+	Lua::registerMethod(L, "Spell", "removeOnUse", SpellFunctions::luaSpellRemoveOnUse);
 	Lua::registerMethod(L, "Spell", "mana", SpellFunctions::luaSpellMana);
 	Lua::registerMethod(L, "Spell", "manaPercent", SpellFunctions::luaSpellManaPercent);
 	Lua::registerMethod(L, "Spell", "soul", SpellFunctions::luaSpellSoul);
@@ -734,6 +735,22 @@ int SpellFunctions::luaSpellNeedDirection(lua_State* L) {
 			Lua::pushBoolean(L, spell->getNeedDirection());
 		} else {
 			spell->setNeedDirection(Lua::getBoolean(L, 2));
+			Lua::pushBoolean(L, true);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int SpellFunctions::luaSpellRemoveOnUse(lua_State* L) {
+	// spell:removeOnUse(bool)
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	if (spell) {
+		if (lua_gettop(L) == 1) {
+			Lua::pushBoolean(L, spell->getRemoveOnUse());
+		} else {
+			spell->setRemoveOnUse(Lua::getBoolean(L, 2));
 			Lua::pushBoolean(L, true);
 		}
 	} else {
