@@ -2247,12 +2247,14 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 
 	// Critical hit
 	uint16_t chance = 0;
-	int32_t bonus = 50;
+	int32_t bonus = 50; // Default critical damage bonus (5%)
 	const auto &player = caster->getPlayer();
 	const auto &monster = caster->getMonster();
+
 	if (player) {
 		chance = player->getSkillLevel(SKILL_CRITICAL_HIT_CHANCE);
 		bonus = player->getSkillLevel(SKILL_CRITICAL_HIT_DAMAGE);
+
 		if (target && target->getMonster()) {
 			uint16_t playerCharmRaceid = player->parseRacebyCharm(CHARM_LOW, false, 0);
 			if (playerCharmRaceid != 0) {
@@ -2270,14 +2272,17 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 		chance = monster->critChance() * 100;
 	}
 
+	// Apply critical damage multiplier
 	bonus += damage.criticalDamage;
-	double multiplier = 1.0 + static_cast<double>(bonus) / 10000;
+	bonus = std::clamp(bonus, 0, 300); // Limit critical damage bonus to 300% (realistic range)
+	double multiplier = 1.0 + static_cast<double>(bonus) / 100.0;
 	chance += static_cast<uint16_t>(damage.criticalChance);
-	if (chance != 0 && uniform_random(1, 10000) <= chance) {
+
+	if (chance > 0 && uniform_random(1, 10000) <= chance) {
 		g_logger().debug("[Combat::applyExtensions] {} critical hit on {}. Damage: {}, finalDamage: {}, Multiplier: {}", caster->getName(), target ? target->getName() : "null", damage.primary.value, static_cast<int32_t>(std::round(damage.primary.value * multiplier)), multiplier);
 		damage.critical = true;
-		damage.primary.value *= multiplier;
-		damage.secondary.value *= multiplier;
+		damage.primary.value = static_cast<int32_t>(damage.primary.value * multiplier);
+		damage.secondary.value = static_cast<int32_t>(damage.secondary.value * multiplier);
 	} else {
 		g_logger().debug("[Combat::applyExtensions] - Critical hit did not occur.");
 	}
@@ -2285,18 +2290,20 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 	if (player) {
 		// Fatal hit (onslaught)
 		if (const auto &playerWeapon = player->getInventoryItem(CONST_SLOT_LEFT);
-		    playerWeapon != nullptr && playerWeapon->getTier() > 0) {
-			const double_t fatalChance = playerWeapon->getFatalChance();
-			const double_t randomChance = uniform_random(0, 10000) / 100;
+			playerWeapon != nullptr && playerWeapon->getTier() > 0) {
+			const double fatalChance = playerWeapon->getFatalChance();
+			const double randomChance = uniform_random(0, 10000) / 100.0;
 			if (fatalChance > 0 && randomChance < fatalChance) {
 				damage.fatal = true;
-				damage.primary.value += static_cast<int32_t>(std::round(damage.primary.value * 0.6));
-				damage.secondary.value += static_cast<int32_t>(std::round(damage.secondary.value * 0.6));
+				double fatalMultiplier = 1.6; // 60% extra damage for fatal hits
+				damage.primary.value = static_cast<int32_t>(damage.primary.value * fatalMultiplier);
+				damage.secondary.value = static_cast<int32_t>(damage.secondary.value * fatalMultiplier);
 			}
 		}
 	} else if (monster) {
-		damage.primary.value *= monster->getAttackMultiplier();
-		damage.secondary.value *= monster->getAttackMultiplier();
+		double monsterMultiplier = monster->getAttackMultiplier();
+		damage.primary.value = static_cast<int32_t>(damage.primary.value * monsterMultiplier);
+		damage.secondary.value = static_cast<int32_t>(damage.secondary.value * monsterMultiplier);
 	}
 }
 
