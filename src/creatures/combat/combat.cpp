@@ -2271,7 +2271,7 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 	}
 
 	bonus += damage.criticalDamage;
-	double multiplier = 1.0 + static_cast<double>(bonus) / 100.0;
+	double multiplier = 1.0 + static_cast<double>(bonus) / 10000;
 	chance += static_cast<uint16_t>(damage.criticalChance);
 	if (chance != 0 && uniform_random(1, 10000) <= chance) {
 		g_logger().debug("[Combat::applyExtensions] {} critical hit on {}. Damage: {}, finalDamage: {}, Multiplier: {}", caster->getName(), target ? target->getName() : "null", damage.primary.value, static_cast<int32_t>(std::round(damage.primary.value * multiplier)), multiplier);
