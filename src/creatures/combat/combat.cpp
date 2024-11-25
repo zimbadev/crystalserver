@@ -1231,7 +1231,25 @@ void Combat::CombatFunc(const std::shared_ptr<Creature> &caster, const Position 
 
 	CombatDamage tmpDamage;
 	if (data) {
-		tmpDamage = *data;
+		tmpDamage.origin = data->origin;
+		tmpDamage.primary.type = data->primary.type;
+		tmpDamage.primary.value = data->primary.value;
+		tmpDamage.secondary.type = data->secondary.type;
+		tmpDamage.secondary.value = data->secondary.value;
+		tmpDamage.critical = data->critical;
+		tmpDamage.fatal = data->fatal;
+		tmpDamage.criticalDamage = data->criticalDamage;
+		tmpDamage.criticalChance = data->criticalChance;
+		tmpDamage.damageMultiplier = data->damageMultiplier;
+		tmpDamage.damageReductionMultiplier = data->damageReductionMultiplier;
+		tmpDamage.healingMultiplier = data->healingMultiplier;
+		tmpDamage.manaLeech = data->manaLeech;
+		tmpDamage.lifeLeech = data->lifeLeech;
+		tmpDamage.healingLink = data->healingLink;
+		tmpDamage.instantSpellName = data->instantSpellName;
+		tmpDamage.runeSpellName = data->runeSpellName;
+		tmpDamage.lifeLeechChance = data->lifeLeechChance;
+		tmpDamage.manaLeechChance = data->manaLeechChance;
 	}
 
 	// Wheel of destiny get beam affected total

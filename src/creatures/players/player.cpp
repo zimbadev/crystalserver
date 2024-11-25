@@ -6452,15 +6452,7 @@ bool Player::hasExtraSwing() {
 
 uint16_t Player::getSkillLevel(skills_t skill) const {
 	auto skillLevel = getLoyaltySkill(skill);
-	// Handle as float to prevent truncation when var exceeds uint16_t max limit
-	const auto &floatSkills = getFloatSkills();
-	if (floatSkills.find(skill) != floatSkills.end()) {
-		auto floatBonus = varSkills[skill] / 100.0f;
-		skillLevel += floatBonus;
-		g_logger().debug("[Player::getSkillLevel] Float Skill VarSkill: {} Level: {}", varSkills[skill], skillLevel);
-	} else {
-		skillLevel = std::max<int32_t>(0, skillLevel + varSkills[skill]);
-	}
+	skillLevel = std::max<int32_t>(0, skillLevel + varSkills[skill]);
 
 	const auto &maxValuePerSkill = getMaxValuePerSkill();
 	if (const auto it = maxValuePerSkill.find(skill);
