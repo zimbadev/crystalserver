@@ -2274,15 +2274,14 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 
 	// Apply critical damage multiplier
 	bonus += damage.criticalDamage;
-	bonus = std::clamp(bonus, 0, 300); // Limit critical damage bonus to 300% (realistic range)
-	double multiplier = 1.0 + static_cast<double>(bonus) / 100.0;
-	chance += static_cast<uint16_t>(damage.criticalChance);
+	double multiplier = 1.0 + static_cast<double>(bonus) / 10000;
+	chance += (uint16_t)damage.criticalChance;
 
 	if (chance > 0 && uniform_random(1, 10000) <= chance) {
 		g_logger().debug("[Combat::applyExtensions] {} critical hit on {}. Damage: {}, finalDamage: {}, Multiplier: {}", caster->getName(), target ? target->getName() : "null", damage.primary.value, static_cast<int32_t>(std::round(damage.primary.value * multiplier)), multiplier);
 		damage.critical = true;
-		damage.primary.value = static_cast<int32_t>(damage.primary.value * multiplier);
-		damage.secondary.value = static_cast<int32_t>(damage.secondary.value * multiplier);
+		damage.primary.value *= multiplier;
+		damage.secondary.value *= multiplier;
 	} else {
 		g_logger().debug("[Combat::applyExtensions] - Critical hit did not occur.");
 	}
@@ -2295,9 +2294,8 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 			const double randomChance = uniform_random(0, 10000) / 100.0;
 			if (fatalChance > 0 && randomChance < fatalChance) {
 				damage.fatal = true;
-				double fatalMultiplier = 1.6; // 60% extra damage for fatal hits
-				damage.primary.value = static_cast<int32_t>(damage.primary.value * fatalMultiplier);
-				damage.secondary.value = static_cast<int32_t>(damage.secondary.value * fatalMultiplier);
+				damage.primary.value += static_cast<int32_t>(std::round(damage.primary.value * 0.6));
+				damage.secondary.value += static_cast<int32_t>(std::round(damage.secondary.value * 0.6));
 			}
 		}
 	} else if (monster) {
