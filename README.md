@@ -20,6 +20,9 @@ at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/COD
 
 You can use your own tool to generate Monster Loot and Monster Elements at [this link](https://crystalsever.vercel.app).
 
+### Official Discord
+Enjoy our [Discord](https://discord.gg/7AYJEHTghQ)
+
 ### Thanks
 - [Open Tibia](https://github.com/opentibia/server) and they [contributors](https://github.com/opentibia/server/graphs/contributors).
 - [The Forgotten Server](https://github.com/otland/forgottenserver) and they [contributors](https://github.com/otland/forgottenserver/graphs/contributors).
