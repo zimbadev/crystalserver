@@ -8,10 +8,12 @@
 
 
 ## Modified files
+  - crystalserver.exe
   - data/scripts/creaturescripts/player/login.lua
   - data/XML/groups.xml
 
 ### Bug Fixes
+  - Fixed issue [#1](https://github.com/jprzimba/crystalserver/issues/1)  ([Tryller](https://github.com/jprzimba))
 
 ## Version 4.0
 
