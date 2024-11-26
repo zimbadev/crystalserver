@@ -1692,13 +1692,16 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg) {
 				newOutfit.lookMountBody = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookMountLegs = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookMountFeet = std::min<uint8_t>(132, msg.getByte());
+
 				bool isMounted = msg.getByte();
 				newOutfit.lookFamiliarsType = msg.get<uint16_t>();
 				g_logger().debug("Bool isMounted: {}", isMounted);
-			}
 
-			uint8_t isMountRandomized = msg.getByte();
-			g_game().playerChangeOutfit(player->getID(), newOutfit, isMountRandomized);
+				uint8_t isMountRandomized = msg.getByte();
+				g_game().playerChangeOutfit(player->getID(), newOutfit, isMountRandomized);
+			} else {
+				g_game().playerChangeOutfit(player->getID(), newOutfit, 0);
+			}
 		} else if (outfitType == 1) {
 			// This value probably has something to do with try outfit variable inside outfit window dialog
 			// if try outfit is set to 2 it expects uint32_t value after mounted and disable mounts from outfit window dialog
