@@ -5,12 +5,17 @@
 ### Features
   - Load Gamemaster, Community Manager and God outfits from groups.xml ([Tryller](https://github.com/jprzimba)).
   - New tag for rune spells: `rune:removeOnUse(bool)`. This can be used to specify a particular rune to remove charges, even when `removeChargesFromRunes` is set to false in `config.lua`. ([Tryller](https://github.com/jprzimba))
+  - Moved files from data-global/migrations to data/migrations. ([Tryller](https://github.com/jprzimba))
 
 
 ## Modified files
   - crystalserver.exe
+  - All files in data/migrations
   - data/scripts/creaturescripts/player/login.lua
   - data/XML/groups.xml
+  
+## Deleted files
+  - All files in data-global/migrations
 
 ### Bug Fixes
   - Fixed issue [#1](https://github.com/jprzimba/crystalserver/issues/1)  ([Tryller](https://github.com/jprzimba))
