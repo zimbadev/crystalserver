@@ -9011,6 +9011,7 @@ bool checkCanInitCreateMarketOffer(const std::shared_ptr<Player> &player, uint8_
 	g_logger().debug("{} - Offer amount: {}", __FUNCTION__, amount);
 
 	if (g_configManager().getBoolean(MARKET_PREMIUM) && !player->isPremium()) {
+		player->sendMarketLeave();
 		player->sendTextMessage(MESSAGE_MARKET, "Only premium accounts may create offers for that object.");
 		return false;
 	}
