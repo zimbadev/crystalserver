@@ -86,9 +86,9 @@ std::shared_ptr<Container> Container::createBrowseField(const std::shared_ptr<Ti
 
 Container::~Container() {
 	if (getID() == ITEM_BROWSEFIELD) {
-		auto parent = getParent();
+		const auto &parent = getParent();
 		if (parent) {
-			auto tile = parent->getTile();
+			const auto &tile = parent->getTile();
 			if (tile) {
 				auto browseField = g_game().browseFields.find(tile);
 				if (browseField != g_game().browseFields.end()) {
@@ -393,7 +393,11 @@ uint32_t Container::getContainerHoldingCount() {
 
 bool Container::isHoldingItem(const std::shared_ptr<Item> &item) {
 	for (ContainerIterator it = iterator(); it.hasNext(); it.advance()) {
-		if (*it == item) {
+		const auto &compareItem = *it;
+		if (!compareItem || !item) {
+			continue;
+		}
+		if (compareItem == item) {
 			return true;
 		}
 	}
@@ -403,6 +407,10 @@ bool Container::isHoldingItem(const std::shared_ptr<Item> &item) {
 bool Container::isHoldingItemWithId(const uint16_t id) {
 	for (ContainerIterator it = iterator(); it.hasNext(); it.advance()) {
 		const auto &item = *it;
+		if (!item) {
+			continue;
+		}
+
 		if (item && item->getID() == id) {
 			return true;
 		}
@@ -1032,9 +1040,9 @@ void ContainerIterator::advance() {
 		return;
 	}
 
-	auto currentItem = container->itemlist[top.index];
+	const auto &currentItem = container->itemlist[top.index];
 	if (currentItem) {
-		auto subContainer = currentItem->getContainer();
+		const auto &subContainer = currentItem->getContainer();
 		if (subContainer && !subContainer->itemlist.empty()) {
 			size_t newDepth = top.depth + 1;
 			if (newDepth <= maxTraversalDepth) {
