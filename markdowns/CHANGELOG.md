@@ -3,68 +3,80 @@
 ## Version 4.1
 
 ### Features
-  - Load Gamemaster, Community Manager and God outfits from groups.xml ([Tryller](https://github.com/jprzimba)).
-  - New tag for rune spells: `rune:removeOnUse(bool)`. This can be used to specify a particular rune to remove charges, even when `removeChargesFromRunes` is set to false in `config.lua`. ([Tryller](https://github.com/jprzimba))
-  - Moved files from data-global/migrations to data/migrations. ([Tryller](https://github.com/jprzimba))
 
+- Load Gamemaster, Community Manager and God outfits from groups.xml ([Tryller](https://github.com/jprzimba)).
+- New tag for rune spells: `rune:removeOnUse(bool)`. This can be used to specify a particular rune to remove charges, even when `removeChargesFromRunes` is set to false in `config.lua`. ([Tryller](https://github.com/jprzimba))
+- Moved files from data-global/migrations to data/migrations. ([Tryller](https://github.com/jprzimba))
+- New configurations in `config.lua`: `timeToRegenMinuteStamina` and `timeToRegenMinutePremiumStamina`. ([Tryller](https://github.com/jprzimba))
+
+## Added files
+
+- Add all files in data/migrations
 
 ## Modified files
-  - crystalserver.exe
-  - All files in data/migrations
-  - data/scripts/creaturescripts/player/login.lua
-  - data/XML/groups.xml
-  
+
+- crystalserver.exe
+- config.lua
+- data/scripts/creaturescripts/player/login.lua
+- data/scripts/creaturescripts/player/regenerate_stamina.lua
+- data/XML/groups.xml
+
 ## Deleted files
-  - All files in data-global/migrations
+
+- All files in data-global/migrations
 
 ### Bug Fixes
-  - Fixed issue [#1](https://github.com/jprzimba/crystalserver/issues/1)  ([Tryller](https://github.com/jprzimba))
+
+- Fixed issue [#1](https://github.com/jprzimba/crystalserver/issues/1) ([Tryller](https://github.com/jprzimba))
 
 ## Version 4.0
 
 ### Features
-  - Implemented Surprise Bags System: data/items/bags.xml ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
-  - New configs to chain system at config.lua "combatChainSkillFormulaMissile" is used for weapons like assassin star/viper star and others, "combatChainSkillFormulaDistance" used for weapons like arrows/bols and "combatChainSkillFormulaWandsAndRods" used for weapons like wands/rods ([Tryller](https://github.com/jprzimba)).
-  - New feature: `playerAlwaysLoginMounted`, configurable in `config.lua` ([Tryller](https://github.com/jprzimba)).
-  - Players can enable the chain system using the `!chain` command. ([Tryller](https://github.com/jprzimba)).
-  - Updated npc data-global/npc/hireling.lua, now it sell imbuement packages and also buy all loots inside Loot Pouch ([Tryller](https://github.com/jprzimba)).
-  - Cyclopedia item summary ([phacUFPE](https://github.com/phacUFPE))
-  - Add Vibrancy imbuement ([pennaor](https://github.com/pennaor))
-  - Badge system ([elsongabriel](https://github.com/elsongabriel))
-  - Screenshots configurable in config.lua enableScreenshots ([Tryller](https://github.com/jprzimba)).
-  - Augments system ([phacUFPE](https://github.com/phacUFPE)).
-  - Add Cyclopedia character titles ([Tryller](https://github.com/jprzimba)).
-  - Monster rename functionality ([luanluciano93](https://github.com/luanluciano93)).
-  - Updated monsters and npcs like Tibia RL ([Tryller](https://github.com/jprzimba)).
-  - Add some monsters from protocol 13.40 ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
-  - Add items from Winter Update 2023 ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
-  - Add V.I.P groups ([phacUFPE](https://github.com/phacUFPE)).
-  - Added new feature configurable in config.lua halfLossExp, halfLossSkilla and halfLossMagicLevel ([dguprado](https://github.com/dguprado), [Tryller](https://github.com/jprzimba)).
+
+- Implemented Surprise Bags System: data/items/bags.xml ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
+- New configs to chain system at config.lua "combatChainSkillFormulaMissile" is used for weapons like assassin star/viper star and others, "combatChainSkillFormulaDistance" used for weapons like arrows/bols and "combatChainSkillFormulaWandsAndRods" used for weapons like wands/rods ([Tryller](https://github.com/jprzimba)).
+- New feature: `playerAlwaysLoginMounted`, configurable in `config.lua` ([Tryller](https://github.com/jprzimba)).
+- Players can enable the chain system using the `!chain` command. ([Tryller](https://github.com/jprzimba)).
+- Updated npc data-global/npc/hireling.lua, now it sell imbuement packages and also buy all loots inside Loot Pouch ([Tryller](https://github.com/jprzimba)).
+- Cyclopedia item summary ([phacUFPE](https://github.com/phacUFPE))
+- Add Vibrancy imbuement ([pennaor](https://github.com/pennaor))
+- Badge system ([elsongabriel](https://github.com/elsongabriel))
+- Screenshots configurable in config.lua enableScreenshots ([Tryller](https://github.com/jprzimba)).
+- Augments system ([phacUFPE](https://github.com/phacUFPE)).
+- Add Cyclopedia character titles ([Tryller](https://github.com/jprzimba)).
+- Monster rename functionality ([luanluciano93](https://github.com/luanluciano93)).
+- Updated monsters and npcs like Tibia RL ([Tryller](https://github.com/jprzimba)).
+- Add some monsters from protocol 13.40 ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
+- Add items from Winter Update 2023 ([Tryller](https://github.com/jprzimba), [dguprado](https://github.com/dguprado)).
+- Add V.I.P groups ([phacUFPE](https://github.com/phacUFPE)).
+- Added new feature configurable in config.lua halfLossExp, halfLossSkilla and halfLossMagicLevel ([dguprado](https://github.com/dguprado), [Tryller](https://github.com/jprzimba)).
 
 ### Bug Fixes
-  - Fixed chain system. Now works properly for Mages and Paladins ([Tryller](https://github.com/jprzimba)).
-  - Fixed V.I.P List ([Tryller](https://github.com/jprzimba)).
-  - Fixed damage reflection not working properly ([Tryller](https://github.com/jprzimba)).
-  - Fixed imbuement system when the player adds imbuement or cancels imbuement and the imbuement window is open not updating ([Tryller](https://github.com/jprzimba)).
-  - Optimized onPlayerSellAllLoot in npc code to avoid long freeze ([Tryller](https://github.com/jprzimba)).
-  - Fixed data/scripts/talkactions/player/refill.lua, now check if player has capacity to receive items. ([Tryller](https://github.com/jprzimba)).
-  - Fixed Loot pouch using in the Obtain method ([carlospess0a](https://github.com/carlospess0a)).
-  - Fixed destroy field is working inside pz ([carlospess0a](https://github.com/carlospess0a)).
-  - Fixed diamond arrow static attack points ([svetrey](https://github.com/svetrey)).
-  - Fixed stamina not recovering when dead ([carlospess0a](https://github.com/carlospess0a)).
-  - Fixed alana sio only to "aleta som" users ([carlospess0a](https://github.com/carlospess0a)).
-  - Fixed Player always logging with mount ([Tryller](https://github.com/jprzimba)).
-  - Fixed quiver bugs ([phacUFPE](https://github.com/phacUFPE)).
-  - Fixed avatar cooldown reduction ([phacUFPE](https://github.com/phacUFPE)).
-  - Fixed imbuement elemental damage only to physical damag ([carlospess0a](https://github.com/carlospess0a)).
-  - Fixed bed issues ([phacUFPE](https://github.com/phacUFPE)).
-  - Fixed crash on moving creatures ([mehah](https://github.com/mehah)).
+
+- Fixed chain system. Now works properly for Mages and Paladins ([Tryller](https://github.com/jprzimba)).
+- Fixed V.I.P List ([Tryller](https://github.com/jprzimba)).
+- Fixed damage reflection not working properly ([Tryller](https://github.com/jprzimba)).
+- Fixed imbuement system when the player adds imbuement or cancels imbuement and the imbuement window is open not updating ([Tryller](https://github.com/jprzimba)).
+- Optimized onPlayerSellAllLoot in npc code to avoid long freeze ([Tryller](https://github.com/jprzimba)).
+- Fixed data/scripts/talkactions/player/refill.lua, now check if player has capacity to receive items. ([Tryller](https://github.com/jprzimba)).
+- Fixed Loot pouch using in the Obtain method ([carlospess0a](https://github.com/carlospess0a)).
+- Fixed destroy field is working inside pz ([carlospess0a](https://github.com/carlospess0a)).
+- Fixed diamond arrow static attack points ([svetrey](https://github.com/svetrey)).
+- Fixed stamina not recovering when dead ([carlospess0a](https://github.com/carlospess0a)).
+- Fixed alana sio only to "aleta som" users ([carlospess0a](https://github.com/carlospess0a)).
+- Fixed Player always logging with mount ([Tryller](https://github.com/jprzimba)).
+- Fixed quiver bugs ([phacUFPE](https://github.com/phacUFPE)).
+- Fixed avatar cooldown reduction ([phacUFPE](https://github.com/phacUFPE)).
+- Fixed imbuement elemental damage only to physical damag ([carlospess0a](https://github.com/carlospess0a)).
+- Fixed bed issues ([phacUFPE](https://github.com/phacUFPE)).
+- Fixed crash on moving creatures ([mehah](https://github.com/mehah)).
 
 ### Changed Features
-  - Removed "useAnyDatapackFolder" at config.lua, now it's enable by default ([Tryller](https://github.com/jprzimba)).
-  - Remove map download, since we share compressed .7z map ([Tryller](https://github.com/jprzimba)).
+
+- Removed "useAnyDatapackFolder" at config.lua, now it's enable by default ([Tryller](https://github.com/jprzimba)).
+- Remove map download, since we share compressed .7z map ([Tryller](https://github.com/jprzimba)).
 
 ---
 
-*Note: This Markdown document provides a concise overview of the changes introduced in Crystal Server version 4.0, categorized into features, bug fixes, and other updates. For a more detailed breakdown, refer to the commit history or release notes. 
-In the changelog when [Tryller](https://github.com/jprzimba) is mentioned, it refers to me, [jprzimba](https://github.com/jprzimba) (João Paulo)*
+_Note: This Markdown document provides a concise overview of the changes introduced in Crystal Server version 4.0, categorized into features, bug fixes, and other updates. For a more detailed breakdown, refer to the commit history or release notes.
+In the changelog when [Tryller](https://github.com/jprzimba) is mentioned, it refers to me, [jprzimba](https://github.com/jprzimba) (João Paulo)_

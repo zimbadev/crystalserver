@@ -291,15 +291,6 @@ teleportSummons = false
 -- This script forces a reload in the entire server, this means that everything that is stored in memory might stop to work properly and/or completely, this script should be used in test environments only
 allowReload = false
 
--- Stamina in Trainers
-staminaTrainer = false
-staminaTrainerDelay = 5
-staminaTrainerGain = 1
--- Stamina in PZ
-staminaPz = false
-staminaOrangeDelay = 1
-staminaGreenDelay = 5
-staminaPzGain = 1
 -- Max players allowed on a dummy.
 maxAllowedOnADummy = 1
 
@@ -534,6 +525,19 @@ deSpawnRadius = 50
 
 -- Stamina
 staminaSystem = true
+timeToRegenMinuteStamina = 3 * 60
+timeToRegenMinutePremiumStamina = 6 * 60
+
+-- Stamina in trainers
+staminaTrainer = false
+staminaTrainerDelay = 5
+staminaTrainerGain = 1
+
+-- Stamina in protect zone
+staminaPz = false
+staminaOrangeDelay = 1
+staminaGreenDelay = 5
+staminaPzGain = 1
 
 -- Mounts
 playerAlwaysLoginMounted = false
