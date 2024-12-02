@@ -217,6 +217,11 @@ void Connection::parseHeader(const std::error_code &error) {
 	}
 
 	uint16_t size = m_msg.getLengthHeader();
+	g_logger().warn("size {}", size);
+	if (std::dynamic_pointer_cast<ProtocolGame>(protocol)) {
+		size = (size * 8) + 4;
+		g_logger().warn("size multiplied {}", size);
+	}
 	if (size == 0 || size > INPUTMESSAGE_MAXSIZE) {
 		close(FORCE_CLOSE);
 		return;
@@ -280,7 +285,7 @@ void Connection::parsePacket(const std::error_code &error) {
 			// it doesn't generate any problem because olders protocol don't use 'server sends first' feature
 			m_msg.get<uint32_t>();
 			// Skip protocol ID
-			m_msg.skipBytes(1);
+			m_msg.skipBytes(2);
 		}
 
 		protocol->onRecvFirstMessage(m_msg);

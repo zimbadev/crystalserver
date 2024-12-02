@@ -881,7 +881,7 @@ void ProtocolGame::onConnect() {
 	output->skipBytes(sizeof(uint32_t));
 
 	// Packet length & type
-	output->add<uint16_t>(0x0006);
+	output->addByte(0x01);
 	output->addByte(0x1F);
 
 	// Add timestamp & random number
@@ -890,6 +890,7 @@ void ProtocolGame::onConnect() {
 
 	challengeRandom = randNumber(generator);
 	output->addByte(challengeRandom);
+	output->addByte(0x71);
 
 	// Go back and write checksum
 	output->skipBytes(-12);
@@ -917,6 +918,7 @@ void ProtocolGame::parsePacket(NetworkMessage &msg) {
 		return;
 	}
 
+	uint8_t paddingByte = msg.getByte();
 	uint8_t recvbyte = msg.getByte();
 
 	if (!player || player->isRemoved()) {
