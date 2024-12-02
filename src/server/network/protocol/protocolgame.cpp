@@ -918,7 +918,6 @@ void ProtocolGame::parsePacket(NetworkMessage &msg) {
 		return;
 	}
 
-	uint8_t paddingByte = msg.getByte();
 	uint8_t recvbyte = msg.getByte();
 
 	if (!player || player->isRemoved()) {
