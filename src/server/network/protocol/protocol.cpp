@@ -223,7 +223,7 @@ bool Protocol::XTEA_decrypt(NetworkMessage &msg) const {
 		return false;
 	}
 
-	msg.setLength(paddingSize);
+	msg.setLength(messageLength - paddingSize);
 	return true;
 }
 
