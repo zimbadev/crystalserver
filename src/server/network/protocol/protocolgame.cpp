@@ -4664,8 +4664,8 @@ void ProtocolGame::sendIcons(const std::unordered_set<PlayerIcon> &iconSet, cons
 		// Send as uint16_t in old protocol
 		msg.add<uint16_t>(static_cast<uint16_t>(icons));
 	} else {
-		// Send as uint32_t in new protocol
-		msg.add<uint32_t>(icons);
+		// Send as uint64_t in new protocol
+		msg.add<uint64_t>(icons);
 		msg.addByte(enumToValue(iconBakragore)); // Icons Bakragore
 	}
 
