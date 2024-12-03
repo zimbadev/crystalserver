@@ -1621,12 +1621,11 @@ void ProtocolGame::parseOpenPrivateChannel(NetworkMessage &msg) {
 
 void ProtocolGame::parseAutoWalk(NetworkMessage &msg) {
 	uint8_t numdirs = msg.getByte();
-	if (numdirs == 0 || (msg.getBufferPosition() + numdirs) != (msg.getLength() + 8)) {
+	if (numdirs == 0 || (msg.getBufferPosition() + numdirs) != (msg.getLength() + 6)) {
 		return;
 	}
 
-	std::vector<Direction> path;
-	path.resize(numdirs, DIRECTION_NORTH);
+	std::vector<Direction> path(numdirs, DIRECTION_NORTH);
 	for (size_t i = numdirs; --i < numdirs;) {
 		const uint8_t rawdir = msg.getByte();
 		switch (rawdir) {
