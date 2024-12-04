@@ -337,6 +337,7 @@ function Player.sendTrackedQuests(self, remainingQuests, missions)
 	for _, mission in ipairs(missions) do
 		msg:addU16(mission.missionId)
 		msg:addString(mission.questName)
+		msg:addByte(self:questIsCompleted(mission.missionId) and 1 or 0)
 		msg:addString(mission.missionName)
 		msg:addString(mission.missionDesc)
 	end
