@@ -2290,12 +2290,8 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 		// Fatal hit (onslaught)
 		if (const auto &playerWeapon = player->getInventoryItem(CONST_SLOT_LEFT);
 			playerWeapon != nullptr && playerWeapon->getTier() > 0) {
-			double fatalChance = playerWeapon->getFatalChance();
-			double randomChance = uniform_random(0, 10000) / 100.0;
-			auto amplificationChance = player->getAmplificationChance();
-			if (amplificationChance  > 0) {
-				fatalChance += (fatalChance * amplificationChance) / 100;
-			}
+			const double fatalChance = playerWeapon->getFatalChance();
+			const double randomChance = uniform_random(0, 10000) / 100.0;
 
 			if (fatalChance > 0 && randomChance < fatalChance) {
 				damage.fatal = true;

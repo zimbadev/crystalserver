@@ -8793,11 +8793,6 @@ void Player::triggerMomentum() {
 	double_t chance = 0;
 	if (const auto &item = getInventoryItem(CONST_SLOT_HEAD)) {
 		chance += item->getMomentumChance();
-
-		auto amplificationChance = item->getAmplificationChance();
-		if (amplificationChance  > 0) {
-			chance += (chance * amplificationChance);
-		}
 	}
 
 	chance += m_wheelPlayer->getBonusData().momentum;
@@ -8858,12 +8853,7 @@ void Player::triggerTranscendance() {
 		return;
 	}
 
-	auto chance = item->getTranscendenceChance();
-	auto amplificationChance = item->getAmplificationChance();
-	if (amplificationChance  > 0) {
-		chance += (chance * amplificationChance);
-	}
-
+	const double_t chance = item->getTranscendenceChance();
 	const double_t randomChance = uniform_random(0, 10000) / 100.;
 	if (getZoneType() != ZONE_PROTECTION && checkLastAggressiveActionWithin(2000) && ((OTSYS_TIME() / 1000) % 2) == 0 && chance > 0 && randomChance < chance) {
 		int64_t duration = g_configManager().getNumber(TRANSCENDANCE_AVATAR_DURATION);
@@ -10399,16 +10389,6 @@ uint16_t Player::getDodgeChance() const {
 	}
 
 	chance += m_wheelPlayer->getStat(WheelStat_t::DODGE);
-
-	return chance;
-}
-
-uint16_t Player::getAmplificationChance() const {
-	uint16_t chance = 0;
-	if (const auto &playerFeet = getInventoryItem(CONST_SLOT_FEET);
-	    playerFeet != nullptr && playerFeet->getTier()) {
-		chance += static_cast<uint16_t>(playerFeet->getAmplificationChance() * 100);
-	}
 
 	return chance;
 }

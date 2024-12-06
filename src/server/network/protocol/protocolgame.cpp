@@ -8836,16 +8836,16 @@ void ProtocolGame::sendForgeSkillStats(NetworkMessage &msg) const {
 		if (const auto &item = player->getInventoryItem(slot); item) {
 			const ItemType &it = Item::items[item->getID()];
 			if (it.isWeapon()) {
-				skill = item->getFatalChance() * 100 + player->getAmplificationChance();
+				skill = item->getFatalChance() * 100;
 			}
 			if (it.isArmor()) {
-				skill = item->getDodgeChance() * 100 + player->getAmplificationChance();
+				skill = item->getDodgeChance() * 100;
 			}
 			if (it.isHelmet()) {
-				skill = item->getMomentumChance() * 100 + player->getAmplificationChance();
+				skill = item->getMomentumChance() * 100;
 			}
 			if (it.isLegs()) {
-				skill = item->getTranscendenceChance() * 100 + player->getAmplificationChance();
+				skill = item->getTranscendenceChance() * 100;
 			}
 		}
 

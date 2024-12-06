@@ -6660,12 +6660,6 @@ bool Game::combatBlockHit(CombatDamage &damage, const std::shared_ptr<Creature> 
 	// Skill dodge (ruse)
 	if (std::shared_ptr<Player> targetPlayer = target->getPlayer()) {
 		auto chance = targetPlayer->getDodgeChance();
-		auto amplificationChance = targetPlayer->getAmplificationChance();
-
-		if (amplificationChance  > 0) {
-			chance += (chance * amplificationChance) / 100;
-		}
-	
 		if (chance > 0 && uniform_random(0, 10000) < chance) {
 			InternalGame::sendBlockEffect(BLOCK_DODGE, damage.primary.type, target->getPosition(), attacker);
 			targetPlayer->sendTextMessage(MESSAGE_ATTENTION, "You dodged an attack.");

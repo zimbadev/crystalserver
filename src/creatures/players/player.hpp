@@ -202,7 +202,6 @@ public:
 	void dismount();
 
 	uint16_t getDodgeChance() const;
-	uint16_t getAmplificationChance() const;
 
 	uint8_t isRandomMounted() const;
 	void setRandomMount(uint8_t isMountRandomized);

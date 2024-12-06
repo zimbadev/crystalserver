@@ -165,18 +165,6 @@ double Item::getDodgeChance() const {
 	);
 }
 
-double Item::getAmplificationChance() const {
-	if (getTier() == 0) {
-		return 0;
-	}
-	return quadraticPoly(
-		g_configManager().getFloat(AMPLIFICATION_CHANCE_FORMULA_A),
-		g_configManager().getFloat(AMPLIFICATION_CHANCE_FORMULA_B),
-		g_configManager().getFloat(AMPLIFICATION_CHANCE_FORMULA_C),
-		getTier()
-	);
-}
-
 double Item::getFatalChance() const {
 	if (getTier() == 0) {
 		return 0;
@@ -2157,8 +2145,6 @@ std::string Item::parseClassificationDescription(const std::shared_ptr<Item> &it
 				string << fmt::format(" ({:.2f}% Ruse).", item->getDodgeChance());
 			} else if (g_game().getObjectCategory(item) == OBJECTCATEGORY_LEGS) {
 				string << fmt::format(" ({:.2f}% Transcendence).", item->getTranscendenceChance());
-			} else if (g_game().getObjectCategory(item) == OBJECTCATEGORY_BOOTS) {
-				string << fmt::format(" ({:.2f}% Amplification).", item->getAmplificationChance());
 			}
 		}
 	}
