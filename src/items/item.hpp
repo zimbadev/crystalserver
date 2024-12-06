@@ -697,6 +697,8 @@ public:
 
 	double getDodgeChance() const;
 
+	double getAmplificationChance() const;
+
 	double getFatalChance() const;
 
 	double getMomentumChance() const;

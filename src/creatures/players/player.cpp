@@ -10393,6 +10393,16 @@ uint16_t Player::getDodgeChance() const {
 	return chance;
 }
 
+uint16_t Player::getAmplificationChance() const {
+	uint16_t chance = 0;
+	if (const auto &playerFeet = getInventoryItem(CONST_SLOT_FEET);
+	    playerFeet != nullptr && playerFeet->getTier()) {
+		chance += static_cast<uint16_t>(playerFeet->getAmplificationChance() * 100);
+	}
+
+	return chance;
+}
+
 uint8_t Player::isRandomMounted() const {
 	return randomMount;
 }

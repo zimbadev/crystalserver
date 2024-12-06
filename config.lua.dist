@@ -157,6 +157,10 @@ onslaughtChanceFormulaA = 0.05
 onslaughtChanceFormulaB = 0.4
 onslaughtChanceFormulaC = 0.05
 
+amplificationChanceFormulaA = 0.4
+amplificationChanceFormulaB = 1.70
+amplificationChanceFormulaC = 0.40
+
 momentumChanceFormulaA = 0.05
 momentumChanceFormulaB = 1.9
 momentumChanceFormulaC = 0.05
