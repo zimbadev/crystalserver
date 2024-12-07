@@ -83,6 +83,7 @@ private:
 			"Game::createInfluencedMonsters",
 			"Game::updateCreatureWalk",
 			"Game::updateForgeableMonsters",
+			"Game::addCreatureCheck",
 			"GlobalEvents::think",
 			"LuaEnvironment::executeTimerEvent",
 			"Modules::executeOnRecvbyte",
