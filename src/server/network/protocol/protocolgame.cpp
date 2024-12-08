@@ -8616,9 +8616,9 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 		return;
 	}
 
-	auto action = static_cast<Supply_Stash_Actions_t>(msg.getByte());
+	auto action = static_cast<Stash_Actions_t>(msg.getByte());
 	switch (action) {
-		case SUPPLY_STASH_ACTION_STOW_ITEM: {
+		case STASH_ACTION_STOW_ITEM: {
 			Position pos = msg.getPosition();
 			auto itemId = msg.get<uint16_t>();
 			uint8_t stackpos = msg.getByte();
@@ -8626,21 +8626,21 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 			g_game().playerStowItem(player->getID(), pos, itemId, stackpos, count, false);
 			break;
 		}
-		case SUPPLY_STASH_ACTION_STOW_CONTAINER: {
+		case STASH_ACTION_STOW_CONTAINER: {
 			Position pos = msg.getPosition();
 			auto itemId = msg.get<uint16_t>();
 			uint8_t stackpos = msg.getByte();
 			g_game().playerStowItem(player->getID(), pos, itemId, stackpos, 0, false);
 			break;
 		}
-		case SUPPLY_STASH_ACTION_STOW_STACK: {
+		case STASH_ACTION_STOW_STACK: {
 			Position pos = msg.getPosition();
 			auto itemId = msg.get<uint16_t>();
 			uint8_t stackpos = msg.getByte();
 			g_game().playerStowItem(player->getID(), pos, itemId, stackpos, 0, true);
 			break;
 		}
-		case SUPPLY_STASH_ACTION_WITHDRAW: {
+		case STASH_ACTION_WITHDRAW: {
 			auto itemId = msg.get<uint16_t>();
 			auto count = msg.get<uint32_t>();
 			uint8_t stackpos = msg.getByte();

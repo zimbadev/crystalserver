@@ -174,6 +174,9 @@ function playerLoginGlobal.onLogin(player)
 		onMovementRemoveProtection(playerId, player:getPosition(), 10)
 	end
 
+	-- fix stash
+	player:setSpecialContainersAvailable(true, true, true)
+
 	player:initializeLoyaltySystem()
 	player:registerEvent("PlayerDeath")
 	player:registerEvent("DropLoot")
