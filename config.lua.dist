@@ -554,9 +554,9 @@ defaultPriority = "high"
 startupDatabaseOptimization = true
 
 -- Status server information
-ownerName = "OpenTibiaBR"
-ownerEmail = "opentibiabr@outlook.com"
-url = "http://docs.opentibiabr.com/"
+ownerName = "Tryller"
+ownerEmail = "@gmail.com"
+url = "https://github.com/jprzimba/crystalserver"
 location = "South America"
 
 -- Sends Discord webhook notifications on startup, raids and shutdown.
