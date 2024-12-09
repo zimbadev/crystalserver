@@ -76,40 +76,30 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "crystal coin", chance = 15000 },
-	{ name = "yellow darklight matter", chance = 6500 },
-	{ name = "magma clump", chance = 3500 },
-	{ name = "darklight core", chance = 4500 },
-	{ id = 12600, chance = 13250, maxCount = 4 }, -- coal
-	{ name = "darklight basalt chunk", chance = 2500 },
-	{ name = "onyx chip", chance = 7250, maxCount = 2 },
-	{ name = "strange helmet", chance = 3250 },
-	{ name = "fire sword", chance = 4250 },
-	{ name = "ultimate mana potion", chance = 11250, maxCount = 3 },
-	{ name = "blue gem", chance = 6259 },
-	{ name = "magma legs", chance = 7759 },
-	{ name = "gold ingot", chance = 18860 },
-	{ name = "red crystal fragment", chance = 7430 },
-	{ name = "small diamond", chance = 4570 },
-	{ name = "green crystal fragment", chance = 3430 },
-	{ name = "magma amulet", chance = 3430 },
-	{ name = "war axe", chance = 2860 },
-	{ name = "giant sword", chance = 2860 },
-	{ name = "might ring", chance = 570 },
-	{ id = 23531, chance = 930 }, -- ring of green plasma
-	{ name = "metal bat", chance = 760 },
-	{ name = "diabolic skull", chance = 590 },
-	{ name = "fire axe", chance = 590 },
-	{ id = 43895, chance = 20 }, -- bag you covet
+	{ name = "crystal coin", chance = 12186, maxCount = 1 },
+	{ name = "yellow darklight matter", chance = 5354, maxCount = 1 },
+	{ name = "magma clump", chance = 11440, maxCount = 1 },
+	{ name = "darklight core", chance = 10276, maxCount = 1 },
+	{ id = 12600, chance = 8489, maxCount = 4 }, -- coal
+	{ name = "darklight basalt chunk", chance = 12855, maxCount = 1 },
+	{ name = "onyx chip", chance = 12831, maxCount = 2 },
+	{ name = "strange helmet", chance = 11001, maxCount = 1 },
+	{ name = "fire sword", chance = 8347, maxCount = 1 },
+	{ name = "ultimate mana potion", chance = 9687, maxCount = 3 },
+	{ name = "blue gem", chance = 5868, maxCount = 1 },
+	{ name = "magma legs", chance = 14497, maxCount = 1 },
+	{ name = "white gem", chance = 9936, maxCount = 1 },
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1450 },
-	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_EARTHDAMAGE, minDamage = -1150, maxDamage = -1400, range = 7, shootEffect = CONST_ME_GREEN_RINGS, effect = CONST_ME_FIREAREA, target = false },
-	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_FIREDAMAGE, minDamage = -800, maxDamage = -1250, length = 8, effect = CONST_ME_EXPLOSIONHIT, target = false },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_EARTHDAMAGE, minDamage = -1000, maxDamage = -1350, radius = 4, effect = CONST_ME_POISONAREA, target = false },
-	{ name = "death chain", interval = 2000, chance = 20, minDamage = -1100, maxDamage = -1380, target = true },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1500 },
+	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_ENERGYDAMAGE, minDamage = -1400, maxDamage = -1650, length = 8, spread = 3, effect = CONST_ME_BLUE_ENERGY_SPARK, target = false },
+	{ name = "combat", intervall = 2000, chance = 20, type = COMBAT_HOLYDAMAGE, minDamage = -1500, maxDamage = -1800, radius = 5, effect = CONST_ME_PURPLESMOKE, target = true },
+	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_HOLYDAMAGE, minDamage = -1200, maxDamage = -1200, radius = 5, effect = CONST_ME_GHOSTLY_BITE, target = true },
+	{ name = "extended energy chain", interval = 2000, chance = 5, minDamage = -800, maxDamage = 1200, target = true },
+	{ name = "largepinkring", interval = 3500, chance = 10, minDamage = -1100, maxDamage = -1600, target = false },
 }
+
 monster.defenses = {
 	defense = 60,
 	armor = 112,

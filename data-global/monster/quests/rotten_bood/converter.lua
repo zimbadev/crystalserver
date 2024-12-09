@@ -75,40 +75,24 @@ monster.voices = {
 	chance = 30,
 }
 
+
 monster.loot = {
-	{ name = "crystal coin", chance = 65000 },
-	{ name = "darklight obsidian axe", chance = 3500 },
-	{ name = "darklight core", chance = 1565, maxCount = 5  },
-	{ name = "wand of starstorm", chance = 6050 },
-	{ name = "darklight matter", chance = 4250, maxCount = 7 },
-	{ name = "ultimate health potion", chance = 25146, maxCount = 5 },
-	{ name = "focus cape", chance = 2565 },
-	{ name = "white gem", chance = 3586 },
-	{ name = "gold ingot", chance = 1860 },
-	{ name = "cyan crystal fragment", chance = 4430 },
-	{ name = "red crystal fragment", chance = 5430 },
-	{ name = "blue crystal shard", chance = 3710 },
-	{ name = "small diamond", chance = 4570 },
-	{ name = "blue gem", chance = 4570 },
-	{ name = "green crystal fragment", chance = 3430 },
-	{ name = "mercenary sword", chance = 965 },
-	{ name = "onyx chip", chance = 2860 },
-	{ name = "war axe", chance = 236 },
-	{ name = "giant sword", chance = 896 },
-	{ name = "stone skin amulet", chance = 570 },
-	{ name = "crystal mace", chance = 1690 },
-	{ name = "noble axe", chance = 1600 },
-	{ id = 23531, chance = 930 }, -- ring of green plasma
-	{ name = "diabolic skull", chance = 590 },
-	{ id = 43895, chance = 20 }, -- bag you covet
+	{ name = "crystal coin", chance = 5230, maxCount = 1 },
+	{ name = "darklight obsidian axe", chance = 6963, maxCount = 1 },
+	{ name = "darklight core", chance = 10715, maxCount = 1 },
+	{ name = "wand of starstorm", chance = 8797, maxCount = 1 },
+	{ name = "blue gem", chance = 9372, maxCount = 1 },
+	{ name = "ultimate health potion", chance = 9851, maxCount = 5 },
+	{ name = "focus cape", chance = 6945, maxCount = 1 },
+	{ name = "white gem", chance = 14533, maxCount = 1 },
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1450 },
-	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_EARTHDAMAGE, minDamage = -1150, maxDamage = -1400, range = 7, shootEffect = CONST_ME_GREEN_RINGS, effect = CONST_ME_FIREAREA, target = false },
-	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_FIREDAMAGE, minDamage = -800, maxDamage = -1250, length = 8, effect = CONST_ME_EXPLOSIONHIT, target = false },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_EARTHDAMAGE, minDamage = -1000, maxDamage = -1350, radius = 4, effect = CONST_ME_POISONAREA, target = false },
-	{ name = "death chain", interval = 2000, chance = 20, minDamage = -1100, maxDamage = -1380, target = true },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -900 },
+	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_ENERGYDAMAGE, minDamage = -1400, maxDamage = -1900, length = 7, spread = 0, effect = CONST_ME_PINK_ENERGY_SPARK, target = false },
+	{ name = "combat", interval = 2500, chance = 20, type = COMBAT_HOLYDAMAGE, minDamage = -1500, maxDamage = -1600, radius = 5, effect = CONST_ME_GHOSTLY_BITE, target = true },
+	{ name = "largeholyring", interval = 2000, chance = 15, minDamage = -1400, maxDamage = -1900 },
+	{ name = "energy chain", interval = 3200, chance = 20, minDamage = -800, maxDamage = -1200 },
 }
 
 monster.defenses = {

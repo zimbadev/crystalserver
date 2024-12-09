@@ -76,42 +76,28 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "crystal coin", chance = 35200 },
-	{ name = "ultimate mana potion", chance = 13921, maxCount = 3 },
-	{ id = 7385, chance = 17375 }, -- crimson sword
-	{ name = "ultimate health potion", chance = 8375, maxCount = 3 },
-	{ name = "organic acid", chance = 3458, maxCount = 2 },
-	{ name = "rotten roots", chance = 3375, maxCount = 2 },
-	{ name = "emerald bangle", chance = 4319 },
-	{ name = "underworld rod", chance = 5889 },
-	{ name = "violet gem", chance = 4989 },
-	{ name = "blue gem", chance = 6189 },
-	{ name = "relic sword", chance = 3439 },
-	{ name = "skullcracker armor", chance = 7439 },
-	{ name = "gold ingot", chance = 18860 },
-	{ name = "blue crystal shard", chance = 5710 },
-	{ name = "small diamond", chance = 4570 },
-	{ name = "green crystal fragment", chance = 3430 },
-	{ name = "magma amulet", chance = 3430 },
-	{ name = "onyx chip", chance = 2860 },
-	{ name = "giant sword", chance = 356 },
-	{ name = "magma boots", chance = 125 },
-	{ name = "might ring", chance = 570 },
-	{ id = 23531, chance = 930 }, -- ring of green plasma
-	{ name = "metal bat", chance = 760 },
-	{ name = "diabolic skull", chance = 590 },
-	{ name = "fire axe", chance = 590 },
-	{ id = 23531, chance = 5119 }, -- ring of green plasma
-	{ id = 43895, chance = 20 }, -- bag you covet
+	{ name = "crystal coin", chance = 6961, maxCount = 1 },
+	{ name = "ultimate mana potion", chance = 10285, maxCount = 2 },
+	{ name = "ultimate health potion", chance = 10285, maxCount = 2 },
+	{ name = "organic acid", chance = 7678, maxCount = 1 },
+	{ name = "rotten roots", chance = 13133, maxCount = 1 },
+	{ name = "emerald bangle", chance = 8558, maxCount = 1 },
+	{ name = "underworld rod", chance = 8380, maxCount = 1 },
+	{ name = "violet gem", chance = 5084, maxCount = 1 },
+	{ name = "blue gem", chance = 9808, maxCount = 1 },
+	{ name = "relic sword", chance = 6964, maxCount = 1 },
+	{ name = "skullcracker armor", chance = 7270, maxCount = 1 },
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1450 },
-	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_EARTHDAMAGE, minDamage = -1150, maxDamage = -1400, range = 7, shootEffect = CONST_ME_GREEN_RINGS, effect = CONST_ME_FIREAREA, target = false },
-	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_FIREDAMAGE, minDamage = -800, maxDamage = -1250, length = 8, effect = CONST_ME_EXPLOSIONHIT, target = false },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_EARTHDAMAGE, minDamage = -1000, maxDamage = -1350, radius = 4, effect = CONST_ME_POISONAREA, target = false },
-	{ name = "death chain", interval = 2000, chance = 20, minDamage = -1100, maxDamage = -1380, target = true },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1600 },
+	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_PHYSICALDAMAGE, minDamage = -1300, maxDamage = -1600, length = 8, spread = 3, effect = CONST_ME_GROUNDSHAKER, target = false },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_PHYSICALDAMAGE, minDamage = -1200, maxDamage = -1500, effect = CONST_ME_BIG_SCRATCH, target = true },
+	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_PHYSICALDAMAGE, minDamage = -1400, maxDamage = -1600, radius = 5, effect = CONST_ME_GROUNDSHAKER, target = true },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_EARTHDAMAGE, minDamage = -1200, maxDamage = -1500, length = 8, spread = 3, effect = CONST_ME_GREEN_RINGS, target = false },
+	{ name = "largepoisonring", interval = 2000, chance = 10, minDamage = -1000, maxDamage = -1200, target = false },
 }
+
 monster.defenses = {
 	defense = 60,
 	armor = 112,
