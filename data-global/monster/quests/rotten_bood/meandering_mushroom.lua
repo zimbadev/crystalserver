@@ -76,38 +76,24 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "crystal coin", chance = 70000 },
-	{ name = "lichen gobbler", chance = 6508 },
-	{ name = "white mushroom", chance = 5500, maxCount = 9 },
-	{ name = "rotten roots", chance = 3507, maxCount = 8 },
-	{ name = "wand of decay", chance = 2080 },
-	{ id = 3039, chance = 22290 }, -- red gem
-	{ name = "worm sponge", chance = 2690, maxCount = 5 },
-	{ name = "dark mushroom", chance = 2599, maxCount = 13 },
-	{ name = "yellow gem", chance = 8209 },
-	{ name = "brown mushroom", chance = 4550, maxCount = 7 },
-	{ name = "terra amulet", chance = 6250 },
-	{ name = "ultimate health potion", chance = 22860, maxCount = 5 },
-	{ name = "cyan crystal fragment", chance = 4430 },
-	{ name = "red crystal fragment", chance = 5430 },
-	{ name = "blue crystal shard", chance = 3710 },
-	{ name = "small diamond", chance = 4570 },
-	{ name = "green crystal fragment", chance = 3430 },
-	{ name = "onyx chip", chance = 2860 },
-	{ name = "magma boots", chance = 698 },
-	{ name = "might ring", chance = 570 },
-	{ id = 23531, chance = 930 }, -- ring of green plasma
-	{ name = "metal bat", chance = 760 },
-	{ name = "diabolic skull", chance = 590 },
-	{ name = "fire axe", chance = 590 },
-	{ id = 43895, chance = 20 } -- bag you covet
+	{ name = "crystal coin", chance = 11755, maxCount = 1 },
+	{ name = "lichen gobbler", chance = 9121, maxCount = 1 },
+	{ name = "white mushroom", chance = 12998, maxCount = 3 },
+	{ name = "rotten roots", chance = 9791, maxCount = 1 },
+	{ name = "wand of decay", chance = 14668, maxCount = 1 },
+	{ id = 3039, chance = 10406, maxCount = 1 }, -- red gem
+	{ name = "dark mushroom", chance = 12313, maxCount = 3 },
+	{ name = "yellow gem", chance = 13520, maxCount = 1 },
+	{ name = "brown mushroom", chance = 6422, maxCount = 3 },
+	{ name = "terra amulet", chance = 13122, maxCount = 1 },
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 400, maxDamage = -800 },
-	{ name = "combat", interval = 2000, chance = 11, type = COMBAT_EARTHDAMAGE, minDamage = -720, maxDamage = -900, radius = 3, shootEffect = CONST_ANI_ENVENOMEDARROW, effect = CONST_ME_GREEN_RINGS, target = true },
-	{ name = "combat", interval = 2000, chance = 25, type = COMBAT_PHYSICALDAMAGE, minDamage = 400, maxDamage = -1500, range = 7, radius = 5, shootEffect = CONST_ANI_EXPLOSION, effect = CONST_ME_EXPLOSIONHIT, target = true },
-	{ name = "combat", interval = 1000, chance = 15, type = COMBAT_FIREDAMAGE, minDamage = -700, maxDamage = -986, range = 7, shootEffect = CONST_ANI_FLAMMINGARROW, effect = CONST_ME_HITBYFIRE, target = false },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1150 },
+	{ name = "combat", interval = 2500, chance = 15, type = COMBAT_DEATHDAMAGE, minDamage = -1800, maxDamage = -1900, radius = 5, effect = CONST_ME_MORTAREA, target = true },
+	{ name = "combat", interval = 2500, chance = 15, type = COMBAT_DEATHDAMAGE, minDamage = -1700, maxDamage = -1700, radius = 5, effect = CONST_ME_INSECTS, target = true },
+	{ name = "combat", interval = 2500, chance = 20, type = COMBAT_ICEDAMAGE, minDamage = -1100, maxDamage = -1300, length = 8, spread = 5, effect = CONST_ME_BLACKSMOKE, target = false },
+	{ name = "largeblackring", interval = 2000, chance = 10, minDamage = -900, maxDamage = -1500, target = false },
 }
 
 monster.defenses = {
