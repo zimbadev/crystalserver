@@ -8057,15 +8057,25 @@ bool Player::isGuildMate(const std::shared_ptr<Player> &player) const {
 }
 
 bool Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
-	const uint32_t stackCount = 100u;
+	const ItemType &itemType = Item::items[itemId];
+	if (itemType.stackable) {
+		while (itemCount > 0) {
+			const auto addValue = itemCount > 100 ? 100 : itemCount;
+			itemCount -= addValue;
+			const auto &newItem = Item::CreateItem(itemId, addValue);
 
-	while (itemCount > 0) {
-		const auto addValue = itemCount > stackCount ? stackCount : itemCount;
-		itemCount -= addValue;
-		const auto &newItem = Item::CreateItem(itemId, addValue);
+			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
+				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
+			}
+		}
+	} else {
+		while (itemCount > 0) {
+			--itemCount;
+			const auto &newItem = Item::CreateItem(itemId);
 
-		if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
-			g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
+			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
+				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
+			}
 		}
 	}
 
