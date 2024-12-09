@@ -1,7 +1,7 @@
 local mType = Game.createMonsterType("Bakragore")
 local monster = {}
 
-monster.description = "a bakragore"
+monster.description = "bakragore"
 monster.experience = 15000000
 monster.outfit = {
 	lookType = 1671,
@@ -17,8 +17,8 @@ monster.events = {
 	"RottenBloodBossOutFitDeath",
 }
 
-monster.health = 1200000
-monster.maxHealth = 1200000
+monster.health = 660000
+monster.maxHealth = 660000
 monster.race = "undead"
 monster.corpse = 44012
 monster.speed = 195
@@ -31,7 +31,7 @@ monster.changeTarget = {
 
 monster.bosstiary = {
 	bossRaceId = 2367,
-	bossRace = RARITY_ARCHFOE,
+	bossRace = RARITY_NEMESIS
 }
 
 monster.strategiesTarget = {
@@ -59,7 +59,6 @@ monster.flags = {
 	canWalkOnEnergy = true,
 	canWalkOnFire = true,
 	canWalkOnPoison = true,
-	pet = false,
 }
 
 monster.light = {
@@ -68,11 +67,6 @@ monster.light = {
 }
 
 monster.summon = {
-	maxSummons = 6,
-	summons = {
-		{ name = "Elder Bloodjaw", chance = 40, interval = 1000, count = 7 },
-
-	},
 }
 
 monster.voices = {
@@ -81,44 +75,79 @@ monster.voices = {
 }
 
 monster.loot = {
-  { name = "crystal coin", chance = 9075, maxCount = 125 },
-    { name = "ultimate mana potion", chance = 12575, maxCount = 211 },
-    { name = "ultimate spirit potion", chance = 7575, maxCount = 35 },
-    { name = "supreme health potion", chance = 575, maxCount = 179 },
-    { name = "bullseye potion", chance = 4575, maxCount = 42 },
-    { name = "berserk potion", chance = 9975, maxCount = 45 },
-    { name = "mastermind potion", chance = 3575, maxCount = 44 },
-    { name = "blue gem", chance = 1575, maxCount = 5 },
-    { name = "green gem", chance = 1575, maxCount = 5 },
-     { id = 36706, chance = 1250, maxCount = 1 },
-    { name = "yellow gem", chance = 1575, maxCount = 5 },
-    { name = "violet gem", chance = 1575, maxCount = 5 },
-    { name = "gold ingot", chance = 2575, maxCount = 1 },
-    { name = "giant emerald", chance = 2575, maxCount = 1 },
-    { name = "giant topaz", chance = 575, maxCount = 1 },
-    { name = "giant amethyst", chance = 575, maxCount = 1 },
-    { name = "raw watermelon tourmaline", chance = 575, maxCount = 1 },
-    { name = "vemiath's infused basalt", chance = 575, maxCount = 1 },
-    { name = "dragon figurine", chance = 575, maxCount = 1 },
-    { name = "darklight figurine", chance = 575, maxCount = 1 },
-    { name = "the essence of vemiath", chance = 575, maxCount = 1 },
-	{ id = 43860, chance = 76520 } -- bag you covet
+	{ id = 3043, chance = 100000, maxCount = 30 }, 
+	{ id = 7643, chance = 40000, maxCount = 20 },
+	{ id = 238, chance = 40000, maxCount = 20 }, 
+	{ id = 7642, chance = 40000, maxCount = 20 }, 
+	{ name = "white gem", chance = 30000, maxCount = 1 },
+	{ name = "giant sapphire", chance = 3000, maxCount = 1 },
+	{ id = 44008, chance = 10000, maxCount = 2 },
+	{ name = "fireborn giant armor", chance = 18000 },
+	{ name = "royal crossbow", chance = 18000 },
+	{ name = "stomper", chance = 13000 },
+	{ name = "blue gem", chance = 9000 },
+	{ name = "gold ring", chance = 9000 },
+	{ name = "steel boots", chance = 9000 },
+	{ name = "thunder hammer", chance = 9000 },
+	{ id = 43855, chance = 4500, maxCount = 2 },
+	{ id = 43854, chance = 29500, maxCount = 2 },
+	{ id = 43853, chance = 44500, maxCount = 3 },
+	{ id = 43901, chance = 4000 },
+	{ id = 43927, chance = 24500 },
+	{ id = 32003, chance = 8000, maxCount = 2 },
+	{ id = 32005, chance = 8000, maxCount = 6 },
+	{ id = 32007, chance = 4000 },
+	{ id = 31991, chance = 1000 },
+	{ id = 31992, chance = 1000 },
+	{ id = 31993, chance = 1000 },
+	{ id = 31994, chance = 1000 },
+	{ id = 31995, chance = 1000 },
+	{ id = 32005, chance = 4000, maxCount = 6 },
+	{ id = 23267, chance = 10000, maxCount = 3 },
+	{ id = 32014, chance = 3000 },
+	{ id = 23234, chance = 3000, maxCount = 2 },
+	{ id = 23236, chance = 3000, maxCount = 3 },
+	{ id = 23238, chance = 3000, maxCount = 3 },
+	{ id = 31996, chance = 1000 },
+	{ id = 31997, chance = 1000 },
+	{ id = 44048, chance = 3000 }, -- Spirit Horseshoe ( Spirit of Purity Mount x4 )
+	{ id = 3278, chance = 50 }, -- Magic Longsword Ultra Rare
+	{ id = 43963, chance = 1000 }, -- figurine bakragore
+	{ id = 43968, chance = 1000 }, -- bakragore's amalgamation
+	{ id = 9058, chance = 800 }, -- gold ingot
+	{ id = 43860, chance = 600 }, -- Bag you covet
+	{ id = 43864, chance = 310 }, -- Sanguine Items ( not grand )
+	{ id = 43866, chance = 320 },
+	{ id = 43868, chance = 330 },
+	{ id = 43870, chance = 340 },
+	{ id = 43872, chance = 350 },
+	{ id = 43874, chance = 360 },
+	{ id = 43876, chance = 370 },
+	{ id = 43877, chance = 380 },
+	{ id = 43879, chance = 390 },
+	{ id = 43881, chance = 400 },
+	{ id = 31965, chance = 15000, maxCount = 2 },
+	{ id = 43882, chance = 410 },
+	{ id = 43884, chance = 420 },
+	{ id = 43885, chance = 430 },
+	{ id = 43887, chance = 440 },
+	{ id = 36478, chance = 450 }
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -10000 },
-	-- { name = "combat", interval = 2000, chance = 30, type = COMBAT_PHYSICALDAMAGE, minDamage = -2950, maxDamage = -4400, range = 7, radius = 3, shootEffect = CONST_ANI_ICE, effect = CONST_ME_ICEAREA, target = true },
-	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_ICEDAMAGE, minDamage = -3000, maxDamage = -7500, length = 8, spread = 0, effect = CONST_ME_INSECTS, target = false },
-	{ name = "singlecloudchain", interval = 6000, chance = 40, minDamage = -3300, maxDamage = -7500, range = 6, effect = CONST_ME_ENERGYHIT, target = true },
-	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_HOLYDAMAGE, minDamage = -3300, maxDamage = -8200, length = 10, spread = 0, effect = CONST_ME_BLUE_GHOST, target = false },
+	{ name ="melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -3000 },
+	{ name ="combat", interval = 3000, chance = 35, type = COMBAT_ICEDAMAGE, minDamage = -900, maxDamage = -1100, range = 7, radius = 7, shootEffect = CONST_ANI_ICE, effect = 243, target = true },
+	{ name ="combat", interval = 2000, chance = 13, type = COMBAT_DEATHDAMAGE, minDamage = -100, maxDamage = -1000, length = 8, spread = 3, effect = 252, target = false },
+	{ name ="combat", interval = 3000, chance = 30, type = COMBAT_FIREDAMAGE, minDamage = -1000, maxDamage = -2000, length = 8, spread = 3, effect = 249, target = false },
+	{ name ="combat", interval = 2000, chance = 30, type = COMBAT_ICEDAMAGE, minDamage = -950, maxDamage = -2400, range = 7, radius = 3, shootEffect = 37, effect = 240, target = true },
+	{ name ="combat", interval = 2000, chance = 10, type = COMBAT_DEATHDAMAGE, minDamage = -1000, maxDamage = -2500, length = 8, spread = 3, effect = 244, target = false },
 }
 
 monster.defenses = {
-	defense = 160,
-	armor = 160,
-	mitigation = 8.40,
-	{ name = "speed", interval = 1000, chance = 20, speedChange = 500, effect = CONST_ME_MAGIC_RED, target = false, duration = 10000 },
-	{ name = "combat", interval = 2000, chance = 25, type = COMBAT_HEALING, minDamage = 5250, maxDamage = 10250, effect = CONST_ME_MAGIC_BLUE, target = false },
+	defense = 135,
+	armor = 135,
+	{ name ="combat", interval = 3000, chance = 15, type = COMBAT_HEALING, minDamage = 2500, maxDamage = 3500, effect = 236, target = false },
+	{ name ="speed", interval = 4000, chance = 80, speedChange = 700, effect = CONST_ME_MAGIC_RED, target = false, duration = 6000 }
 }
 
 monster.elements = {

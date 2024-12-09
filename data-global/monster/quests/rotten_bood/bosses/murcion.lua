@@ -1,7 +1,7 @@
 local mType = Game.createMonsterType("Murcion")
 local monster = {}
 
-monster.description = "a murcion"
+monster.description = "Murcion"
 monster.experience = 3250000
 monster.outfit = {
 	lookType = 1664,
@@ -17,8 +17,8 @@ monster.events = {
 	"RottenBloodBossDeath",
 }
 
-monster.health = 1000000
-monster.maxHealth = 1000000
+monster.health = 350000
+monster.maxHealth = 350000
 monster.race = "undead"
 monster.corpse = 44015
 monster.speed = 195
@@ -31,7 +31,7 @@ monster.changeTarget = {
 
 monster.bosstiary = {
 	bossRaceId = 2362,
-	bossRace = RARITY_ARCHFOE,
+	bossRace = RARITY_NEMESIS
 }
 
 monster.strategiesTarget = {
@@ -68,11 +68,6 @@ monster.light = {
 }
 
 monster.summon = {
-	maxSummons = 4,
-	summons = {
-		{ name = "Mushroom", chance = 40, interval = 1000, count = 2 },
-		{ name = "Mushroom", chance = 50, interval = 1000, count = 2 },
-	},
 }
 
 monster.voices = {
@@ -99,19 +94,18 @@ monster.loot = {
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -8000 },
-	-- { name = "combat", interval = 2000, chance = 30, type = COMBAT_PHYSICALDAMAGE, minDamage = -2950, maxDamage = -4400, range = 7, radius = 3, shootEffect = CONST_ANI_ICE, effect = CONST_ME_ICEAREA, target = true },
-	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_ICEDAMAGE, minDamage = -3000, maxDamage = -5500, length = 8, spread = 0, effect = CONST_ME_INSECTS, target = false },
-	{ name = "singlecloudchain", interval = 6000, chance = 40, minDamage = -3300, maxDamage = -5500, range = 6, effect = CONST_ME_ENERGYHIT, target = true },
-	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_HOLYDAMAGE, minDamage = -3300, maxDamage = -5200, length = 10, spread = 0, effect = CONST_ME_BLUE_GHOST, target = false },
+	{ name ="melee", interval = 2000, chance = 100, minDamage = -1400, maxDamage = -2300 },
+	{ name ="combat", interval = 2000, chance = 20, type = COMBAT_DEATHDAMAGE, minDamage = -500, maxDamage = -900, radius = 4, effect = CONST_ME_SMALLCLOUDS, target = false },
+	{ name ="combat", interval = 2000, chance = 20, type = COMBAT_HOLYDAMAGE, minDamage = -500, maxDamage = -900, range = 4, radius = 4, shootEffect = 31, effect = 248, target = true },
+	{ name ="combat", interval = 2000, chance = 20, type = COMBAT_ICEDAMAGE, minDamage = -1000, maxDamage = -1200, length = 10, spread = 3, effect = 53, target = false },
+	{ name ="combat", interval = 2000, chance = 20, type = COMBAT_PHYSICALDAMAGE, minDamage = -1500, maxDamage = -1900, length = 10, spread = 3, effect = 158, target = false },
+	{ name ="speed", interval = 2000, chance = 20, speedChange = -600, radius = 7, effect = CONST_ME_POFF, target = false, duration = 20000 }
 }
 
 monster.defenses = {
-	defense = 160,
-	armor = 160,
-	mitigation = 8.40,
-	{ name = "speed", interval = 1000, chance = 20, speedChange = 500, effect = CONST_ME_MAGIC_RED, target = false, duration = 10000 },
-	{ name = "combat", interval = 2000, chance = 25, type = COMBAT_HEALING, minDamage = 2250, maxDamage = 4250, effect = CONST_ME_MAGIC_BLUE, target = false },
+	defense = 105,
+	armor = 105,
+	{ name ="combat", interval = 3000, chance = 10, type = COMBAT_HEALING, minDamage = 800, maxDamage = 1500, effect = 236, target = false },
 }
 
 monster.elements = {
