@@ -950,7 +950,7 @@ void WeaponWand::configureWeapon(const ItemType &it) {
 }
 
 int32_t WeaponWand::getWeaponDamage(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &, const std::shared_ptr<Item> &, bool maxDamage /* = false*/) const {
-	if (!g_configManager().getBoolean(TOGGLE_CHAIN_SYSTEM)) {
+	if (!player->checkChainSystem()) {
 		// Returns maximum damage or a random value between minChange and maxChange
 		return maxDamage ? -maxChange : -normal_random(minChange, maxChange);
 	}
