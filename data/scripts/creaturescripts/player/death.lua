@@ -1,7 +1,9 @@
 local deathListEnabled = true
+
 local function getKillerInfo(killer)
 	local byPlayer = 0
 	local killerName
+
 	if killer then
 		if killer:isPlayer() then
 			byPlayer = 1
@@ -12,15 +14,19 @@ local function getKillerInfo(killer)
 				byPlayer = 1
 			end
 		end
+
 		killerName = killer:isMonster() and killer:getType():getNameDescription() or killer:getName()
 	else
 		killerName = "field item"
 	end
+
 	return killerName, byPlayer
 end
+
 local function getMostDamageInfo(mostDamageKiller)
 	local byPlayerMostDamage = 0
 	local mostDamageKillerName
+
 	if mostDamageKiller then
 		if mostDamageKiller:isPlayer() then
 			byPlayerMostDamage = 1
@@ -31,15 +37,18 @@ local function getMostDamageInfo(mostDamageKiller)
 				byPlayerMostDamage = 1
 			end
 		end
+
 		mostDamageKillerName = mostDamageKiller:isMonster() and mostDamageKiller:getType():getNameDescription() or mostDamageKiller:getName()
 	else
 		mostDamageKillerName = "field item"
 	end
+
 	return mostDamageKillerName, byPlayerMostDamage
 end
+
 local function saveDeathRecord(playerGuid, player, killerName, byPlayer, mostDamageName, byPlayerMostDamage, unjustified, mostDamageUnjustified)
 	local query = string.format(
-		"INSERT INTO `player_deaths` (`player_id`, `time`, `level`, `killed_by`, `is_player`, `mostdamage_by`, `mostdamage_is_player`, `unjustified`, `mostdamage_unjustified`) " .. "VALUES (%d, %d, %d, '%s', %d, '%s', %d, %d, %d)",
+		"INSERT INTO `player_deaths` (`player_id`, `time`, `level`, `killed_by`, `is_player`, `mostdamage_by`, `mostdamage_is_player`, `unjustified`, `mostdamage_unjustified`) " .. "VALUES (%d, %d, %d, %s, %d, %s, %d, %d, %d)",
 		playerGuid,
 		os.time(),
 		player:getLevel(),
@@ -52,20 +61,7 @@ local function saveDeathRecord(playerGuid, player, killerName, byPlayer, mostDam
 	)
 	db.query(query)
 end
-local function handleGuildWar(player, killer, mostDamageKiller, killerName, mostDamageName)
-	local deathRecords = getDeathRecords(player:getGuid())
-	if deathRecords > 0 then
-		local targetGuildId = player:getGuild() and player:getGuild():getId() or 0
-		local killerGuildId = killer:getGuild() and killer:getGuild():getId() or 0
-		if targetGuildId ~= 0 and killerGuildId ~= 0 and targetGuildId ~= killerGuildId then
-			local warId = checkForGuildWar(targetGuildId, killerGuildId)
-			if warId then
-				recordGuildWarKill(killer, player, killerGuildId, targetGuildId, warId)
-				checkAndUpdateGuildWarScore(warId, targetGuildId, killerGuildId, player:getName(), killerName, mostDamageName)
-			end
-		end
-	end
-end
+
 local function getDeathRecords(playerGuid)
 	local resultId = db.storeQuery("SELECT `player_id` FROM `player_deaths` WHERE `player_id` = " .. playerGuid)
 	local deathRecords = 0
@@ -73,24 +69,52 @@ local function getDeathRecords(playerGuid)
 		resultId = Result.next(resultId)
 		deathRecords = deathRecords + 1
 	end
+
 	if resultId then
 		Result.free(resultId)
 	end
+
 	return deathRecords
 end
+
+local function handleGuildWar(player, killer, mostDamageKiller, killerName, mostDamageName)
+	if not player or not killer or not killer:isPlayer() or not player:getGuild() or not killer:getGuild() then
+		return
+	end
+
+	local playerGuildId = player:getGuild():getId()
+	local killerGuildId = killer:getGuild():getId()
+
+	if playerGuildId == killerGuildId then
+		return
+	end
+
+	if getDeathRecords(player:getGuid()) > 0 then
+		local warId = checkForGuildWar(playerGuildId, killerGuildId)
+		if warId then
+			recordGuildWarKill(killer, player, killerGuildId, playerGuildId, warId)
+			checkAndUpdateGuildWarScore(warId, playerGuildId, killerGuildId, player:getName(), killerName, mostDamageName)
+		end
+	end
+end
+
 local function checkForGuildWar(targetGuildId, killerGuildId)
 	local resultId = db.storeQuery(string.format("SELECT `id` FROM `guild_wars` WHERE `status` = 1 AND ((`guild1` = %d AND `guild2` = %d) OR (`guild1` = %d AND `guild2` = %d))", killerGuildId, targetGuildId, targetGuildId, killerGuildId))
+
 	local warId = false
 	if resultId then
 		warId = Result.getNumber(resultId, "id")
 		Result.free(resultId)
 	end
+
 	return warId
 end
+
 local function recordGuildWarKill(killer, player, killerGuildId, targetGuildId, warId)
 	local playerName = player:getName()
 	db.asyncQuery(string.format("INSERT INTO `guildwar_kills` (`killer`, `target`, `killerguild`, `targetguild`, `time`, `warid`) VALUES ('%s', '%s', %d, %d, %d, %d)", db.escapeString(killer:getName()), db.escapeString(playerName), killerGuildId, targetGuildId, os.time(), warId))
 end
+
 local function checkAndUpdateGuildWarScore(warId, targetGuildId, killerGuildId, playerName, killerName, mostDamageName)
 	local resultId = db.storeQuery(
 		string.format(
@@ -103,47 +127,61 @@ local function checkAndUpdateGuildWarScore(warId, targetGuildId, killerGuildId, 
 			warId
 		)
 	)
+
 	if resultId then
 		local guild1Kills = Result.getNumber(resultId, "guild1_kills")
 		local guild2Kills = Result.getNumber(resultId, "guild2_kills")
 		local fragsLimit = Result.getNumber(resultId, "frags_limit")
 		Result.free(resultId)
+
 		local killerGuild = killer:getGuild()
 		local targetGuild = player:getGuild()
+
 		updateGuildWarScore(killerGuild, targetGuild, playerName, killerName, guild1Kills, guild2Kills, fragsLimit)
 		endGuildWarIfLimitReached(guild1Kills, guild2Kills, fragsLimit, warId, killerGuild, targetGuild)
 	end
 end
+
 local function updateGuildWarScore(killerGuild, targetGuild, playerName, killerName, guild1Kills, guild2Kills, fragsLimit)
 	local members = killerGuild:getMembersOnline()
 	for _, member in ipairs(members) do
 		member:sendChannelMessage(member, string.format("%s was killed by %s. The new score is: %s %d:%d %s (frags limit: %d)", playerName, killerName, targetGuild:getName(), guild1Kills, guild2Kills, killerGuild:getName(), fragsLimit), TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 	end
+
 	local enemyMembers = targetGuild:getMembersOnline()
 	for _, enemy in ipairs(enemyMembers) do
 		enemy:sendChannelMessage(enemy, string.format("%s was killed by %s. The new score is: %s %d:%d %s (frags limit: %d)", playerName, killerName, targetGuild:getName(), guild1Kills, guild2Kills, killerGuild:getName(), fragsLimit), TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 	end
 end
+
 local function endGuildWarIfLimitReached(guild1Kills, guild2Kills, fragsLimit, warId, killerGuild, targetGuild)
 	if guild1Kills >= fragsLimit or guild2Kills >= fragsLimit then
 		db.query(string.format("UPDATE `guild_wars` SET `status` = 4, `ended` = %d WHERE `status` = 1 AND `id` = %d", os.time(), warId))
 		Game.broadcastMessage(string.format("%s has just won the war against %s.", killerGuild:getName(), targetGuild:getName()))
 	end
 end
+
 local playerDeath = CreatureEvent("PlayerDeath")
+
 function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustified, mostDamageUnjustified)
 	if not deathListEnabled then
 		return
 	end
+
 	local killerName, byPlayer = getKillerInfo(killer)
 	local mostDamageName, byPlayerMostDamage = getMostDamageInfo(mostDamageKiller)
+
 	player:takeScreenshot(byPlayer and SCREENSHOT_TYPE_DEATHPVP or SCREENSHOT_TYPE_DEATHPVE)
+
 	if mostDamageKiller and mostDamageKiller:isPlayer() then
 		mostDamageKiller:takeScreenshot(SCREENSHOT_TYPE_PLAYERKILL)
 	end
+
 	local playerGuid = player:getGuid()
 	saveDeathRecord(playerGuid, player, killerName, byPlayer, mostDamageName, byPlayerMostDamage, unjustified, mostDamageUnjustified)
+
 	Webhook.sendMessage(":skull_crossbones: " .. player:getMarkdownLink() .. " has died. Killed at level _" .. player:getLevel() .. "_ by **" .. killerName .. "**.", announcementChannels["player-kills"])
 	handleGuildWar(player, killer, mostDamageKiller, killerName, mostDamageName)
 end
+
 playerDeath:register()
