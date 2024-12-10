@@ -1263,15 +1263,6 @@ bool Game::removeCreature(const std::shared_ptr<Creature> &creature, bool isLogo
 	return true;
 }
 
-void Game::executeDeath(uint32_t creatureId) {
-	metrics::method_latency measure(__METRICS_METHOD_NAME__);
-	std::shared_ptr<Creature> creature = getCreatureByID(creatureId);
-	if (creature && !creature->isRemoved()) {
-		afterCreatureZoneChange(creature, creature->getZones(), {});
-		creature->onDeath();
-	}
-}
-
 void Game::playerTeleport(uint32_t playerId, const Position &newPosition) {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const auto &player = getPlayerByID(playerId);
@@ -5930,7 +5921,7 @@ void Game::playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId) {
 	}
 
 	player->setAttackedCreature(attackCreature);
-	updateCreatureWalk(player->getID()); // internally uses addEventWalk.
+	player->updateCreatureWalk();
 }
 
 void Game::playerFollowCreature(uint32_t playerId, uint32_t creatureId) {
@@ -5940,7 +5931,7 @@ void Game::playerFollowCreature(uint32_t playerId, uint32_t creatureId) {
 	}
 
 	player->setAttackedCreature(nullptr);
-	updateCreatureWalk(player->getID()); // internally uses addEventWalk.
+	player->updateCreatureWalk();
 	player->setFollowCreature(getCreatureByID(creatureId));
 }
 
@@ -6449,27 +6440,6 @@ bool Game::internalCreatureSay(const std::shared_ptr<Creature> &creature, SpeakC
 		spectator->onCreatureSay(creature, type, text);
 	}
 	return true;
-}
-
-void Game::checkCreatureWalk(uint32_t creatureId) {
-	const auto &creature = getCreatureByID(creatureId);
-	if (creature && creature->getHealth() > 0) {
-		creature->onCreatureWalk();
-	}
-}
-
-void Game::updateCreatureWalk(uint32_t creatureId) {
-	const auto &creature = getCreatureByID(creatureId);
-	if (creature && creature->getHealth() > 0) {
-		creature->goToFollowCreature_async();
-	}
-}
-
-void Game::checkCreatureAttack(uint32_t creatureId) {
-	const auto &creature = getCreatureByID(creatureId);
-	if (creature && creature->getHealth() > 0) {
-		creature->onAttacking(0);
-	}
 }
 
 void Game::addCreatureCheck(const std::shared_ptr<Creature> &creature) {
