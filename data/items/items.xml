@@ -76866,6 +76866,18 @@ Granted by TibiaGoals.com"/>
 		<item id="44942" article="a" name="ramp">
 		<attribute key="floorchange" value="north"/>
 	</item>
+	<item id="44943" article="a" name="ramp"/>
+	<item id="44944" article="a" name="ramp">
+		<attribute key="floorchange" value="west"/>
+	</item>
+	<item id="44945" article="a" name="ramp"/>
+	<item id="44946" article="a" name="ramp">
+		<attribute key="floorchange" value="east"/>
+	</item>
+	<item id="44947" article="a" name="ramp"/>
+	<item id="44948" article="a" name="ramp">
+		<attribute key="floorchange" value="south"/>
+	</item>
 	<item id="45153" article="a" name="ramp"/>
 	<item id="45154" article="a" name="ramp">
 		<attribute key="floorchange" value="north"/>
@@ -80248,8 +80260,8 @@ Granted by TibiaGoals.com"/>
 		<attribute key="maletransformto" value="48450"/>
 		<attribute key="femaletransformto" value="48450"/>
 		<attribute key="rotateTo" value="48444"/>
-	</item> 
-		<item id="48443" article="a" name="bed">
+	</item>
+	<item id="48443" article="a" name="bed">
 		<attribute key="primarytype" value="furniture"/>
 		<attribute key="type" value="bed"/>
 		<attribute key="bedpart" value="pillow"/>
@@ -80288,8 +80300,7 @@ Granted by TibiaGoals.com"/>
 		<attribute key="maletransformto" value="48442"/>
 		<attribute key="femaletransformto" value="48442"/>
 		<attribute key="rotateTo" value="48452"/>
-	</item> 
-	
+	</item>
 	<item id="48451" article="a" name="bed">
 		<attribute key="primarytype" value="furniture"/>
 		<attribute key="type" value="bed"/>
@@ -80317,6 +80328,12 @@ Granted by TibiaGoals.com"/>
 	<item id="48467" name="candy cushion">
 		<attribute key="primarytype" value="furniture"/>
 		<attribute key="rotateTo" value="48457"/>
+	</item>
+	<item id="48493" article="a" name="ladder">
+		<attribute key="type" value="ladder"/>
+	</item>
+	<item id="48494" article="a" name="ladder">
+		<attribute key="type" value="ladder"/>
 	</item>
 	<item id="48929" article="an" name="black sheep soul core">
 		<attribute key="primarytype" value="soul cores"/>
