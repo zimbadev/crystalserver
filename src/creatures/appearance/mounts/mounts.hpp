@@ -18,9 +18,9 @@
 #pragma once
 
 struct Mount {
-	Mount(uint8_t initId, uint16_t initClientId, std::string initName, int32_t initSpeed, bool initPremium, std::string initType) :
+	Mount(uint8_t initId, uint16_t initClientId, std::string initName, int32_t initSpeed, bool initPremium, std::string initType, int32_t initAttackSpeed) :
 		name(std::move(initName)), speed(initSpeed), clientId(initClientId), id(initId), premium(initPremium),
-		type(std::move(initType)) { }
+		type(std::move(initType)), attackSpeed(initAttackSpeed) { }
 
 	std::string name;
 	int32_t speed;
@@ -28,6 +28,7 @@ struct Mount {
 	uint8_t id;
 	bool premium;
 	std::string type;
+	int32_t attackSpeed;
 };
 
 class Mounts {

@@ -49,7 +49,8 @@ bool Mounts::loadFromXml() {
 			mountNode.attribute("name").as_string(),
 			pugi::cast<int32_t>(mountNode.attribute("speed").value()),
 			mountNode.attribute("premium").as_bool(),
-			mountNode.attribute("type").as_string()
+			mountNode.attribute("type").as_string(),
+			pugi::cast<int32_t>(mountNode.attribute("attackspeed").value())
 		));
 	}
 	return true;

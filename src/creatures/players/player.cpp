@@ -6321,12 +6321,25 @@ bool Player::isPromoted() const {
 }
 
 uint32_t Player::getAttackSpeed() const {
+	int32_t modifiers = 0;
 	bool onFistAttackSpeed = g_configManager().getBoolean(TOGGLE_ATTACK_SPEED_ONFIST);
 	uint32_t MAX_ATTACK_SPEED = g_configManager().getNumber(MAX_SPEED_ATTACKONFIST);
+
+	const auto& mount = g_game().mounts->getMountByID(getCurrentMount());
+	if (isMounted() && mount) {
+		if (mount->attackSpeed > 0) {
+			if (mount->attackSpeed >= vocation->getAttackSpeed()) {
+				modifiers = 0;
+			} else {
+				modifiers += mount->attackSpeed;
+			}
+		}
+	}
+
 	if (onFistAttackSpeed) {
 		uint32_t baseAttackSpeed = vocation->getAttackSpeed();
 		uint32_t skillLevel = getSkillLevel(SKILL_FIST);
-		uint32_t attackSpeed = baseAttackSpeed - (skillLevel * g_configManager().getNumber(MULTIPLIER_ATTACKONFIST));
+		uint32_t attackSpeed = baseAttackSpeed - (skillLevel * g_configManager().getNumber(MULTIPLIER_ATTACKONFIST)) - modifiers;
 
 		if (attackSpeed < MAX_ATTACK_SPEED) {
 			attackSpeed = MAX_ATTACK_SPEED;
@@ -6334,7 +6347,8 @@ uint32_t Player::getAttackSpeed() const {
 
 		return attackSpeed;
 	} else {
-		return vocation->getAttackSpeed();
+		uint32_t attackSpeed = vocation->getAttackSpeed() - modifiers;
+		return attackSpeed;
 	}
 }
 
