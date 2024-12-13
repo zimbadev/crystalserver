@@ -10,6 +10,7 @@
 - New configurations in `config.lua`: `timeToRegenMinuteStamina` and `timeToRegenMinutePremiumStamina`. ([Tryller](https://github.com/jprzimba))
 - Added a new attribute `attackspeed` to mounts.xml, allowing mounts to increase player attack speed. ([Tryller](https://github.com/jprzimba))
 - New Feature: `fairFightTimeRange` is now configurable in `config.lua`. ([Tryller](https://github.com/jprzimba))
+- New Feature: `blackSkulledDeathHealth` and `blackSkulledDeathMana` are now configurable in `config.lua`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 

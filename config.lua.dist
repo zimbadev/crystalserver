@@ -46,6 +46,8 @@ monthKillsToRedSkull = 10
 redSkullDuration = 1
 blackSkullDuration = 3
 orangeSkullDuration = 7
+blackSkulledDeathHealth = 40
+blackSkulledDeathMana = 0
 
 cleanProtectionZones = false
 
