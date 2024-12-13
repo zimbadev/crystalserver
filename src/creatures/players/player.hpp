@@ -200,6 +200,7 @@ public:
 	bool hasAnyMount() const;
 	uint8_t getRandomMountId() const;
 	void dismount();
+
 	uint16_t getDodgeChance() const;
 
 	uint8_t isRandomMounted() const;
