@@ -357,6 +357,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, AUGMENT_STRONG_IMPACT_PERCENT, "augmentStrongImpactPercent", 7);
 	loadIntConfig(L, STAMINA_REGEN_MINUTE, "timeToRegenMinuteStamina", 3 * 60);
 	loadIntConfig(L, STAMINA_REGEN_PREMIUM, "timeToRegenMinutePremiumStamina", 6 * 60);
+	loadIntConfig(L, FAIRFIGHT_TIMERANGE, "fairFightTimeRange", 5 * 60 * 1000);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");

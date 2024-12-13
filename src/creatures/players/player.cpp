@@ -3471,15 +3471,15 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 	if (skillLoss) {
 		int playerDmg = 0;
 		int othersDmg = 0;
-		uint32_t sumLevels = 0;
-		uint32_t inFightTicks = 5 * 60 * 1000;
+		uint32_t opponents = 0;
+		uint32_t inFightTicks = g_configManager().getNumber(FAIRFIGHT_TIMERANGE);
 		for (const auto &[creatureId, damageInfo] : damageMap) {
 			const auto &[total, ticks] = damageInfo;
 			if ((OTSYS_TIME() - ticks) <= inFightTicks) {
 				const auto &damageDealer = g_game().getPlayerByID(creatureId);
 				if (damageDealer) {
 					playerDmg += total;
-					sumLevels += damageDealer->getLevel();
+					opponents += damageDealer->getLevel();
 				} else {
 					othersDmg += total;
 				}
@@ -3492,8 +3492,8 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		}
 
 		uint8_t unfairFightReduction = 100;
-		if (pvpDeath && sumLevels > level) {
-			double reduce = level / static_cast<double>(sumLevels);
+		if (pvpDeath && opponents > level) {
+			double reduce = level / static_cast<double>(opponents);
 			unfairFightReduction = std::max<uint8_t>(20, std::floor((reduce * 100) + 0.5));
 		}
 
