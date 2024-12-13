@@ -19,7 +19,7 @@
 
 static constexpr auto SOFTWARE_NAME = "Crystal Server";
 static constexpr auto SOFTWARE_VERSION = "4.1";
-static constexpr auto SOFTWARE_DEVELOPERS = "Tryller";
+static constexpr auto SOFTWARE_DEVELOPERS = "Crystal Server Contributors";
 
 static constexpr auto AUTHENTICATOR_DIGITS = 6U;
 static constexpr auto AUTHENTICATOR_PERIOD = 30U;
