@@ -1,6 +1,6 @@
 # Changelog for Crystal Server
 
-## Version 4.1
+## Version 4.1.2
 
 ### Features
 
