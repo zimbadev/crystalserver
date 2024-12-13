@@ -4,6 +4,9 @@
 
 ### Features
 
+- Protocol 14.10 support. ([Tryller](https://github.com/jprzimba))
+- New protocol 14.10 mounts and outfits. ([Tryller](https://github.com/jprzimba))
+- New protocol 14.10 assets. ([Tryller](https://github.com/jprzimba))
 - Load Gamemaster, Community Manager and God outfits from groups.xml ([Tryller](https://github.com/jprzimba)).
 - New tag for rune spells: `rune:removeOnUse(bool)`. This can be used to specify a particular rune to remove charges, even when `removeChargesFromRunes` is set to false in `config.lua`. ([Tryller](https://github.com/jprzimba))
 - Moved files from data-global/migrations to data/migrations. ([Tryller](https://github.com/jprzimba))
@@ -20,8 +23,10 @@
 - config.lua
 - data/scripts/creaturescripts/player/login.lua
 - data/scripts/creaturescripts/player/regenerate_stamina.lua
+- data/items/assets.dat
 - data/XML/groups.xml
 - data/XML/mounts.xml
+- data/XML/outfits.xml
 
 ## Deleted files
 
