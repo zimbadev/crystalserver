@@ -4,8 +4,8 @@
 
 ### Features
 
-- Protocol 14.10 support. ([Tryller](https://github.com/jprzimba))
-- New protocol 14.10 mounts and outfits. ([Tryller](https://github.com/jprzimba))
+- Protocol 14.05 support. ([Tryller](https://github.com/jprzimba))
+- New protocol 14.10 stash support in 14.05 version. ([Tryller](https://github.com/jprzimba))
 - New protocol 14.10 assets. ([Tryller](https://github.com/jprzimba))
 - Load Gamemaster, Community Manager and God outfits from groups.xml ([Tryller](https://github.com/jprzimba)).
 - New tag for rune spells: `rune:removeOnUse(bool)`. This can be used to specify a particular rune to remove charges, even when `removeChargesFromRunes` is set to false in `config.lua`. ([Tryller](https://github.com/jprzimba))
