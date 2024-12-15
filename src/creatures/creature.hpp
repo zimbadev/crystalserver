@@ -702,8 +702,7 @@ protected:
 		AsyncTaskRunning = 1 << 0,
 		UpdateTargetList = 1 << 1,
 		UpdateIdleStatus = 1 << 2,
-		Pathfinder = 1 << 3,
-		OnThink = 1 << 4,
+		Pathfinder = 1 << 3
 	};
 
 	virtual bool isDead() const {
