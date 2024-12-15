@@ -137,7 +137,7 @@ private:
 	void parsePacket(NetworkMessage &msg) override;
 	void parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvbyte);
 	void onRecvFirstMessage(NetworkMessage &msg) override;
-	void sendLoginChallenge() override;
+	void onConnect() override;
 
 	// Parse methods
 	void parseAutoWalk(NetworkMessage &msg);

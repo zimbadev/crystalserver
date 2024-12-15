@@ -181,6 +181,7 @@ public:
 	bool placeCreature(const std::shared_ptr<Creature> &creature, const Position &pos, bool extendedPos = false, bool force = false);
 
 	bool removeCreature(const std::shared_ptr<Creature> &creature, bool isLogout = true);
+	void executeDeath(uint32_t creatureId);
 
 	void addCreatureCheck(const std::shared_ptr<Creature> &creature);
 	static void removeCreatureCheck(const std::shared_ptr<Creature> &creature);
@@ -444,6 +445,9 @@ public:
 	void setGameState(GameState_t newState);
 
 	// Events
+	void checkCreatureWalk(uint32_t creatureId);
+	void updateCreatureWalk(uint32_t creatureId);
+	void checkCreatureAttack(uint32_t creatureId);
 	void checkCreatures();
 	void checkLight();
 

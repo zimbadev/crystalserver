@@ -77,7 +77,7 @@ public:
 private:
 	Player &m_player;
 
-	VipStatus_t status = VipStatus_t::Online;
+	VipStatus_t status = VipStatus_t::ONLINE;
 	std::vector<std::shared_ptr<VIPGroup>> vipGroups;
 	phmap::flat_hash_set<uint32_t> vipGuids;
 };

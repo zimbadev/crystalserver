@@ -431,13 +431,27 @@ void Monster::onCreatureMove(const std::shared_ptr<Creature> &creature, const st
 						if (const auto &nextTile = g_game().map.getTile(checkPosition)) {
 							const auto &topCreature = nextTile->getTopCreature();
 							if (followCreature != topCreature && isOpponent(topCreature)) {
-								selectTarget(topCreature);
+								g_dispatcher().addEvent([selfWeak = std::weak_ptr(getMonster()), topCreatureWeak = std::weak_ptr(topCreature)] {
+									const auto &self = selfWeak.lock();
+									const auto &topCreature = topCreatureWeak.lock();
+									if (self && topCreature) {
+										self->selectTarget(topCreature);
+									}
+								},
+								                        "Monster::onCreatureMove");
 							}
 						}
 					}
 				} else if (isOpponent(creature)) {
 					// we have no target lets try pick this one
-					selectTarget(creature);
+					g_dispatcher().addEvent([selfWeak = std::weak_ptr(getMonster()), creatureWeak = std::weak_ptr(creature)] {
+						const auto &self = selfWeak.lock();
+						const auto &creaturePtr = creatureWeak.lock();
+						if (self && creaturePtr) {
+							self->selectTarget(creaturePtr);
+						}
+					},
+					                        "Monster::onCreatureMove");
 				}
 			}
 		};
@@ -948,7 +962,7 @@ bool Monster::selectTarget(const std::shared_ptr<Creature> &creature) {
 
 	if (isHostile() || isSummon()) {
 		if (setAttackedCreature(creature)) {
-			checkCreatureAttack();
+			g_dispatcher().addEvent([creatureId = getID()] { g_game().checkCreatureAttack(creatureId); }, __FUNCTION__);
 		}
 	}
 	return setFollowCreature(creature);
@@ -972,7 +986,7 @@ void Monster::setIdle(bool idle) {
 }
 
 void Monster::updateIdleStatus() {
-	if (!g_dispatcher().context().isAsync()) {
+	if (g_dispatcher().context().getGroup() == TaskGroup::Walk) {
 		setAsyncTaskFlag(UpdateIdleStatus, true);
 		return;
 	}
@@ -1067,11 +1081,8 @@ void Monster::onThink(uint32_t interval) {
 	}
 
 	updateIdleStatus();
-	setAsyncTaskFlag(OnThink, true);
-}
 
-void Monster::onThink_async() {
-	if (isIdle) { // updateIdleStatus(); is executed before this method
+	if (isIdle) {
 		return;
 	}
 
@@ -1106,13 +1117,10 @@ void Monster::onThink_async() {
 		}
 	}
 
-	onThinkTarget(EVENT_CREATURE_THINK_INTERVAL);
-
-	safeCall([this] {
-		onThinkYell(EVENT_CREATURE_THINK_INTERVAL);
-		onThinkDefense(EVENT_CREATURE_THINK_INTERVAL);
-		onThinkSound(EVENT_CREATURE_THINK_INTERVAL);
-	});
+	onThinkTarget(interval);
+	onThinkYell(interval);
+	onThinkDefense(interval);
+	onThinkSound(interval);
 }
 
 void Monster::doAttacking(uint32_t interval) {

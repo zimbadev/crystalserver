@@ -46,6 +46,8 @@ monthKillsToRedSkull = 10
 redSkullDuration = 1
 blackSkullDuration = 3
 orangeSkullDuration = 7
+blackSkulledDeathHealth = 40
+blackSkulledDeathMana = 0
 
 cleanProtectionZones = false
 
@@ -251,7 +253,6 @@ onlyPremiumAccount = false
 -- NOTE: toggleServerIsRetroPVP will make this server as retro, setting PARTY_PROTECTION and ADVANCED_SECURE_MODE to 0
 -- NOTE: toggleTravelsFree will make all travels from boat free
 -- NOTE: buyAolCommandFee will add fee when player buy aol by command (!aol), active changing value more than 0 (fee value. ex: 1 = 1gp  aol will be 50001)
--- NOTE: buyBlessCommandFee will add fee when player buy bless by command (!bless), active changing value between 1 and 100 (fee percent. ex: 3 = 3%, 30 = 30%)
 -- NOTE: teleportPlayerToVocationRoom will enable oressa to teleport player to his/her room vocation
 -- NOTE: toggleReceiveReward = true, will enable players to choose one of reward exercise weapon by command !reward
 -- NOTE: randomMonsterSpawn = true, will enable monsters from the same spawn to be randomized between them, thus making a variable hunt
@@ -270,7 +271,6 @@ toggleGoldPouchQuickLootOnly = false
 toggleServerIsRetroPVP = false
 toggleTravelsFree = false
 buyAolCommandFee = 0
-buyBlessCommandFee = 0
 teleportPlayerToVocationRoom = true
 toggleReceiveReward = false
 randomMonsterSpawn = false
@@ -327,6 +327,14 @@ deathLosePercent = -1
 halfLossExp = false
 halfLossSkill = false
 halfLossMagicLevel = false
+
+-- Blessings
+-- fairFightTimeRange is last X seconds from which damage to player counts.
+-- NOTE: buyBlessCommandFee will add fee when player buy bless by command (!bless), active changing value between 1 and 100 (fee percent. ex: 3 = 3%, 30 = 30%)
+buyBlessCommandFee = 0
+inventoryGlowOnFiveBless = false
+adventurersBlessingLevel = 21
+fairFightTimeRange = 5 * 60 * 1000
 
 -- Houses
 -- NOTE: set housePriceEachSQM to -1 to disable the ingame buy house functionality
@@ -425,8 +433,6 @@ showScriptsLogInConsole = false
 minDelayBetweenConditions = 0
 -- configure maximum value of critical imbuement
 criticalChance = 10
-inventoryGlowOnFiveBless = false
-adventurersBlessingLevel = 21
 skulledDeathLoseStoreItem = false
 experienceDisplayRates = true
 -- configure attack base on Fist Fighting skill/experience
