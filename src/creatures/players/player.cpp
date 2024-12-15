@@ -2797,10 +2797,10 @@ int32_t Player::getIdleTime() const {
 void Player::setTraining(bool value) {
 	for (const auto &[key, player] : g_game().getPlayers()) {
 		if (!this->isInGhostMode() || player->isAccessPlayer()) {
-			player->vip()->notifyStatusChange(static_self_cast<Player>(), value ? VipStatus_t::Training : VipStatus_t::Online, false);
+			player->vip()->notifyStatusChange(static_self_cast<Player>(), value ? VipStatus_t::TRAINING : VipStatus_t::ONLINE, false);
 		}
 	}
-	vip()->setStatus(VipStatus_t::Training);
+	vip()->setStatus(VipStatus_t::TRAINING);
 	setExerciseTraining(value);
 }
 
@@ -3729,6 +3729,14 @@ bool Player::spawn() {
 		spectator->onCreatureAppear(static_self_cast<Player>(), false);
 	}
 
+	// notify status change when login after dead
+	for (const auto &[key, player] : g_game().getPlayers()) {
+		if (!this->isInGhostMode() || player->isAccessPlayer()) {
+			VipStatus_t status = player->isExerciseTraining() ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;
+			player->vip()->notifyStatusChange(static_self_cast<Player>(), status, false);
+		}
+	}
+
 	getParent()->postAddNotification(static_self_cast<Player>(), nullptr, 0);
 	g_game().addCreatureCheck(static_self_cast<Player>());
 	g_game().addPlayer(static_self_cast<Player>());
@@ -3780,7 +3788,7 @@ void Player::despawn() {
 
 	// show player as pending
 	for (const auto &[key, player] : g_game().getPlayers()) {
-		player->vip()->notifyStatusChange(static_self_cast<Player>(), VipStatus_t::Pending, false);
+		player->vip()->notifyStatusChange(static_self_cast<Player>(), VipStatus_t::PENDING, false);
 	}
 
 	setDead(true);
@@ -3839,7 +3847,7 @@ void Player::removeList() {
 	g_game().removePlayer(static_self_cast<Player>());
 
 	for (const auto &[key, player] : g_game().getPlayers()) {
-		player->vip()->notifyStatusChange(static_self_cast<Player>(), VipStatus_t::Offline);
+		player->vip()->notifyStatusChange(static_self_cast<Player>(), VipStatus_t::OFFLINE);
 	}
 }
 

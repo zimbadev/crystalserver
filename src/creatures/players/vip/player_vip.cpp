@@ -58,9 +58,9 @@ void PlayerVIP::notifyStatusChange(const std::shared_ptr<Player> &loginPlayer, V
 	m_player.client->sendUpdatedVIPStatus(loginPlayer->getGUID(), vipStatus);
 
 	if (message) {
-		if (vipStatus == VipStatus_t::Online) {
+		if (vipStatus == VipStatus_t::ONLINE) {
 			m_player.sendTextMessage(TextMessage(MESSAGE_FAILURE, fmt::format("{} has logged in.", loginPlayer->getName())));
-		} else if (vipStatus == VipStatus_t::Offline) {
+		} else if (vipStatus == VipStatus_t::OFFLINE) {
 			m_player.sendTextMessage(TextMessage(MESSAGE_FAILURE, fmt::format("{} has logged out.", loginPlayer->getName())));
 		}
 	}

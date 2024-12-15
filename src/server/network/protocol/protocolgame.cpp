@@ -6892,7 +6892,7 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 
 			std::shared_ptr<Player> vipPlayer = g_game().getPlayerByGUID(entry.guid);
 			if (!vipPlayer) {
-				vipStatus = VipStatus_t::Offline;
+				vipStatus = VipStatus_t::OFFLINE;
 			} else {
 				vipStatus = vipPlayer->vip()->getStatus();
 			}
@@ -6905,7 +6905,7 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 
 			std::shared_ptr<Player> vipPlayer = g_game().getPlayerByGUID(entry.guid);
 			if (!vipPlayer || vipPlayer->isInGhostMode()) {
-				vipStatus = VipStatus_t::Offline;
+				vipStatus = VipStatus_t::OFFLINE;
 			} else {
 				vipStatus = vipPlayer->vip()->getStatus();
 			}
@@ -7432,7 +7432,7 @@ void ProtocolGame::sendPodiumWindow(const std::shared_ptr<Item> &podium, const P
 }
 
 void ProtocolGame::sendUpdatedVIPStatus(uint32_t guid, VipStatus_t newStatus) {
-	if (oldProtocol && newStatus == VipStatus_t::Training) {
+	if (oldProtocol && newStatus == VipStatus_t::TRAINING) {
 		return;
 	}
 
@@ -7444,7 +7444,7 @@ void ProtocolGame::sendUpdatedVIPStatus(uint32_t guid, VipStatus_t newStatus) {
 }
 
 void ProtocolGame::sendVIP(uint32_t guid, const std::string &name, const std::string &description, uint32_t icon, bool notify, VipStatus_t status) {
-	if (oldProtocol && status == VipStatus_t::Training) {
+	if (oldProtocol && status == VipStatus_t::TRAINING) {
 		return;
 	}
 
