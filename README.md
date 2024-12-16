@@ -9,7 +9,7 @@ It is based on [The Forgotten Server](https://github.com/otland/forgottenserver)
 This project was created a long time ago to distribute a stable and safe distro for those who want to have a Tibia otserv.
 
 To connect to the server and to take a stable experience, you can
-use [mehah's otclient](https://github.com/mehah/otclient).
+use the [Game Client](https://github.com/jprzimba/gameclient/releases) or [mehah's OTCLient](https://github.com/mehah/otclient).
 
 You can see the complete change log for Crystal Server at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/CHANGELOG.md).
 
