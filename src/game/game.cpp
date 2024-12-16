@@ -10394,15 +10394,14 @@ void Game::updateForgeableMonsters() {
 void Game::createFiendishMonsters() {
 	uint32_t created = 0;
 	uint32_t fiendishLimit = g_configManager().getNumber(FORGE_FIENDISH_CREATURES_LIMIT); // Fiendish Creatures limit
+	
 	while (fiendishMonsters.size() < fiendishLimit) {
 		if (fiendishMonsters.size() >= fiendishLimit) {
 			g_logger().warn("[{}] - Returning in creation of Fiendish, size: {}, max is: {}.", __FUNCTION__, fiendishMonsters.size(), fiendishLimit);
 			break;
 		}
 
-		if (auto ret = makeFiendishMonster();
-		    // Condition
-		    ret == 0) {
+		if (auto ret = makeFiendishMonster(); ret == 0) { // Condition
 			return;
 		}
 
@@ -10413,13 +10412,14 @@ void Game::createFiendishMonsters() {
 void Game::createInfluencedMonsters() {
 	uint32_t created = 0;
 	uint32_t influencedLimit = g_configManager().getNumber(FORGE_INFLUENCED_CREATURES_LIMIT);
-	while (created < influencedLimit) {
+	
+	while (influencedMonsters.size() < influencedLimit) {
 		if (influencedMonsters.size() >= influencedLimit) {
 			g_logger().warn("[{}] - Returning in creation of Influenced, size: {}, max is: {}.", __FUNCTION__, influencedMonsters.size(), influencedLimit);
 			break;
 		}
 
-		if (makeInfluencedMonster() == 0) {
+		if (auto ret = makeInfluencedMonster(); ret == 0) { // Condition
 			return;
 		}
 
