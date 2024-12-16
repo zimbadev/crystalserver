@@ -1,5 +1,6 @@
 # Changelog for Crystal Server
 
+
 ## Version 4.1.2
 
 ### Features
@@ -7,6 +8,38 @@
 - Protocol 14.10 support. ([Tryller](https://github.com/jprzimba))
 - New protocol 14.10 mounts and outfits. ([Tryller](https://github.com/jprzimba))
 - New protocol 14.10 assets. ([Tryller](https://github.com/jprzimba))
+
+## Added files
+
+- Add all files in data/migrations
+
+## Modified files
+
+- crystalserver.exe
+- config.lua
+- data-global/world/world-house.xml
+- data/items/assets.dat
+- data/items/items.xml
+- data/libs/functions/quests.lua
+- data/modules/scripts/questtrack/questtrack.lua
+- data/scripts/creaturescripts/player/login.lua
+- data/scripts/movements/special_tiles.lua
+- data/scripts/talkactions/god/icons_functions.lua
+
+## Added files
+
+- data-global/scripts/creaturescripts/customs/water_houses.lua
+
+### Bug Fixes
+
+- Fixed influenced creatures not spawning. ([Tryller](https://github.com/jprzimba))
+- Fixed houses with pool bug. ([Tryller](https://github.com/jprzimba))
+
+
+## Version 4.1
+
+### Features
+
 - Load Gamemaster, Community Manager and God outfits from groups.xml ([Tryller](https://github.com/jprzimba)).
 - New tag for rune spells: `rune:removeOnUse(bool)`. This can be used to specify a particular rune to remove charges, even when `removeChargesFromRunes` is set to false in `config.lua`. ([Tryller](https://github.com/jprzimba))
 - Moved files from data-global/migrations to data/migrations. ([Tryller](https://github.com/jprzimba))
@@ -85,5 +118,5 @@
 
 ---
 
-_Note: This Markdown document provides a concise overview of the changes introduced in Crystal Server version 4.0, categorized into features, bug fixes, and other updates. For a more detailed breakdown, refer to the commit history or release notes.
+_Note: This Markdown document provides a concise overview of the changes introduced in Crystal Server, categorized into features, bug fixes, and other updates. For a more detailed breakdown, refer to the commit history or release notes.
 In the changelog when [Tryller](https://github.com/jprzimba) is mentioned, it refers to me, [jprzimba](https://github.com/jprzimba) (João Paulo)_
