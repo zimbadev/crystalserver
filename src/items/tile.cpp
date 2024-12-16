@@ -1131,6 +1131,10 @@ void Tile::addThing(int32_t, const std::shared_ptr<Thing> &thing) {
 				}
 			}
 
+			if (item->getID() == ITEM_WATERBALL_SPLASH && !hasFlag(TILESTATE_TRASHHOLDER)) {
+				item->setID(ITEM_WATERBALL);
+			}
+
 			items = makeItemList();
 			items->insert(items->getBeginDownItem(), item);
 			items->increaseDownItemCount();

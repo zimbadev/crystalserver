@@ -914,6 +914,9 @@ void LuaEnums::initItemIdEnums(lua_State* L) {
 	registerEnum(L, ITEM_PRIMAL_POD);
 	registerEnum(L, ITEM_DECORATION_KIT);
 
+	registerEnum(L, ITEM_WATERBALL);
+	registerEnum(L, ITEM_WATERBALL_SPLASH);
+
 	registerEnum(L, ItemID_t::HIRELING_LAMP);
 }
 
