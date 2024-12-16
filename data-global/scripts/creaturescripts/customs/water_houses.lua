@@ -1,5 +1,6 @@
 local positions = {
-	{ fromPos = Position(33600, 31927, 3), toPos = Position(33606, 31931, 3) }
+	{ fromPos = Position(33600, 31927, 3), toPos = Position(33606, 31931, 3) },
+	{ fromPos = Position(32772, 31163, 8), toPos = Position(32778, 31168, 8) }
 }
 
 local function isInRestrictedArea(position)
