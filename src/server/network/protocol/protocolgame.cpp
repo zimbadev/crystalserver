@@ -2092,14 +2092,12 @@ void ProtocolGame::parseInspectionObject(NetworkMessage &msg) {
 }
 
 void ProtocolGame::sendSessionEndInformation(SessionEndInformations information) {
-	if (oldProtocol) {
-		return;
+	if (!oldProtocol) {
+		auto output = OutputMessagePool::getOutputMessage();
+		output->addByte(0x18);
+		output->addByte(information);
+		send(output);
 	}
-
-	auto output = OutputMessagePool::getOutputMessage();
-	output->addByte(0x18);
-	output->addByte(information);
-	send(output);
 	disconnect();
 }
 
