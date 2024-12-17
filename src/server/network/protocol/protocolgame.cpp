@@ -7431,20 +7431,20 @@ void ProtocolGame::sendPodiumWindow(const std::shared_ptr<Item> &podium, const P
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::sendUpdatedVIPStatus(uint32_t guid, VipStatus_t newStatus) {
-	if (oldProtocol && newStatus == VipStatus_t::TRAINING) {
+void ProtocolGame::sendUpdatedVIPStatus(uint32_t guid, VipStatus_t status) {
+	if (oldProtocol) {
 		return;
 	}
 
 	NetworkMessage msg;
 	msg.addByte(0xD3);
 	msg.add<uint32_t>(guid);
-	msg.addByte(enumToValue(newStatus));
+	msg.addByte(enumToValue(status));
 	writeToOutputBuffer(msg);
 }
 
 void ProtocolGame::sendVIP(uint32_t guid, const std::string &name, const std::string &description, uint32_t icon, bool notify, VipStatus_t status) {
-	if (oldProtocol && status == VipStatus_t::TRAINING) {
+	if (oldProtocol) {
 		return;
 	}
 
