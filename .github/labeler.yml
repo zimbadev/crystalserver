@@ -1,0 +1,16 @@
+---
+"Area: Source":
+  - any: ['src/**/*']
+
+"Area: Datapack Core":
+  - any: ['data/**/*']
+
+"Area: Datapack Global":
+  - any: ['data-global/**/*', '!data-global/world/*']
+
+"Area: Map Global":
+  - any: ['data-global/world/*']
+
+"Area: Docker":
+  - any: ['docker/**/*']
+  
