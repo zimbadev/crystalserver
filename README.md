@@ -1,5 +1,14 @@
 # Crystal Server
 
+[![Discord](https://img.shields.io/discord/1310943869923495988?style=flat-square&logo=discord)](https://discord.gg/7AYJEHTghQ)
+[![Build - Ubuntu](https://github.com/jprzimba/crystalserver/actions/workflows/build-ubuntu.yml/badge.svg)](https://github.com/jprzimba/crystalserver/actions/workflows/build-ubuntu.yml)
+[![Build - Windows - CMake](https://github.com/jprzimba/crystalserver/actions/workflows/build-windows-cmake.yml/badge.svg)](https://github.com/jprzimba/crystalserver/actions/workflows/build-windows-cmake.yml)
+[![Build - Windows - Solution](https://github.com/jprzimba/crystalserver/actions/workflows/build-windows-solution.yml/badge.svg)](https://github.com/jprzimba/crystalserver/actions/workflows/build-windows-solution.yml)
+[![Build - Docker](https://github.com/jprzimba/crystalserver/actions/workflows/build-docker.yml/badge.svg)](https://github.com/jprzimba/crystalserver/actions/workflows/build-docker.yml)
+![GitHub repo size](https://img.shields.io/github/repo-size/jprzimba/crystalserver)
+[![GitHub](https://img.shields.io/github/license/jprzimba/crystalserver)](https://github.com/jprzimba/crystalserver/blob/main/LICENSE)
+
+
 ## Project
 
 Crystal Server is a free and open-source MMORPG server emulator written in C++.
