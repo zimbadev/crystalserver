@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////
+
 #include "pch.hpp"
 
 #include <boost/ut.hpp>
@@ -48,13 +49,13 @@ suite<"account"> accountTest = [] {
 
 	test("Account::Account default constructors") = [] {
 		shared_ptr<Account> byId = make_shared<Account>(1);
-		shared_ptr<Account> byDescriptor = make_shared<Account>("crystalserver@test.com");
+		shared_ptr<Account> byDescriptor = make_shared<Account>("crystal@test.com");
 
 		expect(eq(byId->getID(), 1));
 		expect(eq(byDescriptor->getID(), 0));
 
 		expect(byId->getDescriptor().empty());
-		expect(eq(byDescriptor->getDescriptor(), string{"crystalserver@test.com"}));
+		expect(eq(byDescriptor->getDescriptor(), string{"crystal@test.com"}));
 
 		for (auto& account : { byId, byDescriptor }) {
 			expect(eq(account->getPremiumRemainingDays(), 0));
@@ -71,7 +72,7 @@ suite<"account"> accountTest = [] {
 
 	vector<AccountLoadTestCase> accountLoadTestCases{
 		{"returns by id if exists", make_shared<Account>(1), AccountErrors_t::Ok},
-		{"returns by descriptor if exists", make_shared<Account>("crystalserver@test.com"), AccountErrors_t::Ok},
+		{"returns by descriptor if exists", make_shared<Account>("crystal@test.com"), AccountErrors_t::Ok},
 		{"returns error if id is not valid", make_shared<Account>(2), AccountErrors_t::LoadingAccount},
 		{"returns error if descriptor is not valid", make_shared<Account>("not@valid.com"), AccountErrors_t::LoadingAccount}
 	};
@@ -79,7 +80,7 @@ suite<"account"> accountTest = [] {
 	for (auto& testCase : accountLoadTestCases) {
 		test(testCase.description) = [&injectionFixture, &testCase] {
 			auto [accountRepository] = injectionFixture.get<AccountRepository>();
-			accountRepository.addAccount("crystalserver@test.com", AccountInfo{1, 1, 1, AccountType::ACCOUNT_TYPE_GOD});
+			accountRepository.addAccount("crystal@test.com", AccountInfo{1, 1, 1, AccountType::ACCOUNT_TYPE_GOD});
 			expect(eqEnum(testCase.account->load(), testCase.expectedError)) << testCase.description;
 		};
 	}
@@ -92,12 +93,12 @@ suite<"account"> accountTest = [] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 
 		Account acc { 1 };
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.getAccountType(), AccountType::ACCOUNT_TYPE_GOD));
 
-		accountRepository.addAccount("crystalserver2@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GAMEMASTER });
+		accountRepository.addAccount("crystal2@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GAMEMASTER });
 
 		expect(eqEnum(acc.reload(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.getAccountType(), AccountType::ACCOUNT_TYPE_GAMEMASTER));
@@ -112,7 +113,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.failSave = true;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.save(), AccountErrors_t::Storage));
@@ -123,7 +124,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.failSave = false;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.save(), AccountErrors_t::Ok));
@@ -137,7 +138,7 @@ suite<"account"> accountTest = [] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 
 		Account acc { 1 };
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(std::get<1>(acc.getCoins(CoinType::Normal)), AccountErrors_t::Storage));
@@ -147,7 +148,7 @@ suite<"account"> accountTest = [] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 
 		Account acc { 1 };
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -159,10 +160,10 @@ suite<"account"> accountTest = [] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 
 		Account acc { 2 };
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
-		accountRepository.addAccount("crystalserver2@test.com", AccountInfo { 2, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal2@test.com", AccountInfo { 2, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(2, CoinType::Normal, 33);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -174,7 +175,7 @@ suite<"account"> accountTest = [] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 
 		Account acc { 1 };
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 		accountRepository.setCoins(1, CoinType::Tournament, 100);
 
@@ -194,7 +195,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.failAddCoins = true;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -205,7 +206,7 @@ suite<"account"> accountTest = [] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 
 		Account acc { 1 };
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -217,7 +218,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.failAddCoins = false;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -231,10 +232,10 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 2 };
 		accountRepository.failAddCoins = false;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
-		accountRepository.addAccount("crystalserver2@test.com", AccountInfo { 2, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal2@test.com", AccountInfo { 2, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(2, CoinType::Normal, 33);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -250,7 +251,7 @@ suite<"account"> accountTest = [] {
 		accountRepository.failAddCoins = false;
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 		accountRepository.setCoins(1, CoinType::Tournament, 57);
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.addCoins(CoinType::Normal, 100), AccountErrors_t::Ok));
@@ -278,7 +279,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.failAddCoins = true;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -289,7 +290,7 @@ suite<"account"> accountTest = [] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 
 		Account acc { 1 };
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -301,7 +302,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.failAddCoins = false;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -315,10 +316,10 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.failAddCoins = false;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 
-		accountRepository.addAccount("crystalserver2@test.com", AccountInfo { 2, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal2@test.com", AccountInfo { 2, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(2, CoinType::Normal, 33);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -332,7 +333,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.failAddCoins = false;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, CoinType::Normal, 100);
 		accountRepository.setCoins(1, CoinType::Tournament, 57);
 
@@ -359,7 +360,7 @@ suite<"account"> accountTest = [] {
 		Account acc { 1 };
 		accountRepository.failAddCoins = false;
 		accountRepository.setCoins(1, CoinType::Normal, 1);
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.removeCoins(CoinType::Normal, 100), AccountErrors_t::RemoveCoins));
 
@@ -391,7 +392,7 @@ suite<"account"> accountTest = [] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 
 		Account acc { 1 };
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		accountRepository.setCoins(1, CoinType::Normal, 1);
 
@@ -415,7 +416,7 @@ suite<"account"> accountTest = [] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 
 		Account acc { 1 };
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eq(acc.getPassword(), std::string { "123456" }));
@@ -426,7 +427,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.failGetPassword = true;
-		accountRepository.addAccount("crystalserver@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eq(std::string{}, acc.getPassword()));
@@ -521,7 +522,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.addAccount(
-			"crystalserver@test.com",
+			"crystal@test.com",
 			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, {{ "Crystal", 1 }, { "Crystal2", 2 }} }
  		);
 
@@ -539,7 +540,7 @@ suite<"account"> accountTest = [] {
 
 		Account acc { 1 };
 		accountRepository.addAccount(
-			"crystalserver@test.com",
+			"crystal@test.com",
 			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, { { "Crystal", 1 }, { "Crystal2", 2 } } }
 		);
 

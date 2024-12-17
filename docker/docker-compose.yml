@@ -40,7 +40,7 @@ services:
         condition: service_healthy
 
   login:
-    image: opentibiabr/login-server:latest
+    image: crystalserver/login-server:latest
     restart: unless-stopped
     ports:
       - '$LOGIN_HTTP_PORT:$LOGIN_HTTP_PORT'
