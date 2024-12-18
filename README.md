@@ -22,7 +22,7 @@ use the [Game Client](https://github.com/jprzimba/gameclient/releases) or [mehah
 
 You can see the complete change log for Crystal Server at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/CHANGELOG.md).
 
-If you want edit the map, use the [Remere's Map Editor](https://www.mediafire.com/file/o2e06j8j2lsxmh8/RME.rar/file).
+If you want edit the map, use the [Remere's Map Editor](https://github.com/jprzimba/rme-crystalserver/releases).
 
 You are subject to our code of conduct, read
 at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/CODE_OF_CONDUCT.md).
