@@ -22,7 +22,7 @@ use the [Game Client](https://github.com/jprzimba/gameclient/releases) or [mehah
 
 You can see the complete change log for Crystal Server at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/CHANGELOG.md).
 
-If you want edit the map, use the [Remere's Map Editor](https://www.mediafire.com/file/o2e06j8j2lsxmh8/RME.rar/file).
+If you want edit the map, use the [Remere's Map Editor](https://github.com/jprzimba/rme-crystalserver/releases).
 
 You are subject to our code of conduct, read
 at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/CODE_OF_CONDUCT.md).
@@ -35,7 +35,8 @@ Enjoy our [Discord](https://discord.gg/7AYJEHTghQ)
 ### Thanks
 - [Open Tibia](https://github.com/opentibia/server) and their [contributors](https://github.com/opentibia/server/graphs/contributors).
 - [The Forgotten Server](https://github.com/otland/forgottenserver) and their [contributors](https://github.com/otland/forgottenserver/graphs/contributors).
-- [Canary Server](https://github.com/opentibiabr/canary) and its [contributors](https://github.com/opentibiabr/canary/graphs/contributors).
+- [Crsystal Server](https://github.com/jprzimba/crystalserver) and their [contributors](https://github.com/jprzimba/crystalserver/graphs/contributors).
+- [Canary Server](https://github.com/opentibiabr/canary) and their [contributors](https://github.com/opentibiabr/canary/graphs/contributors).
 
 
 ### Issues

@@ -17,7 +17,7 @@ monster.raceId = 2376
 monster.Bestiary = {
 	class = "Vermin",
 	race = BESTY_RACE_VERMIN,
-    toKill = 5000,
+	toKill = 5000,
 	FirstUnlock = 200,
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
@@ -123,4 +123,3 @@ monster.immunities = {
 }
 
 mType:register(monster)
-

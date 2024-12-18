@@ -1,5 +1,39 @@
 # Changelog for Crystal Server
 
+
+## Version 4.1.2
+
+### Features
+
+- Protocol 14.05 support. ([Tryller](https://github.com/jprzimba))
+- New protocol 14.05 assets. ([Tryller](https://github.com/jprzimba))
+
+## Added files
+
+- Add all files in data/migrations
+
+## Modified files
+
+- crystalserver.exe
+- config.lua
+- data-global/world/world.otbm (7z file)
+- data-global/world/world-house.xml
+- data/items/assets.dat
+- data/items/items.xml
+- data/scripts/creaturescripts/player/login.lua
+- data/scripts/movements/special_tiles.lua
+- data/scripts/talkactions/god/icons_functions.lua
+
+## Added files
+
+- data-global/scripts/creaturescripts/customs/water_houses.lua
+
+### Bug Fixes
+
+- Fixed influenced creatures not spawning. ([Tryller](https://github.com/jprzimba))
+- Fixed houses with pool bug. ([Tryller](https://github.com/jprzimba))
+- Fixed some V.I.P list issues. ([Tryller](https://github.com/jprzimba))
+
 ## Version 4.1
 
 ### Features
@@ -82,5 +116,5 @@
 
 ---
 
-_Note: This Markdown document provides a concise overview of the changes introduced in Crystal Server version 4.0, categorized into features, bug fixes, and other updates. For a more detailed breakdown, refer to the commit history or release notes.
+_Note: This Markdown document provides a concise overview of the changes introduced in Crystal Server, categorized into features, bug fixes, and other updates. For a more detailed breakdown, refer to the commit history or release notes.
 In the changelog when [Tryller](https://github.com/jprzimba) is mentioned, it refers to me, [jprzimba](https://github.com/jprzimba) (João Paulo)_

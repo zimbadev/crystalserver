@@ -38,9 +38,9 @@ function tile.onStepIn(creature, item, position, fromPosition)
 				end
 
 				local depotMessage = "Your depot contains " .. depotItems .. " item" .. (depotItems ~= 1 and "s." or ".")
-				local stashMessage = "Your supply stash contains " .. player:getStashCount() .. " item" .. (player:getStashCount() ~= 1 and "s." or ".")
+				local stashMessage = "Your stash contains " .. player:getStashCount() .. " item" .. (player:getStashCount() ~= 1 and "s." or ".")
 
-				player:sendTextMessage(MESSAGE_FAILURE, depotMessage .. "\n" .. stashMessage)
+				player:sendTextMessage(MESSAGE_FAILURE, depotMessage .. " " .. stashMessage)
 				player:setSpecialContainersAvailable(true, true, true)
 				return true
 			end
