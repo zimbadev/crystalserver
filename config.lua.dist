@@ -48,6 +48,7 @@ blackSkullDuration = 3
 orangeSkullDuration = 7
 blackSkulledDeathHealth = 40
 blackSkulledDeathMana = 0
+fieldOwnershipDuration = 5 * 1000
 
 cleanProtectionZones = false
 

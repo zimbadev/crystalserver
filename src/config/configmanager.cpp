@@ -361,6 +361,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, FAIRFIGHT_TIMERANGE, "fairFightTimeRange", 5 * 60 * 1000);
 	loadIntConfig(L, BLACK_SKULL_DEATH_HEALTH, "blackSkulledDeathHealth", 40);
 	loadIntConfig(L, BLACK_SKULL_DEATH_MANA, "blackSkulledDeathMana", 0);
+	loadIntConfig(L, FIELD_OWNERSHIP, "fieldOwnershipDuration", 5 * 1000);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");
