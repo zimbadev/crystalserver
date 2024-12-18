@@ -5,9 +5,8 @@
 
 ### Features
 
-- Protocol 14.10 support. ([Tryller](https://github.com/jprzimba))
-- New protocol 14.10 mounts and outfits. ([Tryller](https://github.com/jprzimba))
-- New protocol 14.10 assets. ([Tryller](https://github.com/jprzimba))
+- Protocol 14.05 support. ([Tryller](https://github.com/jprzimba))
+- New protocol 14.05 assets. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
@@ -17,11 +16,10 @@
 
 - crystalserver.exe
 - config.lua
+- data-global/world/world.otbm (7z file)
 - data-global/world/world-house.xml
 - data/items/assets.dat
 - data/items/items.xml
-- data/libs/functions/quests.lua
-- data/modules/scripts/questtrack/questtrack.lua
 - data/scripts/creaturescripts/player/login.lua
 - data/scripts/movements/special_tiles.lua
 - data/scripts/talkactions/god/icons_functions.lua
@@ -34,7 +32,6 @@
 
 - Fixed influenced creatures not spawning. ([Tryller](https://github.com/jprzimba))
 - Fixed houses with pool bug. ([Tryller](https://github.com/jprzimba))
-
 
 ## Version 4.1
 
