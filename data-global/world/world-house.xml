@@ -937,7 +937,7 @@
 	<house name="Quay 1" houseid="3636" entryx="33885" entryy="31552" entryz="7" rent="200000" townid="22" size="81" clientid="0" beds="4" />
 	<house name="Quay 2" houseid="3637" entryx="33896" entryy="31544" entryz="7" rent="200000" townid="22" size="130" clientid="0" beds="3" />
 	<house name="Halls of Sun and Sea" houseid="3638" entryx="33909" entryy="31535" entryz="7" rent="1000000" guildhall="true" townid="22" size="423" clientid="0" beds="15" />
-	<house name="Palace Vicinity" houseid="3639" entryx="33866" entryy="31516" entryz="7" rent="200000" townid="22" size="129" clientid="0" beds="4" />
+	<house name="Palace Vicinity" houseid="3639" entryx="33866" entryy="31516" entryz="7" rent="200000" townid="22" size="132" clientid="0" beds="4" />
 	<house name="Wave Tower" houseid="3640" entryx="33879" entryy="31525" entryz="7" rent="400000" townid="22" size="212" clientid="0" beds="6" />
 	<house name="Old Sanctuary of God King Qjell" houseid="3641" entryx="33473" entryy="31310" entryz="9" rent="300000" townid="18" size="699" clientid="0" beds="6" />
 	<house name="Old Heritage Estate" houseid="3642" entryx="33598" entryy="31909" entryz="6" rent="600000" townid="20" size="335" clientid="0" beds="7" />
@@ -952,7 +952,7 @@
 	<house name="Wallside Lane 2" houseid="3651" entryx="33637" entryy="31928" entryz="6" rent="600000" townid="20" size="227" clientid="0" beds="4" />
 	<house name="Vanward Flats B" houseid="3652" entryx="33614" entryy="31935" entryz="6" rent="400000" townid="20" size="179" clientid="0" beds="4" />
 	<house name="Vanward Flats A" houseid="3653" entryx="33621" entryy="31935" entryz="6" rent="400000" townid="20" size="189" clientid="0" beds="4" />
-	<house name="Bronze Brothers Bastion" houseid="3654" entryx="33599" entryy="31933" entryz="6" rent="5000000" guildhall="true" townid="20" size="945" clientid="0" beds="16" />
+	<house name="Bronze Brothers Bastion" houseid="3654" entryx="33599" entryy="31933" entryz="6" rent="5000000" guildhall="true" townid="20" size="941" clientid="0" beds="16" />
 	<house name="Cistern Ave" houseid="3655" entryx="33588" entryy="31926" entryz="6" rent="300000" townid="20" size="111" clientid="0" beds="2" />
 	<house name="Antimony Lane 4" houseid="3656" entryx="33614" entryy="31922" entryz="6" rent="400000" townid="20" size="159" clientid="0" beds="3" />
 	<house name="Antimony Lane 3" houseid="3657" entryx="33630" entryy="31921" entryz="6" rent="400000" townid="20" size="101" clientid="0" beds="3" />

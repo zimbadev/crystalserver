@@ -393,7 +393,7 @@ private:
 	void sendOutfitWindow();
 	void sendPodiumWindow(const std::shared_ptr<Item> &podium, const Position &position, uint16_t itemId, uint8_t stackpos);
 
-	void sendUpdatedVIPStatus(uint32_t guid, VipStatus_t newStatus);
+	void sendUpdatedVIPStatus(uint32_t guid, VipStatus_t status);
 	void sendVIP(uint32_t guid, const std::string &name, const std::string &description, uint32_t icon, bool notify, VipStatus_t status);
 	void sendVIPGroups();
 
