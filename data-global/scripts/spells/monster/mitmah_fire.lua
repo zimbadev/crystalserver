@@ -21,7 +21,6 @@ function spell.onCastSpell(creature, var)
 	return combat:execute(creature, var)
 end
 
-
 spell:name("mitmah fire")
 spell:words("###21343")
 spell:isAggressive(true)

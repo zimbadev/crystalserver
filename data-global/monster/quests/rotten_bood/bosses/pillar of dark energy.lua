@@ -13,11 +13,10 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-
 monster.health = 37500
 monster.maxHealth = 37500
 monster.race = "venom"
---monster.corpse = 
+--monster.corpse =
 monster.speed = 0
 monster.manaCost = 0
 
@@ -63,9 +62,7 @@ monster.voices = {
 	chance = 30,
 }
 
-monster.loot = {
-
-}
+monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1450 },
@@ -101,4 +98,3 @@ monster.immunities = {
 }
 
 mType:register(monster)
-

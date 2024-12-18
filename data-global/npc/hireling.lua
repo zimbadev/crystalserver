@@ -350,13 +350,13 @@ function createHirelingType(HirelingName)
 			-- Sell all loot in loot pouch
 			{ itemName = "talon", clientId = 3034, sell = 320 },
 			{ itemName = "all loot", clientId = 23721, sell = 1 },
-	
+
 			-- Alaistar
 			{ itemName = "cowbell", clientId = 21204, sell = 210 },
 			{ itemName = "execowtioner mask", clientId = 21201, sell = 240 },
 			{ itemName = "giant pacifier", clientId = 21199, sell = 170 },
 			{ itemName = "glob of glooth", clientId = 21182, sell = 125 },
-			{ itemName = "glooth injection tube", clientId = 21103, sell = 350 },	
+			{ itemName = "glooth injection tube", clientId = 21103, sell = 350 },
 			{ itemName = "metal jaw", clientId = 21193, sell = 260 },
 			{ itemName = "metal toe", clientId = 21198, sell = 430 },
 			{ itemName = "mooh'tah shell", clientId = 21202, sell = 110 },
@@ -391,7 +391,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "tower shield", clientId = 3428, sell = 8000 },
 			{ itemName = "vampire shield", clientId = 3434, sell = 15000 },
 			{ itemName = "warrior helmet", clientId = 3369, sell = 5000 },
-	
+
 			-- Haroun
 			{ itemName = "axe ring", clientId = 3092, sell = 100 },
 			{ itemName = "bronze amulet", clientId = 3056, sell = 50, count = 200 },
@@ -416,7 +416,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "wand of starstorm", clientId = 8092, sell = 3600 },
 			{ itemName = "wand of voodoo", clientId = 8094, sell = 4400 },
 			{ itemName = "wand of vortex", clientId = 3074, sell = 100 },
-	
+
 			-- flint
 			{ itemName = "crest of the deep seas", clientId = 21892, sell = 10000 },
 			{ itemName = "cowtana", clientId = 21177, sell = 2500 },
@@ -437,7 +437,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "heat core", clientId = 21167, sell = 10000 },
 			{ itemName = "alloy legs", clientId = 21168, sell = 11000 },
 			{ itemName = "execowtioner axe", clientId = 21176, sell = 12000 },
-	
+
 			-- nah'bob
 			{ itemName = "angelic axe", clientId = 7436, sell = 5000 },
 			{ itemName = "blue robe", clientId = 3567, sell = 10000 },
@@ -464,7 +464,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "shadow sceptre", clientId = 7451, sell = 10000 },
 			{ itemName = "thaian sword", clientId = 7391, sell = 16000 },
 			{ itemName = "war hammer", clientId = 3279, sell = 1200 },
-	
+
 			-- yaman
 			{ itemName = "ankh", clientId = 3077, sell = 100 },
 			{ itemName = "dragon necklace", clientId = 3085, sell = 100, count = 200 },
@@ -488,7 +488,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "terra rod", clientId = 3065, sell = 2000 },
 			{ itemName = "time ring", clientId = 3053, sell = 100 },
 			{ itemName = "underworld rod", clientId = 8082, sell = 4400 },
-	
+
 			-- talila
 			{ itemName = "butterfly ring", clientId = 25698, sell = 2000 },
 			{ itemName = "heavy blossom staff", clientId = 25700, sell = 5000 },
@@ -529,7 +529,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "studded armor", clientId = 3378, sell = 25 },
 			{ itemName = "sword", clientId = 3264, sell = 25 },
 			{ itemName = "brass helmet", clientId = 3354, sell = 30 },
-			{ itemName = "mace", clientId = 3286,  sell = 30 },
+			{ itemName = "mace", clientId = 3286, sell = 30 },
 			{ itemName = "katana", clientId = 3300, sell = 35 },
 			{ itemName = "swampling club", clientId = 17824, sell = 40 },
 			{ itemName = "plate shield", clientId = 3410, sell = 45 },
@@ -583,7 +583,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "draken boots", clientId = 4033, sell = 40000 },
 			{ itemName = "zaoan helmet", clientId = 10385, sell = 45000 },
 			{ itemName = "Elite Draken Mail", clientId = 11651, sell = 50000 },
-	
+
 			-- hanna
 			{ itemName = "amber", clientId = 32626, sell = 20000 },
 			{ itemName = "amber with a bug", clientId = 32624, sell = 41000 },
@@ -647,7 +647,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "wedding ring", clientId = 3004, sell = 100 },
 			{ itemName = "white pearl", clientId = 3026, sell = 160 },
 			{ itemName = "orichalcum pearl", clientId = 3026, sell = 80 },
-	
+
 			-- lailene
 			{ itemName = "batwing hat", clientId = 9103, sell = 8000 },
 			{ itemName = "ethno coat", clientId = 8064, sell = 200 },
@@ -662,7 +662,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "spellbook of lost souls", clientId = 8075, sell = 19000 },
 			{ itemName = "spellbook of mind control", clientId = 8074, sell = 13000 },
 			{ itemName = "spellbook of warding", clientId = 8073, sell = 8000 },
-	
+
 			-- rashid
 			{ itemName = "abyss hammer", clientId = 7414, sell = 20000 },
 			{ itemName = "albino plate", clientId = 19358, sell = 1500 },
@@ -820,7 +820,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "war horn", clientId = 2958, sell = 8000 },
 			{ itemName = "witch hat", clientId = 9653, sell = 5000 },
 			{ itemName = "wyvern fang", clientId = 7408, sell = 1500 },
-	
+
 			-- rock in a hard place
 			{ itemName = "axe", clientId = 3274, sell = 7 },
 			{ itemName = "battle axe", clientId = 3266, sell = 80 },
@@ -943,7 +943,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "watch", clientId = 2906, sell = 6 },
 			{ itemName = "wooden hammer", clientId = 3459, sell = 15 },
 			{ itemName = "wooden shield", clientId = 3412, sell = 5 },
-			
+
 			-- tamoril
 			{ itemName = "blue gem", clientId = 3041, sell = 5000 },
 			{ itemName = "golden mug", clientId = 2903, sell = 250 },
@@ -987,7 +987,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "collar of blue plasma", clientId = 23542, sell = 6000 },
 			{ itemName = "collar of green plasma", clientId = 23543, sell = 6000 },
 			{ itemName = "collar of red plasma", clientId = 23544, sell = 6000 },
-	
+
 			-- yasir
 			{ itemName = "golden sun token", clientId = 43734, sell = 11000 },
 			{ itemName = "abomination's tail", clientId = 36791, sell = 700000 },
@@ -1671,7 +1671,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "zaogun flag", clientId = 10413, sell = 600 },
 			{ itemName = "zaogun shoulderplates", clientId = 10414, sell = 150 },
 			{ itemName = "watermelon tourmaline", clientId = 33780, sell = 230000 },
-	 
+
 			-- Valindara
 			{ itemName = "watermelon tourmaline", clientId = 33779, sell = 30000 },
 			{ itemName = "amber with a bug", clientId = 32624, sell = 41000 },
@@ -1767,7 +1767,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "white silk flower", clientId = 34008, sell = 9000 },
 			{ itemName = "wild flowers", clientId = 25691, sell = 120 },
 			{ itemName = "wood cape", clientId = 3575, sell = 5000 },
-			{ itemName = "wooden spellbook", clientId = 25699, sell = 12000 },  
+			{ itemName = "wooden spellbook", clientId = 25699, sell = 12000 },
 		},
 	}
 
@@ -1775,7 +1775,7 @@ function createHirelingType(HirelingName)
 	local function addItemsToShoppingBag(npc, player)
 		local playerId = player:getId()
 		local playerData = playerImbuementData[playerId]
-	
+
 		if playerData then
 			local moneyRequired = playerData.moneyRequired
 			local itemList = playerData.itemList
@@ -1784,31 +1784,31 @@ function createHirelingType(HirelingName)
 				npcHandler:setTopic(player:getId(), 0)
 				return false, "You don't have enough money."
 			end
-	
+
 			local totalWeight = 0
 			for _, item in pairs(itemList) do
 				local itemType = ItemType(item.itemId)
 				totalWeight = totalWeight + (itemType:getWeight() * item.count)
 			end
-	
+
 			if player:getFreeCapacity() < totalWeight then
 				return false, "You don't have enough weight."
 			end
-	
+
 			if player:getFreeBackpackSlots() == 0 then
 				return false, "You don't have enough room."
 			end
-	
+
 			local shoppingBag = player:addItem(2856, 1) -- present box
 			for _, item in pairs(itemList) do
 				shoppingBag:addItem(item.itemId, item.count)
 			end
-	
+
 			player:removeMoneyBank(moneyRequired)
-	
+
 			return true
 		end
-	
+
 		return false
 	end
 
@@ -2026,7 +2026,6 @@ function createHirelingType(HirelingName)
 		},
 	}
 
-
 	-- On buy npc shop message
 	npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
 		npc:sellItem(player, itemId, amount, subType, 0, ignore, inBackpacks)
@@ -2085,7 +2084,7 @@ function createHirelingType(HirelingName)
 		GOODS = 1400,
 		IMBUEMENT_START = 2000,
 		IMBUEMENT_BUY = 2001,
-		IMBUEMENT_END = 2002
+		IMBUEMENT_END = 2002,
 	}
 
 	local TOPIC_FOOD = {
@@ -2094,9 +2093,9 @@ function createHirelingType(HirelingName)
 
 	local GREETINGS = {
 		BANK = "Alright! What can I do for you and your bank business, |PLAYERNAME|?",
-			FOOD = [[Hmm, yes! A variety of fine food awaits! However, a small expense of 15000 gold is expected to make these delicious masterpieces happen.
+		FOOD = [[Hmm, yes! A variety of fine food awaits! However, a small expense of 15000 gold is expected to make these delicious masterpieces happen.
 			For 90000 gold I will also serve you a specific dish. Just tell me what it shall be: a {specific} meal or a little {surprise}.]],
-			STASH = "Of course, here is your stash! Well-maintained and neatly sorted for your convenience!",
+		STASH = "Of course, here is your stash! Well-maintained and neatly sorted for your convenience!",
 	}
 
 	local function getHirelingSkills()
@@ -2298,7 +2297,7 @@ function createHirelingType(HirelingName)
 
 		-- imbuement packages
 		local imbuementPackages =
-		"These are the available imbuement packages, Skill increase: {bash}, {blockade}, {chop}, {epiphany}, {precision}, {slash}. Additional attributes: {featherweight}, {strike}, {swiftness}, {vampirism}, {vibrancy}, {void}. Elemental damage: {electrify}, {frost}, {reap}, {scorch}, {venom}. Elemental protection: {cloud fabric}, {demon presence}, {dragon hide}, {lich shroud}, {quara scale}, {snake skin}."
+			"These are the available imbuement packages, Skill increase: {bash}, {blockade}, {chop}, {epiphany}, {precision}, {slash}. Additional attributes: {featherweight}, {strike}, {swiftness}, {vampirism}, {vibrancy}, {void}. Elemental damage: {electrify}, {frost}, {reap}, {scorch}, {venom}. Elemental protection: {cloud fabric}, {demon presence}, {dragon hide}, {lich shroud}, {quara scale}, {snake skin}."
 		if MsgContains(message, "imbuement packages") then
 			npcHandler:setTopic(playerId, TOPIC.IMBUEMENT_START)
 			npcHandler:say(imbuementPackages, npc, creature)

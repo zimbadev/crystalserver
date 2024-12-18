@@ -14,14 +14,12 @@ monster.outfit = {
 }
 
 monster.raceId = 61772
-monster.Bestiary = {
-
-}
+monster.Bestiary = {}
 
 monster.health = 10000
 monster.maxHealth = 10000
 monster.race = "venom"
---monster.corpse = 
+--monster.corpse =
 monster.speed = 0
 monster.manaCost = 0
 
@@ -67,9 +65,7 @@ monster.voices = {
 	chance = 30,
 }
 
-monster.loot = {
-
-}
+monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -400 },
@@ -104,4 +100,3 @@ monster.immunities = {
 }
 
 mType:register(monster)
-

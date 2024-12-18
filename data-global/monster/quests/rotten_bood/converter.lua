@@ -75,7 +75,6 @@ monster.voices = {
 	chance = 30,
 }
 
-
 monster.loot = {
 	{ name = "crystal coin", chance = 5230, maxCount = 1 },
 	{ name = "darklight obsidian axe", chance = 6963, maxCount = 1 },
@@ -122,4 +121,3 @@ monster.immunities = {
 }
 
 mType:register(monster)
-

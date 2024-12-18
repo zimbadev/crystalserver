@@ -82,8 +82,8 @@ monster.loot = {
 	{ name = "platinum coin", chance = 5000, maxCount = 10 },
 	{ name = "Strong Health Potion", chance = 1200, maxCount = 3 },
 	{ name = "Green Crystal Splinter", chance = 1000, maxCount = 1 },
-    { name = "Brown Crystal Splinter", chance = 1000, maxCount = 1 },
-    { name = "Broken Mitmah Necklace", chance = 500, maxCount = 1 },
+	{ name = "Brown Crystal Splinter", chance = 1000, maxCount = 1 },
+	{ name = "Broken Mitmah Necklace", chance = 500, maxCount = 1 },
 	{ name = "Ruby Necklace", chance = 1000, maxCount = 1 },
 	{ name = "Yellow Gem", chance = 900, maxCount = 3 },
 	{ name = "Gold Ingot", chance = 1000, maxCount = 1 },
@@ -91,10 +91,9 @@ monster.loot = {
 	{ name = "Onyx Chip", chance = 1000, maxCount = 1 },
 	{ name = "Opal", chance = 1000, maxCount = 1 },
 	{ name = "Prismatic Quartz", chance = 1000, maxCount = 1 },
-	{ name = "Gold-Brocaded Cloth", chance = 1000, maxCount = 1 },	
-    { name = "Ornate Crossbow", chance = 400, maxCount = 1 },
+	{ name = "Gold-Brocaded Cloth", chance = 1000, maxCount = 1 },
+	{ name = "Ornate Crossbow", chance = 400, maxCount = 1 },
 	{ name = "Broken Mitmah Necklace", chance = 500, maxCount = 1 },
-				
 }
 
 monster.attacks = {

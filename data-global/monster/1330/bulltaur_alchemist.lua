@@ -83,11 +83,11 @@ monster.loot = {
 	{ name = "platinum coin", chance = 3533, maxCount = 7 },
 	{ id = 44736, chance = 4545 }, -- stealth ring
 	{ id = 44737, chance = 4545 }, -- stealth ring
-	{ id = 44738, chance = 4545 }, -- stealth ring	
+	{ id = 44738, chance = 4545 }, -- stealth ring
 	{ name = "might ring", chance = 4285 },
 	{ name = "mino shield", chance = 840 },
 	{ name = "dragon hammer", chance = 420 },
-	{ id = 3041, chance = 4545 }, -- stealth ring	
+	{ id = 3041, chance = 4545 }, -- stealth ring
 	{ name = "ultimate health potion", chance = 5285 },
 	{ name = "great mana potion", chance = 6285 },
 	{ name = "alloy legs", chance = 1285 },
@@ -100,7 +100,6 @@ monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 90, maxDamage = -390 },
 	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_ICEDAMAGE, minDamage = -150, maxDamage = -450, range = 3, radius = 4, effect = CONST_ME_ICEAREA, target = true },
 	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_ENERGYDAMAGE, minDamage = -150, maxDamage = -450, range = 3, radius = 4, effect = 170, target = true },
-
 }
 
 monster.defenses = {
@@ -130,4 +129,3 @@ monster.immunities = {
 }
 
 mType:register(monster)
-
