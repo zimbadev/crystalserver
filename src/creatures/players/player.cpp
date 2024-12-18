@@ -4934,6 +4934,7 @@ bool Player::checkAutoLoot(bool isBoss) const {
 	if (!g_configManager().getBoolean(AUTOLOOT)) {
 		return false;
 	}
+
 	if (g_configManager().getBoolean(VIP_SYSTEM_ENABLED) && g_configManager().getBoolean(VIP_AUTOLOOT_VIP_ONLY) && !isVip()) {
 		return false;
 	}
@@ -4949,8 +4950,11 @@ bool Player::checkAutoLoot(bool isBoss) const {
 }
 
 bool Player::checkChainSystem() const {
-	const bool toggleChain = g_configManager().getBoolean(TOGGLE_CHAIN_SYSTEM);
-	if (!toggleChain) {
+	if (!g_configManager().getBoolean(TOGGLE_CHAIN_SYSTEM)) {
+		return false;
+	}
+
+	if (g_configManager().getBoolean(VIP_SYSTEM_ENABLED) && g_configManager().getBoolean(CHAIN_SYSTEM_VIP_ONLY) && !isVip()) {
 		return false;
 	}
 

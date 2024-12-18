@@ -9,6 +9,7 @@
 - New protocol 14.05 assets. ([Tryller](https://github.com/jprzimba))
 - Fix gotoHouse talkaction. ([Tryller](https://github.com/jprzimba))
 - Optimized the `onPlayerSellAllLoot` code to prevent prolonged freezes. ([Tryller](https://github.com/jprzimba))
+- Add a new configurable feature in `config.lua`: `chainSystemVipOnly`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
