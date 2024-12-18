@@ -32,6 +32,7 @@
 
 - Fixed influenced creatures not spawning. ([Tryller](https://github.com/jprzimba))
 - Fixed houses with pool bug. ([Tryller](https://github.com/jprzimba))
+- Fixed some V.I.P list issues. ([Tryller](https://github.com/jprzimba))
 
 ## Version 4.1
 
