@@ -46,6 +46,7 @@ public:
 	VipStatus_t getStatus() const {
 		return status;
 	}
+
 	void setStatus(VipStatus_t newStatus) {
 		status = newStatus;
 	}
