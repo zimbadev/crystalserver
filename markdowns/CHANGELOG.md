@@ -7,6 +7,7 @@
 
 - Protocol 14.05 support. ([Tryller](https://github.com/jprzimba))
 - New protocol 14.05 assets. ([Tryller](https://github.com/jprzimba))
+- Fix gotoHouse talkaction. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
@@ -23,6 +24,7 @@
 - data/scripts/creaturescripts/player/login.lua
 - data/scripts/movements/special_tiles.lua
 - data/scripts/talkactions/god/icons_functions.lua
+- data/scripts/talkactions/god/goto_house.lua
 
 ## Added files
 
