@@ -84,11 +84,11 @@ monster.loot = {
 	{ name = "platinum coin", chance = 3533, maxCount = 7 },
 	{ id = 44736, chance = 4545 }, -- stealth ring
 	{ id = 44737, chance = 4545 }, -- stealth ring
-	{ id = 44738, chance = 4545 }, -- stealth ring	
+	{ id = 44738, chance = 4545 }, -- stealth ring
 	{ name = "might ring", chance = 14285 },
 	{ name = "mino shield", chance = 840 },
 	{ name = "dragon hammer", chance = 420 },
-	{ id = 3041, chance = 4545 }, -- stealth ring	
+	{ id = 3041, chance = 4545 }, -- stealth ring
 }
 
 monster.attacks = {

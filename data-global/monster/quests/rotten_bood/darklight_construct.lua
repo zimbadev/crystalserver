@@ -123,4 +123,3 @@ monster.immunities = {
 }
 
 mType:register(monster)
-

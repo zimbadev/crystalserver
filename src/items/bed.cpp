@@ -91,7 +91,12 @@ std::shared_ptr<BedItem> BedItem::getNextBedItem() {
 }
 
 bool BedItem::canUse(const std::shared_ptr<Player> &player) {
-	if ((player == nullptr) || (house == nullptr) || !player->isPremium()) {
+	if ((player == nullptr) || (house == nullptr)) {
+		return false;
+	}
+
+	if (g_configManager().getBoolean(BEDS_ONLY_PREMIUM) && !player->isPremium()) {
+		player->sendCancelMessage(RETURNVALUE_YOUNEEDPREMIUMACCOUNT);
 		return false;
 	}
 

@@ -48,6 +48,7 @@ blackSkullDuration = 3
 orangeSkullDuration = 7
 blackSkulledDeathHealth = 40
 blackSkulledDeathMana = 0
+fieldOwnershipDuration = 5 * 1000
 
 cleanProtectionZones = false
 
@@ -356,6 +357,7 @@ housePurchasedShowPrice = false
 houseLoseAfterInactivity = 30 -- days; 0 = never
 onlyInvitedCanMoveHouseItems = true
 togglehouseTransferOnRestart = true
+bedsOnlyPremium = true
 
 -- Item Usage
 timeBetweenActions = 200
@@ -450,6 +452,7 @@ maxDamageReflection = 200
 -- Chain system
 -- NOTE: combatChainDelay: set to minimum 50 miliseconds
 toggleChainSystem = false
+chainSystemVipOnly = true
 combatChainDelay = 50
 combatChainTargets = 5
 combatChainSkillFormulaAxe = 0.9

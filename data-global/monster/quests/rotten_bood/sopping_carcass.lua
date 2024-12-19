@@ -17,7 +17,7 @@ monster.raceId = 2396
 monster.Bestiary = {
 	class = "Undead",
 	race = BESTY_RACE_UNDEAD,
-    toKill = 5000,
+	toKill = 5000,
 	FirstUnlock = 200,
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
@@ -76,15 +76,15 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "crystal coin", chance = 90305},
-	{ name = "soul orb", chance = 27927, minCount = 1, maxCount = 3},
-	{ name = "lichen gobbler", chance = 15243},
-	{ name = "decayed finger bone", chance = 25798},
-	{ name = "rotten roots", chance = 9031},
-	{ name = "yellow gem", chance = 3836},
-	{ name = "underworld rod", chance = 1525},
-	{ id = 3039, chance = 3537}, -- red gem,
-	{ name = "ripper lance", chance = 4752}
+	{ name = "crystal coin", chance = 90305 },
+	{ name = "soul orb", chance = 27927, minCount = 1, maxCount = 3 },
+	{ name = "lichen gobbler", chance = 15243 },
+	{ name = "decayed finger bone", chance = 25798 },
+	{ name = "rotten roots", chance = 9031 },
+	{ name = "yellow gem", chance = 3836 },
+	{ name = "underworld rod", chance = 1525 },
+	{ id = 3039, chance = 3537 }, -- red gem,
+	{ name = "ripper lance", chance = 4752 },
 }
 
 monster.attacks = {
@@ -99,7 +99,7 @@ monster.attacks = {
 monster.defenses = {
 	defense = 60,
 	armor = 112,
-	mitigation = 3.25
+	mitigation = 3.25,
 }
 
 monster.elements = {
@@ -123,4 +123,3 @@ monster.immunities = {
 }
 
 mType:register(monster)
-

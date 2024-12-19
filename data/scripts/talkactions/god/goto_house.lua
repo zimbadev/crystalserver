@@ -1,6 +1,6 @@
-local sellHouse = TalkAction("/gotohouse")
+local gotoHouse = TalkAction("/gotohouse")
 
-function sellHouse.onSay(player, words, param)
+function gotoHouse.onSay(player, words, param)
 	local targetPlayer = Player(param)
 	if targetPlayer then
 		local targetHouse = targetPlayer:getHouse()
@@ -23,6 +23,6 @@ function sellHouse.onSay(player, words, param)
 	return true
 end
 
-sellHouse:separator(" ")
-sellHouse:groupType("god")
-sellHouse:register()
+gotoHouse:separator(" ")
+gotoHouse:groupType("god")
+gotoHouse:register()

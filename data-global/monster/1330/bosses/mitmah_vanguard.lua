@@ -81,7 +81,7 @@ monster.loot = {
 	{ id = 44621, chance = 440 }, -- health potion
 	{ id = 44624, chance = 440 }, -- halberd
 	{ name = "Gold Coin", chance = 9650, maxCount = 400 },
-	{ name = "Crystal Coin", chance = 700,  maxCount = 2 },
+	{ name = "Crystal Coin", chance = 700, maxCount = 2 },
 	{ name = "Great Spirit Potion", chance = 2450 },
 	{ name = "Ultimate Mana Potion", chance = 5450, maxCount = 15 },
 	{ name = "Ultimate Health Potion", chance = 5450, maxCount = 15 },
@@ -103,7 +103,6 @@ monster.defenses = {
 	armor = 45,
 	mitigation = 3.00,
 	{ name = "combat", interval = 2000, chance = 8, type = COMBAT_HEALING, minDamage = 2500, maxDamage = 5000, effect = CONST_ME_MAGIC_GREEN, target = false },
-
 }
 
 monster.elements = {
@@ -141,4 +140,3 @@ mType.onMove = function(monster, creature, fromPosition, toPosition) end
 mType.onSay = function(monster, creature, type, message) end
 
 mType:register(monster)
-

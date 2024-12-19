@@ -31,7 +31,7 @@ monster.changeTarget = {
 
 monster.bosstiary = {
 	bossRaceId = 2367,
-	bossRace = RARITY_NEMESIS
+	bossRace = RARITY_NEMESIS,
 }
 
 monster.strategiesTarget = {
@@ -66,8 +66,7 @@ monster.light = {
 	color = 0,
 }
 
-monster.summon = {
-}
+monster.summon = {}
 
 monster.voices = {
 	interval = 5000,
@@ -75,10 +74,10 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ id = 3043, chance = 100000, maxCount = 30 }, 
+	{ id = 3043, chance = 100000, maxCount = 30 },
 	{ id = 7643, chance = 40000, maxCount = 20 },
-	{ id = 238, chance = 40000, maxCount = 20 }, 
-	{ id = 7642, chance = 40000, maxCount = 20 }, 
+	{ id = 238, chance = 40000, maxCount = 20 },
+	{ id = 7642, chance = 40000, maxCount = 20 },
 	{ name = "white gem", chance = 30000, maxCount = 1 },
 	{ name = "giant sapphire", chance = 3000, maxCount = 1 },
 	{ id = 44008, chance = 10000, maxCount = 2 },
@@ -131,23 +130,23 @@ monster.loot = {
 	{ id = 43884, chance = 420 },
 	{ id = 43885, chance = 430 },
 	{ id = 43887, chance = 440 },
-	{ id = 36478, chance = 450 }
+	{ id = 36478, chance = 450 },
 }
 
 monster.attacks = {
-	{ name ="melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -3000 },
-	{ name ="combat", interval = 3000, chance = 35, type = COMBAT_ICEDAMAGE, minDamage = -900, maxDamage = -1100, range = 7, radius = 7, shootEffect = CONST_ANI_ICE, effect = 243, target = true },
-	{ name ="combat", interval = 2000, chance = 13, type = COMBAT_DEATHDAMAGE, minDamage = -100, maxDamage = -1000, length = 8, spread = 3, effect = 252, target = false },
-	{ name ="combat", interval = 3000, chance = 30, type = COMBAT_FIREDAMAGE, minDamage = -1000, maxDamage = -2000, length = 8, spread = 3, effect = 249, target = false },
-	{ name ="combat", interval = 2000, chance = 30, type = COMBAT_ICEDAMAGE, minDamage = -950, maxDamage = -2400, range = 7, radius = 3, shootEffect = 37, effect = 240, target = true },
-	{ name ="combat", interval = 2000, chance = 10, type = COMBAT_DEATHDAMAGE, minDamage = -1000, maxDamage = -2500, length = 8, spread = 3, effect = 244, target = false },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -3000 },
+	{ name = "combat", interval = 3000, chance = 35, type = COMBAT_ICEDAMAGE, minDamage = -900, maxDamage = -1100, range = 7, radius = 7, shootEffect = CONST_ANI_ICE, effect = 243, target = true },
+	{ name = "combat", interval = 2000, chance = 13, type = COMBAT_DEATHDAMAGE, minDamage = -100, maxDamage = -1000, length = 8, spread = 3, effect = 252, target = false },
+	{ name = "combat", interval = 3000, chance = 30, type = COMBAT_FIREDAMAGE, minDamage = -1000, maxDamage = -2000, length = 8, spread = 3, effect = 249, target = false },
+	{ name = "combat", interval = 2000, chance = 30, type = COMBAT_ICEDAMAGE, minDamage = -950, maxDamage = -2400, range = 7, radius = 3, shootEffect = 37, effect = 240, target = true },
+	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_DEATHDAMAGE, minDamage = -1000, maxDamage = -2500, length = 8, spread = 3, effect = 244, target = false },
 }
 
 monster.defenses = {
 	defense = 135,
 	armor = 135,
-	{ name ="combat", interval = 3000, chance = 15, type = COMBAT_HEALING, minDamage = 2500, maxDamage = 3500, effect = 236, target = false },
-	{ name ="speed", interval = 4000, chance = 80, speedChange = 700, effect = CONST_ME_MAGIC_RED, target = false, duration = 6000 }
+	{ name = "combat", interval = 3000, chance = 15, type = COMBAT_HEALING, minDamage = 2500, maxDamage = 3500, effect = 236, target = false },
+	{ name = "speed", interval = 4000, chance = 80, speedChange = 700, effect = CONST_ME_MAGIC_RED, target = false, duration = 6000 },
 }
 
 monster.elements = {
