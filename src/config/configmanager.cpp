@@ -212,6 +212,7 @@ bool ConfigManager::load() {
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_DISTANCE, "combatChainSkillFormulaDistance", 0.9);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_MISSILE, "combatChainSkillFormulaMissile", 0.9);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_WANDS_AND_RODS, "combatChainSkillFormulaWandsAndRods", 1.0);
+	loadFloatConfig(L, BEDS_ONLY_PREMIUM, "bedsOnlyPremium", true);
 
 	loadIntConfig(L, ACTIONS_DELAY_INTERVAL, "timeBetweenActions", 200);
 	loadIntConfig(L, ADVENTURERSBLESSING_LEVEL, "adventurersBlessingLevel", 21);

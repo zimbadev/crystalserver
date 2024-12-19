@@ -357,6 +357,7 @@ housePurchasedShowPrice = false
 houseLoseAfterInactivity = 30 -- days; 0 = never
 onlyInvitedCanMoveHouseItems = true
 togglehouseTransferOnRestart = true
+bedsOnlyPremium = true
 
 -- Item Usage
 timeBetweenActions = 200
