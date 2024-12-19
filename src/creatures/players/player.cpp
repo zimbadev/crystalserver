@@ -77,6 +77,7 @@ MuteCountMap Player::muteCountMap;
 Player::Player(std::shared_ptr<ProtocolGame> p) :
 	lastPing(OTSYS_TIME()),
 	lastPong(lastPing),
+	lastLoad(OTSYS_TIME()),
 	inbox(std::make_shared<Inbox>(ITEM_INBOX)),
 	client(std::move(p)) {
 	m_playerVIP = std::make_unique<PlayerVIP>(*this);
@@ -5663,6 +5664,11 @@ void Player::onAttacked() {
 	Creature::onAttacked();
 
 	addInFightTicks();
+}
+
+bool Player::checkLoginDelay(uint32_t playerId) const
+{
+	return (OTSYS_TIME() <= (lastLoad + g_configManager().getNumber(LOGIN_PROTECTION)) && !hasBeenAttacked(playerId));
 }
 
 void Player::onIdleStatus() {

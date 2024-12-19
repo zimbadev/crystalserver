@@ -443,6 +443,11 @@ void Monster::onCreatureMove(const std::shared_ptr<Creature> &creature, const st
 						}
 					}
 				} else if (isOpponent(creature)) {
+					auto player = std::dynamic_pointer_cast<Player>(creature);
+					if (player && player->checkLoginDelay(player->getID())) {
+						return;
+					}
+
 					// we have no target lets try pick this one
 					g_dispatcher().addEvent([selfWeak = std::weak_ptr(getMonster()), creatureWeak = std::weak_ptr(creature)] {
 						const auto &self = selfWeak.lock();
@@ -951,6 +956,11 @@ bool Monster::isFleeing() const {
 
 bool Monster::selectTarget(const std::shared_ptr<Creature> &creature) {
 	if (!isTarget(creature)) {
+		return false;
+	}
+
+	auto player = std::dynamic_pointer_cast<Player>(creature);
+	if (player && player->checkLoginDelay(player->getID())) {
 		return false;
 	}
 
