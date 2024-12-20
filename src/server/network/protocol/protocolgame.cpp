@@ -7434,7 +7434,7 @@ void ProtocolGame::sendPodiumWindow(const std::shared_ptr<Item> &podium, const P
 }
 
 void ProtocolGame::sendUpdatedVIPStatus(uint32_t guid, VipStatus_t status) {
-	if (oldProtocol) {
+	if (oldProtocol && status == VipStatus_t::TRAINING) {
 		return;
 	}
 
@@ -7446,7 +7446,7 @@ void ProtocolGame::sendUpdatedVIPStatus(uint32_t guid, VipStatus_t status) {
 }
 
 void ProtocolGame::sendVIP(uint32_t guid, const std::string &name, const std::string &description, uint32_t icon, bool notify, VipStatus_t status) {
-	if (oldProtocol) {
+	if (oldProtocol && status == VipStatus_t::TRAINING) {
 		return;
 	}
 
