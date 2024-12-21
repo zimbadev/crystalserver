@@ -3803,7 +3803,7 @@ bool Player::dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, const 
 	return false;
 }
 
-std::shared_ptr<Item> Player::getCorpse(const std::shared_ptr<Creature>& lastHitCreature, const std::shared_ptr<Creature>& mostDamageCreature) {
+std::shared_ptr<Item> Player::getCorpse(const std::shared_ptr<Creature> &lastHitCreature, const std::shared_ptr<Creature> &mostDamageCreature) {
 	auto corpse = Creature::getCorpse(lastHitCreature, mostDamageCreature);
 	if (!corpse || !corpse->getContainer()) {
 		return nullptr;
