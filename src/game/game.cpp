@@ -3506,6 +3506,7 @@ void Game::playerMove(uint32_t playerId, Direction direction) {
 	player->resetIdleTime();
 	player->setNextWalkActionTask(nullptr);
 	player->cancelPush();
+	player->resetLastLoad();
 
 	player->startAutoWalk(std::vector<Direction> { direction }, false);
 }
@@ -5930,6 +5931,7 @@ void Game::playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId) {
 	}
 
 	player->setAttackedCreature(attackCreature);
+	player->resetLastLoad();
 	updateCreatureWalk(player->getID()); // internally uses addEventWalk.
 }
 

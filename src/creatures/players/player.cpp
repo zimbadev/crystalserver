@@ -77,6 +77,7 @@ MuteCountMap Player::muteCountMap;
 Player::Player(std::shared_ptr<ProtocolGame> p) :
 	lastPing(OTSYS_TIME()),
 	lastPong(lastPing),
+	lastLoad(OTSYS_TIME()),
 	inbox(std::make_shared<Inbox>(ITEM_INBOX)),
 	client(std::move(p)) {
 	m_playerVIP = std::make_unique<PlayerVIP>(*this);
@@ -3803,19 +3804,42 @@ bool Player::dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, const 
 }
 
 std::shared_ptr<Item> Player::getCorpse(const std::shared_ptr<Creature> &lastHitCreature, const std::shared_ptr<Creature> &mostDamageCreature) {
-	const auto &corpse = Creature::getCorpse(lastHitCreature, mostDamageCreature);
-	if (corpse && corpse->getContainer()) {
-		std::ostringstream ss;
-		if (lastHitCreature) {
-			std::string subjectPronoun = getSubjectPronoun();
-			capitalizeWords(subjectPronoun);
-			ss << "You recognize " << getNameDescription() << ". " << subjectPronoun << " " << getSubjectVerb(true) << " killed by " << lastHitCreature->getNameDescription() << '.';
-		} else {
-			ss << "You recognize " << getNameDescription() << '.';
+	auto corpse = Creature::getCorpse(lastHitCreature, mostDamageCreature);
+	if (!corpse || !corpse->getContainer()) {
+		return nullptr;
+	}
+
+	std::ostringstream descriptionStream;
+	std::string subjectPronoun = getSubjectPronoun();
+	capitalizeWords(subjectPronoun);
+
+	if (damageMap.empty()) {
+		descriptionStream << fmt::format("You recognize {}.", getNameDescription());
+	} else {
+		descriptionStream << fmt::format("You recognize {}. {} was killed by ", getNameDescription(), subjectPronoun);
+
+		std::vector<std::string> killers;
+		for (const auto& [creatureId, damageInfo] : damageMap) {
+			auto damageDealer = g_game().getCreatureByID(creatureId);
+			if (damageDealer) {
+				killers.push_back(damageDealer->getNameDescription());
+			}
 		}
 
-		corpse->setAttribute(ItemAttribute_t::DESCRIPTION, ss.str());
+		if (killers.empty()) {
+			descriptionStream << "an unknown attacker";
+		} else {
+			for (size_t i = 0; i < killers.size(); ++i) {
+				if (i > 0) {
+					descriptionStream << (i == killers.size() - 1 ? " and " : ", ");
+				}
+				descriptionStream << killers[i];
+			}
+		}
+		descriptionStream << '.';
 	}
+
+	corpse->setAttribute(ItemAttribute_t::DESCRIPTION, descriptionStream.str());
 	return corpse;
 }
 
@@ -5663,6 +5687,11 @@ void Player::onAttacked() {
 	Creature::onAttacked();
 
 	addInFightTicks();
+}
+
+bool Player::checkLoginDelay(uint32_t playerId) const
+{
+	return (OTSYS_TIME() <= (lastLoad + g_configManager().getNumber(LOGIN_PROTECTION)) && !hasBeenAttacked(playerId));
 }
 
 void Player::onIdleStatus() {
@@ -8929,13 +8958,49 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 	history.success = success;
 	history.tierLoss = reduceTierLoss;
 
+	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
+	if (!exaltationChest) {
+		g_logger().error("Failed to create exaltation chest");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+	const auto &exaltationContainer = exaltationChest->getContainer();
+	if (!exaltationContainer) {
+		g_logger().error("Failed to create exaltation container");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	auto returnValue = queryAdd(CONST_SLOT_BACKPACK, exaltationContainer, 1, 0);
+	if (returnValue != RETURNVALUE_NOERROR) {
+		g_logger().error("[Log 1] Failed to add forge item {} from player with name {}", firstItemId, getName());
+		sendCancelMessage(getReturnMessage(returnValue));
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	const auto &firstForgedItem = Item::CreateItem(firstItemId, 1);
+	if (!firstForgedItem) {
+		g_logger().error("[Log 3] Player with name {} failed to fuse item with id {}", getName(), firstItemId);
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	returnValue = g_game().internalAddItem(exaltationContainer, firstForgedItem, INDEX_WHEREEVER);
+	if (returnValue != RETURNVALUE_NOERROR) {
+		g_logger().error("[Log 1] Failed to add forge item {} from player with name {}", firstItemId, getName());
+		sendCancelMessage(getReturnMessage(returnValue));
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
 	const auto &firstForgingItem = getForgeItemFromId(firstItemId, tier);
 	if (!firstForgingItem) {
 		g_logger().error("[Log 1] Player with name {} failed to fuse item with id {}", getName(), firstItemId);
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
 	}
-	auto returnValue = g_game().internalRemoveItem(firstForgingItem, 1);
+	returnValue = g_game().internalRemoveItem(firstForgingItem, 1);
 	if (returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 1] Failed to remove forge item {} from player with name {}", firstItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
@@ -8951,33 +9016,6 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 	if (returnValue = g_game().internalRemoveItem(secondForgingItem, 1);
 	    returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 2] Failed to remove forge item {} from player with name {}", secondItemId, getName());
-		sendCancelMessage(getReturnMessage(returnValue));
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
-	if (!exaltationChest) {
-		g_logger().error("Failed to create exaltation chest");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-	const auto &exaltationContainer = exaltationChest->getContainer();
-	if (!exaltationContainer) {
-		g_logger().error("Failed to create exaltation container");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	const auto &firstForgedItem = Item::CreateItem(firstItemId, 1);
-	if (!firstForgedItem) {
-		g_logger().error("[Log 3] Player with name {} failed to fuse item with id {}", getName(), firstItemId);
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-	returnValue = g_game().internalAddItem(exaltationContainer, firstForgedItem, INDEX_WHEREEVER);
-	if (returnValue != RETURNVALUE_NOERROR) {
-		g_logger().error("[Log 1] Failed to add forge item {} from player with name {}", firstItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
@@ -9144,7 +9182,7 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 
 	returnValue = g_game().internalAddItem(static_self_cast<Player>(), exaltationContainer, INDEX_WHEREEVER);
 	if (returnValue != RETURNVALUE_NOERROR) {
-		g_logger().error("Failed to add exaltation chest to player with name {}", getName());
+		g_logger().error("Failed to add exaltation chest to player with name {}", fmt::underlying(ITEM_EXALTATION_CHEST), getName());
 		sendCancelMessage(getReturnMessage(returnValue));
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
@@ -9171,13 +9209,33 @@ void Player::forgeTransferItemTier(ForgeAction_t actionType, uint16_t donorItemI
 	history.tier = tier;
 	history.success = true;
 
+	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
+	if (!exaltationChest) {
+		g_logger().error("Exaltation chest is nullptr");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+	const auto &exaltationContainer = exaltationChest->getContainer();
+	if (!exaltationContainer) {
+		g_logger().error("Exaltation container is nullptr");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	auto returnValue = queryAdd(CONST_SLOT_BACKPACK, exaltationContainer, 1, 0);
+	if (returnValue != RETURNVALUE_NOERROR) {
+		sendCancelMessage(getReturnMessage(returnValue));
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
 	const auto &donorItem = getForgeItemFromId(donorItemId, tier);
 	if (!donorItem) {
 		g_logger().error("[Log 1] Player with name {} failed to transfer item with id {}", getName(), donorItemId);
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
 	}
-	auto returnValue = g_game().internalRemoveItem(donorItem, 1);
+	returnValue = g_game().internalRemoveItem(donorItem, 1);
 	if (returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 1] Failed to remove transfer item {} from player with name {}", donorItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
@@ -9195,19 +9253,6 @@ void Player::forgeTransferItemTier(ForgeAction_t actionType, uint16_t donorItemI
 	    returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 2] Failed to remove transfer item {} from player with name {}", receiveItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
-	if (!exaltationChest) {
-		g_logger().error("Exaltation chest is nullptr");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-	const auto &exaltationContainer = exaltationChest->getContainer();
-	if (!exaltationContainer) {
-		g_logger().error("Exaltation container is nullptr");
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
 	}

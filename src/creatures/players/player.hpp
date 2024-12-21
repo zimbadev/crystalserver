@@ -384,6 +384,8 @@ public:
 
 	void genReservedStorageRange();
 
+	bool checkLoginDelay(uint32_t playerId) const;
+
 	void setGroup(std::shared_ptr<Group> newGroup) {
 		group = std::move(newGroup);
 	}
@@ -431,6 +433,10 @@ public:
 
 	void resetIdleTime() {
 		idleTime = 0;
+	}
+
+	void resetLastLoad() {
+		lastLoad = 0;
 	}
 
 	bool isInGhostMode() const override {
@@ -1413,6 +1419,7 @@ private:
 	int64_t lastUIInteraction = 0;
 	int64_t lastPing;
 	int64_t lastPong;
+	int64_t lastLoad;
 	int64_t nextAction = 0;
 	int64_t nextPotionAction = 0;
 	int64_t lastQuickLootNotification = 0;

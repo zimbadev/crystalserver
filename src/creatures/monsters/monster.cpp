@@ -443,6 +443,11 @@ void Monster::onCreatureMove(const std::shared_ptr<Creature> &creature, const st
 						}
 					}
 				} else if (isOpponent(creature)) {
+					auto player = std::dynamic_pointer_cast<Player>(creature);
+					if (player && player->checkLoginDelay(player->getID())) {
+						return;
+					}
+
 					// we have no target lets try pick this one
 					g_dispatcher().addEvent([selfWeak = std::weak_ptr(getMonster()), creatureWeak = std::weak_ptr(creature)] {
 						const auto &self = selfWeak.lock();
@@ -523,9 +528,9 @@ void Monster::onAttackedByPlayer(const std::shared_ptr<Player> &attackerPlayer) 
 	}
 }
 
-void Monster::onSpawn() {
+void Monster::onSpawn(const Position &position) {
 	if (mType->info.spawnEvent != -1) {
-		// onSpawn(self)
+		// onSpawn(self, spawnPosition)
 		LuaScriptInterface* scriptInterface = mType->info.scriptInterface;
 		if (!scriptInterface->reserveScriptEnv()) {
 			g_logger().error("Monster {} creature {}] Call stack overflow. Too many lua "
@@ -542,8 +547,9 @@ void Monster::onSpawn() {
 
 		LuaScriptInterface::pushUserdata<Monster>(L, getMonster());
 		LuaScriptInterface::setMetatable(L, -1, "Monster");
+		LuaScriptInterface::pushPosition(L, position);
 
-		scriptInterface->callVoidFunction(1);
+		scriptInterface->callVoidFunction(2);
 	}
 }
 
@@ -951,6 +957,11 @@ bool Monster::isFleeing() const {
 
 bool Monster::selectTarget(const std::shared_ptr<Creature> &creature) {
 	if (!isTarget(creature)) {
+		return false;
+	}
+
+	auto player = std::dynamic_pointer_cast<Player>(creature);
+	if (player && player->checkLoginDelay(player->getID())) {
 		return false;
 	}
 

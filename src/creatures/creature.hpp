@@ -454,7 +454,7 @@ public:
 	void onDeath();
 	virtual uint64_t getGainedExperience(const std::shared_ptr<Creature> &attacker) const;
 	void addDamagePoints(const std::shared_ptr<Creature> &attacker, int32_t damagePoints);
-	bool hasBeenAttacked(uint32_t attackerId);
+	bool hasBeenAttacked(uint32_t attackerId) const;
 
 	// combat event functions
 	virtual void onAddCondition(ConditionType_t type);
