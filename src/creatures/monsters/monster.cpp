@@ -2429,14 +2429,14 @@ void Monster::dropLoot(const std::shared_ptr<Container> &corpse, const std::shar
 							std::shared_ptr<Item> newItem = nullptr;
 							if (dropAmount > 1) {
 								newItem = Item::CreateItem(chosenBagId, dropAmount);
-								if (newItem){
+								if (newItem) {
 									if (g_game().internalAddItem(corpse, newItem) != RETURNVALUE_NOERROR) {
 										corpse->internalAddThing(newItem);
 									}
 								}
 							} else {
 								newItem = Item::CreateItem(chosenBagId, 1);
-								if (newItem){
+								if (newItem) {
 									if (g_game().internalAddItem(corpse, newItem) != RETURNVALUE_NOERROR) {
 										corpse->internalAddThing(newItem);
 									}

@@ -3518,11 +3518,11 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			}
 		}
 
-		double magicLossPercent = deathLossPercent  / 100.;
+		double magicLossPercent = deathLossPercent / 100.;
 		if (g_configManager().getBoolean(HALF_LOSS_MAGIC) && magicLossPercent > 0) {
 			magicLossPercent /= 2;
 		}
-	
+
 		lostMana = static_cast<uint64_t>(sumMana * magicLossPercent);
 
 		while (lostMana > manaSpent && magLevel > 0) {
@@ -3565,11 +3565,11 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 
 			sumSkillTries += skills[i].tries;
 
-			double skillLossPercent = deathLossPercent  / 100.;
+			double skillLossPercent = deathLossPercent / 100.;
 			if (g_configManager().getBoolean(HALF_LOSS_SKILL) && skillLossPercent > 0) {
 				skillLossPercent /= 2;
 			}
-			
+
 			auto lostSkillTries = static_cast<uint32_t>(sumSkillTries * skillLossPercent);
 			while (lostSkillTries > skills[i].tries) {
 				lostSkillTries -= skills[i].tries;
@@ -3819,7 +3819,7 @@ std::shared_ptr<Item> Player::getCorpse(const std::shared_ptr<Creature> &lastHit
 		descriptionStream << fmt::format("You recognize {}. {} was killed by ", getNameDescription(), subjectPronoun);
 
 		std::vector<std::string> killers;
-		for (const auto& [creatureId, damageInfo] : damageMap) {
+		for (const auto &[creatureId, damageInfo] : damageMap) {
 			auto damageDealer = g_game().getCreatureByID(creatureId);
 			if (damageDealer) {
 				killers.push_back(damageDealer->getNameDescription());
@@ -5131,7 +5131,8 @@ ItemsTierCountList Player::getDepotInboxItemsId() const {
 		}
 	}
 
-	return itemMap;;
+	return itemMap;
+	;
 }
 
 std::vector<std::shared_ptr<Item>> Player::getAllInventoryItems(bool ignoreEquiped /*= false*/, bool ignoreItemWithTier /* false*/) const {
@@ -5689,8 +5690,7 @@ void Player::onAttacked() {
 	addInFightTicks();
 }
 
-bool Player::checkLoginDelay(uint32_t playerId) const
-{
+bool Player::checkLoginDelay(uint32_t playerId) const {
 	return (OTSYS_TIME() <= (lastLoad + g_configManager().getNumber(LOGIN_PROTECTION)) && !hasBeenAttacked(playerId));
 }
 
@@ -6365,7 +6365,7 @@ uint32_t Player::getAttackSpeed() const {
 	bool onFistAttackSpeed = g_configManager().getBoolean(TOGGLE_ATTACK_SPEED_ONFIST);
 	uint32_t MAX_ATTACK_SPEED = g_configManager().getNumber(MAX_SPEED_ATTACKONFIST);
 
-	const auto& mount = g_game().mounts->getMountByID(getCurrentMount());
+	const auto &mount = g_game().mounts->getMountByID(getCurrentMount());
 	if (isMounted() && mount) {
 		if (mount->attackSpeed > 0) {
 			if (mount->attackSpeed >= vocation->getAttackSpeed()) {
@@ -9892,7 +9892,7 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 			sendBlessStatus();
 		}
 
-		if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) &&  getCurrentMount() != 0) {
+		if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) && getCurrentMount() != 0) {
 			toggleMount(true);
 		}
 
