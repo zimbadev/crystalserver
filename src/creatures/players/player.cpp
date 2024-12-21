@@ -3803,20 +3803,43 @@ bool Player::dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, const 
 	return false;
 }
 
-std::shared_ptr<Item> Player::getCorpse(const std::shared_ptr<Creature> &lastHitCreature, const std::shared_ptr<Creature> &mostDamageCreature) {
-	const auto &corpse = Creature::getCorpse(lastHitCreature, mostDamageCreature);
-	if (corpse && corpse->getContainer()) {
-		std::ostringstream ss;
-		if (lastHitCreature) {
-			std::string subjectPronoun = getSubjectPronoun();
-			capitalizeWords(subjectPronoun);
-			ss << "You recognize " << getNameDescription() << ". " << subjectPronoun << " " << getSubjectVerb(true) << " killed by " << lastHitCreature->getNameDescription() << '.';
-		} else {
-			ss << "You recognize " << getNameDescription() << '.';
+std::shared_ptr<Item> Player::getCorpse(const std::shared_ptr<Creature>& lastHitCreature, const std::shared_ptr<Creature>& mostDamageCreature) {
+	auto corpse = Creature::getCorpse(lastHitCreature, mostDamageCreature);
+	if (!corpse || !corpse->getContainer()) {
+		return nullptr;
+	}
+
+	std::ostringstream descriptionStream;
+	std::string subjectPronoun = getSubjectPronoun();
+	capitalizeWords(subjectPronoun);
+
+	if (damageMap.empty()) {
+		descriptionStream << fmt::format("You recognize {}.", getNameDescription());
+	} else {
+		descriptionStream << fmt::format("You recognize {}. {} was killed by ", getNameDescription(), subjectPronoun);
+
+		std::vector<std::string> killers;
+		for (const auto& [creatureId, damageInfo] : damageMap) {
+			auto damageDealer = g_game().getCreatureByID(creatureId);
+			if (damageDealer) {
+				killers.push_back(damageDealer->getNameDescription());
+			}
 		}
 
-		corpse->setAttribute(ItemAttribute_t::DESCRIPTION, ss.str());
+		if (killers.empty()) {
+			descriptionStream << "an unknown attacker";
+		} else {
+			for (size_t i = 0; i < killers.size(); ++i) {
+				if (i > 0) {
+					descriptionStream << (i == killers.size() - 1 ? " and " : ", ");
+				}
+				descriptionStream << killers[i];
+			}
+		}
+		descriptionStream << '.';
 	}
+
+	corpse->setAttribute(ItemAttribute_t::DESCRIPTION, descriptionStream.str());
 	return corpse;
 }
 
