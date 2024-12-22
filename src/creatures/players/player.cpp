@@ -8111,25 +8111,15 @@ bool Player::isGuildMate(const std::shared_ptr<Player> &player) const {
 }
 
 bool Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
-	const ItemType &itemType = Item::items[itemId];
-	if (itemType.stackable) {
-		while (itemCount > 0) {
-			const auto addValue = itemCount > 100 ? 100 : itemCount;
-			itemCount -= addValue;
-			const auto &newItem = Item::CreateItem(itemId, addValue);
+	const uint32_t stackCount = 100u;
 
-			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
-				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
-			}
-		}
-	} else {
-		while (itemCount > 0) {
-			--itemCount;
-			const auto &newItem = Item::CreateItem(itemId);
+	while (itemCount > 0) {
+		const auto addValue = itemCount > stackCount ? stackCount : itemCount;
+		itemCount -= addValue;
+		const auto &newItem = Item::CreateItem(itemId, addValue);
 
-			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
-				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
-			}
+		if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
+			g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
 		}
 	}
 
@@ -8141,20 +8131,20 @@ bool Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 	return true;
 }
 
-void processContainerItems(const std::shared_ptr<Item> &item, const std::shared_ptr<Item> &container, StashContainerList &itemDict) {
-	if (!container) {
-		return;
+void sendStowItems(const std::shared_ptr<Item> &item, const std::shared_ptr<Item> &stowItem, StashContainerList &itemDict) {
+	if (stowItem->getID() == item->getID()) {
+		itemDict.emplace_back(stowItem, stowItem->getItemCount());
 	}
 
-	if (const auto &containerItems = container->getContainer()) {
-		for (const auto &subItem : containerItems->getItems(true)) {
-			itemDict.emplace_back(subItem, subItem->getItemCount());
-		}
+	if (const auto &container = stowItem->getContainer()) {
+		std::ranges::copy_if(container->getStowableItems(), std::back_inserter(itemDict), [&item](const auto &stowable_it) {
+			return stowable_it.first->getID() == item->getID();
+		});
 	}
 }
 
 void Player::stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool allItems) {
-	if (!item) {
+	if (!item || (!item->isItemStorable() && item->getID() != ITEM_GOLD_POUCH)) {
 		sendCancelMessage("This item cannot be stowed here.");
 		return;
 	}
@@ -8164,35 +8154,46 @@ void Player::stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool al
 		if (!item->isInsideDepot(true)) {
 			// Stow "all items" from player backpack
 			if (const auto &backpack = getInventoryItem(CONST_SLOT_BACKPACK)) {
-				processContainerItems(item, backpack, itemDict);
+				sendStowItems(item, backpack, itemDict);
 			}
 
 			// Stow "all items" from loot pouch
 			const auto &itemParent = item->getParent();
-			const auto &lootPouch = itemParent ? itemParent->getItem() : nullptr;
-			if (lootPouch && lootPouch->getID() == ITEM_GOLD_POUCH) {
-				processContainerItems(item, lootPouch, itemDict);
+			const auto &lootPouch = itemParent->getItem();
+			if (itemParent && lootPouch && lootPouch->getID() == ITEM_GOLD_POUCH) {
+				sendStowItems(item, lootPouch, itemDict);
 			}
 		}
 
 		// Stow locker items
 		const auto &depotLocker = getDepotLocker(getLastDepotId());
-		for (const auto &lockerItem : depotLocker->getItems(true)) {
-			processContainerItems(item, lockerItem, itemDict);
+		const auto &[itemVector, itemMap] = requestLockerItems(depotLocker);
+		for (const auto &lockerItem : itemVector) {
+			if (lockerItem == nullptr) {
+				break;
+			}
+
+			if (item->isInsideDepot(true)) {
+				sendStowItems(item, lockerItem, itemDict);
+			}
+		}
+	} else if (item->getContainer()) {
+		itemDict = item->getContainer()->getStowableItems();
+		for (const std::shared_ptr<Item> &containerItem : item->getContainer()->getItems(true)) {
+			uint32_t depotChest = g_configManager().getNumber(DEPOTCHEST);
+			bool validDepot = depotChest > 0 && depotChest < 21;
+			if (g_configManager().getBoolean(STASH_MOVING) && containerItem && !containerItem->isStackable() && validDepot) {
+				g_game().internalMoveItem(containerItem->getParent(), getDepotChest(depotChest, true), INDEX_WHEREEVER, containerItem, containerItem->getItemCount(), nullptr);
+				movedItems++;
+				moved = true;
+			}
 		}
 	} else {
-		// Process case for items inside containers
-		if (item->getContainer()) {
-			for (const auto &containerItem : item->getContainer()->getItems(true)) {
-				itemDict.emplace_back(containerItem, containerItem->getItemCount());
-			}
-		} else {
-			itemDict.emplace_back(item, count);
-		}
+		itemDict.emplace_back(item, count);
 	}
 
 	if (itemDict.empty()) {
-		sendCancelMessage("There are no items to be stowed in this container.");
+		sendCancelMessage("There is no stowable items on this container.");
 		return;
 	}
 
