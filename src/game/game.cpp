@@ -3323,7 +3323,7 @@ ObjectCategory_t Game::getObjectCategory(const ItemType &it) {
 uint64_t Game::getItemMarketPrice(const std::map<uint16_t, uint64_t> &itemMap, bool buyPrice) const {
 	uint64_t total = 0;
 
-	for (const auto& [itemId, itemCount] : itemMap) {
+	for (const auto &[itemId, itemCount] : itemMap) {
 		switch (itemId) {
 			case ITEM_GOLD_COIN:
 				total += itemCount;
@@ -3340,11 +3340,11 @@ uint64_t Game::getItemMarketPrice(const std::map<uint16_t, uint64_t> &itemMap, b
 			default: {
 				auto marketIt = itemsPriceMap.find(itemId);
 				if (marketIt != itemsPriceMap.end()) {
-					for (const auto& [tier, price] : marketIt->second) {
+					for (const auto &[tier, price] : marketIt->second) {
 						total += price * itemCount;
 					}
 				} else {
-					const ItemType& itemType = Item::items[itemId];
+					const ItemType &itemType = Item::items[itemId];
 					uint64_t price = buyPrice ? itemType.buyPrice : itemType.sellPrice;
 					total += price * itemCount;
 				}
@@ -10396,7 +10396,7 @@ void Game::updateForgeableMonsters() {
 void Game::createFiendishMonsters() {
 	uint32_t created = 0;
 	uint32_t fiendishLimit = g_configManager().getNumber(FORGE_FIENDISH_CREATURES_LIMIT); // Fiendish Creatures limit
-	
+
 	while (fiendishMonsters.size() < fiendishLimit) {
 		if (fiendishMonsters.size() >= fiendishLimit) {
 			g_logger().warn("[{}] - Returning in creation of Fiendish, size: {}, max is: {}.", __FUNCTION__, fiendishMonsters.size(), fiendishLimit);
@@ -10414,7 +10414,7 @@ void Game::createFiendishMonsters() {
 void Game::createInfluencedMonsters() {
 	uint32_t created = 0;
 	uint32_t influencedLimit = g_configManager().getNumber(FORGE_INFLUENCED_CREATURES_LIMIT);
-	
+
 	while (influencedMonsters.size() < influencedLimit) {
 		if (influencedMonsters.size() >= influencedLimit) {
 			g_logger().warn("[{}] - Returning in creation of Influenced, size: {}, max is: {}.", __FUNCTION__, influencedMonsters.size(), influencedLimit);
