@@ -186,7 +186,7 @@ function BossLever:onUse(player)
 		end
 
 		local infoPositions = lever:getInfoPositions()
-		if creature:getGroup():getId() < GROUP_TYPE_GOD and isAccountNormal and self:lastEncounterTime(creature) > os.time() then
+		if creature:getGroup():getId() < GROUP_TYPE_GOD and checkAccountType and self:lastEncounterTime(creature) > os.time() then
 			for _, posInfo in pairs(infoPositions) do
 				local currentPlayer = posInfo.creature
 				if currentPlayer then
