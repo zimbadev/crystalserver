@@ -3447,7 +3447,8 @@ int PlayerFunctions::luaPlayerSetGhostMode(lua_State* L) {
 	} else {
 		for (const auto &it : g_game().getPlayers()) {
 			if (!it.second->isAccessPlayer()) {
-				it.second->vip()->notifyStatusChange(player, player->vip()->getStatus());
+				VipStatus_t status = it.second->isExerciseTraining() ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;
+				it.second->vip()->notifyStatusChange(player, status);
 			}
 		}
 	}

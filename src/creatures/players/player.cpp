@@ -2796,13 +2796,19 @@ int32_t Player::getIdleTime() const {
 }
 
 void Player::setTraining(bool value) {
+	if (isExerciseTraining() == value) {
+		return;
+	}
+
+	exerciseTraining = value;
+	VipStatus_t newStatus = exerciseTraining ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;	
 	for (const auto &[key, player] : g_game().getPlayers()) {
 		if (!this->isInGhostMode() || player->isAccessPlayer()) {
-			player->vip()->notifyStatusChange(static_self_cast<Player>(), value ? VipStatus_t::TRAINING : VipStatus_t::ONLINE, false);
+			player->vip()->notifyStatusChange(static_self_cast<Player>(), newStatus, false);
 		}
 	}
-	vip()->setStatus(VipStatus_t::TRAINING);
-	setExerciseTraining(value);
+
+	setExerciseTraining(exerciseTraining);
 }
 
 void Player::addItemImbuementStats(const Imbuement* imbuement) {
@@ -3876,7 +3882,8 @@ void Player::removeList() {
 
 void Player::addList() {
 	for (const auto &[key, player] : g_game().getPlayers()) {
-		player->vip()->notifyStatusChange(static_self_cast<Player>(), vip()->getStatus());
+		VipStatus_t status = player->isExerciseTraining() ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;
+		player->vip()->notifyStatusChange(static_self_cast<Player>(), status, false);
 	}
 
 	g_game().addPlayer(static_self_cast<Player>());
