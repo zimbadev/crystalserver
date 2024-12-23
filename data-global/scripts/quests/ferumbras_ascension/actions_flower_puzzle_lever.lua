@@ -1,13 +1,13 @@
 local flowerPositions = {
-	[1] = { itemid = 3676, position = Position(33455, 32707, 14) },
-	[2] = { itemid = 3676, position = Position(33460, 32707, 14) },
-	[3] = { itemid = 3678, position = Position(33455, 32708, 14) },
-	[4] = { itemid = 3677, position = Position(33457, 32707, 14) },
-	[5] = { itemid = 3678, position = Position(33457, 32708, 14) },
-	[6] = { itemid = 3677, position = Position(33456, 32708, 14) },
-	[7] = { itemid = 3676, position = Position(33458, 32709, 14) },
-	[8] = { itemid = 3677, position = Position(33459, 32708, 14) },
-	[9] = { itemid = 3678, position = Position(33460, 32709, 14) },
+	[1] = { itemid = 3676, position = Position(33455, 32708, 14) },
+	[2] = { itemid = 3676, position = Position(33459, 32707, 14) },
+	[3] = { itemid = 3676, position = Position(33460, 32708, 14) },
+	[4] = { itemid = 3678, position = Position(33456, 32692, 14) },
+	[5] = { itemid = 3678, position = Position(33458, 32692, 14) },
+	[6] = { itemid = 3678, position = Position(33460, 32693, 14) },
+	[7] = { itemid = 3677, position = Position(33457, 32686, 14) },
+	[8] = { itemid = 3677, position = Position(33459, 32686, 14) },
+	[9] = { itemid = 3677, position = Position(33456, 32687, 14) },
 }
 
 local gates = {

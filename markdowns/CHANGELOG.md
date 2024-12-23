@@ -7,7 +7,6 @@
 
 - Protocol 14.05 support. ([Tryller](https://github.com/jprzimba))
 - New protocol 14.05 assets. ([Tryller](https://github.com/jprzimba))
-- Fix gotoHouse talkaction. ([Tryller](https://github.com/jprzimba))
 - Optimized the `onPlayerSellAllLoot` code to prevent prolonged freezes. ([Tryller](https://github.com/jprzimba))
 - Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`. ([Tryller](https://github.com/jprzimba))
 
@@ -27,6 +26,8 @@
 - data/scripts/movements/special_tiles.lua
 - data/scripts/talkactions/god/icons_functions.lua
 - data/scripts/talkactions/god/goto_house.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_flower_puzzle_lever.lua
+- data-global/scripts/quests/ferumbras_ascension/movements_flower_puzzle.lua
 
 ## Added files
 
@@ -37,6 +38,8 @@
 - Fixed influenced creatures not spawning. ([Tryller](https://github.com/jprzimba))
 - Fixed houses with pool bug. ([Tryller](https://github.com/jprzimba))
 - Fixed some V.I.P list issues. ([Tryller](https://github.com/jprzimba))
+- Fixed gotoHouse talkaction. ([Tryller](https://github.com/jprzimba))
+- Fixed Ferumbras' Ascendant Garden Flower Puzzle.
 
 ## Version 4.1
 
