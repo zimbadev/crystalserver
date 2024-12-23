@@ -462,7 +462,6 @@ public:
 		return std::ranges::find(vector, augmentType) != vector.end();
 	}
 
-
 	std::vector<const BagItemInfo*> getAllBagItems() const {
 		std::vector<const BagItemInfo*> allBagItems;
 		for (const auto &entry : bagItems) {
@@ -471,8 +470,7 @@ public:
 		return allBagItems;
 	}
 
-	void setItemBag(uint16_t itemId, const std::string &itemName, uint32_t chance, uint32_t minAmount, uint32_t maxAmount, 
-		uint64_t minRange, uint64_t maxRange, const std::string &monsterClass);
+	void setItemBag(uint16_t itemId, const std::string &itemName, uint32_t chance, uint32_t minAmount, uint32_t maxAmount, uint64_t minRange, uint64_t maxRange, const std::string &monsterClass);
 
 private:
 	std::vector<ItemType> items;

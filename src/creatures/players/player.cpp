@@ -2801,7 +2801,7 @@ void Player::setTraining(bool value) {
 	}
 
 	exerciseTraining = value;
-	VipStatus_t newStatus = exerciseTraining ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;	
+	VipStatus_t newStatus = exerciseTraining ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;
 	for (const auto &[key, player] : g_game().getPlayers()) {
 		if (!this->isInGhostMode() || player->isAccessPlayer()) {
 			player->vip()->notifyStatusChange(static_self_cast<Player>(), newStatus, false);

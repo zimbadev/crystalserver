@@ -108,7 +108,8 @@ bool Mailbox::sendItem(const std::shared_ptr<Item> &item) const {
 	if (player && item) {
 		const auto &playerInbox = player->getInbox();
 		const auto &itemParent = item->getParent();
-		if (g_game().internalMoveItem(itemParent, playerInbox, INDEX_WHEREEVER, item, item->getItemCount(), nullptr, FLAG_NOLIMIT) == RETURNVALUE_NOERROR) {			const auto &newItem = g_game().transformItem(item, item->getID() + 1);
+		if (g_game().internalMoveItem(itemParent, playerInbox, INDEX_WHEREEVER, item, item->getItemCount(), nullptr, FLAG_NOLIMIT) == RETURNVALUE_NOERROR) {
+			const auto &newItem = g_game().transformItem(item, item->getID() + 1);
 			if (newItem && newItem->getID() == ITEM_LETTER_STAMPED && !writer.empty()) {
 				newItem->setAttribute(ItemAttribute_t::WRITER, writer);
 				newItem->setAttribute(ItemAttribute_t::DATE, date);
