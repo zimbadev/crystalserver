@@ -10909,3 +10909,49 @@ void Game::updatePlayersOnline() const {
 		g_logger().error("[Game::updatePlayersOnline] Failed to update players online.");
 	}
 }
+
+bool Game::isExpertPvpEnabled() {
+	return g_configManager().getBoolean(TOGGLE_EXPERT_PVP);
+}
+
+void Game::updateSpectatorsPvp(const std::shared_ptr<Thing> &thing) {
+	if (!thing) {
+		return;
+	}
+
+	if (std::shared_ptr<Creature> creature = thing->getCreature()) {
+		std::shared_ptr<Player> player = creature->getPlayer();
+		if (!player) {
+			return;
+		}
+
+		for (const auto &spectator : Spectators().find<Player>(player->getPosition(), true)) {
+			std::shared_ptr<Player> itPlayer = spectator->getPlayer();
+			if (!itPlayer) {
+				continue;
+			}
+
+			SquareColor_t sqColor = SQ_COLOR_NONE;
+			if (player->hasPvpActivity(itPlayer)) {
+				sqColor = SQ_COLOR_YELLOW;
+			} else if (itPlayer->isInPvpSituation()) {
+				if (itPlayer == player) {
+					sqColor = SQ_COLOR_YELLOW;
+				} else if (player->hasPvpActivity(itPlayer, true)) {
+					// if this player attacked anyone of players's guild/party
+					sqColor = SQ_COLOR_ORANGE;
+				} else {
+					// meaning that the fight you are not involved.
+					sqColor = SQ_COLOR_BROWN;
+				}
+			} else {
+				// player isn't enganged at any pvp situation! ( even if self)
+				player->sendCreatureSquare(itPlayer, SQ_COLOR_NONE, 0);
+			}
+
+			if (sqColor != SQ_COLOR_NONE) {
+				player->sendPvpSquare(itPlayer, sqColor);
+			}
+		}
+	}
+}

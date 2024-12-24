@@ -3333,7 +3333,8 @@ bool Player::isPzLocked() const {
 
 BlockType_t Player::blockHit(const std::shared_ptr<Creature> &attacker, const CombatType_t &combatType, int32_t &damage, bool checkDefense, bool checkArmor, bool field) {
 	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor, field);
-	if (attacker) {
+
+	if (!g_game().isExpertPvpEnabled() && attacker) {
 		sendCreatureSquare(attacker, SQ_COLOR_BLACK);
 	}
 
@@ -5586,6 +5587,10 @@ void Player::onEndCondition(ConditionType_t type) {
 		pzLocked = false;
 		clearAttacked();
 
+		if (g_game().isExpertPvpEnabled()) {
+			g_game().updateSpectatorsPvp(std::const_pointer_cast<Player>(getPlayer()));
+		}
+
 		if (getSkull() != SKULL_RED && getSkull() != SKULL_BLACK) {
 			setSkull(SKULL_NONE);
 		}
@@ -5651,7 +5656,12 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 	}
 
 	const auto &targetPlayer = target->getPlayer();
-	if (targetPlayer && !isPartner(targetPlayer) && !isGuildMate(targetPlayer)) {
+	if (targetPlayer) {
+		if (!g_game().isExpertPvpEnabled() && (isPartner(targetPlayer) || isGuildMate(targetPlayer))) {
+			addInFightTicks();
+			return;
+		}
+
 		if (!pzLocked && g_game().getWorldType() == WORLD_TYPE_PVP_ENFORCED) {
 			pzLocked = true;
 			sendIcons();
@@ -5678,6 +5688,11 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 				}
 			}
 		}
+	}
+
+	if (g_game().isExpertPvpEnabled()) {
+		g_game().updateSpectatorsPvp(std::const_pointer_cast<Player>(getPlayer()));
+		g_game().updateSpectatorsPvp(targetPlayer);
 	}
 
 	addInFightTicks();
@@ -7580,6 +7595,10 @@ void Player::onThink(uint32_t interval) {
 	// Wheel of destiny major spells
 	wheel()->onThink();
 
+	if (g_game().isExpertPvpEnabled()) {
+		g_game().updateSpectatorsPvp(std::const_pointer_cast<Player>(getPlayer()));
+	}
+
 	g_callbacks().executeCallback(EventCallback_t::playerOnThink, &EventCallback::playerOnThink, getPlayer(), interval);
 }
 
@@ -7786,9 +7805,9 @@ void Player::sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakCla
 	}
 }
 
-void Player::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color) const {
+void Player::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color, uint8_t length) const {
 	if (client) {
-		client->sendCreatureSquare(creature, color);
+		client->sendCreatureSquare(creature, color, length);
 	}
 }
 
@@ -9833,6 +9852,11 @@ void Player::onRemoveTileItem(const std::shared_ptr<Tile> &fromTile, const Posit
 void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool isLogin) {
 	Creature::onCreatureAppear(creature, isLogin);
 
+	if (g_game().isExpertPvpEnabled()) {
+		g_game().updateSpectatorsPvp(getPlayer());
+		g_game().updateSpectatorsPvp(creature);
+	}
+
 	if (isLogin && creature == getPlayer()) {
 		onEquipInventory();
 
@@ -10550,4 +10574,69 @@ uint16_t Player::getPlayerVocationEnum() const {
 	}
 
 	return Vocation_t::VOCATION_NONE;
+}
+
+bool Player::hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty/* = false*/) const
+{
+	if (!g_game().isExpertPvpEnabled() || !player || player.get() == this) {
+		return false;
+	}
+
+	if (hasAttacked(player) || player->hasAttacked(std::const_pointer_cast<Player>(getPlayer()))) {
+		return true;
+	}
+
+	if (guildAndParty) {
+		if (guild) {
+			for (auto it : guild->getMembersOnline()) {
+				if (it->hasPvpActivity(player)) {
+					return true;
+				}
+			}
+		}
+
+		const auto &party = getParty();
+		if (party) {
+			for (auto it : party->getMembers()) {
+				if (it->hasPvpActivity(player)) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+bool Player::isInPvpSituation()
+{
+	if (!isPvpSituation) {
+		return false;
+	}
+
+	if (pzLocked || attackedSet.size() > 0) {
+		return true;
+	}
+
+	for (auto it : g_game().getPlayers()) {
+		std::shared_ptr<Player> itPlayer = it.second;
+		if (!itPlayer || itPlayer->isRemoved()) {
+			continue;
+		}
+
+		if (itPlayer->hasAttacked(getPlayer())) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+void Player::sendPvpSquare(const std::shared_ptr<Creature> &creature, SquareColor_t squareColor)
+{
+	sendCreatureSquare(creature, squareColor, 2);
+
+	if (squareColor == SQ_COLOR_YELLOW) {
+        sendCreatureSquare(creature, squareColor, 2);
+	}
 }

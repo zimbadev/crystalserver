@@ -25,6 +25,7 @@ maintainModeMessage = ""
 -- NOTE: valid values for worldType are: "pvp", "no-pvp" and "pvp-enforced"
 -- NOTE: removeBeginningWeaponAmmunition: spears, arrows, bolt have endless ammo (allows training for paladins)
 -- NOTE: refundManaOnBeginningWeapons: wand of vortex and snakebite refund mana used (allows training for mages)
+-- NOTE: toggleExpertPvp enables the PvP frames, similar to Tibia RL.
 worldType = "pvp"
 hotkeyAimbotEnabled = true
 protectionLevel = 7
@@ -50,6 +51,7 @@ blackSkulledDeathHealth = 40
 blackSkulledDeathMana = 0
 fieldOwnershipDuration = 5 * 1000
 loginProtectionPeriod = 10 * 1000
+toggleExpertPvp = true
 
 cleanProtectionZones = false
 
