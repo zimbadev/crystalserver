@@ -141,6 +141,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TELEPORT_SUMMONS, "teleportSummons", false);
 	loadBoolConfig(L, TOGGLE_ATTACK_SPEED_ONFIST, "toggleAttackSpeedOnFist", false);
 	loadBoolConfig(L, TOGGLE_CHAIN_SYSTEM, "toggleChainSystem", true);
+	loadBoolConfig(L, CHAIN_SYSTEM_MODIFY_MAGIC, "chainSystemModifyMagic", false);
 	loadBoolConfig(L, TOGGLE_FREE_QUEST, "toggleFreeQuest", true);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_ALLOW_ANYTHING, "toggleGoldPouchAllowAnything", false);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_QUICKLOOT_ONLY, "toggleGoldPouchQuickLootOnly", false);
