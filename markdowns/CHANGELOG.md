@@ -8,7 +8,7 @@
 - Protocol 14.05 support. ([Tryller](https://github.com/jprzimba))
 - New protocol 14.05 assets. ([Tryller](https://github.com/jprzimba))
 - Optimized the `onPlayerSellAllLoot` code to prevent prolonged freezes. ([Tryller](https://github.com/jprzimba))
-- Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`. ([Tryller](https://github.com/jprzimba))
+- Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`, `chainSystemModifyMagic`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
@@ -39,7 +39,7 @@
 - Fixed houses with pool bug. ([Tryller](https://github.com/jprzimba))
 - Fixed some V.I.P list issues. ([Tryller](https://github.com/jprzimba))
 - Fixed gotoHouse talkaction. ([Tryller](https://github.com/jprzimba))
-- Fixed Ferumbras' Ascendant Garden Flower Puzzle.
+- Fixed Ferumbras' Ascendant Garden Flower Puzzle. ([Mckay666](https://github.com/Mckay666))
 
 ## Version 4.1
 

@@ -8959,47 +8959,20 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 		return;
 	}
 
+	uint32_t maxContainer = static_cast<uint32_t>(g_configManager().getNumber(MAX_CONTAINER));
+	auto backpack = getInventoryItem(CONST_SLOT_BACKPACK);
+	auto mainBackpack = backpack ? backpack->getContainer() : nullptr;
+
+	if (mainBackpack && mainBackpack->getContainerHoldingCount() >= maxContainer) {
+		sendCancelMessage(RETURNVALUE_CONTAINERISFULL);
+		return;
+	}
+
 	ForgeHistory history;
 	history.actionType = actionType;
 	history.tier = tier;
 	history.success = success;
 	history.tierLoss = reduceTierLoss;
-
-	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
-	if (!exaltationChest) {
-		g_logger().error("Failed to create exaltation chest");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-	const auto &exaltationContainer = exaltationChest->getContainer();
-	if (!exaltationContainer) {
-		g_logger().error("Failed to create exaltation container");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	auto returnValue = queryAdd(CONST_SLOT_BACKPACK, exaltationContainer, 1, 0);
-	if (returnValue != RETURNVALUE_NOERROR) {
-		g_logger().error("[Log 1] Failed to add forge item {} from player with name {}", firstItemId, getName());
-		sendCancelMessage(getReturnMessage(returnValue));
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	const auto &firstForgedItem = Item::CreateItem(firstItemId, 1);
-	if (!firstForgedItem) {
-		g_logger().error("[Log 3] Player with name {} failed to fuse item with id {}", getName(), firstItemId);
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	returnValue = g_game().internalAddItem(exaltationContainer, firstForgedItem, INDEX_WHEREEVER);
-	if (returnValue != RETURNVALUE_NOERROR) {
-		g_logger().error("[Log 1] Failed to add forge item {} from player with name {}", firstItemId, getName());
-		sendCancelMessage(getReturnMessage(returnValue));
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
 
 	const auto &firstForgingItem = getForgeItemFromId(firstItemId, tier);
 	if (!firstForgingItem) {
@@ -9007,7 +8980,7 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
 	}
-	returnValue = g_game().internalRemoveItem(firstForgingItem, 1);
+	auto returnValue = g_game().internalRemoveItem(firstForgingItem, 1);
 	if (returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 1] Failed to remove forge item {} from player with name {}", firstItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
@@ -9023,6 +8996,33 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 	if (returnValue = g_game().internalRemoveItem(secondForgingItem, 1);
 	    returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 2] Failed to remove forge item {} from player with name {}", secondItemId, getName());
+		sendCancelMessage(getReturnMessage(returnValue));
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
+	if (!exaltationChest) {
+		g_logger().error("Failed to create exaltation chest");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+	const auto &exaltationContainer = exaltationChest->getContainer();
+	if (!exaltationContainer) {
+		g_logger().error("Failed to create exaltation container");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	const auto &firstForgedItem = Item::CreateItem(firstItemId, 1);
+	if (!firstForgedItem) {
+		g_logger().error("[Log 3] Player with name {} failed to fuse item with id {}", getName(), firstItemId);
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+	returnValue = g_game().internalAddItem(exaltationContainer, firstForgedItem, INDEX_WHEREEVER);
+	if (returnValue != RETURNVALUE_NOERROR) {
+		g_logger().error("[Log 1] Failed to add forge item {} from player with name {}", firstItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
@@ -9189,7 +9189,7 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 
 	returnValue = g_game().internalAddItem(static_self_cast<Player>(), exaltationContainer, INDEX_WHEREEVER);
 	if (returnValue != RETURNVALUE_NOERROR) {
-		g_logger().error("Failed to add exaltation chest to player with name {}", fmt::underlying(ITEM_EXALTATION_CHEST), getName());
+		g_logger().error("Failed to add exaltation chest to player with name {}", getName());
 		sendCancelMessage(getReturnMessage(returnValue));
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
@@ -9216,33 +9216,13 @@ void Player::forgeTransferItemTier(ForgeAction_t actionType, uint16_t donorItemI
 	history.tier = tier;
 	history.success = true;
 
-	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
-	if (!exaltationChest) {
-		g_logger().error("Exaltation chest is nullptr");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-	const auto &exaltationContainer = exaltationChest->getContainer();
-	if (!exaltationContainer) {
-		g_logger().error("Exaltation container is nullptr");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	auto returnValue = queryAdd(CONST_SLOT_BACKPACK, exaltationContainer, 1, 0);
-	if (returnValue != RETURNVALUE_NOERROR) {
-		sendCancelMessage(getReturnMessage(returnValue));
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
 	const auto &donorItem = getForgeItemFromId(donorItemId, tier);
 	if (!donorItem) {
 		g_logger().error("[Log 1] Player with name {} failed to transfer item with id {}", getName(), donorItemId);
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
 	}
-	returnValue = g_game().internalRemoveItem(donorItem, 1);
+	auto returnValue = g_game().internalRemoveItem(donorItem, 1);
 	if (returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 1] Failed to remove transfer item {} from player with name {}", donorItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
@@ -9260,6 +9240,19 @@ void Player::forgeTransferItemTier(ForgeAction_t actionType, uint16_t donorItemI
 	    returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 2] Failed to remove transfer item {} from player with name {}", receiveItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
+	if (!exaltationChest) {
+		g_logger().error("Exaltation chest is nullptr");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+	const auto &exaltationContainer = exaltationChest->getContainer();
+	if (!exaltationContainer) {
+		g_logger().error("Exaltation container is nullptr");
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
 	}

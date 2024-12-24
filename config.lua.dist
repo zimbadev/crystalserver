@@ -452,8 +452,10 @@ maxDamageReflection = 200
 
 -- Chain system
 -- NOTE: combatChainDelay: set to minimum 50 miliseconds
+-- NOTE: chainSystemModifyMagic will increase power of wands and rods based on player magic level
 toggleChainSystem = false
 chainSystemVipOnly = true
+chainSystemModifyMagic = false
 combatChainDelay = 50
 combatChainTargets = 5
 combatChainSkillFormulaAxe = 0.9
