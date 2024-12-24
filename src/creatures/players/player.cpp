@@ -10576,8 +10576,7 @@ uint16_t Player::getPlayerVocationEnum() const {
 	return Vocation_t::VOCATION_NONE;
 }
 
-bool Player::hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty/* = false*/) const
-{
+bool Player::hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty /* = false*/) const {
 	if (!g_game().isExpertPvpEnabled() || !player || player.get() == this) {
 		return false;
 	}
@@ -10608,8 +10607,7 @@ bool Player::hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAnd
 	return false;
 }
 
-bool Player::isInPvpSituation()
-{
+bool Player::isInPvpSituation() {
 	if (!isPvpSituation) {
 		return false;
 	}
@@ -10628,15 +10626,14 @@ bool Player::isInPvpSituation()
 			return true;
 		}
 	}
-	
+
 	return false;
 }
 
-void Player::sendPvpSquare(const std::shared_ptr<Creature> &creature, SquareColor_t squareColor)
-{
+void Player::sendPvpSquare(const std::shared_ptr<Creature> &creature, SquareColor_t squareColor) {
 	sendCreatureSquare(creature, squareColor, 2);
 
 	if (squareColor == SQ_COLOR_YELLOW) {
-        sendCreatureSquare(creature, squareColor, 2);
+		sendCreatureSquare(creature, squareColor, 2);
 	}
 }
