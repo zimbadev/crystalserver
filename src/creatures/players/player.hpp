@@ -619,6 +619,7 @@ public:
 	void setChaseMode(bool mode);
 	void setFightMode(FightMode_t mode);
 	void setSecureMode(bool mode);
+	void setPvpMode(PvpMode_t mode);
 
 	Faction_t getFaction() const override;
 
@@ -985,6 +986,9 @@ public:
 	void sendPvpSquare(const std::shared_ptr<Creature> &creature, SquareColor_t squareColor);
 	void setPvpSituation(bool situation) {
 		isPvpSituation = situation;
+	}
+	PvpMode_t getPvPMode() const {
+		return pvpMode;
 	}
 
 	const std::map<uint8_t, OpenContainer> &getOpenContainers() const;
@@ -1548,6 +1552,7 @@ private:
 	BlockType_t lastAttackBlockType = BLOCK_NONE;
 	TradeState_t tradeState = TRADE_NONE;
 	FightMode_t fightMode = FIGHTMODE_ATTACK;
+	PvpMode_t pvpMode = PVP_MODE_DOVE;
 	Faction_t faction = FACTION_PLAYER;
 	QuickLootFilter_t quickLootFilter {};
 	PlayerPronoun_t pronoun = PLAYERPRONOUN_THEY;

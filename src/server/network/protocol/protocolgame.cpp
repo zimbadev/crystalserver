@@ -1931,7 +1931,7 @@ void ProtocolGame::parseFightModes(NetworkMessage &msg) {
 	uint8_t rawFightMode = msg.getByte(); // 1 - offensive, 2 - balanced, 3 - defensive
 	uint8_t rawChaseMode = msg.getByte(); // 0 - stand while fightning, 1 - chase opponent
 	uint8_t rawSecureMode = msg.getByte(); // 0 - can't attack unmarked, 1 - can attack unmarked
-	// uint8_t rawPvpMode = msg.getByte(); // pvp mode introduced in 10.0
+	uint8_t rawPvpMode = msg.getByte(); // pvp mode introduced in 10.0
 
 	FightMode_t fightMode;
 	if (rawFightMode == 1) {
@@ -1942,7 +1942,18 @@ void ProtocolGame::parseFightModes(NetworkMessage &msg) {
 		fightMode = FIGHTMODE_DEFENSE;
 	}
 
-	g_game().playerSetFightModes(player->getID(), fightMode, rawChaseMode != 0, rawSecureMode != 0);
+	PvpMode_t pvpMode;
+	if (rawPvpMode == 0) {
+		pvpMode = PVP_MODE_DOVE;
+	} else if (rawPvpMode == 1) {
+		pvpMode = PVP_MODE_WHITE_HAND;
+	} else if (rawPvpMode == 2) {
+		pvpMode = PVP_MODE_YELLOW_HAND;
+	} else {
+		pvpMode = PVP_MODE_RED_FIST;
+	}
+
+	g_game().playerSetFightModes(player->getID(), fightMode, pvpMode, rawChaseMode != 0, rawSecureMode != 0);
 }
 
 void ProtocolGame::parseAttack(NetworkMessage &msg) {
@@ -6769,7 +6780,7 @@ void ProtocolGame::sendFightModes() {
 	msg.addByte(player->fightMode);
 	msg.addByte(player->chaseMode);
 	msg.addByte(player->secureMode);
-	msg.addByte(PVP_MODE_DOVE);
+	msg.addByte(player->pvpMode);
 	writeToOutputBuffer(msg);
 }
 
@@ -6838,7 +6849,7 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 	}
 
 	msg.addByte(0x00); // can change pvp framing option
-	msg.addByte(0x00); // expert mode button enabled
+	msg.addByte(g_game().isExpertPvpEnabled() ? 0x01 : 0x00); // expert mode button enabled
 
 	msg.addString(g_configManager().getString(STORE_IMAGES_URL));
 	msg.add<uint16_t>(static_cast<uint16_t>(g_configManager().getNumber(STORE_COIN_PACKET)));

@@ -5946,15 +5946,47 @@ void Game::playerFollowCreature(uint32_t playerId, uint32_t creatureId) {
 	player->setFollowCreature(getCreatureByID(creatureId));
 }
 
-void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode) {
+void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, PvpMode_t pvpMode, bool chaseMode, bool secureMode) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
 	}
 
+	PvpMode_t oldPvpMode = player->getPvPMode();
+	bool expertPvp = isExpertPvpEnabled();
+
 	player->setFightMode(fightMode);
 	player->setChaseMode(chaseMode);
-	player->setSecureMode(secureMode);
+
+	if (expertPvp) {
+		WorldType_t worldType = getWorldType();
+		if (worldType == WORLD_TYPE_NO_PVP && pvpMode == PVP_MODE_RED_FIST) {
+			player->setPvpMode(player->pvpMode);
+		} else if (worldType == WORLD_TYPE_PVP_ENFORCED && pvpMode != PVP_MODE_RED_FIST) {
+			player->setPvpMode(PVP_MODE_RED_FIST);
+		} else {
+			player->setPvpMode(pvpMode);
+		}
+
+		if ((worldType == WORLD_TYPE_NO_PVP && !secureMode) || 
+			(worldType == WORLD_TYPE_PVP_ENFORCED && secureMode)) {
+			player->setSecureMode(!secureMode);
+		} else {
+			if (player->getPvPMode() == PVP_MODE_RED_FIST) {
+				player->setSecureMode(false);
+			} else {
+				player->setSecureMode(secureMode);
+			}
+
+			if (oldPvpMode == PVP_MODE_RED_FIST) {
+				player->setSecureMode(true);
+			}
+		}
+
+		player->sendFightModes();
+	} else {
+		player->setSecureMode(secureMode);
+	}
 }
 
 void Game::playerRequestAddVip(uint32_t playerId, const std::string &name) {

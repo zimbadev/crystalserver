@@ -5440,6 +5440,10 @@ void Player::setFightMode(FightMode_t mode) {
 	fightMode = mode;
 }
 
+void Player::setPvpMode(PvpMode_t mode) {
+	pvpMode = mode;
+}
+
 void Player::setSecureMode(bool mode) {
 	secureMode = mode;
 }

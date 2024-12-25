@@ -355,7 +355,7 @@ public:
 	void playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId);
 	void playerFollowCreature(uint32_t playerId, uint32_t creatureId);
 	void playerCancelAttackAndFollow(uint32_t playerId);
-	void playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode);
+	void playerSetFightModes(uint32_t playerId, FightMode_t fightMode, PvpMode_t pvpMode, bool chaseMode, bool secureMode);
 	void playerLookAt(uint32_t playerId, uint16_t itemId, const Position &pos, uint8_t stackPos);
 	void playerLookInBattleList(uint32_t playerId, uint32_t creatureId);
 	void playerQuickLootCorpse(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position);
