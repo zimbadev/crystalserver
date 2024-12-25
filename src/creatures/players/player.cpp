@@ -3883,7 +3883,7 @@ void Player::removeList() {
 void Player::addList() {
 	for (const auto &[key, player] : g_game().getPlayers()) {
 		VipStatus_t status = player->isExerciseTraining() ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;
-		player->vip()->notifyStatusChange(static_self_cast<Player>(), status, false);
+		player->vip()->notifyStatusChange(static_self_cast<Player>(), status);
 	}
 
 	g_game().addPlayer(static_self_cast<Player>());
