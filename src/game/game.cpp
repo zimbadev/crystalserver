@@ -5968,8 +5968,7 @@ void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, PvpMode
 			player->setPvpMode(pvpMode);
 		}
 
-		if ((worldType == WORLD_TYPE_NO_PVP && !secureMode) || 
-			(worldType == WORLD_TYPE_PVP_ENFORCED && secureMode)) {
+		if ((worldType == WORLD_TYPE_NO_PVP && !secureMode) || (worldType == WORLD_TYPE_PVP_ENFORCED && secureMode)) {
 			player->setSecureMode(!secureMode);
 		} else {
 			if (player->getPvPMode() == PVP_MODE_RED_FIST) {
