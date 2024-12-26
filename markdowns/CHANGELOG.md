@@ -30,6 +30,7 @@
 - data/scripts/talkactions/god/goto_house.lua
 - data-global/scripts/quests/ferumbras_ascension/actions_flower_puzzle_lever.lua
 - data-global/scripts/quests/ferumbras_ascension/movements_flower_puzzle.lua
+- data-global/scripts/lib/register_actions.lua
 
 ## Added files
 
@@ -42,6 +43,7 @@
 - Fixed some V.I.P list issues. ([Tryller](https://github.com/jprzimba))
 - Fixed gotoHouse talkaction. ([Tryller](https://github.com/jprzimba))
 - Fixed Ferumbras' Ascendant Garden Flower Puzzle. ([Mckay666](https://github.com/Mckay666))
+- Fixed lava tiles in entrance of The Pits of Inferno Quest. ([jeansouzak](https://github.com/jeansouzak))
 
 ## Version 4.1
 
