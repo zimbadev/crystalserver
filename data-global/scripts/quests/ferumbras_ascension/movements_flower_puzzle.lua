@@ -128,7 +128,7 @@ function flowerPuzzle.onStepIn(creature, item, position, fromPosition)
 			local flowerOneTile = Tile(itempos.flowerOne)
 			local flowerTwoTile = Tile(itempos.flowerTwo)
 			local flowerThreeTile = Tile(itempos.flowerThree)
-			local flowerTiles = {flowerOneTile, flowerTwoTile, flowerThreeTile}
+			local flowerTiles = { flowerOneTile, flowerTwoTile, flowerThreeTile }
 
 			local itemId
 			if i <= 6 then

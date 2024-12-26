@@ -77,7 +77,7 @@ void TrashHolder::addThing(int32_t, const std::shared_ptr<Thing> &thing) {
 		return;
 	}
 
-	if(item->getID() == ITEM_WATERBALL_SPLASH) {
+	if (item->getID() == ITEM_WATERBALL_SPLASH) {
 		return;
 	}
 
@@ -85,7 +85,7 @@ void TrashHolder::addThing(int32_t, const std::shared_ptr<Thing> &thing) {
 		g_game().transformItem(item, ITEM_WATERBALL_SPLASH);
 		return;
 	}
-	
+
 	g_game().internalRemoveItem(item);
 
 	if (it.magicEffect != CONST_ME_NONE) {
