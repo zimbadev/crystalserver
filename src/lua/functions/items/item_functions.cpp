@@ -45,6 +45,7 @@ void ItemFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Item", "getUniqueId", ItemFunctions::luaItemGetUniqueId);
 	Lua::registerMethod(L, "Item", "getActionId", ItemFunctions::luaItemGetActionId);
 	Lua::registerMethod(L, "Item", "setActionId", ItemFunctions::luaItemSetActionId);
+	Lua::registerMethod(L, "Item", "setLoadedFromMap", ItemFunctions::luaItemSetLoadedFromMap);
 
 	Lua::registerMethod(L, "Item", "getCount", ItemFunctions::luaItemGetCount);
 	Lua::registerMethod(L, "Item", "getCharges", ItemFunctions::luaItemGetCharges);
@@ -307,6 +308,19 @@ int ItemFunctions::luaItemSetActionId(lua_State* L) {
 	const auto &item = Lua::getUserdataShared<Item>(L, 1);
 	if (item) {
 		item->setAttribute(ItemAttribute_t::ACTIONID, actionId);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemFunctions::luaItemSetLoadedFromMap(lua_State* L) {
+	// item:setLoadedFromMap(value)
+	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	if (item) {
+		const bool boolValue = Lua::getBoolean(L, 2);
+		item->setLoadedFromMap(boolValue);
 		Lua::pushBoolean(L, true);
 	} else {
 		lua_pushnil(L);

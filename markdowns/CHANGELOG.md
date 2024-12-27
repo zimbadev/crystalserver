@@ -44,6 +44,7 @@
 - Fixed gotoHouse talkaction. ([Tryller](https://github.com/jprzimba))
 - Fixed Ferumbras' Ascendant Garden Flower Puzzle. ([Mckay666](https://github.com/Mckay666))
 - Fixed lava tiles in entrance of The Pits of Inferno Quest. ([jeansouzak](https://github.com/jeansouzak))
+- Fixed Items created using CreateMapItem are cleanable by /clean. ([#7](https://github.com/jprzimba/crystalserver/issues/7)) ([Tryller](https://github.com/jprzimba)).
 
 ## Version 4.1
 
