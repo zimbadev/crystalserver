@@ -3,11 +3,14 @@
 function CreateMapItem(tablename)
 	for index, value in pairs(tablename) do
 		for i = 1, #value.itemPos do
+			local item
 			local tile = Tile(value.itemPos[i])
 			-- Checks if the position is valid
 			if tile then
-				if tile:getItemCountById(index) == 0 then
+				item = tile:getItemById(index)
+				if item then
 					Game.createItem(index, 1, value.itemPos[i])
+					item:setLoadedFromMap(true)
 				end
 			end
 		end
@@ -102,6 +105,7 @@ function loadLuaMapSign(tablename)
 			-- If he found the item, add the text
 			if item then
 				item:setAttribute(ITEM_ATTRIBUTE_TEXT, value.text)
+				item:setLoadedFromMap(true)
 			end
 		end
 		::continue::
@@ -138,6 +142,7 @@ function loadLuaMapBookDocument(tablename)
 					-- If the item exists, add the text
 					if item then
 						item:setAttribute(ITEM_ATTRIBUTE_TEXT, value.text)
+						item:setLoadedFromMap(true)
 						totals[2] = totals[2] + 1
 					else
 						logger.warn("[loadLuaMapBookDocument] - Item not found! Index: {}, itemId: {}", index, value.itemId)

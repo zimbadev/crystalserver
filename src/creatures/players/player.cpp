@@ -2796,13 +2796,19 @@ int32_t Player::getIdleTime() const {
 }
 
 void Player::setTraining(bool value) {
+	if (isExerciseTraining() == value) {
+		return;
+	}
+
+	exerciseTraining = value;
+	VipStatus_t newStatus = exerciseTraining ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;
 	for (const auto &[key, player] : g_game().getPlayers()) {
 		if (!this->isInGhostMode() || player->isAccessPlayer()) {
-			player->vip()->notifyStatusChange(static_self_cast<Player>(), value ? VipStatus_t::TRAINING : VipStatus_t::ONLINE, false);
+			player->vip()->notifyStatusChange(static_self_cast<Player>(), newStatus, false);
 		}
 	}
-	vip()->setStatus(VipStatus_t::TRAINING);
-	setExerciseTraining(value);
+
+	setExerciseTraining(exerciseTraining);
 }
 
 void Player::addItemImbuementStats(const Imbuement* imbuement) {
@@ -3877,7 +3883,8 @@ void Player::removeList() {
 
 void Player::addList() {
 	for (const auto &[key, player] : g_game().getPlayers()) {
-		player->vip()->notifyStatusChange(static_self_cast<Player>(), vip()->getStatus());
+		VipStatus_t status = player->isExerciseTraining() ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;
+		player->vip()->notifyStatusChange(static_self_cast<Player>(), status);
 	}
 
 	g_game().addPlayer(static_self_cast<Player>());
@@ -4984,6 +4991,42 @@ bool Player::checkChainSystem() const {
 	}
 
 	auto featureKV = kv()->scoped("features")->get("chainSystem");
+	if (featureKV.has_value()) {
+		auto value = featureKV->getNumber();
+		if (value == 1) {
+			return true;
+		} else if (value == 0) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
+bool Player::checkEmoteSpells() const {
+	if (!g_configManager().getBoolean(EMOTE_SPELLS)) {
+		return false;
+	}
+
+	auto featureKV = kv()->scoped("features")->get("emoteSpells");
+	if (featureKV.has_value()) {
+		auto value = featureKV->getNumber();
+		if (value == 1) {
+			return true;
+		} else if (value == 0) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
+bool Player::checkSpellNameInsteadOfWords() const {
+	if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
+		return false;
+	}
+
+	auto featureKV = kv()->scoped("features")->get("spellNameInsteadOfWords");
 	if (featureKV.has_value()) {
 		auto value = featureKV->getNumber();
 		if (value == 1) {
@@ -8837,15 +8880,11 @@ bool Player::saySpell(SpeakClasses type, const std::string &text, bool isGhostMo
 		spectators = (*spectatorsPtr);
 	}
 
-	int32_t valueEmote = 0;
 	// Send to client
 	for (const auto &spectator : spectators) {
 		if (const auto &tmpPlayer = spectator->getPlayer()) {
-			if (g_configManager().getBoolean(EMOTE_SPELLS)) {
-				valueEmote = tmpPlayer->getStorageValue(STORAGEVALUE_EMOTE);
-			}
 			if (!isGhostMode || tmpPlayer->canSeeCreature(static_self_cast<Player>())) {
-				if (valueEmote == 1) {
+				if (checkEmoteSpells()) {
 					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_MONSTER_SAY, text, pos);
 				} else {
 					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_SPELL_USE, text, pos);

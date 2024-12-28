@@ -6021,7 +6021,9 @@ void Game::playerRequestAddVip(uint32_t playerId, const std::string &name) {
 		}
 
 		if (!vipPlayer->isInGhostMode() || player->isAccessPlayer()) {
-			player->vip()->add(vipPlayer->getGUID(), vipPlayer->getName(), vipPlayer->vip()->getStatus());
+			player->vip()->add(vipPlayer->getGUID(), vipPlayer->getName(), VipStatus_t::ONLINE);
+		} else if (vipPlayer->isExerciseTraining()) {
+			player->vip()->add(vipPlayer->getGUID(), vipPlayer->getName(), VipStatus_t::TRAINING);
 		} else {
 			player->vip()->add(vipPlayer->getGUID(), vipPlayer->getName(), VipStatus_t::OFFLINE);
 		}

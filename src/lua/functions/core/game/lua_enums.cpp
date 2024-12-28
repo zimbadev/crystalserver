@@ -159,7 +159,6 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 	registerEnum(L, LIGHT_STATE_NIGHT);
 	registerEnum(L, LIGHT_STATE_SUNSET);
 	registerEnum(L, LIGHT_STATE_SUNRISE);
-	registerEnum(L, STORAGEVALUE_EMOTE);
 
 	registerEnum(L, IMMOVABLE_ACTION_ID);
 

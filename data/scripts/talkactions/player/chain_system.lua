@@ -7,6 +7,7 @@ local validValues = {
 
 function feature.onSay(player, words, param)
 	if not configManager.getBoolean(configKeys.TOGGLE_CHAIN_SYSTEM) then
+		player:sendTextMessage(MESSAGE_FAILURE, "Chain system have been disabled by the administrator.")
 		return true
 	end
 

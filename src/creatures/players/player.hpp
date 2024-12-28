@@ -1223,6 +1223,8 @@ public:
 
 	bool checkAutoLoot(bool isBoss) const;
 	bool checkChainSystem() const;
+	bool checkEmoteSpells() const;
+	bool checkSpellNameInsteadOfWords() const;
 
 	QuickLootFilter_t getQuickLootFilter() const;
 

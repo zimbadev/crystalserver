@@ -6901,26 +6901,26 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 
 	if (player->isAccessPlayer()) {
 		for (const VIPEntry &entry : vipEntries) {
-			VipStatus_t vipStatus;
+			VipStatus_t vipStatus = VipStatus_t::ONLINE;
 
 			std::shared_ptr<Player> vipPlayer = g_game().getPlayerByGUID(entry.guid);
 			if (!vipPlayer) {
 				vipStatus = VipStatus_t::OFFLINE;
-			} else {
-				vipStatus = vipPlayer->vip()->getStatus();
+			} else if (vipPlayer->isExerciseTraining()) {
+				vipStatus = VipStatus_t::TRAINING;
 			}
 
 			sendVIP(entry.guid, entry.name, entry.description, entry.icon, entry.notify, vipStatus);
 		}
 	} else {
 		for (const VIPEntry &entry : vipEntries) {
-			VipStatus_t vipStatus;
+			VipStatus_t vipStatus = VipStatus_t::ONLINE;
 
 			std::shared_ptr<Player> vipPlayer = g_game().getPlayerByGUID(entry.guid);
 			if (!vipPlayer || vipPlayer->isInGhostMode()) {
 				vipStatus = VipStatus_t::OFFLINE;
-			} else {
-				vipStatus = vipPlayer->vip()->getStatus();
+			} else if (vipPlayer->isExerciseTraining()) {
+				vipStatus = VipStatus_t::TRAINING;
 			}
 
 			sendVIP(entry.guid, entry.name, entry.description, entry.icon, entry.notify, vipStatus);

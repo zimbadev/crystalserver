@@ -9,29 +9,39 @@
 - New protocol 14.05 assets. ([Tryller](https://github.com/jprzimba))
 - Optimized the `onPlayerSellAllLoot` code to prevent prolonged freezes. ([Tryller](https://github.com/jprzimba))
 - Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`, `chainSystemModifyMagic`. ([Tryller](https://github.com/jprzimba))
+- Added a new commands for players: `!randomoutfit`, `!spellwords`. ([Tryller](https://github.com/jprzimba))
+- Moved emote spells to `kv` instead of `storage`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
 - Add all files in data/migrations
+- data/scripts/talkactions/player/randomoutfit.lua
+- data/scripts/talkactions/player/spell_name_instead_words.lua
+- data/scripts/creaturescripts/player/swimming.lua
+- data-global/scripts/creaturescripts/customs/water_houses.lua
 
 ## Modified files
 
 - crystalserver.exe
 - config.lua
-- data-global/world/world.otbm (7z file)
-- data-global/world/world-house.xml
 - data/items/assets.dat
 - data/items/items.xml
+- data/libs/systems/features.lua
 - data/scripts/creaturescripts/player/login.lua
 - data/scripts/movements/special_tiles.lua
+- data/scripts/movements/swimming.lua
 - data/scripts/talkactions/god/icons_functions.lua
 - data/scripts/talkactions/god/goto_house.lua
+- data/scripts/talkactions/god/manage_monster.lua
+- data/scripts/talkactions/god/create_summon.lua
+- data/scripts/talkactions/god/create_npc.lua
+- data/scripts/talkactions/player/chain_system.lua
+- data/scripts/talkactions/player/emote_spell.lua
+- data-global/world/world.otbm (7z file)
+- data-global/world/world-house.xml
 - data-global/scripts/quests/ferumbras_ascension/actions_flower_puzzle_lever.lua
 - data-global/scripts/quests/ferumbras_ascension/movements_flower_puzzle.lua
-
-## Added files
-
-- data-global/scripts/creaturescripts/customs/water_houses.lua
+- data-global/scripts/lib/register_actions.lua
 
 ### Bug Fixes
 
@@ -40,6 +50,12 @@
 - Fixed some V.I.P list issues. ([Tryller](https://github.com/jprzimba))
 - Fixed gotoHouse talkaction. ([Tryller](https://github.com/jprzimba))
 - Fixed Ferumbras' Ascendant Garden Flower Puzzle. ([Mckay666](https://github.com/Mckay666))
+- Fixed lava tiles in entrance of The Pits of Inferno Quest. ([jeansouzak](https://github.com/jeansouzak))
+- Fixed Items created using CreateMapItem are cleanable by /clean. ([#7](https://github.com/jprzimba/crystalserver/issues/7)) ([Tryller](https://github.com/jprzimba))
+- Prevent players from entering the pool while in ghost mode. ([Tryller](https://github.com/jprzimba))
+- Prevent players from logging out while in the pool.
+- Prevent the use of `/n`, `/m`, and `/s` commands while in the pool. ([Tryller](https://github.com/jprzimba))
+
 
 ## Version 4.1
 

@@ -23,6 +23,12 @@ function swimming.onStepIn(creature, item, position, fromPosition)
 		return false
 	end
 
+	if player:isInGhostMode() then
+		player:sendCancelMessage("You cannot enter the water while in ghost mode.")
+		player:teleportTo(fromPosition, true)
+		return false
+	end
+
 	for i = 1, #conditions do
 		player:removeCondition(conditions[i])
 	end

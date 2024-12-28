@@ -542,10 +542,6 @@ public:
 		return isDummy() || items[id].m_canBeUsedByGuests;
 	}
 
-	bool isDecayDisabled() const {
-		return decayDisabled;
-	}
-
 	const std::string &getName() const {
 		if (hasAttribute(ItemAttribute_t::NAME)) {
 			return getString(ItemAttribute_t::NAME);
@@ -630,6 +626,18 @@ public:
 
 	bool isLoadedFromMap() const {
 		return loadedFromMap;
+	}
+
+	void setLoadedFromMap(bool value) {
+		loadedFromMap = value;
+	}
+
+	bool isDecayDisabled() const {
+		return decayDisabled;
+	}
+
+	void setDecayDisabled(bool value) {
+		decayDisabled = value;
 	}
 
 	bool isCleanable() const {
