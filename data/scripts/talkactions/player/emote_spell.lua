@@ -13,7 +13,7 @@ function emoteSpell.onSay(player, words, param)
 
 	if not table.contains(validValues, param) then
 		local validValuesStr = table.concat(validValues, "/")
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Invalid param specified. Usage: !emote [" .. validValuesStr .. "]")
+		player:sendTextMessage(MESSAGE_FAILURE, "Invalid param specified. Usage: !emote [" .. validValuesStr .. "]")
 		return true
 	end
 

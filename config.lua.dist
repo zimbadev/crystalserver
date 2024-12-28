@@ -426,7 +426,6 @@ allowChangeOutfit = true
 freePremium = false
 kickIdlePlayerAfterMinutes = 15
 maxMessageBuffer = 4
-emoteSpells = false
 allowWalkthrough = true
 coinPacketSize = 25
 coinImagesURL = "http://127.0.0.1/images/store/"
@@ -464,6 +463,10 @@ combatChainSkillFormulaSword = 1.1
 combatChainSkillFormulaDistance = 0.9
 combatChainSkillFormulaMissile = 0.9
 combatChainSkillFormulaWandsAndRods = 1.0
+
+-- Spells
+emoteSpells = false
+spellNameInsteadOfWords = false
 
 -- Global server Save
 -- NOTE: globalServerSaveNotifyDuration in minutes

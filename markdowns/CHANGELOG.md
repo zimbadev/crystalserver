@@ -9,13 +9,14 @@
 - New protocol 14.05 assets. ([Tryller](https://github.com/jprzimba))
 - Optimized the `onPlayerSellAllLoot` code to prevent prolonged freezes. ([Tryller](https://github.com/jprzimba))
 - Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`, `chainSystemModifyMagic`. ([Tryller](https://github.com/jprzimba))
-- Added a new command for players: `!randomoutfit`. ([Tryller](https://github.com/jprzimba))
+- Added a new commands for players: `!randomoutfit`, `!spellwords`. ([Tryller](https://github.com/jprzimba))
 - Moved emote spells to `kv` instead of `storage`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
 - Add all files in data/migrations
 - data/scripts/talkactions/player/randomoutfit.lua
+- data/scripts/talkactions/player/spell_name_instead_words.lua
 - data/scripts/creaturescripts/player/swimming.lua
 - data-global/scripts/creaturescripts/customs/water_houses.lua
 

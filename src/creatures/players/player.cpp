@@ -5020,6 +5020,24 @@ bool Player::checkEmoteSpells() const {
 	return false;
 }
 
+bool Player::checkSpellNameInsteadOfWords() const {
+	if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
+		return false;
+	}
+
+	auto featureKV = kv()->scoped("features")->get("spellNameInsteadOfWords");
+	if (featureKV.has_value()) {
+		auto value = featureKV->getNumber();
+		if (value == 1) {
+			return true;
+		} else if (value == 0) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
 QuickLootFilter_t Player::getQuickLootFilter() const {
 	return quickLootFilter;
 }
