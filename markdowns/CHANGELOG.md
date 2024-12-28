@@ -15,6 +15,8 @@
 
 - Add all files in data/migrations
 - data/scripts/talkactions/player/randomoutfit.lua
+- data/scripts/creaturescripts/player/swimming.lua
+- data-global/scripts/creaturescripts/customs/water_houses.lua
 
 ## Modified files
 
@@ -26,15 +28,12 @@
 - data/items/items.xml
 - data/scripts/creaturescripts/player/login.lua
 - data/scripts/movements/special_tiles.lua
+- data/scripts/movements/swimming.lua
 - data/scripts/talkactions/god/icons_functions.lua
 - data/scripts/talkactions/god/goto_house.lua
 - data-global/scripts/quests/ferumbras_ascension/actions_flower_puzzle_lever.lua
 - data-global/scripts/quests/ferumbras_ascension/movements_flower_puzzle.lua
 - data-global/scripts/lib/register_actions.lua
-
-## Added files
-
-- data-global/scripts/creaturescripts/customs/water_houses.lua
 
 ### Bug Fixes
 
