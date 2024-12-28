@@ -2,12 +2,12 @@ local randomOutfit = TalkAction("!randomoutfit")
 
 local config = {
 	changeInterval = 100,
-	showEffect = false
+	showEffect = false,
 }
 
 local validValues = {
 	"on",
-	"off"
+	"off",
 }
 
 local activePlayers = {}
