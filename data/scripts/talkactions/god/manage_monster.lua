@@ -58,6 +58,11 @@ function createMonster.onSay(player, words, param)
 		return true
 	end
 
+	if player:getOutfit().lookType == 267 then
+		player:sendCancelMessage("You cannot execte this command while in the pool.")
+		return true
+	end
+
 	local playerPosition = player:getPosition()
 	local splitParams = param:split(",")
 	local monsterName = splitParams[1]

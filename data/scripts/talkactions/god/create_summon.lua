@@ -9,6 +9,11 @@ function createSummon.onSay(player, words, param)
 		return true
 	end
 
+	if player:getOutfit().lookType == 267 then
+		player:sendCancelMessage("You cannot execte this command while in the pool.")
+		return true
+	end
+
 	local position = player:getPosition()
 	local summon = Game.createMonster(param, position, true, false, player)
 	if not summon then
