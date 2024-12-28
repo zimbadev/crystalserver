@@ -1,6 +1,7 @@
 Features = {
 	AutoLoot = "autoloot",
 	ChainSystem = "chainSystem",
+	EmoteSpells = "emoteSpells",
 }
 
 local function validateFeature(feature)

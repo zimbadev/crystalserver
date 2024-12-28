@@ -1,22 +1,27 @@
--- Usage talkaction: "!emote on" or "!emote off"
 local emoteSpell = TalkAction("!emote")
 
+local validValues = {
+	"on",
+	"off",
+}
+
 function emoteSpell.onSay(player, words, param)
-	if configManager.getBoolean(configKeys.EMOTE_SPELLS) == false then
-		player:sendTextMessage(MESSAGE_LOOK, "Emote spells have been disabled by the administrator.")
+	if not configManager.getBoolean(configKeys.EMOTE_SPELLS) then
+		player:sendTextMessage(MESSAGE_FAILURE, "Emote spells have been disabled by the administrator.")
 		return true
 	end
 
-	if param == "" then
-		player:sendCancelMessage("Please specify the parameter: 'on' to activate or 'off' to deactivate.")
+	if not table.contains(validValues, param) then
+		local validValuesStr = table.concat(validValues, "/")
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Invalid param specified. Usage: !emote [" .. validValuesStr .. "]")
 		return true
 	end
 
 	if param == "on" then
-		player:setStorageValue(STORAGEVALUE_EMOTE, 1)
+		player:setFeature(Features.EmoteSpells, 1)
 		player:sendTextMessage(MESSAGE_LOOK, "You have activated emote spells.")
 	elseif param == "off" then
-		player:setStorageValue(STORAGEVALUE_EMOTE, 0)
+		player:setFeature(Features.EmoteSpells, 0)
 		player:sendTextMessage(MESSAGE_LOOK, "You have deactivated emote spells.")
 	end
 	return true

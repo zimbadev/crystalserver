@@ -10,6 +10,7 @@
 - Optimized the `onPlayerSellAllLoot` code to prevent prolonged freezes. ([Tryller](https://github.com/jprzimba))
 - Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`, `chainSystemModifyMagic`. ([Tryller](https://github.com/jprzimba))
 - Added a new command for players: `!randomoutfit`. ([Tryller](https://github.com/jprzimba))
+- Moved emote spells to `kv` instead of `storage`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
@@ -22,10 +23,9 @@
 
 - crystalserver.exe
 - config.lua
-- data-global/world/world.otbm (7z file)
-- data-global/world/world-house.xml
 - data/items/assets.dat
 - data/items/items.xml
+- data/libs/systems/features.lua
 - data/scripts/creaturescripts/player/login.lua
 - data/scripts/movements/special_tiles.lua
 - data/scripts/movements/swimming.lua
@@ -34,6 +34,10 @@
 - data/scripts/talkactions/god/manage_monster.lua
 - data/scripts/talkactions/god/create_summon.lua
 - data/scripts/talkactions/god/create_npc.lua
+- data/scripts/talkactions/player/chain_system.lua
+- data/scripts/talkactions/player/emote_spell.lua
+- data-global/world/world.otbm (7z file)
+- data-global/world/world-house.xml
 - data-global/scripts/quests/ferumbras_ascension/actions_flower_puzzle_lever.lua
 - data-global/scripts/quests/ferumbras_ascension/movements_flower_puzzle.lua
 - data-global/scripts/lib/register_actions.lua

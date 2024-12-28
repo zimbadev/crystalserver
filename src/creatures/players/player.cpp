@@ -5002,6 +5002,24 @@ bool Player::checkChainSystem() const {
 	return false;
 }
 
+bool Player::checkEmoteSpells() const {
+	if (!g_configManager().getBoolean(EMOTE_SPELLS)) {
+		return false;
+	}
+
+	auto featureKV = kv()->scoped("features")->get("emoteSpells");
+	if (featureKV.has_value()) {
+		auto value = featureKV->getNumber();
+		if (value == 1) {
+			return true;
+		} else if (value == 0) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
 QuickLootFilter_t Player::getQuickLootFilter() const {
 	return quickLootFilter;
 }
@@ -8821,15 +8839,11 @@ bool Player::saySpell(SpeakClasses type, const std::string &text, bool isGhostMo
 		spectators = (*spectatorsPtr);
 	}
 
-	int32_t valueEmote = 0;
 	// Send to client
 	for (const auto &spectator : spectators) {
 		if (const auto &tmpPlayer = spectator->getPlayer()) {
-			if (g_configManager().getBoolean(EMOTE_SPELLS)) {
-				valueEmote = tmpPlayer->getStorageValue(STORAGEVALUE_EMOTE);
-			}
 			if (!isGhostMode || tmpPlayer->canSeeCreature(static_self_cast<Player>())) {
-				if (valueEmote == 1) {
+				if (checkEmoteSpells()) {
 					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_MONSTER_SAY, text, pos);
 				} else {
 					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_SPELL_USE, text, pos);
