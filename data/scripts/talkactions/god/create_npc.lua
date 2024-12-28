@@ -12,6 +12,11 @@ function createNpc.onSay(player, words, param)
 		return true
 	end
 
+	if player:getOutfit().lookType == 267 then
+		player:sendCancelMessage("You cannot execte this command while in the pool.")
+		return true
+	end
+
 	local split = param:split(",")
 	local name = split[1]
 	local permanentStr = split[2]
