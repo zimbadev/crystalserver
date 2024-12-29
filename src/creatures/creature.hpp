@@ -123,13 +123,13 @@ public:
 
 	virtual CreatureType_t getType() const = 0;
 
-    bool isPlayer() const {
-        return getType() == CreatureType_t::CREATURETYPE_PLAYER;
-    }
+	bool isPlayer() const {
+		return getType() == CreatureType_t::CREATURETYPE_PLAYER;
+	}
 
-    bool isMonster() const {
-        return getType() == CreatureType_t::CREATURETYPE_MONSTER;
-    }
+	bool isMonster() const {
+		return getType() == CreatureType_t::CREATURETYPE_MONSTER;
+	}
 
 	virtual void setID() = 0;
 	void setRemoved() {
