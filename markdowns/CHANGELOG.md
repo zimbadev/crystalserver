@@ -33,6 +33,7 @@
 - data/scripts/talkactions/god/icons_functions.lua
 - data/scripts/talkactions/god/goto_house.lua
 - data/scripts/talkactions/god/manage_monster.lua
+- data/scripts/talkactions/god/create_item.lua
 - data/scripts/talkactions/god/create_summon.lua
 - data/scripts/talkactions/god/create_npc.lua
 - data/scripts/talkactions/player/chain_system.lua
