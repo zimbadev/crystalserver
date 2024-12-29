@@ -3825,23 +3825,40 @@ std::shared_ptr<Item> Player::getCorpse(const std::shared_ptr<Creature> &lastHit
 		descriptionStream << fmt::format("You recognize {}. {} was killed by ", getNameDescription(), subjectPronoun);
 
 		std::vector<std::string> killers;
+		std::string firstMonster;
+
 		for (const auto &[creatureId, damageInfo] : damageMap) {
 			auto damageDealer = g_game().getCreatureByID(creatureId);
 			if (damageDealer) {
-				killers.push_back(damageDealer->getNameDescription());
+				if (damageDealer->isPlayer()) {
+					killers.push_back(damageDealer->getNameDescription());
+				} else if (damageDealer->isMonster() && firstMonster.empty()) {
+					auto master = damageDealer->getMaster();
+					if (master && master->isPlayer()) {
+						firstMonster = fmt::format("{} summoned by {}", damageDealer->getNameDescription(), master->getNameDescription());
+					} else {
+						firstMonster = damageDealer->getNameDescription();
+					}
+				}
 			}
 		}
 
-		if (killers.empty()) {
-			descriptionStream << "an unknown attacker";
-		} else {
+		if (!killers.empty()) {
 			for (size_t i = 0; i < killers.size(); ++i) {
 				if (i > 0) {
 					descriptionStream << (i == killers.size() - 1 ? " and " : ", ");
 				}
 				descriptionStream << killers[i];
 			}
+			if (!firstMonster.empty()) {
+				descriptionStream << " and " << firstMonster;
+			}
+		} else if (!firstMonster.empty()) {
+			descriptionStream << firstMonster;
+		} else {
+			descriptionStream << "an unknown attacker";
 		}
+
 		descriptionStream << '.';
 	}
 
