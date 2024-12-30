@@ -7499,7 +7499,7 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 		int32_t adjustedDamage = realDamage;
 		if (target) {
 			if (realDamage > targetHealth) {
-				 adjustedDamage = targetHealth > 0 ? targetHealth : realDamage;
+				adjustedDamage = targetHealth > 0 ? targetHealth : realDamage;
 			}
 		}
 
@@ -7512,7 +7512,7 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 			targetPlayer,
 			message,
 			spectators.data(),
-			adjustedDamage //realDamage
+			adjustedDamage // realDamage
 		);
 
 		if (attackerPlayer) {
