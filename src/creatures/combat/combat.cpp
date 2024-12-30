@@ -1532,10 +1532,10 @@ std::vector<std::pair<Position, std::vector<uint32_t>>> Combat::pickChainTargets
 				continue;
 			}
 
-			const auto& casterPlayer = caster->getPlayer();
-			const auto& casterMonster = caster->getMonster();
-			const auto& spectatorPlayer = spectator->getPlayer();
-			const auto& spectatorSummon = spectator->isSummon();
+			const auto &casterPlayer = caster->getPlayer();
+			const auto &casterMonster = caster->getMonster();
+			const auto &spectatorPlayer = spectator->getPlayer();
+			const auto &spectatorSummon = spectator->isSummon();
 
 			if (casterPlayer) {
 				if (casterPlayer->hasSecureMode()) {
@@ -1551,7 +1551,7 @@ std::vector<std::pair<Position, std::vector<uint32_t>>> Combat::pickChainTargets
 				}
 			} else if (casterMonster) {
 				if (spectatorSummon) {
-					const auto& master = spectator->getMaster();
+					const auto &master = spectator->getMaster();
 					if (!master || !master->getPlayer()) {
 						visited.insert(spectator->getID());
 						continue;
@@ -1560,7 +1560,7 @@ std::vector<std::pair<Position, std::vector<uint32_t>>> Combat::pickChainTargets
 					visited.insert(spectator->getID());
 					continue;
 				}
-			} 
+			}
 
 			if (!isValidChainTarget(caster, currentTarget, spectator, params, aggressive)) {
 				visited.insert(spectator->getID());
