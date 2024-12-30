@@ -3530,7 +3530,6 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			magicLossPercent /= 2;
 		}
 
-
 		lostMana = static_cast<uint64_t>(sumMana * magicLossPercent);
 
 		while (lostMana > manaSpent && magLevel > 0) {
@@ -5176,7 +5175,8 @@ ItemsTierCountList Player::getDepotInboxItemsId() const {
 		}
 	}
 
-	return itemMap;;
+	return itemMap;
+	;
 }
 
 std::vector<std::shared_ptr<Item>> Player::getAllInventoryItems(bool ignoreEquiped /*= false*/, bool ignoreItemWithTier /* false*/) const {

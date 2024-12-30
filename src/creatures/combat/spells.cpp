@@ -101,8 +101,7 @@ TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player,
 	if (instantSpell->playerCastInstant(player, param)) {
 		if (!player->checkSpellNameInsteadOfWords()) {
 			words = instantSpell->getWords();
-		}
-		else {
+		} else {
 			words = instantSpell->getName();
 		}
 
