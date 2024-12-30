@@ -2796,13 +2796,19 @@ int32_t Player::getIdleTime() const {
 }
 
 void Player::setTraining(bool value) {
+	if (isExerciseTraining() == value) {
+		return;
+	}
+
+	exerciseTraining = value;
+	VipStatus_t newStatus = exerciseTraining ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;
 	for (const auto &[key, player] : g_game().getPlayers()) {
 		if (!this->isInGhostMode() || player->isAccessPlayer()) {
-			player->vip()->notifyStatusChange(static_self_cast<Player>(), value ? VipStatus_t::TRAINING : VipStatus_t::ONLINE, false);
+			player->vip()->notifyStatusChange(static_self_cast<Player>(), newStatus, false);
 		}
 	}
-	vip()->setStatus(VipStatus_t::TRAINING);
-	setExerciseTraining(value);
+
+	setExerciseTraining(exerciseTraining);
 }
 
 void Player::addItemImbuementStats(const Imbuement* imbuement) {
@@ -3519,9 +3525,11 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		}
 
 		double magicLossPercent = deathLossPercent / 100.;
+		double magicLossPercent = deathLossPercent / 100.;
 		if (g_configManager().getBoolean(HALF_LOSS_MAGIC) && magicLossPercent > 0) {
 			magicLossPercent /= 2;
 		}
+
 
 		lostMana = static_cast<uint64_t>(sumMana * magicLossPercent);
 
@@ -3876,7 +3884,8 @@ void Player::removeList() {
 
 void Player::addList() {
 	for (const auto &[key, player] : g_game().getPlayers()) {
-		player->vip()->notifyStatusChange(static_self_cast<Player>(), vip()->getStatus());
+		VipStatus_t status = player->isExerciseTraining() ? VipStatus_t::TRAINING : VipStatus_t::ONLINE;
+		player->vip()->notifyStatusChange(static_self_cast<Player>(), status);
 	}
 
 	g_game().addPlayer(static_self_cast<Player>());
@@ -4995,6 +5004,42 @@ bool Player::checkChainSystem() const {
 	return false;
 }
 
+bool Player::checkEmoteSpells() const {
+	if (!g_configManager().getBoolean(EMOTE_SPELLS)) {
+		return false;
+	}
+
+	auto featureKV = kv()->scoped("features")->get("emoteSpells");
+	if (featureKV.has_value()) {
+		auto value = featureKV->getNumber();
+		if (value == 1) {
+			return true;
+		} else if (value == 0) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
+bool Player::checkSpellNameInsteadOfWords() const {
+	if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
+		return false;
+	}
+
+	auto featureKV = kv()->scoped("features")->get("spellNameInsteadOfWords");
+	if (featureKV.has_value()) {
+		auto value = featureKV->getNumber();
+		if (value == 1) {
+			return true;
+		} else if (value == 0) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
 QuickLootFilter_t Player::getQuickLootFilter() const {
 	return quickLootFilter;
 }
@@ -5131,8 +5176,7 @@ ItemsTierCountList Player::getDepotInboxItemsId() const {
 		}
 	}
 
-	return itemMap;
-	;
+	return itemMap;;
 }
 
 std::vector<std::shared_ptr<Item>> Player::getAllInventoryItems(bool ignoreEquiped /*= false*/, bool ignoreItemWithTier /* false*/) const {
@@ -8112,25 +8156,15 @@ bool Player::isGuildMate(const std::shared_ptr<Player> &player) const {
 }
 
 bool Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
-	const ItemType &itemType = Item::items[itemId];
-	if (itemType.stackable) {
-		while (itemCount > 0) {
-			const auto addValue = itemCount > 100 ? 100 : itemCount;
-			itemCount -= addValue;
-			const auto &newItem = Item::CreateItem(itemId, addValue);
+	const uint32_t stackCount = 100u;
 
-			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
-				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
-			}
-		}
-	} else {
-		while (itemCount > 0) {
-			--itemCount;
-			const auto &newItem = Item::CreateItem(itemId);
+	while (itemCount > 0) {
+		const auto addValue = itemCount > stackCount ? stackCount : itemCount;
+		itemCount -= addValue;
+		const auto &newItem = Item::CreateItem(itemId, addValue);
 
-			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
-				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
-			}
+		if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
+			g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
 		}
 	}
 
@@ -8142,20 +8176,20 @@ bool Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 	return true;
 }
 
-void processContainerItems(const std::shared_ptr<Item> &item, const std::shared_ptr<Item> &container, StashContainerList &itemDict) {
-	if (!container) {
-		return;
+void sendStowItems(const std::shared_ptr<Item> &item, const std::shared_ptr<Item> &stowItem, StashContainerList &itemDict) {
+	if (stowItem->getID() == item->getID()) {
+		itemDict.emplace_back(stowItem, stowItem->getItemCount());
 	}
 
-	if (const auto &containerItems = container->getContainer()) {
-		for (const auto &subItem : containerItems->getItems(true)) {
-			itemDict.emplace_back(subItem, subItem->getItemCount());
-		}
+	if (const auto &container = stowItem->getContainer()) {
+		std::ranges::copy_if(container->getStowableItems(), std::back_inserter(itemDict), [&item](const auto &stowable_it) {
+			return stowable_it.first->getID() == item->getID();
+		});
 	}
 }
 
 void Player::stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool allItems) {
-	if (!item) {
+	if (!item || (!item->isItemStorable() && item->getID() != ITEM_GOLD_POUCH)) {
 		sendCancelMessage("This item cannot be stowed here.");
 		return;
 	}
@@ -8165,35 +8199,46 @@ void Player::stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool al
 		if (!item->isInsideDepot(true)) {
 			// Stow "all items" from player backpack
 			if (const auto &backpack = getInventoryItem(CONST_SLOT_BACKPACK)) {
-				processContainerItems(item, backpack, itemDict);
+				sendStowItems(item, backpack, itemDict);
 			}
 
 			// Stow "all items" from loot pouch
 			const auto &itemParent = item->getParent();
-			const auto &lootPouch = itemParent ? itemParent->getItem() : nullptr;
-			if (lootPouch && lootPouch->getID() == ITEM_GOLD_POUCH) {
-				processContainerItems(item, lootPouch, itemDict);
+			const auto &lootPouch = itemParent->getItem();
+			if (itemParent && lootPouch && lootPouch->getID() == ITEM_GOLD_POUCH) {
+				sendStowItems(item, lootPouch, itemDict);
 			}
 		}
 
 		// Stow locker items
 		const auto &depotLocker = getDepotLocker(getLastDepotId());
-		for (const auto &lockerItem : depotLocker->getItems(true)) {
-			processContainerItems(item, lockerItem, itemDict);
+		const auto &[itemVector, itemMap] = requestLockerItems(depotLocker);
+		for (const auto &lockerItem : itemVector) {
+			if (lockerItem == nullptr) {
+				break;
+			}
+
+			if (item->isInsideDepot(true)) {
+				sendStowItems(item, lockerItem, itemDict);
+			}
+		}
+	} else if (item->getContainer()) {
+		itemDict = item->getContainer()->getStowableItems();
+		for (const std::shared_ptr<Item> &containerItem : item->getContainer()->getItems(true)) {
+			uint32_t depotChest = g_configManager().getNumber(DEPOTCHEST);
+			bool validDepot = depotChest > 0 && depotChest < 21;
+			if (g_configManager().getBoolean(STASH_MOVING) && containerItem && !containerItem->isStackable() && validDepot) {
+				g_game().internalMoveItem(containerItem->getParent(), getDepotChest(depotChest, true), INDEX_WHEREEVER, containerItem, containerItem->getItemCount(), nullptr);
+				movedItems++;
+				moved = true;
+			}
 		}
 	} else {
-		// Process case for items inside containers
-		if (item->getContainer()) {
-			for (const auto &containerItem : item->getContainer()->getItems(true)) {
-				itemDict.emplace_back(containerItem, containerItem->getItemCount());
-			}
-		} else {
-			itemDict.emplace_back(item, count);
-		}
+		itemDict.emplace_back(item, count);
 	}
 
 	if (itemDict.empty()) {
-		sendCancelMessage("There are no items to be stowed in this container.");
+		sendCancelMessage("There is no stowable items on this container.");
 		return;
 	}
 
@@ -8814,15 +8859,11 @@ bool Player::saySpell(SpeakClasses type, const std::string &text, bool isGhostMo
 		spectators = (*spectatorsPtr);
 	}
 
-	int32_t valueEmote = 0;
 	// Send to client
 	for (const auto &spectator : spectators) {
 		if (const auto &tmpPlayer = spectator->getPlayer()) {
-			if (g_configManager().getBoolean(EMOTE_SPELLS)) {
-				valueEmote = tmpPlayer->getStorageValue(STORAGEVALUE_EMOTE);
-			}
 			if (!isGhostMode || tmpPlayer->canSeeCreature(static_self_cast<Player>())) {
-				if (valueEmote == 1) {
+				if (checkEmoteSpells()) {
 					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_MONSTER_SAY, text, pos);
 				} else {
 					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_SPELL_USE, text, pos);
@@ -8952,47 +8993,20 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 		return;
 	}
 
+	uint32_t maxContainer = static_cast<uint32_t>(g_configManager().getNumber(MAX_CONTAINER));
+	auto backpack = getInventoryItem(CONST_SLOT_BACKPACK);
+	auto mainBackpack = backpack ? backpack->getContainer() : nullptr;
+
+	if (mainBackpack && mainBackpack->getContainerHoldingCount() >= maxContainer) {
+		sendCancelMessage(RETURNVALUE_CONTAINERISFULL);
+		return;
+	}
+
 	ForgeHistory history;
 	history.actionType = actionType;
 	history.tier = tier;
 	history.success = success;
 	history.tierLoss = reduceTierLoss;
-
-	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
-	if (!exaltationChest) {
-		g_logger().error("Failed to create exaltation chest");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-	const auto &exaltationContainer = exaltationChest->getContainer();
-	if (!exaltationContainer) {
-		g_logger().error("Failed to create exaltation container");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	auto returnValue = queryAdd(CONST_SLOT_BACKPACK, exaltationContainer, 1, 0);
-	if (returnValue != RETURNVALUE_NOERROR) {
-		g_logger().error("[Log 1] Failed to add forge item {} from player with name {}", firstItemId, getName());
-		sendCancelMessage(getReturnMessage(returnValue));
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	const auto &firstForgedItem = Item::CreateItem(firstItemId, 1);
-	if (!firstForgedItem) {
-		g_logger().error("[Log 3] Player with name {} failed to fuse item with id {}", getName(), firstItemId);
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	returnValue = g_game().internalAddItem(exaltationContainer, firstForgedItem, INDEX_WHEREEVER);
-	if (returnValue != RETURNVALUE_NOERROR) {
-		g_logger().error("[Log 1] Failed to add forge item {} from player with name {}", firstItemId, getName());
-		sendCancelMessage(getReturnMessage(returnValue));
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
 
 	const auto &firstForgingItem = getForgeItemFromId(firstItemId, tier);
 	if (!firstForgingItem) {
@@ -9000,7 +9014,7 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
 	}
-	returnValue = g_game().internalRemoveItem(firstForgingItem, 1);
+	auto returnValue = g_game().internalRemoveItem(firstForgingItem, 1);
 	if (returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 1] Failed to remove forge item {} from player with name {}", firstItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
@@ -9016,6 +9030,33 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 	if (returnValue = g_game().internalRemoveItem(secondForgingItem, 1);
 	    returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 2] Failed to remove forge item {} from player with name {}", secondItemId, getName());
+		sendCancelMessage(getReturnMessage(returnValue));
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
+	if (!exaltationChest) {
+		g_logger().error("Failed to create exaltation chest");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+	const auto &exaltationContainer = exaltationChest->getContainer();
+	if (!exaltationContainer) {
+		g_logger().error("Failed to create exaltation container");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	const auto &firstForgedItem = Item::CreateItem(firstItemId, 1);
+	if (!firstForgedItem) {
+		g_logger().error("[Log 3] Player with name {} failed to fuse item with id {}", getName(), firstItemId);
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+	returnValue = g_game().internalAddItem(exaltationContainer, firstForgedItem, INDEX_WHEREEVER);
+	if (returnValue != RETURNVALUE_NOERROR) {
+		g_logger().error("[Log 1] Failed to add forge item {} from player with name {}", firstItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
@@ -9182,7 +9223,7 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 
 	returnValue = g_game().internalAddItem(static_self_cast<Player>(), exaltationContainer, INDEX_WHEREEVER);
 	if (returnValue != RETURNVALUE_NOERROR) {
-		g_logger().error("Failed to add exaltation chest to player with name {}", fmt::underlying(ITEM_EXALTATION_CHEST), getName());
+		g_logger().error("Failed to add exaltation chest to player with name {}", getName());
 		sendCancelMessage(getReturnMessage(returnValue));
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
@@ -9209,33 +9250,13 @@ void Player::forgeTransferItemTier(ForgeAction_t actionType, uint16_t donorItemI
 	history.tier = tier;
 	history.success = true;
 
-	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
-	if (!exaltationChest) {
-		g_logger().error("Exaltation chest is nullptr");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-	const auto &exaltationContainer = exaltationChest->getContainer();
-	if (!exaltationContainer) {
-		g_logger().error("Exaltation container is nullptr");
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
-	auto returnValue = queryAdd(CONST_SLOT_BACKPACK, exaltationContainer, 1, 0);
-	if (returnValue != RETURNVALUE_NOERROR) {
-		sendCancelMessage(getReturnMessage(returnValue));
-		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-		return;
-	}
-
 	const auto &donorItem = getForgeItemFromId(donorItemId, tier);
 	if (!donorItem) {
 		g_logger().error("[Log 1] Player with name {} failed to transfer item with id {}", getName(), donorItemId);
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
 	}
-	returnValue = g_game().internalRemoveItem(donorItem, 1);
+	auto returnValue = g_game().internalRemoveItem(donorItem, 1);
 	if (returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 1] Failed to remove transfer item {} from player with name {}", donorItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
@@ -9253,6 +9274,19 @@ void Player::forgeTransferItemTier(ForgeAction_t actionType, uint16_t donorItemI
 	    returnValue != RETURNVALUE_NOERROR) {
 		g_logger().error("[Log 2] Failed to remove transfer item {} from player with name {}", receiveItemId, getName());
 		sendCancelMessage(getReturnMessage(returnValue));
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	const auto &exaltationChest = Item::CreateItem(ITEM_EXALTATION_CHEST, 1);
+	if (!exaltationChest) {
+		g_logger().error("Exaltation chest is nullptr");
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+	const auto &exaltationContainer = exaltationChest->getContainer();
+	if (!exaltationContainer) {
+		g_logger().error("Exaltation container is nullptr");
 		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
 		return;
 	}

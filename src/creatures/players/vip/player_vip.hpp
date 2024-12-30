@@ -43,10 +43,6 @@ public:
 	size_t getMaxEntries() const;
 	uint8_t getMaxGroupEntries() const;
 
-	VipStatus_t getStatus() const {
-		return status;
-	}
-
 	void setStatus(VipStatus_t newStatus) {
 		status = newStatus;
 	}

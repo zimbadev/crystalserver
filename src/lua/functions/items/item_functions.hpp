@@ -43,6 +43,7 @@ private:
 	static int luaItemGetUniqueId(lua_State* L);
 	static int luaItemGetActionId(lua_State* L);
 	static int luaItemSetActionId(lua_State* L);
+	static int luaItemSetLoadedFromMap(lua_State* L);
 
 	static int luaItemGetCount(lua_State* L);
 	static int luaItemGetCharges(lua_State* L);

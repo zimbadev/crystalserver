@@ -101,9 +101,9 @@ std::shared_ptr<Item> MapCache::createItem(const std::shared_ptr<BasicItem> &Bas
 	if (item->canDecay()) {
 		item->startDecaying();
 	}
-	item->loadedFromMap = true;
-	item->decayDisabled = Item::items[item->getID()].decayTo != -1;
 
+	item->setLoadedFromMap(true);
+	item->setDecayDisabled(Item::items[item->getID()].decayTo != -1);
 	return item;
 }
 

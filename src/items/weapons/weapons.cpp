@@ -955,6 +955,10 @@ int32_t WeaponWand::getWeaponDamage(const std::shared_ptr<Player> &player, const
 		return maxDamage ? -maxChange : -normal_random(minChange, maxChange);
 	}
 
+	if (!g_configManager().getBoolean(CHAIN_SYSTEM_MODIFY_MAGIC)) {
+		return maxDamage ? -maxChange : -normal_random(minChange, maxChange);
+	}
+
 	// If chain system is enabled, calculates magic-based damage
 	int32_t attackSkill = 0;
 	int32_t attackValue = 0;

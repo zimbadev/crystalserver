@@ -1213,8 +1213,8 @@ bool Item::canBeMoved() const {
 
 void Item::checkDecayMapItemOnMove() {
 	if (getDuration() > 0 && isDecayDisabled() && canBeMoved()) {
-		decayDisabled = false;
-		loadedFromMap = false;
+		setDecayDisabled(false);
+		setLoadedFromMap(false);
 		startDecaying();
 	}
 }

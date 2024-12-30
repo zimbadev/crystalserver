@@ -141,6 +141,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TELEPORT_SUMMONS, "teleportSummons", false);
 	loadBoolConfig(L, TOGGLE_ATTACK_SPEED_ONFIST, "toggleAttackSpeedOnFist", false);
 	loadBoolConfig(L, TOGGLE_CHAIN_SYSTEM, "toggleChainSystem", true);
+	loadBoolConfig(L, CHAIN_SYSTEM_MODIFY_MAGIC, "chainSystemModifyMagic", false);
 	loadBoolConfig(L, TOGGLE_FREE_QUEST, "toggleFreeQuest", true);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_ALLOW_ANYTHING, "toggleGoldPouchAllowAnything", false);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_QUICKLOOT_ONLY, "toggleGoldPouchQuickLootOnly", false);
@@ -170,6 +171,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, HALF_LOSS_MAGIC, "halfLossMagicLevel", true);
 	loadBoolConfig(L, CHAIN_SYSTEM_VIP_ONLY, "chainSystemVipOnly", false);
 	loadBoolConfig(L, BEDS_ONLY_PREMIUM, "bedsOnlyPremium", true);
+	loadBoolConfig(L, SPELL_NAME_INSTEAD_WORDS, "spellNameInsteadOfWords", false);
 
 	loadFloatConfig(L, BESTIARY_RATE_CHARM_SHOP_PRICE, "bestiaryRateCharmShopPrice", 1.0);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_AXE, "combatChainSkillFormulaAxe", 0.9);
