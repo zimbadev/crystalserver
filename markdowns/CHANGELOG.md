@@ -47,6 +47,8 @@
 ### Bug Fixes
 
 - Fixed influenced creatures not spawning. ([Tryller](https://github.com/jprzimba))
+- Fixed sending damage higher then monster health. ([Tryller](https://github.com/jprzimba))
+- Fixed chain targets. ([Mortera-world](https://github.com/Mortera-world))
 - Fixed houses with pool bug. ([Tryller](https://github.com/jprzimba))
 - Fixed some V.I.P list issues. ([Tryller](https://github.com/jprzimba))
 - Fixed gotoHouse talkaction. ([Tryller](https://github.com/jprzimba))

@@ -1516,6 +1516,52 @@ std::vector<std::pair<Position, std::vector<uint32_t>>> Combat::pickChainTargets
 			if (!spectator || visited.contains(spectator->getID())) {
 				continue;
 			}
+
+			if (spectator->getZoneType() == ZONE_PROTECTION) {
+				visited.insert(spectator->getID());
+				continue;
+			}
+
+			if (spectator->getNpc()) {
+				visited.insert(spectator->getID());
+				continue;
+			}
+
+			if (spectator == caster) {
+				visited.insert(spectator->getID());
+				continue;
+			}
+
+			const auto &casterPlayer = caster->getPlayer();
+			const auto &casterMonster = caster->getMonster();
+			const auto &spectatorPlayer = spectator->getPlayer();
+			const auto &spectatorSummon = spectator->isSummon();
+
+			if (casterPlayer) {
+				if (casterPlayer->hasSecureMode()) {
+					if (spectatorPlayer) {
+						visited.insert(spectator->getID());
+						continue;
+					}
+
+					if (spectatorSummon && spectator->getMaster() && spectator->getMaster()->getPlayer()) {
+						visited.insert(spectator->getID());
+						continue;
+					}
+				}
+			} else if (casterMonster) {
+				if (spectatorSummon) {
+					const auto &master = spectator->getMaster();
+					if (!master || !master->getPlayer()) {
+						visited.insert(spectator->getID());
+						continue;
+					}
+				} else if (!spectator->getPlayer()) {
+					visited.insert(spectator->getID());
+					continue;
+				}
+			}
+
 			if (!isValidChainTarget(caster, currentTarget, spectator, params, aggressive)) {
 				visited.insert(spectator->getID());
 				continue;
