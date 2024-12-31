@@ -9368,7 +9368,6 @@ void ProtocolGame::sendTakeScreenshot(Screenshot_t screenshotType) {
 	writeToOutputBuffer(msg);
 }
 
-
 void ProtocolGame::parseCyclopediaHouseAuction(NetworkMessage &msg) {
 	if (oldProtocol) {
 		return;
