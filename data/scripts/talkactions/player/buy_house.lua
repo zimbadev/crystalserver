@@ -1,6 +1,11 @@
 local buyHouse = TalkAction("!buyhouse")
 
 function buyHouse.onSay(player, words, param)
+	if configManager.getBoolean(configKeys.CYCLOPEDIA_HOUSE_AUCTION) then
+		player:sendTextMessage(MESSAGE_FAILURE, "Command have been disabled by the administrator.")
+		return true
+	end
+
 	local housePrice = configManager.getNumber(configKeys.HOUSE_PRICE_PER_SQM)
 	if housePrice == -1 then
 		return true

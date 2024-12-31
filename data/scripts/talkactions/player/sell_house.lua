@@ -1,6 +1,11 @@
 local sellHouse = TalkAction("!sellhouse")
 
 function sellHouse.onSay(player, words, param)
+	if configManager.getBoolean(configKeys.CYCLOPEDIA_HOUSE_AUCTION) then
+		player:sendTextMessage(MESSAGE_FAILURE, "Command have been disabled by the administrator.")
+		return true
+	end
+
 	local tradePartner = Player(param)
 	if not tradePartner or tradePartner == player then
 		player:sendCancelMessage("Trade player not found.")
