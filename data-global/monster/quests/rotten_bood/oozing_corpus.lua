@@ -16,32 +16,32 @@ monster.outfit = {
 monster.raceId = 2381
 monster.Bestiary = {
 	class = "Undead",
-	race = BESTY_RACE_HUMANOID,
+	race = BESTY_RACE_UNDEAD,
 	toKill = 5000,
 	FirstUnlock = 200,
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Jaded Roots",
+	Occurrence = 0,
+	Locations = "Jaded Roots.",
 }
 
 monster.health = 28700
 monster.maxHealth = 28700
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43575
 monster.speed = 220
 monster.manaCost = 0
 
 monster.changeTarget = {
 	interval = 4000,
-	chance = 10,
+	chance = 0,
 }
 
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -54,9 +54,9 @@ monster.flags = {
 	rewardBoss = false,
 	illusionable = false,
 	canPushItems = true,
-	canPushCreatures = true,
-	staticAttackChance = 80,
-	targetDistance = 1,
+	canPushCreatures = false,
+	staticAttackChance = 90,
+	targetDistance = 0,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
@@ -66,13 +66,8 @@ monster.flags = {
 }
 
 monster.light = {
-	level = 0,
-	color = 0,
-}
-
-monster.voices = {
-	interval = 5000,
-	chance = 30,
+	level = 4,
+	color = 143,
 }
 
 monster.loot = {
@@ -83,6 +78,7 @@ monster.loot = {
 	{ name = "rotten roots", chance = 13133, maxCount = 1 },
 	{ name = "blue gem", chance = 9808, maxCount = 1 },
 	{ name = "dragonbone staff", chance = 6964, maxCount = 1 },
+	{ name = "worm sponge", chance = 7270, maxCount = 1 },
 	{ name = "violet gem", chance = 5084, maxCount = 1 },
 	{ name = "jade hammer", chance = 3073, maxCount = 1 },
 }
@@ -96,9 +92,9 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 104,
-	mitigation = 3.16,
+	defense = 100,
+	armor = 107,
+	mitigation = 3.25,
 }
 
 monster.elements = {
@@ -116,7 +112,7 @@ monster.elements = {
 
 monster.immunities = {
 	{ type = "paralyze", condition = true },
-	{ type = "outfit", condition = false },
+	{ type = "outfit", condition = true },
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },
 }

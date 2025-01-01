@@ -15,20 +15,20 @@ monster.outfit = {
 
 monster.raceId = 2399
 monster.Bestiary = {
-	class = "Undead",
-	race = BESTY_RACE_HUMANOID,
+	class = "Magical",
+	race = BESTY_RACE_MAGICAL,
 	toKill = 5000,
 	FirstUnlock = 200,
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
+	Occurrence = 0,
 	Locations = "Darklight Core",
 }
 
 monster.health = 29700
 monster.maxHealth = 29700
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43844
 monster.speed = 210
 monster.manaCost = 0
@@ -41,7 +41,7 @@ monster.changeTarget = {
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -55,7 +55,7 @@ monster.flags = {
 	illusionable = false,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 80,
+	staticAttackChance = 90,
 	targetDistance = 1,
 	runHealth = 0,
 	healthHidden = false,
@@ -68,11 +68,6 @@ monster.flags = {
 monster.light = {
 	level = 0,
 	color = 0,
-}
-
-monster.voices = {
-	interval = 5000,
-	chance = 30,
 }
 
 monster.loot = {
@@ -97,9 +92,9 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 104,
-	mitigation = 3.16,
+	defense = 112,
+	armor = 112,
+	mitigation = 3.10,
 }
 
 monster.elements = {

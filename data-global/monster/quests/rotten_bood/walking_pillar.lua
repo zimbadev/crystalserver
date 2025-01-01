@@ -15,22 +15,22 @@ monster.outfit = {
 
 monster.raceId = 2394
 monster.Bestiary = {
-	class = "Undead",
-	race = BESTY_RACE_HUMANOID,
+	class = "Construct",
+	race = BESTY_RACE_CONSTRUCT,
 	toKill = 5000,
 	FirstUnlock = 200,
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Jaded Roots",
+	Occurrence = 0,
+	Locations = "Darklight Core",
 }
 
 monster.health = 38000
 monster.maxHealth = 38000
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43824
-monster.speed = 210
+monster.speed = 190
 monster.manaCost = 0
 
 monster.changeTarget = {
@@ -41,7 +41,7 @@ monster.changeTarget = {
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -52,16 +52,16 @@ monster.flags = {
 	convinceable = false,
 	pushable = false,
 	rewardBoss = false,
-	illusionable = false,
+	illusionable = true,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 80,
-	targetDistance = 4,
-	runHealth = 0,
+	staticAttackChance = 90,
+	targetDistance = 1,
+	runHealth = 50,
 	healthHidden = false,
 	isBlockable = false,
 	canWalkOnEnergy = true,
-	canWalkOnFire = true,
+	canWalkOnFire = false,
 	canWalkOnPoison = true,
 }
 
@@ -72,7 +72,8 @@ monster.light = {
 
 monster.voices = {
 	interval = 5000,
-	chance = 30,
+	chance = 10,
+	{ text = "TREEMBLE", yell = false },
 }
 
 monster.loot = {
@@ -101,9 +102,9 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 112,
-	mitigation = 3.25,
+	defense = 120,
+	armor = 120,
+	mitigation = 2.75,
 }
 
 monster.elements = {

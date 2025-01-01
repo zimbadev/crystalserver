@@ -15,7 +15,7 @@ monster.outfit = {
 
 monster.health = 86000
 monster.maxHealth = 86000
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43669
 monster.speed = 210
 monster.manaCost = 0
@@ -59,7 +59,8 @@ monster.light = {
 monster.voices = {
 	interval = 5000,
 	chance = 10,
-	{ text = "SHWAARR!", yell = true },
+	{ text = "SHWAARR!", yell = false },
+	{ text = "SHWAARP!", yell = false },
 }
 
 monster.loot = {}

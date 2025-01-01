@@ -74883,21 +74883,12 @@ Granted by TibiaGoals.com"/>
 	<item id="42632" name="stairs">
 		<attribute key="floorchange" value="east"/>
 	</item>
-	<item id="42964" name="stairs"/>
-	<item id="42965" name="stairs">
-		<attribute key="floorchange" value="north"/>
+	<item id="42744" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
 	</item>
-	<item id="42966" name="stairs"/>
-	<item id="42967" name="stairs">
-		<attribute key="floorchange" value="west"/>
-	</item>
-	<item id="42968" name="stairs"/>
-	<item id="42969" name="stairs">
-		<attribute key="floorchange" value="east"/>
-	</item>
-	<item id="42970" name="stairs"/>
-	<item id="42971" name="stairs">
-		<attribute key="floorchange" value="south"/>
+	<item id="42745" article="a" name="open door">
+		<attribute key="type" value="door"/>
 	</item>
 	<item id="43952" article="a" name="closed door">
 		<attribute key="type" value="door"/>
@@ -74916,6 +74907,22 @@ Granted by TibiaGoals.com"/>
 	<item id="43955" article="a" name="open door">
 		<attribute key="type" value="door"/>
 		<attribute key="transformOnUse" value="43953"/>
+	</item>
+	<item id="42964" name="stairs"/>
+	<item id="42965" name="stairs">
+		<attribute key="floorchange" value="north"/>
+	</item>
+	<item id="42966" name="stairs"/>
+	<item id="42967" name="stairs">
+		<attribute key="floorchange" value="west"/>
+	</item>
+	<item id="42968" name="stairs"/>
+	<item id="42969" name="stairs">
+		<attribute key="floorchange" value="east"/>
+	</item>
+	<item id="42970" name="stairs"/>
+	<item id="42971" name="stairs">
+		<attribute key="floorchange" value="south"/>
 	</item>
 	<item id="43129" name="stairs"/>
 	<item id="43130" name="stairs">
@@ -75467,6 +75474,11 @@ Granted by TibiaGoals.com"/>
 		<attribute key="loottype" value="creature products" />
 		<attribute key="primarytype" value="creature products" />
 		<attribute key="weight" value="100" />
+	</item>
+	<item id="43851" article="a" name="darklight matter">
+		<attribute key="loottype" value="creature products"/>
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="100"/>
 	</item>
 	<item id="43852" article="a" name="darklight basalt chunk">
 		<attribute key="loottype" value="creature products" />
@@ -76210,6 +76222,9 @@ Granted by TibiaGoals.com"/>
 			<attribute key="slot" value="feet"/>
 			<attribute key="vocation" value="Druid;true, Elder Druid"/>
 		</attribute>
+	</item>
+	<item id="43891" article="a" name="sacrificial plate">
+		<attribute key="primarytype" value="shrines and altars"/>
 	</item>
 	<item id="43895" article="a" name="bag you covet">
 		<attribute key="primarytype" value="valuables"/>

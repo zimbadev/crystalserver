@@ -17,21 +17,21 @@ monster.events = {
 	"RottenBloodBossDeath",
 }
 
+monster.bosstiary = {
+	bossRaceId = 2362,
+	bossRace = RARITY_NEMESIS,
+}
+
 monster.health = 350000
 monster.maxHealth = 350000
 monster.race = "undead"
 monster.corpse = 44015
-monster.speed = 195
+monster.speed = 250
 monster.manaCost = 0
 
 monster.changeTarget = {
-	interval = 2000,
-	chance = 10,
-}
-
-monster.bosstiary = {
-	bossRaceId = 2362,
-	bossRace = RARITY_NEMESIS,
+	interval = 10000,
+	chance = 20,
 }
 
 monster.strategiesTarget = {
@@ -51,7 +51,7 @@ monster.flags = {
 	illusionable = false,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 95,
+	staticAttackChance = 98,
 	targetDistance = 1,
 	runHealth = 0,
 	healthHidden = false,
@@ -59,7 +59,6 @@ monster.flags = {
 	canWalkOnEnergy = true,
 	canWalkOnFire = true,
 	canWalkOnPoison = true,
-	pet = false,
 }
 
 monster.light = {
@@ -67,37 +66,34 @@ monster.light = {
 	color = 0,
 }
 
-monster.summon = {}
-
-monster.voices = {
-	interval = 5000,
-	chance = 10,
+monster.summon = {
+	maxSummons = 8,
+	summons = {
+		{ name = "Mushroom", chance = 30, interval = 5000, count = 8 },
+	},
 }
 
+monster.voices = {}
+
 monster.loot = {
-	{ name = "crystal coin", chance = 8000, maxCount = 78 },
-	{ name = "supreme health potion", chance = 12500, maxCount = 156 },
-	{ name = "ultimate mana potion", chance = 12500, maxCount = 18 },
-	{ name = "ultimate spirit potion", chance = 2500, maxCount = 87 },
-	{ name = "berserk potion", chance = 5500, maxCount = 16 },
-	{ name = "blue gem", chance = 2500 },
-	{ name = "green gem", chance = 2500, maxCount = 2 },
-	{ id = 36706, chance = 2500, maxCount = 4 }, -- red gem
-	{ name = "mastermind potion", chance = 2500, maxCount = 19 },
-	{ name = "gold ingot", chance = 2500 },
-	{ name = "white gem", chance = 2500 },
-	{ name = "amber with a dragonfly", chance = 1250 },
-	{ name = "giant emerald", chance = 1250 },
-	{ name = "spiritual horseshoe", chance = 312 },
-	{ id = 43895, chance = 20 }, -- bag you covet
+	{ name = "crystal coin", chance = 12317, maxCount = 91 },
+	{ id = 3039, chance = 10896, maxCount = 2 }, -- red gem
+	{ name = "amber with a bug", chance = 14590, maxCount = 1 },
+	{ name = "amber with a dragonfly", chance = 5405, maxCount = 1 },
+	{ name = "bullseye potion", chance = 10821, maxCount = 44 },
+	{ name = "green gem", chance = 7763, maxCount = 4 },
+	{ name = "mastermind potion", chance = 9534, maxCount = 15 },
+	{ name = "supreme health potion", chance = 6212, maxCount = 102 },
+	{ name = "ultimate mana potion", chance = 8785, maxCount = 29 },
+	{ name = "ultimate spirit potion", chance = 8783, maxCount = 161 },
 }
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = -1400, maxDamage = -2300 },
 	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_DEATHDAMAGE, minDamage = -500, maxDamage = -900, radius = 4, effect = CONST_ME_SMALLCLOUDS, target = false },
 	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_HOLYDAMAGE, minDamage = -500, maxDamage = -900, range = 4, radius = 4, shootEffect = 31, effect = 248, target = true },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_ICEDAMAGE, minDamage = -1000, maxDamage = -1200, length = 10, spread = 3, effect = 53, target = false },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_PHYSICALDAMAGE, minDamage = -1500, maxDamage = -1900, length = 10, spread = 3, effect = 158, target = false },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_ICEDAMAGE, minDamage = -1000, maxDamage = -1200, length = 10, spread = 0, effect = 53, target = false },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_PHYSICALDAMAGE, minDamage = -1500, maxDamage = -1900, length = 10, spread = 0, effect = 158, target = false },
 	{ name = "speed", interval = 2000, chance = 20, speedChange = -600, radius = 7, effect = CONST_ME_POFF, target = false, duration = 20000 },
 }
 
@@ -108,16 +104,16 @@ monster.defenses = {
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = 0 },
-	{ type = COMBAT_EARTHDAMAGE, percent = 0 },
-	{ type = COMBAT_FIREDAMAGE, percent = 0 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = 15 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = 15 },
+	{ type = COMBAT_EARTHDAMAGE, percent = 15 },
+	{ type = COMBAT_FIREDAMAGE, percent = 15 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 0 },
-	{ type = COMBAT_HOLYDAMAGE, percent = 0 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 0 },
+	{ type = COMBAT_ICEDAMAGE, percent = 15 },
+	{ type = COMBAT_HOLYDAMAGE, percent = 15 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 15 },
 }
 
 monster.immunities = {

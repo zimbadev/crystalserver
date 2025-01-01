@@ -4,7 +4,7 @@ local monster = {}
 monster.description = "Vemiath"
 monster.experience = 3250000
 monster.outfit = {
-	lookType = 1668,
+	lookType = 1665,
 	lookHead = 0,
 	lookBody = 0,
 	lookLegs = 0,
@@ -17,21 +17,21 @@ monster.events = {
 	"RottenBloodBossDeath",
 }
 
+monster.bosstiary = {
+	bossRaceId = 2365,
+	bossRace = RARITY_ARCHFOE,
+}
+
 monster.health = 350000
 monster.maxHealth = 350000
 monster.race = "undead"
 monster.corpse = 44021
-monster.speed = 195
+monster.speed = 250
 monster.manaCost = 0
 
 monster.changeTarget = {
-	interval = 2000,
-	chance = 10,
-}
-
-monster.bosstiary = {
-	bossRaceId = 2365,
-	bossRace = RARITY_NEMESIS,
+	interval = 10000,
+	chance = 20,
 }
 
 monster.strategiesTarget = {
@@ -51,7 +51,7 @@ monster.flags = {
 	illusionable = false,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 95,
+	staticAttackChance = 98,
 	targetDistance = 1,
 	runHealth = 0,
 	healthHidden = false,
@@ -59,7 +59,6 @@ monster.flags = {
 	canWalkOnEnergy = true,
 	canWalkOnFire = true,
 	canWalkOnPoison = true,
-	pet = false,
 }
 
 monster.light = {
@@ -67,39 +66,37 @@ monster.light = {
 	color = 0,
 }
 
-monster.summon = {
-	maxSummons = 8,
-	summons = {
-		{ name = "Pillar of Dark Energy", chance = 38, interval = 1713, count = 7 },
-	},
+monster.summon = {}
+
+monster.voices = {
+	interval = 5000,
+	chance = 10,
+	{ text = "The light... that... drains!", yell = false },
+	{ text = "RAAAR!", yell = false },
+	{ text = "WILL ... PUNISH ... YOU!", yell = false },
+	{ text = "Darkness ... devours!", yell = false },
 }
 
-monster.voices = {}
-
 monster.loot = {
-	{ name = "crystal coin", chance = 2832, minCount = 1, maxCount = 125 },
-	{ name = "ultimate mana potion", chance = 3676, minCount = 1, maxCount = 211 },
-	{ name = "ultimate spirit potion", chance = 4373, minCount = 1, maxCount = 35 },
-	{ name = "supreme health potion", chance = 3446, minCount = 1, maxCount = 179 },
-	{ name = "bullseye potion", chance = 3542, minCount = 1, maxCount = 42 },
-	{ name = "berserk potion", chance = 4060, minCount = 1, maxCount = 45 },
-	{ name = "mastermind potion", chance = 2891, minCount = 1, maxCount = 44 },
-	{ id = 3041, chance = 3992, minCount = 0, maxCount = 5 }, -- blue gem,
-	{ name = "green gem", chance = 1989, minCount = 0, maxCount = 5 },
-	{ id = 3039, chance = 2491, minCount = 0, maxCount = 5 }, -- red gem,
-	{ name = "yellow gem", chance = 3194, minCount = 0, maxCount = 5 },
-	{ name = "violet gem", chance = 2163, minCount = 0, maxCount = 5 },
-	{ name = "gold ingot", chance = 2249 },
-	{ name = "giant emerald", chance = 2434 },
-	{ name = "giant topaz", chance = 1850 },
-	{ name = "giant amethyst", chance = 1698 },
-	{ name = "raw watermelon tourmaline", chance = 4768 },
-	{ name = "vemiath's infused basalt", chance = 3249, minCount = 0, maxCount = 1 },
-	{ name = "dragon figurine", chance = 3595 },
-	{ name = "darklight figurine", chance = 4829 },
-	{ name = "the essence of vemiath", chance = 4167 },
-	{ name = "spiritual horseshoe", chance = 1813 },
-	{ id = 43895, chance = 2280 }, -- bag you covet
+	{ name = "crystal coin", chance = 8852, maxCount = 125 },
+	{ name = "ultimate mana potion", chance = 11337, maxCount = 211 },
+	{ name = "giant emerald", chance = 6423, maxCount = 1 },
+	{ name = "supreme health potion", chance = 8385, maxCount = 179 },
+	{ name = "yellow gem", chance = 8604, maxCount = 5 },
+	{ name = "berserk potion", chance = 9395, maxCount = 45 },
+	{ name = "blue gem", chance = 14144, maxCount = 5 },
+	{ name = "green gem", chance = 6221, maxCount = 4 },
+	{ name = "bullseye potion", chance = 6530, maxCount = 26 },
+	{ name = "mastermind potion", chance = 5700, maxCount = 44 },
+	{ name = "ultimate spirit potion", chance = 9216, maxCount = 25 },
+	{ name = "giant topaz", chance = 11191, maxCount = 1 },
+	{ name = "giant amethyst", chance = 8527, maxCount = 1 },
+	{ name = "gold ingot", chance = 10866, maxCount = 1 },
+	{ id = 3039, chance = 8945, maxCount = 1 }, -- red gem
+	{ name = "dragon figurine", chance = 11502, maxCount = 1 },
+	{ name = "raw watermelon tourmaline", chance = 9302, maxCount = 1 },
+	{ name = "vemiath's infused basalt", chance = 7914, maxCount = 1 },
+	{ name = "violet gem", chance = 7210, maxCount = 1 },
 }
 
 monster.attacks = {
@@ -118,16 +115,16 @@ monster.defenses = {
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = 0 },
-	{ type = COMBAT_EARTHDAMAGE, percent = 0 },
-	{ type = COMBAT_FIREDAMAGE, percent = 0 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = 15 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = 15 },
+	{ type = COMBAT_EARTHDAMAGE, percent = 15 },
+	{ type = COMBAT_FIREDAMAGE, percent = 15 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 0 },
-	{ type = COMBAT_HOLYDAMAGE, percent = 0 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 0 },
+	{ type = COMBAT_ICEDAMAGE, percent = 15 },
+	{ type = COMBAT_HOLYDAMAGE, percent = 15 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 15 },
 }
 
 monster.immunities = {

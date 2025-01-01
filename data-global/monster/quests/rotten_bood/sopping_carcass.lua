@@ -22,26 +22,26 @@ monster.Bestiary = {
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Putrefactory",
+	Occurrence = 0,
+	Locations = "Putrefactory.",
 }
 
 monster.health = 32700
 monster.maxHealth = 32700
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43832
 monster.speed = 210
 monster.manaCost = 0
 
 monster.changeTarget = {
 	interval = 4000,
-	chance = 10,
+	chance = 0,
 }
 
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -54,9 +54,9 @@ monster.flags = {
 	rewardBoss = false,
 	illusionable = false,
 	canPushItems = true,
-	canPushCreatures = true,
-	staticAttackChance = 80,
-	targetDistance = 4,
+	canPushCreatures = false,
+	staticAttackChance = 90,
+	targetDistance = 0,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
@@ -70,22 +70,7 @@ monster.light = {
 	color = 0,
 }
 
-monster.voices = {
-	interval = 5000,
-	chance = 30,
-}
-
-monster.loot = {
-	{ name = "crystal coin", chance = 90305 },
-	{ name = "soul orb", chance = 27927, minCount = 1, maxCount = 3 },
-	{ name = "lichen gobbler", chance = 15243 },
-	{ name = "decayed finger bone", chance = 25798 },
-	{ name = "rotten roots", chance = 9031 },
-	{ name = "yellow gem", chance = 3836 },
-	{ name = "underworld rod", chance = 1525 },
-	{ id = 3039, chance = 3537 }, -- red gem,
-	{ name = "ripper lance", chance = 4752 },
-}
+monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1100 },
@@ -97,9 +82,9 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 112,
-	mitigation = 3.25,
+	defense = 109,
+	armor = 109,
+	mitigation = 3.28,
 }
 
 monster.elements = {
@@ -117,7 +102,7 @@ monster.elements = {
 
 monster.immunities = {
 	{ type = "paralyze", condition = true },
-	{ type = "outfit", condition = false },
+	{ type = "outfit", condition = true },
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },
 }

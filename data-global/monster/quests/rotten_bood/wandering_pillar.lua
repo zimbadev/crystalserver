@@ -15,22 +15,22 @@ monster.outfit = {
 
 monster.raceId = 2395
 monster.Bestiary = {
-	class = "Undead",
-	race = BESTY_RACE_HUMANOID,
+	class = "Construct",
+	race = BESTY_RACE_CONSTRUCT,
 	toKill = 5000,
-	FirstUnlock = 50,
-	SecondUnlock = 5000,
+	FirstUnlock = 200,
+	SecondUnlock = 2000,
 	CharmsPoints = 100,
-	Stars = 3,
-	Occurrence = 2,
-	Locations = "Gloom Pillars",
+	Stars = 5,
+	Occurrence = 0,
+	Locations = "Darklight Core",
 }
 
 monster.health = 37000
 monster.maxHealth = 37000
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43828
-monster.speed = 220
+monster.speed = 190
 monster.manaCost = 0
 
 monster.changeTarget = {
@@ -41,7 +41,7 @@ monster.changeTarget = {
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -52,16 +52,16 @@ monster.flags = {
 	convinceable = false,
 	pushable = false,
 	rewardBoss = false,
-	illusionable = false,
+	illusionable = true,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 80,
+	staticAttackChance = 90,
 	targetDistance = 1,
-	runHealth = 0,
+	runHealth = 50,
 	healthHidden = false,
 	isBlockable = false,
 	canWalkOnEnergy = true,
-	canWalkOnFire = true,
+	canWalkOnFire = false,
 	canWalkOnPoison = true,
 }
 
@@ -72,7 +72,10 @@ monster.light = {
 
 monster.voices = {
 	interval = 5000,
-	chance = 30,
+	chance = 10,
+	{ text = "POWERRR!!", yell = false },
+	{ text = "DARKNESS. DEATH. ENERGIES.", yell = false },
+	{ text = "TREMMMBLE!", yell = false },
 }
 
 monster.loot = {
@@ -102,22 +105,22 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 104,
-	mitigation = 3.16,
+	defense = 120,
+	armor = 120,
+	mitigation = 2.75,
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = -30 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = 25 },
-	{ type = COMBAT_EARTHDAMAGE, percent = -40 },
-	{ type = COMBAT_FIREDAMAGE, percent = -25 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = -10 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = 60 },
+	{ type = COMBAT_EARTHDAMAGE, percent = -15 },
+	{ type = COMBAT_FIREDAMAGE, percent = -15 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 10 },
-	{ type = COMBAT_HOLYDAMAGE, percent = 10 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 0 },
+	{ type = COMBAT_ICEDAMAGE, percent = 45 },
+	{ type = COMBAT_HOLYDAMAGE, percent = 0 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 10 },
 }
 
 monster.immunities = {
