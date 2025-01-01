@@ -422,6 +422,7 @@ resetSessionsOnStartup = false
 -- Misc.
 -- NOTE: experienceDisplayRates: set to false to ignore exp rate or true to include exp rate
 -- NOTE: disableLegacyRaids: set to true to disable legacy XML raids
+-- NOTE: logPlayersStatements will log all player statements.
 allowChangeOutfit = true
 freePremium = false
 kickIdlePlayerAfterMinutes = 15
@@ -448,7 +449,7 @@ disableMonsterArmor = false
 minElementalResistance = -200
 maxElementalResistance = 200
 maxDamageReflection = 200
-logPlayersStatements = true
+logPlayersStatements = false
 
 -- Chain system
 -- NOTE: combatChainDelay: set to minimum 50 miliseconds
