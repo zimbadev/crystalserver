@@ -46,6 +46,7 @@
 #include "io/iobestiary.hpp"
 #include "io/ioguild.hpp"
 #include "io/iologindata.hpp"
+#include "io/functions/iologindata_save_player.hpp"
 #include "io/iomarket.hpp"
 #include "io/ioprey.hpp"
 #include "items/bed.hpp"
@@ -6230,6 +6231,11 @@ void Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 
 	if (type != TALKTYPE_PRIVATE_PN) {
 		player->removeMessageBuffer();
+	}
+
+	uint32_t statementId = 0;
+	if (g_configManager().getBoolean(LOG_PLAYERS_STATEMENTS)) {
+		IOLoginDataSave::savePlayerStatement(player, receiver, channelId, text, statementId);
 	}
 
 	switch (type) {
