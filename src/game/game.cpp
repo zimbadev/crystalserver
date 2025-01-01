@@ -6234,8 +6234,9 @@ void Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 	}
 
 	uint32_t statementId = 0;
-	if(g_configManager().getBoolean(LOG_PLAYERS_STATEMENTS))
+	if (g_configManager().getBoolean(LOG_PLAYERS_STATEMENTS)) {
 		IOLoginDataSave::savePlayerStatement(player, receiver, channelId, text, statementId);
+	}
 
 	switch (type) {
 		case TALKTYPE_SAY:
