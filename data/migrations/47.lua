@@ -4,13 +4,13 @@ function onUpdateDatabase()
 	db.query([[
 		CREATE TABLE IF NOT EXISTS `player_statements`(
 			`id` INT NOT NULL AUTO_INCREMENT,
-			`player_id` INT NOT NULL,
-			`receiver` TEXT NOT NULL,
+			`sender` VARCHAR (255) NOT NULL,
+			`receiver` VARCHAR (255) NOT NULL,
 			`channel_id` INT NOT NULL DEFAULT 0,
 			`text` VARCHAR (255) NOT NULL,
 			`date` BIGINT NOT NULL DEFAULT 0,
-			PRIMARY KEY (`id`), KEY (`player_id`), KEY (`channel_id`),
-			FOREIGN KEY (`player_id`) REFERENCES `players`(`id`) ON DELETE CASCADE
+			PRIMARY KEY (`id`),
+			KEY (`channel_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	]])
 	return true
