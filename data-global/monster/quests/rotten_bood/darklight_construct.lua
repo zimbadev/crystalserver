@@ -2,9 +2,9 @@ local mType = Game.createMonsterType("Darklight Construct")
 local monster = {}
 
 monster.description = "a darklight construct"
-monster.experience = 22465
+monster.experience = 22050
 monster.outfit = {
-	lookType = 1660,
+	lookType = 1622,
 	lookHead = 0,
 	lookBody = 0,
 	lookLegs = 0,
@@ -22,13 +22,13 @@ monster.Bestiary = {
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Gloom Pillars",
+	Occurrence = 0,
+	Locations = "Darklight Core",
 }
 
 monster.health = 32200
 monster.maxHealth = 32200
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43840
 monster.speed = 220
 monster.manaCost = 0
@@ -55,8 +55,8 @@ monster.flags = {
 	illusionable = false,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 80,
-	targetDistance = 4,
+	staticAttackChance = 90,
+	targetDistance = 0,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
@@ -68,11 +68,6 @@ monster.flags = {
 monster.light = {
 	level = 0,
 	color = 0,
-}
-
-monster.voices = {
-	interval = 5000,
-	chance = 30,
 }
 
 monster.loot = {
@@ -97,9 +92,9 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 104,
-	mitigation = 3.16,
+	defense = 117,
+	armor = 117,
+	mitigation = 2.98,
 }
 
 monster.elements = {

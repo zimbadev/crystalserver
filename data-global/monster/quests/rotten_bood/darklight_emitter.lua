@@ -22,14 +22,14 @@ monster.Bestiary = {
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Gloom Pillars",
+	Occurrence = 0,
+	Locations = "Darklight Core",
 }
 
 monster.health = 27500
 monster.maxHealth = 27500
-monster.race = "venom"
-monster.corpse = 43844
+monster.race = "undead"
+monster.corpse = 43583
 monster.speed = 210
 monster.manaCost = 0
 
@@ -41,7 +41,7 @@ monster.changeTarget = {
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -55,8 +55,8 @@ monster.flags = {
 	illusionable = false,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 80,
-	targetDistance = 1,
+	staticAttackChance = 90,
+	targetDistance = 0,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
@@ -68,11 +68,6 @@ monster.flags = {
 monster.light = {
 	level = 0,
 	color = 0,
-}
-
-monster.voices = {
-	interval = 5000,
-	chance = 30,
 }
 
 monster.loot = {
@@ -95,9 +90,9 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 104,
-	mitigation = 3.16,
+	defense = 120,
+	armor = 120,
+	mitigation = 3.04,
 }
 
 monster.elements = {

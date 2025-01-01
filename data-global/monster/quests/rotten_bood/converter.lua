@@ -22,15 +22,15 @@ monster.Bestiary = {
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Gloom Pillars",
+	Occurrence = 0,
+	Locations = "Gloom Pillars.",
 }
 
 monster.health = 29600
 monster.maxHealth = 29600
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43567
-monster.speed = 210
+monster.speed = 250
 monster.manaCost = 0
 
 monster.changeTarget = {
@@ -41,7 +41,7 @@ monster.changeTarget = {
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -52,16 +52,16 @@ monster.flags = {
 	convinceable = false,
 	pushable = false,
 	rewardBoss = false,
-	illusionable = false,
+	illusionable = true,
 	canPushItems = true,
-	canPushCreatures = true,
+	canPushCreatures = false,
 	staticAttackChance = 80,
-	targetDistance = 4,
+	targetDistance = 1,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
 	canWalkOnEnergy = true,
-	canWalkOnFire = true,
+	canWalkOnFire = false,
 	canWalkOnPoison = true,
 }
 
@@ -70,14 +70,10 @@ monster.light = {
 	color = 0,
 }
 
-monster.voices = {
-	interval = 5000,
-	chance = 30,
-}
-
 monster.loot = {
 	{ name = "crystal coin", chance = 5230, maxCount = 1 },
 	{ name = "darklight obsidian axe", chance = 6963, maxCount = 1 },
+	{ name = "darklight matter", chance = 6927, maxCount = 1 },
 	{ name = "darklight core", chance = 10715, maxCount = 1 },
 	{ name = "wand of starstorm", chance = 8797, maxCount = 1 },
 	{ name = "blue gem", chance = 9372, maxCount = 1 },
@@ -95,22 +91,22 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 112,
-	mitigation = 3.25,
+	defense = 100,
+	armor = 100,
+	mitigation = 3.31,
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = 45 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = -15 },
-	{ type = COMBAT_EARTHDAMAGE, percent = 40 },
-	{ type = COMBAT_FIREDAMAGE, percent = 15 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = -20 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = -10 },
+	{ type = COMBAT_EARTHDAMAGE, percent = 10 },
+	{ type = COMBAT_FIREDAMAGE, percent = 25 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = -15 },
-	{ type = COMBAT_HOLYDAMAGE, percent = -5 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 5 },
+	{ type = COMBAT_ICEDAMAGE, percent = 0 },
+	{ type = COMBAT_HOLYDAMAGE, percent = 35 },
+	{ type = COMBAT_DEATHDAMAGE, percent = -15 },
 }
 
 monster.immunities = {
