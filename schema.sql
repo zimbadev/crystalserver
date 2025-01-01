@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
     CONSTRAINT `server_config_pk` PRIMARY KEY (`config`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '46'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
+INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '47'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -571,6 +571,18 @@ CREATE TABLE IF NOT EXISTS `player_charms` (
     `UnlockedRunesBit` VARCHAR(250) NULL,
     `tracker list` BLOB NULL
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure `player_statements`
+CREATE TABLE IF NOT EXISTS `player_statements` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`player_id` INT NOT NULL,
+	`receiver` TEXT NOT NULL,
+	`channel_id` INT NOT NULL DEFAULT 0,
+	`text` VARCHAR (255) NOT NULL,
+	`date` BIGINT NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`), KEY (`player_id`), KEY (`channel_id`),
+	FOREIGN KEY (`player_id`) REFERENCES `players`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `player_deaths`
 CREATE TABLE IF NOT EXISTS `player_deaths` (

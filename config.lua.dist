@@ -448,6 +448,7 @@ disableMonsterArmor = false
 minElementalResistance = -200
 maxElementalResistance = 200
 maxDamageReflection = 200
+logPlayersStatements = true
 
 -- Chain system
 -- NOTE: combatChainDelay: set to minimum 50 miliseconds
