@@ -1,16 +1,24 @@
 function onUpdateDatabase()
-	logger.info("Updating database to version 47 (player statements)")
+	logger.info("Updating database to version 47 (hireling)")
 
 	db.query([[
-		CREATE TABLE IF NOT EXISTS `player_statements`(
-			`id` INT NOT NULL AUTO_INCREMENT,
-			`player_id` INT NOT NULL,
-			`receiver` TEXT NOT NULL,
-			`channel_id` INT NOT NULL DEFAULT 0,
-			`text` VARCHAR (255) NOT NULL,
-			`date` BIGINT NOT NULL DEFAULT 0,
-			PRIMARY KEY (`id`), KEY (`player_id`), KEY (`channel_id`),
-			FOREIGN KEY (`player_id`) REFERENCES `players`(`id`) ON DELETE CASCADE
-		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		CREATE TABLE IF NOT EXISTS `player_hirelings` (
+            `id` INT NOT NULL PRIMARY KEY auto_increment,
+            `player_id` INT NOT NULL,
+            `name` varchar(255),
+            `active` tinyint unsigned NOT NULL DEFAULT '0',
+            `sex` tinyint unsigned NOT NULL DEFAULT '0',
+            `posx` int(11) NOT NULL DEFAULT '0',
+            `posy` int(11) NOT NULL DEFAULT '0',
+            `posz` int(11) NOT NULL DEFAULT '0',
+            `lookbody` int(11) NOT NULL DEFAULT '0',
+            `lookfeet` int(11) NOT NULL DEFAULT '0',
+            `lookhead` int(11) NOT NULL DEFAULT '0',
+            `looklegs` int(11) NOT NULL DEFAULT '0',
+            `looktype` int(11) NOT NULL DEFAULT '136',
+
+            FOREIGN KEY(`player_id`) REFERENCES `players`(`id`)
+                ON DELETE CASCADE
+		)
 	]])
 end
