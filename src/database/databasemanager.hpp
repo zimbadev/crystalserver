@@ -32,3 +32,4 @@ public:
 	static bool getDatabaseConfig(const std::string &config, int32_t &value);
 	static void registerDatabaseConfig(const std::string &config, int32_t value);
 };
+

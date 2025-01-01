@@ -1,5 +1,5 @@
 function onUpdateDatabase()
-	logger.info("Updating database to version 48 (player statements)")
+	logger.info("Updating database to version 47 (player statements)")
 
 	db.query([[
 		CREATE TABLE IF NOT EXISTS `player_statements`(
@@ -13,5 +13,4 @@ function onUpdateDatabase()
 			FOREIGN KEY (`player_id`) REFERENCES `players`(`id`) ON DELETE CASCADE
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	]])
-	return true
 end
