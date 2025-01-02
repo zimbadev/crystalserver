@@ -3688,10 +3688,12 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 				soul = 100;
 				capacity = 400;
 				staminaMinutes = 2520;
+				offlineTrainingTime = 43200;
 				health = healthMax = 150;
-				experience = magLevel = manaSpent = mana = manaMax = bankBalance = 0;
+				experience = magLevel = manaSpent = mana = manaMax = bankBalance = forgeDustLevel = bossPoints = forgeDusts = 0;
 				defaultOutfit.lookAddons = defaultOutfit.lookMount = 0;
 
+				setSkull(SKULL_NONE);
 				g_logger().warn("mandando para o templo");
 				loginPosition = rookTown->getTemplePosition();
 
