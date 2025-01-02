@@ -3125,9 +3125,7 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 	while (experience >= nextLevelExp) {
 		++level;
 		auto currentVocation = vocation;
-		if (currentVocation->getId() != VOCATION_NONE &&
-			g_configManager().getBoolean(ROOK_SYSTEM) &&
-			level <= (uint32_t)g_configManager().getNumber(LEVEL_TO_ROOK)) {
+		if (currentVocation->getId() != VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level <= (uint32_t)g_configManager().getNumber(LEVEL_TO_ROOK)) {
 			const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
 			if (rookVocation) {
 				currentVocation = rookVocation;
@@ -3607,9 +3605,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			while (level > 1 && experience < Player::getExpForLevel(level)) {
 				--level;
 				auto currentVocation = vocation;
-				if (currentVocation->getId() != VOCATION_NONE &&
-					g_configManager().getBoolean(ROOK_SYSTEM) &&
-					level < static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
+				if (currentVocation->getId() != VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level < static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
 					const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
 					if (rookVocation) {
 						currentVocation = rookVocation;
@@ -3676,9 +3672,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, blessOutput.str());
 
 		// Send to rook
-		if (vocation->getId() > VOCATION_NONE && 
-			g_configManager().getBoolean(ROOK_SYSTEM) && 
-			level <= static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
+		if (vocation->getId() > VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level <= static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
 			g_logger().warn("Rook system ativado");
 
 			const auto rookTownId = g_configManager().getNumber(ROOK_TOWN);
@@ -3712,7 +3706,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 				}
 
 				// Remove player from guild?
-				//leaveGuild();
+				// leaveGuild();
 
 				// Clear storages
 				g_logger().warn("limpando storageMap");
@@ -3730,9 +3724,9 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 				// Remove items from inventory
 				g_logger().warn("limpando inventario");
 				/*for (uint32_t i = SLOT_FIRST; i < SLOT_LAST; ++i) {
-					if (inventory[i]) {
-						g_game().internalRemoveItem(inventory[i]);
-					}
+				    if (inventory[i]) {
+				        g_game().internalRemoveItem(inventory[i]);
+				    }
 				}*/
 				g_logger().warn("char enviado para rook");
 			}
