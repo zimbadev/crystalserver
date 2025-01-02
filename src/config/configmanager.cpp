@@ -173,6 +173,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, BEDS_ONLY_PREMIUM, "bedsOnlyPremium", true);
 	loadBoolConfig(L, SPELL_NAME_INSTEAD_WORDS, "spellNameInsteadOfWords", false);
 	loadBoolConfig(L, CYCLOPEDIA_HOUSE_AUCTION, "toggleCyclopediaHouseAuction", true);
+	loadBoolConfig(L, LOG_PLAYERS_STATEMENTS, "logPlayersStatements", false);
 
 	loadFloatConfig(L, BESTIARY_RATE_CHARM_SHOP_PRICE, "bestiaryRateCharmShopPrice", 1.0);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_AXE, "combatChainSkillFormulaAxe", 0.9);

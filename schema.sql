@@ -576,6 +576,18 @@ CREATE TABLE IF NOT EXISTS `player_charms` (
     `tracker list` BLOB NULL
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
+-- Table structure `player_statements`
+CREATE TABLE IF NOT EXISTS `player_statements` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`player_id` INT NOT NULL,
+	`receiver` TEXT NOT NULL,
+	`channel_id` INT NOT NULL DEFAULT 0,
+	`text` VARCHAR (255) NOT NULL,
+	`date` BIGINT NOT NULL DEFAULT 0,
+	PRIMARY KEY (`id`), KEY (`player_id`), KEY (`channel_id`),
+	FOREIGN KEY (`player_id`) REFERENCES `players`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- Table structure `player_deaths`
 CREATE TABLE IF NOT EXISTS `player_deaths` (
     `player_id` int(11) NOT NULL,

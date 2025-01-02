@@ -46,6 +46,7 @@
 #include "io/iobestiary.hpp"
 #include "io/ioguild.hpp"
 #include "io/iologindata.hpp"
+#include "io/functions/iologindata_save_player.hpp"
 #include "io/iomarket.hpp"
 #include "io/ioprey.hpp"
 #include "items/bed.hpp"
@@ -6232,6 +6233,11 @@ void Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 		player->removeMessageBuffer();
 	}
 
+	uint32_t statementId = 0;
+	if (g_configManager().getBoolean(LOG_PLAYERS_STATEMENTS)) {
+		IOLoginDataSave::savePlayerStatement(player, receiver, channelId, text, statementId);
+	}
+
 	switch (type) {
 		case TALKTYPE_SAY:
 			internalCreatureSay(player, TALKTYPE_SAY, text, false);
@@ -9051,9 +9057,10 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 		return;
 	}
 
-	uint64_t calcFee = (price / 100) * amount;
-	uint64_t minFee = std::min<uint64_t>(100000, calcFee);
-	uint64_t fee = std::max<uint64_t>(20, minFee);
+	uint64_t totalPrice = price * amount;
+	uint64_t totalFee = totalPrice * 0.02;
+	uint64_t maxFee = std::min<uint64_t>(1000000, totalFee);
+	uint64_t fee = std::max<uint64_t>(20, totalFee);
 
 	if (type == MARKETACTION_SELL) {
 		if (fee > (player->getBankBalance() + player->getMoney())) {
