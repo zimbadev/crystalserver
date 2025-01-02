@@ -26,7 +26,8 @@ maintainModeMessage = ""
 toggleRookSystem = true
 rookTownId = 3
 levelToRook = 5
-levelToLeaveRook = 8
+minLevelToLeaveRook = 8
+maxLevelToLeaveRook = 10
 
 -- Combat settings
 -- NOTE: valid values for worldType are: "pvp", "no-pvp" and "pvp-enforced"

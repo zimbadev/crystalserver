@@ -370,7 +370,8 @@ bool ConfigManager::load() {
 	loadIntConfig(L, LOGIN_PROTECTION, "loginProtectionPeriod", 10 * 1000);
 	loadIntConfig(L, ROOK_TOWN, "rookTownId", 1);
 	loadIntConfig(L, LEVEL_TO_ROOK, "levelToRook", 5);
-	loadIntConfig(L, LEVEL_LEAVE_ROOK, "levelToLeaveRook", 8);
+	loadIntConfig(L, MIN_LEVEL_LEAVE_ROOK, "minLevelToLeaveRook", 8);
+	loadIntConfig(L, MAX_LEVEL_LEAVE_ROOK, "maxLevelToLeaveRook", 10);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");
