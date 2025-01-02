@@ -3671,68 +3671,8 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		}
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, blessOutput.str());
 
-		// Send to rook
-		if (vocation->getId() > VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level <= static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
-			g_logger().warn("Rook system ativado");
-
-			const auto rookTownId = g_configManager().getNumber(ROOK_TOWN);
-			const auto &rookTown = g_game().map.towns.getTown(rookTownId);
-			g_logger().warn("Rook town id {}", rookTownId);
-
-			if (rookTown) {
-				g_logger().warn("entrando no if rookTown");
-
-				// Reset player stats
-				g_logger().warn("resentando informações basicas");
-				level = 1;
-				soul = 100;
-				capacity = 400;
-				staminaMinutes = 2520;
-				offlineTrainingTime = 43200;
-				health = healthMax = 150;
-				experience = magLevel = manaSpent = mana = manaMax = bankBalance = forgeDustLevel = bossPoints = forgeDusts = 0;
-				defaultOutfit.lookAddons = defaultOutfit.lookMount = 0;
-
-				setSkull(SKULL_NONE);
-				g_logger().warn("mandando para o templo");
-				loginPosition = rookTown->getTemplePosition();
-
-				g_logger().warn("mudando a cidade");
-				setTown(rookTown);
-
-				g_logger().warn("mandando a voação para 0");
-				const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
-				if (rookVocation) {
-					setVocation(rookVocation->getId());
-					g_logger().warn("vocação 0");
-				}
-
-				// Remove player from guild?
-				// leaveGuild();
-
-				// Clear storages
-				g_logger().warn("limpando storageMap");
-				storageMap.clear();
-
-				// Reset player skills
-				g_logger().warn("resetando skills");
-				for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
-					skills[i].level = 10;
-					skills[i].tries = 0;
-					skills[i].percent = Player::getPercentLevel(0, rookVocation->getReqSkillTries(i, 10));
-				}
-				g_logger().warn("skills resetadas");
-
-				// Remove items from inventory
-				g_logger().warn("limpando inventario");
-				/*for (uint32_t i = SLOT_FIRST; i < SLOT_LAST; ++i) {
-				    if (inventory[i]) {
-				        g_game().internalRemoveItem(inventory[i]);
-				    }
-				}*/
-				g_logger().warn("char enviado para rook");
-			}
-		}
+		// rook system
+		sendToRook();
 
 		sendStats();
 		sendSkills();
@@ -3783,6 +3723,58 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		onThink(EVENT_CREATURE_THINK_INTERVAL);
 		onIdleStatus();
 		sendStats();
+	}
+}
+
+void Player::sendToRook() {
+	if (vocation->getId() > VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level <= static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
+		const auto rookTownId = g_configManager().getNumber(ROOK_TOWN);
+		const auto &rookTown = g_game().map.towns.getTown(rookTownId);
+
+		if (rookTown) {
+			// Reset player
+			level = 1;
+			soul = 100;
+			capacity = 400;
+			staminaMinutes = 2520;
+			offlineTrainingTime = 43200;
+			health = healthMax = 150;
+			experience = magLevel = manaSpent = mana = manaMax = bankBalance = forgeDustLevel = bossPoints = forgeDusts = 0;
+			defaultOutfit.lookAddons = defaultOutfit.lookMount = 0;
+
+			setSkull(SKULL_NONE);
+
+			loginPosition = rookTown->getTemplePosition();
+			setTown(rookTown);
+
+			const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
+			if (rookVocation) {
+				setVocation(rookVocation->getId());
+				g_logger().warn("vocação 0");
+			}
+
+			// Remove player from guild?
+			// leaveGuild();
+
+			// Clear storages
+			storageMap.clear();
+			guildWarVector.clear();
+
+			// Reset player skills
+			for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
+				skills[i].level = 10;
+				skills[i].tries = 0;
+				skills[i].percent = Player::getPercentLevel(0, rookVocation->getReqSkillTries(i, 10));
+			}
+
+			// Remove items from inventory
+			// Need to be finished
+			/*for (uint32_t i = SLOT_FIRST; i < SLOT_LAST; ++i) {
+			    if (inventory[i]) {
+			        g_game().internalRemoveItem(inventory[i]);
+			    }
+			}*/
+		}
 	}
 }
 
