@@ -3773,9 +3773,9 @@ void Player::sendToRook() {
 			// Remove items from inventory
 			for (uint32_t slotId = CONST_SLOT_FIRST; slotId < CONST_SLOT_LAST; ++slotId) {
 				const auto &item = inventory[slotId];
-			    if (item) {
-			        g_game().internalRemoveItem(item);
-			    }
+				if (item) {
+					g_game().internalRemoveItem(item);
+				}
 			}
 
 			sendSkills();
