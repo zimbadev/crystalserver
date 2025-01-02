@@ -62,7 +62,7 @@ npcConfig.shop = {
 	{ itemName = "energy ring", clientId = 3051, buy = 5000 },
 	{ itemName = "garlic necklace", clientId = 3083, buy = 100, count = 150 },
 	{ itemName = "life ring", clientId = 3052, buy = 900 },
-	{ itemName = "might ring", clientId = 3048, buy = 5000, count = 20 },
+	{ itemName = "might ring", clientId = 3048, buy = 25000, count = 20 },
 	{ itemName = "power ring", clientId = 3050, buy = 100 },
 	{ itemName = "protection amulet", clientId = 3084, buy = 700, count = 250 },
 	{ itemName = "ring of healing", clientId = 3098, buy = 2000 },

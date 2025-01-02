@@ -11,6 +11,7 @@
 - Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`, `chainSystemModifyMagic`, `logPlayersStatements`. ([Tryller](https://github.com/jprzimba))
 - Added a new commands for players: `!randomoutfit`, `!spellwords`. ([Tryller](https://github.com/jprzimba))
 - Moved emote spells to `kv` instead of `storage`. ([Tryller](https://github.com/jprzimba))
+- Updated npcs and spells from 13.40 updates. ([murilo09](https://github.com/murilo09))
 
 ## Added files
 
@@ -38,6 +39,11 @@
 - data/scripts/talkactions/god/create_npc.lua
 - data/scripts/talkactions/player/chain_system.lua
 - data/scripts/talkactions/player/emote_spell.lua
+- data/scripts/spells/attack/annihilation.lua
+- data/scripts/spells/attack/ultimate_ice_strike.lua
+- data/scripts/spells/attack/ultimate_terra_strike.lua
+- data/XML/imbuements.xml
+- data-global/npc (all npc files)
 - data-global/world/world.otbm (7z file)
 - data-global/world/world-house.xml
 - data-global/scripts/quests/ferumbras_ascension/actions_flower_puzzle_lever.lua
