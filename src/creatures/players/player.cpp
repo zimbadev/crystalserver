@@ -3741,7 +3741,7 @@ void Player::sendToRook() {
 			health = healthMax = 150;
 			experience = levelPercent = magLevel = magLevelPercent = manaSpent = mana = manaMax = bankBalance = 0;
 			defaultOutfit.lookAddons = defaultOutfit.lookMount = 0;
-			;
+
 			if (level > 1) {
 				experience = Player::getExpForLevel(level);
 			}
