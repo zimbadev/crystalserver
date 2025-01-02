@@ -174,6 +174,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, SPELL_NAME_INSTEAD_WORDS, "spellNameInsteadOfWords", false);
 	loadBoolConfig(L, LOG_PLAYERS_STATEMENTS, "logPlayersStatements", false);
 	loadBoolConfig(L, ROOK_SYSTEM, "toggleRookSystem", false);
+	loadBoolConfig(L, TOGGLE_ADD_ROOK_ITEMS, "toggleAddRookItems", false);
 
 	loadFloatConfig(L, BESTIARY_RATE_CHARM_SHOP_PRICE, "bestiaryRateCharmShopPrice", 1.0);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_AXE, "combatChainSkillFormulaAxe", 0.9);
@@ -373,6 +374,14 @@ bool ConfigManager::load() {
 	loadIntConfig(L, MIN_LEVEL_LEAVE_ROOK, "minLevelToLeaveRook", 8);
 	loadIntConfig(L, MAX_LEVEL_LEAVE_ROOK, "maxLevelToLeaveRook", 10);
 	loadIntConfig(L, ROOKED_LEVEL, "rookedLevel", 2);
+	loadIntConfig(L, ROOK_SLOT_BACKPACK, "rookSlotBackpack", ITEM_BAG);
+	loadIntConfig(L, ROOK_SLOT_HEAD, "rookSlotHead", 0);
+	loadIntConfig(L, ROOK_SLOT_ARMOR, "rookSlotArmor", 0);
+	loadIntConfig(L, ROOK_SLOT_LEGS, "rookSlotLegs", 0);
+	loadIntConfig(L, ROOK_SLOT_FEET, "rookSlotFeet", 0);
+	loadIntConfig(L, ROOK_SLOT_RIGHT, "rookSlotRight", 0);
+	loadIntConfig(L, ROOK_SLOT_LEFT, "rookSlotLeft", 0);
+	loadIntConfig(L, ROOK_SLOT_AMMO, "rookSlotAmmo", 0);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");

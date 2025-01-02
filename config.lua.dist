@@ -23,12 +23,21 @@ maintainModeMessage = ""
 
 -- Rook system
 -- NOTE: Town ids: Dawnport = 2, Rookgaard = 3
-toggleRookSystem = true
+toggleRookSystem = false
 rookTownId = 3
 rookedLevel = 2
 levelToRook = 5
 minLevelToLeaveRook = 8
 maxLevelToLeaveRook = 10
+toggleAddRookItems = true
+rookSlotBackpack = 2853
+rookSlotHead = 0
+rookSlotArmor = 0
+rookSlotLegs = 0
+rookSlotFeet = 0
+rookSlotRight = 3270
+rookSlotLeft = 0
+rookSlotAmmo = 0
 
 -- Combat settings
 -- NOTE: valid values for worldType are: "pvp", "no-pvp" and "pvp-enforced"

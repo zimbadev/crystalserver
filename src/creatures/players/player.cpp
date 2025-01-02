@@ -3780,6 +3780,49 @@ void Player::sendToRook() {
 				}
 			}
 
+			// Add items to rooked player
+			if (g_configManager().getBoolean(TOGGLE_ADD_ROOK_ITEMS)) {
+				const uint32_t backpackId = g_configManager().getNumber(ROOK_SLOT_BACKPACK);
+				if (backpackId != 0) {
+					internalAddThing(CONST_SLOT_BACKPACK, Item::CreateItem(backpackId));
+				}
+
+				const uint32_t headId = g_configManager().getNumber(ROOK_SLOT_HEAD);
+				if (headId != 0) {
+					internalAddThing(CONST_SLOT_HEAD, Item::CreateItem(headId));
+				}
+
+				const uint32_t armorId = g_configManager().getNumber(ROOK_SLOT_ARMOR);
+				if (armorId != 0) {
+					internalAddThing(CONST_SLOT_ARMOR, Item::CreateItem(armorId));
+				}
+
+				const uint32_t legsId = g_configManager().getNumber(ROOK_SLOT_LEGS);
+				if (legsId != 0) {
+					internalAddThing(CONST_SLOT_LEGS, Item::CreateItem(legsId));
+				}
+
+				const uint32_t feetId = g_configManager().getNumber(ROOK_SLOT_FEET);
+				if (feetId != 0) {
+					internalAddThing(CONST_SLOT_FEET, Item::CreateItem(feetId));
+				}
+
+				const uint32_t rightId = g_configManager().getNumber(ROOK_SLOT_RIGHT);
+				if (rightId != 0) {
+					internalAddThing(CONST_SLOT_RIGHT, Item::CreateItem(rightId));
+				}
+
+				const uint32_t leftId = g_configManager().getNumber(ROOK_SLOT_LEFT);
+				if (leftId != 0) {
+					internalAddThing(CONST_SLOT_LEFT, Item::CreateItem(leftId));
+				}
+
+				const uint32_t ammoId = g_configManager().getNumber(ROOK_SLOT_AMMO);
+				if (ammoId != 0) {
+					internalAddThing(CONST_SLOT_AMMO, Item::CreateItem(ammoId));
+				}
+			}
+
 			updateBaseSpeed();
 			sendSkills();
 			sendStats();
