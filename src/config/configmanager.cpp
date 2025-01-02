@@ -173,6 +173,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, BEDS_ONLY_PREMIUM, "bedsOnlyPremium", true);
 	loadBoolConfig(L, SPELL_NAME_INSTEAD_WORDS, "spellNameInsteadOfWords", false);
 	loadBoolConfig(L, LOG_PLAYERS_STATEMENTS, "logPlayersStatements", false);
+	loadBoolConfig(L, ROOK_SYSTEM, "toggleRookSystem", false);
 
 	loadFloatConfig(L, BESTIARY_RATE_CHARM_SHOP_PRICE, "bestiaryRateCharmShopPrice", 1.0);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_AXE, "combatChainSkillFormulaAxe", 0.9);
@@ -367,6 +368,9 @@ bool ConfigManager::load() {
 	loadIntConfig(L, BLACK_SKULL_DEATH_MANA, "blackSkulledDeathMana", 0);
 	loadIntConfig(L, FIELD_OWNERSHIP, "fieldOwnershipDuration", 5 * 1000);
 	loadIntConfig(L, LOGIN_PROTECTION, "loginProtectionPeriod", 10 * 1000);
+	loadIntConfig(L, ROOK_TOWN, "rookTownId", 1);
+	loadIntConfig(L, LEVEL_TO_ROOK, "levelToRook", 5);
+	loadIntConfig(L, LEVEL_LEAVE_ROOK, "levelToLeaveRook", 8);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");

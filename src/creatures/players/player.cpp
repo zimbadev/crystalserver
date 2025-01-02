@@ -3124,21 +3124,21 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 	const uint32_t prevLevel = level;
 	while (experience >= nextLevelExp) {
 		++level;
-		// Player stats gain for vocations level <= 8
-		if (vocation->getId() != VOCATION_NONE && level <= 8) {
-			const auto &noneVocation = g_vocations().getVocation(VOCATION_NONE);
-			healthMax += noneVocation->getHPGain();
-			health += noneVocation->getHPGain();
-			manaMax += noneVocation->getManaGain();
-			mana += noneVocation->getManaGain();
-			capacity += noneVocation->getCapGain();
-		} else {
-			healthMax += vocation->getHPGain();
-			health += vocation->getHPGain();
-			manaMax += vocation->getManaGain();
-			mana += vocation->getManaGain();
-			capacity += vocation->getCapGain();
+		auto currentVocation = vocation;
+		if (currentVocation->getId() != VOCATION_NONE &&
+			g_configManager().getBoolean(ROOK_SYSTEM) &&
+			level <= (uint32_t)g_configManager().getNumber(LEVEL_TO_ROOK)) {
+			const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
+			if (rookVocation) {
+				currentVocation = rookVocation;
+			}
 		}
+
+		healthMax += currentVocation->getHPGain();
+		health += currentVocation->getHPGain();
+		manaMax += currentVocation->getManaGain();
+		mana += currentVocation->getManaGain();
+		capacity += currentVocation->getCapGain();
 
 		currLevelExp = nextLevelExp;
 		nextLevelExp = getExpForLevel(level + 1);
@@ -3606,9 +3606,19 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 
 			while (level > 1 && experience < Player::getExpForLevel(level)) {
 				--level;
-				healthMax = std::max<int32_t>(0, healthMax - vocation->getHPGain());
-				manaMax = std::max<int32_t>(0, manaMax - vocation->getManaGain());
-				capacity = std::max<int32_t>(0, capacity - vocation->getCapGain());
+				auto currentVocation = vocation;
+				if (currentVocation->getId() != VOCATION_NONE &&
+					g_configManager().getBoolean(ROOK_SYSTEM) &&
+					level < static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
+					const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
+					if (rookVocation) {
+						currentVocation = rookVocation;
+					}
+				}
+
+				healthMax = std::max<int32_t>(0, healthMax - currentVocation->getHPGain());
+				manaMax = std::max<int32_t>(0, manaMax - currentVocation->getManaGain());
+				capacity = std::max<int32_t>(0, capacity - currentVocation->getCapGain());
 			}
 
 			if (oldLevel != level) {
@@ -3664,6 +3674,69 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			}
 		}
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, blessOutput.str());
+
+		// Send to rook
+		if (vocation->getId() > VOCATION_NONE && 
+			g_configManager().getBoolean(ROOK_SYSTEM) && 
+			level <= static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
+			g_logger().warn("Rook system ativado");
+
+			const auto rookTownId = g_configManager().getNumber(ROOK_TOWN);
+			const auto &rookTown = g_game().map.towns.getTown(rookTownId);
+			g_logger().warn("Rook town id {}", rookTownId);
+
+			if (rookTown) {
+				g_logger().warn("entrando no if rookTown");
+
+				// Reset player stats
+				g_logger().warn("resentando informações basicas");
+				level = 1;
+				soul = 100;
+				capacity = 400;
+				staminaMinutes = 2520;
+				health = healthMax = 150;
+				experience = magLevel = manaSpent = mana = manaMax = bankBalance = 0;
+				defaultOutfit.lookAddons = defaultOutfit.lookMount = 0;
+
+				g_logger().warn("mandando para o templo");
+				loginPosition = rookTown->getTemplePosition();
+
+				g_logger().warn("mudando a cidade");
+				setTown(rookTown);
+
+				g_logger().warn("mandando a voação para 0");
+				const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
+				if (rookVocation) {
+					setVocation(rookVocation->getId());
+					g_logger().warn("vocação 0");
+				}
+
+				// Remove player from guild?
+				//leaveGuild();
+
+				// Clear storages
+				g_logger().warn("limpando storageMap");
+				storageMap.clear();
+
+				// Reset player skills
+				g_logger().warn("resetando skills");
+				for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
+					skills[i].level = 10;
+					skills[i].tries = 0;
+					skills[i].percent = Player::getPercentLevel(0, rookVocation->getReqSkillTries(i, 10));
+				}
+				g_logger().warn("skills resetadas");
+
+				// Remove items from inventory
+				g_logger().warn("limpando inventario");
+				/*for (uint32_t i = SLOT_FIRST; i < SLOT_LAST; ++i) {
+					if (inventory[i]) {
+						g_game().internalRemoveItem(inventory[i]);
+					}
+				}*/
+				g_logger().warn("char enviado para rook");
+			}
+		}
 
 		sendStats();
 		sendSkills();
