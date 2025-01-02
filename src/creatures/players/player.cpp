@@ -3758,12 +3758,8 @@ void Player::sendToRook() {
 				m_party->leaveParty(getPlayer(), true);
 			}
 
-			// Remove player from guild?
-			// leaveGuild();
-
 			// Clear storages
 			storageMap.clear();
-			guildWarVector.clear();
 
 			// Reset player skills
 			for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
