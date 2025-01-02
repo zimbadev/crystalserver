@@ -3733,16 +3733,17 @@ void Player::sendToRook() {
 
 		if (rookTown) {
 			// Reset player
-			level = 1;
+			level = static_cast<uint32_t>(g_configManager().getNumber(ROOKED_LEVEL));
 			soul = 100;
 			capacity = 400;
 			staminaMinutes = 2520;
 			offlineTrainingTime = 43200;
 			health = healthMax = 150;
-			experience = levelPercent = magLevel = manaSpent = mana = manaMax = bankBalance = forgeDustLevel = bossPoints = forgeDusts = 0;
+			experience = levelPercent = magLevel = magLevelPercent = manaSpent = mana = manaMax = bankBalance = 0;
 			defaultOutfit.lookAddons = defaultOutfit.lookMount = 0;
-
-			setSkull(SKULL_NONE);
+;
+			if(level > 1)
+				experience = Player::getExpForLevel(level);
 
 			loginPosition = rookTown->getTemplePosition();
 			setTown(rookTown);
@@ -3778,6 +3779,7 @@ void Player::sendToRook() {
 				}
 			}
 
+			updateBaseSpeed();
 			sendSkills();
 			sendStats();
 			g_saveManager().savePlayer(getPlayer());

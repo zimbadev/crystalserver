@@ -22,9 +22,10 @@ toggleMaintainMode = false
 maintainModeMessage = ""
 
 -- Rook system
--- NOTE: Town ids: Downport = 2, Rookgaard = 3
+-- NOTE: Town ids: Dawnport = 2, Rookgaard = 3
 toggleRookSystem = true
 rookTownId = 3
+rookedLevel = 2
 levelToRook = 5
 minLevelToLeaveRook = 8
 maxLevelToLeaveRook = 10

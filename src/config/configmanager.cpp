@@ -372,6 +372,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, LEVEL_TO_ROOK, "levelToRook", 5);
 	loadIntConfig(L, MIN_LEVEL_LEAVE_ROOK, "minLevelToLeaveRook", 8);
 	loadIntConfig(L, MAX_LEVEL_LEAVE_ROOK, "maxLevelToLeaveRook", 10);
+	loadIntConfig(L, ROOKED_LEVEL, "rookedLevel", 2);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");
