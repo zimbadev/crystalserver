@@ -3739,7 +3739,7 @@ void Player::sendToRook() {
 			staminaMinutes = 2520;
 			offlineTrainingTime = 43200;
 			health = healthMax = 150;
-			experience = magLevel = manaSpent = mana = manaMax = bankBalance = forgeDustLevel = bossPoints = forgeDusts = 0;
+			experience = levelPercent = magLevel = manaSpent = mana = manaMax = bankBalance = forgeDustLevel = bossPoints = forgeDusts = 0;
 			defaultOutfit.lookAddons = defaultOutfit.lookMount = 0;
 
 			setSkull(SKULL_NONE);
@@ -3750,7 +3750,10 @@ void Player::sendToRook() {
 			const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
 			if (rookVocation) {
 				setVocation(rookVocation->getId());
-				g_logger().warn("vocação 0");
+			}
+
+			if (m_party) {
+				m_party->leaveParty(getPlayer(), true);
 			}
 
 			// Remove player from guild?
@@ -3768,12 +3771,19 @@ void Player::sendToRook() {
 			}
 
 			// Remove items from inventory
-			// Need to be finished
-			/*for (uint32_t i = SLOT_FIRST; i < SLOT_LAST; ++i) {
-			    if (inventory[i]) {
-			        g_game().internalRemoveItem(inventory[i]);
+			for (uint32_t slotId = CONST_SLOT_FIRST; slotId < CONST_SLOT_LAST; ++slotId) {
+				const auto &item = inventory[slotId];
+			    if (item) {
+			        g_game().internalRemoveItem(item);
 			    }
-			}*/
+			}
+
+			sendSkills();
+			sendStats();
+
+			g_saveManager().savePlayer(getPlayer());
+
+			g_logger().info("{} has been rooked", getName());
 		}
 	}
 }
