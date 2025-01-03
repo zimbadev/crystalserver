@@ -3752,16 +3752,13 @@ void Player::sendToRook() {
 			const auto playerOutfits = Outfits::getInstance().getOutfits(getSex());
 			for (auto it = outfits.begin(); it != outfits.end();) {
 				const auto &entry = *it;
-				const auto playerOutfit = std::find_if(playerOutfits.begin(), playerOutfits.end(),
-					[&entry](const std::shared_ptr<Outfit>& outfit) {
-						return outfit->lookType == entry.lookType;
-					});
+				const auto playerOutfit = std::find_if(playerOutfits.begin(), playerOutfits.end(), [&entry](const std::shared_ptr<Outfit> &outfit) {
+					return outfit->lookType == entry.lookType;
+				});
 
 				if (playerOutfit != playerOutfits.end()) {
 					const std::string from = (*playerOutfit)->from;
-					if (from == "store" || 
-						entry.lookType == 329 || entry.lookType == 328 || 
-						entry.lookType == 745 || entry.lookType == 746) {
+					if (from == "store" || entry.lookType == 329 || entry.lookType == 328 || entry.lookType == 745 || entry.lookType == 746) {
 						++it;
 					} else {
 						removeOutfitAddon(entry.lookType, 3);
