@@ -3740,7 +3740,37 @@ void Player::sendToRook() {
 			offlineTrainingTime = 43200;
 			health = healthMax = 150;
 			experience = levelPercent = magLevel = magLevelPercent = manaSpent = mana = manaMax = bankBalance = 0;
-			defaultOutfit.lookAddons = defaultOutfit.lookMount = 0;
+
+			// default outfit (citizen)
+			defaultOutfit.lookType = (getSex() == 0) ? 136 : 128;
+			defaultOutfit.lookAddons = 0;
+			defaultOutfit.lookMount = 0;
+
+			g_game().playerChangeOutfit(getID(), defaultOutfit, 0);
+
+			// Clear player outfits
+			const auto playerOutfits = Outfits::getInstance().getOutfits(getSex());
+			for (auto it = outfits.begin(); it != outfits.end();) {
+				const auto &entry = *it;
+				const auto playerOutfit = std::find_if(playerOutfits.begin(), playerOutfits.end(),
+					[&entry](const std::shared_ptr<Outfit>& outfit) {
+						return outfit->lookType == entry.lookType;
+					});
+
+				if (playerOutfit != playerOutfits.end()) {
+					const std::string from = (*playerOutfit)->from;
+					if (from == "store" || 
+						entry.lookType == 329 || entry.lookType == 328 || 
+						entry.lookType == 745 || entry.lookType == 746) {
+						++it;
+					} else {
+						removeOutfitAddon(entry.lookType, 3);
+						it = outfits.erase(it);
+					}
+				} else {
+					++it;
+				}
+			}
 
 			if (level > 1) {
 				experience = Player::getExpForLevel(level);
