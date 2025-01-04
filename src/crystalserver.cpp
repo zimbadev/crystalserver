@@ -385,6 +385,7 @@ void CrystalServer::modulesLoadHelper(bool loaded, std::string moduleName) {
 }
 
 void CrystalServer::shutdown() {
+	g_database().createDatabaseBackup(true);
 	g_dispatcher().shutdown();
 	g_metrics().shutdown();
 	inject<ThreadPool>().shutdown();
