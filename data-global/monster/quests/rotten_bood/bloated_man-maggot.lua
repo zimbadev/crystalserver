@@ -16,25 +16,25 @@ monster.outfit = {
 monster.raceId = 2392
 monster.Bestiary = {
 	class = "Vermin",
-	race = BESTY_RACE_HUMANOID,
+	race = BESTY_RACE_VERMIN,
 	toKill = 5000,
 	FirstUnlock = 200,
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
+	Occurrence = 0,
 	Locations = "Jaded Roots",
 }
 
 monster.health = 31700
 monster.maxHealth = 31700
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43816
 monster.speed = 195
-monster.manaCost = 0
+monster.manaCost = 305
 
 monster.changeTarget = {
-	interval = 4000,
+	interval = 5000,
 	chance = 10,
 }
 
@@ -49,14 +49,14 @@ monster.flags = {
 	summonable = false,
 	attackable = true,
 	hostile = true,
-	convinceable = false,
+	convinceable = true,
 	pushable = false,
 	rewardBoss = false,
 	illusionable = false,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 80,
-	targetDistance = 4,
+	staticAttackChance = 90,
+	targetDistance = 1,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
@@ -70,10 +70,7 @@ monster.light = {
 	color = 0,
 }
 
-monster.voices = {
-	interval = 5000,
-	chance = 30,
-}
+monster.voices = {}
 
 monster.loot = {
 	{ name = "crystal coin", chance = 12961, maxCount = 1 },
@@ -97,16 +94,16 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
+	defense = 104,
 	armor = 104,
 	mitigation = 3.16,
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = 55 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = 45 },
 	{ type = COMBAT_ENERGYDAMAGE, percent = -15 },
-	{ type = COMBAT_EARTHDAMAGE, percent = 60 },
-	{ type = COMBAT_FIREDAMAGE, percent = 85 },
+	{ type = COMBAT_EARTHDAMAGE, percent = 40 },
+	{ type = COMBAT_FIREDAMAGE, percent = 15 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
@@ -116,7 +113,7 @@ monster.elements = {
 }
 
 monster.immunities = {
-	{ type = "paralyze", condition = true },
+	{ type = "paralyze", condition = false },
 	{ type = "outfit", condition = false },
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },

@@ -16,32 +16,32 @@ monster.outfit = {
 monster.raceId = 2397
 monster.Bestiary = {
 	class = "Undead",
-	race = BESTY_RACE_HUMANOID,
+	race = BESTY_RACE_UNDEAD,
 	toKill = 5000,
 	FirstUnlock = 200,
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Jaded Roots",
+	Occurrence = 0,
+	Locations = "Jaded Roots.",
 }
 
 monster.health = 33400
 monster.maxHealth = 33400
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43836
 monster.speed = 210
 monster.manaCost = 0
 
 monster.changeTarget = {
 	interval = 4000,
-	chance = 10,
+	chance = 0,
 }
 
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -54,9 +54,9 @@ monster.flags = {
 	rewardBoss = false,
 	illusionable = false,
 	canPushItems = true,
-	canPushCreatures = true,
-	staticAttackChance = 80,
-	targetDistance = 4,
+	canPushCreatures = false,
+	staticAttackChance = 90,
+	targetDistance = 0,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
@@ -72,13 +72,15 @@ monster.light = {
 
 monster.voices = {
 	interval = 5000,
-	chance = 30,
+	chance = 10,
+	{ text = "*Lessshhh!*", yell = false },
 }
 
 monster.loot = {
-	{ name = "crystal coin", chance = 6961, maxCount = 1 },
-	{ name = "ultimate mana potion", chance = 10285, maxCount = 2 },
-	{ name = "ultimate health potion", chance = 10285, maxCount = 2 },
+	{ name = "crystal coin", chance = 42860 },
+	{ name = "ultimate mana potion", chance = 42860, minCount = 2, maxCount = 3 },
+	{ id = 7385, chance = 14290 }, -- crimson sword
+	{ name = "ultimate health potion", chance = 14290, maxCount = 2 },
 	{ name = "organic acid", chance = 7678, maxCount = 1 },
 	{ name = "rotten roots", chance = 13133, maxCount = 1 },
 	{ name = "emerald bangle", chance = 8558, maxCount = 1 },
@@ -87,6 +89,7 @@ monster.loot = {
 	{ name = "blue gem", chance = 9808, maxCount = 1 },
 	{ name = "relic sword", chance = 6964, maxCount = 1 },
 	{ name = "skullcracker armor", chance = 7270, maxCount = 1 },
+	{ id = 23531, chance = 3073, maxCount = 1 }, -- ring of green plasma
 }
 
 monster.attacks = {
@@ -99,7 +102,7 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
+	defense = 112,
 	armor = 112,
 	mitigation = 3.25,
 }
@@ -119,7 +122,7 @@ monster.elements = {
 
 monster.immunities = {
 	{ type = "paralyze", condition = true },
-	{ type = "outfit", condition = false },
+	{ type = "outfit", condition = true },
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },
 }

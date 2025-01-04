@@ -22,26 +22,26 @@ monster.Bestiary = {
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Putrefactory",
+	Occurrence = 0,
+	Locations = "Putrefactory.",
 }
 
 monster.health = 27500
 monster.maxHealth = 27500
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43579
-monster.speed = 220
+monster.speed = 215
 monster.manaCost = 0
 
 monster.changeTarget = {
 	interval = 4000,
-	chance = 10,
+	chance = 0,
 }
 
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -54,8 +54,8 @@ monster.flags = {
 	rewardBoss = false,
 	illusionable = false,
 	canPushItems = true,
-	canPushCreatures = true,
-	staticAttackChance = 80,
+	canPushCreatures = false,
+	staticAttackChance = 90,
 	targetDistance = 1,
 	runHealth = 0,
 	healthHidden = false,
@@ -66,13 +66,8 @@ monster.flags = {
 }
 
 monster.light = {
-	level = 0,
-	color = 0,
-}
-
-monster.voices = {
-	interval = 5000,
-	chance = 30,
+	level = 4,
+	color = 143,
 }
 
 monster.loot = {
@@ -100,9 +95,9 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 104,
-	mitigation = 3.16,
+	defense = 102,
+	armor = 102,
+	mitigation = 3.10,
 }
 
 monster.elements = {
@@ -120,7 +115,7 @@ monster.elements = {
 
 monster.immunities = {
 	{ type = "paralyze", condition = true },
-	{ type = "outfit", condition = false },
+	{ type = "outfit", condition = true },
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },
 }

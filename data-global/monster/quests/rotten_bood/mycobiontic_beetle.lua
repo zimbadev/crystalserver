@@ -22,26 +22,26 @@ monster.Bestiary = {
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Jaded Roots",
+	Occurrence = 0,
+	Locations = "Jaded roots",
 }
 
 monster.health = 30200
 monster.maxHealth = 30200
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43555
 monster.speed = 230
 monster.manaCost = 0
 
 monster.changeTarget = {
-	interval = 4000,
+	interval = 5000,
 	chance = 10,
 }
 
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -55,8 +55,8 @@ monster.flags = {
 	illusionable = false,
 	canPushItems = true,
 	canPushCreatures = true,
-	staticAttackChance = 80,
-	targetDistance = 1,
+	staticAttackChance = 90,
+	targetDistance = 0,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
@@ -72,7 +72,7 @@ monster.light = {
 
 monster.voices = {
 	interval = 5000,
-	chance = 30,
+	chance = 10,
 }
 
 monster.loot = {
@@ -85,6 +85,7 @@ monster.loot = {
 	{ name = "rotten roots", chance = 25920, maxCount = 1 },
 	{ name = "scarab coin", chance = 22920, maxCount = 3 },
 	{ name = "buckle", chance = 22920, maxCount = 1 },
+	{ name = "rotten vermin ichor", chance = 22920, maxCount = 1 },
 	{ name = "violet gem", chance = 18920 },
 	{ name = "blue gem", chance = 15920 },
 	{ name = "small ruby", chance = 24560, maxCount = 3 },
@@ -100,9 +101,9 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 104,
-	mitigation = 3.16,
+	defense = 116,
+	armor = 116,
+	mitigation = 2.92,
 }
 
 monster.elements = {
@@ -119,7 +120,7 @@ monster.elements = {
 }
 
 monster.immunities = {
-	{ type = "paralyze", condition = true },
+	{ type = "paralyze", condition = false },
 	{ type = "outfit", condition = false },
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },

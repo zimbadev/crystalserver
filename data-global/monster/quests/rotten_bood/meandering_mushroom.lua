@@ -15,33 +15,33 @@ monster.outfit = {
 
 monster.raceId = 2376
 monster.Bestiary = {
-	class = "Vermin",
-	race = BESTY_RACE_VERMIN,
+	class = "Slime",
+	race = BESTY_RACE_SLIME,
 	toKill = 5000,
 	FirstUnlock = 200,
 	SecondUnlock = 2000,
 	CharmsPoints = 100,
 	Stars = 5,
-	Occurrence = 2,
-	Locations = "Jaded Roots",
+	Occurrence = 0,
+	Locations = "Putrefactory.",
 }
 
 monster.health = 29100
 monster.maxHealth = 29100
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 43559
 monster.speed = 205
 monster.manaCost = 0
 
 monster.changeTarget = {
-	interval = 4000,
-	chance = 10,
+	interval = 5000,
+	chance = 0,
 }
 
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
-	damage = 60,
+	damage = 10,
 	random = 10,
 }
 
@@ -54,25 +54,20 @@ monster.flags = {
 	rewardBoss = false,
 	illusionable = false,
 	canPushItems = true,
-	canPushCreatures = true,
-	staticAttackChance = 80,
-	targetDistance = 1,
+	canPushCreatures = false,
+	staticAttackChance = 85,
+	targetDistance = 0,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
-	canWalkOnEnergy = true,
-	canWalkOnFire = true,
+	canWalkOnEnergy = false,
+	canWalkOnFire = false,
 	canWalkOnPoison = true,
 }
 
 monster.light = {
 	level = 0,
 	color = 0,
-}
-
-monster.voices = {
-	interval = 5000,
-	chance = 30,
 }
 
 monster.loot = {
@@ -82,6 +77,7 @@ monster.loot = {
 	{ name = "rotten roots", chance = 9791, maxCount = 1 },
 	{ name = "wand of decay", chance = 14668, maxCount = 1 },
 	{ id = 3039, chance = 10406, maxCount = 1 }, -- red gem
+	{ name = "worm sponge", chance = 10697, maxCount = 1 },
 	{ name = "dark mushroom", chance = 12313, maxCount = 3 },
 	{ name = "yellow gem", chance = 13520, maxCount = 1 },
 	{ name = "brown mushroom", chance = 6422, maxCount = 3 },
@@ -97,9 +93,9 @@ monster.attacks = {
 }
 
 monster.defenses = {
-	defense = 60,
-	armor = 104,
-	mitigation = 3.16,
+	defense = 115,
+	armor = 115,
+	mitigation = 3.19,
 }
 
 monster.elements = {
@@ -116,9 +112,9 @@ monster.elements = {
 }
 
 monster.immunities = {
-	{ type = "paralyze", condition = true },
+	{ type = "paralyze", condition = false },
 	{ type = "outfit", condition = false },
-	{ type = "invisible", condition = true },
+	{ type = "invisible", condition = false },
 	{ type = "bleed", condition = false },
 }
 
