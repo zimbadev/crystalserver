@@ -403,6 +403,7 @@ mysqlDatabase = "crystalserver"
 mysqlPort = 3306
 mysqlSock = ""
 passwordType = "sha1"
+mysqlDatabaseBackup = false
 
 -- NOTE: memoryConst: This is the memory cost for the Argon2 hash algorithm. It specifies the amount of memory that the algorithm will use when calculating a hash.
 --The memory cost is measured in units of KiB (1024 bytes). A higher memory cost makes the algorithm more resistant to brute-force and hash-table attacks, but also consumes more memory.
