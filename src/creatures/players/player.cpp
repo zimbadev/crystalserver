@@ -3769,6 +3769,28 @@ void Player::sendToRook() {
 				}
 			}
 
+			// Clear mounts
+			std::vector<uint8_t> storeMounts;
+			const auto playerMounts = g_game().mounts->getMounts();
+			for (const auto& mount : playerMounts) {
+				if (mount->type == "store" && hasMount(mount)) {
+					storeMounts.push_back(mount->id);
+					continue;
+				}
+
+				if (hasMount(mount)) {
+					untameMount(mount->id);
+				}
+			}
+
+			// Clear storages
+			storageMap.clear();
+
+			// Add player store mounts again
+			for (const auto& storeMountId : storeMounts) {
+				tameMount(storeMountId);
+			}
+
 			if (level > 1) {
 				experience = Player::getExpForLevel(level);
 			}
@@ -3784,9 +3806,6 @@ void Player::sendToRook() {
 			if (m_party) {
 				m_party->leaveParty(getPlayer(), true);
 			}
-
-			// Clear storages
-			storageMap.clear();
 
 			// Reset player skills
 			for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
@@ -6149,6 +6168,7 @@ void Player::genReservedStorageRange() {
 	for (const auto &entry : outfits) {
 		storageMap[++outfits_key] = (entry.lookType << 16) | entry.addons;
 	}
+
 	// generate familiars range
 	uint32_t familiar_key = PSTRG_FAMILIARS_RANGE_START;
 	for (const auto &entry : familiars) {
