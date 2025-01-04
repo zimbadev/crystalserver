@@ -3772,7 +3772,7 @@ void Player::sendToRook() {
 			// Clear mounts
 			std::vector<uint8_t> storeMounts;
 			const auto playerMounts = g_game().mounts->getMounts();
-			for (const auto& mount : playerMounts) {
+			for (const auto &mount : playerMounts) {
 				if (mount->type == "store" && hasMount(mount)) {
 					storeMounts.push_back(mount->id);
 					continue;
@@ -3787,7 +3787,7 @@ void Player::sendToRook() {
 			storageMap.clear();
 
 			// Add player store mounts again
-			for (const auto& storeMountId : storeMounts) {
+			for (const auto &storeMountId : storeMounts) {
 				tameMount(storeMountId);
 			}
 
