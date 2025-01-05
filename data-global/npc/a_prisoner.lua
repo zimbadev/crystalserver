@@ -101,6 +101,7 @@ local function creatureSayCallback(npc, creature, type, message)
 	elseif MsgContains(message, "no") then
 		npcHandler:say("Then go away!", npc, creature)
 	end
+
 	-- The paradox tower quest
 	if MsgContains(message, "math") then
 		if player:getStorageValue(Storage.Quest.U7_24.TheParadoxTower.Mathemagics) < 1 then
@@ -132,6 +133,33 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:setTopic(playerId, 0)
 		end
 	end
+
+	-- Sell rune
+	if MsgContains(message, "sell rune") then
+		npcHandler:say("You want to sell me blank runes! I will give you 50000 gold for each rune! Interested?", npc, creature)
+		npcHandler:setTopic(playerId, 9)
+	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 9 then
+		npcHandler:say("Ok. Take my money. I can summon new money anytime - hehehe.", npc, creature)
+		npcHandler:setTopic(playerId, 0)
+	end
+
+	-- Apple topic
+	if MsgContains(message, "apple") then
+		npcHandler:say("Apples! Real apples! Man I love them! Can I have one? Oh please say yes!", npc, creature)
+		npcHandler:setTopic(playerId, 10)
+	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 10 then
+		if player:removeItem(3585, 1) then
+			npcHandler:say("Mnjam. Excellent! Thanks, man!", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		else
+			npcHandler:say("Do you want to trick me? You don't have one lousy apple!", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		end
+	elseif MsgContains(message, "no") and npcHandler:getTopic(playerId) == 10 then
+		npcHandler:say("Ooooooooooo.<sniff>", npc, creature)
+		npcHandler:setTopic(playerId, 0)
+	end
+
 	return true
 end
 
@@ -140,6 +168,28 @@ npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye! Don't forget about the secret
 npcHandler:setMessage(MESSAGE_GREET, "Huh? What? I can see! Wow! A non-mino. Did they {capture} you as well?")
 
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
+
+keywordHandler:addKeyword({ "name" }, StdModule.say, { npcHandler = npcHandler, text = "My name is - uhm - hang on? I knew it yesterday, didn't I? Doesn't matter!" })
+keywordHandler:addKeyword({ "capture" }, StdModule.say, { npcHandler = npcHandler, text = "Yes, they capture people. I guess that's their {job}." })
+keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "Job? JOB? Hey man - I am in prison! But you know - once upon a time - I was a powerful mage! A mage ... come to think of it .., what is that - a mage?" })
+keywordHandler:addKeyword({ "mad mage" }, StdModule.say, { npcHandler = npcHandler, text = "Hey! That's me! You got it! Thanks mate - now I remember my name!" })
+keywordHandler:addKeyword({ "sorcerer" }, StdModule.say, { npcHandler = npcHandler, text = "I am the mightiest sorcerer from here to there! Yeah!" })
+keywordHandler:addKeyword({ "power" }, StdModule.say, { npcHandler = npcHandler, text = "Power. Hmmm. Once while we were crossing the mountains together a man named Aureus said to me that parcels are equal to power. Any idea what that meant?" })
+keywordHandler:addKeyword({ "books" }, StdModule.say, { npcHandler = npcHandler, text = "I have many books in my home. But only powerful people can read them. I bet you will only see three dots after the headline! Hehehe! Hahaha! Excellent!" })
+keywordHandler:addKeyword({ "time" }, StdModule.say, { npcHandler = npcHandler, text = "Better save time than committing a crime. I am a poet and I know it!" })
+keywordHandler:addKeyword({ "key" }, StdModule.say, { npcHandler = npcHandler, text = "Sure I have the key! Hehehe! Perhaps I will give it to you. IF you can solve my {riddle}." })
+keywordHandler:addKeyword({ "something" }, StdModule.say, { npcHandler = npcHandler, text = "No! I won't tell you. Shame coz it would be useful for you - hehehe." })
+keywordHandler:addKeyword({ "escape" }, StdModule.say, { npcHandler = npcHandler, text = "How could I escape? They only give me rotten food here. I can´t regain my powers because I have no mana!" })
+keywordHandler:addKeyword({ "labyrinth" }, StdModule.say, { npcHandler = npcHandler, text = "It's easy to find your way through it! Just follow the pools of mud. Hehe - useful hint, isn´t it?" })
+keywordHandler:addKeyword({ "way" }, StdModule.say, { npcHandler = npcHandler, text = "It's easy to find your way through it! Just follow the pools of mud. Hehe - useful hint, isn´t it?." })
+keywordHandler:addKeyword({ "mino" }, StdModule.say, { npcHandler = npcHandler, text = "They are trying to capture me! Or hang on! Haven't they already captured me? Hmmm - I will have to think about this." })
+keywordHandler:addKeyword({ "Markwin" }, StdModule.say, { npcHandler = npcHandler, text = "He is the worst of them all! He is the king of the minos! May he burn in hell!" })
+keywordHandler:addKeyword({ "Palkar" }, StdModule.say, { npcHandler = npcHandler, text = "He is the leader of the outcasts. I hope he will never conquer the city of Mintwallin. That would be the end of me!" })
+keywordHandler:addKeyword({ "Karl" }, StdModule.say, { npcHandler = npcHandler, text = "Tataah!" })
+keywordHandler:addKeyword({ "demon" }, StdModule.say, { npcHandler = npcHandler, text = "The only monster I cannot conjure. But soon I will be powerful enough!" })
+keywordHandler:addKeyword({ "monster" }, StdModule.say, { npcHandler = npcHandler, text = "Yeah! There are many monsters guarding my home. Only the bravest hero will be able to slay them!" })
+keywordHandler:addKeyword({ "conjure" }, StdModule.say, { npcHandler = npcHandler, text = "Yeah! There are many monsters guarding my home. Only the bravest hero will be able to slay them!" })
+keywordHandler:addKeyword({ "home" }, StdModule.say, { npcHandler = npcHandler, text = "Yeah! There are many monsters guarding my home. Only the bravest hero will be able to slay them!." })
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
