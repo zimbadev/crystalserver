@@ -51,9 +51,10 @@ function skill.onSay(player, words, param)
 		local targetCurrentLevel = targetPlayer:getLevel()
 		local targetNewLevel = targetCurrentLevel + (action == "add" and skillIncreaseAmount or -skillIncreaseAmount)
 
+		 -- Prevent dropping below level 1
 		if targetNewLevel < 1 then
 			targetNewLevel = 1
-		end -- Prevent dropping below level 1
+		end
 
 		local targetCurrentExp = targetPlayer:getExperience()
 		local targetNewExp = Game.getExperienceForLevel(targetNewLevel)
