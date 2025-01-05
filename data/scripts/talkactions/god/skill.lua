@@ -38,7 +38,7 @@ function skill.onSay(player, words, param)
 
 	local skillParam = split[2]:trim()
 	local skillIncreaseAmount = tonumber(split[3]) or 1
-	local action = split[4] and split[4]:trim():lower() or "add"  -- Default to 'add' if no action is specified
+	local action = split[4] and split[4]:trim():lower() or "add" -- Default to 'add' if no action is specified
 	local skillPrefix = skillParam:sub(1, 1)
 
 	if action ~= "add" and action ~= "remove" then
@@ -50,17 +50,19 @@ function skill.onSay(player, words, param)
 		local levelText = (skillIncreaseAmount > 1) and "levels" or "level"
 		local targetCurrentLevel = targetPlayer:getLevel()
 		local targetNewLevel = targetCurrentLevel + (action == "add" and skillIncreaseAmount or -skillIncreaseAmount)
-	
-		if targetNewLevel < 1 then targetNewLevel = 1 end -- Prevent dropping below level 1
-		
+
+		if targetNewLevel < 1 then
+			targetNewLevel = 1
+		end -- Prevent dropping below level 1
+
 		local targetCurrentExp = targetPlayer:getExperience()
 		local targetNewExp = Game.getExperienceForLevel(targetNewLevel)
 		local experienceDiff = targetCurrentExp - targetNewExp
-	
+
 		if experienceDiff < 0 then
 			experienceDiff = 0
 		end
-	
+
 		if action == "add" then
 			local experienceToAdd = targetNewExp - targetCurrentExp
 			if experienceToAdd > 0 then

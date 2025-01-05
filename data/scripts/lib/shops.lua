@@ -1,4 +1,3 @@
-
 SupplyShopConfigTable = {
 	["foods"] = {
 		{ itemName = "brown mushroom", clientId = 3725, buy = 10 },
