@@ -174,6 +174,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, BEDS_ONLY_PREMIUM, "bedsOnlyPremium", true);
 	loadBoolConfig(L, SPELL_NAME_INSTEAD_WORDS, "spellNameInsteadOfWords", false);
 	loadBoolConfig(L, LOG_PLAYERS_STATEMENTS, "logPlayersStatements", false);
+	loadBoolConfig(L, TOGGLE_TEST_MODE, "toggleTestMode", false);
 	loadBoolConfig(L, ROOK_SYSTEM, "toggleRookSystem", false);
 	loadBoolConfig(L, TOGGLE_ADD_ROOK_ITEMS, "toggleAddRookItems", false);
 

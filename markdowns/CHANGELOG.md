@@ -13,6 +13,7 @@
 - Moved emote spells to `kv` instead of `storage`. ([Tryller](https://github.com/jprzimba))
 - Updated npcs and spells from 13.40 updates. ([murilo09](https://github.com/murilo09))
 - Added a Rook system with configurations in `config.lua`. ([Tryller](https://github.com/jprzimba))
+- Added a Test Mode with configurations in `config.lua`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
