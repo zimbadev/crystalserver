@@ -3124,21 +3124,19 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 	const uint32_t prevLevel = level;
 	while (experience >= nextLevelExp) {
 		++level;
-		// Player stats gain for vocations level <= 8
-		if (vocation->getId() != VOCATION_NONE && level <= 8) {
-			const auto &noneVocation = g_vocations().getVocation(VOCATION_NONE);
-			healthMax += noneVocation->getHPGain();
-			health += noneVocation->getHPGain();
-			manaMax += noneVocation->getManaGain();
-			mana += noneVocation->getManaGain();
-			capacity += noneVocation->getCapGain();
-		} else {
-			healthMax += vocation->getHPGain();
-			health += vocation->getHPGain();
-			manaMax += vocation->getManaGain();
-			mana += vocation->getManaGain();
-			capacity += vocation->getCapGain();
+		auto currentVocation = vocation;
+		if (currentVocation->getId() != VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level <= (uint32_t)g_configManager().getNumber(MIN_LEVEL_LEAVE_ROOK)) {
+			const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
+			if (rookVocation) {
+				currentVocation = rookVocation;
+			}
 		}
+
+		healthMax += currentVocation->getHPGain();
+		health += currentVocation->getHPGain();
+		manaMax += currentVocation->getManaGain();
+		mana += currentVocation->getManaGain();
+		capacity += currentVocation->getCapGain();
 
 		currLevelExp = nextLevelExp;
 		nextLevelExp = getExpForLevel(level + 1);
@@ -3606,9 +3604,17 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 
 			while (level > 1 && experience < Player::getExpForLevel(level)) {
 				--level;
-				healthMax = std::max<int32_t>(0, healthMax - vocation->getHPGain());
-				manaMax = std::max<int32_t>(0, manaMax - vocation->getManaGain());
-				capacity = std::max<int32_t>(0, capacity - vocation->getCapGain());
+				auto currentVocation = vocation;
+				if (currentVocation->getId() != VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level < static_cast<uint32_t>(g_configManager().getNumber(MIN_LEVEL_LEAVE_ROOK))) {
+					const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
+					if (rookVocation) {
+						currentVocation = rookVocation;
+					}
+				}
+
+				healthMax = std::max<int32_t>(0, healthMax - currentVocation->getHPGain());
+				manaMax = std::max<int32_t>(0, manaMax - currentVocation->getManaGain());
+				capacity = std::max<int32_t>(0, capacity - currentVocation->getCapGain());
 			}
 
 			if (oldLevel != level) {
@@ -3665,6 +3671,9 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		}
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, blessOutput.str());
 
+		// rook system
+		sendToRook();
+
 		sendStats();
 		sendSkills();
 		sendReLoginWindow(unfairFightReduction);
@@ -3714,6 +3723,154 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		onThink(EVENT_CREATURE_THINK_INTERVAL);
 		onIdleStatus();
 		sendStats();
+	}
+}
+
+void Player::sendToRook() {
+	if (vocation->getId() > VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level <= static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
+		const auto rookTownId = g_configManager().getNumber(ROOK_TOWN);
+		const auto &rookTown = g_game().map.towns.getTown(rookTownId);
+
+		if (rookTown) {
+			// Reset player
+			level = static_cast<uint32_t>(g_configManager().getNumber(ROOKED_LEVEL));
+			soul = 100;
+			capacity = 400;
+			staminaMinutes = 2520;
+			offlineTrainingTime = 43200;
+			health = healthMax = 150;
+			experience = levelPercent = magLevel = magLevelPercent = manaSpent = mana = manaMax = bankBalance = 0;
+
+			// default outfit (citizen)
+			defaultOutfit.lookType = (getSex() == 0) ? 136 : 128;
+			defaultOutfit.lookAddons = 0;
+			defaultOutfit.lookMount = 0;
+
+			g_game().playerChangeOutfit(getID(), defaultOutfit, 0);
+
+			// Clear player outfits
+			const auto playerOutfits = Outfits::getInstance().getOutfits(getSex());
+			for (auto it = outfits.begin(); it != outfits.end();) {
+				const auto &entry = *it;
+				const auto playerOutfit = std::find_if(playerOutfits.begin(), playerOutfits.end(), [&entry](const std::shared_ptr<Outfit> &outfit) {
+					return outfit->lookType == entry.lookType;
+				});
+
+				if (playerOutfit != playerOutfits.end()) {
+					const std::string from = (*playerOutfit)->from;
+					if (from == "store" || entry.lookType == 329 || entry.lookType == 328 || entry.lookType == 745 || entry.lookType == 746) {
+						++it;
+					} else {
+						removeOutfitAddon(entry.lookType, 3);
+						it = outfits.erase(it);
+					}
+				} else {
+					++it;
+				}
+			}
+
+			// Clear mounts
+			std::vector<uint8_t> storeMounts;
+			const auto playerMounts = g_game().mounts->getMounts();
+			for (const auto &mount : playerMounts) {
+				if (mount->type == "store" && hasMount(mount)) {
+					storeMounts.push_back(mount->id);
+					continue;
+				}
+
+				if (hasMount(mount)) {
+					untameMount(mount->id);
+				}
+			}
+
+			// Clear storages
+			storageMap.clear();
+
+			// Add player store mounts again
+			for (const auto &storeMountId : storeMounts) {
+				tameMount(storeMountId);
+			}
+
+			if (level > 1) {
+				experience = Player::getExpForLevel(level);
+			}
+
+			loginPosition = rookTown->getTemplePosition();
+			setTown(rookTown);
+
+			const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
+			if (rookVocation) {
+				setVocation(rookVocation->getId());
+			}
+
+			if (m_party) {
+				m_party->leaveParty(getPlayer(), true);
+			}
+
+			// Reset player skills
+			for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
+				skills[i].level = 10;
+				skills[i].tries = 0;
+				skills[i].percent = Player::getPercentLevel(0, rookVocation->getReqSkillTries(i, 10));
+			}
+
+			// Remove items from inventory
+			for (uint32_t slotId = CONST_SLOT_FIRST; slotId < CONST_SLOT_LAST; ++slotId) {
+				const auto &item = inventory[slotId];
+				if (item) {
+					g_game().internalRemoveItem(item);
+				}
+			}
+
+			// Add items to rooked player
+			if (g_configManager().getBoolean(TOGGLE_ADD_ROOK_ITEMS)) {
+				const uint32_t backpackId = g_configManager().getNumber(ROOK_SLOT_BACKPACK);
+				if (backpackId != 0) {
+					internalAddThing(CONST_SLOT_BACKPACK, Item::CreateItem(backpackId));
+				}
+
+				const uint32_t headId = g_configManager().getNumber(ROOK_SLOT_HEAD);
+				if (headId != 0) {
+					internalAddThing(CONST_SLOT_HEAD, Item::CreateItem(headId));
+				}
+
+				const uint32_t armorId = g_configManager().getNumber(ROOK_SLOT_ARMOR);
+				if (armorId != 0) {
+					internalAddThing(CONST_SLOT_ARMOR, Item::CreateItem(armorId));
+				}
+
+				const uint32_t legsId = g_configManager().getNumber(ROOK_SLOT_LEGS);
+				if (legsId != 0) {
+					internalAddThing(CONST_SLOT_LEGS, Item::CreateItem(legsId));
+				}
+
+				const uint32_t feetId = g_configManager().getNumber(ROOK_SLOT_FEET);
+				if (feetId != 0) {
+					internalAddThing(CONST_SLOT_FEET, Item::CreateItem(feetId));
+				}
+
+				const uint32_t rightId = g_configManager().getNumber(ROOK_SLOT_RIGHT);
+				if (rightId != 0) {
+					internalAddThing(CONST_SLOT_RIGHT, Item::CreateItem(rightId));
+				}
+
+				const uint32_t leftId = g_configManager().getNumber(ROOK_SLOT_LEFT);
+				if (leftId != 0) {
+					internalAddThing(CONST_SLOT_LEFT, Item::CreateItem(leftId));
+				}
+
+				const uint32_t ammoId = g_configManager().getNumber(ROOK_SLOT_AMMO);
+				if (ammoId != 0) {
+					internalAddThing(CONST_SLOT_AMMO, Item::CreateItem(ammoId));
+				}
+			}
+
+			updateBaseSpeed();
+			sendSkills();
+			sendStats();
+			g_saveManager().savePlayer(getPlayer());
+			g_logger().info("{} has been rooked", getName());
+		}
 	}
 }
 
@@ -6023,6 +6180,7 @@ void Player::genReservedStorageRange() {
 	for (const auto &entry : outfits) {
 		storageMap[++outfits_key] = (entry.lookType << 16) | entry.addons;
 	}
+
 	// generate familiars range
 	uint32_t familiar_key = PSTRG_FAMILIARS_RANGE_START;
 	for (const auto &entry : familiars) {

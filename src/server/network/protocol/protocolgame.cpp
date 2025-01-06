@@ -7239,7 +7239,7 @@ void ProtocolGame::sendOutfitWindow() {
 			msg.addByte(addons);
 			msg.addByte(0x00);
 			++outfitSize;
-		} else if (outfit->lookType == 1210 || outfit->lookType == 1211) {
+		} else if (outfit->lookType == 1210 || outfit->lookType == 1211) { // golden outfit
 			if (player->canWear(1210, 0) || player->canWear(1211, 0)) {
 				msg.add<uint16_t>(outfit->lookType);
 				msg.addString(outfit->name);
@@ -7247,7 +7247,7 @@ void ProtocolGame::sendOutfitWindow() {
 				msg.addByte(0x02);
 				++outfitSize;
 			}
-		} else if (outfit->lookType == 1456 || outfit->lookType == 1457) {
+		} else if (outfit->lookType == 1456 || outfit->lookType == 1457) { // Royal Costume
 			if (player->canWear(1456, 0) || player->canWear(1457, 0)) {
 				msg.add<uint16_t>(outfit->lookType);
 				msg.addString(outfit->name);

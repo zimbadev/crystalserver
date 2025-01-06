@@ -77,13 +77,16 @@ local function greetCallback(npc, creature)
 	local playerId = creature:getId()
 	local player = Player(creature)
 	local level = player:getLevel()
-	if level < 8 then
+	local minLevelLeaveRook = configManager.getNumber(configKeys.MIN_LEVEL_LEAVE_ROOK)
+	local maxLevelLeaveRook = configManager.getNumber(configKeys.MAX_LEVEL_LEAVE_ROOK)
+
+	if level < minLevelLeaveRook then
 		npcHandler:say("CHILD! COME BACK WHEN YOU HAVE GROWN UP!", npc, creature)
 		npcHandler:resetNpc(creature)
 		return false
-	elseif level > 10 then
+	elseif level > maxLevelLeaveRook then
 		npcHandler:say(player:getName() .. ", I CAN'T LET YOU LEAVE - YOU ARE TOO STRONG ALREADY! \z
-		YOU CAN ONLY LEAVE WITH LEVEL 9 OR LOWER.", npc, creature)
+		YOU CAN ONLY LEAVE WITH LEVEL " .. (maxLevelLeaveRook - 1) .. " OR LOWER.", npc, creature)
 		npcHandler:resetNpc(creature)
 		return false
 	elseif player:getVocation():getId() > VOCATION.ID.NONE then
