@@ -14,6 +14,7 @@
 - Cyclopedia House Auction system. ([murilo09](https://github.com/murilo09))
 - Updated npcs and spells from 13.40 updates. ([murilo09](https://github.com/murilo09))
 - Added a Rook system with configurations in `config.lua`. ([Tryller](https://github.com/jprzimba))
+- Added a Test Mode with configurations in `config.lua`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
@@ -68,7 +69,7 @@
 - Prevent players from entering the pool while in ghost mode. ([Tryller](https://github.com/jprzimba))
 - Prevent players from logging out while in the pool.
 - Prevent the use of `/n`, `/m`, and `/s` commands while in the pool. ([Tryller](https://github.com/jprzimba))
-
+- Fixed Morguthis wall action. ([kaleohanopahala](https://github.com/kaleohanopahala))
 
 ## Version 4.1
 

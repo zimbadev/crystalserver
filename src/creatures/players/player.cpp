@@ -6126,11 +6126,19 @@ bool Player::lastHitIsPlayer(const std::shared_ptr<Creature> &lastHitCreature) {
 }
 
 void Player::changeHealth(int32_t healthChange, bool sendHealthChange /* = true*/) {
+	if (g_configManager().getBoolean(TOGGLE_TEST_MODE)) {
+		return;
+	}
+
 	Creature::changeHealth(healthChange, sendHealthChange);
 	sendStats();
 }
 
 void Player::changeMana(int32_t manaChange) {
+	if (g_configManager().getBoolean(TOGGLE_TEST_MODE)) {
+		return;
+	}
+
 	if (!hasFlag(PlayerFlags_t::HasInfiniteMana)) {
 		Creature::changeMana(manaChange);
 	}
@@ -6139,6 +6147,10 @@ void Player::changeMana(int32_t manaChange) {
 }
 
 void Player::changeSoul(int32_t soulChange) {
+	if (g_configManager().getBoolean(TOGGLE_TEST_MODE)) {
+		return;
+	}
+
 	if (soulChange > 0) {
 		soul += std::min<int32_t>(soulChange * g_configManager().getFloat(RATE_SOUL_REGEN), vocation->getSoulMax() - soul);
 	} else {
