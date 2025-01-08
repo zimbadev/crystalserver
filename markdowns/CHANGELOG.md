@@ -68,7 +68,7 @@
 - Prevent players from entering the pool while in ghost mode. ([Tryller](https://github.com/jprzimba))
 - Prevent players from logging out while in the pool.
 - Prevent the use of `/n`, `/m`, and `/s` commands while in the pool. ([Tryller](https://github.com/jprzimba))
-
+- Fixed Morguthis wall action. ([kaleohanopahala](https://github.com/kaleohanopahala))
 
 ## Version 4.1
 
