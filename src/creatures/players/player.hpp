@@ -1325,6 +1325,7 @@ private:
 	void setNextPotionActionTask(const std::shared_ptr<Task> &task);
 
 	void death(const std::shared_ptr<Creature> &lastHitCreature) override;
+	void sendToRook();
 	bool spawn();
 	void despawn();
 	bool dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, const std::shared_ptr<Creature> &mostDamageCreature, bool lastHitUnjustified, bool mostDamageUnjustified) override;
