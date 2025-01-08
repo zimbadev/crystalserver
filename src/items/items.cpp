@@ -357,12 +357,18 @@ bool Items::loadFromXml() {
 		}
 
 		std::string monsterClass = "";
-		auto monsterClassAttr = nodeBags.attribute("monsterClass");
+		auto monsterClassAttr = nodeBags.attribute("class");
 		if (monsterClassAttr) {
 			monsterClass = monsterClassAttr.as_string();
 		}
 
-		setItemBag(itemId, itemName, chance, minAmount, maxAmount, minRange, maxRange, monsterClass);
+		uint32_t monsterRaceId = 0;
+		auto monsterRaceIdAttr = nodeBags.attribute("raceId");
+		if (monsterRaceIdAttr) {
+			monsterRaceId = pugi::cast<uint32_t>(monsterRaceIdAttr.value());
+		}
+
+		setItemBag(itemId, itemName, chance, minAmount, maxAmount, minRange, maxRange, monsterClass, monsterRaceId);
 	}
 
 	return true;
@@ -478,7 +484,7 @@ bool Items::hasItemType(size_t hasId) const {
 	return false;
 }
 
-void Items::setItemBag(uint16_t itemId, const std::string &itemName, uint32_t chance, uint32_t minAmount, uint32_t maxAmount, uint64_t minRange, uint64_t maxRange, const std::string &monsterClass) {
+void Items::setItemBag(uint16_t itemId, const std::string &itemName, uint32_t chance, uint32_t minAmount, uint32_t maxAmount, uint64_t minRange, uint64_t maxRange, const std::string &monsterClass, uint32_t monsterRaceId) {
 	BagItemInfo itemInfo;
 	itemInfo.name = itemName;
 	itemInfo.id = itemId;
@@ -488,6 +494,7 @@ void Items::setItemBag(uint16_t itemId, const std::string &itemName, uint32_t ch
 	itemInfo.minRange = minRange;
 	itemInfo.maxRange = maxRange;
 	itemInfo.monsterClass = monsterClass;
+	itemInfo.monsterRaceId = monsterRaceId;
 	bagItems[itemId] = itemInfo;
 }
 
