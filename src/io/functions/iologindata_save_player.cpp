@@ -818,9 +818,10 @@ bool IOLoginDataSave::savePlayerStatement(const std::shared_ptr<Player> &player,
 	Database &db = Database::getInstance();
 	std::ostringstream query;
 
+	std::string utf8Text = convertToUTF8(text);
 	query << "INSERT INTO `player_statements` (`player_id`, `receiver`, `channel_id`, `text`, `date`) VALUES ("
 		  << player->getGUID() << ", " << db.escapeString(receiver) << ", " << channelId << ", "
-		  << db.escapeString(text) << ", " << time(nullptr) << ")";
+		  << db.escapeString(utf8Text) << ", " << time(nullptr) << ")";
 
 	if (!db.executeQuery(query.str())) {
 		return false;

@@ -27,6 +27,8 @@
 #include "absl/debugging/stacktrace.h"
 #include "absl/debugging/symbolize.h"
 
+#include <boost/locale.hpp>
+
 void printXMLError(const std::string &where, const std::string &fileName, const pugi::xml_parse_result &result) {
 	g_logger().error("[{}] Failed to load {}: {}", where, fileName, result.description());
 
@@ -2133,4 +2135,8 @@ uint8_t calculateMaxPvpReduction(uint8_t blessCount, bool isPromoted /* = false*
 	}
 
 	return result;
+}
+
+std::string convertToUTF8(const std::string& input) {
+	return boost::locale::conv::to_utf<char>(input, "ISO-8859-1");
 }

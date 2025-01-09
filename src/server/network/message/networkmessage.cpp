@@ -16,8 +16,8 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "server/network/message/networkmessage.hpp"
-
 #include "items/containers/container.hpp"
+#include <boost/locale.hpp>
 
 int32_t NetworkMessage::decodeHeader() {
 	// Ensure there are enough bytes to read the header (2 bytes)
@@ -112,9 +112,12 @@ std::string NetworkMessage::getString(uint16_t stringLen /* = 0*/, const std::so
 	g_logger().trace("[{}] called line '{}:{}' in '{}'", __FUNCTION__, location.line(), location.column(), location.function_name());
 
 	// Copy the string from the buffer
-	std::string result(buffer.begin() + info.position, buffer.begin() + info.position + stringLen);
+	auto it = buffer.data() + info.position;
 	info.position += stringLen;
-	return result;
+
+	// Convert the string to UTF-8 using Boost.Locale
+	std::string_view latin1Str{reinterpret_cast<const char*>(it), stringLen};
+	return boost::locale::conv::to_utf<char>(latin1Str.data(), latin1Str.data() + latin1Str.size(), "ISO-8859-1", boost::locale::conv::skip);
 }
 
 Position NetworkMessage::getPosition() {
@@ -131,7 +134,6 @@ void NetworkMessage::skipBytes(int16_t count) {
 }
 
 void NetworkMessage::addString(const std::string &value, const std::source_location &location /*= std::source_location::current()*/, const std::string &function /* = ""*/) {
-	size_t stringLen = value.length();
 	if (value.empty()) {
 		if (!function.empty()) {
 			g_logger().debug("[{}] attempted to add an empty string. Called line '{}'", __FUNCTION__, function);
@@ -139,10 +141,21 @@ void NetworkMessage::addString(const std::string &value, const std::source_locat
 			g_logger().debug("[{}] attempted to add an empty string. Called line '{}:{}' in '{}'", __FUNCTION__, location.line(), location.column(), location.function_name());
 		}
 
-		// Add a 0 length string, the std::array will be filled with 0s
-		add<uint16_t>(uint16_t());
+		// Add a 0 length string
+		add<uint16_t>(0);
 		return;
 	}
+
+	// Convert to ISO-8859-1 using Boost.Locale
+	std::string latin1Str = boost::locale::conv::from_utf<char>(
+		value.data(),
+		value.data() + value.size(),
+		"ISO-8859-1",
+		boost::locale::conv::skip
+	);
+
+	size_t stringLen = latin1Str.size();
+
 	if (!canAdd(stringLen + 2)) {
 		if (!function.empty()) {
 			g_logger().error("[{}] NetworkMessage size is wrong: {}. Called line '{}'", __FUNCTION__, stringLen, function);
@@ -151,6 +164,7 @@ void NetworkMessage::addString(const std::string &value, const std::source_locat
 		}
 		return;
 	}
+
 	if (stringLen > NETWORKMESSAGE_MAXSIZE) {
 		if (!function.empty()) {
 			g_logger().error("[{}] exceeded NetworkMessage max size: {}, actual size: {}. Called line '{}'", __FUNCTION__, NETWORKMESSAGE_MAXSIZE, stringLen, function);
@@ -166,10 +180,12 @@ void NetworkMessage::addString(const std::string &value, const std::source_locat
 		g_logger().trace("[{}] called line '{}:{}' in '{}'", __FUNCTION__, location.line(), location.column(), location.function_name());
 	}
 
-	auto len = static_cast<uint16_t>(stringLen);
-	add<uint16_t>(len);
-	// Using to copy the string into the buffer
-	std::ranges::copy(value, buffer.begin() + info.position);
+	// Add the string length to the buffer
+	add<uint16_t>(static_cast<uint16_t>(stringLen));
+
+	// Copy the Latin-1 encoded string to the buffer
+	std::memcpy(buffer.data() + info.position, latin1Str.data(), stringLen);
+
 	info.position += stringLen;
 	info.length += stringLen;
 }
