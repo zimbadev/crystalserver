@@ -116,7 +116,7 @@ std::string NetworkMessage::getString(uint16_t stringLen /* = 0*/, const std::so
 	info.position += stringLen;
 
 	// Convert the string to UTF-8 using Boost.Locale
-	std::string_view latin1Str{reinterpret_cast<const char*>(it), stringLen};
+	std::string_view latin1Str { reinterpret_cast<const char*>(it), stringLen };
 	return boost::locale::conv::to_utf<char>(latin1Str.data(), latin1Str.data() + latin1Str.size(), "ISO-8859-1", boost::locale::conv::skip);
 }
 
