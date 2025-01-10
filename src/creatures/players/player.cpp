@@ -10976,5 +10976,5 @@ bool Player::isAggressiveCreature(const std::shared_ptr<Creature> &creature, boo
 		return false;
 	}
 
-	return hasPvpActivity(player, guildAndParty);
+	return hasPvpActivity(player, guildAndParty, time);
 }
