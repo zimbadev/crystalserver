@@ -3339,7 +3339,7 @@ BlockType_t Player::blockHit(const std::shared_ptr<Creature> &attacker, const Co
 	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor, field);
 
 	if (attacker) {
-		//sendCreatureSquare(attacker, SQ_COLOR_BLACK, SQUARE_FLASH);
+		// sendCreatureSquare(attacker, SQ_COLOR_BLACK, SQUARE_FLASH);
 	}
 
 	if (blockType != BLOCK_NONE) {
@@ -6525,8 +6525,7 @@ void Player::clearAttacked() {
 	attackedSet.clear();
 }
 
-bool Player::isAttackedBy(const std::shared_ptr<Player> &attacker) const
-{
+bool Player::isAttackedBy(const std::shared_ptr<Player> &attacker) const {
 	if (hasFlag(PlayerFlags_t::NotGainInFight) || !attacker) {
 		return false;
 	}
@@ -6534,8 +6533,7 @@ bool Player::isAttackedBy(const std::shared_ptr<Player> &attacker) const
 	return attackedBySet.find(attacker->guid) != attackedBySet.end();
 }
 
-void Player::addAttackedBy(const std::shared_ptr<Player> &attacker)
-{
+void Player::addAttackedBy(const std::shared_ptr<Player> &attacker) {
 	if (hasFlag(PlayerFlags_t::NotGainInFight) || !attacker || attacker == getPlayer()) {
 		return;
 	}
@@ -6543,8 +6541,7 @@ void Player::addAttackedBy(const std::shared_ptr<Player> &attacker)
 	attackedBySet.emplace(attacker->guid);
 }
 
-void Player::removeAttackedBy(const std::shared_ptr<Player> &attacker)
-{
+void Player::removeAttackedBy(const std::shared_ptr<Player> &attacker) {
 	if (!attacker || attacker == getPlayer()) {
 		return;
 	}
@@ -6552,8 +6549,7 @@ void Player::removeAttackedBy(const std::shared_ptr<Player> &attacker)
 	attackedBySet.erase(attacker->guid);
 }
 
-void Player::clearAttackedBy()
-{
+void Player::clearAttackedBy() {
 	for (auto it : attackedBySet) {
 		if (const auto &attacker = g_game().getPlayerByGUID(it)) {
 			attacker->removeAttacked(getPlayer());
@@ -10844,8 +10840,7 @@ uint16_t Player::getPlayerVocationEnum() const {
 	return Vocation_t::VOCATION_NONE;
 }
 
-SquareColor_t Player::getCreatureSquare(const std::shared_ptr<Creature> &creature) const
-{
+SquareColor_t Player::getCreatureSquare(const std::shared_ptr<Creature> &creature) const {
 	if (!creature) {
 		return SQ_COLOR_NONE;
 	}
@@ -10855,8 +10850,7 @@ SquareColor_t Player::getCreatureSquare(const std::shared_ptr<Creature> &creatur
 			return SQ_COLOR_YELLOW;
 		}
 		return SQ_COLOR_NONE;
-	}
-	else if (creature->isSummon()) {
+	} else if (creature->isSummon()) {
 		return getCreatureSquare(creature->getMaster());
 	}
 
@@ -10867,12 +10861,10 @@ SquareColor_t Player::getCreatureSquare(const std::shared_ptr<Creature> &creatur
 
 	if (isAggressiveCreature(otherPlayer)) {
 		return SQ_COLOR_YELLOW;
-	}
-	else if (otherPlayer->isInPvpSituation()) {
+	} else if (otherPlayer->isInPvpSituation()) {
 		if (isAggressiveCreature(otherPlayer, true)) {
 			return SQ_COLOR_ORANGE;
-		}
-		else {
+		} else {
 			return SQ_COLOR_BROWN;
 		}
 	}
@@ -10934,8 +10926,7 @@ bool Player::isInPvpSituation() const {
 	return false;
 }
 
-bool Player::isAggressiveCreature(const std::shared_ptr<Creature> &creature, bool guildAndParty /*= false*/, uint32_t time /*= 0*/) const
-{
+bool Player::isAggressiveCreature(const std::shared_ptr<Creature> &creature, bool guildAndParty /*= false*/, uint32_t time /*= 0*/) const {
 	if (!creature) {
 		return false;
 	}
@@ -10951,8 +10942,7 @@ bool Player::isAggressiveCreature(const std::shared_ptr<Creature> &creature, boo
 
 	if (player == getPlayer()) {
 		return true;
-	}
-	else if (isPartner(player)) {
+	} else if (isPartner(player)) {
 		return false;
 	}
 

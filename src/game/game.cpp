@@ -8410,8 +8410,7 @@ void Game::updatePlayerHelpers(const std::shared_ptr<Player> &player) {
 	}
 }
 
-void Game::updateCreatureSquare(const std::shared_ptr<Creature> &creature)
-{
+void Game::updateCreatureSquare(const std::shared_ptr<Creature> &creature) {
 	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
 		return;
 	}
@@ -10963,4 +10962,3 @@ void Game::updatePlayersOnline() const {
 		g_logger().error("[Game::updatePlayersOnline] Failed to update players online.");
 	}
 }
-
