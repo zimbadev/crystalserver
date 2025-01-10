@@ -984,13 +984,12 @@ public:
 
 	void setWalkExhaust(int64_t value);
 
+	//  PvP Expert
 	SquareColor_t getCreatureSquare(const std::shared_ptr<Creature> &creature) const;
 	bool hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty = false, uint32_t time = 0) const;
 	bool isInPvpSituation() const;
 	bool isAggressiveCreature(const std::shared_ptr<Creature> &creature, bool guildAndParty = false, uint32_t time = 0) const;
-	void setPvpSituation(bool situation) {
-		isPvpSituation = situation;
-	}
+
 	PvpMode_t getPvPMode() const {
 		return pvpMode;
 	}
@@ -1584,7 +1583,6 @@ private:
 	bool moved = false;
 	bool m_isDead = false;
 	bool imbuementTrackerWindowOpen = false;
-	bool isPvpSituation = false;
 
 	// Hazard system
 	int64_t lastHazardSystemCriticalHit = 0;
