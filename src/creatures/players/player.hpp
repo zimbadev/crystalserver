@@ -725,6 +725,10 @@ public:
 	void addAttacked(const std::shared_ptr<Player> &attacked);
 	void removeAttacked(const std::shared_ptr<Player> &attacked);
 	void clearAttacked();
+	bool isAttackedBy(const std::shared_ptr<Player> &attacker) const;
+	void addAttackedBy(const std::shared_ptr<Player> &attacker);
+	void removeAttackedBy(const std::shared_ptr<Player> &attacker);
+	void clearAttackedBy();
 	void addUnjustifiedDead(const std::shared_ptr<Player> &attacked);
 	void sendCreatureEmblem(const std::shared_ptr<Creature> &creature) const;
 	void sendCreatureSkull(const std::shared_ptr<Creature> &creature) const;
@@ -766,7 +770,7 @@ public:
 	void sendCreatureSay(const std::shared_ptr<Creature> &creature, SpeakClasses type, const std::string &text, const Position* pos = nullptr) const;
 	void sendCreatureReload(const std::shared_ptr<Creature> &creature) const;
 	void sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakClasses type, const std::string &text) const;
-	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color, uint8_t length = 1) const;
+	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color, SquareType_t type) const;
 	void sendCreatureChangeOutfit(const std::shared_ptr<Creature> &creature, const Outfit_t &outfit) const;
 	void sendCreatureChangeVisible(const std::shared_ptr<Creature> &creature, bool visible);
 	void sendCreatureLight(const std::shared_ptr<Creature> &creature) const;
@@ -980,10 +984,10 @@ public:
 
 	void setWalkExhaust(int64_t value);
 
+	SquareColor_t getCreatureSquare(const std::shared_ptr<Creature> &creature) const;
 	bool hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty = false) const;
-	bool isInPvpSituation();
-
-	void sendPvpSquare(const std::shared_ptr<Creature> &creature, SquareColor_t squareColor);
+	bool isInPvpSituation() const;
+	bool isAggressiveCreature(const std::shared_ptr<Creature> &creature, bool guildAndParty = false, uint32_t time = 0) const;
 	void setPvpSituation(bool situation) {
 		isPvpSituation = situation;
 	}
@@ -1368,6 +1372,7 @@ private:
 	void addBosstiaryKill(const std::shared_ptr<MonsterType> &mType);
 
 	phmap::flat_hash_set<uint32_t> attackedSet {};
+	phmap::flat_hash_set<uint32_t> attackedBySet {};
 
 	std::map<uint8_t, OpenContainer> openContainers;
 	std::map<uint32_t, std::shared_ptr<DepotLocker>> depotLockerMap;

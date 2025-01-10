@@ -8410,6 +8410,17 @@ void Game::updatePlayerHelpers(const std::shared_ptr<Player> &player) {
 	}
 }
 
+void Game::updateCreatureSquare(const std::shared_ptr<Creature> &creature)
+{
+	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
+		return;
+	}
+
+	for (const auto &spectator : Spectators().find<Player>(creature->getPosition(), true)) {
+		spectator->getPlayer()->sendCreatureSquare(creature, spectator->getPlayer()->getCreatureSquare(creature), SQUARE_STAY);
+	}
+}
+
 void Game::playerJoinParty(uint32_t playerId, uint32_t leaderId) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
@@ -10953,44 +10964,3 @@ void Game::updatePlayersOnline() const {
 	}
 }
 
-void Game::updateSpectatorsPvp(const std::shared_ptr<Thing> &thing) {
-	if (!thing) {
-		return;
-	}
-
-	if (std::shared_ptr<Creature> creature = thing->getCreature()) {
-		std::shared_ptr<Player> player = creature->getPlayer();
-		if (!player) {
-			return;
-		}
-
-		for (const auto &spectator : Spectators().find<Player>(player->getPosition(), true)) {
-			std::shared_ptr<Player> itPlayer = spectator->getPlayer();
-			if (!itPlayer) {
-				continue;
-			}
-
-			SquareColor_t sqColor = SQ_COLOR_NONE;
-			if (player->hasPvpActivity(itPlayer)) {
-				sqColor = SQ_COLOR_YELLOW;
-			} else if (itPlayer->isInPvpSituation()) {
-				if (itPlayer == player) {
-					sqColor = SQ_COLOR_YELLOW;
-				} else if (player->hasPvpActivity(itPlayer, true)) {
-					// if this player attacked anyone of players's guild/party
-					sqColor = SQ_COLOR_ORANGE;
-				} else {
-					// meaning that the fight you are not involved.
-					sqColor = SQ_COLOR_BROWN;
-				}
-			} else {
-				// player isn't enganged at any pvp situation! ( even if self)
-				player->sendCreatureSquare(itPlayer, SQ_COLOR_NONE, 0);
-			}
-
-			if (sqColor != SQ_COLOR_NONE) {
-				player->sendPvpSquare(itPlayer, sqColor);
-			}
-		}
-	}
-}

@@ -408,6 +408,7 @@ public:
 	void playerWheelGemAction(uint32_t playerId, NetworkMessage &msg);
 
 	void updatePlayerHelpers(const std::shared_ptr<Player> &player);
+	void updateCreatureSquare(const std::shared_ptr<Creature> &creature);
 
 	void shutdown();
 	void dieSafely(const std::string &errorMsg);
@@ -559,8 +560,6 @@ public:
 	std::shared_ptr<Item> getUniqueItem(uint16_t uniqueId);
 	bool addUniqueItem(uint16_t uniqueId, std::shared_ptr<Item> item);
 	void removeUniqueItem(uint16_t uniqueId);
-
-	void updateSpectatorsPvp(const std::shared_ptr<Thing> &thing);
 
 	bool hasEffect(uint16_t effectId);
 	bool hasDistanceEffect(uint16_t effectId);

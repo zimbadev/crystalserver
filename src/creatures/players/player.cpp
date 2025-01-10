@@ -3338,8 +3338,8 @@ bool Player::isPzLocked() const {
 BlockType_t Player::blockHit(const std::shared_ptr<Creature> &attacker, const CombatType_t &combatType, int32_t &damage, bool checkDefense, bool checkArmor, bool field) {
 	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor, field);
 
-	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP) && attacker) {
-		sendCreatureSquare(attacker, SQ_COLOR_BLACK);
+	if (attacker) {
+		//sendCreatureSquare(attacker, SQ_COLOR_BLACK, SQUARE_FLASH);
 	}
 
 	if (blockType != BLOCK_NONE) {
@@ -5809,7 +5809,7 @@ void Player::onEndCondition(ConditionType_t type) {
 		clearAttacked();
 
 		if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
-			g_game().updateSpectatorsPvp(std::const_pointer_cast<Player>(getPlayer()));
+			g_game().updateCreatureSquare(std::const_pointer_cast<Player>(getPlayer()));
 		}
 
 		if (getSkull() != SKULL_RED && getSkull() != SKULL_BLACK) {
@@ -5912,8 +5912,8 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 	}
 
 	if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
-		g_game().updateSpectatorsPvp(std::const_pointer_cast<Player>(getPlayer()));
-		g_game().updateSpectatorsPvp(targetPlayer);
+		g_game().updateCreatureSquare(std::const_pointer_cast<Player>(getPlayer()));
+		g_game().updateCreatureSquare(targetPlayer);
 	}
 
 	addInFightTicks();
@@ -6523,6 +6523,45 @@ void Player::removeAttacked(const std::shared_ptr<Player> &attacked) {
 
 void Player::clearAttacked() {
 	attackedSet.clear();
+}
+
+bool Player::isAttackedBy(const std::shared_ptr<Player> &attacker) const
+{
+	if (hasFlag(PlayerFlags_t::NotGainInFight) || !attacker) {
+		return false;
+	}
+
+	return attackedBySet.find(attacker->guid) != attackedBySet.end();
+}
+
+void Player::addAttackedBy(const std::shared_ptr<Player> &attacker)
+{
+	if (hasFlag(PlayerFlags_t::NotGainInFight) || !attacker || attacker == getPlayer()) {
+		return;
+	}
+
+	attackedBySet.emplace(attacker->guid);
+}
+
+void Player::removeAttackedBy(const std::shared_ptr<Player> &attacker)
+{
+	if (!attacker || attacker == getPlayer()) {
+		return;
+	}
+
+	attackedBySet.erase(attacker->guid);
+}
+
+void Player::clearAttackedBy()
+{
+	for (auto it : attackedBySet) {
+		if (const auto &attacker = g_game().getPlayerByGUID(it)) {
+			attacker->removeAttacked(getPlayer());
+			g_game().updateCreatureSquare(attacker);
+		}
+	}
+
+	attackedBySet.clear();
 }
 
 void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked) {
@@ -7830,7 +7869,7 @@ void Player::onThink(uint32_t interval) {
 	wheel()->onThink();
 
 	if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
-		g_game().updateSpectatorsPvp(std::const_pointer_cast<Player>(getPlayer()));
+		g_game().updateCreatureSquare(std::const_pointer_cast<Player>(getPlayer()));
 	}
 
 	g_callbacks().executeCallback(EventCallback_t::playerOnThink, &EventCallback::playerOnThink, getPlayer(), interval);
@@ -8039,9 +8078,9 @@ void Player::sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakCla
 	}
 }
 
-void Player::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color, uint8_t length) const {
+void Player::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color, SquareType_t type) const {
 	if (client) {
-		client->sendCreatureSquare(creature, color, length);
+		client->sendCreatureSquare(creature, color, type);
 	}
 }
 
@@ -10083,8 +10122,8 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 	Creature::onCreatureAppear(creature, isLogin);
 
 	if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
-		g_game().updateSpectatorsPvp(getPlayer());
-		g_game().updateSpectatorsPvp(creature);
+		g_game().updateCreatureSquare(getPlayer());
+		g_game().updateCreatureSquare(creature);
 	}
 
 	if (isLogin && creature == getPlayer()) {
@@ -10805,6 +10844,42 @@ uint16_t Player::getPlayerVocationEnum() const {
 	return Vocation_t::VOCATION_NONE;
 }
 
+SquareColor_t Player::getCreatureSquare(const std::shared_ptr<Creature> &creature) const
+{
+	if (!creature) {
+		return SQ_COLOR_NONE;
+	}
+
+	if (creature == getPlayer()) {
+		if (isInPvpSituation()) {
+			return SQ_COLOR_YELLOW;
+		}
+		return SQ_COLOR_NONE;
+	}
+	else if (creature->isSummon()) {
+		return getCreatureSquare(creature->getMaster());
+	}
+
+	const auto &otherPlayer = creature->getPlayer();
+	if (!otherPlayer || otherPlayer->isAccessPlayer()) {
+		return SQ_COLOR_NONE;
+	}
+
+	if (isAggressiveCreature(otherPlayer)) {
+		return SQ_COLOR_YELLOW;
+	}
+	else if (otherPlayer->isInPvpSituation()) {
+		if (isAggressiveCreature(otherPlayer, true)) {
+			return SQ_COLOR_ORANGE;
+		}
+		else {
+			return SQ_COLOR_BROWN;
+		}
+	}
+
+	return SQ_COLOR_NONE;
+}
+
 bool Player::hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty /* = false*/) const {
 	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP) || !player || player.get() == this) {
 		return false;
@@ -10836,7 +10911,7 @@ bool Player::hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAnd
 	return false;
 }
 
-bool Player::isInPvpSituation() {
+bool Player::isInPvpSituation() const {
 	if (!isPvpSituation) {
 		return false;
 	}
@@ -10851,7 +10926,7 @@ bool Player::isInPvpSituation() {
 			continue;
 		}
 
-		if (itPlayer->hasAttacked(getPlayer())) {
+		if (itPlayer->hasAttacked(std::const_pointer_cast<Player>(getPlayer()))) {
 			return true;
 		}
 	}
@@ -10859,10 +10934,27 @@ bool Player::isInPvpSituation() {
 	return false;
 }
 
-void Player::sendPvpSquare(const std::shared_ptr<Creature> &creature, SquareColor_t squareColor) {
-	sendCreatureSquare(creature, squareColor, 2);
-
-	if (squareColor == SQ_COLOR_YELLOW) {
-		sendCreatureSquare(creature, squareColor, 2);
+bool Player::isAggressiveCreature(const std::shared_ptr<Creature> &creature, bool guildAndParty /*= false*/, uint32_t time /*= 0*/) const
+{
+	if (!creature) {
+		return false;
 	}
+
+	const auto &player = creature->getPlayer();
+	if (!player) {
+		if (!creature->isSummon()) {
+			return false;
+		}
+
+		return isAggressiveCreature(creature->getMaster(), guildAndParty, time);
+	}
+
+	if (player == getPlayer()) {
+		return true;
+	}
+	else if (isPartner(player)) {
+		return false;
+	}
+
+	return hasPvpActivity(player, guildAndParty);
 }

@@ -3421,7 +3421,7 @@ void ProtocolGame::sendCreatureType(const std::shared_ptr<Creature> &creature, u
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color, uint8_t length) {
+void ProtocolGame::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color, SquareType_t type) {
 	if (!canSee(creature)) {
 		return;
 	}
@@ -3429,7 +3429,7 @@ void ProtocolGame::sendCreatureSquare(const std::shared_ptr<Creature> &creature,
 	NetworkMessage msg;
 	msg.addByte(0x93);
 	msg.add<uint32_t>(creature->getID());
-	msg.addByte(length);
+	msg.addByte(type);
 	msg.addByte(color);
 	writeToOutputBuffer(msg);
 }
