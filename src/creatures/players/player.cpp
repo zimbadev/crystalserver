@@ -3338,7 +3338,7 @@ bool Player::isPzLocked() const {
 BlockType_t Player::blockHit(const std::shared_ptr<Creature> &attacker, const CombatType_t &combatType, int32_t &damage, bool checkDefense, bool checkArmor, bool field) {
 	BlockType_t blockType = Creature::blockHit(attacker, combatType, damage, checkDefense, checkArmor, field);
 
-	if (!g_game().isExpertPvpEnabled() && attacker) {
+	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP) && attacker) {
 		sendCreatureSquare(attacker, SQ_COLOR_BLACK);
 	}
 
@@ -5808,7 +5808,7 @@ void Player::onEndCondition(ConditionType_t type) {
 		pzLocked = false;
 		clearAttacked();
 
-		if (g_game().isExpertPvpEnabled()) {
+		if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
 			g_game().updateSpectatorsPvp(std::const_pointer_cast<Player>(getPlayer()));
 		}
 
@@ -5878,7 +5878,7 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 
 	const auto &targetPlayer = target->getPlayer();
 	if (targetPlayer) {
-		if (!g_game().isExpertPvpEnabled() && (isPartner(targetPlayer) || isGuildMate(targetPlayer))) {
+		if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP) && (isPartner(targetPlayer) || isGuildMate(targetPlayer))) {
 			addInFightTicks();
 			return;
 		}
@@ -5911,7 +5911,7 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 		}
 	}
 
-	if (g_game().isExpertPvpEnabled()) {
+	if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
 		g_game().updateSpectatorsPvp(std::const_pointer_cast<Player>(getPlayer()));
 		g_game().updateSpectatorsPvp(targetPlayer);
 	}
@@ -7829,7 +7829,7 @@ void Player::onThink(uint32_t interval) {
 	// Wheel of destiny major spells
 	wheel()->onThink();
 
-	if (g_game().isExpertPvpEnabled()) {
+	if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
 		g_game().updateSpectatorsPvp(std::const_pointer_cast<Player>(getPlayer()));
 	}
 
@@ -10082,7 +10082,7 @@ void Player::onRemoveTileItem(const std::shared_ptr<Tile> &fromTile, const Posit
 void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool isLogin) {
 	Creature::onCreatureAppear(creature, isLogin);
 
-	if (g_game().isExpertPvpEnabled()) {
+	if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
 		g_game().updateSpectatorsPvp(getPlayer());
 		g_game().updateSpectatorsPvp(creature);
 	}
@@ -10806,7 +10806,7 @@ uint16_t Player::getPlayerVocationEnum() const {
 }
 
 bool Player::hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty /* = false*/) const {
-	if (!g_game().isExpertPvpEnabled() || !player || player.get() == this) {
+	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP) || !player || player.get() == this) {
 		return false;
 	}
 

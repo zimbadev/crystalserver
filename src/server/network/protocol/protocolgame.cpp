@@ -6848,8 +6848,9 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 		}
 	}
 
-	msg.addByte(0x00); // can change pvp framing option
-	msg.addByte(g_game().isExpertPvpEnabled() ? 0x01 : 0x00); // expert mode button enabled
+	bool expertPvp = g_configManager().getBoolean(TOGGLE_EXPERT_PVP);
+	msg.addByte(expertPvp ? 0x01 : 0x00); // can change pvp framing option
+	msg.addByte(expertPvp ? 0x01 : 0x00); // expert mode button enabled
 
 	msg.addString(g_configManager().getString(STORE_IMAGES_URL));
 	msg.add<uint16_t>(static_cast<uint16_t>(g_configManager().getNumber(STORE_COIN_PACKET)));

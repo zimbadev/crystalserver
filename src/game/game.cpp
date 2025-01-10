@@ -5953,14 +5953,11 @@ void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, PvpMode
 		return;
 	}
 
-	PvpMode_t oldPvpMode = player->getPvPMode();
-	bool expertPvp = isExpertPvpEnabled();
-
 	player->setFightMode(fightMode);
 	player->setChaseMode(chaseMode);
 
-	if (expertPvp) {
-		WorldType_t worldType = getWorldType();
+	if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
+		auto oldPvpMode = player->pvpMode;
 		if (worldType == WORLD_TYPE_NO_PVP && pvpMode == PVP_MODE_RED_FIST) {
 			player->setPvpMode(player->pvpMode);
 		} else if (worldType == WORLD_TYPE_PVP_ENFORCED && pvpMode != PVP_MODE_RED_FIST) {
@@ -5972,19 +5969,18 @@ void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, PvpMode
 		if ((worldType == WORLD_TYPE_NO_PVP && !secureMode) || (worldType == WORLD_TYPE_PVP_ENFORCED && secureMode)) {
 			player->setSecureMode(!secureMode);
 		} else {
-			if (player->getPvPMode() == PVP_MODE_RED_FIST) {
+			if (player->getPvPMode() == PVP_MODE_RED_FIST && oldPvpMode != PVP_MODE_RED_FIST) {
 				player->setSecureMode(false);
+			} else if (player->pvpMode != PVP_MODE_RED_FIST && oldPvpMode == PVP_MODE_RED_FIST) {
+				player->setSecureMode(true);
 			} else {
 				player->setSecureMode(secureMode);
-			}
-
-			if (oldPvpMode == PVP_MODE_RED_FIST) {
-				player->setSecureMode(true);
 			}
 		}
 
 		player->sendFightModes();
 	} else {
+		player->setPvpMode(pvpMode);
 		player->setSecureMode(secureMode);
 	}
 }
@@ -10955,10 +10951,6 @@ void Game::updatePlayersOnline() const {
 	if (!success) {
 		g_logger().error("[Game::updatePlayersOnline] Failed to update players online.");
 	}
-}
-
-bool Game::isExpertPvpEnabled() {
-	return g_configManager().getBoolean(TOGGLE_EXPERT_PVP);
 }
 
 void Game::updateSpectatorsPvp(const std::shared_ptr<Thing> &thing) {
