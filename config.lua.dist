@@ -564,6 +564,11 @@ defaultRespawnTime = 60
 deSpawnRange = 2
 deSpawnRadius = 50
 
+-- Surprise Bags
+-- NOTE: set dropSurpriseBagsFromMonsters to false to disable drop surprise bags from monsters.
+-- NOTE: Read data/items/bags.xml for more info.
+dropSurpriseBagsFromMonsters = false
+
 -- Stamina
 staminaSystem = true
 timeToRegenMinuteStamina = 3 * 60
