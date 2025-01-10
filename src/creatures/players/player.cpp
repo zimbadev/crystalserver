@@ -1148,7 +1148,21 @@ bool Player::canWalkthrough(const std::shared_ptr<Creature> &creature) {
 		return true;
 	}
 
+	bool expertPvpWalkThrough = g_configManager().getBoolean(TOGGLE_EXPERT_PVP) && g_configManager().getBoolean(EXPERT_PVP_CANWALKTHROUGHOTHERPLAYERS);
 	const auto &player = creature->getPlayer();
+	if (!player) {
+		if (expertPvpWalkThrough) {
+			if (const auto &monster = creature->getMonster()) {
+				if (!monster->isSummon() || !monster->getMaster()->getPlayer()) {
+					return false;
+				}
+				const auto master = monster->getMaster()->getPlayer();
+				return master != getPlayer() && canWalkthrough(master);
+			}
+		}
+		return false;
+	}
+
 	const auto &monster = creature->getMonster();
 	const auto &npc = creature->getNpc();
 	if (monster) {
@@ -1208,7 +1222,11 @@ bool Player::canWalkthroughEx(const std::shared_ptr<Creature> &creature) const {
 	const auto &npc = creature->getNpc();
 	if (player) {
 		const auto &playerTile = player->getTile();
-		return playerTile && (playerTile->hasFlag(TILESTATE_NOPVPZONE) || playerTile->hasFlag(TILESTATE_PROTECTIONZONE) || player->getLevel() <= static_cast<uint32_t>(g_configManager().getNumber(PROTECTION_LEVEL)) || g_game().getWorldType() == WORLD_TYPE_NO_PVP);
+		if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP) && g_configManager().getBoolean(EXPERT_PVP_CANWALKTHROUGHOTHERPLAYERS)) {
+			return playerTile != nullptr;
+		} else {
+			return playerTile && (playerTile->hasFlag(TILESTATE_NOPVPZONE) || playerTile->hasFlag(TILESTATE_PROTECTIONZONE) || player->getLevel() <= static_cast<uint32_t>(g_configManager().getNumber(PROTECTION_LEVEL)) || g_game().getWorldType() == WORLD_TYPE_NO_PVP);
+		}
 	} else if (npc) {
 		const auto &tile = npc->getTile();
 		const auto &houseTile = std::dynamic_pointer_cast<HouseTile>(tile);
@@ -2434,10 +2452,15 @@ void Player::onChangeZone(ZoneType_t zone) {
 		}
 	}
 
+	bool expertPvp = g_configManager().getBoolean(TOGGLE_EXPERT_PVP);
+	bool expertPvpWalkThrough = g_configManager().getBoolean(EXPERT_PVP_CANWALKTHROUGHOTHERPLAYERS);
+	if (!expertPvp || (expertPvp && !expertPvpWalkThrough)) {
+		g_game().updateCreatureWalkthrough(static_self_cast<Player>());
+	}
+
 	updateImbuementTrackerStats();
 	wheel()->onThink(true);
 	wheel()->sendGiftOfLifeCooldown();
-	g_game().updateCreatureWalkthrough(static_self_cast<Player>());
 	sendIcons();
 	g_events().eventPlayerOnChangeZone(static_self_cast<Player>(), zone);
 
