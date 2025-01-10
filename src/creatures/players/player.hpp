@@ -721,7 +721,7 @@ public:
 	int64_t getSkullTicks() const;
 	void setSkullTicks(int64_t ticks);
 
-	bool hasAttacked(const std::shared_ptr<Player> &attacked) const;
+	bool hasAttacked(const std::shared_ptr<Player> &attacked, uint32_t time = 0) const;
 	void addAttacked(const std::shared_ptr<Player> &attacked);
 	void removeAttacked(const std::shared_ptr<Player> &attacked);
 	void clearAttacked();
@@ -985,7 +985,7 @@ public:
 	void setWalkExhaust(int64_t value);
 
 	SquareColor_t getCreatureSquare(const std::shared_ptr<Creature> &creature) const;
-	bool hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty = false) const;
+	bool hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty = false, uint32_t time = 0) const;
 	bool isInPvpSituation() const;
 	bool isAggressiveCreature(const std::shared_ptr<Creature> &creature, bool guildAndParty = false, uint32_t time = 0) const;
 	void setPvpSituation(bool situation) {
@@ -1371,8 +1371,8 @@ private:
 	void addBestiaryKill(const std::shared_ptr<MonsterType> &mType);
 	void addBosstiaryKill(const std::shared_ptr<MonsterType> &mType);
 
-	phmap::flat_hash_set<uint32_t> attackedSet {};
-	phmap::flat_hash_set<uint32_t> attackedBySet {};
+	std::unordered_map<uint32_t, uint32_t> attackedSet;
+	std::unordered_set<uint32_t> attackedBySet;
 
 	std::map<uint8_t, OpenContainer> openContainers;
 	std::map<uint32_t, std::shared_ptr<DepotLocker>> depotLockerMap;

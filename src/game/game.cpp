@@ -8389,6 +8389,16 @@ void Game::playerInviteToParty(uint32_t playerId, uint32_t invitedId) {
 		return;
 	}
 
+	if (player->isInPvpSituation()) {
+		player->sendTextMessage(MESSAGE_PARTY_MANAGEMENT, "You cannot invite players to a party while engaged in aggression.");
+		return;
+	}
+
+	if (invitedPlayer->isInPvpSituation()) {
+		player->sendTextMessage(MESSAGE_PARTY_MANAGEMENT, "This player cannot be invited to a party while they are engaged in aggression.");
+		return;
+	}
+
 	std::shared_ptr<Party> party = player->getParty();
 	if (!party) {
 		party = Party::create(player);
@@ -8433,6 +8443,11 @@ void Game::playerJoinParty(uint32_t playerId, uint32_t leaderId) {
 
 	auto party = leader->getParty();
 	if (!party || party->getLeader() != leader) {
+		return;
+	}
+
+	if (player->isInPvpSituation()) {
+		player->sendTextMessage(MESSAGE_PARTY_MANAGEMENT, "You cannot join a party while engaged in aggression.");
 		return;
 	}
 
