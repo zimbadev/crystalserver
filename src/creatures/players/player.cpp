@@ -6521,17 +6521,16 @@ void Player::setSkullTicks(int64_t ticks) {
 }
 
 bool Player::hasAttacked(const std::shared_ptr<Player> &attacked, uint32_t time /*= 0*/) const {
-    if (hasFlag(PlayerFlags_t::NotGainInFight) || !attacked) {
-        return false;
-    }
+	if (hasFlag(PlayerFlags_t::NotGainInFight) || !attacked) {
+		return false;
+	}
 
-    auto it = attackedSet.find(attacked->guid);
-    if (it == attackedSet.end()) {
-        return false;
-    }
+	auto it = attackedSet.find(attacked->guid);
+	if (it == attackedSet.end()) {
+		return false;
+	}
 
-
-    return time == 0 || it->second <= time;
+	return time == 0 || it->second <= time;
 }
 
 void Player::addAttacked(const std::shared_ptr<Player> &attacked) {
