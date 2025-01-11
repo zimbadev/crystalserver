@@ -355,7 +355,6 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 					return RETURNVALUE_ADJUSTYOURCOMBAT;
 				}
 
-
 				// nopvp-zone
 				const auto &attackerTile = attackerPlayer->getTile();
 				if (targetPlayerTile && targetPlayerTile->hasFlag(TILESTATE_NOPVPZONE)) {
