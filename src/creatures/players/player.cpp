@@ -1143,6 +1143,41 @@ bool Player::canSeeCreature(const std::shared_ptr<Creature> &creature) const {
 	return true;
 }
 
+bool Player::canCombat(const std::shared_ptr<Creature> &creature) const {
+	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
+		return true;
+	}
+
+	if (const auto &monster = creature->getMonster()) {
+		if (!monster->isSummon()) {
+			return true;
+		}
+
+		auto owner = monster->getMaster()->getPlayer();
+		if (!owner || owner == getPlayer() || isPartner(owner) || isGuildMate(owner)) {
+			return true;
+		}
+
+		return canCombat(owner);
+	} else if (const auto &player = creature->getPlayer()) {
+		if (player->getGroup()->access) {
+			return false;
+		}
+
+		// red fist mode forces not to have secure mode.
+		// on all cases, if they have previous aggression, attacking attempt should be successful.
+		// if he is in white-hand mode, then the target must have aggression with the player OR with his partners
+		if (!hasSecureMode() || Combat::isInPvpZone(std::shared_ptr<Creature>(const_cast<Player*>(this)), player) || isAggressiveCreature(player, pvpMode == PVP_MODE_WHITE_HAND)) {
+			return true;
+		}
+
+		// last case is that he is blocking him, without previous aggression details, as the target has a white skull or furtherer.
+		return pvpMode == PVP_MODE_YELLOW_HAND && player->getSkull() != SKULL_NONE;
+	}
+
+	return false;
+}
+
 bool Player::canWalkthrough(const std::shared_ptr<Creature> &creature) {
 	if (group->access || creature->isInGhostMode()) {
 		return true;
@@ -5830,9 +5865,8 @@ void Player::onEndCondition(ConditionType_t type) {
 		onIdleStatus();
 		pzLocked = false;
 		clearAttacked();
-
 		if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
-			g_game().updateCreatureSquare(std::const_pointer_cast<Player>(getPlayer()));
+			clearAttackedBy();
 		}
 
 		if (getSkull() != SKULL_RED && getSkull() != SKULL_BLACK) {
@@ -10158,11 +10192,6 @@ void Player::onRemoveTileItem(const std::shared_ptr<Tile> &fromTile, const Posit
 void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool isLogin) {
 	Creature::onCreatureAppear(creature, isLogin);
 
-	if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
-		g_game().updateCreatureSquare(getPlayer());
-		g_game().updateCreatureSquare(creature);
-	}
-
 	if (isLogin && creature == getPlayer()) {
 		onEquipInventory();
 
@@ -10251,6 +10280,11 @@ void Player::onRemoveCreature(const std::shared_ptr<Creature> &creature, bool is
 
 		if (tradePartner) {
 			g_game().internalCloseTrade(player);
+		}
+
+		if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
+			clearAttacked();
+			clearAttackedBy();
 		}
 
 		closeShopWindow();

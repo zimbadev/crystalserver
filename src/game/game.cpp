@@ -967,6 +967,7 @@ std::shared_ptr<Monster> Game::getMonsterByID(uint32_t id) {
 	if (it == monsters.end()) {
 		return nullptr;
 	}
+
 	return it->second;
 }
 
@@ -979,6 +980,7 @@ std::shared_ptr<Npc> Game::getNpcByID(uint32_t id) {
 	if (it == npcs.end()) {
 		return nullptr;
 	}
+
 	return it->second;
 }
 
@@ -991,12 +993,30 @@ std::shared_ptr<Player> Game::getPlayerByID(uint32_t id, bool allowOffline /* = 
 	if (!allowOffline) {
 		return nullptr;
 	}
+
 	std::shared_ptr<Player> tmpPlayer = std::make_shared<Player>(nullptr);
 	if (!IOLoginData::loadPlayerById(tmpPlayer, id)) {
 		return nullptr;
 	}
+
 	tmpPlayer->setOnline(false);
 	return tmpPlayer;
+}
+
+std::shared_ptr<Player> Game::getOwnerPlayer(const std::shared_ptr<Creature> &creature) {
+	if (!creature) {
+		return nullptr;
+	}
+
+	if (creature->isSummon()) {
+		return getOwnerPlayer(creature->getMaster());
+	}
+
+	return creature->getPlayer();
+}
+
+std::shared_ptr<Player> Game::getOwnerPlayer(uint32_t creatureId) {
+	return getOwnerPlayer(getCreatureByID(creatureId));
 }
 
 std::shared_ptr<Creature> Game::getCreatureByName(const std::string &s) {

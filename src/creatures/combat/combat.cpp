@@ -351,7 +351,10 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 
 				if (isProtected(attackerPlayer, targetPlayer)) {
 					return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
+				} else if (!attackerPlayer->canCombat(targetPlayer)) {
+					return RETURNVALUE_ADJUSTYOURCOMBAT;
 				}
+
 
 				// nopvp-zone
 				const auto &attackerTile = attackerPlayer->getTile();
@@ -378,6 +381,8 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 
 					if (isProtected(masterAttackerPlayer, targetPlayer)) {
 						return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
+					} else if (!masterAttackerPlayer->canCombat(targetPlayer)) {
+						return RETURNVALUE_ADJUSTYOURCOMBAT;
 					}
 				}
 			}
@@ -397,8 +402,14 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 					return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 				}
 
-				if (target->isSummon() && target->getMaster()->getPlayer() && target->getZoneType() == ZONE_NOPVP) {
-					return RETURNVALUE_ACTIONNOTPERMITTEDINANOPVPZONE;
+				if (g_game().getOwnerPlayer(target)) {
+					if (target->getZoneType() == ZONE_NOPVP) {
+						return RETURNVALUE_ACTIONNOTPERMITTEDINANOPVPZONE;
+					} else if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP) && isProtected(attackerPlayer, targetPlayer)) {
+						return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
+					} else if (!attackerPlayer->canCombat(target)) {
+						return RETURNVALUE_ADJUSTYOURCOMBAT;
+					}
 				}
 			} else if (attacker->getMonster()) {
 				const auto &targetMaster = target->getMaster();
@@ -406,6 +417,16 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 				if ((!targetMaster || !targetMaster->getPlayer()) && attacker->getFaction() == FACTION_DEFAULT) {
 					if (!attackerMaster || !attackerMaster->getPlayer()) {
 						return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
+					}
+				} else if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
+					if (g_game().getOwnerPlayer(target)) {
+						if (target->getZoneType() == ZONE_NOPVP) {
+							return RETURNVALUE_ACTIONNOTPERMITTEDINANOPVPZONE;
+						} else if (isProtected(attackerPlayer, targetPlayer)) {
+							return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
+						} else if (!attackerPlayer->canCombat(target)) {
+							return RETURNVALUE_ADJUSTYOURCOMBAT;
+						}
 					}
 				}
 			}

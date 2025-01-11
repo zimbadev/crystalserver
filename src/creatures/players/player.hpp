@@ -580,6 +580,7 @@ public:
 	bool canSee(const Position &pos) override;
 	bool canSeeCreature(const std::shared_ptr<Creature> &creature) const override;
 
+	bool canCombat(const std::shared_ptr<Creature> &creature) const;
 	bool canWalkthrough(const std::shared_ptr<Creature> &creature);
 	bool canWalkthroughEx(const std::shared_ptr<Creature> &creature) const;
 
