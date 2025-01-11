@@ -1943,14 +1943,14 @@ void ProtocolGame::parseFightModes(NetworkMessage &msg) {
 	}
 
 	PvpMode_t pvpMode;
-	if (rawPvpMode == 0) {
-		pvpMode = PVP_MODE_DOVE;
-	} else if (rawPvpMode == 1) {
+	if (rawPvpMode == 1) {
 		pvpMode = PVP_MODE_WHITE_HAND;
 	} else if (rawPvpMode == 2) {
 		pvpMode = PVP_MODE_YELLOW_HAND;
-	} else {
+	} else if (rawPvpMode == 3) {
 		pvpMode = PVP_MODE_RED_FIST;
+	} else {
+		pvpMode = PVP_MODE_DOVE;
 	}
 
 	g_game().playerSetFightModes(player->getID(), fightMode, pvpMode, rawChaseMode != 0, rawSecureMode != 0);

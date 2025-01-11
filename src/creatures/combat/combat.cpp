@@ -2255,6 +2255,11 @@ void AreaCombat::setupExtArea(const std::list<uint32_t> &list, uint32_t rows) {
 //**********************************************************//
 
 void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
+	const auto &target = g_game().getOwnerPlayer(creature);
+	if (target && !isAggressive(target)) {
+		return;
+	}
+
 	// remove magic walls/wild growth
 	if ((!isBlocking() && g_game().getWorldType() == WORLD_TYPE_NO_PVP && id == ITEM_MAGICWALL_SAFE) || id == ITEM_WILDGROWTH_SAFE) {
 		if (!creature->isInGhostMode()) {
@@ -2393,6 +2398,19 @@ int32_t MagicField::getDamage() const {
 		return it.conditionDamage->getTotalDamage();
 	}
 	return 0;
+}
+
+bool MagicField::isAggressive(const std::shared_ptr<Player> &player) const {
+	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP) && g_configManager().getBoolean(EXPERT_PVP_CANWALKTHROUGHMAGICWALLS)) {
+		return true;
+	}
+
+	const auto &caster = g_game().getOwnerPlayer(getOwnerId());
+	if (!caster || pvpMode == PVP_MODE_RED_FIST) {
+		return true;
+	}
+
+	return caster->isAggressiveCreature(player, pvpMode == PVP_MODE_WHITE_HAND, createTime) || pvpMode == PVP_MODE_YELLOW_HAND && player->getSkull() != SKULL_NONE;
 }
 
 MatrixArea::MatrixArea(uint32_t initRows, uint32_t initCols) :

@@ -19,6 +19,7 @@
 
 #include "items/item.hpp"
 #include "lua/global/baseevents.hpp"
+#include "creatures/creatures_definitions.hpp"
 
 class Condition;
 class Creature;
@@ -327,6 +328,9 @@ public:
 	CombatType_t getCombatType() const;
 	int32_t getDamage() const;
 	void onStepInField(const std::shared_ptr<Creature> &creature);
+	bool isAggressive(const std::shared_ptr<Player> &player) const;
+
+	PvpMode_t pvpMode = PVP_MODE_DOVE;
 
 private:
 	int64_t createTime;

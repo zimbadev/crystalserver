@@ -75,7 +75,8 @@ loginProtectionPeriod = 10 * 1000
 -- Expert PvP
 -- NOTE: toggleExpertPvp enables the PvP frames, similar to Tibia RL.
 toggleExpertPvp = true
-pvpExpertCanWalkThroughOtherPlayers = false;
+canWalkThroughOtherPlayers = false
+canWalkThroughMagicWalls = false
 
 cleanProtectionZones = false
 
