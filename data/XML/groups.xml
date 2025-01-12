@@ -147,4 +147,9 @@
 			<flag canmapclickteleport="1" />
 		</flags>
 	</group>
+	<group id="7" name="game tester" access="0" maxdepotitems="0" maxvipentries="200" outfit="0">
+		<flags>
+			<flag isgametester="1" />
+		</flags>
+	</group>
 </groups>

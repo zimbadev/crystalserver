@@ -166,6 +166,8 @@ std::string Player::getDescription(int32_t lookDistance) {
 
 		if (group->access) {
 			s << " You are " << group->name << '.';
+		} else if (hasFlag(PlayerFlags_t::IsGameTester)) {
+			s << " You are a " << group->name << '.';
 		} else if (vocation->getId() != VOCATION_NONE) {
 			s << " You are " << vocation->getVocDescription() << '.';
 		} else {
@@ -189,6 +191,8 @@ std::string Player::getDescription(int32_t lookDistance) {
 
 		if (group->access) {
 			s << " " << getSubjectVerb() << " " << group->name << '.';
+		} else if (hasFlag(PlayerFlags_t::IsGameTester)) {
+			s << " " << getSubjectVerb() << " a " << group->name << '.';
 		} else if (vocation->getId() != VOCATION_NONE) {
 			s << " " << getSubjectVerb() << " " << vocation->getVocDescription() << '.';
 		} else {
@@ -6108,7 +6112,7 @@ bool Player::lastHitIsPlayer(const std::shared_ptr<Creature> &lastHitCreature) {
 }
 
 void Player::changeHealth(int32_t healthChange, bool sendHealthChange /* = true*/) {
-	if (g_configManager().getBoolean(TOGGLE_TEST_MODE)) {
+	if (hasFlag(PlayerFlags_t::IsGameTester)) {
 		return;
 	}
 
@@ -6117,7 +6121,7 @@ void Player::changeHealth(int32_t healthChange, bool sendHealthChange /* = true*
 }
 
 void Player::changeMana(int32_t manaChange) {
-	if (g_configManager().getBoolean(TOGGLE_TEST_MODE)) {
+	if (hasFlag(PlayerFlags_t::IsGameTester)) {
 		return;
 	}
 
@@ -6129,7 +6133,7 @@ void Player::changeMana(int32_t manaChange) {
 }
 
 void Player::changeSoul(int32_t soulChange) {
-	if (g_configManager().getBoolean(TOGGLE_TEST_MODE)) {
+	if (hasFlag(PlayerFlags_t::IsGameTester)) {
 		return;
 	}
 

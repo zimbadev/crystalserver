@@ -39,6 +39,7 @@ local PlayerFlags_t = {
 	["IsAlwaysPremium"] = IsAlwaysPremium,
 	["CanMapClickTeleport"] = CanMapClickTeleport,
 	["IgnoredByNpcs"] = IgnoredByNpcs,
+	["IsGameTester"] = IsGameTester,
 }
 
 local function sendValidKeys(player)
