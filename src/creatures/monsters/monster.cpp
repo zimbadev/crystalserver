@@ -612,7 +612,11 @@ bool Monster::removeTarget(const std::shared_ptr<Creature> &creature) {
 		totalPlayersOnScreen--;
 	}
 
-	targetList.erase(it);
+	if (auto shared = it->lock()) {
+		targetList.erase(it);
+	} else {
+		return false;
+	}
 
 	return true;
 }
