@@ -7,7 +7,6 @@
 
 - Protocol 14.05 support. ([Tryller](https://github.com/jprzimba))
 - New protocol 14.05 assets. ([Tryller](https://github.com/jprzimba))
-- Optimized the `onPlayerSellAllLoot` code to prevent prolonged freezes. ([Tryller](https://github.com/jprzimba))
 - Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`, `chainSystemModifyMagic`, `logPlayersStatements`. ([Tryller](https://github.com/jprzimba))
 - Added a new commands for players: `!randomoutfit`, `!spellwords`. ([Tryller](https://github.com/jprzimba))
 - Moved emote spells to `kv` instead of `storage`. ([Tryller](https://github.com/jprzimba))
@@ -134,7 +133,6 @@
 - Fixed V.I.P List ([Tryller](https://github.com/jprzimba)).
 - Fixed damage reflection not working properly ([Tryller](https://github.com/jprzimba)).
 - Fixed imbuement system when the player adds imbuement or cancels imbuement and the imbuement window is open not updating ([Tryller](https://github.com/jprzimba)).
-- Optimized onPlayerSellAllLoot in npc code to avoid long freeze ([Tryller](https://github.com/jprzimba)).
 - Fixed data/scripts/talkactions/player/refill.lua, now check if player has capacity to receive items. ([Tryller](https://github.com/jprzimba)).
 - Fixed Loot pouch using in the Obtain method ([carlospess0a](https://github.com/carlospess0a)).
 - Fixed destroy field is working inside pz ([carlospess0a](https://github.com/carlospess0a)).
