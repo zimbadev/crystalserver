@@ -612,7 +612,11 @@ bool Monster::removeTarget(const std::shared_ptr<Creature> &creature) {
 		totalPlayersOnScreen--;
 	}
 
-	targetList.erase(it);
+	if (auto shared = it->lock()) {
+		targetList.erase(it);
+	} else {
+		return false;
+	}
 
 	return true;
 }
@@ -1529,6 +1533,11 @@ void Monster::doRandomStep(Direction &nextDirection, bool &result) {
 }
 
 void Monster::doWalkBack(uint32_t &flags, Direction &nextDirection, bool &result) {
+	if (totalPlayersOnScreen > 0) {
+		isWalkingBack = false;
+		return;
+	}
+
 	result = Creature::getNextStep(nextDirection, flags);
 	if (result) {
 		flags |= FLAG_PATHFINDING;
@@ -2408,7 +2417,7 @@ void Monster::dropLoot(const std::shared_ptr<Container> &corpse, const std::shar
 			// Filter out items with chance <= 0
 			std::vector<const Items::BagItemInfo*> validBagItems;
 			for (const auto &bagItem : allBagItems) {
-				if (bagItem->chance > 0 && asLowerCaseString(mType->info.bestiaryClass) == asLowerCaseString(bagItem->monsterClass)) {
+				if (bagItem->chance > 0 && (asLowerCaseString(mType->info.bestiaryClass) == asLowerCaseString(bagItem->monsterClass) || mType->info.raceid == bagItem->monsterRaceId)) {
 					validBagItems.push_back(bagItem);
 				}
 			}
