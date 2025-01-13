@@ -178,7 +178,8 @@ function BossLever:onUse(player)
 		end
 
 		local checkAccountType = creature:getAccountType() < ACCOUNT_TYPE_GAMEMASTER
-		if checkAccountType and creature:getLevel() < self.requiredLevel then
+		local isGameTester = player:hasFlag(PlayerFlag_IsGameTester)
+		if checkAccountType and not isGameTester and creature:getLevel() < self.requiredLevel then
 			local message = "All players need to be level " .. self.requiredLevel .. " or higher."
 			creature:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
 			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
@@ -186,7 +187,7 @@ function BossLever:onUse(player)
 		end
 
 		local infoPositions = lever:getInfoPositions()
-		if creature:getGroup():getId() < GROUP_TYPE_GOD and checkAccountType and self:lastEncounterTime(creature) > os.time() then
+		if creature:getGroup():getId() < GROUP_TYPE_GOD and checkAccountType and not isGameTester and self:lastEncounterTime(creature) > os.time() then
 			for _, posInfo in pairs(infoPositions) do
 				local currentPlayer = posInfo.creature
 				if currentPlayer then

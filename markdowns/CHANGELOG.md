@@ -13,7 +13,7 @@
 - Moved emote spells to `kv` instead of `storage`. ([Tryller](https://github.com/jprzimba))
 - Updated npcs and spells from 13.40 updates. ([murilo09](https://github.com/murilo09))
 - Added a Rook system with configurations in `config.lua`. ([Tryller](https://github.com/jprzimba))
-- Added a Test Mode with configurations in `config.lua`. ([Tryller](https://github.com/jprzimba))
+- Added a new group `game tester` with flag `isgametester` in `groups.xml` and a new player flag `PlayerFlag_IsGameTester`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
@@ -29,6 +29,7 @@
 - config.lua
 - data/items/assets.dat
 - data/items/items.xml
+- data/libs/functions/boss_lever.lua
 - data/libs/systems/features.lua
 - data/scripts/creaturescripts/player/login.lua
 - data/scripts/movements/special_tiles.lua
@@ -39,12 +40,14 @@
 - data/scripts/talkactions/god/create_item.lua
 - data/scripts/talkactions/god/create_summon.lua
 - data/scripts/talkactions/god/create_npc.lua
+- data/scripts/talkactions/god/flags.lua
 - data/scripts/talkactions/player/chain_system.lua
 - data/scripts/talkactions/player/emote_spell.lua
 - data/scripts/spells/attack/annihilation.lua
 - data/scripts/spells/attack/ultimate_ice_strike.lua
 - data/scripts/spells/attack/ultimate_terra_strike.lua
 - data/XML/imbuements.xml
+- data/XML/groups.xml
 - data-global/npc (all npc files)
 - data-global/npc/the_oracle.lua (modified to rook system)
 - data-global/world/world.otbm (7z file)

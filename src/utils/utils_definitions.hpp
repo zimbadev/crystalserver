@@ -699,6 +699,7 @@ enum class PlayerFlags_t : uint8_t {
 	IsAlwaysPremium,
 	CanMapClickTeleport,
 	IgnoredByNpcs,
+	IsGameTester,
 
 	// Must always be the last
 	FlagLast
