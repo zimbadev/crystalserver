@@ -7500,7 +7500,7 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 			spectators.find<Player>(targetPos, true);
 		}
 
-		addCreatureHealth(spectators.data(), target);	
+		addCreatureHealth(spectators.data(), target);
 
 		sendDamageMessageAndEffects(
 			attacker,
@@ -7930,7 +7930,7 @@ bool Game::combatChangeMana(const std::shared_ptr<Creature> &attacker, const std
 		if (attacker) {
 			cause = attacker->getName();
 		}
-	
+
 		if (targetPlayer) {
 			targetPlayer->updateInputAnalyzer(damage.primary.type, manaLoss, cause);
 		}
