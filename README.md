@@ -35,9 +35,7 @@ Enjoy our [Discord](https://discord.gg/7AYJEHTghQ)
 ### Thanks
 - [Open Tibia](https://github.com/opentibia/server) and their [contributors](https://github.com/opentibia/server/graphs/contributors).
 - [The Forgotten Server](https://github.com/otland/forgottenserver) and their [contributors](https://github.com/otland/forgottenserver/graphs/contributors).
-- [Crsystal Server](https://github.com/jprzimba/crystalserver) and their [contributors](https://github.com/jprzimba/crystalserver/graphs/contributors).
-- [Canary Server](https://github.com/opentibiabr/canary) and their [contributors](https://github.com/opentibiabr/canary/graphs/contributors).
-
+- [Crystal Server](https://github.com/jprzimba/crystalserver) and their [contributors](https://github.com/jprzimba/crystalserver/graphs/contributors).
 
 ### Issues
 
