@@ -95,6 +95,8 @@ int TalkActionFunctions::luaTalkActionGroupType(lua_State* L) {
 			groupType = GROUP_TYPE_COMMUNITYMANAGER;
 		} else if (strValue == "god") {
 			groupType = GROUP_TYPE_GOD;
+		} else if (strValue == "test" || strValue == "tester") {
+			groupType = GROUP_TYPE_TESTER;
 		} else {
 			const auto string = fmt::format("Invalid group type string value {} for group type for script: {}", strValue, Lua::getScriptEnv()->getScriptInterface()->getLoadingScriptName());
 			Lua::reportErrorFunc(string);

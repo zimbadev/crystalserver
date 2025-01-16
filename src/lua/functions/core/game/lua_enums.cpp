@@ -252,6 +252,7 @@ void LuaEnums::initAccountEnums(lua_State* L) {
 	registerEnum(L, GROUP_TYPE_GAMEMASTER);
 	registerEnum(L, GROUP_TYPE_COMMUNITYMANAGER);
 	registerEnum(L, GROUP_TYPE_GOD);
+	registerEnum(L, GROUP_TYPE_TESTER);
 }
 
 void LuaEnums::initDailyRewardEnums(lua_State* L) {
