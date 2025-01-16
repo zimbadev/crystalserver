@@ -2261,7 +2261,7 @@ void ConditionRooted::addCondition(std::shared_ptr<Creature>, const std::shared_
 void ConditionRooted::endCondition(std::shared_ptr<Creature> creature) {
 	creature->stopEventWalk();
 	/*
-	 * After a player is feared there's a 30 seconds before they can can feared again.
+	 * After a player is rooted there's a 30 seconds before they can can rooted again.
 	 */
 	const auto &player = creature->getPlayer();
 	if (player) {
