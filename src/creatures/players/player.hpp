@@ -1040,6 +1040,8 @@ public:
 	bool isImmuneCleanse(ConditionType_t conditiontype) const;
 	void setImmuneFear();
 	bool isImmuneFear() const;
+	void setImmuneRoot();
+	bool isImmuneRoot() const;
 	uint16_t parseRacebyCharm(charmRune_t charmId, bool set, uint16_t newRaceid);
 
 	uint64_t getItemCustomPrice(uint16_t itemId, bool buyPrice = false) const;
@@ -1532,6 +1534,7 @@ private:
 	std::pair<ConditionType_t, uint64_t> cleanseCondition = { CONDITION_NONE, 0 };
 
 	std::pair<ConditionType_t, uint64_t> m_fearCondition = { CONDITION_NONE, 0 };
+	std::pair<ConditionType_t, uint64_t> m_rootCondition = { CONDITION_NONE, 0 };
 
 	uint8_t soul = 0;
 	uint8_t levelPercent = 0;

@@ -284,6 +284,7 @@ private:
 	 * @return true if the fear condition can be applied, false otherwise.
 	 */
 	static bool checkFearConditionAffected(const std::shared_ptr<Player> &player);
+	static bool checkRootConditionAffected(const std::shared_ptr<Player> &player);
 	static void CombatConditionFunc(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, const CombatParams &params, CombatDamage* data);
 	static void CombatDispelFunc(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, const CombatParams &params, CombatDamage* data);
 	static void CombatNullFunc(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, const CombatParams &params, CombatDamage* data);
