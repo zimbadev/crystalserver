@@ -260,6 +260,8 @@ std::shared_ptr<Condition> Condition::createCondition(ConditionId_t id, Conditio
 			return std::make_shared<ConditionFeared>(id, type, ticks, buff, subId);
 
 		case CONDITION_ROOTED:
+			return std::make_shared<ConditionRooted>(id, type, ticks, buff, subId);
+
 		case CONDITION_INFIGHT:
 		case CONDITION_DRUNK:
 		case CONDITION_EXHAUST:
@@ -2228,6 +2230,54 @@ std::unordered_set<PlayerIcon> ConditionFeared::getIcons() const {
 
 std::shared_ptr<Condition> ConditionFeared::clone() const {
 	return std::make_shared<ConditionFeared>(*this);
+}
+
+/**
+ *  Condition Root
+ */
+
+ConditionRooted::ConditionRooted(ConditionId_t intiId, ConditionType_t initType, int32_t initTicks, bool initBuff, uint32_t initSubId) :
+	Condition(intiId, initType, initTicks, initBuff, initSubId) { }
+
+bool ConditionRooted::startCondition(std::shared_ptr<Creature> creature) {
+	g_logger().debug("[ConditionRooted::executeCondition] Condition started for {}", creature->getName());
+	return Condition::startCondition(creature);
+}
+
+bool ConditionRooted::executeCondition(const std::shared_ptr<Creature> &creature, int32_t interval) {
+	Position currentPos = creature->getPosition();
+
+	g_logger().debug("[ConditionRooted::executeCondition] Executing condition, current position is {}", currentPos.toString());
+
+	return Condition::executeCondition(creature, interval);
+}
+
+void ConditionRooted::addCondition(std::shared_ptr<Creature>, const std::shared_ptr<Condition> addCondition) {
+	if (updateCondition(addCondition)) {
+		setTicks(addCondition->getTicks());
+	}
+}
+
+void ConditionRooted::endCondition(std::shared_ptr<Creature> creature) {
+	creature->stopEventWalk();
+	/*
+	 * After a player is feared there's a 30 seconds before they can can feared again.
+	 */
+	const auto &player = creature->getPlayer();
+	if (player) {
+		player->setImmuneRoot();
+	}
+}
+
+std::unordered_set<PlayerIcon> ConditionRooted::getIcons() const {
+	auto icons = Condition::getIcons();
+
+	icons.insert(PlayerIcon::Rooted);
+	return icons;
+}
+
+std::shared_ptr<Condition> ConditionRooted::clone() const {
+	return std::make_shared<ConditionRooted>(*this);
 }
 
 /**

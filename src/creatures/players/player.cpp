@@ -1580,6 +1580,16 @@ bool Player::isImmuneFear() const {
 	return (m_fearCondition.first == CONDITION_FEARED) && (timenow <= m_fearCondition.second);
 }
 
+void Player::setImmuneRoot() {
+	m_rootCondition.first = CONDITION_ROOTED;
+	m_rootCondition.second = OTSYS_TIME() + 30000;
+}
+
+bool Player::isImmuneRoot() const {
+	const uint64_t timenow = OTSYS_TIME();
+	return (m_rootCondition.first == CONDITION_ROOTED) && (timenow <= m_rootCondition.second);
+}
+
 uint16_t Player::parseRacebyCharm(charmRune_t charmId, bool set, uint16_t newRaceid) {
 	uint16_t raceid = 0;
 	switch (charmId) {

@@ -769,6 +769,18 @@ bool Combat::checkFearConditionAffected(const std::shared_ptr<Player> &player) {
 	return true;
 }
 
+bool Combat::checkRootConditionAffected(const std::shared_ptr<Player> &player) {
+	if (player->isImmuneRoot()) {
+		return false;
+	}
+
+	if (player->hasCondition(CONDITION_ROOTED)) {
+		return false;
+	}
+
+	return true;
+}
+
 void Combat::CombatConditionFunc(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, const CombatParams &params, CombatDamage* data) {
 	if (params.origin == ORIGIN_MELEE && data && data->primary.value == 0 && data->secondary.value == 0) {
 		return;
@@ -805,6 +817,11 @@ void Combat::CombatConditionFunc(const std::shared_ptr<Creature> &caster, const 
 			if (condition->getType() == CONDITION_FEARED && !checkFearConditionAffected(player)) {
 				return;
 			}
+
+			if (condition->getType() == CONDITION_ROOTED && !checkRootConditionAffected(player)) {
+				return;
+			}
+
 		}
 
 		if (caster == target || (target && !target->isImmune(condition->getType()))) {
