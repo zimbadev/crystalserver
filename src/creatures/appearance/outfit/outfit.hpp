@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include "creatures/creatures_definitions.hpp"
 
 enum PlayerSex_t : uint8_t;
 class Player;
@@ -30,13 +31,23 @@ struct OutfitEntry {
 
 struct Outfit {
 	Outfit(std::string initName, uint16_t initLookType, bool initPremium, bool initUnlocked, std::string initFrom) :
-		name(std::move(initName)), lookType(initLookType), premium(initPremium), unlocked(initUnlocked), from(std::move(initFrom)) { }
+		name(std::move(initName)), lookType(initLookType), premium(initPremium), unlocked(initUnlocked), from(std::move(initFrom)) {
+			std::memset(skills, 0, sizeof(skills));
+			std::memset(skillsPercent, 0, sizeof(skillsPercent));
+			std::memset(stats, 0, sizeof(stats));
+			std::memset(statsPercent, 0, sizeof(statsPercent));
+		}
 
 	std::string name;
 	uint16_t lookType;
 	bool premium;
 	bool unlocked;
 	std::string from;
+
+	int32_t skills[SKILL_LAST + 1];
+	int32_t skillsPercent[SKILL_LAST + 1];
+	int32_t stats[STAT_LAST + 1];
+	int32_t statsPercent[STAT_LAST + 1];
 };
 
 struct ProtocolOutfit {
@@ -59,4 +70,8 @@ public:
 	[[nodiscard]] const std::vector<std::shared_ptr<Outfit>> &getOutfits(PlayerSex_t sex) const;
 
 	std::shared_ptr<Outfit> getOutfitByName(PlayerSex_t sex, const std::string &name) const;
+	uint32_t getOutfitId(PlayerSex_t sex, uint32_t lookType) const;
+
+	bool addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, uint16_t addons);
+	bool removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex);
 };

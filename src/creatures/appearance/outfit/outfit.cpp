@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "creatures/appearance/outfit/outfit.hpp"
-
+#include "creatures/creatures_definitions.hpp"
 #include "config/configmanager.hpp"
 #include "creatures/players/player.hpp"
 #include "game/game.hpp"
@@ -76,17 +76,71 @@ bool Outfits::loadFromXml() {
 			continue;
 		}
 
-		outfits[type].emplace_back(std::make_shared<Outfit>(
+		auto outfit = std::make_shared<Outfit>(
 			outfitNode.attribute("name").as_string(),
 			pugi::cast<uint16_t>(lookTypeAttribute.value()),
 			outfitNode.attribute("premium").as_bool(),
 			outfitNode.attribute("unlocked").as_bool(true),
 			outfitNode.attribute("from").as_string()
-		));
+		);
+
+		if (auto skillsNode = outfitNode.child("skills")) {
+			for (auto skillNode : skillsNode.attributes()) {
+				std::string skillName = skillNode.name();
+				int32_t skillValue = skillNode.as_int();
+
+				if (skillName == "fist") {
+					outfit->skills[SKILL_FIST] += skillValue;
+				} else if (skillName == "club") {
+					outfit->skills[SKILL_CLUB] += skillValue;
+				} else if (skillName == "axe") {
+					outfit->skills[SKILL_AXE] += skillValue;
+				} else if (skillName == "sword") {
+					outfit->skills[SKILL_SWORD] += skillValue;
+				} else if (skillName == "distance" || skillName == "dist") {
+					outfit->skills[SKILL_DISTANCE] += skillValue;
+				} else if (skillName == "shielding" || skillName == "shield") {
+					outfit->skills[SKILL_SHIELD] = skillValue;
+				} else if (skillName == "fishing" || skillName == "fish") {
+					outfit->skills[SKILL_FISHING] = skillValue;
+				} else if (skillName == "melee") {
+					outfit->skills[SKILL_FIST] += skillValue;
+					outfit->skills[SKILL_CLUB] += skillValue;
+					outfit->skills[SKILL_SWORD] += skillValue;
+					outfit->skills[SKILL_AXE] += skillValue;
+				} else if (skillName == "weapon" || skillName == "weapons") {
+					outfit->skills[SKILL_CLUB] += skillValue;
+					outfit->skills[SKILL_SWORD] += skillValue;
+					outfit->skills[SKILL_AXE] += skillValue;
+					outfit->skills[SKILL_DISTANCE] += skillValue;
+				} else if (skillName == "skillsPercent") {
+					auto skillKey = skillNode.name();
+					int32_t percentValue = skillValue;
+					if (skillKey == "fistPercent") {
+						outfit->skillsPercent[SKILL_FIST] += percentValue;
+					} else if (skillKey == "clubPercent") {
+						outfit->skillsPercent[SKILL_CLUB] += percentValue;
+					} else if (skillKey == "swordPercent") {
+						outfit->skillsPercent[SKILL_SWORD] += percentValue;
+					} else if (skillKey == "axePercent") {
+						outfit->skillsPercent[SKILL_AXE] += percentValue;
+					} else if (skillKey == "distancePercent" || skillKey == "distPercent") {
+						outfit->skillsPercent[SKILL_DISTANCE] += percentValue;
+					} else if (skillKey == "shieldingPercent" || skillKey == "shieldPercent") {
+						outfit->skillsPercent[SKILL_SHIELD] = percentValue;
+					} else if (skillKey == "fishingPercent" || skillKey == "fishPercent") {
+						outfit->skillsPercent[SKILL_FISHING] = percentValue;
+					}
+				}
+			}
+		}
+		outfits[type].emplace_back(outfit);
 	}
+
 	for (uint8_t sex = PLAYERSEX_FEMALE; sex <= PLAYERSEX_LAST; ++sex) {
 		outfits[sex].shrink_to_fit();
 	}
+	
 	return true;
 }
 
@@ -128,4 +182,134 @@ std::shared_ptr<Outfit> Outfits::getOutfitByName(PlayerSex_t sex, const std::str
 	}
 
 	return nullptr;
+}
+
+uint32_t Outfits::getOutfitId(PlayerSex_t sex, uint32_t lookType) const {
+	for (const auto &outfit : outfits[sex]) {
+		if (outfit->lookType == lookType) {
+			return outfit->lookType;
+		}
+	}
+
+	return 0;
+}
+
+bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, uint16_t addons) {
+	auto player = g_game().getPlayerByID(playerId);
+	if (!player) {
+		g_logger().error("[{}] - Player not found", __FUNCTION__);
+		return false;
+	}
+
+	auto &outfitsList = outfits[sex];
+	auto it = std::ranges::find_if(outfitsList, [&outfitId](const auto &outfit) {
+		return outfit->lookType == outfitId;
+	});
+
+	if (it == outfitsList.end()) {
+		return false;
+	}
+
+	const auto &outfit = *it;
+
+	// Apply skills
+	bool needUpdateSkills = false;
+	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
+		if (outfit->skills[i]) {
+			needUpdateSkills = true;
+			player->setVarSkill(static_cast<skills_t>(i), outfit->skills[i]);
+		}
+
+		if (outfit->skillsPercent[i]) {
+			needUpdateSkills = true;
+
+			int32_t currentSkillLevel = player->getSkillLevel(static_cast<skills_t>(i));
+			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
+			player->setVarSkill(static_cast<skills_t>(i), additionalSkill);
+		}
+	}
+
+	if (needUpdateSkills) {
+		player->sendSkills();
+	}
+
+	// Apply stats
+	bool needUpdateStats = false;
+	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
+		if (outfit->stats[s]) {
+			needUpdateStats = true;
+			player->setVarStats(static_cast<stats_t>(s), outfit->stats[s]);
+		}
+
+		if (outfit->statsPercent[s]) {
+			needUpdateStats = true;
+			player->setVarStats(static_cast<stats_t>(s), static_cast<int32_t>(player->getDefaultStats(static_cast<stats_t>(s)) * ((outfit->statsPercent[s] - 100) / 100.f)));
+		}
+	}
+
+	if (needUpdateStats) {
+		player->sendStats();
+	}
+
+	return true;
+}
+
+bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex) {
+	auto player = g_game().getPlayerByID(playerId);
+	if (!player) {
+		g_logger().error("[{}] - Player not found", __FUNCTION__);
+		return false;
+	}
+
+	auto &outfitsList = outfits[sex];
+	auto it = std::ranges::find_if(outfitsList, [&outfitId](const auto &outfit) {
+		return outfit->lookType == outfitId;
+	});
+
+	if (it == outfitsList.end()) {
+		return false;
+	}
+
+	const auto &outfit = *it;
+
+	// Remove skills
+	bool needUpdateSkills = false;
+	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
+		if (outfit->skills[i]) {
+			needUpdateSkills = true;
+			player->setVarSkill(static_cast<skills_t>(i), -outfit->skills[i]);
+		}
+
+		if (outfit->skillsPercent[i]) {
+			needUpdateSkills = true;
+
+			int32_t currentSkillLevel = player->getSkillLevel(static_cast<skills_t>(i));
+			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
+			player->setVarSkill(static_cast<skills_t>(i), -additionalSkill);
+		}
+	}
+
+	if (needUpdateSkills) {
+		player->sendSkills();
+	}
+
+	// Remove stats
+	bool needUpdateStats = false;
+	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
+		if (outfit->stats[s]) {
+			needUpdateStats = true;
+			player->setVarStats(static_cast<stats_t>(s), -outfit->stats[s]);
+		}
+
+		if (outfit->statsPercent[s]) {
+			needUpdateStats = true;
+			player->setVarStats(static_cast<stats_t>(s), -static_cast<int32_t>(player->getDefaultStats(static_cast<stats_t>(s)) * ((outfit->statsPercent[s] - 100) / 100.f)));
+		}
+	}
+
+	if (needUpdateStats) {
+		player->sendStats();
+	}
+
+	return true;
 }

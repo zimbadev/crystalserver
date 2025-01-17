@@ -59,10 +59,10 @@ bool Mounts::loadFromXml() {
 
 std::shared_ptr<Mount> Mounts::getMountByID(uint8_t id) {
 	auto it = std::find_if(mounts.begin(), mounts.end(), [id](const std::shared_ptr<Mount> &mount) {
-		return mount->id == id; // Note the use of -> operator to access the members of the Mount object
+		return mount->id == id;
 	});
 
-	return it != mounts.end() ? *it : nullptr; // Returning the shared_ptr to the Mount object
+	return it != mounts.end() ? *it : nullptr;
 }
 
 std::shared_ptr<Mount> Mounts::getMountByName(const std::string &name) {
@@ -76,8 +76,8 @@ std::shared_ptr<Mount> Mounts::getMountByName(const std::string &name) {
 
 std::shared_ptr<Mount> Mounts::getMountByClientID(uint16_t clientId) {
 	auto it = std::find_if(mounts.begin(), mounts.end(), [clientId](const std::shared_ptr<Mount> &mount) {
-		return mount->clientId == clientId; // Note the use of -> operator to access the members of the Mount object
+		return mount->clientId == clientId;
 	});
 
-	return it != mounts.end() ? *it : nullptr; // Returning the shared_ptr to the Mount object
+	return it != mounts.end() ? *it : nullptr;
 }

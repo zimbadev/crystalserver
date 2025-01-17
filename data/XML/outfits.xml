@@ -124,7 +124,27 @@
 	<outfit type="0" looktype="1777" name="Beekeeper" premium="no" unlocked="no" enabled="yes" from="store" />
 
 	<!-- Male -->
-	<outfit type="1" looktype="128" name="Citizen" premium="no" unlocked="yes" enabled="yes" />
+	<outfit type="1" looktype="128" name="Citizen" premium="no" unlocked="yes" enabled="yes">
+		<skills 
+			fist="10"
+			club="20" 
+			axe="30" 
+			sword="40" 
+			distance="50" 
+			shielding="60" 
+			fishing="70" 
+		/>
+		<skillsPercent 
+			fistPercent="10" 
+			clubPercent="20" 
+			swordPercent="30" 
+			axePercent="40" 
+			distancePercent="50" 
+			shieldingPercent="60" 
+			fishingPercent="70" 
+		/>
+	</outfit>
+
 	<outfit type="1" looktype="129" name="Hunter" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="1" looktype="130" name="Mage" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="1" looktype="131" name="Knight" premium="no" unlocked="yes" enabled="yes" />

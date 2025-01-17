@@ -6156,9 +6156,26 @@ void Player::changeSoul(int32_t soulChange) {
 	sendStats();
 }
 
-bool Player::canWear(uint16_t lookType, uint8_t addons) const {
+bool Player::changeOutfit(Outfit_t outfit, bool checkList) {
+	auto outfitId = Outfits::getInstance().getOutfitId(getSex(), outfit.lookType);
+	if(checkList && (!canWearOutfit(outfitId, outfit.lookAddons) || !requestedOutfit))
+		return false;
+
+	requestedOutfit = false;
+	if(outfitAttributes)
+	{
+		auto oldId = Outfits::getInstance().getOutfitId(getSex(), defaultOutfit.lookType);
+		outfitAttributes = !Outfits::getInstance().removeAttributes(getID(), oldId, sex);
+	}
+
+	defaultOutfit = outfit;
+	outfitAttributes = Outfits::getInstance().addAttributes(getID(), outfitId, sex, defaultOutfit.lookAddons);
+	return true;
+}
+
+bool Player::canWearOutfit(uint16_t lookType, uint8_t addons) const {
 	if (g_configManager().getBoolean(WARN_UNSAFE_SCRIPTS) && lookType != 0 && !g_game().isLookTypeRegistered(lookType)) {
-		g_logger().warn("[Player::canWear] An unregistered creature looktype type with id '{}' was blocked to prevent client crash.", lookType);
+		g_logger().warn("[Player::canWearOutfit] An unregistered creature looktype type with id '{}' was blocked to prevent client crash.", lookType);
 		return false;
 	}
 
@@ -10082,6 +10099,11 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 
 	if (isLogin && creature == getPlayer()) {
 		onEquipInventory();
+
+		const auto &outfit = Outfits::getInstance().getOutfitByLookType(getPlayer(), defaultOutfit.lookType);
+		if (outfit) {
+			outfitAttributes = Outfits::getInstance().addAttributes(getID(), defaultOutfit.lookType, sex, defaultOutfit.lookAddons);
+		}
 
 		// Refresh bosstiary tracker onLogin
 		refreshCyclopediaMonsterTracker(true);
