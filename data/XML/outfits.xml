@@ -125,24 +125,15 @@
 
 	<!-- Male -->
 	<outfit type="1" looktype="128" name="Citizen" premium="no" unlocked="yes" enabled="yes">
-		<skills 
-			fist="10"
-			club="20" 
-			axe="30" 
-			sword="40" 
-			distance="50" 
-			shielding="60" 
-			fishing="70" 
-		/>
-		<skillsPercent 
-			fistPercent="10" 
-			clubPercent="20" 
-			swordPercent="30" 
-			axePercent="40" 
-			distancePercent="50" 
-			shieldingPercent="60" 
-			fishingPercent="70" 
-		/>
+		<skills>
+			<fist value="1" percent="10" />
+			<club value="2" percent="20" />
+			<axe value="3" percent="40" />
+			<sword value="4" percent="30" />
+			<distance value="5" percent="50" />
+			<shielding value="6" percent="60" />
+			<fishing value="7" percent="70" />
+		</skills>
 	</outfit>
 
 	<outfit type="1" looktype="129" name="Hunter" premium="no" unlocked="yes" enabled="yes" />

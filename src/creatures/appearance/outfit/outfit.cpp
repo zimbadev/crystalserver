@@ -85,52 +85,52 @@ bool Outfits::loadFromXml() {
 		);
 
 		if (auto skillsNode = outfitNode.child("skills")) {
-			for (auto skillNode : skillsNode.attributes()) {
+			for (auto skillNode : skillsNode.children()) { 
 				std::string skillName = skillNode.name();
-				int32_t skillValue = skillNode.as_int();
+				int32_t skillValue = skillNode.attribute("value").as_int();
+				int32_t skillPercent = skillNode.attribute("percent").as_int();
 
 				if (skillName == "fist") {
 					outfit->skills[SKILL_FIST] += skillValue;
+					outfit->skillsPercent[SKILL_FIST] += skillPercent;
 				} else if (skillName == "club") {
 					outfit->skills[SKILL_CLUB] += skillValue;
+					outfit->skillsPercent[SKILL_CLUB] += skillPercent;
 				} else if (skillName == "axe") {
 					outfit->skills[SKILL_AXE] += skillValue;
+					outfit->skillsPercent[SKILL_AXE] += skillPercent;
 				} else if (skillName == "sword") {
 					outfit->skills[SKILL_SWORD] += skillValue;
+					outfit->skillsPercent[SKILL_SWORD] += skillPercent;
 				} else if (skillName == "distance" || skillName == "dist") {
 					outfit->skills[SKILL_DISTANCE] += skillValue;
+					outfit->skillsPercent[SKILL_DISTANCE] += skillPercent;
 				} else if (skillName == "shielding" || skillName == "shield") {
 					outfit->skills[SKILL_SHIELD] = skillValue;
+					outfit->skillsPercent[SKILL_SHIELD] = skillPercent;
 				} else if (skillName == "fishing" || skillName == "fish") {
 					outfit->skills[SKILL_FISHING] = skillValue;
+					outfit->skillsPercent[SKILL_FISHING] = skillPercent;
 				} else if (skillName == "melee") {
 					outfit->skills[SKILL_FIST] += skillValue;
 					outfit->skills[SKILL_CLUB] += skillValue;
 					outfit->skills[SKILL_SWORD] += skillValue;
 					outfit->skills[SKILL_AXE] += skillValue;
+
+					outfit->skillsPercent[SKILL_FIST] += skillPercent;
+					outfit->skillsPercent[SKILL_CLUB] += skillPercent;
+					outfit->skillsPercent[SKILL_SWORD] += skillPercent;
+					outfit->skillsPercent[SKILL_AXE] += skillPercent;
 				} else if (skillName == "weapon" || skillName == "weapons") {
 					outfit->skills[SKILL_CLUB] += skillValue;
 					outfit->skills[SKILL_SWORD] += skillValue;
 					outfit->skills[SKILL_AXE] += skillValue;
 					outfit->skills[SKILL_DISTANCE] += skillValue;
-				} else if (skillName == "skillsPercent") {
-					auto skillKey = skillNode.name();
-					int32_t percentValue = skillValue;
-					if (skillKey == "fistPercent") {
-						outfit->skillsPercent[SKILL_FIST] += percentValue;
-					} else if (skillKey == "clubPercent") {
-						outfit->skillsPercent[SKILL_CLUB] += percentValue;
-					} else if (skillKey == "swordPercent") {
-						outfit->skillsPercent[SKILL_SWORD] += percentValue;
-					} else if (skillKey == "axePercent") {
-						outfit->skillsPercent[SKILL_AXE] += percentValue;
-					} else if (skillKey == "distancePercent" || skillKey == "distPercent") {
-						outfit->skillsPercent[SKILL_DISTANCE] += percentValue;
-					} else if (skillKey == "shieldingPercent" || skillKey == "shieldPercent") {
-						outfit->skillsPercent[SKILL_SHIELD] = percentValue;
-					} else if (skillKey == "fishingPercent" || skillKey == "fishPercent") {
-						outfit->skillsPercent[SKILL_FISHING] = percentValue;
-					}
+
+					outfit->skillsPercent[SKILL_CLUB] += skillPercent;
+					outfit->skillsPercent[SKILL_SWORD] += skillPercent;
+					outfit->skillsPercent[SKILL_AXE] += skillPercent;
+					outfit->skillsPercent[SKILL_DISTANCE] += skillPercent;
 				}
 			}
 		}
@@ -219,14 +219,14 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 			needUpdateSkills = true;
 			player->setVarSkill(static_cast<skills_t>(i), outfit->skills[i]);
 		}
-
+/*
 		if (outfit->skillsPercent[i]) {
 			needUpdateSkills = true;
-
-			int32_t currentSkillLevel = player->getSkillLevel(static_cast<skills_t>(i));
+			player->setVarSkill((skills_t)i, (int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
+			/*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
 			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
-			player->setVarSkill(static_cast<skills_t>(i), additionalSkill);
-		}
+			player->setVarSkill(static_cast<skills_t>(i), currentSkillLevel + additionalSkill);
+		}*/
 	}
 
 	if (needUpdateSkills) {
@@ -280,13 +280,14 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 			player->setVarSkill(static_cast<skills_t>(i), -outfit->skills[i]);
 		}
 
+/*
 		if (outfit->skillsPercent[i]) {
 			needUpdateSkills = true;
-
-			int32_t currentSkillLevel = player->getSkillLevel(static_cast<skills_t>(i));
+			player->setVarSkill((skills_t)i, -(int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
+			/*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
 			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
 			player->setVarSkill(static_cast<skills_t>(i), -additionalSkill);
-		}
+		}*/
 	}
 
 	if (needUpdateSkills) {

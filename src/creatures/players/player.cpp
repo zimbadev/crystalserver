@@ -6769,6 +6769,17 @@ bool Player::hasExtraSwing() {
 	return lastAttack > 0 && !checkLastAttackWithin(getAttackSpeed());
 }
 
+int32_t Player::getSkill(skills_t skilltype, SkillsId_t skillinfo) const {
+	const Skill& skill = skills[skilltype];
+	int32_t ret = 0;
+
+	if (skillinfo == SKILLVALUE_LEVEL) {
+		ret = skill.level + varSkills[skilltype];
+	}
+
+	return std::max(0, ret);
+}
+
 uint16_t Player::getSkillLevel(skills_t skill) const {
 	auto skillLevel = getLoyaltySkill(skill);
 	skillLevel = std::max<int32_t>(0, skillLevel + varSkills[skill]);
