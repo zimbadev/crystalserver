@@ -821,7 +821,6 @@ void Combat::CombatConditionFunc(const std::shared_ptr<Creature> &caster, const 
 			if (condition->getType() == CONDITION_ROOTED && !checkRootConditionAffected(player)) {
 				return;
 			}
-
 		}
 
 		if (caster == target || (target && !target->isImmune(condition->getType()))) {

@@ -140,7 +140,7 @@ bool Outfits::loadFromXml() {
 	for (uint8_t sex = PLAYERSEX_FEMALE; sex <= PLAYERSEX_LAST; ++sex) {
 		outfits[sex].shrink_to_fit();
 	}
-	
+
 	return true;
 }
 

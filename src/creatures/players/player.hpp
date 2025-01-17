@@ -737,7 +737,9 @@ public:
 	bool getOutfitAddons(const std::shared_ptr<Outfit> &outfit, uint8_t &addons) const;
 
 	bool changeOutfit(Outfit_t outfit, bool checkList);
-	void hasRequestedOutfit(bool v) {requestedOutfit = v;}
+	void hasRequestedOutfit(bool v) {
+		requestedOutfit = v;
+	}
 
 	bool canFamiliar(uint16_t lookType) const;
 	void addFamiliar(uint16_t lookType);

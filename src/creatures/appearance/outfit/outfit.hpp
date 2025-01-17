@@ -32,11 +32,11 @@ struct OutfitEntry {
 struct Outfit {
 	Outfit(std::string initName, uint16_t initLookType, bool initPremium, bool initUnlocked, std::string initFrom) :
 		name(std::move(initName)), lookType(initLookType), premium(initPremium), unlocked(initUnlocked), from(std::move(initFrom)) {
-			std::memset(skills, 0, sizeof(skills));
-			std::memset(skillsPercent, 0, sizeof(skillsPercent));
-			std::memset(stats, 0, sizeof(stats));
-			std::memset(statsPercent, 0, sizeof(statsPercent));
-		}
+		std::memset(skills, 0, sizeof(skills));
+		std::memset(skillsPercent, 0, sizeof(skillsPercent));
+		std::memset(stats, 0, sizeof(stats));
+		std::memset(statsPercent, 0, sizeof(statsPercent));
+	}
 
 	std::string name;
 	uint16_t lookType;

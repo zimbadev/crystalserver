@@ -6158,12 +6158,12 @@ void Player::changeSoul(int32_t soulChange) {
 
 bool Player::changeOutfit(Outfit_t outfit, bool checkList) {
 	auto outfitId = Outfits::getInstance().getOutfitId(getSex(), outfit.lookType);
-	if(checkList && (!canWearOutfit(outfitId, outfit.lookAddons) || !requestedOutfit))
+	if (checkList && (!canWearOutfit(outfitId, outfit.lookAddons) || !requestedOutfit)) {
 		return false;
+	}
 
 	requestedOutfit = false;
-	if(outfitAttributes)
-	{
+	if (outfitAttributes) {
 		auto oldId = Outfits::getInstance().getOutfitId(getSex(), defaultOutfit.lookType);
 		outfitAttributes = !Outfits::getInstance().removeAttributes(getID(), oldId, sex);
 	}
