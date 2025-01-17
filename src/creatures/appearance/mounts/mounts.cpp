@@ -43,6 +43,7 @@ bool Mounts::loadFromXml() {
 			continue;
 		}
 
+		int32_t attackSpeedValue = mountNode.attribute("attackspeed") ? pugi::cast<int32_t>(mountNode.attribute("attackspeed").value()) : 0;
 		mounts.emplace(std::make_shared<Mount>(
 			static_cast<uint8_t>(pugi::cast<uint16_t>(mountNode.attribute("id").value())),
 			lookType,
@@ -50,7 +51,7 @@ bool Mounts::loadFromXml() {
 			pugi::cast<int32_t>(mountNode.attribute("speed").value()),
 			mountNode.attribute("premium").as_bool(),
 			mountNode.attribute("type").as_string(),
-			pugi::cast<int32_t>(mountNode.attribute("attackspeed").value())
+			attackSpeedValue
 		));
 	}
 	return true;
