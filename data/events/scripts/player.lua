@@ -583,7 +583,7 @@ function Player:onGainExperience(target, exp, rawExp)
 			stackBonus = math.min(stack * 10, 150)
 		end
 	end
-	
+
 	exp = exp * (1 + stackBonus / 100)
 
 	-- Final Adjustments: Low Level Bonus and Base Rate
