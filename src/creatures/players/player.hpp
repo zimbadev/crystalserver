@@ -580,6 +580,7 @@ public:
 	bool canSee(const Position &pos) override;
 	bool canSeeCreature(const std::shared_ptr<Creature> &creature) const override;
 
+	bool canCombat(const std::shared_ptr<Creature> &creature) const;
 	bool canWalkthrough(const std::shared_ptr<Creature> &creature);
 	bool canWalkthroughEx(const std::shared_ptr<Creature> &creature) const;
 
@@ -619,6 +620,7 @@ public:
 	void setChaseMode(bool mode);
 	void setFightMode(FightMode_t mode);
 	void setSecureMode(bool mode);
+	void setPvpMode(PvpMode_t mode);
 
 	Faction_t getFaction() const override;
 
@@ -720,10 +722,14 @@ public:
 	int64_t getSkullTicks() const;
 	void setSkullTicks(int64_t ticks);
 
-	bool hasAttacked(const std::shared_ptr<Player> &attacked) const;
+	bool hasAttacked(const std::shared_ptr<Player> &attacked, uint32_t time = 0) const;
 	void addAttacked(const std::shared_ptr<Player> &attacked);
 	void removeAttacked(const std::shared_ptr<Player> &attacked);
 	void clearAttacked();
+	bool isAttackedBy(const std::shared_ptr<Player> &attacker) const;
+	void addAttackedBy(const std::shared_ptr<Player> &attacker);
+	void removeAttackedBy(const std::shared_ptr<Player> &attacker);
+	void clearAttackedBy();
 	void addUnjustifiedDead(const std::shared_ptr<Player> &attacked);
 	void sendCreatureEmblem(const std::shared_ptr<Creature> &creature) const;
 	void sendCreatureSkull(const std::shared_ptr<Creature> &creature) const;
@@ -765,7 +771,7 @@ public:
 	void sendCreatureSay(const std::shared_ptr<Creature> &creature, SpeakClasses type, const std::string &text, const Position* pos = nullptr) const;
 	void sendCreatureReload(const std::shared_ptr<Creature> &creature) const;
 	void sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakClasses type, const std::string &text) const;
-	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color) const;
+	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color, SquareType_t type) const;
 	void sendCreatureChangeOutfit(const std::shared_ptr<Creature> &creature, const Outfit_t &outfit) const;
 	void sendCreatureChangeVisible(const std::shared_ptr<Creature> &creature, bool visible);
 	void sendCreatureLight(const std::shared_ptr<Creature> &creature) const;
@@ -978,6 +984,16 @@ public:
 	bool walkExhausted() const;
 
 	void setWalkExhaust(int64_t value);
+
+	//  PvP Expert
+	SquareColor_t getCreatureSquare(const std::shared_ptr<Creature> &creature) const;
+	bool hasPvpActivity(const std::shared_ptr<Player> &player, bool guildAndParty = false, uint32_t time = 0) const;
+	bool isInPvpSituation() const;
+	bool isAggressiveCreature(const std::shared_ptr<Creature> &creature, bool guildAndParty = false, uint32_t time = 0) const;
+
+	PvpMode_t getPvPMode() const {
+		return pvpMode;
+	}
 
 	const std::map<uint8_t, OpenContainer> &getOpenContainers() const;
 
@@ -1357,7 +1373,8 @@ private:
 	void addBestiaryKill(const std::shared_ptr<MonsterType> &mType);
 	void addBosstiaryKill(const std::shared_ptr<MonsterType> &mType);
 
-	phmap::flat_hash_set<uint32_t> attackedSet {};
+	std::unordered_map<uint32_t, uint32_t> attackedSet;
+	std::unordered_set<uint32_t> attackedBySet;
 
 	std::map<uint8_t, OpenContainer> openContainers;
 	std::map<uint32_t, std::shared_ptr<DepotLocker>> depotLockerMap;
@@ -1546,6 +1563,7 @@ private:
 	BlockType_t lastAttackBlockType = BLOCK_NONE;
 	TradeState_t tradeState = TRADE_NONE;
 	FightMode_t fightMode = FIGHTMODE_ATTACK;
+	PvpMode_t pvpMode = PVP_MODE_DOVE;
 	Faction_t faction = FACTION_PLAYER;
 	QuickLootFilter_t quickLootFilter {};
 	PlayerPronoun_t pronoun = PLAYERPRONOUN_THEY;

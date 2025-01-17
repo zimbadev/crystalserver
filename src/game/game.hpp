@@ -166,6 +166,9 @@ public:
 
 	std::shared_ptr<Player> getPlayerByID(uint32_t id, bool allowOffline = false);
 
+	std::shared_ptr<Player> getOwnerPlayer(const std::shared_ptr<Creature> &creature);
+	std::shared_ptr<Player> getOwnerPlayer(uint32_t creatureId);
+
 	std::shared_ptr<Player> getPlayerByName(const std::string &s, bool allowOffline = false, bool isNewName = false);
 
 	std::shared_ptr<Player> getPlayerByGUID(const uint32_t &guid, bool allowOffline = false);
@@ -355,7 +358,7 @@ public:
 	void playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId);
 	void playerFollowCreature(uint32_t playerId, uint32_t creatureId);
 	void playerCancelAttackAndFollow(uint32_t playerId);
-	void playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode);
+	void playerSetFightModes(uint32_t playerId, FightMode_t fightMode, PvpMode_t pvpMode, bool chaseMode, bool secureMode);
 	void playerLookAt(uint32_t playerId, uint16_t itemId, const Position &pos, uint8_t stackPos);
 	void playerLookInBattleList(uint32_t playerId, uint32_t creatureId);
 	void playerQuickLootCorpse(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position);
@@ -408,6 +411,7 @@ public:
 	void playerWheelGemAction(uint32_t playerId, NetworkMessage &msg);
 
 	void updatePlayerHelpers(const std::shared_ptr<Player> &player);
+	void updateCreatureSquare(const std::shared_ptr<Creature> &creature);
 
 	void shutdown();
 	void dieSafely(const std::string &errorMsg);

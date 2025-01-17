@@ -967,6 +967,7 @@ std::shared_ptr<Monster> Game::getMonsterByID(uint32_t id) {
 	if (it == monsters.end()) {
 		return nullptr;
 	}
+
 	return it->second;
 }
 
@@ -979,6 +980,7 @@ std::shared_ptr<Npc> Game::getNpcByID(uint32_t id) {
 	if (it == npcs.end()) {
 		return nullptr;
 	}
+
 	return it->second;
 }
 
@@ -991,12 +993,30 @@ std::shared_ptr<Player> Game::getPlayerByID(uint32_t id, bool allowOffline /* = 
 	if (!allowOffline) {
 		return nullptr;
 	}
+
 	std::shared_ptr<Player> tmpPlayer = std::make_shared<Player>(nullptr);
 	if (!IOLoginData::loadPlayerById(tmpPlayer, id)) {
 		return nullptr;
 	}
+
 	tmpPlayer->setOnline(false);
 	return tmpPlayer;
+}
+
+std::shared_ptr<Player> Game::getOwnerPlayer(const std::shared_ptr<Creature> &creature) {
+	if (!creature) {
+		return nullptr;
+	}
+
+	if (creature->isSummon()) {
+		return getOwnerPlayer(creature->getMaster());
+	}
+
+	return creature->getPlayer();
+}
+
+std::shared_ptr<Player> Game::getOwnerPlayer(uint32_t creatureId) {
+	return getOwnerPlayer(getCreatureByID(creatureId));
 }
 
 std::shared_ptr<Creature> Game::getCreatureByName(const std::string &s) {
@@ -5947,7 +5967,7 @@ void Game::playerFollowCreature(uint32_t playerId, uint32_t creatureId) {
 	player->setFollowCreature(getCreatureByID(creatureId));
 }
 
-void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode) {
+void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, PvpMode_t pvpMode, bool chaseMode, bool secureMode) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
@@ -5955,7 +5975,34 @@ void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool ch
 
 	player->setFightMode(fightMode);
 	player->setChaseMode(chaseMode);
-	player->setSecureMode(secureMode);
+
+	if (g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
+		auto oldPvpMode = player->pvpMode;
+		if (worldType == WORLD_TYPE_NO_PVP && pvpMode == PVP_MODE_RED_FIST) {
+			player->setPvpMode(player->pvpMode);
+		} else if (worldType == WORLD_TYPE_PVP_ENFORCED && pvpMode != PVP_MODE_RED_FIST) {
+			player->setPvpMode(PVP_MODE_RED_FIST);
+		} else {
+			player->setPvpMode(pvpMode);
+		}
+
+		if ((worldType == WORLD_TYPE_NO_PVP && !secureMode) || (worldType == WORLD_TYPE_PVP_ENFORCED && secureMode)) {
+			player->setSecureMode(!secureMode);
+		} else {
+			if (player->getPvPMode() == PVP_MODE_RED_FIST && oldPvpMode != PVP_MODE_RED_FIST) {
+				player->setSecureMode(false);
+			} else if (player->pvpMode != PVP_MODE_RED_FIST && oldPvpMode == PVP_MODE_RED_FIST) {
+				player->setSecureMode(true);
+			} else {
+				player->setSecureMode(secureMode);
+			}
+		}
+
+		player->sendFightModes();
+	} else {
+		player->setPvpMode(pvpMode);
+		player->setSecureMode(secureMode);
+	}
 }
 
 void Game::playerRequestAddVip(uint32_t playerId, const std::string &name) {
@@ -8363,6 +8410,16 @@ void Game::playerInviteToParty(uint32_t playerId, uint32_t invitedId) {
 		return;
 	}
 
+	if (player->isInPvpSituation()) {
+		player->sendTextMessage(MESSAGE_PARTY_MANAGEMENT, "You cannot invite players to a party while engaged in aggression.");
+		return;
+	}
+
+	if (invitedPlayer->isInPvpSituation()) {
+		player->sendTextMessage(MESSAGE_PARTY_MANAGEMENT, "This player cannot be invited to a party while they are engaged in aggression.");
+		return;
+	}
+
 	std::shared_ptr<Party> party = player->getParty();
 	if (!party) {
 		party = Party::create(player);
@@ -8384,6 +8441,16 @@ void Game::updatePlayerHelpers(const std::shared_ptr<Player> &player) {
 	}
 }
 
+void Game::updateCreatureSquare(const std::shared_ptr<Creature> &creature) {
+	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
+		return;
+	}
+
+	for (const auto &spectator : Spectators().find<Player>(creature->getPosition(), true)) {
+		spectator->getPlayer()->sendCreatureSquare(creature, spectator->getPlayer()->getCreatureSquare(creature), SQUARE_STAY);
+	}
+}
+
 void Game::playerJoinParty(uint32_t playerId, uint32_t leaderId) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
@@ -8397,6 +8464,11 @@ void Game::playerJoinParty(uint32_t playerId, uint32_t leaderId) {
 
 	auto party = leader->getParty();
 	if (!party || party->getLeader() != leader) {
+		return;
+	}
+
+	if (player->isInPvpSituation()) {
+		player->sendTextMessage(MESSAGE_PARTY_MANAGEMENT, "You cannot join a party while engaged in aggression.");
 		return;
 	}
 

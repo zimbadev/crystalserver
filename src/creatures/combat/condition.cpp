@@ -1798,7 +1798,7 @@ bool ConditionDamage::doDamage(const std::shared_ptr<Creature> &creature, int32_
 	}
 
 	if (!creature->isAttackable() || Combat::canDoCombat(attacker, creature, damage.primary.type != COMBAT_HEALING) != RETURNVALUE_NOERROR) {
-		if (!creature->isInGhostMode() && !creature->getNpc()) {
+		if (!creature->isInGhostMode() && !creature->getNpc() && !g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
 			g_game().addMagicEffect(creature->getPosition(), CONST_ME_POFF);
 		}
 		return false;

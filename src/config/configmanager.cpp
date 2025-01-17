@@ -172,6 +172,9 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, HALF_LOSS_MAGIC, "halfLossMagicLevel", true);
 	loadBoolConfig(L, CHAIN_SYSTEM_VIP_ONLY, "chainSystemVipOnly", false);
 	loadBoolConfig(L, BEDS_ONLY_PREMIUM, "bedsOnlyPremium", true);
+	loadBoolConfig(L, TOGGLE_EXPERT_PVP, "toggleExpertPvp", false);
+	loadBoolConfig(L, EXPERT_PVP_CANWALKTHROUGHOTHERPLAYERS, "canWalkThroughOtherPlayers", false);
+	loadBoolConfig(L, EXPERT_PVP_CANWALKTHROUGHMAGICWALLS, "canWalkThroughMagicWalls", false);
 	loadBoolConfig(L, SPELL_NAME_INSTEAD_WORDS, "spellNameInsteadOfWords", false);
 	loadBoolConfig(L, LOG_PLAYERS_STATEMENTS, "logPlayersStatements", false);
 	loadBoolConfig(L, ROOK_SYSTEM, "toggleRookSystem", false);
