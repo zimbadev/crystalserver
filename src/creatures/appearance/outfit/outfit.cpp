@@ -85,7 +85,7 @@ bool Outfits::loadFromXml() {
 		);
 
 		if (auto skillsNode = outfitNode.child("skills")) {
-			for (auto skillNode : skillsNode.children()) { 
+			for (auto skillNode : skillsNode.children()) {
 				std::string skillName = skillNode.name();
 				int32_t skillValue = skillNode.attribute("value").as_int();
 				int32_t skillPercent = skillNode.attribute("percent").as_int();
@@ -219,14 +219,14 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 			needUpdateSkills = true;
 			player->setVarSkill(static_cast<skills_t>(i), outfit->skills[i]);
 		}
-/*
-		if (outfit->skillsPercent[i]) {
-			needUpdateSkills = true;
-			player->setVarSkill((skills_t)i, (int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
-			/*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
-			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
-			player->setVarSkill(static_cast<skills_t>(i), currentSkillLevel + additionalSkill);
-		}*/
+		/*
+		        if (outfit->skillsPercent[i]) {
+		            needUpdateSkills = true;
+		            player->setVarSkill((skills_t)i, (int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
+		            /*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
+		            int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
+		            player->setVarSkill(static_cast<skills_t>(i), currentSkillLevel + additionalSkill);
+		        }*/
 	}
 
 	if (needUpdateSkills) {
@@ -280,14 +280,14 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 			player->setVarSkill(static_cast<skills_t>(i), -outfit->skills[i]);
 		}
 
-/*
-		if (outfit->skillsPercent[i]) {
-			needUpdateSkills = true;
-			player->setVarSkill((skills_t)i, -(int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
-			/*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
-			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
-			player->setVarSkill(static_cast<skills_t>(i), -additionalSkill);
-		}*/
+		/*
+		        if (outfit->skillsPercent[i]) {
+		            needUpdateSkills = true;
+		            player->setVarSkill((skills_t)i, -(int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
+		            /*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
+		            int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
+		            player->setVarSkill(static_cast<skills_t>(i), -additionalSkill);
+		        }*/
 	}
 
 	if (needUpdateSkills) {

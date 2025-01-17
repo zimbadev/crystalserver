@@ -6770,7 +6770,7 @@ bool Player::hasExtraSwing() {
 }
 
 int32_t Player::getSkill(skills_t skilltype, SkillsId_t skillinfo) const {
-	const Skill& skill = skills[skilltype];
+	const Skill &skill = skills[skilltype];
 	int32_t ret = 0;
 
 	if (skillinfo == SKILLVALUE_LEVEL) {
