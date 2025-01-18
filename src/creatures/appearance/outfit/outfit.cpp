@@ -192,7 +192,7 @@ std::shared_ptr<Outfit> Outfits::getOutfitByName(PlayerSex_t sex, const std::str
 	return nullptr;
 }
 
-uint32_t Outfits::getOutfitId(PlayerSex_t sex, uint32_t lookType) const {
+uint32_t Outfits::getOutfitId(PlayerSex_t sex, uint16_t lookType) const {
 	for (const auto &outfit : outfits[sex]) {
 		if (outfit->lookType == lookType) {
 			return outfit->lookType;
