@@ -88,52 +88,54 @@ bool Outfits::loadFromXml() {
 			for (auto skillNode : skillsNode.children()) { 
 				std::string skillName = skillNode.name();
 				int32_t skillValue = skillNode.attribute("value").as_int();
-				int32_t skillPercent = skillNode.attribute("percent").as_int();
 
 				if (skillName == "fist") {
 					outfit->skills[SKILL_FIST] += skillValue;
-					outfit->skillsPercent[SKILL_FIST] += skillPercent;
 				} else if (skillName == "club") {
 					outfit->skills[SKILL_CLUB] += skillValue;
-					outfit->skillsPercent[SKILL_CLUB] += skillPercent;
 				} else if (skillName == "axe") {
 					outfit->skills[SKILL_AXE] += skillValue;
-					outfit->skillsPercent[SKILL_AXE] += skillPercent;
 				} else if (skillName == "sword") {
 					outfit->skills[SKILL_SWORD] += skillValue;
-					outfit->skillsPercent[SKILL_SWORD] += skillPercent;
 				} else if (skillName == "distance" || skillName == "dist") {
 					outfit->skills[SKILL_DISTANCE] += skillValue;
-					outfit->skillsPercent[SKILL_DISTANCE] += skillPercent;
 				} else if (skillName == "shielding" || skillName == "shield") {
 					outfit->skills[SKILL_SHIELD] = skillValue;
-					outfit->skillsPercent[SKILL_SHIELD] = skillPercent;
 				} else if (skillName == "fishing" || skillName == "fish") {
-					outfit->skills[SKILL_FISHING] = skillValue;
-					outfit->skillsPercent[SKILL_FISHING] = skillPercent;
+					outfit->skills[SKILL_FISHING] += skillValue;
 				} else if (skillName == "melee") {
 					outfit->skills[SKILL_FIST] += skillValue;
 					outfit->skills[SKILL_CLUB] += skillValue;
 					outfit->skills[SKILL_SWORD] += skillValue;
 					outfit->skills[SKILL_AXE] += skillValue;
-
-					outfit->skillsPercent[SKILL_FIST] += skillPercent;
-					outfit->skillsPercent[SKILL_CLUB] += skillPercent;
-					outfit->skillsPercent[SKILL_SWORD] += skillPercent;
-					outfit->skillsPercent[SKILL_AXE] += skillPercent;
 				} else if (skillName == "weapon" || skillName == "weapons") {
 					outfit->skills[SKILL_CLUB] += skillValue;
 					outfit->skills[SKILL_SWORD] += skillValue;
 					outfit->skills[SKILL_AXE] += skillValue;
 					outfit->skills[SKILL_DISTANCE] += skillValue;
+				}
+			}
 
-					outfit->skillsPercent[SKILL_CLUB] += skillPercent;
-					outfit->skillsPercent[SKILL_SWORD] += skillPercent;
-					outfit->skillsPercent[SKILL_AXE] += skillPercent;
-					outfit->skillsPercent[SKILL_DISTANCE] += skillPercent;
+			if (auto statsNode = outfitNode.child("stats")) {
+				for (auto statNode : statsNode.children()) {
+					std::string statName = statNode.name();
+					int32_t statValue = statNode.attribute("value").as_int();
+
+					if (statName == "maxHealth") {
+						outfit->stats[STAT_MAXHITPOINTS] += statValue;
+					} else if (statName == "maxMana") {
+						outfit->stats[STAT_MAXMANAPOINTS] += statValue;
+					} else if (statName == "soul") {
+						outfit->stats[STAT_SOULPOINTS] += statValue;
+					} else if (statName == "cap" || statName == "capacity") {
+						outfit->stats[STAT_CAPACITY] += statValue;
+					} else if (statName == "magLevel" || statName == "magicLevel") {
+						outfit->stats[STAT_MAGICPOINTS] += statValue;
+					}
 				}
 			}
 		}
+
 		outfits[type].emplace_back(outfit);
 	}
 
@@ -213,44 +215,22 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 	const auto &outfit = *it;
 
 	// Apply skills
-	bool needUpdateSkills = false;
 	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
 		if (outfit->skills[i]) {
-			needUpdateSkills = true;
 			player->setVarSkill(static_cast<skills_t>(i), outfit->skills[i]);
 		}
-/*
-		if (outfit->skillsPercent[i]) {
-			needUpdateSkills = true;
-			player->setVarSkill((skills_t)i, (int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
-			/*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
-			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
-			player->setVarSkill(static_cast<skills_t>(i), currentSkillLevel + additionalSkill);
-		}*/
 	}
 
-	if (needUpdateSkills) {
-		player->sendSkills();
-	}
 
 	// Apply stats
-	bool needUpdateStats = false;
 	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
 		if (outfit->stats[s]) {
-			needUpdateStats = true;
 			player->setVarStats(static_cast<stats_t>(s), outfit->stats[s]);
 		}
-
-		if (outfit->statsPercent[s]) {
-			needUpdateStats = true;
-			player->setVarStats(static_cast<stats_t>(s), static_cast<int32_t>(player->getDefaultStats(static_cast<stats_t>(s)) * ((outfit->statsPercent[s] - 100) / 100.f)));
-		}
 	}
 
-	if (needUpdateStats) {
-		player->sendStats();
-	}
-
+	player->sendStats();
+	player->sendSkills();
 	return true;
 }
 
@@ -273,44 +253,21 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 	const auto &outfit = *it;
 
 	// Remove skills
-	bool needUpdateSkills = false;
 	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
 		if (outfit->skills[i]) {
-			needUpdateSkills = true;
 			player->setVarSkill(static_cast<skills_t>(i), -outfit->skills[i]);
 		}
-
-/*
-		if (outfit->skillsPercent[i]) {
-			needUpdateSkills = true;
-			player->setVarSkill((skills_t)i, -(int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
-			/*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
-			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
-			player->setVarSkill(static_cast<skills_t>(i), -additionalSkill);
-		}*/
 	}
 
-	if (needUpdateSkills) {
-		player->sendSkills();
-	}
 
 	// Remove stats
-	bool needUpdateStats = false;
 	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
 		if (outfit->stats[s]) {
-			needUpdateStats = true;
 			player->setVarStats(static_cast<stats_t>(s), -outfit->stats[s]);
 		}
-
-		if (outfit->statsPercent[s]) {
-			needUpdateStats = true;
-			player->setVarStats(static_cast<stats_t>(s), -static_cast<int32_t>(player->getDefaultStats(static_cast<stats_t>(s)) * ((outfit->statsPercent[s] - 100) / 100.f)));
-		}
 	}
 
-	if (needUpdateStats) {
-		player->sendStats();
-	}
-
+	player->sendStats();
+	player->sendSkills();
 	return true;
 }

@@ -33,9 +33,7 @@ struct Outfit {
 	Outfit(std::string initName, uint16_t initLookType, bool initPremium, bool initUnlocked, std::string initFrom) :
 		name(std::move(initName)), lookType(initLookType), premium(initPremium), unlocked(initUnlocked), from(std::move(initFrom)) {
 		std::memset(skills, 0, sizeof(skills));
-		std::memset(skillsPercent, 0, sizeof(skillsPercent));
 		std::memset(stats, 0, sizeof(stats));
-		std::memset(statsPercent, 0, sizeof(statsPercent));
 	}
 
 	std::string name;
@@ -44,10 +42,8 @@ struct Outfit {
 	bool unlocked;
 	std::string from;
 
-	int32_t skills[SKILL_LAST + 1];
-	int32_t skillsPercent[SKILL_LAST + 1];
-	int32_t stats[STAT_LAST + 1];
-	int32_t statsPercent[STAT_LAST + 1];
+	int32_t skills[SKILL_LAST + 1] = { 0 };
+	int32_t stats[STAT_LAST + 1] = { 0 };
 };
 
 struct ProtocolOutfit {
