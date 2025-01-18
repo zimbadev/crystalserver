@@ -124,7 +124,7 @@
 	<outfit type="0" looktype="1777" name="Beekeeper" premium="no" unlocked="no" enabled="yes" from="store" />
 
 	<!-- Male -->
-	<outfit type="1" looktype="128" name="Citizen" premium="no" unlocked="yes" enabled="yes">
+	<outfit type="1" looktype="128" name="Citizen" premium="no" unlocked="yes" enabled="yes" manaShield="yes" speed="220" attackspeed="500">
 		<skills>
 			<fist value="1" />
 			<club value="2" />

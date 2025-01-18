@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "creatures/appearance/outfit/outfit.hpp"
+#include "creatures/combat/condition.hpp"
 #include "creatures/creatures_definitions.hpp"
 #include "config/configmanager.hpp"
 #include "creatures/players/player.hpp"
@@ -83,6 +84,11 @@ bool Outfits::loadFromXml() {
 			outfitNode.attribute("unlocked").as_bool(true),
 			outfitNode.attribute("from").as_string()
 		);
+
+		outfit->manaShield = outfitNode.attribute("manaShield").as_bool();
+		outfit->invisible = outfitNode.attribute("invisible").as_bool();
+		outfit->speed = outfitNode.attribute("speed").as_int();
+		outfit->attackSpeed = outfitNode.attribute("attackspeed").as_int();
 
 		if (auto skillsNode = outfitNode.child("skills")) {
 			for (auto skillNode : skillsNode.children()) {
@@ -214,6 +220,21 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 
 	const auto &outfit = *it;
 
+	// Apply Conditions
+	if (outfit->manaShield) {
+		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_MANASHIELD, -1, 0);
+		player->addCondition(condition);
+	}
+
+	if (outfit->invisible) {
+		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_INVISIBLE, -1, 0);
+		player->addCondition(condition);
+	}
+
+	if (outfit->speed) {
+		g_game().changeSpeed(player, outfit->speed);
+	}
+
 	// Apply skills
 	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
 		if (outfit->skills[i]) {
@@ -250,6 +271,19 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 	}
 
 	const auto &outfit = *it;
+
+	// Remoe conditions
+	if (outfit->manaShield) {
+		player->removeCondition(CONDITION_MANASHIELD, CONDITIONID_OUTFIT);
+	}
+
+	if (outfit->invisible) {
+		player->removeCondition(CONDITION_INVISIBLE, CONDITIONID_OUTFIT);
+	}
+
+	if (outfit->speed) {
+		g_game().changeSpeed(player, -outfit->speed);
+	}
 
 	// Remove skills
 	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {

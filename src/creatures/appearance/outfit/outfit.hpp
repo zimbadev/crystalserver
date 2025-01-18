@@ -32,18 +32,29 @@ struct OutfitEntry {
 struct Outfit {
 	Outfit(std::string initName, uint16_t initLookType, bool initPremium, bool initUnlocked, std::string initFrom) :
 		name(std::move(initName)), lookType(initLookType), premium(initPremium), unlocked(initUnlocked), from(std::move(initFrom)) {
+
+		manaShield = false;
+		invisible = false;
 		std::memset(skills, 0, sizeof(skills));
 		std::memset(stats, 0, sizeof(stats));
+		speed = 0;
+		attackSpeed = 0;
 	}
 
 	std::string name;
-	uint16_t lookType;
-	bool premium;
-	bool unlocked;
 	std::string from;
 
-	int32_t skills[SKILL_LAST + 1] = { 0 };
-	int32_t stats[STAT_LAST + 1] = { 0 };
+	bool premium;
+	bool unlocked;
+	bool manaShield;
+	bool invisible;
+
+	uint16_t lookType;
+
+	int32_t speed;
+	int32_t attackSpeed;
+	int32_t skills[SKILL_LAST + 1];
+	int32_t stats[STAT_LAST + 1];
 };
 
 struct ProtocolOutfit {

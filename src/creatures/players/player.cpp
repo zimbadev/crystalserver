@@ -6640,6 +6640,19 @@ uint32_t Player::getAttackSpeed() const {
 		}
 	}
 
+	if (outfitAttributes) {
+		const auto &outfit = Outfits::getInstance().getOutfitByLookType(getPlayer(), defaultOutfit.lookType);
+		if (outfit) {
+			if (outfit->attackSpeed > 0) {
+				if (outfit->attackSpeed >= vocation->getAttackSpeed()) {
+					modifiers = 0;
+				} else {
+					modifiers += outfit->attackSpeed;
+				}
+			}
+		}
+	}
+
 	if (onFistAttackSpeed) {
 		uint32_t baseAttackSpeed = vocation->getAttackSpeed();
 		uint32_t skillLevel = getSkillLevel(SKILL_FIST);
