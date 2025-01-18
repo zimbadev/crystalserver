@@ -85,7 +85,7 @@ bool Outfits::loadFromXml() {
 		);
 
 		if (auto skillsNode = outfitNode.child("skills")) {
-			for (auto skillNode : skillsNode.children()) { 
+			for (auto skillNode : skillsNode.children()) {
 				std::string skillName = skillNode.name();
 				int32_t skillValue = skillNode.attribute("value").as_int();
 
@@ -257,8 +257,20 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 		if (outfit->skills[i]) {
 			player->setVarSkill(static_cast<skills_t>(i), -outfit->skills[i]);
 		}
+
+/*
+		if (outfit->skillsPercent[i]) {
+			needUpdateSkills = true;
+			player->setVarSkill((skills_t)i, -(int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
+			/*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
+			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
+			player->setVarSkill(static_cast<skills_t>(i), -additionalSkill);
+		}*/
 	}
 
+	if (needUpdateSkills) {
+		player->sendSkills();
+	}
 
 	// Remove stats
 	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
