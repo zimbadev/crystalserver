@@ -134,9 +134,13 @@
 			<shielding value="6" />
 			<fishing value="7" />
 		</skills>
-        <stats>
-            <maxHealth value="20000" />
-        </stats>
+		<stats>
+			<maxHealth value="5" />
+			<maxMana value="5" />
+			<soul value="100" />
+			<cap value="100" />
+			<magicLevel value="1" />
+		</stats>
 	</outfit>
 
 	<outfit type="1" looktype="129" name="Hunter" premium="no" unlocked="yes" enabled="yes" />

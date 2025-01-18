@@ -125,11 +125,11 @@ bool Outfits::loadFromXml() {
 						outfit->stats[STAT_MAXHITPOINTS] += statValue;
 					} else if (statName == "maxMana") {
 						outfit->stats[STAT_MAXMANAPOINTS] += statValue;
-					} else if (statName == "soul") {
+					} else if (statName == "soul" || statName == "soulpoints") {
 						outfit->stats[STAT_SOULPOINTS] += statValue;
 					} else if (statName == "cap" || statName == "capacity") {
-						outfit->stats[STAT_CAPACITY] += statValue;
-					} else if (statName == "magLevel" || statName == "magicLevel") {
+						outfit->stats[STAT_CAPACITY] += statValue * 100;
+					} else if (statName == "magLevel" || statName == "magicLevel" || statName == "ml") {
 						outfit->stats[STAT_MAGICPOINTS] += statValue;
 					}
 				}

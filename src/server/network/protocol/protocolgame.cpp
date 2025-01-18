@@ -3502,7 +3502,7 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 	msg.add<uint32_t>(std::min<int32_t>(player->getMaxHealth(), std::numeric_limits<uint16_t>::max()));
 	msg.add<uint32_t>(std::min<int32_t>(player->getMana(), std::numeric_limits<uint16_t>::max()));
 	msg.add<uint32_t>(std::min<int32_t>(player->getMaxMana(), std::numeric_limits<uint16_t>::max()));
-	msg.addByte(player->getSoul());
+	msg.addByte(player->getFullSoul());
 	msg.add<uint16_t>(player->getStaminaMinutes());
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
@@ -7879,7 +7879,7 @@ void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
 		msg.addByte(std::min<uint8_t>(static_cast<uint8_t>(player->getMagicLevelPercent()), 100));
 	}
 
-	msg.addByte(player->getSoul());
+	msg.addByte(player->getFullSoul());
 
 	msg.add<uint16_t>(player->getStaminaMinutes());
 

@@ -465,6 +465,9 @@ public:
 	uint8_t getSoul() const {
 		return soul;
 	}
+	uint8_t getFullSoul() const {
+		return getSoul() + getVarStats(STAT_SOULPOINTS);
+	}
 	bool isAccessPlayer() const;
 	bool isPlayerGroup() const;
 	bool isPremium() const;
@@ -557,6 +560,9 @@ public:
 
 	void setVarStats(stats_t stat, int32_t modifier);
 	int32_t getDefaultStats(stats_t stat) const;
+	int32_t getVarStats(stats_t stat) const {
+		return varStats[stat];
+	}
 
 	void addConditionSuppressions(const std::array<ConditionType_t, ConditionType_t::CONDITION_COUNT> &addCondition);
 	void removeConditionSuppressions();
