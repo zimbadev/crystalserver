@@ -85,10 +85,10 @@ bool Outfits::loadFromXml() {
 			pugi::cast<uint16_t>(lookTypeAttribute.value())
 		);
 
-		outfit->manaShield = outfitNode.attribute("manaShield").as_bool();
+		outfit->manaShield = outfitNode.attribute("manaShield").as_bool() || outfitNode.attribute("manashield").as_bool();
 		outfit->invisible = outfitNode.attribute("invisible").as_bool();
 		outfit->speed = outfitNode.attribute("speed").as_int();
-		outfit->attackSpeed = outfitNode.attribute("attackspeed").as_int();
+		outfit->attackSpeed = outfitNode.attribute("attackSpeed").as_int() || outfitNode.attribute("attackspeed").as_int();
 
 		if (auto skillsNode = outfitNode.child("skills")) {
 			for (auto skillNode : skillsNode.children()) {
