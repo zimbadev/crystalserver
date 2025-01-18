@@ -203,9 +203,8 @@ uint32_t Outfits::getOutfitId(PlayerSex_t sex, uint32_t lookType) const {
 }
 
 bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, uint16_t addons) {
-	auto player = g_game().getPlayerByID(playerId);
+	const auto &player = g_game().getPlayerByID(playerId);
 	if (!player) {
-		g_logger().error("[{}] - Player not found", __FUNCTION__);
 		return false;
 	}
 
@@ -255,9 +254,8 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 }
 
 bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex) {
-	auto player = g_game().getPlayerByID(playerId);
+	const auto &player = g_game().getPlayerByID(playerId);
 	if (!player) {
-		g_logger().error("[{}] - Player not found", __FUNCTION__);
 		return false;
 	}
 
