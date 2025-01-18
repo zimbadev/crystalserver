@@ -79,10 +79,10 @@ bool Outfits::loadFromXml() {
 
 		auto outfit = std::make_shared<Outfit>(
 			outfitNode.attribute("name").as_string(),
-			pugi::cast<uint16_t>(lookTypeAttribute.value()),
+			outfitNode.attribute("from").as_string(),
 			outfitNode.attribute("premium").as_bool(),
 			outfitNode.attribute("unlocked").as_bool(true),
-			outfitNode.attribute("from").as_string()
+			pugi::cast<uint16_t>(lookTypeAttribute.value())
 		);
 
 		outfit->manaShield = outfitNode.attribute("manaShield").as_bool();
@@ -182,7 +182,7 @@ const std::vector<std::shared_ptr<Outfit>> &Outfits::getOutfits(PlayerSex_t sex)
 	return outfits[sex];
 }
 
-std::shared_ptr<Outfit> Outfits::getOutfitByName(PlayerSex_t sex, const std::string &name) const {
+std::shared_ptr<Outfit> Outfits::getOutfitByName(PlayerSex_t sex, const std::string_view &name) const {
 	for (const auto &outfit : outfits[sex]) {
 		if (outfit->name == name) {
 			return outfit;

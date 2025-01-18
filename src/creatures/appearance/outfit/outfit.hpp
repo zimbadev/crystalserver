@@ -30,15 +30,11 @@ struct OutfitEntry {
 };
 
 struct Outfit {
-	Outfit(std::string initName, uint16_t initLookType, bool initPremium, bool initUnlocked, std::string initFrom) :
-		name(std::move(initName)), lookType(initLookType), premium(initPremium), unlocked(initUnlocked), from(std::move(initFrom)) {
-
-		manaShield = false;
-		invisible = false;
+	Outfit(std::string initName, std::string initFrom, bool initPremium, bool initUnlocked, uint16_t initLookType) :
+		name(std::move(initName)), from(std::move(initFrom)), premium(initPremium), unlocked(initUnlocked), lookType(initLookType),
+		manaShield(false), invisible(false), speed(0), attackSpeed(0) {
 		std::memset(skills, 0, sizeof(skills));
 		std::memset(stats, 0, sizeof(stats));
-		speed = 0;
-		attackSpeed = 0;
 	}
 
 	std::string name;
@@ -76,7 +72,7 @@ public:
 	[[nodiscard]] std::shared_ptr<Outfit> getOutfitByLookType(const std::shared_ptr<const Player> &player, uint16_t lookType, bool isOppositeOutfit = false) const;
 	[[nodiscard]] const std::vector<std::shared_ptr<Outfit>> &getOutfits(PlayerSex_t sex) const;
 
-	std::shared_ptr<Outfit> getOutfitByName(PlayerSex_t sex, const std::string &name) const;
+	std::shared_ptr<Outfit> getOutfitByName(PlayerSex_t sex, const std::string_view &name) const;
 	uint32_t getOutfitId(PlayerSex_t sex, uint32_t lookType) const;
 
 	bool addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, uint16_t addons);
