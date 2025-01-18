@@ -258,10 +258,6 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 		}
 	}
 
-	if (needUpdateSkills) {
-		player->sendSkills();
-	}
-
 	// Remove stats
 	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
 		if (outfit->stats[s]) {
