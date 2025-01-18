@@ -221,7 +221,6 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 		}
 	}
 
-
 	// Apply stats
 	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
 		if (outfit->stats[s]) {
@@ -258,14 +257,14 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 			player->setVarSkill(static_cast<skills_t>(i), -outfit->skills[i]);
 		}
 
-/*
-		if (outfit->skillsPercent[i]) {
-			needUpdateSkills = true;
-			player->setVarSkill((skills_t)i, -(int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
-			/*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
-			int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
-			player->setVarSkill(static_cast<skills_t>(i), -additionalSkill);
-		}*/
+		/*
+		        if (outfit->skillsPercent[i]) {
+		            needUpdateSkills = true;
+		            player->setVarSkill((skills_t)i, -(int32_t)(player->getSkill((skills_t)i, SKILLVALUE_LEVEL) * ((outfit->skillsPercent[i] - 100) / 100.f)));
+		            /*int32_t currentSkillLevel = player->getBaseSkill(static_cast<skills_t>(i));
+		            int32_t additionalSkill = static_cast<int32_t>(currentSkillLevel * ((outfit->skillsPercent[i] - 100) / 100.f));
+		            player->setVarSkill(static_cast<skills_t>(i), -additionalSkill);
+		        }*/
 	}
 
 	if (needUpdateSkills) {
