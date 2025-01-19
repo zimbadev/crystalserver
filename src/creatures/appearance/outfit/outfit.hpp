@@ -54,8 +54,8 @@ struct Outfit {
 	int32_t manaGain = 0;
 	int32_t manaTicks = 0;
 
-	int32_t skills[SKILL_LAST + 1] = {0};
-	int32_t stats[STAT_LAST + 1] = {0};
+	int32_t skills[SKILL_LAST + 1] = { 0 };
+	int32_t stats[STAT_LAST + 1] = { 0 };
 };
 
 struct ProtocolOutfit {
