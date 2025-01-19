@@ -90,6 +90,26 @@ bool Outfits::loadFromXml() {
 		outfit->speed = outfitNode.attribute("speed").as_int();
 		outfit->attackSpeed = outfitNode.attribute("attackSpeed").as_int() || outfitNode.attribute("attackspeed").as_int();
 
+		if (auto healthGainAttr = outfitNode.attribute("healthGain")) {
+			outfit->healthGain = healthGainAttr.as_int();
+			outfit->regeneration = true;
+		}
+
+		if (auto healthTicksAttr = outfitNode.attribute("healthTicks")) {
+			outfit->healthTicks = healthTicksAttr.as_int();
+			outfit->regeneration = true;
+		}
+
+		if (auto manaGainAttr = outfitNode.attribute("manaGain")) {
+			outfit->manaGain = manaGainAttr.as_int();
+			outfit->regeneration = true;
+		}
+
+		if (auto manaTicksAttr = outfitNode.attribute("manaTicks")) {
+			outfit->manaTicks = manaTicksAttr.as_int();
+			outfit->regeneration = true;
+		}
+
 		if (auto skillsNode = outfitNode.child("skills")) {
 			for (auto skillNode : skillsNode.children()) {
 				std::string skillName = skillNode.name();
@@ -234,6 +254,23 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 		g_game().changeSpeed(player, outfit->speed);
 	}
 
+	if (outfit->regeneration) {
+		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_REGENERATION, -1, 0);
+		if(outfit->healthGain)
+			condition->setParam(CONDITION_PARAM_HEALTHGAIN, outfit->healthGain);
+
+		if(outfit->healthTicks)
+			condition->setParam(CONDITION_PARAM_HEALTHTICKS, outfit->healthTicks);
+
+		if(outfit->manaGain)
+			condition->setParam(CONDITION_PARAM_MANAGAIN, outfit->manaGain);
+
+		if(outfit->manaTicks)
+			condition->setParam(CONDITION_PARAM_MANATICKS, outfit->manaTicks);
+
+		player->addCondition(condition);
+	}
+
 	// Apply skills
 	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
 		if (outfit->skills[i]) {
@@ -270,7 +307,7 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 
 	const auto &outfit = *it;
 
-	// Remoe conditions
+	// Remove conditions
 	if (outfit->manaShield) {
 		player->removeCondition(CONDITION_MANASHIELD, CONDITIONID_OUTFIT);
 	}
@@ -281,6 +318,10 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 
 	if (outfit->speed) {
 		g_game().changeSpeed(player, -outfit->speed);
+	}
+
+	if (outfit->regeneration) {
+		player->removeCondition(CONDITION_REGENERATION, CONDITIONID_OUTFIT);
 	}
 
 	// Remove skills

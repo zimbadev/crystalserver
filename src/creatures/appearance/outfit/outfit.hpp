@@ -32,7 +32,7 @@ struct OutfitEntry {
 struct Outfit {
 	Outfit(std::string initName, std::string initFrom, bool initPremium, bool initUnlocked, uint16_t initLookType) :
 		name(std::move(initName)), from(std::move(initFrom)), premium(initPremium), unlocked(initUnlocked), lookType(initLookType),
-		manaShield(false), invisible(false), speed(0), attackSpeed(0) {
+		manaShield(false), invisible(false), regeneration(false), healthGain(0), healthTicks(0), manaGain(0), manaTicks(0), speed(0), attackSpeed(0) {
 		std::memset(skills, 0, sizeof(skills));
 		std::memset(stats, 0, sizeof(stats));
 	}
@@ -44,11 +44,17 @@ struct Outfit {
 	bool unlocked;
 	bool manaShield;
 	bool invisible;
+	bool regeneration;
 
 	uint16_t lookType;
 
 	int32_t speed;
 	int32_t attackSpeed;
+	int32_t healthGain;
+	int32_t healthTicks;
+	int32_t manaGain;
+	int32_t manaTicks;
+
 	int32_t skills[SKILL_LAST + 1];
 	int32_t stats[STAT_LAST + 1];
 };

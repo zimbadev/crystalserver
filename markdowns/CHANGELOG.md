@@ -1,6 +1,25 @@
 # Changelog for Crystal Server
 
 
+## Version 4.1.3
+
+### Features
+
+- Add new attributies to outfits. ([Tryller](https://github.com/jprzimba))
+
+## Added files
+
+- notting
+
+## Modified files
+
+- data/XML/outfits.xml
+
+### Bug Fixes
+
+- notting
+
+
 ## Version 4.1.2
 
 ### Features

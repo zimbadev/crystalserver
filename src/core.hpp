@@ -18,7 +18,7 @@
 #pragma once
 
 static constexpr auto SOFTWARE_NAME = "Crystal Server";
-static constexpr auto SOFTWARE_VERSION = "4.1.2";
+static constexpr auto SOFTWARE_VERSION = "4.1.3";
 static constexpr auto SOFTWARE_DEVELOPERS = "Crystal Server Contributors";
 
 static constexpr auto AUTHENTICATOR_DIGITS = 6U;
