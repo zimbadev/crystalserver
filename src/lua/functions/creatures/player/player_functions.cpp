@@ -396,6 +396,9 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "addAchievementPoints", PlayerFunctions::luaPlayerAddAchievementPoints);
 	Lua::registerMethod(L, "Player", "removeAchievementPoints", PlayerFunctions::luaPlayerRemoveAchievementPoints);
 
+	Lua::registerMethod(L, "Player", "addDeflectCondition", PlayerFunctions::luaPlayerAddDeflectCondition);
+	Lua::registerMethod(L, "Player", "removeDeflectCondition", PlayerFunctions::luaPlayerRemoveDeflectCondition);
+
 	// Badge Functions
 	Lua::registerMethod(L, "Player", "addBadge", PlayerFunctions::luaPlayerAddBadge);
 
@@ -4876,6 +4879,36 @@ int PlayerFunctions::luaPlayerSendCreatureAppear(lua_State* L) {
 
 	bool isLogin = Lua::getBoolean(L, 2, false);
 	player->sendCreatureAppear(player, player->getPosition(), isLogin);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerAddDeflectCondition(lua_State* L) {
+	// player:addDeflectCondition(source, conditionType, deflectChance)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+	auto source = Lua::getString(L, 2);
+	auto conditionType = Lua::getNumber<ConditionType_t>(L, 3);
+	auto deflectChance = Lua::getNumber<uint8_t>(L, 4);
+	player->addDeflectCondition(source, conditionType, deflectChance);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerRemoveDeflectCondition(lua_State* L) {
+	// player:removeDeflectCondition(source, conditionType, deflectChance)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+	auto source = Lua::getString(L, 2);
+	auto conditionType = Lua::getNumber<ConditionType_t>(L, 3);
+	auto deflectChance = Lua::getNumber<uint8_t>(L, 4);
+	player->removeDeflectCondition(source, conditionType, deflectChance);
 	Lua::pushBoolean(L, true);
 	return 1;
 }

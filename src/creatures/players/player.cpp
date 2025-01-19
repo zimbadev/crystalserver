@@ -2854,6 +2854,11 @@ void Player::addItemImbuementStats(const Imbuement* imbuement) {
 		bonusCapacity = (capacity * imbuement->capacity) / 100;
 	}
 
+	// Add imbuement deflect conditions
+	for (const auto &[condition, chance] : imbuement->deflectConditions) {
+		addDeflectCondition("imbuement", condition, chance);
+	}
+
 	if (requestUpdate) {
 		sendStats();
 		sendSkills();
@@ -2891,6 +2896,13 @@ void Player::removeItemImbuementStats(const Imbuement* imbuement) {
 	if (imbuement->capacity != 0) {
 		requestUpdate = true;
 		bonusCapacity = 0;
+	}
+
+	// Remove imbuement deflect conditions
+	if (getDeflectConditions().size() > 0) {
+		for (const auto &[condition, chance] : imbuement->deflectConditions) {
+			removeDeflectCondition("imbuement", condition, chance);
+		}
 	}
 
 	if (requestUpdate) {
@@ -10796,4 +10808,30 @@ uint16_t Player::getPlayerVocationEnum() const {
 	}
 
 	return Vocation_t::VOCATION_NONE;
+}
+
+// Deflect Condition
+uint8_t Player::getDeflectConditionChance(const ConditionType_t &conditionType) const {
+	uint8_t maxChance = 0;
+	for (const auto &dc : deflectConditions) {
+		if (conditionType == dc.condition && dc.chance > maxChance) {
+			maxChance = dc.chance;
+		}
+	}
+
+	return maxChance;
+}
+
+void Player::removeDeflectCondition(const std::string_view &source, const ConditionType_t &conditionType, const uint8_t &chance) {
+	auto it = std::find_if(deflectConditions.begin(), deflectConditions.end(), [source, conditionType, chance](const DeflectCondition &dc) {
+		return source == dc.source && conditionType == dc.condition && chance == dc.chance;
+	});
+
+	if (it != deflectConditions.end()) {
+		deflectConditions.erase(it);
+	}
+}
+
+void Player::addDeflectCondition(std::string source, ConditionType_t conditionType, uint8_t chance) {
+	deflectConditions.emplace_back(source, conditionType, chance);
 }
