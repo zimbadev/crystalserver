@@ -115,7 +115,6 @@
 - Players can enable the chain system using the `!chain` command. ([Tryller](https://github.com/jprzimba)).
 - Updated npc data-global/npc/hireling.lua, now it sell imbuement packages and also buy all loots inside Loot Pouch ([Tryller](https://github.com/jprzimba)).
 - Cyclopedia item summary ([phacUFPE](https://github.com/phacUFPE))
-- Add Vibrancy imbuement ([pennaor](https://github.com/pennaor))
 - Badge system ([elsongabriel](https://github.com/elsongabriel))
 - Screenshots configurable in config.lua enableScreenshots ([Tryller](https://github.com/jprzimba)).
 - Augments system ([phacUFPE](https://github.com/phacUFPE)).

@@ -62,6 +62,8 @@ public:
 	bool isPersistent() const;
 	bool isRemovableOnDeath() const;
 
+	bool creatureCanDeflect(std::shared_ptr<Creature> creature) const;
+
 protected:
 	uint8_t drainBodyStage = 0;
 	int64_t endTime {};
@@ -72,7 +74,7 @@ protected:
 	bool isBuff {};
 	bool m_isPersistent {};
 
-	virtual bool updateCondition(const std::shared_ptr<Condition> &addCondition);
+	virtual bool updateCondition(const std::shared_ptr<Condition> &addCondition, std::shared_ptr<Creature> creature = nullptr);
 
 private:
 	SoundEffect_t tickSound = SoundEffect_t::SILENCE;
@@ -286,7 +288,7 @@ private:
 	bool getNextDamage(int32_t &damage);
 	bool doDamage(const std::shared_ptr<Creature> &creature, int32_t healthChange) const;
 
-	bool updateCondition(const std::shared_ptr<Condition> &addCondition) override;
+	bool updateCondition(const std::shared_ptr<Condition> &addCondition, std::shared_ptr<Creature> creature = nullptr) override;
 };
 
 class ConditionFeared final : public Condition {

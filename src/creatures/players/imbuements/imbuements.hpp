@@ -116,6 +116,8 @@ public:
 
 	CombatType_t combatType = COMBAT_NONE;
 
+	std::unordered_map<ConditionType_t, uint8_t> deflectConditions;
+
 protected:
 	friend class Imbuements;
 	friend class Item;

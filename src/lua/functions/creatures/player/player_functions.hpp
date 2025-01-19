@@ -378,6 +378,9 @@ class PlayerFunctions {
 	static int luaPlayerAddAchievementPoints(lua_State* L);
 	static int luaPlayerRemoveAchievementPoints(lua_State* L);
 
+	static int luaPlayerAddDeflectCondition(lua_State* L);
+	static int luaPlayerRemoveDeflectCondition(lua_State* L);
+
 	static int luaPlayerAddBadge(lua_State* L);
 
 	static int luaPlayerAddTitle(lua_State* L);

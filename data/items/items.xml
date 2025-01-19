@@ -2660,7 +2660,9 @@
 		<attribute key="absorbpercentfire" value="-5"/>
 		<attribute key="armor" value="2"/>
 		<attribute key="weight" value="750"/>
-		<attribute key="imbuementslot" value="1"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="paralysis removal" value="3"/>
+		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="35"/>
 			<attribute key="slot" value="feet"/>
@@ -2727,6 +2729,7 @@
 		<attribute key="weight" value="750"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="35"/>
@@ -2740,7 +2743,9 @@
 		<attribute key="absorbpercentenergy" value="-5"/>
 		<attribute key="armor" value="2"/>
 		<attribute key="weight" value="750"/>
-		<attribute key="imbuementslot" value="1"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="paralysis removal" value="3"/>
+		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="35"/>
 			<attribute key="slot" value="feet"/>
@@ -2755,6 +2760,7 @@
 		<attribute key="weight" value="750"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="35"/>
@@ -7219,7 +7225,9 @@
 		<attribute key="showAttributes" value="1"/>
 		<attribute key="speed" value="20"/>
 		<attribute key="weight" value="750"/>
-		<attribute key="imbuementslot" value="1"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="paralysis removal" value="3"/>
+		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
 		</attribute>
@@ -11072,6 +11080,7 @@
 		<attribute key="weight" value="1000"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
@@ -11082,6 +11091,7 @@
 		<attribute key="weight" value="600"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
@@ -11103,6 +11113,7 @@
 		<attribute key="weight" value="600"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
@@ -12116,7 +12127,9 @@
 		<attribute key="speed" value="15"/>
 		<attribute key="armor" value="3"/>
 		<attribute key="weight" value="2500"/>
-		<attribute key="imbuementslot" value="1"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="paralysis removal" value="3"/>
+		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="80"/>
 			<attribute key="slot" value="feet"/>
@@ -14889,6 +14902,7 @@
 		<attribute key="weight" value="800"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
@@ -20503,7 +20517,9 @@
 		<attribute key="speed" value="-6"/>
 		<attribute key="armor" value="2"/>
 		<attribute key="weight" value="1200"/>
-		<attribute key="imbuementslot" value="1"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="paralysis removal" value="3"/>
+		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
 		</attribute>
@@ -23911,6 +23927,7 @@
 		<attribute key="weight" value="600"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
@@ -26833,7 +26850,9 @@
 		<attribute key="absorbpercentholy" value="-2"/>
 		<attribute key="armor" value="3"/>
 		<attribute key="weight" value="2250"/>
-		<attribute key="imbuementslot" value="1"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="paralysis removal" value="3"/>
+		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="70"/>
 			<attribute key="slot" value="feet"/>
@@ -27126,7 +27145,9 @@
 		<attribute key="speed" value="5"/>
 		<attribute key="armor" value="1"/>
 		<attribute key="weight" value="700"/>
-		<attribute key="imbuementslot" value="1"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="paralysis removal" value="3"/>
+		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
 		</attribute>
@@ -34164,6 +34185,7 @@
 		<attribute key="weight" value="1800"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="150"/>
@@ -41800,6 +41822,7 @@
 		<attribute key="weight" value="1800"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="50"/>
@@ -43447,7 +43470,9 @@ Awarded by TibiaMagazine.com.ve"/>
 		<attribute key="speed" value="15"/>
 		<attribute key="armor" value="2"/>
 		<attribute key="weight" value="500"/>
-		<attribute key="imbuementslot" value="1"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="paralysis removal" value="3"/>
+		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="80"/>
 			<attribute key="slot" value="feet"/>
@@ -43871,6 +43896,7 @@ Awarded by TibiaMagazine.com.ve"/>
 		<attribute key="weight" value="1200"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="60"/>
@@ -45232,6 +45258,7 @@ Awarded by TibiaMisterios.com.br"/>
 		<attribute key="weight" value="3600"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
@@ -55525,6 +55552,7 @@ hands of its owner. Granted by TibiaRoyal.com"/>
 		<attribute key="weight" value="800"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="180"/>
@@ -57239,7 +57267,9 @@ hands of its owner. Granted by TibiaRoyal.com"/>
 		<attribute key="speed" value="10"/>
 		<attribute key="armor" value="3"/>
 		<attribute key="weight" value="900"/>
-		<attribute key="imbuementslot" value="1"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="paralysis removal" value="3"/>
+		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="220"/>
 			<attribute key="slot" value="feet"/>
@@ -59255,6 +59285,7 @@ hands of its owner. Granted by TibiaRoyal.com"/>
 		<attribute key="weight" value="1200"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="220"/>
@@ -61707,6 +61738,7 @@ hands of its owner. Granted by TibiaRoyal.com"/>
 		<attribute key="weight" value="1300"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="140"/>
@@ -64267,6 +64299,7 @@ hands of its owner. Granted by TibiaRoyal.com"/>
 		<attribute key="weight" value="1300"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
@@ -64282,6 +64315,7 @@ hands of its owner. Granted by TibiaRoyal.com"/>
 		<attribute key="weight" value="1300"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
@@ -65935,6 +65969,7 @@ former students at the Noodles Academy. Awarded by TibiaLabs.com"/>
 		<attribute key="weight" value="1450"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="150"/>
@@ -65950,6 +65985,7 @@ former students at the Noodles Academy. Awarded by TibiaLabs.com"/>
 		<attribute key="weight" value="1450"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="150"/>
@@ -70551,6 +70587,7 @@ Granted by TibiaGoals.com"/>
 		<attribute key="weight" value="600"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="feet"/>
@@ -71532,6 +71569,7 @@ Granted by TibiaGoals.com"/>
 		<attribute key="weight" value="1100"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="270"/>
@@ -71586,6 +71624,7 @@ Granted by TibiaGoals.com"/>
 		<attribute key="weight" value="980"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="270"/>
@@ -73950,6 +73989,7 @@ Granted by TibiaGoals.com"/>
 		<attribute key="weight" value="1600"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="250"/>
@@ -73965,6 +74005,7 @@ Granted by TibiaGoals.com"/>
 		<attribute key="weight" value="1100"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="3"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="250"/>
@@ -76102,6 +76143,7 @@ Granted by TibiaGoals.com"/>
 		<attribute key="weight" value="1900"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="10"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="avatar of storm" value="cooldown">
@@ -76205,6 +76247,7 @@ Granted by TibiaGoals.com"/>
 		<attribute key="weight" value="1700"/>
 		<attribute key="imbuementslot" value="1">
 			<attribute key="increase speed" value="10"/>
+			<attribute key="paralysis removal" value="3"/>
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="avatar of nature" value="cooldown">

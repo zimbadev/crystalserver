@@ -336,10 +336,15 @@ Condition::Condition(ConditionId_t initId, ConditionType_t initType, int32_t ini
 	endTime(initTicks == -1 ? std::numeric_limits<int64_t>::max() : 0),
 	subId(initSubId), ticks(initTicks), conditionType(initType), id(initId), isBuff(initBuff), m_isPersistent(isPersistent) { }
 
-bool Condition::startCondition(std::shared_ptr<Creature>) {
+bool Condition::startCondition(std::shared_ptr<Creature> creature) {
+	if (creatureCanDeflect(creature)) {
+		return false;
+	}
+
 	if (ticks > 0) {
 		endTime = ticks + OTSYS_TIME();
 	}
+
 	return true;
 }
 
@@ -411,7 +416,19 @@ int32_t Condition::getTicks() const {
 	return ticks;
 }
 
-bool Condition::updateCondition(const std::shared_ptr<Condition> &addCondition) {
+// Determines whether a creature can prevent the condition from being added or updated
+bool Condition::creatureCanDeflect(std::shared_ptr<Creature> creature) const {
+	if (!creature) {
+		return false;
+	}
+	auto player = creature->getPlayer();
+	if (player) {
+		return player->getDeflectConditionChance(conditionType) >= uniform_random(1, 100);
+	}
+	return false;
+}
+
+bool Condition::updateCondition(const std::shared_ptr<Condition> &addCondition, std::shared_ptr<Creature> creature /*= nullptr*/) {
 	if (conditionType != addCondition->getType()) {
 		return false;
 	}
@@ -421,6 +438,10 @@ bool Condition::updateCondition(const std::shared_ptr<Condition> &addCondition) 
 	}
 
 	if (addCondition->getTicks() >= 0 && getEndTime() > (OTSYS_TIME() + addCondition->getTicks())) {
+		return false;
+	}
+
+	if (creatureCanDeflect(creature)) {
 		return false;
 	}
 
@@ -447,7 +468,7 @@ void ConditionGeneric::endCondition(std::shared_ptr<Creature>) {
 }
 
 void ConditionGeneric::addCondition(std::shared_ptr<Creature> creature, const std::shared_ptr<Condition> addCondition) {
-	if (updateCondition(addCondition)) {
+	if (updateCondition(addCondition, creature)) {
 		setTicks(addCondition->getTicks());
 
 		if (creature && addSound != SoundEffect_t::SILENCE) {
@@ -511,7 +532,7 @@ void ConditionAttributes::addCondition(std::shared_ptr<Creature> creature, const
 		return;
 	}
 
-	if (updateCondition(addCondition)) {
+	if (updateCondition(addCondition, creature)) {
 		setTicks(addCondition->getTicks());
 
 		const std::shared_ptr<ConditionAttributes> &conditionAttrs = addCondition->static_self_cast<ConditionAttributes>();
@@ -1228,7 +1249,7 @@ void ConditionRegeneration::endCondition(std::shared_ptr<Creature> creature) {
 }
 
 void ConditionRegeneration::addCondition(std::shared_ptr<Creature> creature, const std::shared_ptr<Condition> addCondition) {
-	if (updateCondition(addCondition)) {
+	if (updateCondition(addCondition, creature)) {
 		setTicks(addCondition->getTicks());
 
 		const auto &conditionRegen = addCondition->static_self_cast<ConditionRegeneration>();
@@ -1476,8 +1497,8 @@ std::unordered_set<PlayerIcon> ConditionManaShield::getIcons() const {
 ConditionSoul::ConditionSoul(ConditionId_t initId, ConditionType_t initType, int32_t iniTicks, bool initBuff, uint32_t initSubId) :
 	ConditionGeneric(initId, initType, iniTicks, initBuff, initSubId) { }
 
-void ConditionSoul::addCondition(std::shared_ptr<Creature>, const std::shared_ptr<Condition> addCondition) {
-	if (updateCondition(addCondition)) {
+void ConditionSoul::addCondition(std::shared_ptr<Creature> creature, const std::shared_ptr<Condition> addCondition) {
+	if (updateCondition(addCondition, creature)) {
 		setTicks(addCondition->getTicks());
 
 		const auto &conditionSoul = addCondition->static_self_cast<ConditionSoul>();
@@ -1635,7 +1656,11 @@ void ConditionDamage::serialize(PropWriteStream &propWriteStream) {
 	}
 }
 
-bool ConditionDamage::updateCondition(const std::shared_ptr<Condition> &addCondition) {
+bool ConditionDamage::updateCondition(const std::shared_ptr<Condition> &addCondition, std::shared_ptr<Creature> creature /*= nullptr*/) {
+	if (creatureCanDeflect(creature)) {
+		return false;
+	}
+
 	const auto &conditionDamage = addCondition->static_self_cast<ConditionDamage>();
 	if (conditionDamage->doForceUpdate()) {
 		return true;
@@ -1824,7 +1849,7 @@ void ConditionDamage::addCondition(std::shared_ptr<Creature> creature, const std
 		return;
 	}
 
-	if (!updateCondition(addCondition)) {
+	if (!updateCondition(addCondition, creature)) {
 		return;
 	}
 
@@ -2215,8 +2240,8 @@ void ConditionFeared::endCondition(std::shared_ptr<Creature> creature) {
 	}
 }
 
-void ConditionFeared::addCondition(std::shared_ptr<Creature>, const std::shared_ptr<Condition> addCondition) {
-	if (updateCondition(addCondition)) {
+void ConditionFeared::addCondition(std::shared_ptr<Creature> creature, const std::shared_ptr<Condition> addCondition) {
+	if (updateCondition(addCondition, creature)) {
 		setTicks(addCondition->getTicks());
 	}
 }
@@ -2252,8 +2277,8 @@ bool ConditionRooted::executeCondition(const std::shared_ptr<Creature> &creature
 	return Condition::executeCondition(creature, interval);
 }
 
-void ConditionRooted::addCondition(std::shared_ptr<Creature>, const std::shared_ptr<Condition> addCondition) {
-	if (updateCondition(addCondition)) {
+void ConditionRooted::addCondition(std::shared_ptr<Creature> creature, const std::shared_ptr<Condition> addCondition) {
+	if (updateCondition(addCondition, creature)) {
 		setTicks(addCondition->getTicks());
 	}
 }
@@ -2384,6 +2409,10 @@ void ConditionSpeed::addCondition(std::shared_ptr<Creature> creature, const std:
 	}
 
 	if (ticks == -1 && addCondition->getTicks() > 0) {
+		return;
+	}
+
+	if (creatureCanDeflect(creature)) {
 		return;
 	}
 
@@ -2529,7 +2558,7 @@ void ConditionOutfit::addCondition(std::shared_ptr<Creature> creature, const std
 		return;
 	}
 
-	if (updateCondition(addCondition)) {
+	if (updateCondition(addCondition, creature)) {
 		setTicks(addCondition->getTicks());
 
 		const auto &conditionOutfit = addCondition->static_self_cast<ConditionOutfit>();
@@ -2595,7 +2624,7 @@ void ConditionLight::endCondition(std::shared_ptr<Creature> creature) {
 }
 
 void ConditionLight::addCondition(std::shared_ptr<Creature> creature, const std::shared_ptr<Condition> condition) {
-	if (updateCondition(condition)) {
+	if (updateCondition(condition, creature)) {
 		setTicks(condition->getTicks());
 
 		const auto &conditionLight = condition->static_self_cast<ConditionLight>();
@@ -2685,7 +2714,7 @@ void ConditionLight::serialize(PropWriteStream &propWriteStream) {
  */
 
 void ConditionSpellCooldown::addCondition(std::shared_ptr<Creature> creature, const std::shared_ptr<Condition> addCondition) {
-	if (updateCondition(addCondition)) {
+	if (updateCondition(addCondition, creature)) {
 		setTicks(addCondition->getTicks());
 
 		if (subId != 0 && ticks > 0) {
@@ -2723,7 +2752,7 @@ bool ConditionSpellCooldown::startCondition(std::shared_ptr<Creature> creature) 
  */
 
 void ConditionSpellGroupCooldown::addCondition(std::shared_ptr<Creature> creature, const std::shared_ptr<Condition> addCondition) {
-	if (updateCondition(addCondition)) {
+	if (updateCondition(addCondition, creature)) {
 		setTicks(addCondition->getTicks());
 
 		if (subId != 0 && ticks > 0) {
