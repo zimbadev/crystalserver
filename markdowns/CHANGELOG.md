@@ -6,6 +6,7 @@
 ### Features
 
 - Added new attributes to outfits. Check `outfits.xml` for examples. ([Tryller](https://github.com/jprzimba))
+- Added Vibrancy imbuement. ([pennaor](https://github.com/pennaor))
 
 ## Added files
 
