@@ -329,17 +329,17 @@ private:
 };
 
 class ConditionRooted final : public Condition {
-public:    
-    ConditionRooted() = default;
-    ConditionRooted(ConditionId_t initId, ConditionType_t initType, int32_t initTicks, bool initBuff, uint32_t initSubId);
+public:
+	ConditionRooted() = default;
+	ConditionRooted(ConditionId_t initId, ConditionType_t initType, int32_t initTicks, bool initBuff, uint32_t initSubId);
 
-    bool startCondition(std::shared_ptr<Creature> creature) override;
-    bool executeCondition(const std::shared_ptr<Creature> &creature, int32_t interval) override;
-    void endCondition(std::shared_ptr<Creature> creature) override;
-    void addCondition(std::shared_ptr<Creature> creature, std::shared_ptr<Condition> condition) override;
-    std::unordered_set<PlayerIcon> getIcons() const override;
-    
-    std::shared_ptr<Condition> clone() const override;
+	bool startCondition(std::shared_ptr<Creature> creature) override;
+	bool executeCondition(const std::shared_ptr<Creature> &creature, int32_t interval) override;
+	void endCondition(std::shared_ptr<Creature> creature) override;
+	void addCondition(std::shared_ptr<Creature> creature, std::shared_ptr<Condition> condition) override;
+	std::unordered_set<PlayerIcon> getIcons() const override;
+
+	std::shared_ptr<Condition> clone() const override;
 };
 
 class ConditionSpeed final : public Condition {
