@@ -5,7 +5,7 @@
 
 ### Features
 
-- Add new attributies to outfits. ([Tryller](https://github.com/jprzimba))
+- Added new attributes to outfits. Check `outfits.xml` for examples. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
