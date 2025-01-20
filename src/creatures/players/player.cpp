@@ -946,11 +946,15 @@ void Player::setVarStats(stats_t stat, int32_t modifier) {
 int32_t Player::getDefaultStats(stats_t stat) const {
 	switch (stat) {
 		case STAT_MAXHITPOINTS:
-			return healthMax;
+			return getMaxHealth() - getVarStats(STAT_MAXHITPOINTS);
 		case STAT_MAXMANAPOINTS:
-			return manaMax;
+			return getMaxMana() - getVarStats(STAT_MAXMANAPOINTS);
 		case STAT_MAGICPOINTS:
-			return getBaseMagicLevel();
+			return getBaseMagicLevel() - getVarStats(STAT_MAGICPOINTS);
+		case STAT_SOULPOINTS:
+			return getSoul() - getVarStats(STAT_SOULPOINTS);
+		case STAT_CAPACITY:
+			return getBaseCapacity() - getVarStats(STAT_CAPACITY);
 		default:
 			return 0;
 	}
@@ -6168,9 +6172,26 @@ void Player::changeSoul(int32_t soulChange) {
 	sendStats();
 }
 
-bool Player::canWear(uint16_t lookType, uint8_t addons) const {
+bool Player::changeOutfit(Outfit_t outfit, bool checkList) {
+	auto outfitId = Outfits::getInstance().getOutfitId(getSex(), outfit.lookType);
+	if (checkList && (!canWearOutfit(outfitId, outfit.lookAddons) || !requestedOutfit)) {
+		return false;
+	}
+
+	requestedOutfit = false;
+	if (outfitAttributes) {
+		auto oldId = Outfits::getInstance().getOutfitId(getSex(), defaultOutfit.lookType);
+		outfitAttributes = !Outfits::getInstance().removeAttributes(getID(), oldId, getSex());
+	}
+
+	defaultOutfit = outfit;
+	outfitAttributes = Outfits::getInstance().addAttributes(getID(), outfitId, getSex(), defaultOutfit.lookAddons);
+	return true;
+}
+
+bool Player::canWearOutfit(uint16_t lookType, uint8_t addons) const {
 	if (g_configManager().getBoolean(WARN_UNSAFE_SCRIPTS) && lookType != 0 && !g_game().isLookTypeRegistered(lookType)) {
-		g_logger().warn("[Player::canWear] An unregistered creature looktype type with id '{}' was blocked to prevent client crash.", lookType);
+		g_logger().warn("[Player::canWearOutfit] An unregistered creature looktype type with id '{}' was blocked to prevent client crash.", lookType);
 		return false;
 	}
 
@@ -6631,6 +6652,19 @@ uint32_t Player::getAttackSpeed() const {
 		}
 	}
 
+	if (outfitAttributes) {
+		const auto &outfit = Outfits::getInstance().getOutfitByLookType(getPlayer(), defaultOutfit.lookType);
+		if (outfit) {
+			if (outfit->attackSpeed > 0) {
+				if (outfit->attackSpeed >= vocation->getAttackSpeed()) {
+					modifiers = 0;
+				} else {
+					modifiers += outfit->attackSpeed;
+				}
+			}
+		}
+	}
+
 	if (onFistAttackSpeed) {
 		uint32_t baseAttackSpeed = vocation->getAttackSpeed();
 		uint32_t skillLevel = getSkillLevel(SKILL_FIST);
@@ -6762,6 +6796,17 @@ uint32_t Player::getMaxMana() const {
 
 bool Player::hasExtraSwing() {
 	return lastAttack > 0 && !checkLastAttackWithin(getAttackSpeed());
+}
+
+int32_t Player::getSkill(skills_t skilltype, SkillsId_t skillinfo) const {
+	const Skill &skill = skills[skilltype];
+	int32_t ret = 0;
+
+	if (skillinfo == SKILLVALUE_LEVEL) {
+		ret = skill.level + varSkills[skilltype];
+	}
+
+	return std::max(0, ret);
 }
 
 uint16_t Player::getSkillLevel(skills_t skill) const {
@@ -10094,6 +10139,11 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 
 	if (isLogin && creature == getPlayer()) {
 		onEquipInventory();
+
+		const auto &outfit = Outfits::getInstance().getOutfitByLookType(getPlayer(), defaultOutfit.lookType);
+		if (outfit) {
+			outfitAttributes = Outfits::getInstance().addAttributes(getID(), defaultOutfit.lookType, sex, defaultOutfit.lookAddons);
+		}
 
 		// Refresh bosstiary tracker onLogin
 		refreshCyclopediaMonsterTracker(true);

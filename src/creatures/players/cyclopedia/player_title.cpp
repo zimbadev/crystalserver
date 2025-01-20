@@ -287,17 +287,17 @@ bool PlayerTitle::checkOther(const std::string &name) const {
 		// Win Ancient Aucar Outfits complete so fight with Atab and be teleported to the arena.
 	} else if (name == "Admirer of the Crown") {
 		// Complete the Royal Costume Outfits.
-		return m_player.canWear(1457, 3) && m_player.canWear(1456, 3);
+		return m_player.canWearOutfit(1457, 3) && m_player.canWearOutfit(1456, 3);
 	} else if (name == "Big Spender") {
 		// Unlocked the full Golden Outfit.
-		return m_player.canWear(1211, 3) && m_player.canWear(1210, 3);
+		return m_player.canWearOutfit(1211, 3) && m_player.canWearOutfit(1210, 3);
 	} else if (name == "Challenger of the Iks") {
 		// Defeat Ahau while equipping a Broken Iks Headpiece, a Broken Iks Cuirass, some Broken Iks Faulds and Broken Iks Sandals
 		return m_player.getBestiaryKillCount(2346) >= 1;
 	} else if (name == "Royal Bounacean Advisor") {
 		// Complete the Galthen and the Lost Queen quest line
 		// Win Royal Bounacean Outfit
-		return m_player.canWear(1437, 3) && m_player.canWear(1436, 3);
+		return m_player.canWearOutfit(1437, 3) && m_player.canWearOutfit(1436, 3);
 	} else if (name == "Aeternal") {
 		// Unlocked by 10-year-old characters.
 	} else if (name == "Robinson Crusoe") {

@@ -1,6 +1,26 @@
 # Changelog for Crystal Server
 
 
+## Version 4.1.3
+
+### Features
+
+- Added new attributes to outfits. Check `outfits.xml` for examples. ([Tryller](https://github.com/jprzimba))
+- Added Vibrancy imbuement. ([pennaor](https://github.com/pennaor))
+
+## Added files
+
+- notting
+
+## Modified files
+
+- data/XML/outfits.xml
+
+### Bug Fixes
+
+- notting
+
+
 ## Version 4.1.2
 
 ### Features

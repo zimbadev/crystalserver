@@ -3502,7 +3502,7 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 	msg.add<uint32_t>(std::min<int32_t>(player->getMaxHealth(), std::numeric_limits<uint16_t>::max()));
 	msg.add<uint32_t>(std::min<int32_t>(player->getMana(), std::numeric_limits<uint16_t>::max()));
 	msg.add<uint32_t>(std::min<int32_t>(player->getMaxMana(), std::numeric_limits<uint16_t>::max()));
-	msg.addByte(player->getSoul());
+	msg.addByte(player->getFullSoul());
 	msg.add<uint16_t>(player->getStaminaMinutes());
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
@@ -7240,7 +7240,7 @@ void ProtocolGame::sendOutfitWindow() {
 			msg.addByte(0x00);
 			++outfitSize;
 		} else if (outfit->lookType == 1210 || outfit->lookType == 1211) { // golden outfit
-			if (player->canWear(1210, 0) || player->canWear(1211, 0)) {
+			if (player->canWearOutfit(1210, 0) || player->canWearOutfit(1211, 0)) {
 				msg.add<uint16_t>(outfit->lookType);
 				msg.addString(outfit->name);
 				msg.addByte(3);
@@ -7248,7 +7248,7 @@ void ProtocolGame::sendOutfitWindow() {
 				++outfitSize;
 			}
 		} else if (outfit->lookType == 1456 || outfit->lookType == 1457) { // Royal Costume
-			if (player->canWear(1456, 0) || player->canWear(1457, 0)) {
+			if (player->canWearOutfit(1456, 0) || player->canWearOutfit(1457, 0)) {
 				msg.add<uint16_t>(outfit->lookType);
 				msg.addString(outfit->name);
 				msg.addByte(3);
@@ -7335,6 +7335,7 @@ void ProtocolGame::sendOutfitWindow() {
 	// Version 12.81 - Random mount 'bool'
 	msg.addByte(isSupportOutfit ? 0x00 : (player->isRandomMounted() ? 0x01 : 0x00));
 
+	player->hasRequestedOutfit(true);
 	writeToOutputBuffer(msg);
 }
 
@@ -7878,7 +7879,7 @@ void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
 		msg.addByte(std::min<uint8_t>(static_cast<uint8_t>(player->getMagicLevelPercent()), 100));
 	}
 
-	msg.addByte(player->getSoul());
+	msg.addByte(player->getFullSoul());
 
 	msg.add<uint16_t>(player->getStaminaMinutes());
 

@@ -465,6 +465,9 @@ public:
 	uint8_t getSoul() const {
 		return soul;
 	}
+	uint8_t getFullSoul() const {
+		return getSoul() + getVarStats(STAT_SOULPOINTS);
+	}
 	bool isAccessPlayer() const;
 	bool isPlayerGroup() const;
 	bool isPremium() const;
@@ -557,6 +560,9 @@ public:
 
 	void setVarStats(stats_t stat, int32_t modifier);
 	int32_t getDefaultStats(stats_t stat) const;
+	int32_t getVarStats(stats_t stat) const {
+		return varStats[stat];
+	}
 
 	void addConditionSuppressions(const std::array<ConditionType_t, ConditionType_t::CONDITION_COUNT> &addCondition);
 	void removeConditionSuppressions();
@@ -681,6 +687,7 @@ public:
 	void drainMana(const std::shared_ptr<Creature> &attacker, int32_t manaLoss) override;
 	void addManaSpent(uint64_t amount);
 	void addSkillAdvance(skills_t skill, uint64_t count);
+	int32_t getSkill(skills_t skilltype, SkillsId_t skillinfo) const;
 
 	int32_t getArmor() const override;
 	int32_t getDefense() const override;
@@ -729,11 +736,16 @@ public:
 	void sendCreatureSkull(const std::shared_ptr<Creature> &creature) const;
 	void checkSkullTicks(int64_t ticks);
 
-	bool canWear(uint16_t lookType, uint8_t addons) const;
+	bool canWearOutfit(uint16_t lookType, uint8_t addons) const;
 	void addOutfit(uint16_t lookType, uint8_t addons);
 	bool removeOutfit(uint16_t lookType);
 	bool removeOutfitAddon(uint16_t lookType, uint8_t addons);
 	bool getOutfitAddons(const std::shared_ptr<Outfit> &outfit, uint8_t &addons) const;
+
+	bool changeOutfit(Outfit_t outfit, bool checkList);
+	void hasRequestedOutfit(bool v) {
+		requestedOutfit = v;
+	}
 
 	bool canFamiliar(uint16_t lookType) const;
 	void addFamiliar(uint16_t lookType);
@@ -1595,6 +1607,8 @@ private:
 	bool moved = false;
 	bool m_isDead = false;
 	bool imbuementTrackerWindowOpen = false;
+	bool requestedOutfit = false;
+	bool outfitAttributes = false;
 
 	// Hazard system
 	int64_t lastHazardSystemCriticalHit = 0;

@@ -4396,7 +4396,7 @@ void Game::playerSetShowOffSocket(uint32_t playerId, Outfit_t &outfit, const Pos
 		item->setCustomAttribute("PastLookMount", static_cast<int64_t>(outfit.lookMount));
 	}
 
-	if (!player->canWear(outfit.lookType, outfit.lookAddons)) {
+	if (!player->canWearOutfit(outfit.lookType, outfit.lookAddons)) {
 		outfit.lookType = 0;
 		outfit.lookAddons = 0;
 	}
@@ -6124,6 +6124,10 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, uint8_t isMoun
 		return;
 	}
 
+	if (!player->changeOutfit(outfit, true)) {
+		return;
+	}
+
 	if (player->isWearingSupportOutfit()) {
 		outfit.lookMount = 0;
 		isMountRandomized = 0;
@@ -6174,7 +6178,7 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, uint8_t isMoun
 		player->dismount();
 	}
 
-	if (player->canWear(outfit.lookType, outfit.lookAddons)) {
+	if (player->canWearOutfit(outfit.lookType, outfit.lookAddons)) {
 		player->defaultOutfit = outfit;
 
 		if (player->hasCondition(CONDITION_OUTFIT)) {

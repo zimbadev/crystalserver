@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <outfits>
+	<!-- Example of new attributies 
+	<outfit type="1" looktype="128" name="Citizen" premium="no" unlocked="yes" enabled="yes" healthGain="5" healthTicks="5" manaGain="5" manaTicks="5" manaShield="no" speed="220" attackSpeed="500">
+		<skills>
+			<fist value="1" />
+			<club value="2" />
+			<axe value="3" />
+			<sword value="4" />
+			<distance value="5" />
+			<shielding value="6" />
+			<fishing value="7" />
+		</skills>
+		<stats>
+			<maxHealth value="5" />
+			<maxMana value="5" />
+			<soul value="100" />
+			<cap value="100" />
+			<magicLevel value="1" />
+		</stats>
+	</outfit>
+	-->
 	<!-- Female -->
 	<outfit type="0" looktype="136" name="Citizen" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="0" looktype="137" name="Hunter" premium="no" unlocked="yes" enabled="yes" />

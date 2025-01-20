@@ -1017,6 +1017,16 @@ bool ConditionAttributes::setParam(ConditionParam_t param, int32_t value) {
 			return true;
 		}
 
+		case CONDITION_PARAM_STAT_SOULPOINTS: {
+			stats[STAT_SOULPOINTS] = value;
+			return true;
+		}
+
+		case CONDITION_PARAM_STAT_SOULPOINTSPERCENT: {
+			statsPercent[STAT_SOULPOINTS] = std::max<int32_t>(0, value);
+			return true;
+		}
+
 		case CONDITION_PARAM_STAT_MAGICPOINTSPERCENT: {
 			statsPercent[STAT_MAGICPOINTS] = std::max<int32_t>(0, value);
 			return true;

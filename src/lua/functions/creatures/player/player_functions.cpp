@@ -2733,7 +2733,7 @@ int PlayerFunctions::luaPlayerHasOutfit(lua_State* L) {
 	if (player) {
 		const uint16_t lookType = Lua::getNumber<uint16_t>(L, 2);
 		const auto addon = Lua::getNumber<uint8_t>(L, 3, 0);
-		Lua::pushBoolean(L, player->canWear(lookType, addon));
+		Lua::pushBoolean(L, player->canWearOutfit(lookType, addon));
 	} else {
 		lua_pushnil(L);
 	}
