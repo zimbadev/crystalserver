@@ -2575,9 +2575,6 @@ float Monster::getAttackMultiplier() const {
 
 float Monster::getDefenseMultiplier() const {
 	float multiplier = mType->getDefenseMultiplier();
-	if (auto stacks = getForgeStack(); stacks > 0) {
-		multiplier *= (1 + (0.1 * stacks));
-	}
 	return multiplier;
 }
 
