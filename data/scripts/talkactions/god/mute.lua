@@ -32,7 +32,7 @@ mute:separator(" ")
 mute:groupType("god")
 mute:register()
 
--- Unmute player
+---------------- // ----------------
 local unmute = TalkAction("/unmute")
 
 function unmute.onSay(player, words, param)
