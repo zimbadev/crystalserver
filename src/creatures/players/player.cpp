@@ -5242,6 +5242,20 @@ bool Player::checkSpellNameInsteadOfWords() const {
 	return false;
 }
 
+bool Player::checkMute() const {
+	auto featureKV = kv()->scoped("features")->get("mutePlayer");
+	if (featureKV.has_value()) {
+		auto value = featureKV->getNumber();
+		if (value == 1) {
+			return true;
+		} else if (value == 0) {
+			return false;
+		}
+	}
+
+	return false;
+}
+
 QuickLootFilter_t Player::getQuickLootFilter() const {
 	return quickLootFilter;
 }

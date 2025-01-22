@@ -1227,6 +1227,7 @@ public:
 	bool checkChainSystem() const;
 	bool checkEmoteSpells() const;
 	bool checkSpellNameInsteadOfWords() const;
+	bool checkMute() const;
 
 	QuickLootFilter_t getQuickLootFilter() const;
 
