@@ -14,9 +14,7 @@ monster.outfit = {
 }
 
 monster.raceId = 290
-monster.Bestiary = {
-
-}
+monster.Bestiary = {}
 
 monster.health = 795
 monster.maxHealth = 795
@@ -59,16 +57,12 @@ monster.light = {
 	color = 0,
 }
 
-monster.voices = {
+monster.voices = {}
 
-}
-
-monster.loot = {
-
-}
+monster.loot = {}
 
 monster.attacks = {
-{ name = "drunk", interval = 2000, chance = 70, length = 3, spread = 2, effect = CONST_ME_SOUND_RED, target = false, duration = 5000 },
+	{ name = "drunk", interval = 2000, chance = 70, length = 3, spread = 2, effect = CONST_ME_SOUND_RED, target = false, duration = 5000 },
 }
 
 monster.defenses = {
