@@ -7193,6 +7193,7 @@ void ProtocolGame::sendOutfitWindow() {
 			msg.addString(mount->name);
 		}
 
+		player->hasRequestedOutfit(true);
 		writeToOutputBuffer(msg);
 		return;
 	}
