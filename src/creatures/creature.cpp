@@ -220,15 +220,42 @@ void Creature::onCreatureWalk() {
 }
 
 void Creature::onWalk(Direction &dir) {
-	if (hasCondition(CONDITION_DRUNK)) {
-		uint32_t r = uniform_random(0, 60);
-		if (r <= DIRECTION_DIAGONAL_MASK) {
-			if (r < DIRECTION_DIAGONAL_MASK) {
-				dir = static_cast<Direction>(r);
+	int32_t highestDrunkSubId = -1;
+	if (!isSuppress(CONDITION_DRUNK, false)) {
+		for (const auto &condition : conditions) {
+			if (condition->getType() != CONDITION_DRUNK) {
+				continue;
 			}
-			g_game().internalCreatureSay(static_self_cast<Creature>(), TALKTYPE_MONSTER_SAY, "Hicks!", false);
+
+			int32_t subId = condition->getSubId();
+			if ((!condition->getEndTime() || condition->getEndTime() >= OTSYS_TIME()) && subId > highestDrunkSubId) {
+				highestDrunkSubId = subId;
+			}
 		}
 	}
+
+	if (highestDrunkSubId < 0) {
+		return;
+	}
+
+	highestDrunkSubId += 25;
+	int32_t randomValue = normal_random(1, 100);
+	if (randomValue > highestDrunkSubId) {
+		return;
+	}
+
+	int32_t threshold = highestDrunkSubId / 5;
+	if (randomValue <= threshold) {
+		dir = DIRECTION_NORTH;
+	} else if (randomValue <= (threshold * 2)) {
+		dir = DIRECTION_WEST;
+	} else if (randomValue <= (threshold * 3)) {
+		dir = DIRECTION_SOUTH;
+	} else if (randomValue <= (threshold * 4)) {
+		dir = DIRECTION_EAST;
+	}
+
+	g_game().internalCreatureSay(static_self_cast<Creature>(), TALKTYPE_MONSTER_SAY, "Hicks!", false);
 }
 
 void Creature::resetMovementState() {
