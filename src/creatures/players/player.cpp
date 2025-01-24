@@ -5463,12 +5463,12 @@ std::vector<std::shared_ptr<Item>> Player::getEquippedItems() const {
 }
 
 std::shared_ptr<Item> Player::getEquippedItem(Slots_t slot) const {
-    if (slot < CONST_SLOT_FIRST || slot >= CONST_SLOT_LAST) {
-        return nullptr;
-    }
+	if (slot < CONST_SLOT_FIRST || slot >= CONST_SLOT_LAST) {
+		return nullptr;
+	}
 
-    const auto &item = inventory[slot];
-    return item;
+	const auto &item = inventory[slot];
+	return item;
 }
 
 std::map<uint32_t, uint32_t> &Player::getAllItemTypeCount(std::map<uint32_t, uint32_t> &countMap) const {

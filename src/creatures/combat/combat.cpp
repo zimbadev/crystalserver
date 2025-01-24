@@ -846,9 +846,9 @@ void Combat::CombatDispelFunc(const std::shared_ptr<Creature> &, const std::shar
 	if (params.dispelType == CONDITION_INVISIBLE) {
 		if (const auto &player = target->getPlayer()) {
 			const auto &item = player->getEquippedItem(CONST_SLOT_RING);
-			if (item && item->getID() == ITEM_STEALTH_RING_ACTIVATED && (g_game().getWorldType() == WORLD_TYPE_PVP_ENFORCED
-				|| player->getTile()->hasFlag(TILESTATE_PVPZONE)) && normal_random(1, 100) <= 10)
+			if (item && item->getID() == ITEM_STEALTH_RING_ACTIVATED && (g_game().getWorldType() == WORLD_TYPE_PVP_ENFORCED || player->getTile()->hasFlag(TILESTATE_PVPZONE)) && normal_random(1, 100) <= 10) {
 				g_game().internalRemoveItem(item);
+			}
 		}
 	}
 
