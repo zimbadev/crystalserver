@@ -18,7 +18,7 @@
 
 ### Bug Fixes
 
-- notting
+- Fixed Stealth Ring being destroyed in certain cases, based on [Stealth Ring](https://tibia.fandom.com/wiki/Stealth_Ring). ([Tryller](https://github.com/jprzimba))
 
 
 ## Version 4.1.2

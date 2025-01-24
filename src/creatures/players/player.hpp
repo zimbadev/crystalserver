@@ -1259,6 +1259,14 @@ public:
 	 */
 	std::vector<std::shared_ptr<Item>> getEquippedItems() const;
 
+	/**
+	 * @brief Get the equipped item in the specified slot.
+	 * @details This function returns the item currently equipped in the given slot, or nullptr if the slot is empty or invalid.
+	 * @param slot The slot from which to retrieve the equipped item.
+	 * @return A pointer to the equipped item, or nullptr if no item is equipped in the specified slot.
+	 */
+	std::shared_ptr<Item> getEquippedItem(Slots_t slot) const;
+
 	// Player wheel interface
 	std::unique_ptr<PlayerWheel> &wheel();
 	const std::unique_ptr<PlayerWheel> &wheel() const;
