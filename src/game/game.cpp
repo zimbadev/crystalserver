@@ -10565,7 +10565,7 @@ void Game::playerCheckActivity(const std::string &playerName, int interval) {
 		return;
 	}
 
-	if (!player->hasFlag(PlayerFlags_t::AllowIdle)) { 
+	if (!player->hasFlag(PlayerFlags_t::AllowIdle)) {
 		player->m_deathTime += interval;
 		const int32_t kickAfterMinutes = g_configManager().getNumber(KICK_AFTER_MINUTES);
 		if (player->m_deathTime > (kickAfterMinutes * 60000) + 60000) {
