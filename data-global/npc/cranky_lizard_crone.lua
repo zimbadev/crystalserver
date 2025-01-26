@@ -42,7 +42,7 @@ npcType.onThink = function(npc, interval)
 end
 
 -- Messages
-local newaddon = "Here you are, enjoy your brand new addon!"
+local newAddon = "Here you are, enjoy your brand new addon!"
 local noItems = "You do not have all the required items."
 local already = "It seems you already have this addon, don't you try to mock me son!"
 
@@ -57,7 +57,7 @@ function WayfarerFirst(npc, creature, message, keywords, parameters, node)
 		if player:getStorageValue(Storage.WayfarerOutfit) < 1 then
 			if player:getItemCount(11701) > 0 then
 				if player:removeItem(11701, 1) then
-					npcHandler:say(newaddon, npc, creature)
+					npcHandler:say(newAddon, npc, creature)
 					player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
 					player:addOutfitAddon(366, 1)
 					player:addOutfitAddon(367, 1)
@@ -82,7 +82,7 @@ function WayfarerSecond(npc, creature, message, keywords, parameters, node)
 		if player:getStorageValue(Storage.WayfarerOutfit + 1) < 1 then
 			if player:getItemCount(11700) > 0 then
 				if player:removeItem(11700, 1) then
-					npcHandler:say(newaddon, npc, creature)
+					npcHandler:say(newAddon, npc, creature)
 					player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
 					player:addOutfitAddon(366, 2)
 					player:addOutfitAddon(367, 2)
