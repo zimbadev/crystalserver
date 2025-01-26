@@ -62,6 +62,7 @@
 			<flag hasfulllight="1" />
 			<flag allowidle="1" />
 			<flag notgainunjustified="1" />
+			<flag canwearallmounts="1" />
 		</flags>
 	</group>
 	<group id="5" name="community manager" access="1" maxdepotitems="0" maxvipentries="200" outfit="266">
@@ -109,6 +110,7 @@
 			<flag hasfulllight="1" />
 			<flag allowidle="1" />
 			<flag notgainunjustified="1" />
+			<flag canwearallmounts="1" />
 		</flags>
 	</group>
 	<group id="6" name="god" access="1" maxdepotitems="0" maxvipentries="200" outfit="302">
@@ -157,6 +159,7 @@
 			<flag hasfulllight="1" />
 			<flag allowidle="1" />
 			<flag notgainunjustified="1" />
+			<flag canwearallmounts="1" />
 		</flags>
 	</group>
 	<group id="7" name="game tester" access="0" maxdepotitems="0" maxvipentries="200">

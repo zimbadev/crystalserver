@@ -44,6 +44,7 @@ local PlayerFlags_t = {
 	["HasFullLight"] = HasFullLight,
 	["AllowIdle"] = AllowIdle,
 	["NotGainUnjustified"] = NotGainUnjustified,
+	["CanWearAllMounts"] = CanWearAllMounts,
 }
 
 local function sendValidKeys(player)

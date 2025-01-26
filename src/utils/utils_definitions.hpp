@@ -694,6 +694,7 @@ enum class PlayerFlags_t : uint8_t {
 	HasFullLight,
 	AllowIdle,
 	NotGainUnjustified,
+	CanWearAllMounts,
 
 	// Must always be the last
 	FlagLast

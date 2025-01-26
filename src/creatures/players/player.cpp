@@ -7415,7 +7415,7 @@ bool Player::untameMount(uint8_t mountId) {
 }
 
 bool Player::hasMount(const std::shared_ptr<Mount> &mount) const {
-	if (isAccessPlayer()) {
+	if (hasFlag(PlayerFlags_t::CanWearAllMounts)) {
 		return true;
 	}
 
