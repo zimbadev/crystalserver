@@ -42,6 +42,8 @@ local PlayerFlags_t = {
 	["IsGameTester"] = IsGameTester,
 	["CanMoveFromFar"] = CanMoveFromFar,
 	["HasFullLight"] = HasFullLight,
+	["AllowIdle"] = AllowIdle,
+	["NotGainUnjustified"] = NotGainUnjustified,
 }
 
 local function sendValidKeys(player)

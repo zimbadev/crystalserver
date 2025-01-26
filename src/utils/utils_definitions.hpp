@@ -692,6 +692,8 @@ enum class PlayerFlags_t : uint8_t {
 	IsGameTester,
 	CanMoveFromFar,
 	HasFullLight,
+	AllowIdle,
+	NotGainUnjustified,
 
 	// Must always be the last
 	FlagLast
