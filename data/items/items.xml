@@ -76920,14 +76920,36 @@ Granted by TibiaGoals.com"/>
 	<item id="44902" article="a" name="ramp">
 		<attribute key="floorchange" value="south"/>
 	</item>
+	<item id="44913" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="44914" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="44915" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="44916" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="44917" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="44918" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
 	<item id="44941" article="a" name="ramp"/>
-		<item id="44942" article="a" name="ramp">
+	<item id="44942" article="a" name="ramp">
 		<attribute key="floorchange" value="north"/>
 	</item>
-	<item id="44943" article="a" name="ramp"/>
-	<item id="44944" article="a" name="ramp">
+	<item id="44943" article="a" name="ramp">
 		<attribute key="floorchange" value="west"/>
 	</item>
+	<item id="44944" article="a" name="ramp"/>
 	<item id="44945" article="a" name="ramp"/>
 	<item id="44946" article="a" name="ramp">
 		<attribute key="floorchange" value="east"/>
@@ -80392,6 +80414,76 @@ Granted by TibiaGoals.com"/>
 	</item>
 	<item id="48494" article="a" name="ladder">
 		<attribute key="type" value="ladder"/>
+	</item>
+	<item id="48495" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48496" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48497" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="48498" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="48499" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48500" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48501" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="48502" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="48520" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48521" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48522" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48523" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48524" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="48525" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="48526" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="48527" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="48528" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48529" article="a" name="closed door">
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="48530" article="an" name="open door">
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="48531" article="an" name="open door">
+		<attribute key="type" value="door"/>
 	</item>
 	<item id="48929" article="an" name="black sheep soul core">
 		<attribute key="primarytype" value="soul cores"/>
