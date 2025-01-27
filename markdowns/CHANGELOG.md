@@ -17,6 +17,15 @@
 
 - data/XML/groups.xml
 - data/XML/outfits.xml
+- data-global/scripts/quests/ferumbras_ascension/actions_lever_first.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_lever_four.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_lever_second.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_lever_third.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_the_shatterer_levers.lua
+- data-global/scripts/quests/ferumbras_ascension/creaturescripts_bosses_kill.lua
+- data-global/scripts/quests/ferumbras_ascension/creaturescripts_death_dragon.lua
+- data-global/scripts/quests/ferumbras_ascension/creaturescripts_the_shatterer_kill.lua
+- data-global/scripts/quests/ferumbras_ascension/creaturescripts_zamulosh_clone.lua
 
 ### Bug Fixes
 
