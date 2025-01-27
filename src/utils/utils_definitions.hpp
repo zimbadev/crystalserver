@@ -690,6 +690,11 @@ enum class PlayerFlags_t : uint8_t {
 	CanMapClickTeleport,
 	IgnoredByNpcs,
 	IsGameTester,
+	CanMoveFromFar,
+	HasFullLight,
+	AllowIdle,
+	NotGainUnjustified,
+	CanWearAllMounts,
 
 	// Must always be the last
 	FlagLast

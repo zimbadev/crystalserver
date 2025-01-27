@@ -7777,8 +7777,8 @@ void ProtocolGame::AddCreature(NetworkMessage &msg, const std::shared_ptr<Creatu
 	}
 
 	LightInfo lightInfo = creature->getCreatureLight();
-	msg.addByte(player->isAccessPlayer() ? 0xFF : lightInfo.level);
-	msg.addByte(lightInfo.color);
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 0xFF : lightInfo.level));
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 215 : lightInfo.color));
 
 	msg.add<uint16_t>(creature->getStepSpeed());
 
@@ -8076,8 +8076,8 @@ void ProtocolGame::closeImbuementWindow() {
 
 void ProtocolGame::AddWorldLight(NetworkMessage &msg, LightInfo lightInfo) {
 	msg.addByte(0x82);
-	msg.addByte((player->isAccessPlayer() ? 0xFF : lightInfo.level));
-	msg.addByte(lightInfo.color);
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 0xFF : lightInfo.level));
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 215 : lightInfo.color));
 }
 
 void ProtocolGame::sendSpecialContainersAvailable() {
@@ -8137,8 +8137,8 @@ void ProtocolGame::AddCreatureLight(NetworkMessage &msg, const std::shared_ptr<C
 
 	msg.addByte(0x8D);
 	msg.add<uint32_t>(creature->getID());
-	msg.addByte((player->isAccessPlayer() ? 0xFF : lightInfo.level));
-	msg.addByte(lightInfo.color);
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 0xFF : lightInfo.level));
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 215 : lightInfo.color));
 }
 
 // tile

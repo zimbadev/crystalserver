@@ -6563,7 +6563,7 @@ void Player::clearAttacked() {
 }
 
 void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked) {
-	if (hasFlag(PlayerFlags_t::NotGainInFight) || attacked == getPlayer() || g_game().getWorldType() == WORLD_TYPE_PVP_ENFORCED) {
+	if (hasFlag(PlayerFlags_t::NotGainInFight) || hasFlag(PlayerFlags_t::NotGainUnjustified) || attacked == getPlayer() || g_game().getWorldType() == WORLD_TYPE_PVP_ENFORCED) {
 		return;
 	}
 
@@ -7415,7 +7415,7 @@ bool Player::untameMount(uint8_t mountId) {
 }
 
 bool Player::hasMount(const std::shared_ptr<Mount> &mount) const {
-	if (isAccessPlayer()) {
+	if (hasFlag(PlayerFlags_t::CanWearAllMounts)) {
 		return true;
 	}
 

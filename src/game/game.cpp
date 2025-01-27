@@ -1462,7 +1462,7 @@ void Game::playerMoveCreature(const std::shared_ptr<Player> &player, const std::
 
 		player->setNextActionTask(nullptr);
 
-		if (!Position::areInRange<1, 1, 0>(movingCreatureOrigPos, player->getPosition())) {
+		if (!Position::areInRange<1, 1, 0>(movingCreatureOrigPos, player->getPosition()) && !player->hasFlag(PlayerFlags_t::CanMoveFromFar)) {
 			// need to walk to the creature first before moving it
 			std::vector<Direction> listDir;
 			if (player->getPathTo(movingCreatureOrigPos, listDir, 0, 1, true, true)) {
@@ -1765,7 +1765,7 @@ void Game::playerMoveItem(const std::shared_ptr<Player> &player, const Position 
 		return;
 	}
 
-	if (!Position::areInRange<1, 1>(playerPos, mapFromPos)) {
+	if (!Position::areInRange<1, 1>(playerPos, mapFromPos) && !player->hasFlag(PlayerFlags_t::CanMoveFromFar)) {
 		// need to walk to the item first before using it
 		std::vector<Direction> listDir;
 		if (player->getPathTo(item->getPosition(), listDir, 0, 1, true, true)) {
@@ -1803,7 +1803,7 @@ void Game::playerMoveItem(const std::shared_ptr<Player> &player, const Position 
 			}
 		}
 
-		if (!Position::areInRange<1, 1, 0>(playerPos, mapToPos)) {
+		if (!Position::areInRange<1, 1, 0>(playerPos, mapToPos) && !player->hasFlag(PlayerFlags_t::CanMoveFromFar)) {
 			auto walkPos = mapToPos;
 			if (vertical) {
 				walkPos.x++;
@@ -10565,7 +10565,7 @@ void Game::playerCheckActivity(const std::string &playerName, int interval) {
 		return;
 	}
 
-	if (!player->isAccessPlayer()) {
+	if (!player->hasFlag(PlayerFlags_t::AllowIdle)) {
 		player->m_deathTime += interval;
 		const int32_t kickAfterMinutes = g_configManager().getNumber(KICK_AFTER_MINUTES);
 		if (player->m_deathTime > (kickAfterMinutes * 60000) + 60000) {

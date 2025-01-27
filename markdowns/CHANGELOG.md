@@ -6,6 +6,7 @@
 ### Features
 
 - Added new attributes to outfits. Check `outfits.xml` for examples. ([Tryller](https://github.com/jprzimba))
+- Added new flags: `CanMoveFromFar`, `HasFullLight`, `AllowIdle`, `CanWearAllMounts`, and `NotGainUnjustified`. ([Tryller](https://github.com/jprzimba))
 - Added Vibrancy imbuement. ([pennaor](https://github.com/pennaor))
 
 ## Added files
@@ -14,6 +15,7 @@
 
 ## Modified files
 
+- data/XML/groups.xml
 - data/XML/outfits.xml
 
 ### Bug Fixes

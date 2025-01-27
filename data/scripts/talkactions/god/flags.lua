@@ -40,6 +40,11 @@ local PlayerFlags_t = {
 	["CanMapClickTeleport"] = CanMapClickTeleport,
 	["IgnoredByNpcs"] = IgnoredByNpcs,
 	["IsGameTester"] = IsGameTester,
+	["CanMoveFromFar"] = CanMoveFromFar,
+	["HasFullLight"] = HasFullLight,
+	["AllowIdle"] = AllowIdle,
+	["NotGainUnjustified"] = NotGainUnjustified,
+	["CanWearAllMounts"] = CanWearAllMounts,
 }
 
 local function sendValidKeys(player)
