@@ -23,10 +23,10 @@ function feature.onSay(player, words, param)
 	end
 
 	if param == "on" then
-		player:setFeature(Features.ChainSystem, 1)
+		player:setFeature(Features.ChainSystem, true)
 		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Chain System is now enabled.")
 	elseif param == "off" then
-		player:setFeature(Features.ChainSystem, 0)
+		player:setFeature(Features.ChainSystem, false)
 		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Chain System is now disabled.")
 	end
 	return true

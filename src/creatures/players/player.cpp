@@ -5186,19 +5186,21 @@ bool Player::checkAutoLoot(bool isBoss) const {
 
 bool Player::checkChainSystem() const {
 	if (!g_configManager().getBoolean(TOGGLE_CHAIN_SYSTEM)) {
+		kv()->scoped("features")->set("chainSystem", false);
 		return false;
 	}
 
 	if (g_configManager().getBoolean(VIP_SYSTEM_ENABLED) && g_configManager().getBoolean(CHAIN_SYSTEM_VIP_ONLY) && !isVip()) {
+		kv()->scoped("features")->set("chainSystem", false);
 		return false;
 	}
 
 	auto featureKV = kv()->scoped("features")->get("chainSystem");
 	if (featureKV.has_value()) {
-		auto value = featureKV->getNumber();
-		if (value == 1) {
+		auto value = featureKV->get<bool>();
+		if (value) {
 			return true;
-		} else if (value == 0) {
+		} else {
 			return false;
 		}
 	}
@@ -5208,15 +5210,16 @@ bool Player::checkChainSystem() const {
 
 bool Player::checkEmoteSpells() const {
 	if (!g_configManager().getBoolean(EMOTE_SPELLS)) {
+		kv()->scoped("features")->set("emoteSpells", false);
 		return false;
 	}
 
 	auto featureKV = kv()->scoped("features")->get("emoteSpells");
 	if (featureKV.has_value()) {
-		auto value = featureKV->getNumber();
-		if (value == 1) {
+		auto value = featureKV->get<bool>();
+		if (value) {
 			return true;
-		} else if (value == 0) {
+		} else {
 			return false;
 		}
 	}
@@ -5226,15 +5229,16 @@ bool Player::checkEmoteSpells() const {
 
 bool Player::checkSpellNameInsteadOfWords() const {
 	if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
+		kv()->scoped("features")->set("spellNameInsteadOfWords", false);
 		return false;
 	}
 
 	auto featureKV = kv()->scoped("features")->get("spellNameInsteadOfWords");
 	if (featureKV.has_value()) {
-		auto value = featureKV->getNumber();
-		if (value == 1) {
+		auto value = featureKV->get<bool>();
+		if (value) {
 			return true;
-		} else if (value == 0) {
+		} else {
 			return false;
 		}
 	}
