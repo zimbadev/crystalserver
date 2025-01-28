@@ -15,6 +15,7 @@
 
 ## Modified files
 
+- data/modules/scripts/gamestore/init.lua
 - data/XML/groups.xml
 - data/XML/outfits.xml
 - data-global/scripts/quests/ferumbras_ascension/actions_lever_first.lua
@@ -30,6 +31,7 @@
 ### Bug Fixes
 
 - Fixed Stealth Ring being destroyed in certain cases, based on [Stealth Ring](https://tibia.fandom.com/wiki/Stealth_Ring). ([Tryller](https://github.com/jprzimba))
+- Fixed an issue where store items could not be moved to the store inbox after being unwrapped. ([TheGlitchLab](https://github.com/TheGlitchLab))
 
 
 ## Version 4.1.2
