@@ -6,6 +6,7 @@
 ### Features
 
 - Added new attributes to outfits. Check `outfits.xml` for examples. ([Tryller](https://github.com/jprzimba))
+- Added new attributies to /attr: `text`, `writer`, `duration`, `weight`, `imbuementslot`, `tier`, `hitchance`, `shootrange`, `special` and `quicklootcontainer`. ([Tryller](https://github.com/jprzimba))
 - Added new flags: `CanMoveFromFar`, `HasFullLight`, `AllowIdle`, `CanWearAllMounts`, and `NotGainUnjustified`. ([Tryller](https://github.com/jprzimba))
 - Added Vibrancy imbuement. ([pennaor](https://github.com/pennaor))
 
@@ -16,6 +17,7 @@
 ## Modified files
 
 - data/modules/scripts/gamestore/init.lua
+- data/scripts/talkactions/god/attributes.lua
 - data/XML/groups.xml
 - data/XML/outfits.xml
 - data-global/scripts/quests/ferumbras_ascension/actions_lever_first.lua
