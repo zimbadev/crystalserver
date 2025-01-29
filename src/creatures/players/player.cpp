@@ -27,6 +27,7 @@
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/npcs/npc.hpp"
+#include "creatures/players/animus_mastery/animus_mastery.hpp"
 #include "creatures/players/wheel/player_wheel.hpp"
 #include "creatures/players/wheel/wheel_gems.hpp"
 #include "creatures/players/achievement/player_achievement.hpp"
@@ -79,7 +80,8 @@ Player::Player(std::shared_ptr<ProtocolGame> p) :
 	lastPong(lastPing),
 	lastLoad(OTSYS_TIME()),
 	inbox(std::make_shared<Inbox>(ITEM_INBOX)),
-	client(std::move(p)) {
+	client(std::move(p)),
+	m_animusMastery(*this) {
 	m_playerVIP = std::make_unique<PlayerVIP>(*this);
 	m_wheelPlayer = std::make_unique<PlayerWheel>(*this);
 	m_playerAchievement = std::make_unique<PlayerAchievement>(*this);
@@ -3123,6 +3125,14 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 		exp += (exp * (1.75 * getHazardSystemPoints() * g_configManager().getFloat(HAZARD_EXP_BONUS_MULTIPLIER))) / 100.;
 	}
 
+	const bool handleAnimusMastery = monster && animusMastery().has(monster->getMonsterType()->name);
+	float animusMasteryMultiplier = 0;
+
+	if (handleAnimusMastery) {
+		animusMasteryMultiplier = animusMastery().getExperienceMultiplier();
+		exp *= animusMasteryMultiplier;
+	}
+
 	experience += exp;
 
 	if (sendText) {
@@ -3132,6 +3142,10 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 			if (expPercent > 0) {
 				expString = expString + fmt::format(" (VIP bonus {}%)", expPercent > 100 ? 100 : expPercent);
 			}
+		}
+
+		if (handleAnimusMastery) {
+			expString = fmt::format("{} (animus mastery bonus {:.1f}%)", expString, (animusMasteryMultiplier - 1) * 100);
 		}
 
 		TextMessage message(MESSAGE_EXPERIENCE, "You gained " + expString + (handleHazardExperience ? " (Hazard)" : ""));
@@ -5186,19 +5200,21 @@ bool Player::checkAutoLoot(bool isBoss) const {
 
 bool Player::checkChainSystem() const {
 	if (!g_configManager().getBoolean(TOGGLE_CHAIN_SYSTEM)) {
+		kv()->scoped("features")->set("chainSystem", false);
 		return false;
 	}
 
 	if (g_configManager().getBoolean(VIP_SYSTEM_ENABLED) && g_configManager().getBoolean(CHAIN_SYSTEM_VIP_ONLY) && !isVip()) {
+		kv()->scoped("features")->set("chainSystem", false);
 		return false;
 	}
 
 	auto featureKV = kv()->scoped("features")->get("chainSystem");
 	if (featureKV.has_value()) {
-		auto value = featureKV->getNumber();
-		if (value == 1) {
+		auto value = featureKV->get<bool>();
+		if (value) {
 			return true;
-		} else if (value == 0) {
+		} else {
 			return false;
 		}
 	}
@@ -5208,15 +5224,16 @@ bool Player::checkChainSystem() const {
 
 bool Player::checkEmoteSpells() const {
 	if (!g_configManager().getBoolean(EMOTE_SPELLS)) {
+		kv()->scoped("features")->set("emoteSpells", false);
 		return false;
 	}
 
 	auto featureKV = kv()->scoped("features")->get("emoteSpells");
 	if (featureKV.has_value()) {
-		auto value = featureKV->getNumber();
-		if (value == 1) {
+		auto value = featureKV->get<bool>();
+		if (value) {
 			return true;
-		} else if (value == 0) {
+		} else {
 			return false;
 		}
 	}
@@ -5226,15 +5243,16 @@ bool Player::checkEmoteSpells() const {
 
 bool Player::checkSpellNameInsteadOfWords() const {
 	if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
+		kv()->scoped("features")->set("spellNameInsteadOfWords", false);
 		return false;
 	}
 
 	auto featureKV = kv()->scoped("features")->get("spellNameInsteadOfWords");
 	if (featureKV.has_value()) {
-		auto value = featureKV->getNumber();
-		if (value == 1) {
+		auto value = featureKV->get<bool>();
+		if (value) {
 			return true;
-		} else if (value == 0) {
+		} else {
 			return false;
 		}
 	}
@@ -5474,6 +5492,15 @@ std::vector<std::shared_ptr<Item>> Player::getEquippedItems() const {
 	}
 
 	return valid_items;
+}
+
+std::shared_ptr<Item> Player::getEquippedItem(Slots_t slot) const {
+	if (slot < CONST_SLOT_FIRST || slot >= CONST_SLOT_LAST) {
+		return nullptr;
+	}
+
+	const auto &item = inventory[slot];
+	return item;
 }
 
 std::map<uint32_t, uint32_t> &Player::getAllItemTypeCount(std::map<uint32_t, uint32_t> &countMap) const {
@@ -6078,17 +6105,23 @@ bool Player::onKilledMonster(const std::shared_ptr<Monster> &monster) {
 	if (hasFlag(PlayerFlags_t::NotGenerateLoot)) {
 		monster->setDropLoot(false);
 	}
+
 	if (monster->hasBeenSummoned()) {
 		return false;
 	}
+
 	const auto &mType = monster->getMonsterType();
 	if (mType == nullptr) {
 		g_logger().error("[{}] Monster type is null.", __FUNCTION__);
 		return false;
 	}
-	addHuntingTaskKill(mType);
-	addBestiaryKill(mType);
-	addBosstiaryKill(mType);
+
+	if (!monster->getSoulPit()) {
+		addHuntingTaskKill(mType);
+		addBestiaryKill(mType);
+		addBosstiaryKill(mType);
+	}
+
 	return false;
 }
 
@@ -6568,7 +6601,7 @@ void Player::clearAttacked() {
 }
 
 void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked) {
-	if (hasFlag(PlayerFlags_t::NotGainInFight) || attacked == getPlayer() || g_game().getWorldType() == WORLD_TYPE_PVP_ENFORCED) {
+	if (hasFlag(PlayerFlags_t::NotGainInFight) || hasFlag(PlayerFlags_t::NotGainUnjustified) || attacked == getPlayer() || g_game().getWorldType() == WORLD_TYPE_PVP_ENFORCED) {
 		return;
 	}
 
@@ -7250,7 +7283,13 @@ uint8_t Player::getLastMount() const {
 	if (value > 0) {
 		return value;
 	}
-	return static_cast<uint8_t>(kv()->get("last-mount")->get<int>());
+
+	const auto lastMount = kv()->get("last-mount");
+	if (!lastMount.has_value()) {
+		return 0;
+	}
+
+	return static_cast<uint8_t>(lastMount->get<int>());
 }
 
 uint8_t Player::getCurrentMount() const {
@@ -7420,7 +7459,7 @@ bool Player::untameMount(uint8_t mountId) {
 }
 
 bool Player::hasMount(const std::shared_ptr<Mount> &mount) const {
-	if (isAccessPlayer()) {
+	if (hasFlag(PlayerFlags_t::CanWearAllMounts)) {
 		return true;
 	}
 
@@ -10673,6 +10712,15 @@ const std::unique_ptr<PlayerTitle> &Player::title() const {
 	return m_playerTitle;
 }
 
+// Cyclopedia interface
+std::unique_ptr<PlayerCyclopedia> &Player::cyclopedia() {
+	return m_playerCyclopedia;
+}
+
+const std::unique_ptr<PlayerCyclopedia> &Player::cyclopedia() const {
+	return m_playerCyclopedia;
+}
+
 // VIP interface
 std::unique_ptr<PlayerVIP> &Player::vip() {
 	return m_playerVIP;
@@ -10682,13 +10730,13 @@ const std::unique_ptr<PlayerVIP> &Player::vip() const {
 	return m_playerVIP;
 }
 
-// Cyclopedia
-std::unique_ptr<PlayerCyclopedia> &Player::cyclopedia() {
-	return m_playerCyclopedia;
+// Animus Mastery interface
+AnimusMastery &Player::animusMastery() {
+	return m_animusMastery;
 }
 
-const std::unique_ptr<PlayerCyclopedia> &Player::cyclopedia() const {
-	return m_playerCyclopedia;
+const AnimusMastery &Player::animusMastery() const {
+	return m_animusMastery;
 }
 
 void Player::sendLootMessage(const std::string &message) const {

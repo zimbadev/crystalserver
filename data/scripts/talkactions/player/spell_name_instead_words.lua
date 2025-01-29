@@ -18,10 +18,10 @@ function featrue.onSay(player, words, param)
 	end
 
 	if param == "on" then
-		player:setFeature(Features.SpellNameInsteadOfWords, 1)
+		player:setFeature(Features.SpellNameInsteadOfWords, true)
 		player:sendTextMessage(MESSAGE_LOOK, "You have activated spell name instead of words.")
 	elseif param == "off" then
-		player:setFeature(Features.SpellNameInsteadOfWords, 0)
+		player:setFeature(Features.SpellNameInsteadOfWords, false)
 		player:sendTextMessage(MESSAGE_LOOK, "You have deactivated spell name instead of words.")
 	end
 	return true

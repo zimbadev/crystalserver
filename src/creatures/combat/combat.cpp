@@ -645,6 +645,10 @@ void Combat::CombatHealthFunc(const std::shared_ptr<Creature> &caster, const std
 			}
 		}
 
+		if (targetPlayer && damage.primary.type == COMBAT_HEALING) {
+			damage.primary.value *= targetPlayer->getBuff(BUFF_HEALINGRECEIVED) / 100.;
+		}
+
 		damage.damageMultiplier += attackerPlayer->wheel()->getMajorStatConditional("Divine Empowerment", WheelMajor_t::DAMAGE);
 		g_logger().trace("Wheel Divine Empowerment damage multiplier {}", damage.damageMultiplier);
 	}
@@ -839,6 +843,19 @@ void Combat::CombatConditionFunc(const std::shared_ptr<Creature> &caster, const 
 }
 
 void Combat::CombatDispelFunc(const std::shared_ptr<Creature> &, const std::shared_ptr<Creature> &target, const CombatParams &params, CombatDamage*) {
+	if (!target->hasCondition(params.dispelType, -1)) {
+		return;
+	}
+
+	if (params.dispelType == CONDITION_INVISIBLE) {
+		if (const auto &player = target->getPlayer()) {
+			const auto &item = player->getEquippedItem(CONST_SLOT_RING);
+			if (item && item->getID() == ITEM_STEALTH_RING_ACTIVATED && (g_game().getWorldType() == WORLD_TYPE_PVP_ENFORCED || player->getTile()->hasFlag(TILESTATE_PVPZONE)) && normal_random(1, 100) <= 10) {
+				g_game().internalRemoveItem(item);
+			}
+		}
+	}
+
 	if (target) {
 		target->removeCombatCondition(params.dispelType);
 	}
@@ -1977,8 +1994,16 @@ void AreaCombat::getList(const Position &centerPos, const Position &targetPos, s
 
 	for (uint32_t y = 0; y < rows; ++y) {
 		for (uint32_t x = 0; x < cols; ++x) {
-			if (area->getValue(y, x) != 0 && g_game().isSightClear(casterPos, tmpPos, true)) {
-				list.emplace_back(g_game().map.getOrCreateTile(tmpPos));
+			if (area->getValue(y, x) != 0) {
+				std::shared_ptr<Tile> tile = g_game().map.getTile(tmpPos);
+				if (tile && tile->hasFlag(TILESTATE_FLOORCHANGE)) {
+					++tmpPos.x;
+					continue;
+				}
+
+				if (g_game().isSightClear(casterPos, tmpPos, true)) {
+					list.emplace_back(g_game().map.getOrCreateTile(tmpPos));
+				}
 			}
 			++tmpPos.x;
 		}
@@ -2331,7 +2356,8 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 			}
 		}
 	} else if (monster) {
-		chance = monster->critChance() * 100;
+		chance = monster->getCriticalChance() * 100;
+		bonus = monster->getCriticalDamage() * 100;
 	}
 
 	// Apply critical damage multiplier

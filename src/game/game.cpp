@@ -1462,7 +1462,7 @@ void Game::playerMoveCreature(const std::shared_ptr<Player> &player, const std::
 
 		player->setNextActionTask(nullptr);
 
-		if (!Position::areInRange<1, 1, 0>(movingCreatureOrigPos, player->getPosition())) {
+		if (!Position::areInRange<1, 1, 0>(movingCreatureOrigPos, player->getPosition()) && !player->hasFlag(PlayerFlags_t::CanMoveFromFar)) {
 			// need to walk to the creature first before moving it
 			std::vector<Direction> listDir;
 			if (player->getPathTo(movingCreatureOrigPos, listDir, 0, 1, true, true)) {
@@ -1765,7 +1765,7 @@ void Game::playerMoveItem(const std::shared_ptr<Player> &player, const Position 
 		return;
 	}
 
-	if (!Position::areInRange<1, 1>(playerPos, mapFromPos)) {
+	if (!Position::areInRange<1, 1>(playerPos, mapFromPos) && !player->hasFlag(PlayerFlags_t::CanMoveFromFar)) {
 		// need to walk to the item first before using it
 		std::vector<Direction> listDir;
 		if (player->getPathTo(item->getPosition(), listDir, 0, 1, true, true)) {
@@ -1803,7 +1803,7 @@ void Game::playerMoveItem(const std::shared_ptr<Player> &player, const Position 
 			}
 		}
 
-		if (!Position::areInRange<1, 1, 0>(playerPos, mapToPos)) {
+		if (!Position::areInRange<1, 1, 0>(playerPos, mapToPos) && !player->hasFlag(PlayerFlags_t::CanMoveFromFar)) {
 			auto walkPos = mapToPos;
 			if (vertical) {
 				walkPos.x++;
@@ -4583,10 +4583,12 @@ std::shared_ptr<Item> Game::wrapItem(const std::shared_ptr<Item> &item, const st
 	if (isCaskItem(item->getID())) {
 		hiddenCharges = item->getSubType();
 	}
+
 	if (house != nullptr && Item::items.getItemType(item->getID()).isBed()) {
 		item->getBed()->wakeUp(nullptr);
 		house->removeBed(item->getBed());
 	}
+
 	uint16_t oldItemID = item->getID();
 	auto itemName = item->getName();
 	std::shared_ptr<Item> newItem = transformItem(item, ITEM_DECORATION_KIT);
@@ -4595,9 +4597,12 @@ std::shared_ptr<Item> Game::wrapItem(const std::shared_ptr<Item> &item, const st
 	if (hiddenCharges > 0) {
 		newItem->setAttribute(ItemAttribute_t::DATE, hiddenCharges);
 	}
+
 	if (amount > 0) {
 		newItem->setAttribute(ItemAttribute_t::AMOUNT, amount);
 	}
+
+	newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint16_t>(ItemAttribute_t::OWNER));
 	newItem->startDecaying();
 	return newItem;
 }
@@ -4607,27 +4612,33 @@ void Game::unwrapItem(const std::shared_ptr<Item> &item, uint16_t unWrapId, cons
 		player->sendCancelMessage(RETURNVALUE_ITEMISNOTYOURS);
 		return;
 	}
+
 	auto hiddenCharges = item->getAttribute<uint16_t>(ItemAttribute_t::DATE);
 	const ItemType &newiType = Item::items.getItemType(unWrapId);
 	if (player != nullptr && house != nullptr && newiType.isBed() && house->getMaxBeds() > -1 && house->getBedCount() >= house->getMaxBeds()) {
 		player->sendCancelMessage("You reached the maximum beds in this house");
 		return;
 	}
+
 	auto amount = item->getAttribute<uint16_t>(ItemAttribute_t::AMOUNT);
 	if (!amount) {
 		amount = 1;
 	}
+
 	std::shared_ptr<Item> newItem = transformItem(item, unWrapId, amount);
 	if (house && newiType.isBed()) {
 		house->addBed(newItem->getBed());
 	}
+
 	if (newItem) {
 		if (hiddenCharges > 0 && isCaskItem(unWrapId)) {
 			newItem->setSubType(hiddenCharges);
 		}
+
 		newItem->removeCustomAttribute("unWrapId");
 		newItem->removeAttribute(ItemAttribute_t::DESCRIPTION);
 		newItem->startDecaying();
+		newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint16_t>(ItemAttribute_t::OWNER));
 	}
 }
 
@@ -7661,8 +7672,12 @@ void Game::buildMessageAsTarget(
 	const std::string &damageString
 ) const {
 	ss.str({});
-	auto attackMsg = damage.critical ? "critical " : "";
-	auto article = damage.critical ? "a" : "an";
+	const auto &monster = attacker ? attacker->getMonster() : nullptr;
+	bool handleSoulPit = monster ? monster->getSoulPit() && monster->getForgeStack() == 40 : false;
+
+	std::string attackMsg = damage.critical && !handleSoulPit ? "critical " : "";
+	std::string article = damage.critical && !handleSoulPit ? "a" : "an";
+
 	ss << "You lose " << damageString;
 	if (!attacker) {
 		ss << '.';
@@ -7673,6 +7688,9 @@ void Game::buildMessageAsTarget(
 	}
 	if (damage.extension) {
 		ss << " " << damage.exString;
+	}
+	if (handleSoulPit && damage.critical) {
+		ss << " (Soulpit Crit)";
 	}
 	message.type = MESSAGE_DAMAGE_RECEIVED;
 	message.text = ss.str();
@@ -10572,7 +10590,7 @@ void Game::playerCheckActivity(const std::string &playerName, int interval) {
 		return;
 	}
 
-	if (!player->isAccessPlayer()) {
+	if (!player->hasFlag(PlayerFlags_t::AllowIdle)) {
 		player->m_deathTime += interval;
 		const int32_t kickAfterMinutes = g_configManager().getNumber(KICK_AFTER_MINUTES);
 		if (player->m_deathTime > (kickAfterMinutes * 60000) + 60000) {

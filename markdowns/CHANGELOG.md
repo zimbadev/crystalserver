@@ -6,19 +6,61 @@
 ### Features
 
 - Added new attributes to outfits. Check `outfits.xml` for examples. ([Tryller](https://github.com/jprzimba))
+- Added new attributies to /attr: `text`, `writer`, `duration`, `weight`, `imbuementslot`, `tier`, `hitchance`, `shootrange`, `special` and `quicklootcontainer`. ([Tryller](https://github.com/jprzimba))
+- Added new flags: `CanMoveFromFar`, `HasFullLight`, `AllowIdle`, `CanWearAllMounts`, and `NotGainUnjustified`. ([Tryller](https://github.com/jprzimba))
 - Added Vibrancy imbuement. ([pennaor](https://github.com/pennaor))
+- Added Soul Pit arena/animus mastery/soul core. ([FelipePaluco](https://github.com/FelipePaluco))
 
 ## Added files
 
-- notting
+- data/migrations/49.lua
+- data-global/lib/others/soulpit.lua
+- data-global/startup/tables/tile.lua
+- data-global/npc/myzzi.lua
+- data-global/npc/shirtalis_of_the_summer_court.lua
+- data-global/npc/farhilorn_of_the_winter_court.lua
+- data-global/scripts/actions/soulpit/soulpit_arena_exit.lua
+- data-global/scripts/actions/soulpit/soulpit_entrance.lua
+- data-global/scripts/quests/soulpit/exalted_core.lua
+- data-global/scripts/quests/soulpit/ondroploot_soul_core.lua
+- data-global/scripts/quests/soulpit/soul_prism.lua
+- data-global/scripts/quests/soulpit/soulpit_creatureevents.lua
+- data-global/scripts/quests/soulpit/soulpit_fight.lua
+- data-global/scripts/quests/soulpit/soulpit_intensehex.lua
+- data-global/scripts/quests/soulpit/soulpit_opressor.lua
+- data-global/scripts/quests/soulpit/soulpit_powerless.lua
 
 ## Modified files
 
+- config.lua
+- schema.sql
+- data/items/items.xm
+- data/libs/functions/lever.lua
+- data/modules/scripts/gamestore/init.lua
+- data/scripts/talkactions/god/attributes.lua
+- data/scripts/lib/register_spells.lua
+- data/XML/groups.xml
 - data/XML/outfits.xml
+- data-global/lib/others/load.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_lever_first.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_lever_four.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_lever_second.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_lever_third.lua
+- data-global/scripts/quests/ferumbras_ascension/actions_the_shatterer_levers.lua
+- data-global/scripts/quests/ferumbras_ascension/creaturescripts_bosses_kill.lua
+- data-global/scripts/quests/ferumbras_ascension/creaturescripts_death_dragon.lua
+- data-global/scripts/quests/ferumbras_ascension/creaturescripts_the_shatterer_kill.lua
+- data-global/scripts/quests/ferumbras_ascension/creaturescripts_zamulosh_clone.lua
+- data-global/world/world-house.xml
+- data-global/world/world-monster.xml
+- data-global/world/world-npc.xml
+- data-global/world/world.otbm (world.7z)
 
 ### Bug Fixes
 
-- notting
+- Fixed Stealth Ring being destroyed in certain cases, based on [Stealth Ring](https://tibia.fandom.com/wiki/Stealth_Ring). ([Tryller](https://github.com/jprzimba))
+- Fixed an issue where store items could not be moved to the store inbox after being unwrapped. ([TheGlitchLab](https://github.com/TheGlitchLab))
+- Fixed some features not being disabled when deactivated in `config.lua`: `!chain`, `!emote`, and `!spellwords`. ([Tryller](https://github.com/jprzimba))
 
 
 ## Version 4.1.2

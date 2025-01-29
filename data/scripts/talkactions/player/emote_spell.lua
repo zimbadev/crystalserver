@@ -18,10 +18,10 @@ function emoteSpell.onSay(player, words, param)
 	end
 
 	if param == "on" then
-		player:setFeature(Features.EmoteSpells, 1)
+		player:setFeature(Features.EmoteSpells, true)
 		player:sendTextMessage(MESSAGE_LOOK, "You have activated emote spells.")
 	elseif param == "off" then
-		player:setFeature(Features.EmoteSpells, 0)
+		player:setFeature(Features.EmoteSpells, false)
 		player:sendTextMessage(MESSAGE_LOOK, "You have deactivated emote spells.")
 	end
 	return true

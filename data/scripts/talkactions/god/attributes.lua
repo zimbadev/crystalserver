@@ -107,6 +107,66 @@ local itemFunctions = {
 			return item:setAttribute(ITEM_ATTRIBUTE_ARMOR, target)
 		end,
 	},
+	["text"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_TEXT, target)
+		end,
+	},
+	["writer"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_WRITER, target)
+		end,
+	},
+	["duration"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_DURATION, target)
+		end,
+	},
+	["weight"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_WEIGHT, target)
+		end,
+	},
+	["imbuementslot"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_IMBUEMENT_SLOT, target)
+		end,
+	},
+	["tier"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_TIER, target)
+		end,
+	},
+	["hitchance"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_HITCHANCE, target)
+		end,
+	},
+	["shootrange"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_SHOOTRANGE, target)
+		end,
+	},
+	["special"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_SPECIAL, target)
+		end,
+	},
+	["quicklootcontainer"] = {
+		isActive = true,
+		targetFunction = function(item, target)
+			return item:setAttribute(ITEM_ATTRIBUTE_QUICKLOOTCONTAINER, target)
+		end,
+	},
 }
 
 local creatureFunctions = {

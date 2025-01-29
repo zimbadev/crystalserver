@@ -1675,6 +1675,7 @@ function GameStore.processHouseRelatedPurchase(player, offer)
 
 					if not offer.movable then
 						decoKit:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+						decoKit:setAttribute(ITEM_ATTRIBUTE_OWNER, player:getGuid())
 					end
 				end
 			else
@@ -1686,6 +1687,7 @@ function GameStore.processHouseRelatedPurchase(player, offer)
 
 						if not offer.movable then
 							decoKit:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+							decoKit:setAttribute(ITEM_ATTRIBUTE_OWNER, player:getGuid())
 						end
 					end
 				end
