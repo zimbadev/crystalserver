@@ -124,6 +124,7 @@ enum ConditionType_t : uint8_t {
 	CONDITION_GREATERHEX = 33,
 	CONDITION_BAKRAGORE = 34,
 	CONDITION_GOSHNARTAINT = 35,
+	CONDITION_POWERLESS = 36,
 
 	// Need the last ever
 	CONDITION_COUNT
@@ -230,6 +231,7 @@ enum ConditionParam_t {
 	CONDITION_PARAM_INCREASE_MANADRAINPERCENT = 80,
 	CONDITION_PARAM_INCREASE_DROWNPERCENT = 81,
 	CONDITION_PARAM_CHARM_CHANCE_MODIFIER = 82,
+	CONDITION_PARAM_BUFF_HEALINGRECEIVED = 83,
 };
 
 enum stats_t {
@@ -1341,6 +1343,7 @@ enum class CreatureIconModifications_t {
 	Influenced,
 	Fiendish,
 	ReducedHealth,
+	ReducedHealthExclamation,
 };
 
 enum class CreatureIconQuests_t {

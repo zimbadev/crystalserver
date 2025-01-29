@@ -27,6 +27,7 @@
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/npcs/npc.hpp"
+#include "creatures/players/animus_mastery/animus_mastery.hpp"
 #include "creatures/players/wheel/player_wheel.hpp"
 #include "creatures/players/wheel/wheel_gems.hpp"
 #include "creatures/players/achievement/player_achievement.hpp"
@@ -79,7 +80,8 @@ Player::Player(std::shared_ptr<ProtocolGame> p) :
 	lastPong(lastPing),
 	lastLoad(OTSYS_TIME()),
 	inbox(std::make_shared<Inbox>(ITEM_INBOX)),
-	client(std::move(p)) {
+	client(std::move(p)),
+	m_animusMastery(*this) {
 	m_playerVIP = std::make_unique<PlayerVIP>(*this);
 	m_wheelPlayer = std::make_unique<PlayerWheel>(*this);
 	m_playerAchievement = std::make_unique<PlayerAchievement>(*this);
@@ -3123,6 +3125,14 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 		exp += (exp * (1.75 * getHazardSystemPoints() * g_configManager().getFloat(HAZARD_EXP_BONUS_MULTIPLIER))) / 100.;
 	}
 
+	const bool handleAnimusMastery = monster && animusMastery().has(monster->getMonsterType()->name);
+	float animusMasteryMultiplier = 0;
+
+	if (handleAnimusMastery) {
+		animusMasteryMultiplier = animusMastery().getExperienceMultiplier();
+		exp *= animusMasteryMultiplier;
+	}
+
 	experience += exp;
 
 	if (sendText) {
@@ -3132,6 +3142,10 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 			if (expPercent > 0) {
 				expString = expString + fmt::format(" (VIP bonus {}%)", expPercent > 100 ? 100 : expPercent);
 			}
+		}
+
+		if (handleAnimusMastery) {
+			expString = fmt::format("{} (animus mastery bonus {:.1f}%)", expString, (animusMasteryMultiplier - 1) * 100);
 		}
 
 		TextMessage message(MESSAGE_EXPERIENCE, "You gained " + expString + (handleHazardExperience ? " (Hazard)" : ""));
@@ -6077,17 +6091,23 @@ bool Player::onKilledMonster(const std::shared_ptr<Monster> &monster) {
 	if (hasFlag(PlayerFlags_t::NotGenerateLoot)) {
 		monster->setDropLoot(false);
 	}
+
 	if (monster->hasBeenSummoned()) {
 		return false;
 	}
+
 	const auto &mType = monster->getMonsterType();
 	if (mType == nullptr) {
 		g_logger().error("[{}] Monster type is null.", __FUNCTION__);
 		return false;
 	}
-	addHuntingTaskKill(mType);
-	addBestiaryKill(mType);
-	addBosstiaryKill(mType);
+
+	if (!monster->getSoulPit()) {
+		addHuntingTaskKill(mType);
+		addBestiaryKill(mType);
+		addBosstiaryKill(mType);
+	}
+
 	return false;
 }
 
@@ -10678,6 +10698,15 @@ const std::unique_ptr<PlayerTitle> &Player::title() const {
 	return m_playerTitle;
 }
 
+// Cyclopedia interface
+std::unique_ptr<PlayerCyclopedia> &Player::cyclopedia() {
+	return m_playerCyclopedia;
+}
+
+const std::unique_ptr<PlayerCyclopedia> &Player::cyclopedia() const {
+	return m_playerCyclopedia;
+}
+
 // VIP interface
 std::unique_ptr<PlayerVIP> &Player::vip() {
 	return m_playerVIP;
@@ -10687,13 +10716,13 @@ const std::unique_ptr<PlayerVIP> &Player::vip() const {
 	return m_playerVIP;
 }
 
-// Cyclopedia
-std::unique_ptr<PlayerCyclopedia> &Player::cyclopedia() {
-	return m_playerCyclopedia;
+// Animus Mastery interface
+AnimusMastery &Player::animusMastery() {
+	return m_animusMastery;
 }
 
-const std::unique_ptr<PlayerCyclopedia> &Player::cyclopedia() const {
-	return m_playerCyclopedia;
+const AnimusMastery &Player::animusMastery() const {
+	return m_animusMastery;
 }
 
 void Player::sendLootMessage(const std::string &message) const {
