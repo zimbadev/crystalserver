@@ -254,7 +254,6 @@ int GameFunctions::luaGameGetBestiaryList(lua_State* L) {
 	return 1;
 }
 
-
 int GameFunctions::luaGameCreateSoulPitMonster(lua_State* L) {
 	// Game.createSoulPitMonster(monsterName, position, [stack = 1, [, extended = false[, force = false[, master = nil]]]])
 	const auto &monster = Monster::createMonster(Lua::getString(L, 1));

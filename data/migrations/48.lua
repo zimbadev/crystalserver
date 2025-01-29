@@ -1,5 +1,5 @@
 function onUpdateDatabase()
-	logger.info("Updating database to version 47 (player statements)")
+	logger.info("Updating database to version 48 (player statements)")
 
 	db.query([[
 		CREATE TABLE IF NOT EXISTS `player_statements`(
