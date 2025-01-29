@@ -24,7 +24,9 @@
 #include "items/cylinder.hpp"
 #include "game/movement/position.hpp"
 #include "creatures/creatures_definitions.hpp"
+#include "creatures/players/animus_mastery/animus_mastery.hpp"
 
+class AnimusMastery;
 class House;
 class NetworkMessage;
 class Weapon;
@@ -471,6 +473,9 @@ public:
 	uint8_t getSoul() const {
 		return soul;
 	}
+	uint8_t getFullSoul() const {
+		return getSoul() + getVarStats(STAT_SOULPOINTS);
+	}
 	bool isAccessPlayer() const;
 	bool isPlayerGroup() const;
 	bool isPremium() const;
@@ -563,6 +568,9 @@ public:
 
 	void setVarStats(stats_t stat, int32_t modifier);
 	int32_t getDefaultStats(stats_t stat) const;
+	int32_t getVarStats(stats_t stat) const {
+		return varStats[stat];
+	}
 
 	void addConditionSuppressions(const std::array<ConditionType_t, ConditionType_t::CONDITION_COUNT> &addCondition);
 	void removeConditionSuppressions();
@@ -687,6 +695,7 @@ public:
 	void drainMana(const std::shared_ptr<Creature> &attacker, int32_t manaLoss) override;
 	void addManaSpent(uint64_t amount);
 	void addSkillAdvance(skills_t skill, uint64_t count);
+	int32_t getSkill(skills_t skilltype, SkillsId_t skillinfo) const;
 
 	int32_t getArmor() const override;
 	int32_t getDefense() const override;
@@ -735,11 +744,16 @@ public:
 	void sendCreatureSkull(const std::shared_ptr<Creature> &creature) const;
 	void checkSkullTicks(int64_t ticks);
 
-	bool canWear(uint16_t lookType, uint8_t addons) const;
+	bool canWearOutfit(uint16_t lookType, uint8_t addons) const;
 	void addOutfit(uint16_t lookType, uint8_t addons);
 	bool removeOutfit(uint16_t lookType);
 	bool removeOutfitAddon(uint16_t lookType, uint8_t addons);
 	bool getOutfitAddons(const std::shared_ptr<Outfit> &outfit, uint8_t &addons) const;
+
+	bool changeOutfit(Outfit_t outfit, bool checkList);
+	void hasRequestedOutfit(bool v) {
+		requestedOutfit = v;
+	}
 
 	bool canFamiliar(uint16_t lookType) const;
 	void addFamiliar(uint16_t lookType);
@@ -1055,6 +1069,8 @@ public:
 	bool isImmuneCleanse(ConditionType_t conditiontype) const;
 	void setImmuneFear();
 	bool isImmuneFear() const;
+	void setImmuneRoot();
+	bool isImmuneRoot() const;
 	uint16_t parseRacebyCharm(charmRune_t charmId, bool set, uint16_t newRaceid);
 
 	uint64_t getItemCustomPrice(uint16_t itemId, bool buyPrice = false) const;
@@ -1260,6 +1276,14 @@ public:
 	 */
 	std::vector<std::shared_ptr<Item>> getEquippedItems() const;
 
+	/**
+	 * @brief Get the equipped item in the specified slot.
+	 * @details This function returns the item currently equipped in the given slot, or nullptr if the slot is empty or invalid.
+	 * @param slot The slot from which to retrieve the equipped item.
+	 * @return A pointer to the equipped item, or nullptr if no item is equipped in the specified slot.
+	 */
+	std::shared_ptr<Item> getEquippedItem(Slots_t slot) const;
+
 	// Player wheel interface
 	std::unique_ptr<PlayerWheel> &wheel();
 	const std::unique_ptr<PlayerWheel> &wheel() const;
@@ -1276,13 +1300,17 @@ public:
 	std::unique_ptr<PlayerTitle> &title();
 	const std::unique_ptr<PlayerTitle> &title() const;
 
-	// Player summary interface
+	// Player cyclopedia interface
 	std::unique_ptr<PlayerCyclopedia> &cyclopedia();
 	const std::unique_ptr<PlayerCyclopedia> &cyclopedia() const;
 
 	// Player vip interface
 	std::unique_ptr<PlayerVIP> &vip();
 	const std::unique_ptr<PlayerVIP> &vip() const;
+
+	// Player animusMastery interface
+	AnimusMastery &animusMastery();
+	const AnimusMastery &animusMastery() const;
 
 	void sendLootMessage(const std::string &message) const;
 
@@ -1295,6 +1323,32 @@ public:
 	bool canSpeakWithHireling(uint8_t speechbubble);
 
 	uint16_t getPlayerVocationEnum() const;
+
+	/*******************************************************************************
+	 * Deflect Condition
+	 * Responsible for defining the conditions that when trying to be
+	 * added to the player or being updated, there is a chance to prevent these actions
+	 ******************************************************************************/
+	struct DeflectCondition {
+		DeflectCondition(std::string source, ConditionType_t condition, uint8_t chance) :
+			source(source), condition(condition), chance(chance) { }
+		std::string source;
+		uint8_t chance = 0;
+		ConditionType_t condition = CONDITION_NONE;
+	};
+
+	const std::vector<DeflectCondition> &getDeflectConditions() const {
+		return deflectConditions;
+	}
+
+	// Searches according to a conditionType the higest chance found among the player's
+	// deflect conditions. Return defaults to 0 if no condition is met.
+	uint8_t getDeflectConditionChance(const ConditionType_t &conditionType) const;
+
+	// Removes a deflect condition from a player from a given source
+	void removeDeflectCondition(const std::string_view &source, const ConditionType_t &conditionType, const uint8_t &chance);
+
+	void addDeflectCondition(std::string source, ConditionType_t conditionType, uint8_t chance);
 
 private:
 	friend class PlayerLock;
@@ -1547,6 +1601,7 @@ private:
 	std::pair<ConditionType_t, uint64_t> cleanseCondition = { CONDITION_NONE, 0 };
 
 	std::pair<ConditionType_t, uint64_t> m_fearCondition = { CONDITION_NONE, 0 };
+	std::pair<ConditionType_t, uint64_t> m_rootCondition = { CONDITION_NONE, 0 };
 
 	uint8_t soul = 0;
 	uint8_t levelPercent = 0;
@@ -1581,6 +1636,8 @@ private:
 	bool moved = false;
 	bool m_isDead = false;
 	bool imbuementTrackerWindowOpen = false;
+	bool requestedOutfit = false;
+	bool outfitAttributes = false;
 
 	// Hazard system
 	int64_t lastHazardSystemCriticalHit = 0;
@@ -1657,6 +1714,7 @@ private:
 	std::unique_ptr<PlayerCyclopedia> m_playerCyclopedia;
 	std::unique_ptr<PlayerTitle> m_playerTitle;
 	std::unique_ptr<PlayerVIP> m_playerVIP;
+	AnimusMastery m_animusMastery;
 
 	std::mutex quickLootMutex;
 
@@ -1687,4 +1745,11 @@ private:
 	int32_t getMarriageSpouse() const {
 		return marriageSpouse;
 	}
+
+	// Stores of conditions to be deflected from various sources, including from "imbuements".
+	// Different DeflectCondition containing the same data may be present.
+	// This is allowed because, for example, if armor and boots have a common imbument,
+	// unequipping the armor does not influence the boot's imbuement.
+	// When present simultaneously, the one with the greatest chance of occurrence will prevail.
+	std::vector<DeflectCondition> deflectConditions;
 };

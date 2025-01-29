@@ -25,6 +25,7 @@
 #include "creatures/players/achievement/player_achievement.hpp"
 #include "creatures/players/cyclopedia/player_badge.hpp"
 #include "creatures/players/cyclopedia/player_cyclopedia.hpp"
+#include "creatures/players/animus_mastery/animus_mastery.hpp"
 #include "creatures/players/cyclopedia/player_title.hpp"
 #include "creatures/players/vip/player_vip.hpp"
 #include "creatures/players/vocations/vocation.hpp"
@@ -281,6 +282,19 @@ void IOLoginDataLoad::loadPlayerConditions(const std::shared_ptr<Player> &player
 		}
 		condition = Condition::createCondition(propStream);
 	}
+}
+
+void IOLoginDataLoad::loadPlayerAnimusMastery(const std::shared_ptr<Player> &player, const DBResult_ptr &result) {
+	if (!result || !player) {
+		g_logger().warn("[{}] - Player or Result nullptr", __FUNCTION__);
+		return;
+	}
+
+	unsigned long attrSize;
+	const char* attr = result->getStream("animus_mastery", attrSize);
+	PropStream propStream;
+	propStream.init(attr, attrSize);
+	player->animusMastery().unserialize(propStream);
 }
 
 void IOLoginDataLoad::loadPlayerDefaultOutfit(const std::shared_ptr<Player> &player, const DBResult_ptr &result) {

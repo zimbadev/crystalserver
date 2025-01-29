@@ -43,6 +43,7 @@ bool Mounts::loadFromXml() {
 			continue;
 		}
 
+		int32_t attackSpeedValue = mountNode.attribute("attackspeed") ? pugi::cast<int32_t>(mountNode.attribute("attackspeed").value()) : 0;
 		mounts.emplace(std::make_shared<Mount>(
 			static_cast<uint8_t>(pugi::cast<uint16_t>(mountNode.attribute("id").value())),
 			lookType,
@@ -50,7 +51,7 @@ bool Mounts::loadFromXml() {
 			pugi::cast<int32_t>(mountNode.attribute("speed").value()),
 			mountNode.attribute("premium").as_bool(),
 			mountNode.attribute("type").as_string(),
-			pugi::cast<int32_t>(mountNode.attribute("attackspeed").value())
+			attackSpeedValue
 		));
 	}
 	return true;
@@ -58,10 +59,10 @@ bool Mounts::loadFromXml() {
 
 std::shared_ptr<Mount> Mounts::getMountByID(uint8_t id) {
 	auto it = std::find_if(mounts.begin(), mounts.end(), [id](const std::shared_ptr<Mount> &mount) {
-		return mount->id == id; // Note the use of -> operator to access the members of the Mount object
+		return mount->id == id;
 	});
 
-	return it != mounts.end() ? *it : nullptr; // Returning the shared_ptr to the Mount object
+	return it != mounts.end() ? *it : nullptr;
 }
 
 std::shared_ptr<Mount> Mounts::getMountByName(const std::string &name) {
@@ -75,8 +76,8 @@ std::shared_ptr<Mount> Mounts::getMountByName(const std::string &name) {
 
 std::shared_ptr<Mount> Mounts::getMountByClientID(uint16_t clientId) {
 	auto it = std::find_if(mounts.begin(), mounts.end(), [clientId](const std::shared_ptr<Mount> &mount) {
-		return mount->clientId == clientId; // Note the use of -> operator to access the members of the Mount object
+		return mount->clientId == clientId;
 	});
 
-	return it != mounts.end() ? *it : nullptr; // Returning the shared_ptr to the Mount object
+	return it != mounts.end() ? *it : nullptr;
 }

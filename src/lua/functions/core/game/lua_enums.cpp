@@ -252,6 +252,7 @@ void LuaEnums::initAccountEnums(lua_State* L) {
 	registerEnum(L, GROUP_TYPE_GAMEMASTER);
 	registerEnum(L, GROUP_TYPE_COMMUNITYMANAGER);
 	registerEnum(L, GROUP_TYPE_GOD);
+	registerEnum(L, GROUP_TYPE_TESTER);
 }
 
 void LuaEnums::initDailyRewardEnums(lua_State* L) {
@@ -357,6 +358,7 @@ void LuaEnums::initConditionIdEnums(lua_State* L) {
 	registerEnum(L, CONDITIONID_FEET);
 	registerEnum(L, CONDITIONID_RING);
 	registerEnum(L, CONDITIONID_AMMO);
+	registerEnum(L, CONDITIONID_OUTFIT);
 }
 
 void LuaEnums::initConditionParamEnums(lua_State* L) {

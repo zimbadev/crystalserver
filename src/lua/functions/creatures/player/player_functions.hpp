@@ -378,6 +378,9 @@ class PlayerFunctions {
 	static int luaPlayerAddAchievementPoints(lua_State* L);
 	static int luaPlayerRemoveAchievementPoints(lua_State* L);
 
+	static int luaPlayerAddDeflectCondition(lua_State* L);
+	static int luaPlayerRemoveDeflectCondition(lua_State* L);
+
 	static int luaPlayerAddBadge(lua_State* L);
 
 	static int luaPlayerAddTitle(lua_State* L);
@@ -391,6 +394,9 @@ class PlayerFunctions {
 	static int luaPlayerRemoveIconBakragore(lua_State* L);
 
 	static int luaPlayerSendCreatureAppear(lua_State* L);
+	static int luaPlayerAddAnimusMastery(lua_State* L);
+	static int luaPlayerRemoveAnimusMastery(lua_State* L);
+	static int luaPlayerHasAnimusMastery(lua_State* L);
 
 	friend class CreatureFunctions;
 };

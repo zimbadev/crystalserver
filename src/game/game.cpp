@@ -382,10 +382,11 @@ Game::Game() {
 		{ static_cast<uint8_t>(LOYALTY_POINTS), "Loyalty Points" },
 		{ static_cast<uint8_t>(MAGIC_LEVEL), "Magic Level" },
 		{ static_cast<uint8_t>(SHIELDING), "Shielding" },
-		{ static_cast<uint8_t>(HighscoreCategories_t::SWORD_FIGHTING), "Sword Fighting" },
+		{ static_cast<uint8_t>(SWORD_FIGHTING), "Sword Fighting" },
 	};
 
 	m_highscoreCategories = {
+		HighscoreCategory("Boss Points", static_cast<uint8_t>(HighscoreCategories_t::BOSS_POINTS)),
 		HighscoreCategory("Experience Points", static_cast<uint8_t>(HighscoreCategories_t::EXPERIENCE)),
 		HighscoreCategory("Fist Fighting", static_cast<uint8_t>(HighscoreCategories_t::FIST_FIGHTING)),
 		HighscoreCategory("Club Fighting", static_cast<uint8_t>(HighscoreCategories_t::CLUB_FIGHTING)),
@@ -1461,7 +1462,7 @@ void Game::playerMoveCreature(const std::shared_ptr<Player> &player, const std::
 
 		player->setNextActionTask(nullptr);
 
-		if (!Position::areInRange<1, 1, 0>(movingCreatureOrigPos, player->getPosition())) {
+		if (!Position::areInRange<1, 1, 0>(movingCreatureOrigPos, player->getPosition()) && !player->hasFlag(PlayerFlags_t::CanMoveFromFar)) {
 			// need to walk to the creature first before moving it
 			std::vector<Direction> listDir;
 			if (player->getPathTo(movingCreatureOrigPos, listDir, 0, 1, true, true)) {
@@ -1764,7 +1765,7 @@ void Game::playerMoveItem(const std::shared_ptr<Player> &player, const Position 
 		return;
 	}
 
-	if (!Position::areInRange<1, 1>(playerPos, mapFromPos)) {
+	if (!Position::areInRange<1, 1>(playerPos, mapFromPos) && !player->hasFlag(PlayerFlags_t::CanMoveFromFar)) {
 		// need to walk to the item first before using it
 		std::vector<Direction> listDir;
 		if (player->getPathTo(item->getPosition(), listDir, 0, 1, true, true)) {
@@ -1802,7 +1803,7 @@ void Game::playerMoveItem(const std::shared_ptr<Player> &player, const Position 
 			}
 		}
 
-		if (!Position::areInRange<1, 1, 0>(playerPos, mapToPos)) {
+		if (!Position::areInRange<1, 1, 0>(playerPos, mapToPos) && !player->hasFlag(PlayerFlags_t::CanMoveFromFar)) {
 			auto walkPos = mapToPos;
 			if (vertical) {
 				walkPos.x++;
@@ -4396,7 +4397,7 @@ void Game::playerSetShowOffSocket(uint32_t playerId, Outfit_t &outfit, const Pos
 		item->setCustomAttribute("PastLookMount", static_cast<int64_t>(outfit.lookMount));
 	}
 
-	if (!player->canWear(outfit.lookType, outfit.lookAddons)) {
+	if (!player->canWearOutfit(outfit.lookType, outfit.lookAddons)) {
 		outfit.lookType = 0;
 		outfit.lookAddons = 0;
 	}
@@ -4433,6 +4434,7 @@ void Game::playerSetShowOffSocket(uint32_t playerId, Outfit_t &outfit, const Pos
 
 	item->setCustomAttribute("PodiumVisible", static_cast<int64_t>(podiumVisible));
 	item->setCustomAttribute("LookDirection", static_cast<int64_t>(direction));
+	item->removeAttribute(ItemAttribute_t::NAME);
 
 	// Change Podium name
 	if (outfit.lookType != 0 || outfit.lookMount != 0) {
@@ -4581,10 +4583,12 @@ std::shared_ptr<Item> Game::wrapItem(const std::shared_ptr<Item> &item, const st
 	if (isCaskItem(item->getID())) {
 		hiddenCharges = item->getSubType();
 	}
+
 	if (house != nullptr && Item::items.getItemType(item->getID()).isBed()) {
 		item->getBed()->wakeUp(nullptr);
 		house->removeBed(item->getBed());
 	}
+
 	uint16_t oldItemID = item->getID();
 	auto itemName = item->getName();
 	std::shared_ptr<Item> newItem = transformItem(item, ITEM_DECORATION_KIT);
@@ -4593,9 +4597,12 @@ std::shared_ptr<Item> Game::wrapItem(const std::shared_ptr<Item> &item, const st
 	if (hiddenCharges > 0) {
 		newItem->setAttribute(ItemAttribute_t::DATE, hiddenCharges);
 	}
+
 	if (amount > 0) {
 		newItem->setAttribute(ItemAttribute_t::AMOUNT, amount);
 	}
+
+	newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint16_t>(ItemAttribute_t::OWNER));
 	newItem->startDecaying();
 	return newItem;
 }
@@ -4605,27 +4612,33 @@ void Game::unwrapItem(const std::shared_ptr<Item> &item, uint16_t unWrapId, cons
 		player->sendCancelMessage(RETURNVALUE_ITEMISNOTYOURS);
 		return;
 	}
+
 	auto hiddenCharges = item->getAttribute<uint16_t>(ItemAttribute_t::DATE);
 	const ItemType &newiType = Item::items.getItemType(unWrapId);
 	if (player != nullptr && house != nullptr && newiType.isBed() && house->getMaxBeds() > -1 && house->getBedCount() >= house->getMaxBeds()) {
 		player->sendCancelMessage("You reached the maximum beds in this house");
 		return;
 	}
+
 	auto amount = item->getAttribute<uint16_t>(ItemAttribute_t::AMOUNT);
 	if (!amount) {
 		amount = 1;
 	}
+
 	std::shared_ptr<Item> newItem = transformItem(item, unWrapId, amount);
 	if (house && newiType.isBed()) {
 		house->addBed(newItem->getBed());
 	}
+
 	if (newItem) {
 		if (hiddenCharges > 0 && isCaskItem(unWrapId)) {
 			newItem->setSubType(hiddenCharges);
 		}
+
 		newItem->removeCustomAttribute("unWrapId");
 		newItem->removeAttribute(ItemAttribute_t::DESCRIPTION);
 		newItem->startDecaying();
+		newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint16_t>(ItemAttribute_t::OWNER));
 	}
 }
 
@@ -6124,6 +6137,10 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, uint8_t isMoun
 		return;
 	}
 
+	if (!player->changeOutfit(outfit, true)) {
+		return;
+	}
+
 	if (player->isWearingSupportOutfit()) {
 		outfit.lookMount = 0;
 		isMountRandomized = 0;
@@ -6174,7 +6191,7 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, uint8_t isMoun
 		player->dismount();
 	}
 
-	if (player->canWear(outfit.lookType, outfit.lookAddons)) {
+	if (player->canWearOutfit(outfit.lookType, outfit.lookAddons)) {
 		player->defaultOutfit = outfit;
 
 		if (player->hasCondition(CONDITION_OUTFIT)) {
@@ -7466,7 +7483,7 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 		}
 
 		auto targetHealth = target->getHealth();
-		realDamage = damage.primary.value + damage.secondary.value;
+		realDamage = std::min<int32_t>(targetHealth, damage.primary.value + damage.secondary.value);
 		if (realDamage == 0) {
 			return true;
 		} else if (realDamage >= targetHealth) {
@@ -7502,13 +7519,6 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 
 		addCreatureHealth(spectators.data(), target);
 
-		int32_t adjustedDamage = realDamage;
-		if (target) {
-			if (realDamage > targetHealth) {
-				adjustedDamage = targetHealth > 0 ? targetHealth : realDamage;
-			}
-		}
-
 		sendDamageMessageAndEffects(
 			attacker,
 			target,
@@ -7518,7 +7528,7 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 			targetPlayer,
 			message,
 			spectators.data(),
-			adjustedDamage // realDamage
+			realDamage
 		);
 
 		if (attackerPlayer) {
@@ -7655,8 +7665,12 @@ void Game::buildMessageAsTarget(
 	const std::string &damageString
 ) const {
 	ss.str({});
-	auto attackMsg = damage.critical ? "critical " : "";
-	auto article = damage.critical ? "a" : "an";
+	const auto &monster = attacker ? attacker->getMonster() : nullptr;
+	bool handleSoulPit = monster ? monster->getSoulPit() && monster->getForgeStack() == 40 : false;
+
+	std::string attackMsg = damage.critical && !handleSoulPit ? "critical " : "";
+	std::string article = damage.critical && !handleSoulPit ? "a" : "an";
+
 	ss << "You lose " << damageString;
 	if (!attacker) {
 		ss << '.';
@@ -7667,6 +7681,9 @@ void Game::buildMessageAsTarget(
 	}
 	if (damage.extension) {
 		ss << " " << damage.exString;
+	}
+	if (handleSoulPit && damage.critical) {
+		ss << " (Soulpit Crit)";
 	}
 	message.type = MESSAGE_DAMAGE_RECEIVED;
 	message.text = ss.str();
@@ -7933,6 +7950,14 @@ bool Game::combatChangeMana(const std::shared_ptr<Creature> &attacker, const std
 		}
 
 		target->drainMana(attacker, manaLoss);
+		std::string cause = "(other)";
+		if (attacker) {
+			cause = attacker->getName();
+		}
+
+		if (targetPlayer) {
+			targetPlayer->updateInputAnalyzer(damage.primary.type, manaLoss, cause);
+		}
 
 		std::stringstream ss;
 
@@ -7964,7 +7989,7 @@ bool Game::combatChangeMana(const std::shared_ptr<Creature> &attacker, const std
 				} else if (targetPlayer == attackerPlayer) {
 					ss << " due to your own attack.";
 				} else {
-					ss << " mana due to an attack by " << attacker->getNameDescription() << '.';
+					ss << " due to an attack by " << attacker->getNameDescription() << '.';
 				}
 				message.type = MESSAGE_DAMAGE_RECEIVED;
 				message.text = ss.str();
@@ -9063,8 +9088,7 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 	uint64_t fee = std::clamp(totalFee, uint64_t(20), maxFee); // Limit between 20 and maxFee
 
 	if (type == MARKETACTION_SELL) {
-		uint64_t totalPriceWithFee = totalPrice + fee;
-		if (totalPriceWithFee > (player->getMoney() + player->getBankBalance())) {
+		if (fee > (player->getMoney() + player->getBankBalance())) {
 			offerStatus << "Fee is greater than player money";
 			return;
 		}
@@ -10559,7 +10583,7 @@ void Game::playerCheckActivity(const std::string &playerName, int interval) {
 		return;
 	}
 
-	if (!player->isAccessPlayer()) {
+	if (!player->hasFlag(PlayerFlags_t::AllowIdle)) {
 		player->m_deathTime += interval;
 		const int32_t kickAfterMinutes = g_configManager().getNumber(KICK_AFTER_MINUTES);
 		if (player->m_deathTime > (kickAfterMinutes * 60000) + 60000) {

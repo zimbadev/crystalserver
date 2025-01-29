@@ -27,6 +27,7 @@
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/npcs/npc.hpp"
+#include "creatures/players/animus_mastery/animus_mastery.hpp"
 #include "creatures/players/achievement/player_achievement.hpp"
 #include "creatures/players/cyclopedia/player_badge.hpp"
 #include "creatures/players/cyclopedia/player_cyclopedia.hpp"
@@ -2396,8 +2397,13 @@ void ProtocolGame::parseBestiarysendMonsterData(NetworkMessage &msg) {
 
 	newmsg.addByte(currentLevel);
 
-	newmsg.add<uint16_t>(0); // Animus Mastery Bonus
-	newmsg.add<uint16_t>(0); // Animus Mastery Points
+	if (player->animusMastery().has(mtype->name)) {
+		newmsg.add<uint16_t>(static_cast<uint16_t>(std::round((player->animusMastery().getExperienceMultiplier() - 1) * 1000))); // Animus Mastery Bonus
+		newmsg.add<uint16_t>(player->animusMastery().getPoints()); // Animus Mastery Points
+	} else {
+		newmsg.add<uint16_t>(0);
+		newmsg.add<uint16_t>(0);
+	}
 
 	newmsg.add<uint32_t>(killCounter);
 
@@ -3032,10 +3038,15 @@ void ProtocolGame::parseBestiarysendCreatures(NetworkMessage &msg) {
 			newmsg.addByte(0);
 		}
 
-		newmsg.add<uint16_t>(0); // Creature Animous Bonus
+		const auto monsterType = g_monsters().getMonsterType(it_.second);
+		if (monsterType && player->animusMastery().has(it_.second)) {
+			newmsg.add<uint16_t>(static_cast<uint16_t>(std::round((player->animusMastery().getExperienceMultiplier() - 1) * 1000))); // Animus Mastery Bonus
+		} else {
+			newmsg.add<uint16_t>(0);
+		}
 	}
 
-	newmsg.add<uint16_t>(0); // Animus Mastery Points
+	newmsg.add<uint16_t>(player->animusMastery().getPoints()); // Animus Mastery Points
 
 	writeToOutputBuffer(newmsg);
 }
@@ -3506,7 +3517,7 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 	msg.add<uint32_t>(std::min<int32_t>(player->getMaxHealth(), std::numeric_limits<uint16_t>::max()));
 	msg.add<uint32_t>(std::min<int32_t>(player->getMana(), std::numeric_limits<uint16_t>::max()));
 	msg.add<uint32_t>(std::min<int32_t>(player->getMaxMana(), std::numeric_limits<uint16_t>::max()));
-	msg.addByte(player->getSoul());
+	msg.addByte(player->getFullSoul());
 	msg.add<uint16_t>(player->getStaminaMinutes());
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
@@ -7198,6 +7209,7 @@ void ProtocolGame::sendOutfitWindow() {
 			msg.addString(mount->name);
 		}
 
+		player->hasRequestedOutfit(true);
 		writeToOutputBuffer(msg);
 		return;
 	}
@@ -7245,7 +7257,7 @@ void ProtocolGame::sendOutfitWindow() {
 			msg.addByte(0x00);
 			++outfitSize;
 		} else if (outfit->lookType == 1210 || outfit->lookType == 1211) { // golden outfit
-			if (player->canWear(1210, 0) || player->canWear(1211, 0)) {
+			if (player->canWearOutfit(1210, 0) || player->canWearOutfit(1211, 0)) {
 				msg.add<uint16_t>(outfit->lookType);
 				msg.addString(outfit->name);
 				msg.addByte(3);
@@ -7253,7 +7265,7 @@ void ProtocolGame::sendOutfitWindow() {
 				++outfitSize;
 			}
 		} else if (outfit->lookType == 1456 || outfit->lookType == 1457) { // Royal Costume
-			if (player->canWear(1456, 0) || player->canWear(1457, 0)) {
+			if (player->canWearOutfit(1456, 0) || player->canWearOutfit(1457, 0)) {
 				msg.add<uint16_t>(outfit->lookType);
 				msg.addString(outfit->name);
 				msg.addByte(3);
@@ -7340,6 +7352,7 @@ void ProtocolGame::sendOutfitWindow() {
 	// Version 12.81 - Random mount 'bool'
 	msg.addByte(isSupportOutfit ? 0x00 : (player->isRandomMounted() ? 0x01 : 0x00));
 
+	player->hasRequestedOutfit(true);
 	writeToOutputBuffer(msg);
 }
 
@@ -7780,8 +7793,8 @@ void ProtocolGame::AddCreature(NetworkMessage &msg, const std::shared_ptr<Creatu
 	}
 
 	LightInfo lightInfo = creature->getCreatureLight();
-	msg.addByte(player->isAccessPlayer() ? 0xFF : lightInfo.level);
-	msg.addByte(lightInfo.color);
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 0xFF : lightInfo.level));
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 215 : lightInfo.color));
 
 	msg.add<uint16_t>(creature->getStepSpeed());
 
@@ -7883,7 +7896,7 @@ void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
 		msg.addByte(std::min<uint8_t>(static_cast<uint8_t>(player->getMagicLevelPercent()), 100));
 	}
 
-	msg.addByte(player->getSoul());
+	msg.addByte(player->getFullSoul());
 
 	msg.add<uint16_t>(player->getStaminaMinutes());
 
@@ -8079,8 +8092,8 @@ void ProtocolGame::closeImbuementWindow() {
 
 void ProtocolGame::AddWorldLight(NetworkMessage &msg, LightInfo lightInfo) {
 	msg.addByte(0x82);
-	msg.addByte((player->isAccessPlayer() ? 0xFF : lightInfo.level));
-	msg.addByte(lightInfo.color);
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 0xFF : lightInfo.level));
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 215 : lightInfo.color));
 }
 
 void ProtocolGame::sendSpecialContainersAvailable() {
@@ -8140,8 +8153,8 @@ void ProtocolGame::AddCreatureLight(NetworkMessage &msg, const std::shared_ptr<C
 
 	msg.addByte(0x8D);
 	msg.add<uint32_t>(creature->getID());
-	msg.addByte((player->isAccessPlayer() ? 0xFF : lightInfo.level));
-	msg.addByte(lightInfo.color);
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 0xFF : lightInfo.level));
+	msg.addByte((player->hasFlag(PlayerFlags_t::HasFullLight) ? 215 : lightInfo.color));
 }
 
 // tile

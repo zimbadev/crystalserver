@@ -140,7 +140,7 @@ function playerLoginGlobal.onLogin(player)
 	end
 
 	-- Set Ghost Mode
-	if player:getGroup():getId() >= GROUP_TYPE_GAMEMASTER then
+	if player:getGroup():getId() >= GROUP_TYPE_GAMEMASTER and player:getGroup():getId() < GROUP_TYPE_TESTER then
 		player:setGhostMode(true)
 	end
 

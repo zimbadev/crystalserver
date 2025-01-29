@@ -575,6 +575,17 @@ function Player:onGainExperience(target, exp, rawExp)
 		end
 	end
 
+	-- Forge Stack Bonus
+	local stackBonus = 0
+	if target:getForgeStack() > 0 then
+		local stack = target:getForgeStack()
+		if stack >= 1 and stack <= 15 then
+			stackBonus = math.min(stack * 10, 150)
+		end
+	end
+
+	exp = exp * (1 + stackBonus / 100)
+
 	-- Final Adjustments: Low Level Bonus and Base Rate
 	local lowLevelBonusExp = self:getFinalLowLevelBonus()
 	local baseRateExp = self:getFinalBaseRateExperience()
