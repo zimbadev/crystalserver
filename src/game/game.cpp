@@ -6239,7 +6239,7 @@ void Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 		ss << "You are unable to talk.";
 		player->sendTextMessage(MESSAGE_FAILURE, ss.str());
 		return;
-	} 
+	}
 
 	uint32_t muteTime = player->isMuted();
 	if (muteTime > 0) {
