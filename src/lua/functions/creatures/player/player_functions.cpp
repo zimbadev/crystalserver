@@ -36,6 +36,7 @@
 #include "game/scheduling/save_manager.hpp"
 #include "io/iobestiary.hpp"
 #include "io/iologindata.hpp"
+#include "io/functions/iologindata_save_player.hpp"
 #include "io/ioprey.hpp"
 #include "items/containers/depot/depotchest.hpp"
 #include "items/containers/depot/depotlocker.hpp"
@@ -4212,13 +4213,11 @@ int PlayerFunctions::luaPlayerChangeName(lua_State* L) {
 		Lua::pushBoolean(L, false);
 		return 0;
 	}
-	if (player->isOnline()) {
-		player->removePlayer(true, true);
-	}
+
 	player->kv()->remove("namelock");
 	const auto newName = Lua::getString(L, 2);
-	player->setName(newName);
-	g_saveManager().savePlayer(player);
+	const auto oldName = player->getName();
+	IOLoginDataSave::savePlayerNamesAndChangeName(player, newName, oldName);
 	return 1;
 }
 
