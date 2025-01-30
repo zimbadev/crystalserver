@@ -22,6 +22,7 @@
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/players/animus_mastery/animus_mastery.hpp"
 #include "game/game.hpp"
+#include "game/scheduling/save_manager.hpp"
 #include "io/ioprey.hpp"
 #include "items/containers/depot/depotchest.hpp"
 #include "items/containers/inbox/inbox.hpp"
@@ -836,5 +837,39 @@ bool IOLoginDataSave::savePlayerStatement(const std::shared_ptr<Player> &player,
 	}
 
 	statementId = db.getLastInsertId();
+	return true;
+}
+
+bool IOLoginDataSave::changeName(const std::shared_ptr<Player> &player, const std::string &newName, const std::string &oldName) {
+	if (!player) {
+		g_logger().warn("[IOLoginData::savePlayerStatement] - Player nullptr: {}", __FUNCTION__);
+		return false;
+	}
+
+	Database &db = Database::getInstance();
+	std::ostringstream query;
+
+	const time_t now = time(nullptr);
+
+	// find former name
+	std::string formerName = oldName;
+	auto result = db.storeQuery(fmt::format("SELECT `former_name` FROM `player_oldnames` WHERE `player_id` = {} LIMIT 1", player->getGUID()));
+	if (result) {
+		formerName = result->getString("former_name");
+	}
+
+	query << "INSERT INTO `player_oldnames` (`player_id`, `former_name`, `name`, `old_name`, `date`) VALUES ("
+		<< player->getGUID() << ", " << db.escapeString(formerName) << ", " << db.escapeString(newName) << ", " << db.escapeString(oldName) << ", " << now << ")";
+
+	if (!db.executeQuery(query.str())) {
+		return false;
+	}
+
+	if (player->isOnline()) {
+		player->removePlayer(true, true);
+	}
+
+	player->setName(newName);
+	g_saveManager().savePlayer(player);
 	return true;
 }
