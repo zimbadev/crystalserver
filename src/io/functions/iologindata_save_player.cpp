@@ -859,7 +859,7 @@ bool IOLoginDataSave::changeName(const std::shared_ptr<Player> &player, const st
 	}
 
 	query << "INSERT INTO `player_oldnames` (`player_id`, `former_name`, `name`, `old_name`, `date`) VALUES ("
-		<< player->getGUID() << ", " << db.escapeString(formerName) << ", " << db.escapeString(newName) << ", " << db.escapeString(oldName) << ", " << now << ")";
+		  << player->getGUID() << ", " << db.escapeString(formerName) << ", " << db.escapeString(newName) << ", " << db.escapeString(oldName) << ", " << now << ")";
 
 	if (!db.executeQuery(query.str())) {
 		return false;
