@@ -173,6 +173,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, CHAIN_SYSTEM_VIP_ONLY, "chainSystemVipOnly", false);
 	loadBoolConfig(L, BEDS_ONLY_PREMIUM, "bedsOnlyPremium", true);
 	loadBoolConfig(L, SPELL_NAME_INSTEAD_WORDS, "spellNameInsteadOfWords", false);
+	loadBoolConfig(L, CYCLOPEDIA_HOUSE_AUCTION, "toggleCyclopediaHouseAuction", true);
 	loadBoolConfig(L, LOG_PLAYERS_STATEMENTS, "logPlayersStatements", false);
 	loadBoolConfig(L, ROOK_SYSTEM, "toggleRookSystem", false);
 	loadBoolConfig(L, TOGGLE_ADD_ROOK_ITEMS, "toggleAddRookItems", false);
@@ -386,6 +387,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, ROOK_SLOT_RIGHT, "rookSlotRight", 0);
 	loadIntConfig(L, ROOK_SLOT_LEFT, "rookSlotLeft", 0);
 	loadIntConfig(L, ROOK_SLOT_AMMO, "rookSlotAmmo", 0);
+	loadIntConfig(L, DAYS_TO_CLOSE_BID, "daysToCloseBid", 7);
 	loadIntConfig(L, ANIMUS_MASTERY_MONSTERS_TO_INCREASE_XP_MULTIPLIER, "animusMasteryMonstersToIncreaseXpMultiplier", 10);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
