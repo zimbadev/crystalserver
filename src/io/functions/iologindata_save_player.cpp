@@ -840,7 +840,7 @@ bool IOLoginDataSave::savePlayerStatement(const std::shared_ptr<Player> &player,
 	return true;
 }
 
-bool IOLoginDataSave::changeName(const std::shared_ptr<Player> &player, const std::string &newName, const std::string &oldName) {
+bool IOLoginDataSave::savePlayerNamesAndChangeName(const std::shared_ptr<Player> &player, const std::string &newName, const std::string &oldName) {
 	if (!player) {
 		g_logger().warn("[IOLoginData::savePlayerStatement] - Player nullptr: {}", __FUNCTION__);
 		return false;

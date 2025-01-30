@@ -4217,7 +4217,7 @@ int PlayerFunctions::luaPlayerChangeName(lua_State* L) {
 	player->kv()->remove("namelock");
 	const auto newName = Lua::getString(L, 2);
 	const auto oldName = player->getName();
-	IOLoginDataSave::changeName(player, newName, oldName);
+	IOLoginDataSave::savePlayerNamesAndChangeName(player, newName, oldName);
 	return 1;
 }
 
