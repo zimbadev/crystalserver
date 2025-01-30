@@ -10,6 +10,7 @@
 - Added new flags: `CanMoveFromFar`, `HasFullLight`, `AllowIdle`, `CanWearAllMounts`, and `NotGainUnjustified`. ([Tryller](https://github.com/jprzimba))
 - Added Vibrancy imbuement. ([pennaor](https://github.com/pennaor))
 - Added Soul Pit arena/animus mastery/soul core. ([FelipePaluco](https://github.com/FelipePaluco))
+- Added a new command `/mute`, which will mute a player until unmuted by `/unmute`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 

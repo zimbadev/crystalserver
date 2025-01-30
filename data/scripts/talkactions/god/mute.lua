@@ -23,7 +23,7 @@ function mute.onSay(player, words, param)
 		return true
 	end
 
-	target:setFeature(Features.MutePlayer, 1)
+	target:setFeature(Features.MutePlayer, true)
 	player:popupFYI(target:getName() .. " has been muted.")
 	return true
 end
@@ -52,7 +52,7 @@ function unmute.onSay(player, words, param)
 		return true
 	end
 
-	target:setFeature(Features.MutePlayer, 0)
+	target:setFeature(Features.MutePlayer, false)
 	player:popupFYI(target:getName() .. " has been unmuted.")
 	return true
 end

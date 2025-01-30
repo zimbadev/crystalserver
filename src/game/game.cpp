@@ -6236,7 +6236,7 @@ void Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 
 	if (player->checkMute()) {
 		std::ostringstream ss;
-		ss << "You are unable to talk.";
+		ss << "- You have been forbidden to speak.";
 		player->sendTextMessage(MESSAGE_FAILURE, ss.str());
 		return;
 	}
