@@ -10,10 +10,14 @@
 - Added new flags: `CanMoveFromFar`, `HasFullLight`, `AllowIdle`, `CanWearAllMounts`, and `NotGainUnjustified`. ([Tryller](https://github.com/jprzimba))
 - Added Vibrancy imbuement. ([pennaor](https://github.com/pennaor))
 - Added Soul Pit arena/animus mastery/soul core. ([FelipePaluco](https://github.com/FelipePaluco))
+- Cyclopedia House Auction system. ([murilo09](https://github.com/murilo09))
+- Updated name change functionality to save old player names in a database table called `player_oldnames`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 
 - data/migrations/49.lua
+- data/migrations/50.lua
+- data/migrations/51.lua
 - data-global/lib/others/soulpit.lua
 - data-global/startup/tables/tile.lua
 - data-global/npc/myzzi.lua
@@ -72,7 +76,6 @@
 - Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`, `chainSystemModifyMagic`, `logPlayersStatements`. ([Tryller](https://github.com/jprzimba))
 - Added a new commands for players: `!randomoutfit`, `!spellwords`. ([Tryller](https://github.com/jprzimba))
 - Moved emote spells to `kv` instead of `storage`. ([Tryller](https://github.com/jprzimba))
-- Cyclopedia House Auction system. ([murilo09](https://github.com/murilo09))
 - Updated npcs and spells from 13.40 updates. ([murilo09](https://github.com/murilo09))
 - Added a Rook system with configurations in `config.lua`. ([Tryller](https://github.com/jprzimba))
 - Added a new group `game tester` with flag `isgametester` in `groups.xml` and a new player flag `PlayerFlag_IsGameTester`. ([Tryller](https://github.com/jprzimba))
