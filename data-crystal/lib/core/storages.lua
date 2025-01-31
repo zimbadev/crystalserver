@@ -39,8 +39,7 @@ Storage = {
 			Behemoth = {
 				GuardianHalberd = 5006,
 				DemonShield = 5007,
-				GoldenArmor = 5008
-
+				GoldenArmor = 5008,
 			},
 			CobraBastion = {
 				Questline = 52311,
@@ -49,8 +48,7 @@ Storage = {
 				Lever = 14031,
 				SteelBoots = 5003,
 				DH = 5004,
-				DemonShield = 5005
-
+				DemonShield = 5005,
 			},
 			Rookgaard = {
 				Mace = 5000,
@@ -67,7 +65,7 @@ Storage = {
 			NORTH = 2017,
 			SOUTH = 2018,
 			WEST = 2019,
-			EAST = 2020
+			EAST = 2020,
 		},
 		UnderWater = {
 			S1 = 4550,
