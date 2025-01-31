@@ -3,6 +3,7 @@ Features = {
 	ChainSystem = "chainSystem",
 	EmoteSpells = "emoteSpells",
 	SpellNameInsteadOfWords = "spellNameInsteadOfWords",
+	MutePlayer = "mutePlayer",
 }
 
 local function validateFeature(feature)
