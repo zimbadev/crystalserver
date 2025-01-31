@@ -885,7 +885,7 @@ void ProtocolGame::onConnect() {
 	output->skipBytes(sizeof(uint32_t));
 
 	// Packet length & type
-	output->addByte(0x01);
+	output->add<uint16_t>(0x0006);
 	output->addByte(0x1F);
 
 	// Add timestamp & random number
@@ -894,7 +894,6 @@ void ProtocolGame::onConnect() {
 
 	challengeRandom = randNumber(generator);
 	output->addByte(challengeRandom);
-	output->addByte(0x71);
 
 	// Go back and write checksum
 	output->skipBytes(-12);
@@ -1628,7 +1627,7 @@ void ProtocolGame::parseOpenPrivateChannel(NetworkMessage &msg) {
 
 void ProtocolGame::parseAutoWalk(NetworkMessage &msg) {
 	uint8_t numdirs = msg.getByte();
-	if (numdirs == 0 || (msg.getBufferPosition() + numdirs) != (msg.getLength() + 6)) {
+	if (numdirs == 0 || (msg.getBufferPosition() + numdirs) != (msg.getLength() + 8)) {
 		return;
 	}
 
@@ -4680,8 +4679,8 @@ void ProtocolGame::sendIcons(const std::unordered_set<PlayerIcon> &iconSet, cons
 		// Send as uint16_t in old protocol
 		msg.add<uint16_t>(static_cast<uint16_t>(icons));
 	} else {
-		// Send as uint64_t in new protocol
-		msg.add<uint64_t>(icons);
+		// Send as uint32_t in new protocol
+		msg.add<uint32_t>(icons);
 		msg.addByte(enumToValue(iconBakragore)); // Icons Bakragore
 	}
 
@@ -4691,7 +4690,7 @@ void ProtocolGame::sendIcons(const std::unordered_set<PlayerIcon> &iconSet, cons
 void ProtocolGame::sendIconBakragore(const IconBakragore icon) {
 	NetworkMessage msg;
 	msg.addByte(0xA2);
-	msg.add<uint64_t>(0); // Send empty normal icons
+	msg.add<uint32_t>(0); // Send empty normal icons
 	msg.addByte(enumToValue(icon));
 	writeToOutputBuffer(msg);
 }
