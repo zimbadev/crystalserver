@@ -72,7 +72,6 @@ npcConfig.shop = {
 	{ itemName = "pirate backpack", clientId = 5926, buy = 20 },
 	{ itemName = "beach backpack", clientId = 5949, buy = 20 },
 	{ itemName = "fur backpack", clientId = 7342, buy = 20 },
-	{ itemName = "light shovel", clientId = 5710, buy = 20 },
 	{ itemName = "rope", clientId = 3003, buy = 50 },
 	{ itemName = "shovel", clientId = 3457, buy = 50 },
 }
