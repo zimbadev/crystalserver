@@ -56,7 +56,6 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
-
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I am the blacksmith. If you need weapons or armor - just ask me." })
 
 npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|, I buy {dead rats} and {dead rabbits}.")
@@ -68,7 +67,7 @@ npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 npcConfig.shop = {
 	{ itemName = "dead rabbit", clientId = 4173, buy = 5 },
-	{ itemName = "dead rat", clientId = 4255, buy = 5 }
+	{ itemName = "dead rat", clientId = 4255, buy = 5 },
 }
 
 -- On buy npc shop message

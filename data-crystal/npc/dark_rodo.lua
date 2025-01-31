@@ -50,7 +50,6 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
-
 npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|. I sell runes, potions, wands and rods")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Farewell, |PLAYERNAME|, may the winds guide your way.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Come back soon!")

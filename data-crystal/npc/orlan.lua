@@ -69,7 +69,6 @@ node1:addChildKeyword({ "no" }, StdModule.say, {
 	reset = true,
 })
 
-
 npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|. I can give you a {promotion}.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "How rude!")
 

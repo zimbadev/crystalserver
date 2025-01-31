@@ -72,7 +72,6 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
-
 npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|. I sell ham, dragon ham, meat, carrots, red apples, brown breads, brown mushrooms and eggs (everything for 8 gold coins)!")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Use your knowledge wisely, |PLAYERNAME|.")
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)

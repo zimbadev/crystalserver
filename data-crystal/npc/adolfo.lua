@@ -56,7 +56,6 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
-
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I am the blacksmith. If you need weapons or armor - just ask me." })
 
 npcHandler:setMessage(MESSAGE_GREET, "Welcome to my shop, adventurer |PLAYERNAME|! I {trade} with weapons and armor.")
@@ -74,11 +73,11 @@ npcConfig.shop = {
 	{ itemName = "rope", clientId = 3003, buy = 50 },
 	{ itemName = "shovel", clientId = 3457, buy = 50 },
 	{ itemName = "wooden shield", clientId = 3412, buy = 15 },
- 	{ itemName = "brass shield", clientId = 3411, buy = 40 },
+	{ itemName = "brass shield", clientId = 3411, buy = 40 },
 	{ itemName = "leather boots", clientId = 3552, buy = 10 },
 	{ itemName = "brass helmet", clientId = 3354, buy = 25 },
 	{ itemName = "leather helmet", clientId = 3355, buy = 25 },
-	{ itemName = "torch", clientId = 2920, buy = 2 }
+	{ itemName = "torch", clientId = 2920, buy = 2 },
 }
 
 -- On buy npc shop message

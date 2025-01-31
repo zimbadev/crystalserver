@@ -72,7 +72,7 @@ npcConfig.shop = {
 	{ itemName = "rope", clientId = 3003, buy = 50 },
 	{ itemName = "shovel", clientId = 3457, buy = 50 },
 	{ itemName = "wooden shield", clientId = 3412, buy = 15 },
- 	{ itemName = "brass shield", clientId = 3411, buy = 40 },
+	{ itemName = "brass shield", clientId = 3411, buy = 40 },
 	{ itemName = "leather boots", clientId = 3552, buy = 10 },
 	{ itemName = "brass helmet", clientId = 3354, buy = 25 },
 	{ itemName = "leather helmet", clientId = 3355, buy = 25 },

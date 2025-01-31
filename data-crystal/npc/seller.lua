@@ -50,7 +50,6 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
-
 npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|. I sell amulet of loss, backpacks, light shovel, shovel and rope")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Farewell, |PLAYERNAME|, may the winds guide your way.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Come back soon!")
@@ -75,7 +74,7 @@ npcConfig.shop = {
 	{ itemName = "fur backpack", clientId = 7342, buy = 20 },
 	{ itemName = "light shovel", clientId = 5710, buy = 20 },
 	{ itemName = "rope", clientId = 3003, buy = 50 },
-	{ itemName = "shovel", clientId = 3457, buy = 50 }
+	{ itemName = "shovel", clientId = 3457, buy = 50 },
 }
 
 -- On buy npc shop message
