@@ -3226,7 +3226,7 @@ void ProtocolGame::parseBrowseField(NetworkMessage &msg) {
 void ProtocolGame::parseSeekInContainer(NetworkMessage &msg) {
 	uint8_t containerId = msg.getByte();
 	auto index = msg.get<uint16_t>();
-	auto primaryType = msg.getByte();
+	auto primaryType = !oldProtocol ? msg.getByte() : 0;
 	g_game().playerSeekInContainer(player->getID(), containerId, index, primaryType);
 }
 
