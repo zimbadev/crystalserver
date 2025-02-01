@@ -1,4 +1,3 @@
-
 local communicates = {
 	"Welcome to Crystal Server! Visit the organization to see all our work: https://crystalsever.vercel.app",
 	"Did you like it? Help support what we do here with a donation by visiting the link: https://crystalsever.vercel.app/donate",
@@ -8,7 +7,7 @@ local communicates = {
 local scriptConfig = {
 	itemId = 19236,
 	registerPositions = {
-		{x = 350, y = 642, z = 6},
+		{ x = 350, y = 642, z = 6 },
 	},
 }
 
