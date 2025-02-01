@@ -103,6 +103,4 @@ GlobalStorage = {
 	KeysUpdate = 40000, -- Reserved storage from 40000 - 40000
 }
 
-startupGlobalStorages = {
-
-}
+startupGlobalStorages = {}
