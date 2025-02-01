@@ -50,4 +50,13 @@ TileUnique = {
 		itemId = 7804,
 		itemPos = { x = 628, y = 676, z = 7 },
 	},
+	-- Portals
+	[Storage.CrystalServer.Portals.S1] = {
+		itemId = 27589,
+		itemPos = { x = 650, y = 424, z = 8 },
+	},
+	[Storage.CrystalServer.Portals.S2] = {
+		itemId = 27589,
+		itemPos = { x = 702, y = 366, z = 9 },
+	},
 }
