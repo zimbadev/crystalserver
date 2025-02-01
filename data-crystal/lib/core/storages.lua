@@ -35,6 +35,9 @@ Storage = {
 			Folda = 9062,
 			LibertyBay = 9063,
 		},
+		AdventurersGuild = {
+			Stone = 52130,
+		},
 		Quests = {
 			Behemoth = {
 				GuardianHalberd = 5006,

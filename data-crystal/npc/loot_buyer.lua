@@ -264,7 +264,6 @@ npcConfig.shop = {
 	{ itemName = "crowbar", clientId = 3304, sell = 50 },
 	{ itemName = "longsword", clientId = 3285, sell = 51 },
 	{ itemName = "viking helmet", clientId = 3367, sell = 66 },
-	{ itemName = "chain armor", clientId = 3358, sell = 70 },
 	{ itemName = "scale armor", clientId = 3377, sell = 75 },
 	{ itemName = "battle axe", clientId = 3266, sell = 80 },
 	{ itemName = "steel shield", clientId = 3409, sell = 80 },
