@@ -1,5 +1,5 @@
 local config = {
-	{ position = Position(624, 433, 8), itemId = 1977 }
+	{ position = Position(624, 433, 8), itemId = 1977 },
 }
 
 local hydrasCamp = Action()
