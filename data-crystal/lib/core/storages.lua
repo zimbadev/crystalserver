@@ -100,4 +100,9 @@ GlobalStorage = {
 	ExampleQuest = {
 		Example = 60000,
 	},
+	KeysUpdate = 40000, -- Reserved storage from 40000 - 40000
+}
+
+startupGlobalStorages = {
+
 }

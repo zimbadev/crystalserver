@@ -11,9 +11,13 @@ LeverAction = {
 }
 
 LeverUnique = {
-	--[[ Exxample of usage
-	[1006] = {
+	-- Hydras Camp
+	[Storage.CrystalServer.HydrasCampLever] = {
 		itemId = 2772,
-		itemPos = { x = 33240, y = 31722, z = 11 },
-	},]]
+		itemPos = {x = 641, y = 452, z = 8},
+	},
+	[Storage.CrystalServer.Quests.DemonHelmet.Lever] = {
+		itemId = 2772,
+		itemPos = {x = 548, y = 686, z = 10},
+	},
 }
