@@ -20,34 +20,34 @@ TileUnique = {
 	-- Under Water
 	[Storage.CrystalServer.UnderWater.S1] = {
 		itemId = 7804,
-		itemPos = {x = 265, y = 395, z = 7}
+		itemPos = { x = 265, y = 395, z = 7 },
 	},
 	[Storage.CrystalServer.UnderWater.S2] = {
 		itemId = 7804,
-		itemPos = {x = 266, y = 395, z = 7}
+		itemPos = { x = 266, y = 395, z = 7 },
 	},
 	[Storage.CrystalServer.UnderWater.S3] = {
 		itemId = 7804,
-		itemPos = {x = 345, y = 429, z = 7}
+		itemPos = { x = 345, y = 429, z = 7 },
 	},
 	[Storage.CrystalServer.UnderWater.S4] = {
 		itemId = 7804,
-		itemPos = {x = 345, y = 430, z = 7}
+		itemPos = { x = 345, y = 430, z = 7 },
 	},
 	[Storage.CrystalServer.UnderWater.S5] = {
 		itemId = 7804,
-		itemPos = {x = 537, y = 559, z = 7}
+		itemPos = { x = 537, y = 559, z = 7 },
 	},
 	[Storage.CrystalServer.UnderWater.S6] = {
 		itemId = 7804,
-		itemPos = {x = 538, y = 559, z = 7}
+		itemPos = { x = 538, y = 559, z = 7 },
 	},
 	[Storage.CrystalServer.UnderWater.S7] = {
 		itemId = 7804,
-		itemPos = {x = 628, y = 675, z = 7}
+		itemPos = { x = 628, y = 675, z = 7 },
 	},
 	[Storage.CrystalServer.UnderWater.S8] = {
 		itemId = 7804,
-		itemPos = {x = 628, y = 676, z = 7}
+		itemPos = { x = 628, y = 676, z = 7 },
 	},
 }
