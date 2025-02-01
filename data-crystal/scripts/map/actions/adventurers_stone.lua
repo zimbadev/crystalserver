@@ -2,13 +2,13 @@ local config = {
 	enableTemples = true,
 	Temples = {
 		{ fromPos = Position(434, 503, 7), toPos = Position(443, 508, 7), townId = TOWNS_LIST.KARMIA },
-		{ fromPos = Position(32358, 31777, 7), toPos = Position(32364, 31787, 7), townId = TOWNS_LIST.DESERT_CITY },
-		{ fromPos = Position(32642, 31921, 11), toPos = Position(32656, 31929, 11), townId = TOWNS_LIST.TIQUANDA },
-		{ fromPos = Position(32365, 32231, 7), toPos = Position(32374, 32243, 7), townId = TOWNS_LIST.INFERNO },
-		{ fromPos = Position(32953, 32072, 7), toPos = Position(32963, 32081, 7), townId = TOWNS_LIST.VENORE },
-		{ fromPos = Position(33188, 32844, 8), toPos = Position(33201, 32857, 8), townId = TOWNS_LIST.PREMIUM_ISLAND },
-		{ fromPos = Position(33208, 31803, 8), toPos = Position(33225, 31819, 8), townId = TOWNS_LIST.FOLDA },
-		{ fromPos = Position(33018, 31514, 11), toPos = Position(33032, 31531, 11), townId = TOWNS_LIST.LIBERTY_BAY },
+		{ fromPos = Position(356, 490, 7), toPos = Position(364, 497, 7), townId = TOWNS_LIST.DESERT_CITY },
+		{ fromPos = Position(556, 459, 6), toPos = Position(560, 462, 6), townId = TOWNS_LIST.TIQUANDA },
+		{ fromPos = Position(478, 427, 7), toPos = Position(484, 431, 7), townId = TOWNS_LIST.INFERNO },
+		{ fromPos = Position(399, 381, 6), toPos = Position(408, 390, 6), townId = TOWNS_LIST.VENORE },
+		{ fromPos = Position(422, 629, 7), toPos = Position(429, 636, 7), townId = TOWNS_LIST.PREMIUM_ISLAND },
+		{ fromPos = Position(240, 306, 7), toPos = Position(245, 313, 7), townId = TOWNS_LIST.FOLDA },
+		{ fromPos = Position(545, 705, 7), toPos = Position(550, 711, 7), townId = TOWNS_LIST.LIBERTY_BAY },
 	},
 }
 

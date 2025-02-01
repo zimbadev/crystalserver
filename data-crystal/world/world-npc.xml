@@ -292,4 +292,7 @@
 	<npc centerx="429" centery="485" centerz="8" radius="1">
 		<npc name="Jimbim" x="-1" y="0" z="8" spawntime="60" direction="2" />
 	</npc>
+	<npc centerx="440" centery="504" centerz="8" radius="1">
+		<npc name="Quentin" x="0" y="0" z="8" spawntime="60" />
+	</npc>
 </npcs>

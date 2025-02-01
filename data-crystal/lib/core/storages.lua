@@ -37,6 +37,7 @@ Storage = {
 		},
 		AdventurersGuild = {
 			Stone = 52130,
+			FreeStone = 52131,
 		},
 		Quests = {
 			Behemoth = {
