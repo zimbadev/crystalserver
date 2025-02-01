@@ -6,7 +6,7 @@ local config = {
 	[Storage.CrystalServer.Citizen.Tiquanda] = TOWNS_LIST.TIQUANDA,
 	[Storage.CrystalServer.Citizen.PremiumIsland] = TOWNS_LIST.PREMIUM_ISLAND,
 	[Storage.CrystalServer.Citizen.Folda] = TOWNS_LIST.FOLDA,
-	[Storage.CrystalServer.Citizen.LibertyBay]= TOWNS_LIST.LIBERTY_BAY
+	[Storage.CrystalServer.Citizen.LibertyBay] = TOWNS_LIST.LIBERTY_BAY,
 }
 
 local citizen = MoveEvent()
