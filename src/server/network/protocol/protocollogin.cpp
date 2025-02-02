@@ -98,9 +98,15 @@ void ProtocolLogin::getCharacterList(const std::string &accountDescriptor, const
 	}
 
 	// Get premium days, check is premium and get lastday
-	output->addByte(account.getPremiumRemainingDays());
-	output->addByte(account.getPremiumLastDay() > getTimeNow());
-	output->add<uint32_t>(account.getPremiumLastDay());
+	if (g_configManager().getBoolean(FREE_PREMIUM)) {
+		output->addByte(0);
+		output->addByte(1);
+		output->add<uint32_t>(0);
+	} else {
+		output->addByte(account.getPremiumRemainingDays());
+		output->addByte(account.getPremiumLastDay() > getTimeNow());
+		output->add<uint32_t>(account.getPremiumLastDay());
+	}
 
 	send(output);
 
