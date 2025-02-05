@@ -843,10 +843,6 @@ void Combat::CombatConditionFunc(const std::shared_ptr<Creature> &caster, const 
 }
 
 void Combat::CombatDispelFunc(const std::shared_ptr<Creature> &, const std::shared_ptr<Creature> &target, const CombatParams &params, CombatDamage*) {
-	if (!target->hasCondition(params.dispelType, -1)) {
-		return;
-	}
-
 	if (params.dispelType == CONDITION_INVISIBLE) {
 		if (const auto &player = target->getPlayer()) {
 			const auto &item = player->getEquippedItem(CONST_SLOT_RING);
