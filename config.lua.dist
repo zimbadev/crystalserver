@@ -2,6 +2,7 @@
 
 -- Core settings
 -- If you want to use the global datapack folder, put "data-global"
+-- if you want use Crystal Server map, put "data-crystal"
 dataPackDirectory = "data-global"
 -- Don't change this unless you know what you're doing
 coreDirectory = "data"
