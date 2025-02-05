@@ -2615,9 +2615,6 @@
 	<monster centerx="640" centery="324" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="619" centery="325" centerz="8" radius="1" />
-	<monster centerx="623" centery="325" centerz="8" radius="1" />
-	<monster centerx="614" centery="326" centerz="8" radius="1" />
 	<monster centerx="629" centery="326" centerz="8" radius="3">
 		<monster name="Bulltaur Alchemist" x="3" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur brute" x="2" y="1" z="8" spawntime="60" />
@@ -2631,15 +2628,12 @@
 		<monster name="Deathling Spellsinger" x="-1" y="-2" z="8" spawntime="60" />
 		<monster name="Deathling Scout" x="-2" y="2" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="617" centery="328" centerz="8" radius="1" />
 	<monster centerx="640" centery="328" centerz="8" radius="1">
 		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="643" centery="328" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="611" centery="329" centerz="8" radius="1" />
-	<monster centerx="614" centery="330" centerz="8" radius="1" />
 	<monster centerx="644" centery="331" centerz="8" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 	</monster>
@@ -2650,11 +2644,9 @@
 	<monster centerx="289" centery="333" centerz="8" radius="5">
 		<monster name="Quara Mantassin" x="0" y="-1" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="611" centery="333" centerz="8" radius="1" />
 	<monster centerx="696" centery="333" centerz="8" radius="3">
 		<monster name="Deathling Spellsinger" x="3" y="2" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="616" centery="334" centerz="8" radius="1" />
 	<monster centerx="634" centery="334" centerz="8" radius="2">
 		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="-2" y="2" z="8" spawntime="60" />
@@ -2670,13 +2662,9 @@
 		<monster name="Deathling Scout" x="-3" y="-1" z="8" spawntime="60" />
 		<monster name="Deathling Spellsinger" x="1" y="2" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="612" centery="337" centerz="8" radius="1" />
 	<monster centerx="720" centery="338" centerz="8" radius="3">
 		<monster name="Deathling Spellsinger" x="0" y="-1" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="627" centery="339" centerz="8" radius="1" />
-	<monster centerx="615" centery="340" centerz="8" radius="1" />
-	<monster centerx="620" centery="340" centerz="8" radius="1" />
 	<monster centerx="634" centery="340" centerz="8" radius="1">
 		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
