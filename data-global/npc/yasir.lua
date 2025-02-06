@@ -656,6 +656,19 @@ npcConfig.shop = {
 	{ itemName = "young lich worm", clientId = 31590, sell = 25000 },
 	{ itemName = "zaogun flag", clientId = 10413, sell = 600 },
 	{ itemName = "zaogun shoulderplates", clientId = 10414, sell = 150 },
+	{ itemName = "strange substance", clientId = 44740, sell = 810 },
+	{ itemName = "encrypted notes", clientId = 44739, sell = 620 },
+	{ itemName = "staff piece", clientId = 44741, sell = 560 },
+	{ itemName = "idol of the forge", clientId = 44742, sell = 950 },
+	{ itemName = "bulltaur hoof", clientId = 44737, sell = 540 },
+	{ itemName = "bulltaur armor scrap", clientId = 44738, sell = 480 },
+	{ itemName = "bulltaur horn", clientId = 44736, sell = 385 },
+	{ itemName = "crystal of the Mitmah", clientId = 44439, sell = 280 },
+	{ itemName = "gold-brocaded cloth", clientId = 40529, sell = 175 },
+	{ itemName = "broken Mitmah necklace", clientId = 44438, sell = 210 },
+	{ itemName = "ritual tooth", clientId = 40528, sell = 135 },
+	{ itemName = "broken Mitmah chestplate", clientId = 44727, sell = 85000 },
+	{ itemName = "splintered Mitmah gem", clientId = 44728, sell = 225000 },
 }
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
