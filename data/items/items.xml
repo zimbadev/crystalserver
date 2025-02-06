@@ -76844,6 +76844,57 @@ Granted by TibiaGoals.com"/>
 		<attribute key="decayTo" value="44662"/>
 		<attribute key="containersize" value="10"/>
 	</item>
+	<item id="44706" article="a" name="dead bulltaur brute">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="60"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44707" article="a" name="dead bulltaur brute">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44706"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44708" article="a" name="dead bulltaur brute">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44707"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44710" article="a" name="dead bulltaur alchemist">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="60"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44711" article="a" name="dead bulltaur alchemist">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44710"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44712" article="a" name="dead bulltaur alchemist">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44711"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44714" article="a" name="dead bulltaur forgepriest">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="60"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44715" article="a" name="dead bulltaur forgepriest">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44714"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44716" article="a" name="dead bulltaur forgepriest">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44715"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
 	<item id="44743" article="a" name="Nimmersatt's seal">
 		<attribute key="loottype" value="creature products" />
 		<attribute key="primarytype" value="creature products" />
