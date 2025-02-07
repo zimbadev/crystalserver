@@ -80494,6 +80494,48 @@ Granted by TibiaGoals.com"/>
 	<item id="48502" article="an" name="open door">
 		<attribute key="type" value="door"/>
 	</item>
+	<item id="48505" article="a" name="preserved dark seed">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="30" />
+	</item>
+	<item id="48508" article="a" name="amber souvenir" plural="amber souvenirs">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48509" article="a" name="resinous fish fin" plural="resinous fish fins">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48510" article="a" name="demon root" plural="demon roots">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48511" article="a" name="resin parasite" plural="resin parasites">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48514" article="a" name="strange inedible fruit">
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48515" article="a" name="petrified leaf">
+		<attribute key="description" value="Rootwalkers can use this to enhance their attire."/>
+		<attribute key="weight" value="50"/>
+	</item>
+	<item id="48516" article="a" name="root tentacle" plural="root tentacles">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="100"/>
+	</item>
+	<item id="48517" article="a" name="fish eye">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="100"/>
+	</item>
 	<item id="48520" article="a" name="closed door">
 		<attribute key="type" value="door"/>
 		<attribute key="blockProjectile" value="1"/>
@@ -80535,6 +80577,11 @@ Granted by TibiaGoals.com"/>
 	</item>
 	<item id="48531" article="an" name="open door">
 		<attribute key="type" value="door"/>
+	</item>
+	<item id="48544" article="a" name="wad of fairy floss" plural="wad of fairy flosses">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
 	</item>
 	<item id="48929" article="an" name="black sheep soul core">
 		<attribute key="primarytype" value="soul cores"/>
