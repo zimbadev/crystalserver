@@ -38,16 +38,15 @@ local area = createCombatArea(arr)
 combat1:setArea(createCombatArea(arr))
 combat2:setArea(createCombatArea(arr1))
 
-
 local spell = Spell("instant")
 
 local combats = { combat1, combat2 }
 
 function spell.onCastSpell(creature, var)
-   for _, combat in pairs(combats) do
-      combat:execute(creature, var)
-   end
-   return true
+	for _, combat in pairs(combats) do
+		combat:execute(creature, var)
+	end
+	return true
 end
 
 spell:name("rotthingshaper")

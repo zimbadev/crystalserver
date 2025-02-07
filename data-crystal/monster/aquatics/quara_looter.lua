@@ -76,34 +76,34 @@ monster.voices = {
 }
 
 monster.loot = {
-    { name = "Amber Souvenir", chance = 7040 },  
-    { name = "Resinous Fish Fin", chance = 6460 },  
-    { id = 3039, chance = 4340 }, -- red gem 
-    { id = 3041, chance = 2700 }, -- blue gem 
-    { name = "Glacier Kilt", chance = 940 }, 
-    { name = "Necklace of the Deep", chance = 820 },
-    { name = "Crystal Crossbow", chance = 470 },  
-    { name = "Rift Lance", chance = 350 },  
-    { name = "Mantassin Tail", chance = 230 },    
-    { name = "platinum coin", chance = 10000, maxCount = 25 },  
-    { name = "Glacier Robe", chance = 1000 },
-    { name = "Preserved Light Blue Seed", chance = 110 },
-    { name = "Preserved Purple Seed", chance = 110 },
-    { name = "Preserved Violet Seed", chance = 110 },
+	{ name = "Amber Souvenir", chance = 7040 },
+	{ name = "Resinous Fish Fin", chance = 6460 },
+	{ id = 3039, chance = 4340 }, -- red gem
+	{ id = 3041, chance = 2700 }, -- blue gem
+	{ name = "Glacier Kilt", chance = 940 },
+	{ name = "Necklace of the Deep", chance = 820 },
+	{ name = "Crystal Crossbow", chance = 470 },
+	{ name = "Rift Lance", chance = 350 },
+	{ name = "Mantassin Tail", chance = 230 },
+	{ name = "platinum coin", chance = 10000, maxCount = 25 },
+	{ name = "Glacier Robe", chance = 1000 },
+	{ name = "Preserved Light Blue Seed", chance = 110 },
+	{ name = "Preserved Purple Seed", chance = 110 },
+	{ name = "Preserved Violet Seed", chance = 110 },
 }
 
 monster.attacks = {
-	{name ="melee", interval = 2000, chance = 100, type = COMBAT_DEATHDAMAGE, minDamage = -150, maxDamage = -450 },
-	{name ="combat", interval = 2000, chance = 35, type = COMBAT_ICEDAMAGE, minDamage = -400, maxDamage = -750, range = 7, shootEffect = CONST_ANI_SHIVERARROW, effect = CONST_ME_ICEATTACK, target = true },
-	{name ="quarasmallicering", interval = 2000, chance = 16 },
-	{name ="podzillaphyschain", interval = 2000, chance = 15 },
+	{ name = "melee", interval = 2000, chance = 100, type = COMBAT_DEATHDAMAGE, minDamage = -150, maxDamage = -450 },
+	{ name = "combat", interval = 2000, chance = 35, type = COMBAT_ICEDAMAGE, minDamage = -400, maxDamage = -750, range = 7, shootEffect = CONST_ANI_SHIVERARROW, effect = CONST_ME_ICEATTACK, target = true },
+	{ name = "quarasmallicering", interval = 2000, chance = 16 },
+	{ name = "podzillaphyschain", interval = 2000, chance = 15 },
 }
 
 monster.defenses = {
 	defense = 95,
 	armor = 95,
 	mitigation = 2.75,
-	{ name = "combat", interval = 2000, chance = 7, type = COMBAT_HEALING, minDamage = 600, maxDamage = 800, effect = CONST_ME_MAGIC_BLUE, target = false },	
+	{ name = "combat", interval = 2000, chance = 7, type = COMBAT_HEALING, minDamage = 600, maxDamage = 800, effect = CONST_ME_MAGIC_BLUE, target = false },
 }
 
 monster.elements = {
@@ -118,7 +118,6 @@ monster.elements = {
 	{ type = COMBAT_HOLYDAMAGE, percent = 10 },
 	{ type = COMBAT_DEATHDAMAGE, percent = 5 },
 }
-
 
 monster.immunities = {
 	{ type = "paralyze", condition = true },
