@@ -1,0 +1,298 @@
+<?xml version="1.0"?>
+<npcs>
+	<npc centerx="269" centery="322" centerz="5" radius="5">
+		<npc name="Nimral" x="0" y="0" z="5" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="388" centery="419" centerz="5" radius="5">
+		<npc name="Julian" x="0" y="-5" z="5" spawntime="60" direction="2" />
+		<npc name="Orlan" x="0" y="0" z="5" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="432" centery="426" centerz="5" radius="5">
+		<npc name="Nimral" x="-1" y="0" z="5" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="523" centery="438" centerz="5" radius="5">
+		<npc name="Nimral" x="0" y="1" z="5" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="522" centery="449" centerz="5" radius="5">
+		<npc name="Roger" x="0" y="0" z="5" spawntime="60" direction="2" />
+		<npc name="Dufi" x="0" y="4" z="5" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="531" centery="453" centerz="5" radius="5">
+		<npc name="Maria" x="0" y="0" z="5" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="331" centery="455" centerz="5" radius="5">
+		<npc name="Julian" x="0" y="0" z="5" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="459" centery="481" centerz="5" radius="5">
+		<npc name="Nimral" x="0" y="-2" z="5" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="402" centery="487" centerz="5" radius="5">
+		<npc name="Nimral" x="-2" y="0" z="5" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="256" centery="321" centerz="6" radius="5">
+		<npc name="Jimbim" x="0" y="0" z="6" spawntime="60" direction="2" />
+		<npc name="Dark Rodo" x="0" y="4" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="250" centery="347" centerz="6" radius="5">
+		<npc name="Roger" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="244" centery="348" centerz="6" radius="5">
+		<npc name="Dufi" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="397" centery="385" centerz="6" radius="5">
+		<npc name="Maria" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="407" centery="385" centerz="6" radius="5">
+		<npc name="Dufi" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="486" centery="399" centerz="6" radius="5">
+		<npc name="Julian" x="3" y="-2" z="6" spawntime="60" direction="2" />
+		<npc name="Orlan" x="-3" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="805" centery="407" centerz="6" radius="5">
+		<npc name="The Oracle" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="466" centery="409" centerz="6" radius="5">
+		<npc name="Seller" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="387" centery="417" centerz="6" radius="5">
+		<npc name="Seller" x="0" y="-1" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="468" centery="428" centerz="6" radius="5">
+		<npc name="Steven" x="2" y="-1" z="6" spawntime="60" direction="2" />
+		<npc name="Dufi" x="-3" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="397" centery="432" centerz="6" radius="5">
+		<npc name="Dark Rodo" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="408" centery="432" centerz="6" radius="5">
+		<npc name="Jimbim" x="0" y="0" z="6" spawntime="60" direction="2" />
+		<npc name="Steven" x="-5" y="4" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="522" centery="449" centerz="6" radius="5">
+		<npc name="Dark Rodo" x="0" y="0" z="6" spawntime="60" direction="2" />
+		<npc name="Seller" x="0" y="4" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="531" centery="453" centerz="6" radius="5">
+		<npc name="Jimbim" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="329" centery="457" centerz="6" radius="5">
+		<npc name="Orlan" x="1" y="-2" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="566" centery="464" centerz="6" radius="5">
+		<npc name="Carpetman" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="359" centery="493" centerz="6" radius="5">
+		<npc name="Steven" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="438" centery="508" centerz="6" radius="5">
+		<npc name="Steven" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="520" centery="531" centerz="6" radius="5">
+		<npc name="Carpetman" x="0" y="1" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="528" centery="559" centerz="6" radius="5">
+		<npc name="Varkhal" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="436" centery="622" centerz="6" radius="5">
+		<npc name="Carpetman" x="-1" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="439" centery="644" centerz="6" radius="5">
+		<npc name="Dufi" x="0" y="0" z="6" spawntime="60" direction="2" />
+		<npc name="Dark Rodo" x="-4" y="4" z="6" spawntime="60" direction="2" />
+		<npc name="Roger" x="4" y="4" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="435" centery="648" centerz="6" radius="5">
+		<npc name="Jimbim" x="4" y="5" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="343" centery="650" centerz="6" radius="1">
+		<npc name="Imbuement Assistant" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="563" centery="676" centerz="6" radius="5">
+		<npc name="Steven" x="0" y="0" z="6" spawntime="60" direction="2" />
+		<npc name="Roger" x="-5" y="1" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="554" centery="694" centerz="6" radius="5">
+		<npc name="Dufi" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="567" centery="695" centerz="6" radius="5">
+		<npc name="Carpetman" x="1" y="1" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="544" centery="721" centerz="6" radius="5">
+		<npc name="Orlan" x="0" y="-3" z="6" spawntime="60" direction="2" />
+		<npc name="Julian" x="0" y="1" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="256" centery="325" centerz="7" radius="5">
+		<npc name="Lara" x="0" y="0" z="7" spawntime="60" direction="2" />
+		<npc name="Junior" x="-3" y="5" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="240" centery="327" centerz="7" radius="5">
+		<npc name="Orlan" x="0" y="0" z="7" spawntime="60" direction="2" />
+		<npc name="Julian" x="5" y="1" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="231" centery="335" centerz="7" radius="5">
+		<npc name="Mark" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="250" centery="347" centerz="7" radius="5">
+		<npc name="Seller" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="244" centery="348" centerz="7" radius="5">
+		<npc name="Maria" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="402" centery="382" centerz="7" radius="5">
+		<npc name="Junior" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="477" centery="391" centerz="7" radius="5">
+		<npc name="Mark" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="488" centery="394" centerz="7" radius="5">
+		<npc name="Maria" x="0" y="-1" z="7" spawntime="60" direction="2" />
+		<npc name="Roger" x="-5" y="5" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="512" centery="399" centerz="7" radius="5">
+		<npc name="Lara" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="401" centery="407" centerz="7" radius="5">
+		<npc name="Mark" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="784" centery="407" centerz="7" radius="5">
+		<npc name="George" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="466" centery="409" centerz="7" radius="5">
+		<npc name="Jimbim" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="785" centery="414" centerz="7" radius="5">
+		<npc name="Adolfo" x="-1" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="387" centery="416" centerz="7" radius="5">
+		<npc name="Roger" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="470" centery="420" centerz="7" radius="5">
+		<npc name="Dark Rodo" x="0" y="-1" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="403" centery="436" centerz="7" radius="5">
+		<npc name="Lara" x="0" y="1" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="542" centery="444" centerz="7" radius="5">
+		<npc name="Steven" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="529" centery="459" centerz="7" radius="8">
+		<npc name="Junior" x="3" y="-5" z="7" spawntime="60" direction="2" />
+		<npc name="Orlan" x="8" y="6" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="550" centery="465" centerz="7" radius="5">
+		<npc name="Julian" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="328" centery="471" centerz="7" radius="5">
+		<npc name="Roger" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="374" centery="473" centerz="7" radius="5">
+		<npc name="Junior" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="343" centery="498" centerz="7" radius="5">
+		<npc name="Mark" x="1" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="438" centery="501" centerz="7" radius="5">
+		<npc name="Dufi" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="448" centery="501" centerz="7" radius="5">
+		<npc name="Roger" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="469" centery="501" centerz="7" radius="5">
+		<npc name="Junior" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="438" centery="509" centerz="7" radius="5">
+		<npc name="Orlan" x="-3" y="0" z="7" spawntime="60" direction="2" />
+		<npc name="Julian" x="3" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="441" centery="515" centerz="7" radius="5">
+		<npc name="Dark Rodo" x="0" y="0" z="7" spawntime="60" direction="2" />
+		<npc name="Seller" x="0" y="5" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="457" centery="515" centerz="7" radius="5">
+		<npc name="Jimbim" x="-1" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="478" centery="515" centerz="7" radius="5">
+		<npc name="Maria" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="452" centery="542" centerz="7" radius="5">
+		<npc name="Mark" x="2" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="626" centery="599" centerz="7" radius="30">
+		<npc name="Carpetman" x="-6" y="29" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="569" centery="605" centerz="7" radius="1">
+		<npc name="Eremo" x="-1" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="219" centery="607" centerz="7" radius="1">
+		<npc name="Nimral" x="1" y="1" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="433" centery="637" centerz="7" radius="5">
+		<npc name="Steven" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="465" centery="637" centerz="7" radius="5">
+		<npc name="Mark" x="-1" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="332" centery="639" centerz="7" radius="1">
+		<npc name="Cledwyn" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="334" centery="646" centerz="7" radius="1">
+		<npc name="Loot Buyer" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="448" centery="649" centerz="7" radius="5">
+		<npc name="Junior" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="438" centery="654" centerz="7" radius="5">
+		<npc name="Seller" x="1" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="460" centery="666" centerz="7" radius="5">
+		<npc name="Julian" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="449" centery="671" centerz="7" radius="5">
+		<npc name="Lara" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="563" centery="675" centerz="7" radius="5">
+		<npc name="Maria" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="553" centery="693" centerz="7" radius="5">
+		<npc name="Junior" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="554" centery="706" centerz="7" radius="5">
+		<npc name="Mark" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="547" centery="720" centerz="7" radius="5">
+		<npc name="Seller" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="540" centery="721" centerz="7" radius="5">
+		<npc name="Dark Rodo" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="554" centery="721" centerz="7" radius="5">
+		<npc name="Lara" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="429" centery="448" centerz="8" radius="1">
+		<npc name="Alice" x="-1" y="0" z="8" spawntime="60" />
+	</npc>
+	<npc centerx="374" centery="465" centerz="8" radius="5">
+		<npc name="Lara" x="0" y="0" z="8" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="429" centery="467" centerz="8" radius="1">
+		<npc name="Aldo" x="-1" y="0" z="8" spawntime="60" />
+	</npc>
+	<npc centerx="366" centery="473" centerz="8" radius="5">
+		<npc name="Jimbim" x="0" y="0" z="8" spawntime="60" direction="2" />
+		<npc name="Dufi" x="4" y="4" z="8" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="382" centery="473" centerz="8" radius="5">
+		<npc name="Dark Rodo" x="0" y="0" z="8" spawntime="60" direction="2" />
+		<npc name="Seller" x="-5" y="4" z="8" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="377" centery="477" centerz="8" radius="5">
+		<npc name="Maria" x="-3" y="2" z="8" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="429" centery="485" centerz="8" radius="1">
+		<npc name="Jimbim" x="-1" y="0" z="8" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="440" centery="504" centerz="8" radius="1">
+		<npc name="Quentin" x="0" y="0" z="8" spawntime="60" />
+	</npc>
+</npcs>

@@ -76844,6 +76844,57 @@ Granted by TibiaGoals.com"/>
 		<attribute key="decayTo" value="44662"/>
 		<attribute key="containersize" value="10"/>
 	</item>
+	<item id="44706" article="a" name="dead bulltaur brute">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="60"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44707" article="a" name="dead bulltaur brute">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44706"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44708" article="a" name="dead bulltaur brute">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44707"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44710" article="a" name="dead bulltaur alchemist">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="60"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44711" article="a" name="dead bulltaur alchemist">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44710"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44712" article="a" name="dead bulltaur alchemist">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44711"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44714" article="a" name="dead bulltaur forgepriest">
+		<attribute key="decayTo" value="0"/>
+		<attribute key="duration" value="60"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44715" article="a" name="dead bulltaur forgepriest">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44714"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="44716" article="a" name="dead bulltaur forgepriest">
+		<attribute key="containerSize" value="30"/>
+		<attribute key="decayTo" value="44715"/>
+		<attribute key="duration" value="300"/>
+		<attribute key="fluidSource" value="blood"/>
+	</item>
 	<item id="44743" article="a" name="Nimmersatt's seal">
 		<attribute key="loottype" value="creature products" />
 		<attribute key="primarytype" value="creature products" />
@@ -76977,11 +77028,11 @@ Granted by TibiaGoals.com"/>
 	<item id="45641" article="a" name="candy necklace">
 		<attribute key="primarytype" value="amulets and necklaces"/>
 		<attribute key="description" value="This necklace provides a sugary barrier against attacks."/>
+		<attribute key="armor" value="2"/>
 		<attribute key="showAttributes" value="1"/>
 		<attribute key="absorbpercentphysical" value="3"/>
 		<attribute key="absorbpercentenergy" value="6"/>
-		<attribute key="absorbpercentpoison" value="-5"/>
-		<attribute key="armor" value="2"/>
+		<attribute key="absorbpercentearth" value="-5"/>
 		<attribute key="weight" value="510"/>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="220"/>
@@ -77021,29 +77072,29 @@ Granted by TibiaGoals.com"/>
 		</attribute>
 	</item>
 	<item id="45639" article="a" name="cocoa grimoire">
+		<attribute key="primarytype" value="spellbooks"/>
 		<attribute key="weaponType" value="spellbook"/>
 		<attribute key="description" value="This spellbook was made from rich dark chocolate and is filled with powerful knowledge."/>
-		<attribute key="showAttributes" value="1"/>
+		<attribute key="absorbpercentphysical" value="2"/>
+		<attribute key="absorbpercentenergy" value="5"/>
 		<attribute key="magiclevelpoints" value="3"/>
 		<attribute key="firemagiclevelpoints" value="1"/>
 		<attribute key="magicshieldCapacityflat" value="150"/>
 		<attribute key="magicshieldCapacitypercent" value="3"/>
-		<attribute key="absorbpercentphysical" value="2"/>
-		<attribute key="absorbpercentenergy" value="5"/>
 		<attribute key="defense" value="19"/>
-		<attribute key="weight" value="1700"/>
+		<attribute key="weight" value="1500"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="elemental protection death" value="3"/>
+			<attribute key="elemental protection fire" value="3"/>
+			<attribute key="elemental protection ice" value="3"/>
+			<attribute key="elemental protection holy" value="3"/>
+			<attribute key="elemental protection earth" value="3"/>
+			<attribute key="skillboost shielding" value="3"/>
+		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="ultimate flame strike" value="base">
 				<attribute key="value" value="33"/>
 			</attribute>
-		</attribute>
-		<attribute key="imbuementslot" value="1">
-			<attribute key="elemental protection death" value="3"/>
-			<attribute key="elemental protection earth" value="3"/>
-			<attribute key="elemental protection ice" value="3"/>
-			<attribute key="elemental protection fire" value="3"/>
-			<attribute key="elemental protection holy" value="3"/>
-			<attribute key="skillboost shielding" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="200"/>
@@ -77052,29 +77103,29 @@ Granted by TibiaGoals.com"/>
 		</attribute>
 	</item>
 	<item id="45640" article="a" name="creamy grimoire">
+		<attribute key="primarytype" value="spellbooks"/>
 		<attribute key="weaponType" value="spellbook"/>
 		<attribute key="description" value="This spellbook was made from pure white chocolate and is brimming with magical finesse."/>
-		<attribute key="showAttributes" value="1"/>
+		<attribute key="absorbpercentphysical" value="2"/>
+		<attribute key="absorbpercentfire" value="5"/>
 		<attribute key="magiclevelpoints" value="3"/>
 		<attribute key="healingmagiclevelpoints" value="1"/>
 		<attribute key="magicshieldCapacityflat" value="150"/>
 		<attribute key="magicshieldCapacitypercent" value="3"/>
-		<attribute key="absorbpercentphysical" value="2"/>
-		<attribute key="absorbpercentfire" value="5"/>
 		<attribute key="defense" value="19"/>
 		<attribute key="weight" value="1700"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="elemental protection death" value="3"/>
+			<attribute key="elemental protection energy" value="3"/>
+			<attribute key="elemental protection ice" value="3"/>
+			<attribute key="elemental protection holy" value="3"/>
+			<attribute key="elemental protection earth" value="3"/>
+			<attribute key="skillboost shielding" value="3"/>
+		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="ultimate ice strike" value="base">
 				<attribute key="value" value="33"/>
 			</attribute>
-		</attribute>
-		<attribute key="imbuementslot" value="1">
-			<attribute key="elemental protection death" value="3"/>
-			<attribute key="elemental protection earth" value="3"/>
-			<attribute key="elemental protection ice" value="3"/>
-			<attribute key="elemental protection energy" value="3"/>
-			<attribute key="elemental protection holy" value="3"/>
-			<attribute key="skillboost shielding" value="3"/>
 		</attribute>
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="200"/>
@@ -77087,7 +77138,6 @@ Granted by TibiaGoals.com"/>
 		<attribute key="description" value="This ring provides a delicious defense for a limited number of uses."/>
 		<attribute key="showCharges" value="1"/>
 		<attribute key="showAttributes" value="1"/>
-		<attribute key="armor" value="0"/>
 		<attribute key="absorbpercentmanadrain" value="30"/>
 		<attribute key="charges" value="200"/>
 		<attribute key="weight" value="80"/>
@@ -77110,6 +77160,36 @@ Granted by TibiaGoals.com"/>
 			<attribute key="vocation" value="Paladin;true, Royal Paladin"/>
 		</attribute>
 	</item>
+	<item id="45652" article="a" name="preserved pink seed">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="30" />
+	</item>
+	<item id="45653" article="a" name="preserved red seed">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="30" />
+	</item>
+	<item id="45654" article="a" name="preserved light blue seed">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="30" />
+	</item>
+	<item id="45655" article="a" name="preserved violet seed">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="30" />
+	</item>
+	<item id="45656" article="a" name="preserved purple seed">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="30" />
+	</item>
+	<item id="45657" article="a" name="preserved yellow seed">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="30" />
+	</item>
 	<item id="46627" article="a" name="crusher">
 		<attribute key="loottype" value="tools"/>
 		<attribute key="showCharges" value="1"/>
@@ -77124,7 +77204,6 @@ Granted by TibiaGoals.com"/>
 		<attribute key="primarytype" value="sword weapons"/>
 		<attribute key="weaponType" value="sword"/>
 		<attribute key="slotType" value="two-handed"/>
-		<attribute key="attack" value="0"/>
 		<attribute key="elementdeath" value="50"/>
 		<attribute key="defense" value="34"/>
 		<attribute key="skillsword" value="4"/>
@@ -77133,13 +77212,14 @@ Granted by TibiaGoals.com"/>
 			<attribute key="life leech" value="3"/>
 			<attribute key="mana leech" value="3"/>
 			<attribute key="critical hit" value="3"/>
+			<attribute key="skillboost sword" value="3"/>
 		</attribute>
 		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14"/>
-			</attribute>
 			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000"/>
+				<attribute key="value" value="8000" />
+			</attribute>
+			<attribute key="annihilation" value="critical extra damage">
+				<attribute key="value" value="14" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -77153,7 +77233,6 @@ Granted by TibiaGoals.com"/>
 		<attribute key="primarytype" value="axe weapons"/>
 		<attribute key="weaponType" value="axe"/>
 		<attribute key="slotType" value="two-handed"/>
-		<attribute key="attack" value="0"/>
 		<attribute key="elementearth" value="50"/>
 		<attribute key="defense" value="34"/>
 		<attribute key="skillaxe" value="4"/>
@@ -77162,13 +77241,14 @@ Granted by TibiaGoals.com"/>
 			<attribute key="life leech" value="3"/>
 			<attribute key="mana leech" value="3"/>
 			<attribute key="critical hit" value="3"/>
+			<attribute key="skillboost axe" value="3"/>
 		</attribute>
 		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14"/>
-			</attribute>
 			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000"/>
+				<attribute key="value" value="8000" />
+			</attribute>
+			<attribute key="annihilation" value="critical extra damage">
+				<attribute key="value" value="14" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -77182,7 +77262,6 @@ Granted by TibiaGoals.com"/>
 		<attribute key="primarytype" value="club weapons"/>
 		<attribute key="weaponType" value="club"/>
 		<attribute key="slotType" value="two-handed"/>
-		<attribute key="attack" value="0"/>
 		<attribute key="elementdeath" value="50"/>
 		<attribute key="defense" value="34"/>
 		<attribute key="skillclub" value="4"/>
@@ -77191,13 +77270,14 @@ Granted by TibiaGoals.com"/>
 			<attribute key="life leech" value="3"/>
 			<attribute key="mana leech" value="3"/>
 			<attribute key="critical hit" value="3"/>
+			<attribute key="skillboost club" value="3"/>
 		</attribute>
 		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14"/>
-			</attribute>
 			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000"/>
+				<attribute key="value" value="8000" />
+			</attribute>
+			<attribute key="annihilation" value="critical extra damage">
+				<attribute key="value" value="14" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -77207,7 +77287,7 @@ Granted by TibiaGoals.com"/>
 			<attribute key="vocation" value="Knight;true, Elite Knight"/>
 		</attribute>
 	</item>
-	<item id="47371" article="a" name="amber bow">
+	<item id="47371" article="an" name="amber bow">
 		<attribute key="primarytype" value="distance weapons"/>
 		<attribute key="weaponType" value="distance"/>
 		<attribute key="slotType" value="two-handed"/>
@@ -77241,13 +77321,12 @@ Granted by TibiaGoals.com"/>
 		<attribute key="primarytype" value="wands"/>
 		<attribute key="weaponType" value="wand"/>
 		<attribute key="shootType" value="energy"/>
+		<attribute key="absorbpercentice" value="6"/>
 		<attribute key="magiclevelpoints" value="3"/>
 		<attribute key="energymagiclevelpoints" value="2"/>
-		<attribute key="absorbpercentice" value="6"/>
 		<attribute key="range" value="5"/>
-		<attribute key="weight" value="2000"/>
+		<attribute key="weight" value="2200"/>
 		<attribute key="imbuementslot" value="2">
-			<attribute key="life leech" value="3"/>
 			<attribute key="mana leech" value="3"/>
 			<attribute key="critical hit" value="3"/>
 			<attribute key="skillboost magic level" value="3"/>
@@ -77261,8 +77340,8 @@ Granted by TibiaGoals.com"/>
 			<attribute key="level" value="330"/>
 			<attribute key="mana" value="20"/>
 			<attribute key="unproperly" value="true"/>
-			<attribute key="fromDamage" value="90"/>
-			<attribute key="toDamage" value="110"/>
+			<attribute key="fromDamage" value="82"/>
+			<attribute key="toDamage" value="95"/>
 			<attribute key="weaponType" value="wand"/>
 			<attribute key="wandType" value="energy"/>
 			<attribute key="vocation" value="Sorcerer;true, Master Sorcerer"/>
@@ -77273,13 +77352,12 @@ Granted by TibiaGoals.com"/>
 		<attribute key="primarytype" value="rods"/>
 		<attribute key="weaponType" value="wand"/>
 		<attribute key="shootType" value="ice"/>
-		<attribute key="magiclevelpoints" value="3"/>
-		<attribute key="icemagiclevelpoints" value="2"/>
 		<attribute key="absorbpercentfire" value="6"/>
 		<attribute key="range" value="5"/>
+		<attribute key="magiclevelpoints" value="3"/>
+		<attribute key="icemagiclevelpoints" value="2"/>
 		<attribute key="weight" value="1800"/>
 		<attribute key="imbuementslot" value="2">
-			<attribute key="life leech" value="3"/>
 			<attribute key="mana leech" value="3"/>
 			<attribute key="critical hit" value="3"/>
 			<attribute key="skillboost magic level" value="3"/>
@@ -77293,8 +77371,8 @@ Granted by TibiaGoals.com"/>
 			<attribute key="level" value="330"/>
 			<attribute key="mana" value="20"/>
 			<attribute key="unproperly" value="true"/>
-			<attribute key="fromDamage" value="90"/>
-			<attribute key="toDamage" value="110"/>
+			<attribute key="fromDamage" value="80"/>
+			<attribute key="toDamage" value="95"/>
 			<attribute key="weaponType" value="wand"/>
 			<attribute key="wandType" value="ice"/>
 			<attribute key="vocation" value="Druid;true, Elder Druid"/>
@@ -77304,7 +77382,6 @@ Granted by TibiaGoals.com"/>
 	<item id="47374" article="an" name="amber sabre">
 		<attribute key="primarytype" value="sword weapons"/>
 		<attribute key="weaponType" value="sword"/>
-		<attribute key="attack" value="0"/>
 		<attribute key="elementenergy" value="46"/>
 		<attribute key="defense" value="32"/>
 		<attribute key="extradef" value="3"/>
@@ -77314,13 +77391,14 @@ Granted by TibiaGoals.com"/>
 			<attribute key="life leech" value="3"/>
 			<attribute key="mana leech" value="3"/>
 			<attribute key="critical hit" value="3"/>
+			<attribute key="skillboost sword" value="3"/>
 		</attribute>
 		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14"/>
-			</attribute>
 			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000"/>
+				<attribute key="value" value="8000" />
+			</attribute>
+			<attribute key="annihilation" value="critical extra damage">
+				<attribute key="value" value="14" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -77328,12 +77406,12 @@ Granted by TibiaGoals.com"/>
 			<attribute key="unproperly" value="true"/>
 			<attribute key="weaponType" value="sword"/>
 			<attribute key="vocation" value="Knight;true, Elite Knight"/>
+			<attribute key="slot" value="hand"/>
 		</attribute>
 	</item>
 	<item id="47375" article="an" name="amber axe">
 		<attribute key="primarytype" value="axe weapons"/>
 		<attribute key="weaponType" value="axe"/>
-		<attribute key="attack" value="0"/>
 		<attribute key="elementice" value="46"/>
 		<attribute key="defense" value="32"/>
 		<attribute key="extradef" value="3"/>
@@ -77343,13 +77421,14 @@ Granted by TibiaGoals.com"/>
 			<attribute key="life leech" value="3"/>
 			<attribute key="mana leech" value="3"/>
 			<attribute key="critical hit" value="3"/>
+			<attribute key="skillboost axe" value="3"/>
 		</attribute>
 		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14"/>
-			</attribute>
 			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000"/>
+				<attribute key="value" value="8000" />
+			</attribute>
+			<attribute key="annihilation" value="critical extra damage">
+				<attribute key="value" value="14" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -77357,12 +77436,12 @@ Granted by TibiaGoals.com"/>
 			<attribute key="unproperly" value="true"/>
 			<attribute key="weaponType" value="axe"/>
 			<attribute key="vocation" value="Knight;true, Elite Knight"/>
+			<attribute key="slot" value="hand"/>
 		</attribute>
 	</item>
 	<item id="47376" article="an" name="amber cudgel">
 		<attribute key="primarytype" value="club weapons"/>
 		<attribute key="weaponType" value="club"/>
-		<attribute key="attack" value="0"/>
 		<attribute key="elementfire" value="46"/>
 		<attribute key="defense" value="32"/>
 		<attribute key="extradef" value="3"/>
@@ -77372,13 +77451,14 @@ Granted by TibiaGoals.com"/>
 			<attribute key="life leech" value="3"/>
 			<attribute key="mana leech" value="3"/>
 			<attribute key="critical hit" value="3"/>
+			<attribute key="skillboost club" value="3"/>
 		</attribute>
 		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14"/>
-			</attribute>
 			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000"/>
+				<attribute key="value" value="8000" />
+			</attribute>
+			<attribute key="annihilation" value="critical extra damage">
+				<attribute key="value" value="14" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -77386,6 +77466,7 @@ Granted by TibiaGoals.com"/>
 			<attribute key="unproperly" value="true"/>
 			<attribute key="weaponType" value="club"/>
 			<attribute key="vocation" value="Knight;true, Elite Knight"/>
+			<attribute key="slot" value="hand"/>
 		</attribute>
 	</item>
 	<item id="47377" article="an" name="amber crossbow">
@@ -80114,27 +80195,49 @@ Granted by TibiaGoals.com"/>
 			<attribute key="slot" value="backpack"/>
 		</attribute>
 	</item>
-	<item id="48116" article="a" name="gummy rotworm">
+	<item id="48116" article="a" name="gummy rotworm" plural="gummy rotworms">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
 		<attribute key="weight" value="20"/>
 	</item>
-	<item id="48255" article="a" name="lime tart">
-		<attribute key="weight" value="250"/>
-	</item>
-	<item id="48249" article="a" name="milk chocolate coin">
-		<attribute key="weight" value="10"/>
+	<item id="48249" article="an" name="milk chocolate coin">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="valuables"/>
+		<attribute key="weight" value="1"/>
 	</item>
 	<item id="48250" article="a" name="dark chocolate coin">
-		<attribute key="weight" value="10"/>
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="valuables"/>
+		<attribute key="weight" value="1"/>
 	</item>
-	<item id="48252" article="a" name="brigadeiro">
-		<attribute key="weight" value="10"/>
+	<item id="48251" article="a" name="wafer paper flower" plural="wafer paper flowers">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="5"/>
 	</item>
-	<item id="48253" article="a" name="beijinho">
+	<item id="48252" article="a" name="brigadeiro" plural="brigadeiros">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
 		<attribute key="weight" value="10"/>
 	</item>
 	<item id="48257" article="a" name="dead nibblemaw">
 		<attribute key="decayTo" value="0"/>
 		<attribute key="duration" value="5"/>
+	</item>
+	<item id="48254" article="a" name="churro heart" plural="churro hearts">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="15"/>
+	</item>
+	<item id="48255" article="a" name="lime tart" plural="lime tarts">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48256" article="a" name="pastry dragon" plural="pastry dragons">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
 	</item>
 	<item id="48258" article="a" name="dead nibblemaw">
 		<attribute key="containerSize" value="8"/>
@@ -80194,6 +80297,11 @@ Granted by TibiaGoals.com"/>
 		<attribute key="decayTo" value="48297"/>
 		<attribute key="duration" value="5"/>
 		<attribute key="fluidSource" value="blood"/>
+	</item>
+	<item id="48273" article="a" name="taiyaki ice cream" plural="taiyaki ice creams">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="20"/>
 	</item>
 	<item id="48274" article="a" name="dead quara looter">
 		<attribute key="decayTo" value="0"/>
@@ -80321,6 +80429,15 @@ Granted by TibiaGoals.com"/>
 		<attribute key="duration" value="5"/>
 		<attribute key="fluidSource" value="blood"/>
 	</item>
+	<item id="48413" article="an" name="amber sickle">
+		<attribute key="primarytype" value="other items"/>
+		<attribute key="description" value="The sickle is extremely sharp and feels warm to the touch. This one is quite brittle."/>
+		<attribute key="weight" value="1050"/>
+	</item>
+	<item id="48424" article="a" name="pegasus feather">
+		<attribute key="primarytype" value="taming items"/>
+		<attribute key="weight" value="100"/>
+	</item>
 	<item id="48441" article="a" name="bed">
 		<attribute key="primarytype" value="furniture"/>
 		<attribute key="type" value="bed"/>
@@ -80443,6 +80560,48 @@ Granted by TibiaGoals.com"/>
 	<item id="48502" article="an" name="open door">
 		<attribute key="type" value="door"/>
 	</item>
+	<item id="48505" article="a" name="preserved dark seed">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="30" />
+	</item>
+	<item id="48508" article="a" name="amber souvenir" plural="amber souvenirs">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48509" article="a" name="resinous fish fin" plural="resinous fish fins">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48510" article="a" name="demon root" plural="demon roots">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48511" article="a" name="resin parasite" plural="resin parasites">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48514" article="a" name="strange inedible fruit">
+		<attribute key="weight" value="25"/>
+	</item>
+	<item id="48515" article="a" name="petrified leaf">
+		<attribute key="description" value="Rootwalkers can use this to enhance their attire."/>
+		<attribute key="weight" value="50"/>
+	</item>
+	<item id="48516" article="a" name="root tentacle" plural="root tentacles">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="100"/>
+	</item>
+	<item id="48517" article="a" name="fish eye">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="100"/>
+	</item>
 	<item id="48520" article="a" name="closed door">
 		<attribute key="type" value="door"/>
 		<attribute key="blockProjectile" value="1"/>
@@ -80484,6 +80643,11 @@ Granted by TibiaGoals.com"/>
 	</item>
 	<item id="48531" article="an" name="open door">
 		<attribute key="type" value="door"/>
+	</item>
+	<item id="48544" article="a" name="wad of fairy floss" plural="wad of fairy flosses">
+		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="food"/>
+		<attribute key="weight" value="25"/>
 	</item>
 	<item id="48929" article="an" name="black sheep soul core">
 		<attribute key="primarytype" value="soul cores"/>
