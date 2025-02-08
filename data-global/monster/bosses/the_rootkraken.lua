@@ -12,8 +12,7 @@ monster.outfit = {
 	lookAddons = 0,
 	lookMount = 0,
 }
-monster.events = {
-}
+monster.events = {}
 
 monster.bosstiary = {
 	bossRaceId = 2528,
@@ -71,28 +70,28 @@ monster.voices = {
 }
 
 monster.loot = {
-    { name = "crystal coin", chance = 100000, maxCount = 3 },  
-    { name = "platinum coin", chance = 100000, maxCount = 93 },  
-    { name = "ultimate health potion", chance = 42590, maxCount = 19 },  
-    { name = "great spirit potion", chance = 42590, maxCount = 7 },  
-    { name = "great mana potion", chance = 31480, maxCount = 14 },  
-    { name = "supreme health potion", chance = 31480, maxCount = 4 },  
-    { name = "ultimate spirit potion", chance = 25930, maxCount = 14 },  
-    { id = 3037, chance = 24070 }, -- yellow gem 
-    { name = "amber with a bug", chance = 18520 },  
-    { name = "giant topaz", chance = 7410 },  
-    { name = "amber crusher", chance = 1850 },
-    { id = 47375, chance = 300 }, -- amber axe
-    { id = 47369, chance = 200 }, -- amber greataxe
-    { id = 47368, chance = 200 }, -- amber slayer
-    { id = 47374, chance = 300 }, -- amber sabre
-    { id = 47376, chance = 300 }, -- amber cudgel
-    { id = 47370, chance = 200 }, -- amber bludgeon
-    { id = 47371, chance = 200 }, -- amber bow
-    { id = 47377, chance = 300 }, -- amber crossbow
-    { id = 47372, chance = 300 }, -- amber wand
-    { id = 47373, chance = 300 }, -- amber rod
-    { id = 48514, chance = 250 }, -- strange inedible fruit
+	{ name = "crystal coin", chance = 100000, maxCount = 3 },
+	{ name = "platinum coin", chance = 100000, maxCount = 93 },
+	{ name = "ultimate health potion", chance = 42590, maxCount = 19 },
+	{ name = "great spirit potion", chance = 42590, maxCount = 7 },
+	{ name = "great mana potion", chance = 31480, maxCount = 14 },
+	{ name = "supreme health potion", chance = 31480, maxCount = 4 },
+	{ name = "ultimate spirit potion", chance = 25930, maxCount = 14 },
+	{ id = 3037, chance = 24070 }, -- yellow gem
+	{ name = "amber with a bug", chance = 18520 },
+	{ name = "giant topaz", chance = 7410 },
+	{ name = "amber crusher", chance = 1850 },
+	{ id = 47375, chance = 300 }, -- amber axe
+	{ id = 47369, chance = 200 }, -- amber greataxe
+	{ id = 47368, chance = 200 }, -- amber slayer
+	{ id = 47374, chance = 300 }, -- amber sabre
+	{ id = 47376, chance = 300 }, -- amber cudgel
+	{ id = 47370, chance = 200 }, -- amber bludgeon
+	{ id = 47371, chance = 200 }, -- amber bow
+	{ id = 47377, chance = 300 }, -- amber crossbow
+	{ id = 47372, chance = 300 }, -- amber wand
+	{ id = 47373, chance = 300 }, -- amber rod
+	{ id = 48514, chance = 250 }, -- strange inedible fruit
 }
 
 monster.attacks = {

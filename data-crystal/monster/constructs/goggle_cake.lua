@@ -4,7 +4,7 @@ local monster = {}
 monster.description = "a goggle cake"
 monster.experience = 2700
 monster.outfit = {
-	lookType = 1740, 
+	lookType = 1740,
 	lookHead = 0,
 	lookBody = 10,
 	lookLegs = 115,
@@ -29,7 +29,7 @@ monster.Bestiary = {
 monster.health = 2700
 monster.maxHealth = 2700
 monster.race = "undead"
-monster.corpse = 48271 
+monster.corpse = 48271
 monster.speed = 122
 monster.manaCost = 0
 
@@ -114,16 +114,16 @@ monster.defenses = {
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = -5 },   
-	{ type = COMBAT_ENERGYDAMAGE, percent = -15 },     
-	{ type = COMBAT_EARTHDAMAGE, percent = 105 },     
-	{ type = COMBAT_FIREDAMAGE, percent = 110 },      
-	{ type = COMBAT_LIFEDRAIN, percent = 100 },       
-	{ type = COMBAT_MANADRAIN, percent = 100 },       
-	{ type = COMBAT_DROWNDAMAGE, percent = 100 },     
-	{ type = COMBAT_ICEDAMAGE, percent = -15 },   
-	{ type = COMBAT_HOLYDAMAGE, percent = -5 },       
-	{ type = COMBAT_DEATHDAMAGE, percent = -15 },      
+	{ type = COMBAT_PHYSICALDAMAGE, percent = -5 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = -15 },
+	{ type = COMBAT_EARTHDAMAGE, percent = 105 },
+	{ type = COMBAT_FIREDAMAGE, percent = 110 },
+	{ type = COMBAT_LIFEDRAIN, percent = 100 },
+	{ type = COMBAT_MANADRAIN, percent = 100 },
+	{ type = COMBAT_DROWNDAMAGE, percent = 100 },
+	{ type = COMBAT_ICEDAMAGE, percent = -15 },
+	{ type = COMBAT_HOLYDAMAGE, percent = -5 },
+	{ type = COMBAT_DEATHDAMAGE, percent = -15 },
 }
 
 monster.immunities = {
