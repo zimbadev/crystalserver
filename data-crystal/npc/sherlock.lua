@@ -66,7 +66,6 @@ keywordHandler:addAliasKeyword({ "passage" })
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I am Maris, Captain of this ship." })
 keywordHandler:addAliasKeyword({ "captain" })
 
-
 npcHandler:setMessage(MESSAGE_GREET, "I hope you have a good reason to step near my ship, say {travel}, |PLAYERNAME|.")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Yeah, bye or whatever.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Bye.")
