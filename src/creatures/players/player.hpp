@@ -473,9 +473,6 @@ public:
 	uint8_t getSoul() const {
 		return soul;
 	}
-	uint8_t getFullSoul() const {
-		return getSoul() + getVarStats(STAT_SOULPOINTS);
-	}
 	bool isAccessPlayer() const;
 	bool isPlayerGroup() const;
 	bool isPremium() const;

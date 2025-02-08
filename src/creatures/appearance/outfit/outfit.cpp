@@ -141,23 +141,21 @@ bool Outfits::loadFromXml() {
 					outfit->skills[SKILL_DISTANCE] += skillValue;
 				}
 			}
+		}
 
-			if (auto statsNode = outfitNode.child("stats")) {
-				for (auto statNode : statsNode.children()) {
-					std::string statName = statNode.name();
-					int32_t statValue = statNode.attribute("value").as_int();
+		if (auto statsNode = outfitNode.child("stats")) {
+			for (auto statNode : statsNode.children()) {
+				std::string statName = statNode.name();
+				int32_t statValue = statNode.attribute("value").as_int();
 
-					if (statName == "maxHealth") {
-						outfit->stats[STAT_MAXHITPOINTS] += statValue;
-					} else if (statName == "maxMana") {
-						outfit->stats[STAT_MAXMANAPOINTS] += statValue;
-					} else if (statName == "soul" || statName == "soulpoints") {
-						outfit->stats[STAT_SOULPOINTS] += statValue;
-					} else if (statName == "cap" || statName == "capacity") {
-						outfit->stats[STAT_CAPACITY] += statValue * 100;
-					} else if (statName == "magLevel" || statName == "magicLevel" || statName == "ml") {
-						outfit->stats[STAT_MAGICPOINTS] += statValue;
-					}
+				if (statName == "maxHealth" || statName == "maxhealth") {
+					outfit->stats[STAT_MAXHITPOINTS] = statValue;
+				} else if (statName == "maxMana" || statName == "maxmana") {
+					outfit->stats[STAT_MAXMANAPOINTS] = statValue;
+				} else if (statName == "cap" || statName == "capacity") {
+					outfit->stats[STAT_CAPACITY] = statValue * 100;
+				} else if (statName == "magLevel" || statName == "magicLevel" || statName == "magiclevel" || statName == "ml") {
+					outfit->stats[STAT_MAGICPOINTS] = statValue;
 				}
 			}
 		}

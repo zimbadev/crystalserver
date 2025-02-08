@@ -954,8 +954,6 @@ int32_t Player::getDefaultStats(stats_t stat) const {
 			return getMaxMana() - getVarStats(STAT_MAXMANAPOINTS);
 		case STAT_MAGICPOINTS:
 			return getBaseMagicLevel() - getVarStats(STAT_MAGICPOINTS);
-		case STAT_SOULPOINTS:
-			return getSoul() - getVarStats(STAT_SOULPOINTS);
 		case STAT_CAPACITY:
 			return getBaseCapacity() - getVarStats(STAT_CAPACITY);
 		default:
