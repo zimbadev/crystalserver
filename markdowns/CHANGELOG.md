@@ -1,6 +1,26 @@
 # Changelog for Crystal Server
 
 
+
+## Version 4.1.4
+
+### Features
+
+- NOTTING
+
+## Added files
+- NOTTING
+
+#### Crystal Server Map
+- NOTTING
+
+#### Global Map
+- NOTTING
+
+### Bug Fixes
+
+- NOTTING
+
 ## Version 4.1.3
 
 ### Features
@@ -13,12 +33,26 @@
 - Added a new command `/mute`, which will mute a player until unmuted by `/unmute`. ([Tryller](https://github.com/jprzimba))
 - Cyclopedia House Auction system. ([murilo09](https://github.com/murilo09))
 - Updated name change functionality to save old player names in a database table called `player_oldnames`. ([Tryller](https://github.com/jprzimba))
+- Added new useful commands: `!shared`, `!food`, `!frags`, `!promotion`, and `!bp`. ([Tryller](https://github.com/jprzimba))
+- Added missing 13.40 monsters and spells. ([Tryller](https://github.com/jprzimba))
+- Updated items.xml with missing 13.40 items. ([Tryller](https://github.com/jprzimba))
+- Added Crystal Server map (SadSoul map). ([Tryller](https://github.com/jprzimba))
+- Updated Yasir. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
-
 - data/migrations/49.lua
 - data/migrations/50.lua
 - data/migrations/51.lua
+- data/scripts/talkactions/player/buy_backpack.lua
+- data/scripts/talkactions/player/food.lua
+- data/scripts/talkactions/player/frags.lua
+- data/scripts/talkactions/player/promotion.lua
+- data/scripts/talkactions/player/shared.lua
+
+#### Crystal Server Map
+- All files in data-crystal
+
+#### Global Map
 - data-global/lib/others/soulpit.lua
 - data-global/startup/tables/tile.lua
 - data-global/npc/myzzi.lua
@@ -34,18 +68,58 @@
 - data-global/scripts/quests/soulpit/soulpit_intensehex.lua
 - data-global/scripts/quests/soulpit/soulpit_opressor.lua
 - data-global/scripts/quests/soulpit/soulpit_powerless.lua
+- data-global/monster/aquatics/quara_looter.lua
+- data-global/monster/aquatics/quara_plunderer.lua
+- data-global/monster/aquatics/quara_raider.lua
+- data-global/monster/bosses/sugar_daddy.lua
+- data-global/monster/bosses/sugar_mommy.lua
+- data-global/monster/bosses/the_rootkraken.lua
+- data-global/monster/constructs/gingerbread_men.lua
+- data-global/monster/constructs/goggle_cake.lua
+- data-global/monster/elementals/candy_floss_elemental.lua
+- data-global/monster/elementals/honey_elemental.lua
+- data-global/monster/fey/angry_sugar_fairy.lua
+- data-global/monster/fey/cream_blob.lua
+- data-global/monster/fey/fruit_drop.lua
+- data-global/monster/fey/sugar_cube.lua
+- data-global/monster/fey/sugar_cube_worker.lua
+- data-global/monster/fey/truffle.lua
+- data-global/monster/fey/truffle_cook.lua
+- data-global/monster/magicals/candy_horror.lua
+- data-global/monster/magicals/nibblemaw.lua
+- data-global/monster/plants/rootthing_amber_shaper.lua
+- data-global/monster/plants/rootthing_bug_tracker.lua
+- data-global/monster/plants/rootthing_nutshell.lua
+- data-global/scripts/spells/monster/podzillaphys_chain.lua
+- data-global/scripts/spells/monster/quara_looter_small_icering.lua
+- data-global/scripts/spells/monster/quara_plunderer_cross.lua
+- data-global/scripts/spells/monster/quara_plunderer_smoke.lua
+- data-global/scripts/spells/monster/quara_raider_icering.lua
+- data-global/scripts/spells/monster/quara_raider_shoot.lua
+- data-global/scripts/spells/monster/quara_raider_watercreature.lua
+- data-global/scripts/spells/monster/quara_raider_watersplash.lua
+- data-global/scripts/spells/monster/rootkraken_deathholy.lua
+- data-global/scripts/spells/monster/rootkraken_rootearth.lua
+- data-global/scripts/spells/monster/rotthing_explo.lua
+- data-global/scripts/spells/monster/rotthing_shaper.lua
+- data-global/scripts/spells/monster/rotthing_ulus.lua
+- data-global/scripts/spells/monster/rotthing_wave.lua
+- data-global/scripts/spells/monster/rotthingholy_ulus.lua
 
 ## Modified files
 
 - config.lua
 - schema.sql
-- data/items/items.xm
+- data/items/items.xml
 - data/libs/functions/lever.lua
 - data/modules/scripts/gamestore/init.lua
 - data/scripts/talkactions/god/attributes.lua
 - data/scripts/lib/register_spells.lua
 - data/XML/groups.xml
 - data/XML/outfits.xml
+
+#### Global Map
+- data-global/npc/yasir.lua
 - data-global/lib/others/load.lua
 - data-global/scripts/quests/ferumbras_ascension/actions_lever_first.lua
 - data-global/scripts/quests/ferumbras_ascension/actions_lever_four.lua
@@ -63,9 +137,11 @@
 
 ### Bug Fixes
 
-- Fixed Stealth Ring being destroyed in certain cases, based on [Stealth Ring](https://tibia.fandom.com/wiki/Stealth_Ring). ([Tryller](https://github.com/jprzimba))
+- Fixed Stealth Ring being destroyed in certain cases, based on [Stealth Ring] (https://tibia.fandom.com/wiki/Stealth_Ring). ([Tryller](https://github.com/jprzimba))
 - Fixed an issue where store items could not be moved to the store inbox after being unwrapped. ([TheGlitchLab](https://github.com/TheGlitchLab))
 - Fixed some features not being disabled when deactivated in `config.lua`: `!chain`, `!emote`, and `!spellwords`. ([Tryller](https://github.com/jprzimba))
+- Fix forge monster time left. ([TheGlitchLab](https://github.com/TheGlitchLab))
+- Fixed drunk condition. ([Tryller](https://github.com/jprzimba))
 
 
 ## Version 4.1.2
