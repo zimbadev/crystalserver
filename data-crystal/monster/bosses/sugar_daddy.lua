@@ -13,8 +13,6 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-
-
 monster.bosstiary = {
 	bossRaceId = 2562,
 	bossRace = RARITY_BANE,
