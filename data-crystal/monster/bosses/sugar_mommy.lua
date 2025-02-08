@@ -13,8 +13,6 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-
-
 monster.bosstiary = {
 	bossRaceId = 2580,
 	bossRace = RARITY_BANE,
@@ -70,7 +68,7 @@ monster.voices = {
 	{ text = "SUGAR!!!", yell = false },
 }
 
-monster.loot = {	
+monster.loot = {
 	{ name = "platinum coin", chance = 100000, maxCount = 11 },
 	{ name = "cherry", chance = 100000, maxCount = 2 },
 	{ id = 3039, chance = 11465, maxCount = 1 }, -- red gem
@@ -79,7 +77,6 @@ monster.loot = {
 	{ id = 48250, chance = 28555, maxCount = 11 }, -- dark chocolate coin
 	{ id = 48249, chance = 26465, maxCount = 12 }, -- milk chocolate coin
 	{ id = 48273, chance = 16465, maxCount = 1 }, -- taiyaki ice cream
-
 }
 
 monster.attacks = {

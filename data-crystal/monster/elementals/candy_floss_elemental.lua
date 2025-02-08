@@ -4,7 +4,7 @@ local monster = {}
 monster.description = "a candy floss elemental"
 monster.experience = 3850
 monster.outfit = {
-	lookType = 1749, 
+	lookType = 1749,
 	lookHead = 0,
 	lookBody = 0,
 	lookLegs = 0,
@@ -29,7 +29,7 @@ monster.Bestiary = {
 monster.health = 3700
 monster.maxHealth = 3700
 monster.race = "undead"
-monster.corpse = 48345 
+monster.corpse = 48345
 monster.speed = 105
 monster.manaCost = 0
 
@@ -109,16 +109,16 @@ monster.defenses = {
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = 40 }, 
-	{ type = COMBAT_ENERGYDAMAGE, percent = 15 },  
-	{ type = COMBAT_EARTHDAMAGE, percent = -10 },    
-	{ type = COMBAT_FIREDAMAGE, percent = -15 },     
-	{ type = COMBAT_LIFEDRAIN, percent = 0 },       
-	{ type = COMBAT_MANADRAIN, percent = 0 },       
-	{ type = COMBAT_DROWNDAMAGE, percent = 0 },     
-	{ type = COMBAT_ICEDAMAGE, percent = 15 },     
-	{ type = COMBAT_HOLYDAMAGE, percent = 0 },      
-	{ type = COMBAT_DEATHDAMAGE, percent = 20 },   
+	{ type = COMBAT_PHYSICALDAMAGE, percent = 40 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = 15 },
+	{ type = COMBAT_EARTHDAMAGE, percent = -10 },
+	{ type = COMBAT_FIREDAMAGE, percent = -15 },
+	{ type = COMBAT_LIFEDRAIN, percent = 0 },
+	{ type = COMBAT_MANADRAIN, percent = 0 },
+	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
+	{ type = COMBAT_ICEDAMAGE, percent = 15 },
+	{ type = COMBAT_HOLYDAMAGE, percent = 0 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 20 },
 }
 
 monster.immunities = {

@@ -76,34 +76,33 @@ monster.voices = {
 }
 
 monster.loot = {
-    { name = "Amber Souvenir", chance = 7330 },  
-    { id = 3039, chance = 5340 }, -- red gem
-    { name = "Resinous Fish Fin", chance = 4090 }, 
-    { name = "Skull Staff", chance = 1480 }, 
-   	{ id = 3041, chance = 1140 }, -- blue gem 
-    { name = "Glacier Robe", chance = 910 },  
-    { name = "Crystalline Armor", chance = 510 },  
-    { name = "Quara Pincers", chance = 510 },  
-    { name = "Abyss Hammer", chance = 170 },  
-    { name = "Preserved Light Blue Seed", chance = 110 },
-    { name = "Preserved Purple Seed", chance = 110 }, 
-    { name = "platinum coin", chance = 10000, maxCount = 25 }, 
+	{ name = "Amber Souvenir", chance = 7330 },
+	{ id = 3039, chance = 5340 }, -- red gem
+	{ name = "Resinous Fish Fin", chance = 4090 },
+	{ name = "Skull Staff", chance = 1480 },
+	{ id = 3041, chance = 1140 }, -- blue gem
+	{ name = "Glacier Robe", chance = 910 },
+	{ name = "Crystalline Armor", chance = 510 },
+	{ name = "Quara Pincers", chance = 510 },
+	{ name = "Abyss Hammer", chance = 170 },
+	{ name = "Preserved Light Blue Seed", chance = 110 },
+	{ name = "Preserved Purple Seed", chance = 110 },
+	{ name = "platinum coin", chance = 10000, maxCount = 25 },
 }
 
 monster.attacks = {
-	{name ="melee", interval = 2000, chance = 100, type= COMBAT_PHYSICALDAMAGE, minDamage = -250, maxDamage = -320},
-	{name ="quaralargeicering", interval = 2000, chance = 20, minDamage = -1250, maxDamage = -1400, target = false },
-	{name ="quararaidershoot", interval = 2000, chance = 35, minDamage = -650, maxDamage = -900, range = 7, target = true },
-	{name= "quarawatersplash", interval = 2000, chance = 18, minDamage = -1350, maxDamage = -1600, target = false},
-	{name ="quaraseamonster", interval = 2000, chance = 18,  minDamage = -1350, maxDamage = -1600, target = false},
+	{ name = "melee", interval = 2000, chance = 100, type = COMBAT_PHYSICALDAMAGE, minDamage = -250, maxDamage = -320 },
+	{ name = "quaralargeicering", interval = 2000, chance = 20, minDamage = -1250, maxDamage = -1400, target = false },
+	{ name = "quararaidershoot", interval = 2000, chance = 35, minDamage = -650, maxDamage = -900, range = 7, target = true },
+	{ name = "quarawatersplash", interval = 2000, chance = 18, minDamage = -1350, maxDamage = -1600, target = false },
+	{ name = "quaraseamonster", interval = 2000, chance = 18, minDamage = -1350, maxDamage = -1600, target = false },
 }
-
 
 monster.defenses = {
 	defense = 95,
 	armor = 95,
 	mitigation = 2.75,
-	{ name = "combat", interval = 2000, chance = 7, type = COMBAT_HEALING, minDamage = 800, maxDamage = 1000, effect = CONST_ME_MAGIC_BLUE, target = false },	
+	{ name = "combat", interval = 2000, chance = 7, type = COMBAT_HEALING, minDamage = 800, maxDamage = 1000, effect = CONST_ME_MAGIC_BLUE, target = false },
 }
 
 monster.elements = {
