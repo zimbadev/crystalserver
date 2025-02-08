@@ -116,29 +116,29 @@ bool Outfits::loadFromXml() {
 				int32_t skillValue = skillNode.attribute("value").as_int();
 
 				if (skillName == "fist") {
-					outfit->skills[SKILL_FIST] = skillValue;
+					outfit->skills[SKILL_FIST] += skillValue;
 				} else if (skillName == "club") {
-					outfit->skills[SKILL_CLUB] = skillValue;
+					outfit->skills[SKILL_CLUB] += skillValue;
 				} else if (skillName == "axe") {
-					outfit->skills[SKILL_AXE] = skillValue;
+					outfit->skills[SKILL_AXE] += skillValue;
 				} else if (skillName == "sword") {
-					outfit->skills[SKILL_SWORD] = skillValue;
+					outfit->skills[SKILL_SWORD] += skillValue;
 				} else if (skillName == "distance" || skillName == "dist") {
-					outfit->skills[SKILL_DISTANCE] = skillValue;
+					outfit->skills[SKILL_DISTANCE] += skillValue;
 				} else if (skillName == "shielding" || skillName == "shield") {
 					outfit->skills[SKILL_SHIELD] = skillValue;
 				} else if (skillName == "fishing" || skillName == "fish") {
-					outfit->skills[SKILL_FISHING] = skillValue;
+					outfit->skills[SKILL_FISHING] += skillValue;
 				} else if (skillName == "melee") {
-					outfit->skills[SKILL_FIST] = skillValue;
-					outfit->skills[SKILL_CLUB] = skillValue;
-					outfit->skills[SKILL_SWORD] = skillValue;
-					outfit->skills[SKILL_AXE] = skillValue;
+					outfit->skills[SKILL_FIST] += skillValue;
+					outfit->skills[SKILL_CLUB] += skillValue;
+					outfit->skills[SKILL_SWORD] += skillValue;
+					outfit->skills[SKILL_AXE] += skillValue;
 				} else if (skillName == "weapon" || skillName == "weapons") {
-					outfit->skills[SKILL_CLUB] = skillValue;
-					outfit->skills[SKILL_SWORD] = skillValue;
-					outfit->skills[SKILL_AXE] = skillValue;
-					outfit->skills[SKILL_DISTANCE] = skillValue;
+					outfit->skills[SKILL_CLUB] += skillValue;
+					outfit->skills[SKILL_SWORD] += skillValue;
+					outfit->skills[SKILL_AXE] += skillValue;
+					outfit->skills[SKILL_DISTANCE] += skillValue;
 				}
 			}
 		}
@@ -149,13 +149,13 @@ bool Outfits::loadFromXml() {
 				int32_t statValue = statNode.attribute("value").as_int();
 
 				if (statName == "maxHealth" || statName == "maxhealth") {
-					outfit->stats[STAT_MAXHITPOINTS] = statValue;
+					outfit->stats[STAT_MAXHITPOINTS] += statValue;
 				} else if (statName == "maxMana" || statName == "maxmana") {
-					outfit->stats[STAT_MAXMANAPOINTS] = statValue;
+					outfit->stats[STAT_MAXMANAPOINTS] += statValue;
 				} else if (statName == "cap" || statName == "capacity") {
-					outfit->stats[STAT_CAPACITY] = statValue * 100;
+					outfit->stats[STAT_CAPACITY] += statValue * 100;
 				} else if (statName == "magLevel" || statName == "magicLevel" || statName == "magiclevel" || statName == "ml") {
-					outfit->stats[STAT_MAGICPOINTS] = statValue;
+					outfit->stats[STAT_MAGICPOINTS] += statValue;
 				}
 			}
 		}
