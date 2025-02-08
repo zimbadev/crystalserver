@@ -117,10 +117,11 @@
 
 ### Bug Fixes
 
-- Fixed Stealth Ring being destroyed in certain cases, based on [Stealth Ring](https://tibia.fandom.com/wiki/Stealth_Ring). ([Tryller](https://github.com/jprzimba))
+- Fixed Stealth Ring being destroyed in certain cases, based on [Stealth Ring] (https://tibia.fandom.com/wiki/Stealth_Ring). ([Tryller](https://github.com/jprzimba))
 - Fixed an issue where store items could not be moved to the store inbox after being unwrapped. ([TheGlitchLab](https://github.com/TheGlitchLab))
 - Fixed some features not being disabled when deactivated in `config.lua`: `!chain`, `!emote`, and `!spellwords`. ([Tryller](https://github.com/jprzimba))
 - Fix forge monster time left. ([TheGlitchLab](https://github.com/TheGlitchLab))
+- Fixed drunk condition. ([Tryller](https://github.com/jprzimba))
 
 
 ## Version 4.1.2
