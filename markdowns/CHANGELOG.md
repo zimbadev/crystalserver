@@ -20,6 +20,7 @@
 ### Bug Fixes
 
 - Fixed client debug. ([mehah](https://github.com/mehah))
+- Fixed colored loot message on bosses. ([omarcopires](https://github.com/omarcopires))
 
 ## Version 4.1.3
 
