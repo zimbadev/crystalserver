@@ -6744,6 +6744,7 @@ GameStore.Categories = {
 				count = 1,
 				description = "{house}\n{box}\n{storeinbox}\n{backtoinbox}",
 				type = GameStore.OfferTypes.OFFER_TYPE_HOUSE,
+				coinType = GameStore.CoinType.Coin
 			},
 		},
 	},
