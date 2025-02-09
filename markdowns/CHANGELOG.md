@@ -19,7 +19,7 @@
 
 ### Bug Fixes
 
-- NOTTING
+- Fixed client debug. ([mehah](https://github.com/mehah))
 
 ## Version 4.1.3
 
