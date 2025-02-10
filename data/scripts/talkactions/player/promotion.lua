@@ -6,6 +6,11 @@ local config = {
 }
 
 function promotion.onSay(player, words, param)
+	if (player:getVocation():getId() == VOCATION_NONE) then
+		player:sendCancelMessage("Sorry, you need to have a vocation to be promoted!")
+		return true
+	end
+
 	local promotion = player:getVocation():getPromotion()
 	if player:isPromoted() then
 		player:sendCancelMessage("You are already promoted!")
@@ -21,6 +26,8 @@ function promotion.onSay(player, words, param)
 		player:setVocation(promotion)
 		player:getPosition():sendMagicEffect(CONST_ME_HOLYDAMAGE)
 	end
+
+	return true
 end
 promotion:groupType("normal")
 promotion:register()

@@ -21,7 +21,7 @@ function frags.onSay(player, words, param)
 	end
 
 	player:sendTextMessage(MESSAGE_LOOK, "You have " .. totalFrags .. " unjustified kills.")
-	return false
+	return true
 end
 
 frags:separator(" ")
