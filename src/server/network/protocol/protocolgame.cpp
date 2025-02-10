@@ -912,9 +912,10 @@ void ProtocolGame::disconnectClient(const std::string &message) const {
 	disconnect();
 }
 
-void ProtocolGame::writeToOutputBuffer(const NetworkMessage &msg) {
-	auto out = getOutputBuffer(msg.getLength());
-	out->append(msg);
+void ProtocolGame::writeToOutputBuffer(NetworkMessage &msg) {
+	g_dispatcher().safeCall([self = getThis(), msg = std::move(msg)] {
+		self->getOutputBuffer(msg.getLength())->append(msg);
+	});
 }
 
 void ProtocolGame::parsePacket(NetworkMessage &msg) {

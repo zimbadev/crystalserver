@@ -19,7 +19,14 @@
 
 ### Bug Fixes
 
-- NOTTING
+- Fixed client debug. ([mehah](https://github.com/mehah))
+- Fixed colored loot message on bosses. ([omarcopires](https://github.com/omarcopires))
+- Fixed weight error when adding potions to container. ([omarcopires](https://github.com/omarcopires))
+
+## Modified files
+
+- data/scripts/actions/items/potions.lua
+
 
 ## Version 4.1.3
 
