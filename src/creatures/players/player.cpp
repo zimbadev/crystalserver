@@ -6288,6 +6288,10 @@ bool Player::canWearOutfit(uint16_t lookType, uint8_t addons) const {
 		return false;
 	}
 
+	if (g_configManager().getBoolean(UNLOCK_ALL_OUTFITS)) {
+		return true;
+	}
+
 	if (outfit->premium && !isPremium()) {
 		return false;
 	}
@@ -6369,7 +6373,7 @@ bool Player::removeOutfitAddon(uint16_t lookType, uint8_t addons) {
 }
 
 bool Player::getOutfitAddons(const std::shared_ptr<Outfit> &outfit, uint8_t &addons) const {
-	if (group->access) {
+	if (group->access || g_configManager().getBoolean(UNLOCK_ALL_OUTFITS)) {
 		addons = 3;
 		return true;
 	}
@@ -6405,8 +6409,14 @@ bool Player::canFamiliar(uint16_t lookType) const {
 		return false;
 	}
 
-	if (familiar->premium && !isPremium()) {
+	bool fullUnlock = g_configManager().getBoolean(UNLOCK_ALL_FAMILIARS);
+
+	if (familiar->premium && !isPremium() && !fullUnlock) {
 		return false;
+	}
+
+	if (fullUnlock) {
+		return true;
 	}
 
 	if (familiar->unlocked) {
@@ -7496,7 +7506,7 @@ bool Player::untameMount(uint8_t mountId) {
 }
 
 bool Player::hasMount(const std::shared_ptr<Mount> &mount) const {
-	if (hasFlag(PlayerFlags_t::CanWearAllMounts)) {
+	if (hasFlag(PlayerFlags_t::CanWearAllMounts) || g_configManager().getBoolean(UNLOCK_ALL_MOUNTS)) {
 		return true;
 	}
 

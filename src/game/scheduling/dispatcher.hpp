@@ -139,7 +139,7 @@ public:
 	 *
 	 * @note This method is useful in multi-threaded applications to avoid race conditions or thread context violations.
 	 */
-	 void safeCall(std::function<void(void)> &&f);
+	void safeCall(std::function<void(void)> &&f);
 
 	[[nodiscard]] uint64_t getDispatcherCycle() const {
 		return dispatcherCycle;
