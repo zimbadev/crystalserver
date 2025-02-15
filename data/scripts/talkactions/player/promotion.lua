@@ -6,7 +6,7 @@ local config = {
 }
 
 function promotion.onSay(player, words, param)
-	if (player:getVocation():getId() == VOCATION_NONE) then
+	if player:getVocation():getId() == VOCATION_NONE then
 		player:sendCancelMessage("Sorry, you need to have a vocation to be promoted!")
 		return true
 	end
