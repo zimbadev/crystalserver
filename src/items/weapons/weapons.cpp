@@ -957,7 +957,7 @@ int32_t WeaponWand::getWeaponDamage(const std::shared_ptr<Player> &player, const
 			multiplier = vocation->wandRodDamageMultiplier;
 		}
 
-		int32_t maxValue = static_cast<int32_t>(maxChange * multiplier);
+		auto maxValue = static_cast<int32_t>(maxChange * multiplier);
 
 		// Returns maximum damage or a random value between minChange and maxChange
 		return maxDamage ? -maxValue : -normal_random(minChange, maxValue);

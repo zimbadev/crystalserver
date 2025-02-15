@@ -216,6 +216,15 @@ namespace {
 			}
 		}
 
+		for (uint16_t i = 0; i < COMBAT_COUNT; ++i) {
+			const int16_t &vocationAbsorbPercent = player->getVocation()->getAbsorbPercent(indexToCombatType(i));
+			if (vocationAbsorbPercent == 0) {
+				continue;
+			}
+
+			damageModifiers[i] *= (std::floor(100. - vocationAbsorbPercent) / 100.);
+		}
+
 		for (size_t i = 0; i < COMBAT_COUNT; ++i) {
 			damageModifiers[i] -= 100 * player->getAbsorbPercent(indexToCombatType(i));
 			if (g_configManager().getBoolean(TOGGLE_WHEELSYSTEM)) {
