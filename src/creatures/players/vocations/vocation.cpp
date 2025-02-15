@@ -306,7 +306,6 @@ bool Vocations::loadFromXml() {
 					voc->increaseAbsorbPercent(COMBAT_NEUTRALDAMAGE, generalAttr.as_int());
 				}
 			}
-		
 		}
 	}
 	return true;

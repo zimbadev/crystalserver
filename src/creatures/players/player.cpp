@@ -3460,13 +3460,13 @@ BlockType_t Player::blockHit(const std::shared_ptr<Creature> &attacker, const Co
 		const auto charges = item->getAttribute<uint16_t>(ItemAttribute_t::CHARGES);
 		const ItemType &it = Item::items[item->getID()];
 		if (it.abilities) {
-			blocked += static_cast<int32_t>(std::ceil((double)(damage *  it.abilities->absorbPercent[combatTypeToIndex(combatType)])) / 100.);
+			blocked += static_cast<int32_t>(std::ceil((double)(damage * it.abilities->absorbPercent[combatTypeToIndex(combatType)])) / 100.);
 			if (charges != 0) {
 				transform = true;
 			}
 
 			if (field && it.abilities->fieldAbsorbPercent[combatTypeToIndex(combatType)]) {
-				blocked += static_cast<int32_t>(std::ceil((double)(damage *  it.abilities->fieldAbsorbPercent[combatTypeToIndex(combatType)])) / 100.);
+				blocked += static_cast<int32_t>(std::ceil((double)(damage * it.abilities->fieldAbsorbPercent[combatTypeToIndex(combatType)])) / 100.);
 				if (charges != 0) {
 					transform = true;
 				}
