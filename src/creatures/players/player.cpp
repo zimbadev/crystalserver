@@ -3473,9 +3473,7 @@ BlockType_t Player::blockHit(const std::shared_ptr<Creature> &attacker, const Co
 			}
 
 			if (transform) {
-				if (charges != 0) {
-					g_game().transformItem(item, item->getID(), charges - 1);
-				}
+				g_game().transformItem(item, item->getID(), charges - 1);
 			}
 		}
 	}
