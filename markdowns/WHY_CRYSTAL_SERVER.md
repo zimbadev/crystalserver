@@ -1,0 +1,88 @@
+# Why Crystal Server?
+
+### Features
+
+- Added a new feature to unlock cosmetics in `config.lua`: `unlockAllOutfits`, `unlockAllMounts`, and `unlockAllFamiliars`.
+- Added a new attribute to `vocations.xml`: `wandRodDamage`.
+- Added new attributes to outfits. Check `outfits.xml` for examples.
+- Added new attributies to /attr: `text`, `writer`, `duration`, `weight`, `imbuementslot`, `tier`, `hitchance`, `shootrange`, `special` and `quicklootcontainer`.
+- Added new flags: `CanMoveFromFar`, `HasFullLight`, `AllowIdle`, `CanWearAllMounts`, and `NotGainUnjustified`.
+- Added Vibrancy imbuement.
+- Added Soul Pit arena/animus mastery/soul core.
+- Added a new command `/mute`, which will mute a player until unmuted by `/unmute`.
+- Cyclopedia House Auction system.
+- Updated name change functionality to save old player names in a database table called `player_oldnames`.
+- Added new useful commands: `!shared`, `!food`, `!frags`, `!promotion`, and `!bp`.
+- Added missing 13.40 monsters and spells.
+- Updated items.xml with missing 13.40 items.
+- Added Crystal Server map (SadSoul map).
+- Updated Yasir.
+- Protocol 14.05 support.
+- New protocol 14.05 assets.
+- Add new configurable featurees in `config.lua`:  `chainSystemVipOnly`, `fieldOwnershipDuration`, `bedsOnlyPremium`, `loginProtectionPeriod`, `chainSystemModifyMagic`, `logPlayersStatements`.
+- Added a new commands for players: `!randomoutfit`, `!spellwords`.
+- Moved emote spells to `kv` instead of `storage`.
+- Updated npcs and spells from 13.40 updates.
+- Added a Rook system with configurations in `config.lua`.
+- Added a new group `game tester` with flag `isgametester` in `groups.xml` and a new player flag `PlayerFlag_IsGameTester`.
+- Load Gamemaster, Community Manager and God outfits from groups.xml.
+- New tag for rune spells: `rune:removeOnUse(bool)`. This can be used to specify a particular rune to remove charges, even when `removeChargesFromRunes` is set to false in `config.lua`.
+- Moved files from data-global/migrations to data/migrations.
+- New configurations in `config.lua`: `timeToRegenMinuteStamina` and `timeToRegenMinutePremiumStamina`.
+- Added a new attribute `attackspeed` to mounts.xml, allowing mounts to increase player attack speed.
+- New Feature: `fairFightTimeRange` is now configurable in `config.lua`.
+- New Feature: `blackSkulledDeathHealth` and `blackSkulledDeathMana` are now configurable in `config.lua`.
+- Implemented Surprise Bags System: data/items/bags.xml.
+- New configs to chain system at config.lua "combatChainSkillFormulaMissile" is used for weapons like assassin star/viper star and others, "combatChainSkillFormulaDistance" used for weapons like arrows/bols and "combatChainSkillFormulaWandsAndRods" used for weapons like wands/rods.
+- New feature: `playerAlwaysLoginMounted`, configurable in `config.lua`.
+- Players can enable the chain system using the `!chain` command..
+- Updated npc data-global/npc/hireling.lua, now it sell imbuement packages and also buy all loots inside Loot Pouch.
+- Cyclopedia item summary
+- Badge system.
+- Screenshots configurable in config.lua enableScreenshots.
+- Augments system
+- Add Cyclopedia character titles.
+- Monster rename functionality
+- Updated monsters and npcs like Tibia RL.
+- Add some monsters from protocol 13.40.
+- Add items from Winter Update 2023.
+- Add V.I.P groups.
+- Added new feature configurable in config.lua `halfLossExp`, `halfLossSkilla` and `halfLossMagicLevel`.
+
+### Bug Fixes
+
+- Fixed client debug.
+- Fixed colored loot message on bosses.
+- Fixed weight error when adding potions to container.
+- Fixed Stealth Ring being destroyed in certain cases, based on [Stealth Ring] (https://tibia.fandom.com/wiki/Stealth_Ring).
+- Fixed an issue where store items could not be moved to the store inbox after being unwrapped.
+- Fixed some features not being disabled when deactivated in `config.lua`: `!chain`, `!emote`, and `!spellwords`.
+- Fix forge monster time left.
+- Fixed drunk condition.
+- Fixed influenced creatures not spawning.
+- Fixed sending damage higher then monster health.
+- Fixed chain targets.
+- Fixed houses with pool bug.
+- Fixed some V.I.P list issues.
+- Fixed gotoHouse talkaction.
+- Fixed the `/i` command displaying effects while in ghost mode.
+- Fixed Items created using CreateMapItem are cleanable by /clean. ([#7](https://github.com/jprzimba/crystalserver/issues/7))
+- Prevent players from entering the pool while in ghost mode.
+- Prevent players from logging out while in the pool.
+- Prevent the use of `/n`, `/m`, and `/s` commands while in the pool.
+- Fixed issue [#1](https://github.com/jprzimba/crystalserver/issues/1)
+- Fixed chain system. Now works properly for Mages and Paladins.
+- Fixed damage reflection not working properly.
+- Fixed imbuement system when the player adds imbuement or cancels imbuement and the imbuement window is open not updating.
+- Fixed data/scripts/talkactions/player/refill.lua, now check if player has capacity to receive items.
+- Fixed Loot pouch using in the Obtain method.
+- Fixed destroy field is working inside pz.
+- Fixed diamond arrow static attack points.
+- Fixed stamina not recovering when dead.
+- Fixed alana sio only to "aleta som" users.
+- Fixed Player always logging with mount.
+- Fixed quiver bugs.
+- Fixed avatar cooldown reduction.
+- Fixed imbuement elemental damage only to physical damag.
+- Fixed bed issues.
+- Fixed crash on moving creatures.
