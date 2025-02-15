@@ -951,8 +951,16 @@ void WeaponWand::configureWeapon(const ItemType &it) {
 
 int32_t WeaponWand::getWeaponDamage(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &, const std::shared_ptr<Item> &, bool maxDamage /* = false*/) const {
 	if (!player->checkChainSystem()) {
+		float multiplier = 1.0f;
+		auto vocation = player->getVocation();
+		if (vocation) {
+			multiplier = vocation->wandRodDamageMultiplier;
+		}
+
+		int32_t maxValue = static_cast<int32_t>(maxChange * multiplier);
+
 		// Returns maximum damage or a random value between minChange and maxChange
-		return maxDamage ? -maxChange : -normal_random(minChange, maxChange);
+		return maxDamage ? -maxValue : -normal_random(minChange, maxValue);
 	}
 
 	if (!g_configManager().getBoolean(CHAIN_SYSTEM_MODIFY_MAGIC)) {
