@@ -216,13 +216,15 @@ namespace {
 			}
 		}
 
-		for (uint16_t i = 0; i < COMBAT_COUNT; ++i) {
-			const int16_t &vocationAbsorbPercent = player->getVocation()->getAbsorbPercent(indexToCombatType(i));
+		for (uint16_t i = COMBAT_FIRST; i <= COMBAT_LAST; ++i) {
+			int16_t vocationAbsorbPercent = player->getVocation()->getAbsorbPercent(indexToCombatType(i));
 			if (vocationAbsorbPercent == 0) {
 				continue;
 			}
 
-			damageModifiers[i] *= (std::floor(100. - vocationAbsorbPercent) / 100.);
+			g_logger().debug("[cyclopedia damage reduction] element {}, reduced {} percent, for element {}", indexToCombatType(i), vocationAbsorbPercent, combatTypeToName(indexToCombatType(i)));
+
+			damageModifiers[i] -= (100 * vocationAbsorbPercent);
 		}
 
 		for (size_t i = 0; i < COMBAT_COUNT; ++i) {
