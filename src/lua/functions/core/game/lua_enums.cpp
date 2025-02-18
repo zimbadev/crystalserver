@@ -154,6 +154,7 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 
 	// Use with house:getAccessList, house:setAccessList
 	registerEnum(L, GUEST_LIST);
+	registerEnum(L, SUBOWNER_LIST);
 
 	registerEnum(L, LIGHT_STATE_DAY);
 	registerEnum(L, LIGHT_STATE_NIGHT);

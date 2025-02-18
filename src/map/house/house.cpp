@@ -424,6 +424,25 @@ bool House::getAccessList(uint32_t listId, std::string &list) const {
 	return door->getAccessList(list);
 }
 
+bool House::isInAccessList(const std::shared_ptr<Player> &player, uint32_t listId) {
+	if (listId == GUEST_LIST) {
+		return guestList.isInList(player);
+	} else if (listId == SUBOWNER_LIST) {
+		return subOwnerList.isInList(player);
+	}
+
+	const auto &door = getDoorByNumber(listId);
+	if (!door) {
+		return false;
+	}
+
+	return door->accessList->isInList(player);
+}
+
+bool House::isInvited(const std::shared_ptr<Player> &player) const {
+	return getHouseAccessLevel(player) != HOUSE_NOT_INVITED;
+}
+
 void House::addDoor(const std::shared_ptr<Door> &door) {
 	doorList.push_back(door);
 	door->setHouse(static_self_cast<House>());
@@ -695,7 +714,8 @@ bool AccessList::isInList(const std::shared_ptr<Player> &player) const {
 		return true;
 	}
 
-	if (playerList.contains(player->getGUID())) {
+	auto playerIt = playerList.find(player->getGUID());
+	if (playerIt != playerList.end()) {
 		return true;
 	}
 
