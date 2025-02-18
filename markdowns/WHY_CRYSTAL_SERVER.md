@@ -3,7 +3,7 @@
 ### Features
 
 - Added a new feature to unlock cosmetics in `config.lua`: `unlockAllOutfits`, `unlockAllMounts`, and `unlockAllFamiliars`.
-- Added a new attribute to `vocations.xml`: `wandRodDamage`.
+- Added a new attribute to `vocations.xml`: `wandRodDamage`, `absorb`.
 - Added new attributes to outfits. Check `outfits.xml` for examples.
 - Added new attributies to /attr: `text`, `writer`, `duration`, `weight`, `imbuementslot`, `tier`, `hitchance`, `shootrange`, `special` and `quicklootcontainer`.
 - Added new flags: `CanMoveFromFar`, `HasFullLight`, `AllowIdle`, `CanWearAllMounts`, and `NotGainUnjustified`.

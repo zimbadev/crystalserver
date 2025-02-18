@@ -7,7 +7,7 @@
 ### Features
 
 - Added a new feature to unlock cosmetics in `config.lua`: `unlockAllOutfits`, `unlockAllMounts`, and `unlockAllFamiliars`. ([Tryller](https://github.com/jprzimba))
-- Added a new attribute to `vocations.xml`: `wandRodDamage`. ([Tryller](https://github.com/jprzimba))
+- Added a new attributies to `vocations.xml`: `wandRodDamage`, `absorb`. ([Tryller](https://github.com/jprzimba))
 
 ## Added files
 - NOTTING

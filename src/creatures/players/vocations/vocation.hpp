@@ -69,8 +69,15 @@ public:
 	bool getMagicShield() const;
 	bool canCombat() const;
 
+	int16_t getAbsorbPercent(CombatType_t combat) const {
+		return absorbPercent[combat];
+	}
+
+	void increaseAbsorbPercent(CombatType_t combat, int16_t v);
+
 	float meleeDamageMultiplier = 1.0f;
 	float distDamageMultiplier = 1.0f;
+	float wandRodDamageMultiplier = 1.0f;
 	float defenseMultiplier = 1.0f;
 	float armorMultiplier = 1.0f;
 
@@ -80,6 +87,8 @@ public:
 
 	float pvpDamageReceivedMultiplier = 1.0f;
 	float pvpDamageDealtMultiplier = 1.0f;
+
+	int16_t absorbPercent[COMBAT_COUNT] = { 0 };
 
 	std::vector<WheelGemSupremeModifier_t> getSupremeGemModifiers();
 
