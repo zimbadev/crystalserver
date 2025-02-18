@@ -113,8 +113,7 @@ int NpcFunctions::luaNpcSetMasterPos(lua_State* L) {
 	return 1;
 }
 
-int NpcFunctions::luaNpcGetMasterPos(lua_State* L)
-{
+int NpcFunctions::luaNpcGetMasterPos(lua_State* L) {
 	// npc:getMasterPos()
 	const auto &npc = Lua::getUserdataShared<Npc>(L, 1);
 	if (!npc) {

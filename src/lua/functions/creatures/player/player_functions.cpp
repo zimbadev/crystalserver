@@ -3556,7 +3556,7 @@ int PlayerFunctions::luaPlayerGetOpenContainers(lua_State* L) {
 		const auto &openContainers = player->getOpenContainers();
 
 		lua_createtable(L, openContainers.size(), 0);
-		for (auto const &containerInfo : openContainers) {
+		for (const auto &containerInfo : openContainers) {
 			Lua::pushUserdata<Container>(L, containerInfo.second.container);
 			Lua::setMetatable(L, -1, "Container");
 			lua_rawseti(L, -2, containerInfo.first);
