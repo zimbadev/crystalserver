@@ -29,6 +29,7 @@ void NpcFunctions::init(lua_State* L) {
 	Lua::registerMetaMethod(L, "Npc", "__eq", Lua::luaUserdataCompare);
 	Lua::registerMethod(L, "Npc", "isNpc", NpcFunctions::luaNpcIsNpc);
 	Lua::registerMethod(L, "Npc", "setMasterPos", NpcFunctions::luaNpcSetMasterPos);
+	Lua::registerMethod(L, "Npc", "getMasterPos", NpcFunctions::luaNpcGetMasterPos);
 	Lua::registerMethod(L, "Npc", "getCurrency", NpcFunctions::luaNpcGetCurrency);
 	Lua::registerMethod(L, "Npc", "setCurrency", NpcFunctions::luaNpcSetCurrency);
 	Lua::registerMethod(L, "Npc", "getSpeechBubble", NpcFunctions::luaNpcGetSpeechBubble);
@@ -109,6 +110,20 @@ int NpcFunctions::luaNpcSetMasterPos(lua_State* L) {
 	const Position &pos = Lua::getPosition(L, 2);
 	npc->setMasterPos(pos);
 	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int NpcFunctions::luaNpcGetMasterPos(lua_State* L) {
+	// npc:getMasterPos()
+	const auto &npc = Lua::getUserdataShared<Npc>(L, 1);
+	if (!npc) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_NPC_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	const Position &pos = npc->getMasterPos();
+	Lua::pushPosition(L, pos);
 	return 1;
 }
 

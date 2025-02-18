@@ -46,12 +46,15 @@ private:
 
 	static int luaItemTypeIsPodium(lua_State* L);
 	static int luaItemTypeGetType(lua_State* L);
+	static int luaItemTypeGetGroup(lua_State* L);
 	static int luaItemTypeGetId(lua_State* L);
 	static int luaItemTypeGetName(lua_State* L);
 	static int luaItemTypeGetPluralName(lua_State* L);
 	static int luaItemTypeGetArticle(lua_State* L);
 	static int luaItemTypeGetDescription(lua_State* L);
 	static int luaItemTypeGetSlotPosition(lua_State* L);
+	static int luaItemTypeGetRotateId(lua_State* L);
+	static int luaItemTypeGetWareId(lua_State* L);
 
 	static int luaItemTypeGetCharges(lua_State* L);
 	static int luaItemTypeGetFluidSource(lua_State* L);
@@ -77,6 +80,8 @@ private:
 	static int luaItemTypeGetDecayId(lua_State* L);
 	static int luaItemTypeGetRequiredLevel(lua_State* L);
 	static int luaItemTypeGetAmmoType(lua_State* L);
+	static int luaItemTypeGetCorpseType(lua_State* L);
+	static int luaItemTypeGetClassification(lua_State* L);
 
 	static int luaItemTypeGetSpeed(lua_State* L);
 	static int luaItemTypeGetBaseSpeed(lua_State* L);
@@ -86,4 +91,8 @@ private:
 	static int luaItemTypeGetVocationString(lua_State* L);
 
 	static int luaItemTypeHasSubType(lua_State* L);
+	static int luaItemTypeGetAbilities(lua_State* L);
+
+	static int luaItemTypeIsWrapKit(lua_State* L);
+	static int luaItemTypeIsSpellBook(lua_State* L);
 };

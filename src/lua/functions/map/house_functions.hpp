@@ -49,9 +49,14 @@ private:
 	static int luaHouseGetItems(lua_State* L);
 	static int luaHouseGetTileCount(lua_State* L);
 
+	static int luaHouseGetOwnerName(lua_State* L);
+	static int luaHouseGetOwnerAccountId(lua_State* L);
+
 	static int luaHouseCanEditAccessList(lua_State* L);
 	static int luaHouseGetAccessList(lua_State* L);
 	static int luaHouseSetAccessList(lua_State* L);
+	static int luaHouseIsInAccessList(lua_State* L);
+	static int luaHouseGetAccessLevel(lua_State* L);
 
 	static int luaHouseKickPlayer(lua_State* L);
 	static int luaHouseIsInvited(lua_State* L);

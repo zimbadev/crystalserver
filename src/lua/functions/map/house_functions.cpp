@@ -44,6 +44,8 @@ void HouseFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "House", "hasItemOnTile", HouseFunctions::luaHouseHasItemOnTile);
 	Lua::registerMethod(L, "House", "hasNewOwnership", HouseFunctions::luaHouseHasNewOwnership);
 	Lua::registerMethod(L, "House", "startTrade", HouseFunctions::luaHouseStartTrade);
+	Lua::registerMethod(L, "House", "getOwnerName", HouseFunctions::luaHouseGetOwnerName);
+	Lua::registerMethod(L, "House", "getOwnerAccountId", HouseFunctions::luaHouseGetOwnerAccountId);
 
 	Lua::registerMethod(L, "House", "getBeds", HouseFunctions::luaHouseGetBeds);
 	Lua::registerMethod(L, "House", "getBedCount", HouseFunctions::luaHouseGetBedCount);
@@ -59,6 +61,8 @@ void HouseFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "House", "canEditAccessList", HouseFunctions::luaHouseCanEditAccessList);
 	Lua::registerMethod(L, "House", "getAccessList", HouseFunctions::luaHouseGetAccessList);
 	Lua::registerMethod(L, "House", "setAccessList", HouseFunctions::luaHouseSetAccessList);
+	Lua::registerMethod(L, "House", "isInAccessList", HouseFunctions::luaHouseIsInAccessList);
+	Lua::registerMethod(L, "House", "getAccessLevel", HouseFunctions::luaHouseGetAccessLevel);
 
 	Lua::registerMethod(L, "House", "kickPlayer", HouseFunctions::luaHouseKickPlayer);
 	Lua::registerMethod(L, "House", "isInvited", HouseFunctions::luaHouseIsInvited);
@@ -460,6 +464,70 @@ int HouseFunctions::luaHouseSetAccessList(lua_State* L) {
 	return 1;
 }
 
+int HouseFunctions::luaHouseIsInAccessList(lua_State* L) {
+	// house:isInAccessList(player, listId)
+	const auto &house = Lua::getUserdataShared<House>(L, 1);
+	if (!house) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const auto &player = Lua::getPlayer(L, 2);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+
+	if (house->getHouseAccessLevel(player) >= HOUSE_SUBOWNER) {
+		Lua::pushBoolean(L, true);
+		return 1;
+	}
+
+	const uint32_t listId = Lua::getNumber<uint32_t>(L, 3);
+	Lua::pushBoolean(L, house->isInAccessList(player, listId));
+	return 1;
+}
+
+int HouseFunctions::luaHouseGetAccessLevel(lua_State* L) {
+	// house:getAccessLevel(player)
+	const auto &house = Lua::getUserdataShared<House>(L, 1);
+	if (!house) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const auto &player = Lua::getPlayer(L, 2);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+
+	lua_pushnumber(L, house->getHouseAccessLevel(player));
+	return 1;
+}
+
+int HouseFunctions::luaHouseGetOwnerName(lua_State* L) {
+	// house:getOwnerName()
+	const auto &house = Lua::getUserdataShared<House>(L, 1);
+	if (house) {
+		Lua::pushString(L, house->getOwnerName());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int HouseFunctions::luaHouseGetOwnerAccountId(lua_State* L) {
+	// house:getOwnerAccountId()
+	const auto &house = Lua::getUserdataShared<House>(L, 1);
+	if (house) {
+		lua_pushnumber(L, house->getOwnerAccountId());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
 int HouseFunctions::luaHouseKickPlayer(lua_State* L) {
 	// house:kickPlayer(player, targetPlayer)
 	const auto &house = Lua::getUserdataShared<House>(L, 1);
@@ -470,7 +538,7 @@ int HouseFunctions::luaHouseKickPlayer(lua_State* L) {
 
 	const auto &player = Lua::getPlayer(L, 2);
 	if (!player) {
-		Lua::reportErrorFunc("Player is nullptr");
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
 		return 1;
 	}
 

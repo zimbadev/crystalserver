@@ -69,10 +69,7 @@ public:
 	bool getMagicShield() const;
 	bool canCombat() const;
 
-	int16_t getAbsorbPercent(CombatType_t combat) const {
-		return absorbPercent[combat];
-	}
-
+	int16_t getAbsorbPercent(CombatType_t combat) const;
 	void increaseAbsorbPercent(CombatType_t combat, int16_t v);
 
 	float meleeDamageMultiplier = 1.0f;

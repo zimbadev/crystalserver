@@ -28,6 +28,7 @@ private:
 	static int luaNpcIsNpc(lua_State* L);
 
 	static int luaNpcSetMasterPos(lua_State* L);
+	static int luaNpcGetMasterPos(lua_State* L);
 
 	static int luaNpcGetCurrency(lua_State* L);
 	static int luaNpcSetCurrency(lua_State* L);

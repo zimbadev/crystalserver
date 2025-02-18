@@ -52,4 +52,7 @@ private:
 
 	static int luaVocationGetDemotion(lua_State* L);
 	static int luaVocationGetPromotion(lua_State* L);
+
+	static int luaVocationGetAbsorbPercent(lua_State* L);
+	static int luaVocationIncreaseAbsorbPercent(lua_State* L);
 };

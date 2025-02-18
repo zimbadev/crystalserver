@@ -96,7 +96,9 @@ public:
 
 	uint32_t getAnalyzerTimeNow() const;
 
-public:
+	uint32_t getMinLevel();
+	uint32_t getMaxLevel();
+
 	// Party analyzer
 	time_t trackerTime = time(nullptr);
 	PartyAnalyzer_t priceType = MARKET_PRICE;
@@ -108,8 +110,6 @@ private:
 	SharedExpStatus_t getSharedExperienceStatus();
 	uint32_t getHighestLevel();
 	uint32_t getLowestLevel();
-	uint32_t getMinLevel();
-	uint32_t getMaxLevel();
 	float shareRangeMultiplier() const;
 
 	std::map<uint32_t, int64_t> ticksMap;

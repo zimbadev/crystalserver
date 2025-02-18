@@ -57,6 +57,7 @@ private:
 	static int luaMonsterTypeMaxHealth(lua_State* L);
 	static int luaMonsterTypeRunHealth(lua_State* L);
 	static int luaMonsterTypeExperience(lua_State* L);
+	static int luaMonsterTypeSkull(lua_State* L);
 
 	static int luaMonsterTypeFaction(lua_State* L);
 	static int luaMonsterTypeEnemyFactions(lua_State* L);

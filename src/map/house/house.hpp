@@ -121,10 +121,8 @@ public:
 	// SUBOWNER_LIST = subowner list
 	void setAccessList(uint32_t listId, const std::string &textlist);
 	bool getAccessList(uint32_t listId, std::string &list) const;
-
-	bool isInvited(const std::shared_ptr<Player> &player) const {
-		return getHouseAccessLevel(player) != HOUSE_NOT_INVITED;
-	}
+	bool isInAccessList(const std::shared_ptr<Player> &player, uint32_t listId);
+	bool isInvited(const std::shared_ptr<Player> &player) const;
 
 	AccessHouseLevel_t getHouseAccessLevel(const std::shared_ptr<Player> &player) const;
 	bool kickPlayer(const std::shared_ptr<Player> &player, const std::shared_ptr<Player> &target);
@@ -201,6 +199,10 @@ public:
 
 	uint32_t getId() const {
 		return id;
+	}
+
+	const std::string &getOwnerName() const {
+		return ownerName;
 	}
 
 	void addDoor(const std::shared_ptr<Door> &door);
