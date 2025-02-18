@@ -521,6 +521,10 @@ uint16_t Vocation::getWheelGemId(WheelGemQuality_t quality) {
 	return Item::items.getItemIdByName(gemName);
 }
 
+int16_t Vocation::getAbsorbPercent(CombatType_t combat) const {
+	return absorbPercent[combat];
+}
+
 void Vocation::increaseAbsorbPercent(CombatType_t combat, int16_t v) {
 	absorbPercent[combat] += v;
 }

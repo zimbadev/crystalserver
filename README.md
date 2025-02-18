@@ -29,9 +29,6 @@ at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/COD
 
 You can use your own tool to generate Monster Loot and Monster Elements at [this link](https://crystalsever.vercel.app).
 
-### Why Crystal Server?
-Crystal Server has a lot of new features and bug fixes: [Check the full list](https://github.com/jprzimba/crystalserver/blob/main/markdowns/WHY_CRYSTAL_SERVER.md).
-
 ### Official Discord
 Enjoy our [Discord](https://discord.gg/7AYJEHTghQ)
 

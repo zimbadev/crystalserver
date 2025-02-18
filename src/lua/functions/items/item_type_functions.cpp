@@ -45,12 +45,15 @@ void ItemTypeFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "ItemType", "isPodium", ItemTypeFunctions::luaItemTypeIsPodium);
 	Lua::registerMethod(L, "ItemType", "getType", ItemTypeFunctions::luaItemTypeGetType);
+	Lua::registerMethod(L, "ItemType", "getGroup", ItemTypeFunctions::luaItemTypeGetGroup);
 	Lua::registerMethod(L, "ItemType", "getId", ItemTypeFunctions::luaItemTypeGetId);
 	Lua::registerMethod(L, "ItemType", "getName", ItemTypeFunctions::luaItemTypeGetName);
 	Lua::registerMethod(L, "ItemType", "getPluralName", ItemTypeFunctions::luaItemTypeGetPluralName);
 	Lua::registerMethod(L, "ItemType", "getArticle", ItemTypeFunctions::luaItemTypeGetArticle);
 	Lua::registerMethod(L, "ItemType", "getDescription", ItemTypeFunctions::luaItemTypeGetDescription);
 	Lua::registerMethod(L, "ItemType", "getSlotPosition", ItemTypeFunctions::luaItemTypeGetSlotPosition);
+	Lua::registerMethod(L, "ItemType", "getRotateId", ItemTypeFunctions::luaItemTypeGetRotateId);
+	Lua::registerMethod(L, "ItemType", "getWareId", ItemTypeFunctions::luaItemTypeGetWareId);
 
 	Lua::registerMethod(L, "ItemType", "getCharges", ItemTypeFunctions::luaItemTypeGetCharges);
 	Lua::registerMethod(L, "ItemType", "getFluidSource", ItemTypeFunctions::luaItemTypeGetFluidSource);
@@ -77,6 +80,8 @@ void ItemTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "ItemType", "getDecayId", ItemTypeFunctions::luaItemTypeGetDecayId);
 	Lua::registerMethod(L, "ItemType", "getRequiredLevel", ItemTypeFunctions::luaItemTypeGetRequiredLevel);
 	Lua::registerMethod(L, "ItemType", "getAmmoType", ItemTypeFunctions::luaItemTypeGetAmmoType);
+	Lua::registerMethod(L, "ItemType", "getCorpseType", ItemTypeFunctions::luaItemTypeGetCorpseType);
+	Lua::registerMethod(L, "ItemType", "getClassification", ItemTypeFunctions::luaItemTypeGetClassification);
 
 	Lua::registerMethod(L, "ItemType", "getDecayTime", ItemTypeFunctions::luaItemTypeGetDecayTime);
 	Lua::registerMethod(L, "ItemType", "getShowDuration", ItemTypeFunctions::luaItemTypeGetShowDuration);
@@ -86,6 +91,10 @@ void ItemTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "ItemType", "getVocationString", ItemTypeFunctions::luaItemTypeGetVocationString);
 
 	Lua::registerMethod(L, "ItemType", "hasSubType", ItemTypeFunctions::luaItemTypeHasSubType);
+	Lua::registerMethod(L, "ItemType", "getAbilities", ItemTypeFunctions::luaItemTypeGetAbilities);
+
+	Lua::registerMethod(L, "ItemType", "isWrapKit", ItemTypeFunctions::luaItemTypeIsWrapKit);
+	Lua::registerMethod(L, "ItemType", "isSpellBook", ItemTypeFunctions::luaItemTypeIsSpellBook);
 
 	ItemClassificationFunctions::init(L);
 }
@@ -308,6 +317,17 @@ int ItemTypeFunctions::luaItemTypeGetType(lua_State* L) {
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
 		lua_pushnumber(L, itemType->type);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeGetGroup(lua_State* L) {
+	// itemType:getGroup()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->group);
 	} else {
 		lua_pushnil(L);
 	}
@@ -542,6 +562,28 @@ int ItemTypeFunctions::luaItemTypeGetAmmoType(lua_State* L) {
 	return 1;
 }
 
+int ItemTypeFunctions::luaItemTypeGetCorpseType(lua_State* L) {
+	// itemType:getCorpseType()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->corpseType);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeGetClassification(lua_State* L) {
+	// itemType:getClassification()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->upgradeClassification);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
 int ItemTypeFunctions::luaItemTypeGetElementType(lua_State* L) {
 	// itemType:getElementType()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
@@ -702,11 +744,164 @@ int ItemTypeFunctions::luaItemTypeHasSubType(lua_State* L) {
 	return 1;
 }
 
+int ItemTypeFunctions::luaItemTypeGetAbilities(lua_State* L) {
+	// itemType:getAbilities()
+	auto* itemType = const_cast<ItemType*>(Lua::getUserdata<const ItemType>(L, 1));
+	if (itemType) {
+		Abilities &abilities = itemType->getAbilities();
+
+		lua_createtable(L, 6, 21);
+		Lua::setField(L, "healthGain", abilities.healthGain);
+		Lua::setField(L, "healthTicks", abilities.healthTicks);
+		Lua::setField(L, "manaGain", abilities.manaGain);
+		Lua::setField(L, "manaTicks", abilities.manaTicks);
+		Lua::setField(L, "speed", abilities.speed);
+		Lua::setField(L, "elementDamage", abilities.elementDamage);
+		Lua::setField(L, "elementType", abilities.elementType);
+		Lua::setField(L, "magicShieldCapacityPercent", abilities.magicShieldCapacityPercent);
+		Lua::setField(L, "magicShieldCapacityFlat", abilities.magicShieldCapacityFlat);
+		Lua::setField(L, "cleavePercent", abilities.cleavePercent);
+
+		lua_pushboolean(L, abilities.manaShield);
+		lua_setfield(L, -2, "manaShield");
+		lua_pushboolean(L, abilities.invisible);
+		lua_setfield(L, -2, "invisible");
+		lua_pushboolean(L, abilities.regeneration);
+		lua_setfield(L, -2, "regeneration");
+
+		// conditionImmunities
+		lua_createtable(L, abilities.conditionImmunities.size(), 0);
+		for (size_t i = 0; i < abilities.conditionImmunities.size(); ++i) {
+			lua_pushnumber(L, static_cast<int>(abilities.conditionImmunities[i]));
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "conditionImmunities");
+
+		// conditionSuppressions
+		lua_createtable(L, abilities.conditionSuppressions.size(), 0);
+		for (size_t i = 0; i < abilities.conditionSuppressions.size(); ++i) {
+			lua_pushnumber(L, static_cast<int>(abilities.conditionSuppressions[i]));
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "conditionSuppressions");
+
+		// Stats
+		lua_createtable(L, 0, STAT_LAST + 1);
+		for (int32_t i = STAT_FIRST; i <= STAT_LAST; i++) {
+			lua_pushnumber(L, abilities.stats[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "stats");
+
+		// Stats percent
+		lua_createtable(L, 0, STAT_LAST + 1);
+		for (int32_t i = STAT_FIRST; i <= STAT_LAST; i++) {
+			lua_pushnumber(L, abilities.statsPercent[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "statsPercent");
+
+		// Skills
+		lua_createtable(L, 0, SKILL_LAST + 1);
+		for (int32_t i = SKILL_FIRST; i <= SKILL_LAST; i++) {
+			lua_pushnumber(L, abilities.skills[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "skills");
+
+		// specializedMagicLevel
+		lua_createtable(L, 0, COMBAT_COUNT);
+		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
+			lua_pushnumber(L, abilities.specializedMagicLevel[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "specializedMagicLevel");
+
+		// Field absorb percent
+		lua_createtable(L, 0, COMBAT_COUNT);
+		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
+			lua_pushnumber(L, abilities.fieldAbsorbPercent[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "fieldAbsorbPercent");
+
+		// Absorb percent
+		lua_createtable(L, 0, COMBAT_COUNT);
+		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
+			lua_pushnumber(L, abilities.absorbPercent[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "absorbPercent");
+
+		//// Reflect
+		// Reflect Flat (100% chance)
+		lua_createtable(L, COMBAT_COUNT, 0);
+		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
+			lua_pushnumber(L, abilities.reflectFlat[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "reflectFlat");
+
+		// Reflect percent
+		lua_createtable(L, 0, COMBAT_COUNT);
+		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
+			lua_pushnumber(L, abilities.reflectPercent[i]);
+			lua_rawseti(L, -2, i + 1);
+		}
+		lua_setfield(L, -2, "reflectPercent");
+	}
+	return 1;
+}
+
 int ItemTypeFunctions::luaItemTypeGetVocationString(lua_State* L) {
 	// itemType:getVocationString()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
 		Lua::pushString(L, itemType->vocationString);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeGetRotateId(lua_State* L) {
+	// itemType:getRotateId()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType && itemType->rotatable) {
+		lua_pushnumber(L, itemType->rotateTo);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeGetWareId(lua_State* L) {
+	// itemType:getWareId()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->wareId);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeIsWrapKit(lua_State* L) {
+	// itemType:isWrapKit()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->isWrapKit);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeIsSpellBook(lua_State* L) {
+	// itemType:isSpellbook()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->spellbook);
 	} else {
 		lua_pushnil(L);
 	}
