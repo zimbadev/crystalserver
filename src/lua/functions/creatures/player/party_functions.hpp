@@ -39,4 +39,6 @@ private:
 	static int luaPartyIsSharedExperienceEnabled(lua_State* L);
 	static int luaPartyShareExperience(lua_State* L);
 	static int luaPartySetSharedExperience(lua_State* L);
+	static int luaPartyGetMinLevel(lua_State* L);
+	static int luaPartyGetMaxLevel(lua_State* L);
 };

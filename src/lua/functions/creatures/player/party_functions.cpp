@@ -41,6 +41,8 @@ void PartyFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Party", "isSharedExperienceEnabled", PartyFunctions::luaPartyIsSharedExperienceEnabled);
 	Lua::registerMethod(L, "Party", "shareExperience", PartyFunctions::luaPartyShareExperience);
 	Lua::registerMethod(L, "Party", "setSharedExperience", PartyFunctions::luaPartySetSharedExperience);
+	Lua::registerMethod(L, "Party", "getMinLevel", PartyFunctions::luaPartyGetMinLevel);
+	Lua::registerMethod(L, "Party", "getMaxLevel", PartyFunctions::luaPartyGetMaxLevel);
 }
 
 int32_t PartyFunctions::luaPartyCreate(lua_State* L) {
@@ -291,6 +293,28 @@ int PartyFunctions::luaPartySetSharedExperience(lua_State* L) {
 	const auto &party = Lua::getUserdataShared<Party>(L, 1);
 	if (party) {
 		Lua::pushBoolean(L, party->setSharedExperience(party->getLeader(), active));
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PartyFunctions::luaPartyGetMinLevel(lua_State* L) {
+	// party:getMinLevel()
+	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	if (party) {
+		lua_pushnumber(L, party->getMinLevel());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PartyFunctions::luaPartyGetMaxLevel(lua_State* L) {
+	// party:getMaxLevel()
+	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	if (party) {
+		lua_pushnumber(L, party->getMaxLevel());
 	} else {
 		lua_pushnil(L);
 	}
