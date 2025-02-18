@@ -80,6 +80,8 @@ private:
 	static int luaItemTypeGetDecayId(lua_State* L);
 	static int luaItemTypeGetRequiredLevel(lua_State* L);
 	static int luaItemTypeGetAmmoType(lua_State* L);
+	static int luaItemTypeGetCorpseType(lua_State* L);
+	static int luaItemTypeGetClassification(lua_State* L);
 
 	static int luaItemTypeGetSpeed(lua_State* L);
 	static int luaItemTypeGetBaseSpeed(lua_State* L);
@@ -89,4 +91,7 @@ private:
 	static int luaItemTypeGetVocationString(lua_State* L);
 
 	static int luaItemTypeHasSubType(lua_State* L);
+
+	static int luaItemTypeIsWrapKit(lua_State* L);
+	static int luaItemTypeIsSpellBook(lua_State* L);
 };

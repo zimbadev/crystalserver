@@ -80,6 +80,8 @@ void ItemTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "ItemType", "getDecayId", ItemTypeFunctions::luaItemTypeGetDecayId);
 	Lua::registerMethod(L, "ItemType", "getRequiredLevel", ItemTypeFunctions::luaItemTypeGetRequiredLevel);
 	Lua::registerMethod(L, "ItemType", "getAmmoType", ItemTypeFunctions::luaItemTypeGetAmmoType);
+	Lua::registerMethod(L, "ItemType", "getCorpseType", ItemTypeFunctions::luaItemTypeGetCorpseType);
+	Lua::registerMethod(L, "ItemType", "getClassification", ItemTypeFunctions::luaItemTypeGetClassification);
 
 	Lua::registerMethod(L, "ItemType", "getDecayTime", ItemTypeFunctions::luaItemTypeGetDecayTime);
 	Lua::registerMethod(L, "ItemType", "getShowDuration", ItemTypeFunctions::luaItemTypeGetShowDuration);
@@ -89,6 +91,9 @@ void ItemTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "ItemType", "getVocationString", ItemTypeFunctions::luaItemTypeGetVocationString);
 
 	Lua::registerMethod(L, "ItemType", "hasSubType", ItemTypeFunctions::luaItemTypeHasSubType);
+
+	Lua::registerMethod(L, "ItemType", "isWrapKit", ItemTypeFunctions::luaItemTypeIsWrapKit);
+	Lua::registerMethod(L, "ItemType", "isSpellBook", ItemTypeFunctions::luaItemTypeIsSpellBook);
 
 	ItemClassificationFunctions::init(L);
 }
@@ -556,6 +561,28 @@ int ItemTypeFunctions::luaItemTypeGetAmmoType(lua_State* L) {
 	return 1;
 }
 
+int ItemTypeFunctions::luaItemTypeGetCorpseType(lua_State* L) {
+	// itemType:getCorpseType()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->corpseType);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeGetClassification(lua_State* L) {
+	// itemType:getClassification()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->upgradeClassification);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
 int ItemTypeFunctions::luaItemTypeGetElementType(lua_State* L) {
 	// itemType:getElementType()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
@@ -743,6 +770,28 @@ int ItemTypeFunctions::luaItemTypeGetWareId(lua_State* L) {
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
 		lua_pushnumber(L, itemType->wareId);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeIsWrapKit(lua_State* L) {
+	// itemType:isWrapKit()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->isWrapKit);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeIsSpellBook(lua_State* L) {
+	// itemType:isSpellbook()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->spellbook);
 	} else {
 		lua_pushnil(L);
 	}
