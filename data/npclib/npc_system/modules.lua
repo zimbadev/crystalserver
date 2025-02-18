@@ -244,7 +244,7 @@ if Modules == nil then
 
 				-- What a foolish Quest - Mission 3
 				if IsRunningGlobalDatapack() then
-					if IsRunningGlobalDatapackStorage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer ~= nil then
+					if Storage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer ~= nil then
 						if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer) > os.time() then
 							if destination ~= Position(32660, 31957, 15) then -- kazordoon steamboat
 								player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer, 1)
