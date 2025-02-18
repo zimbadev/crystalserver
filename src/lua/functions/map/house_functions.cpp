@@ -506,8 +506,7 @@ int HouseFunctions::luaHouseGetAccessLevel(lua_State* L) {
 	return 1;
 }
 
-int HouseFunctions::luaHouseGetOwnerName(lua_State* L)
-{
+int HouseFunctions::luaHouseGetOwnerName(lua_State* L) {
 	// house:getOwnerName()
 	const auto &house = Lua::getUserdataShared<House>(L, 1);
 	if (house) {
@@ -518,8 +517,7 @@ int HouseFunctions::luaHouseGetOwnerName(lua_State* L)
 	return 1;
 }
 
-int HouseFunctions::luaHouseGetOwnerAccountId(lua_State* L)
-{
+int HouseFunctions::luaHouseGetOwnerAccountId(lua_State* L) {
 	// house:getOwnerAccountId()
 	const auto &house = Lua::getUserdataShared<House>(L, 1);
 	if (house) {

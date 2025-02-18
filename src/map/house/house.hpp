@@ -201,7 +201,7 @@ public:
 		return id;
 	}
 
-	const std::string& getOwnerName() const {
+	const std::string &getOwnerName() const {
 		return ownerName;
 	}
 
