@@ -45,12 +45,15 @@ void ItemTypeFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "ItemType", "isPodium", ItemTypeFunctions::luaItemTypeIsPodium);
 	Lua::registerMethod(L, "ItemType", "getType", ItemTypeFunctions::luaItemTypeGetType);
+	Lua::registerMethod(L, "ItemType", "getGroup", ItemTypeFunctions::luaItemTypeGetGroup);
 	Lua::registerMethod(L, "ItemType", "getId", ItemTypeFunctions::luaItemTypeGetId);
 	Lua::registerMethod(L, "ItemType", "getName", ItemTypeFunctions::luaItemTypeGetName);
 	Lua::registerMethod(L, "ItemType", "getPluralName", ItemTypeFunctions::luaItemTypeGetPluralName);
 	Lua::registerMethod(L, "ItemType", "getArticle", ItemTypeFunctions::luaItemTypeGetArticle);
 	Lua::registerMethod(L, "ItemType", "getDescription", ItemTypeFunctions::luaItemTypeGetDescription);
 	Lua::registerMethod(L, "ItemType", "getSlotPosition", ItemTypeFunctions::luaItemTypeGetSlotPosition);
+	Lua::registerMethod(L, "ItemType", "getRotateId", ItemTypeFunctions::luaItemTypeGetRotateId);
+	Lua::registerMethod(L, "ItemType", "getWareId", ItemTypeFunctions::luaItemTypeGetWareId);
 
 	Lua::registerMethod(L, "ItemType", "getCharges", ItemTypeFunctions::luaItemTypeGetCharges);
 	Lua::registerMethod(L, "ItemType", "getFluidSource", ItemTypeFunctions::luaItemTypeGetFluidSource);
@@ -308,6 +311,18 @@ int ItemTypeFunctions::luaItemTypeGetType(lua_State* L) {
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
 		lua_pushnumber(L, itemType->type);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeGetGroup(lua_State* L)
+{
+	// itemType:getGroup()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->group);
 	} else {
 		lua_pushnil(L);
 	}
@@ -707,6 +722,30 @@ int ItemTypeFunctions::luaItemTypeGetVocationString(lua_State* L) {
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
 		Lua::pushString(L, itemType->vocationString);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeGetRotateId(lua_State* L)
+{
+	// itemType:getRotateId()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType && itemType->rotatable) {
+		lua_pushnumber(L, itemType->rotateTo);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ItemTypeFunctions::luaItemTypeGetWareId(lua_State* L)
+{
+	// itemType:getWareId()
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	if (itemType) {
+		lua_pushnumber(L, itemType->wareId);
 	} else {
 		lua_pushnil(L);
 	}
