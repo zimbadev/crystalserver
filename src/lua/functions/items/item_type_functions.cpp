@@ -317,8 +317,7 @@ int ItemTypeFunctions::luaItemTypeGetType(lua_State* L) {
 	return 1;
 }
 
-int ItemTypeFunctions::luaItemTypeGetGroup(lua_State* L)
-{
+int ItemTypeFunctions::luaItemTypeGetGroup(lua_State* L) {
 	// itemType:getGroup()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
@@ -728,8 +727,7 @@ int ItemTypeFunctions::luaItemTypeGetVocationString(lua_State* L) {
 	return 1;
 }
 
-int ItemTypeFunctions::luaItemTypeGetRotateId(lua_State* L)
-{
+int ItemTypeFunctions::luaItemTypeGetRotateId(lua_State* L) {
 	// itemType:getRotateId()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType && itemType->rotatable) {
@@ -740,8 +738,7 @@ int ItemTypeFunctions::luaItemTypeGetRotateId(lua_State* L)
 	return 1;
 }
 
-int ItemTypeFunctions::luaItemTypeGetWareId(lua_State* L)
-{
+int ItemTypeFunctions::luaItemTypeGetWareId(lua_State* L) {
 	// itemType:getWareId()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
