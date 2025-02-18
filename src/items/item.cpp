@@ -99,7 +99,17 @@ std::shared_ptr<Item> Item::CreateItem(const uint16_t type, uint16_t count /*= 0
 	return newItem;
 }
 
+bool Item::hasImbuementAttribute(const std::string &attributeSlot) const {
+	// attributeSlot = ITEM_IMBUEMENT_SLOT + slot id
+	return getCustomAttribute(attributeSlot) != nullptr;
+}
+
 bool Item::getImbuementInfo(uint8_t slot, ImbuementInfo* imbuementInfo) const {
+	std::string attributeSlot = std::to_string(ITEM_IMBUEMENT_SLOT + slot);
+	if (!hasImbuementAttribute(attributeSlot)) {
+		return false;
+	}
+
 	const CustomAttribute* attribute = getCustomAttribute(std::to_string(ITEM_IMBUEMENT_SLOT + slot));
 	const auto info = attribute ? attribute->getAttribute<uint32_t>() : 0;
 	imbuementInfo->imbuement = g_imbuements().getImbuement(info & 0xFF);
