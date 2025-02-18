@@ -581,8 +581,7 @@ int MonsterTypeFunctions::luaMonsterTypeExperience(lua_State* L) {
 	return 1;
 }
 
-int MonsterTypeFunctions::luaMonsterTypeSkull(lua_State* L)
-{
+int MonsterTypeFunctions::luaMonsterTypeSkull(lua_State* L) {
 	// get: monsterType:skull() set: monsterType:skull(str/constant)
 	const auto &monsterType = Lua::getUserdataShared<MonsterType>(L, 1);
 	if (monsterType) {
