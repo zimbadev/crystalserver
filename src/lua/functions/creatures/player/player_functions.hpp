@@ -272,6 +272,7 @@ class PlayerFunctions {
 	static int luaPlayerGetContainerId(lua_State* L);
 	static int luaPlayerGetContainerById(lua_State* L);
 	static int luaPlayerGetContainerIndex(lua_State* L);
+	static int luaPlayerGetOpenContainers(lua_State* L);
 
 	static int luaPlayerGetInstantSpells(lua_State* L);
 	static int luaPlayerCanCast(lua_State* L);
@@ -370,6 +371,7 @@ class PlayerFunctions {
 
 	static int luaPlayerKV(lua_State* L);
 	static int luaPlayerGetStoreInbox(lua_State* L);
+	static int luaPlayerIsNearDepotBox(lua_State* L);
 
 	static int luaPlayerHasAchievement(lua_State* L);
 	static int luaPlayerAddAchievement(lua_State* L);

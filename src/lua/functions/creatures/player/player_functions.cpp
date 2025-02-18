@@ -292,6 +292,7 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "getContainerId", PlayerFunctions::luaPlayerGetContainerId);
 	Lua::registerMethod(L, "Player", "getContainerById", PlayerFunctions::luaPlayerGetContainerById);
 	Lua::registerMethod(L, "Player", "getContainerIndex", PlayerFunctions::luaPlayerGetContainerIndex);
+	Lua::registerMethod(L, "Player", "getOpenContainers", PlayerFunctions::luaPlayerGetOpenContainers);
 
 	Lua::registerMethod(L, "Player", "getInstantSpells", PlayerFunctions::luaPlayerGetInstantSpells);
 	Lua::registerMethod(L, "Player", "canCast", PlayerFunctions::luaPlayerCanCast);
@@ -390,6 +391,7 @@ void PlayerFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "Player", "kv", PlayerFunctions::luaPlayerKV);
 	Lua::registerMethod(L, "Player", "getStoreInbox", PlayerFunctions::luaPlayerGetStoreInbox);
+	Lua::registerMethod(L, "Player", "isNearDepotBox", PlayerFunctions::luaPlayerIsNearDepotBox);
 
 	Lua::registerMethod(L, "Player", "hasAchievement", PlayerFunctions::luaPlayerHasAchievement);
 	Lua::registerMethod(L, "Player", "addAchievement", PlayerFunctions::luaPlayerAddAchievement);
@@ -3546,6 +3548,25 @@ int PlayerFunctions::luaPlayerGetContainerIndex(lua_State* L) {
 	return 1;
 }
 
+int PlayerFunctions::luaPlayerGetOpenContainers(lua_State* L) {
+	// player:getOpenContainers()
+	// returns windowId and userdata of opened containers
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		const auto &openContainers = player->getOpenContainers();
+
+		lua_createtable(L, openContainers.size(), 0);
+		for (auto const &containerInfo : openContainers) {
+			Lua::pushUserdata<Container>(L, containerInfo.second.container);
+			Lua::setMetatable(L, -1, "Container");
+			lua_rawseti(L, -2, containerInfo.first);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
 int PlayerFunctions::luaPlayerGetInstantSpells(lua_State* L) {
 	// player:getInstantSpells()
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
@@ -4663,6 +4684,18 @@ int PlayerFunctions::luaPlayerGetStoreInbox(lua_State* L) {
 	} else {
 		Lua::pushBoolean(L, false);
 	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerIsNearDepotBox(lua_State* L) {
+	// player:isNearDepotBox()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	Lua::pushBoolean(L, player->isNearDepotBox());
 	return 1;
 }
 
