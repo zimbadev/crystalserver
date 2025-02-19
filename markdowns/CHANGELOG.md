@@ -24,12 +24,14 @@
 - Fixed client debug. ([mehah](https://github.com/mehah))
 - Fixed colored loot message on bosses. ([omarcopires](https://github.com/omarcopires))
 - Fixed weight error when adding potions to container. ([omarcopires](https://github.com/omarcopires))
+- Fixed the withdraw command in the bank talkaction. ([Tryller](https://github.com/jprzimba))
 
 ## Modified files
 
 - crystalserver.exe
 - config.lua
 - data/scripts/actions/items/potions.lua
+- data/scripts/talkactions/player/bank.lua
 - data/XML/vocations.xml
 
 
