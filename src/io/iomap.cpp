@@ -167,7 +167,7 @@ void IOMap::parseTileArea(FileStream &stream, Map &map, const Position &pos) {
 				const uint16_t id = stream.getU16();
 				const auto &iType = Item::items[id];
 
-				if (!tile->isHouse() || (!iType.isBed() && !iType.isTrashHolder())) {
+				if (!tile->isHouse() || (!iType.isBed())) {
 
 					const auto item = std::make_shared<BasicItem>();
 					item->id = id;
