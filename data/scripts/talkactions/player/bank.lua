@@ -1,6 +1,5 @@
 local config = {
 	enabled = true,
-	messageStyle = MESSAGE_LOOK,
 }
 
 if not config.enabled then
@@ -10,7 +9,7 @@ end
 local balance = TalkAction("!balance")
 
 function balance.onSay(player, words, param)
-	player:sendTextMessage(config.messageStyle, "Your current bank balance is " .. FormatNumber(Bank.balance(player)) .. ".")
+	player:sendTextMessage(MESSAGE_LOOK, "Your current bank balance is " .. FormatNumber(Bank.balance(player)) .. ".")
 	return true
 end
 
@@ -27,17 +26,17 @@ function deposit.onSay(player, words, param)
 	else
 		amount = tonumber(param)
 		if not amount or amount <= 0 and isValidMoney(amount) then
-			player:sendTextMessage(config.messageStyle, "Invalid amount.")
+			player:sendCancelMessage("Invalid amount.")
 			return true
 		end
 	end
 
 	if not Bank.deposit(player, amount) then
-		player:sendTextMessage(config.messageStyle, "You don't have enough money.")
+		player:sendCancelMessage("You don't have enough money.")
 		return true
 	end
 
-	player:sendTextMessage(config.messageStyle, "You have deposited " .. FormatNumber(amount) .. " gold coins.")
+	player:sendTextMessage(MESSAGE_LOOK, "You have deposited " .. FormatNumber(amount) .. " gold coins.")
 	return true
 end
 
@@ -49,17 +48,41 @@ local withdraw = TalkAction("!withdraw")
 
 function withdraw.onSay(player, words, param)
 	local amount = tonumber(param)
+
 	if not amount or amount <= 0 and isValidMoney(amount) then
-		player:sendTextMessage(config.messageStyle, "Invalid amount.")
+		player:sendCancelMessage("Invalid amount.")
+		return true
+	end
+
+	local totalValue = amount
+	local crystalCoins = math.floor(totalValue / 10000)
+	totalValue = totalValue % 10000
+	local platinumCoins = math.floor(totalValue / 100)
+	totalValue = totalValue % 100
+	local goldCoins = totalValue
+
+	local crystalPiles = math.floor((crystalCoins + 99) / 100)
+	local platinumPiles = math.floor((platinumCoins + 99) / 100)
+	local goldPiles = math.floor((goldCoins + 99) / 100)
+	local totalPiles = crystalPiles + platinumPiles + goldPiles
+
+	local moneyWeight = getMoneyWeight(amount)
+	if player:getFreeCapacity() < moneyWeight then
+		player:sendCancelMessage("You don't have enough capacity to carry this amount of gold.")
+		return true
+	end
+
+	if player:getFreeBackpackSlots() < totalPiles then
+		player:sendCancelMessage("You don't have enough room in your backpack to carry all these coins.")
 		return true
 	end
 
 	if not Bank.withdraw(player, amount) then
-		player:sendTextMessage(config.messageStyle, "You don't have enough money.")
+		player:sendCancelMessage("You don't have enough money.")
 		return true
 	end
 
-	player:sendTextMessage(config.messageStyle, "You have withdrawn " .. FormatNumber(amount) .. " gold coins.")
+	player:sendTextMessage(MESSAGE_LOOK, "You have withdrawn " .. FormatNumber(amount) .. " gold coins.")
 	return true
 end
 
@@ -73,29 +96,29 @@ function transfer.onSay(player, words, param)
 	local split = param:split(",")
 	local amount = tonumber(split[2])
 	if not amount or amount <= 0 and isValidMoney(amount) then
-		player:sendTextMessage(config.messageStyle, "Invalid amount.")
+		player:sendCancelMessage("Invalid amount.")
 		return true
 	end
 
 	local name = split[1]
 	if not name then
-		player:sendTextMessage(config.messageStyle, "Invalid name.")
+		player:sendCancelMessage("Invalid name.")
 		return true
 	end
 	name = name:trim()
 	local normalizedName = Game.getNormalizedPlayerName(name)
 	if not normalizedName then
-		player:sendTextMessage(config.messageStyle, "A player with name " .. name .. " does not exist.")
+		player:sendCancelMessage("A player with name " .. name .. " does not exist.")
 		return true
 	end
 	name = normalizedName
 
 	if not player:transferMoneyTo(name, amount) then
-		player:sendTextMessage(config.messageStyle, "You don't have enough money.")
+		player:sendCancelMessage("You don't have enough money.")
 		return true
 	end
 
-	player:sendTextMessage(config.messageStyle, "You have transferred " .. FormatNumber(amount) .. " gold coins to " .. name .. ".")
+	player:sendTextMessage(MESSAGE_LOOK, "You have transferred " .. FormatNumber(amount) .. " gold coins to " .. name .. ".")
 	return true
 end
 
