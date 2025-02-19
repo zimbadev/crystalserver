@@ -5462,6 +5462,10 @@ void Game::playerLookInShop(uint32_t playerId, uint16_t itemId, uint8_t count) {
 		return;
 	}
 
+	if (!player->hasShopItemForSale(it.id, count)) {
+		return;
+	}
+
 	if (!g_events().eventPlayerOnLookInShop(player, &it, count)) {
 		return;
 	}
