@@ -34,6 +34,9 @@
 - data/scripts/talkactions/player/bank.lua
 - data/XML/vocations.xml
 
+## Deleted files
+- data-global/scripts/creaturescripts/customs/water_houses.lua
+
 
 ## Version 4.1.3
 
