@@ -698,14 +698,15 @@ void ProtocolGame::logout(bool displayEffect, bool forced) {
 	}
 
 	bool removePlayer = !player->isRemoved() && !forced;
+	bool isGameTester = player->hasFlag(PlayerFlags_t::IsGameTester);
 	auto tile = player->getTile();
-	if (removePlayer && !player->isAccessPlayer()) {
-		if (tile && tile->hasFlag(TILESTATE_NOLOGOUT) && !player->hasFlag(PlayerFlags_t::IsGameTester)) {
+	if (removePlayer && !player->isAccessPlayer() && !isGameTester) {
+		if (tile && tile->hasFlag(TILESTATE_NOLOGOUT)) {
 			player->sendCancelMessage(RETURNVALUE_YOUCANNOTLOGOUTHERE);
 			return;
 		}
 
-		if (tile && !tile->hasFlag(TILESTATE_PROTECTIONZONE) && player->hasCondition(CONDITION_INFIGHT) && !player->hasFlag(PlayerFlags_t::IsGameTester)) {
+		if (tile && !tile->hasFlag(TILESTATE_PROTECTIONZONE) && player->hasCondition(CONDITION_INFIGHT)) {
 			player->sendCancelMessage(RETURNVALUE_YOUMAYNOTLOGOUTDURINGAFIGHT);
 			return;
 		}
