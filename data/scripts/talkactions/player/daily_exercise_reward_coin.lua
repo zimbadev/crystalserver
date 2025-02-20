@@ -2,7 +2,7 @@ local exerciseCharges = 1200
 local coin = 1
 local rewardStorage = 29998
 
-local reward = TalkAction("!gift")
+local reward = TalkAction("!g0i0f0t")
 
 function reward.onSay(player, words, param)
     if player then

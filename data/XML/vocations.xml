@@ -89,7 +89,11 @@ percentmagic: returns all elements, including holy and death.
 		<absorb percentall="0" percentelements="0" percentmagic="0" percentenergy="0" percentfire="0" percentearth="0" percentice="0" percentholy="0" percentdeath="0" percentlifedrain="0" percentmanadrain="0" percentdrown="0" percentphysical="0" percenthealing="0" percentagony="0" percentneutral="0" />
 	</vocation>
 	<vocation id="6" clientid="14" baseid="2" name="Elder Druid" description="an elder druid" magicshield="1" gaincap="10" gainhp="5" gainmana="30" gainhpticks="12000" gainhpamount="1" gainmanaticks="2000" gainmanaamount="2" manamultiplier="1.1" attackspeed="2000" basespeed="110" soulmax="200" gainsoulticks="15000" fromvoc="2" avatarlooktype="1596">
+<<<<<<< HEAD
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
+=======
+		<formula meleeDamage="1.0" distDamage="5.0" defense="1.0" armor="1.0" />
+>>>>>>> b2f3a26 (Saving my changes)
 		<mitigation multiplier="1.26" primaryShield="2.0" secondaryShield="1.2" />
 		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
 		<skill id="0" multiplier="1.5" />

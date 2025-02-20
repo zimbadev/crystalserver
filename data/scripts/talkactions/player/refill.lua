@@ -1,5 +1,5 @@
 -- Usage talkaction: "!refill will refill all your amulets and rings for silver tokens"
-local refill = TalkAction("!refill")
+local refill = TalkAction("!repair")
 
 local chargeItem = {
 	["pendulet"] = { noChargeID = 29429, ChargeID = 30344, cost = 2 },
@@ -39,13 +39,13 @@ local function hasCapacityToChange(player, message)
 			itemMessage = "items"
 		end
 
-		player:sendTextMessage(MESSAGE_FAILURE, "You need " .. capMessage .. " to refill and carry the " .. itemMessage .. ".")
+		player:sendTextMessage(MESSAGE_FAILURE, "You need " .. capMessage .. " to repair and carry the " .. itemMessage .. ".")
 		return false
 	end
 end
 
 function refill.onSay(player, words, param)
-	local message = "You have refilled"
+	local message = "You have repaired"
 	if not hasCapacityToChange(player, message) then
 		return true
 	end
@@ -64,10 +64,10 @@ function refill.onSay(player, words, param)
 		end
 	end
 	if #refilledItems == 0 then
-		player:sendTextMessage(MESSAGE_LOOK, "You do not have any items to refill or lack silver tokens.")
+		player:sendTextMessage(MESSAGE_LOOK, "You do not have any items to repair or lack silver tokens.")
 	else
 		local itemList = table.concat(refilledItems, ", ")
-		player:sendTextMessage(MESSAGE_LOOK, "Refilled " .. itemList .. " for a total of " .. totalCost .. " silver tokens.")
+		player:sendTextMessage(MESSAGE_LOOK, "Repaired " .. itemList .. " for a total of " .. totalCost .. " silver tokens.")
 	end
 	return true
 end

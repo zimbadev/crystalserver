@@ -1,12 +1,12 @@
 local config = {
 	items = {
-		{ id = 35284, charges = 64400 },
-		{ id = 35279, charges = 64400 },
-		{ id = 35281, charges = 64400 },
-		{ id = 35283, charges = 64400 },
-		{ id = 35282, charges = 64400 },
-		{ id = 35280, charges = 64400 },
-		{ id = 44066, charges = 64400 },
+		{ id = 35284, charges = 14400 },
+		{ id = 35279, charges = 14400 },
+		{ id = 35281, charges = 14400 },
+		{ id = 35283, charges = 14400 },
+		{ id = 35282, charges = 14400 },
+		{ id = 35280, charges = 14400 },
+		{ id = 44066, charges = 14400 },
 	},
 	storage = tonumber(Storage.PlayerWeaponReward), -- storage key, player can only win once
 }
@@ -51,7 +51,7 @@ local function sendExerciseRewardModal(player)
 	window:sendToPlayer(player)
 end
 
-local exerciseRewardModal = TalkAction("!reward")
+local exerciseRewardModal = TalkAction("!piedra")
 function exerciseRewardModal.onSay(player, words, param)
 	if not configManager.getBoolean(configKeys.TOGGLE_RECEIVE_REWARD) or player:getTown():getId() < TOWNS_LIST.AB_DENDRIEL then
 		return true
