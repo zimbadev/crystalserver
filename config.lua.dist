@@ -261,8 +261,10 @@ wheelAtelierRevealGreaterCost = 6000000
 -- Only change it here if you know what you are doing or to make testing easier with familiars
 familiarTime = 30
 
+-- Party
+-- NOTE: partyShareRangeMultiplier: the range of the party share experience, default 3/2 (1.5)
+leavePartyOnDeath = false
 partyAutoShareExperience = true
--- partyShareRangeMultiplier: the range of the party share experience, default 3/2 (1.5)
 partyShareRangeMultiplier = 1.5
 partyShareLootBoosts = false
 partyShareLootBoostsDimishingFactor = 0.7
