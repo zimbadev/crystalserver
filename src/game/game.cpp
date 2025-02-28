@@ -1565,6 +1565,12 @@ ReturnValue Game::internalMoveCreature(const std::shared_ptr<Creature> &creature
 	Position destPos = getNextPosition(direction, currentPos);
 	const auto &player = creature->getPlayer();
 
+	// special tiles
+	if (player && isSpecialTile(destPos) && !player->isPremium()) {
+		player->sendCancelWalk();
+		return RETURNVALUE_YOUNEEDPREMIUMACCOUNT;
+	}
+
 	bool diagonalMovement = (direction & DIRECTION_DIAGONAL_MASK) != 0;
 	if (player && !diagonalMovement) {
 		// try go up
@@ -11271,4 +11277,47 @@ bool Game::processBankAuction(std::shared_ptr<Player> player, const std::shared_
 		}
 	}
 	return true;
+}
+
+void Game::loadSpecialTiles() {
+	pugi::xml_document doc;
+	const std::string folder = g_configManager().getString(CORE_DIRECTORY) + "/XML/specialtiles.xml";
+	const pugi::xml_parse_result result = doc.load_file(folder.c_str());
+
+	if (!result) {
+		printXMLError(__FUNCTION__, folder, result);
+		return;
+	}
+
+	specialTiles.clear();
+
+	pugi::xml_node root = doc.child("specialtiles");
+
+	for (pugi::xml_node tileNode : root.children("tile")) {
+		int x = tileNode.attribute("tilex").as_int();
+		int y = tileNode.attribute("tiley").as_int();
+		int z = tileNode.attribute("tilez").as_int();
+		specialTiles.insert(Position(x, y, z));
+	}
+
+	for (pugi::xml_node tilesNode : root.children("tiles")) {
+		int fromX = tilesNode.attribute("fromtilex").as_int();
+		int fromY = tilesNode.attribute("fromtiley").as_int();
+		int fromZ = tilesNode.attribute("fromtilez").as_int();
+		int toX = tilesNode.attribute("totilex").as_int();
+		int toY = tilesNode.attribute("totiley").as_int();
+		int toZ = tilesNode.attribute("totilez").as_int();
+
+		for (int x = fromX; x <= toX; ++x) {
+			for (int y = fromY; y <= toY; ++y) {
+				specialTiles.insert(Position(x, y, fromZ));
+			}
+		}
+	}
+
+	g_logger().info("Loaded {} special tiles from Special Tiles System", specialTiles.size());
+}
+
+bool Game::isSpecialTile(const Position &pos) const {
+	return specialTiles.find(pos) != specialTiles.end();
 }
