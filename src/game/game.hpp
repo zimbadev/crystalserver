@@ -94,9 +94,9 @@ struct HighscoreCacheEntry {
 };
 
 struct PositionHasher {
-    std::size_t operator()(const Position& pos) const {
-        return std::hash<int>()(pos.x) ^ std::hash<int>()(pos.y) << 1 ^ std::hash<int>()(pos.z) << 2;
-    }
+	std::size_t operator()(const Position &pos) const {
+		return std::hash<int>()(pos.x) ^ std::hash<int>()(pos.y) << 1 ^ std::hash<int>()(pos.z) << 2;
+	}
 };
 
 class Game {
