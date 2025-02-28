@@ -294,7 +294,6 @@ onlyPremiumAccount = false
 -- NOTE: startStreakLevel will make a reward streak level for new players who never logged in
 -- NOTE: if showLootsInBestiary is true, will cause all loots to be shown in the bestiary even if the player has not reached the required number of kills
 -- NOTE: minTownIdToBankTransferFromMain blocks towns less than defined from receiving money transfers
--- NOTE: Set `toggleSpecialTiles` to true if you want to use the system.
 stashMoving = false
 stashItemCount = 5000
 depotChest = 4
@@ -314,7 +313,13 @@ enablePlayerPutItemInAmmoSlot = false
 startStreakLevel = 0
 showLootsInBestiary = false
 minTownIdToBankTransferFromMain = 4
-toggleSpecialTiles = false
+
+-- Special tiles and Free Town
+-- NOTE: Special tiles and free town ID are independent.
+-- NOTE: Set toggleSpecialTiles to true if you want to use the system.
+-- NOTE: freeTownId = 8 is Thais city.
+freeTownId = 8
+toggleSpecialTiles = true
 
 -- Cosmetics
 -- NOTE: enableSupportOutfit enable GODS and GMS to select support outfit (gamemaster, customer support or community manager)

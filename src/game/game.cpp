@@ -11324,3 +11324,26 @@ void Game::loadSpecialTiles() {
 bool Game::isSpecialTile(const Position &pos) const {
 	return specialTiles.find(pos) != specialTiles.end();
 }
+
+void Game::checkPremiumArea(const std::shared_ptr<Player> &player) {
+	if (!player || player->isPremium() || player->isVip()) {
+		return;
+	}
+
+	const auto freeTownId = g_configManager().getNumber(FREE_TOWN_ID);
+	const auto &freeTown = g_game().map.towns.getTown(freeTownId);
+	if (!freeTown) {
+		return;
+	}
+
+	const auto &playerPos = player->getPosition();
+	const auto freeTownTemplePosition = freeTown->getTemplePosition();
+	if (isSpecialTile(playerPos)) {
+		player->sendTextMessage(MESSAGE_ADMINISTRATOR, "Your premium has expired. You are being teleported to a free town.");
+		Position freeTemplePosition(freeTownTemplePosition);
+		internalTeleport(player, freeTemplePosition, false);
+		player->loginPosition = freeTownTemplePosition;
+		player->setTown(freeTown);
+		g_saveManager().savePlayer(player);
+	}
+}

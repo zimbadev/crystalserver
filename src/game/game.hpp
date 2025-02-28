@@ -207,6 +207,7 @@ public:
 
 	void loadSpecialTiles();
 	bool isSpecialTile(const Position &pos) const;
+	void checkPremiumArea(const std::shared_ptr<Player> &player);
 
 	void addItemsClassification(ItemClassification* itemsClassification) {
 		itemsClassifications.push_back(itemsClassification);
