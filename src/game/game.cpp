@@ -11325,7 +11325,7 @@ bool Game::isSpecialTile(const Position &pos) const {
 	return specialTiles.find(pos) != specialTiles.end();
 }
 
-void Game::checkPremiumArea(const std::shared_ptr<Player> &player) {
+void Game::checkSpecialTiles(const std::shared_ptr<Player> &player) {
 	if (!player || player->isPremium() || player->isVip()) {
 		return;
 	}
