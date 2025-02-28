@@ -11306,7 +11306,6 @@ void Game::loadSpecialTiles() {
 		int fromZ = tilesNode.attribute("fromtilez").as_int();
 		int toX = tilesNode.attribute("totilex").as_int();
 		int toY = tilesNode.attribute("totiley").as_int();
-		int toZ = tilesNode.attribute("totilez").as_int();
 
 		for (int x = fromX; x <= toX; ++x) {
 			for (int y = fromY; y <= toY; ++y) {
