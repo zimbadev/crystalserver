@@ -314,6 +314,13 @@ startStreakLevel = 0
 showLootsInBestiary = false
 minTownIdToBankTransferFromMain = 4
 
+-- Special tiles and Free Town
+-- NOTE: Special tiles and free town ID are independent.
+-- NOTE: Set toggleSpecialTiles to true if you want to use the system.
+-- NOTE: freeTownId = 8 is Thais city.
+freeTownId = 8
+toggleSpecialTiles = true
+
 -- Cosmetics
 -- NOTE: enableSupportOutfit enable GODS and GMS to select support outfit (gamemaster, customer support or community manager)
 enableSupportOutfit = true

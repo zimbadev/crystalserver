@@ -93,6 +93,12 @@ struct HighscoreCacheEntry {
 	std::chrono::time_point<std::chrono::system_clock> timestamp;
 };
 
+struct PositionHasher {
+	std::size_t operator()(const Position &pos) const {
+		return std::hash<int>()(pos.x) ^ std::hash<int>()(pos.y) << 1 ^ std::hash<int>()(pos.z) << 2;
+	}
+};
+
 class Game {
 public:
 	Game();
@@ -198,6 +204,10 @@ public:
 	uint32_t getPlayersRecord() const {
 		return playersRecord;
 	}
+
+	void loadSpecialTiles();
+	bool isSpecialTile(const Position &pos) const;
+	void checkSpecialTiles(const std::shared_ptr<Player> &player);
 
 	void addItemsClassification(ItemClassification* itemsClassification) {
 		itemsClassifications.push_back(itemsClassification);
@@ -738,6 +748,7 @@ private:
 
 	std::unordered_set<Badge> m_badges;
 	std::unordered_set<Title> m_titles;
+	std::unordered_set<Position, PositionHasher> specialTiles;
 
 	std::vector<HighscoreCategory> m_highscoreCategories;
 	std::unordered_map<uint8_t, std::string> m_highscoreCategoriesNames;

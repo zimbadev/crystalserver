@@ -375,6 +375,7 @@ void CrystalServer::loadModules() {
 	g_ioBosstiary().loadBoostedBoss();
 	g_ioprey().initializeTaskHuntOptions();
 	g_game().logCyclopediaStats();
+	g_game().loadSpecialTiles();
 }
 
 void CrystalServer::modulesLoadHelper(bool loaded, std::string moduleName) {

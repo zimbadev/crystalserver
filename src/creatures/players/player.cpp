@@ -10309,6 +10309,7 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 		}
 
 		g_game().changePlayerSpeed(static_self_cast<Player>(), 0);
+		g_game().checkSpecialTiles(static_self_cast<Player>());
 	}
 }
 

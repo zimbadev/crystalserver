@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specialtiles>
+    <!-- Single tile marked as special -->
+    <tile x="32367" y="32231" z="7" />
+    
+    <!-- A range of tiles marked as special -->
+    <tiles fromX="32358" fromY="32239" fromZ="7" toX="32363" toY="32244" />
+</specialtiles>
