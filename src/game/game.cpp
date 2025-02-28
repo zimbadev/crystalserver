@@ -11280,6 +11280,10 @@ bool Game::processBankAuction(std::shared_ptr<Player> player, const std::shared_
 }
 
 void Game::loadSpecialTiles() {
+	if (!g_configManager().getBoolean(TOGGLE_SPECIAL_TILES)) {
+		return;
+	}
+
 	pugi::xml_document doc;
 	const std::string folder = g_configManager().getString(CORE_DIRECTORY) + "/XML/specialtiles.xml";
 	const pugi::xml_parse_result result = doc.load_file(folder.c_str());
@@ -11294,18 +11298,18 @@ void Game::loadSpecialTiles() {
 	pugi::xml_node root = doc.child("specialtiles");
 
 	for (pugi::xml_node tileNode : root.children("tile")) {
-		int x = tileNode.attribute("tilex").as_int();
-		int y = tileNode.attribute("tiley").as_int();
-		int z = tileNode.attribute("tilez").as_int();
+		int x = tileNode.attribute("x").as_int();
+		int y = tileNode.attribute("y").as_int();
+		int z = tileNode.attribute("z").as_int();
 		specialTiles.insert(Position(x, y, z));
 	}
 
 	for (pugi::xml_node tilesNode : root.children("tiles")) {
-		int fromX = tilesNode.attribute("fromtilex").as_int();
-		int fromY = tilesNode.attribute("fromtiley").as_int();
-		int fromZ = tilesNode.attribute("fromtilez").as_int();
-		int toX = tilesNode.attribute("totilex").as_int();
-		int toY = tilesNode.attribute("totiley").as_int();
+		int fromX = tilesNode.attribute("fromX").as_int();
+		int fromY = tilesNode.attribute("fromY").as_int();
+		int fromZ = tilesNode.attribute("fromZ").as_int();
+		int toX = tilesNode.attribute("toX").as_int();
+		int toY = tilesNode.attribute("toY").as_int();
 
 		for (int x = fromX; x <= toX; ++x) {
 			for (int y = fromY; y <= toY; ++y) {
