@@ -44,6 +44,8 @@ static constexpr int32_t STORAGEVALUE_GIFT_OF_LIFE_COOLDOWN_WOD = 43200;
 
 constexpr double SCALING_BASE = 10.0;
 
+static constexpr int32_t SWIMMING_OUTFIT = 267;
+
 // Reserved player storage key ranges;
 // [10000000 - 20000000];
 static constexpr int32_t PSTRG_RESERVED_RANGE_START = 10000000;
@@ -64,4 +66,3 @@ static constexpr int32_t IMMOVABLE_ACTION_ID = 100;
 #define IS_IN_KEYRANGE(key, range) \
 	(key >= PSTRG_##range##_START && ((key - PSTRG_##range##_START) <= PSTRG_##range##_SIZE))
 
-#define SWIMMING_OUTFIT 267

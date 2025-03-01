@@ -11369,7 +11369,7 @@ void Game::createIllusion(const std::shared_ptr<Player> &player, const Outfit_t 
 		return;
 	}
 
-	std::shared_ptr<ConditionOutfit> outfitCondition = std::make_shared<ConditionOutfit>(CONDITIONID_COMBAT, CONDITION_OUTFIT, time, false, 0);
+	auto outfitCondition = std::make_shared<ConditionOutfit>(CONDITIONID_COMBAT, CONDITION_OUTFIT, time, false, 0);
 	if (!outfitCondition) {
 		return;
 	}
