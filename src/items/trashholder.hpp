@@ -19,11 +19,16 @@
 
 #include "items/item.hpp"
 #include "items/cylinder.hpp"
+#include "utils/utils_definitions.hpp"
 
 class TrashHolder final : public Item, public Cylinder {
 public:
-	explicit TrashHolder(uint16_t itemId) :
-		Item(itemId) { }
+	explicit TrashHolder(uint16_t itemId, MagicEffectClasses _effect = CONST_ME_NONE) :
+		Item(itemId), effect(_effect) { }
+
+	std::shared_ptr<TrashHolder> shared_from_this() {
+		return std::static_pointer_cast<TrashHolder>(Item::shared_from_this());
+	}
 
 	std::shared_ptr<TrashHolder> getTrashHolder() override {
 		return static_self_cast<TrashHolder>();
@@ -39,6 +44,10 @@ public:
 	ReturnValue queryRemove(const std::shared_ptr<Thing> &thing, uint32_t count, uint32_t flags, const std::shared_ptr<Creature> &actor = nullptr) override;
 	std::shared_ptr<Cylinder> queryDestination(int32_t &index, const std::shared_ptr<Thing> &thing, std::shared_ptr<Item> &destItem, uint32_t &flags) override;
 
+	virtual std::shared_ptr<Tile> getTile() override {
+		return Item::getTile();
+	}
+
 	void addThing(const std::shared_ptr<Thing> &thing) override;
 	void addThing(int32_t index, const std::shared_ptr<Thing> &thing) override;
 
@@ -49,4 +58,11 @@ public:
 
 	void postAddNotification(const std::shared_ptr<Thing> &thing, const std::shared_ptr<Cylinder> &oldParent, int32_t index, CylinderLink_t link = LINK_OWNER) override;
 	void postRemoveNotification(const std::shared_ptr<Thing> &thing, const std::shared_ptr<Cylinder> &newParent, int32_t index, CylinderLink_t link = LINK_OWNER) override;
+
+	MagicEffectClasses getEffect() const {
+		return effect;
+	}
+
+private:
+	MagicEffectClasses effect;
 };

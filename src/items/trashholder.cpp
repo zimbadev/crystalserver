@@ -18,6 +18,7 @@
 #include "items/trashholder.hpp"
 
 #include "game/game.hpp"
+#include "utils/const.hpp"
 
 ReturnValue TrashHolder::queryAdd(int32_t, const std::shared_ptr<Thing> &thing, uint32_t, uint32_t, const std::shared_ptr<Creature> &actor) {
 	if (!thing) {
@@ -56,40 +57,48 @@ void TrashHolder::addThing(int32_t, const std::shared_ptr<Thing> &thing) {
 		return;
 	}
 
-	const auto &item = thing->getItem();
-	if (!item) {
-		return;
-	}
-
-	if (item.get() == this || !item->hasProperty(CONST_PROP_MOVABLE)) {
-		return;
-	}
-
-	const ItemType &it = Item::items[id];
-	if (item->isHangable() && it.isGroundTile()) {
-		const std::shared_ptr<Tile> &tile = std::dynamic_pointer_cast<Tile>(getParent());
-		if (tile && tile->hasFlag(TILESTATE_SUPPORTS_HANGABLE)) {
+	if (const auto &item = thing->getItem()) {
+		if (item.get() == this || !item->hasProperty(CONST_PROP_MOVABLE)) {
 			return;
 		}
-	}
 
-	if (item->isCarpet() || item->getID() == ITEM_DECORATION_KIT) {
-		return;
-	}
+		const ItemType &it = Item::items[id];
+		if (item->isHangable() && it.isGroundTile()) {
+			const std::shared_ptr<Tile> &tile = std::dynamic_pointer_cast<Tile>(getParent());
+			if (tile && tile->hasFlag(TILESTATE_SUPPORTS_HANGABLE)) {
+				return;
+			}
+		}
 
-	if (item->getID() == ITEM_WATERBALL_SPLASH) {
-		return;
-	}
+		if (item->isCarpet() || item->getID() == ITEM_DECORATION_KIT) {
+			return;
+		}
 
-	if (item->getID() == ITEM_WATERBALL) {
-		g_game().transformItem(item, ITEM_WATERBALL_SPLASH);
-		return;
-	}
+		if(g_game().isSwimmingPool(shared_from_this(), getTile(), true))
+		{
+			if (item->getID() == ITEM_WATERBALL_SPLASH) {
+				return;
+			}
 
-	g_game().internalRemoveItem(item);
+			if (item->getID() == ITEM_WATERBALL) {
+				g_game().transformItem(item, ITEM_WATERBALL_SPLASH);
+				return;
+			}
+		}
 
-	if (it.magicEffect != CONST_ME_NONE) {
-		g_game().addMagicEffect(getPosition(), it.magicEffect);
+		g_game().internalRemoveItem(item);
+		if (effect != CONST_ME_NONE) {
+			g_game().addMagicEffect(getPosition(), effect);
+		}
+	} else if(g_game().isSwimmingPool(shared_from_this(), getTile(), false) && thing->getCreature()) {
+		const auto &player = thing->getCreature()->getPlayer();
+		if(player && player->getPosition() == player->getLastPosition())
+		{
+			//player has just logged in a swimming pool
+			Outfit_t outfit;
+			outfit.lookType = SWIMMING_OUTFIT;
+			g_game().createIllusion(player, outfit, -1);
+		}
 	}
 }
 
