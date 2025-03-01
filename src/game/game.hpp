@@ -210,7 +210,7 @@ public:
 	void checkSpecialTiles(const std::shared_ptr<Player> &player);
 
 	bool isSwimmingPool(const std::shared_ptr<Item> &item, const std::shared_ptr<Tile> &tile, bool checkProtection) const;
-	void createIllusion(const std::shared_ptr<Player> &player, const Outfit_t& outfit, int32_t time);
+	void createIllusion(const std::shared_ptr<Player> &player, const Outfit_t &outfit, int32_t time);
 
 	void addItemsClassification(ItemClassification* itemsClassification) {
 		itemsClassifications.push_back(itemsClassification);

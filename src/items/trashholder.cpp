@@ -74,8 +74,7 @@ void TrashHolder::addThing(int32_t, const std::shared_ptr<Thing> &thing) {
 			return;
 		}
 
-		if(g_game().isSwimmingPool(shared_from_this(), getTile(), true))
-		{
+		if (g_game().isSwimmingPool(shared_from_this(), getTile(), true)) {
 			if (item->getID() == ITEM_WATERBALL_SPLASH) {
 				return;
 			}
@@ -90,11 +89,10 @@ void TrashHolder::addThing(int32_t, const std::shared_ptr<Thing> &thing) {
 		if (effect != CONST_ME_NONE) {
 			g_game().addMagicEffect(getPosition(), effect);
 		}
-	} else if(g_game().isSwimmingPool(shared_from_this(), getTile(), false) && thing->getCreature()) {
+	} else if (g_game().isSwimmingPool(shared_from_this(), getTile(), false) && thing->getCreature()) {
 		const auto &player = thing->getCreature()->getPlayer();
-		if(player && player->getPosition() == player->getLastPosition())
-		{
-			//player has just logged in a swimming pool
+		if (player && player->getPosition() == player->getLastPosition()) {
+			// player has just logged in a swimming pool
 			Outfit_t outfit;
 			outfit.lookType = SWIMMING_OUTFIT;
 			g_game().createIllusion(player, outfit, -1);

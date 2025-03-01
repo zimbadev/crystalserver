@@ -11364,7 +11364,7 @@ bool Game::isSwimmingPool(const std::shared_ptr<Item> &item, const std::shared_p
 	return trashHolder && trashHolder->getEffect() == CONST_ME_LOSEENERGY && (!checkProtection || tile->getZoneType() == ZONE_PROTECTION || tile->getZoneType() == ZONE_NOPVP);
 }
 
-void Game::createIllusion(const std::shared_ptr<Player> &player, const Outfit_t& outfit, int32_t time) {
+void Game::createIllusion(const std::shared_ptr<Player> &player, const Outfit_t &outfit, int32_t time) {
 	if (!player) {
 		return;
 	}
