@@ -765,6 +765,10 @@ bool Npc::canWalkTo(const Position &fromPos, Direction dir) {
 		return false;
 	}
 
+	if (g_game().isSwimmingPool(nullptr, getTile(), false) != g_game().isSwimmingPool(nullptr, toTile, false)) {
+		return false;
+	}
+
 	if (!floorChange && (toTile->hasFlag(TILESTATE_FLOORCHANGE) || toTile->getTeleportItem())) {
 		return false;
 	}

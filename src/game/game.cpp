@@ -55,6 +55,7 @@
 #include "items/containers/rewards/rewardchest.hpp"
 #include "items/items.hpp"
 #include "items/items_classification.hpp"
+#include "items/trashholder.hpp"
 #include "lua/callbacks/event_callback.hpp"
 #include "lua/callbacks/events_callbacks.hpp"
 #include "lua/creature/actions.hpp"
@@ -11346,4 +11347,33 @@ void Game::checkSpecialTiles(const std::shared_ptr<Player> &player) {
 		player->setTown(freeTown);
 		g_saveManager().savePlayer(player);
 	}
+}
+
+bool Game::isSwimmingPool(const std::shared_ptr<Item> &item, const std::shared_ptr<Tile> &tile, bool checkProtection) const {
+	if (!tile) {
+		return false;
+	}
+
+	std::shared_ptr<TrashHolder> trashHolder = nullptr;
+	if (!item) {
+		trashHolder = tile->getTrashHolder();
+	} else {
+		trashHolder = item->getTrashHolder();
+	}
+
+	return trashHolder && trashHolder->getEffect() == CONST_ME_LOSEENERGY && (!checkProtection || tile->getZoneType() == ZONE_PROTECTION || tile->getZoneType() == ZONE_NOPVP);
+}
+
+void Game::createIllusion(const std::shared_ptr<Player> &player, const Outfit_t &outfit, int32_t time) {
+	if (!player) {
+		return;
+	}
+
+	auto outfitCondition = std::make_shared<ConditionOutfit>(CONDITIONID_COMBAT, CONDITION_OUTFIT, time, false, 0);
+	if (!outfitCondition) {
+		return;
+	}
+
+	outfitCondition->setOutfit(outfit);
+	player->addCondition(outfitCondition);
 }

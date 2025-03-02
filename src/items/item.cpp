@@ -76,7 +76,7 @@ std::shared_ptr<Item> Item::CreateItem(const uint16_t type, uint16_t count /*= 0
 		} else if (it.isDoor()) {
 			newItem = std::make_shared<Door>(type);
 		} else if (it.isTrashHolder()) {
-			newItem = std::make_shared<TrashHolder>(type);
+			newItem = std::make_shared<TrashHolder>(type, it.magicEffect);
 		} else if (it.isMailbox()) {
 			newItem = std::make_shared<Mailbox>(type);
 		} else if (it.isBed()) {

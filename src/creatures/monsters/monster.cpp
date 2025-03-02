@@ -2284,13 +2284,25 @@ void Monster::setSoulPitStack(uint8_t stack, bool isSummon /* = false */) {
 
 bool Monster::canWalkTo(Position pos, Direction moveDirection) {
 	pos = getNextPosition(moveDirection, pos);
-	if (isInSpawnRange(pos)) {
-		const auto &tile = g_game().map.getTile(pos);
-		if (tile && tile->getTopVisibleCreature(getMonster()) == nullptr && tile->queryAdd(0, getMonster(), 1, FLAG_PATHFINDING | FLAG_IGNOREFIELDDAMAGE) == RETURNVALUE_NOERROR) {
-			return true;
-		}
+
+	if (!isInSpawnRange(pos)) {
+		return false;
 	}
-	return false;
+
+	const auto &tile = g_game().map.getTile(pos);
+	if (!tile) {
+		return false;
+	}
+
+	if (g_game().isSwimmingPool(nullptr, getTile(), false) != g_game().isSwimmingPool(nullptr, tile, false)) {
+		return false;
+	}
+
+	if (tile->queryAdd(0, getMonster(), 1, FLAG_PATHFINDING | FLAG_IGNOREFIELDDAMAGE) != RETURNVALUE_NOERROR) {
+		return false;
+	}
+
+	return true;
 }
 
 void Monster::death(const std::shared_ptr<Creature> &) {
