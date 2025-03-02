@@ -9325,11 +9325,9 @@ void Player::triggerTranscendance() {
 	const double_t randomChance = uniform_random(0, 10000) / 100.;
 	if (getZoneType() != ZONE_PROTECTION && checkLastAggressiveActionWithin(2000) && ((OTSYS_TIME() / 1000) % 2) == 0 && chance > 0 && randomChance < chance) {
 		int64_t duration = g_configManager().getNumber(TRANSCENDANCE_AVATAR_DURATION);
-		const auto &outfitCondition = Condition::createCondition(CONDITIONID_COMBAT, CONDITION_OUTFIT, duration, 0)->static_self_cast<ConditionOutfit>();
 		Outfit_t outfit;
 		outfit.lookType = getVocation()->getAvatarLookType();
-		outfitCondition->setOutfit(outfit);
-		addCondition(outfitCondition);
+		g_game().createIllusion(static_self_cast<Player>(), outfit, duration);
 		wheel()->setOnThinkTimer(WheelOnThink_t::AVATAR_FORGE, OTSYS_TIME() + duration);
 		g_game().addMagicEffect(getPosition(), CONST_ME_AVATAR_APPEAR);
 
