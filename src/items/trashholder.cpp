@@ -17,7 +17,7 @@
 
 #include "items/trashholder.hpp"
 
-#include "creatures/creature.hpp"
+#include "creatures/players/player.hpp"
 #include "game/game.hpp"
 #include "utils/const.hpp"
 
