@@ -575,9 +575,12 @@ void Game::start(ServiceManager* manager) {
 		);
 	}
 
-	g_dispatcher().cycleEvent(
-		UPDATE_PLAYERS_ONLINE_DB, [this] { updatePlayersOnline(); }, "Game::updatePlayersOnline"
-	);
+	auto updatePlayersInterval = g_configManager().getNumber(UPDATE_PLAYERS_INTERVAL);
+	if (updatePlayersInterval > 0) {
+		g_dispatcher().cycleEvent(
+			updatePlayersInterval, [this] { updatePlayersOnline(); }, "Game::updatePlayersOnline"
+		);
+	}
 }
 
 GameState_t Game::getGameState() const {

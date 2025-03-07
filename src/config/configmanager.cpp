@@ -395,6 +395,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, DAYS_TO_CLOSE_BID, "daysToCloseBid", 7);
 	loadIntConfig(L, ANIMUS_MASTERY_MONSTERS_TO_INCREASE_XP_MULTIPLIER, "animusMasteryMonstersToIncreaseXpMultiplier", 10);
 	loadIntConfig(L, FREE_TOWN_ID, "freeTownId", 8);
+	loadIntConfig(L, UPDATE_PLAYERS_INTERVAL, "updatePlayersInterval", 10 * 60 * 1000);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");
