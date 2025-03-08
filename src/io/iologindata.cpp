@@ -441,13 +441,12 @@ void IOLoginData::removeGuidVIPGroupEntry(uint32_t accountId, uint32_t guid) {
 	g_database().executeQuery(query);
 }
 
-
 void IOLoginData::updateOnlineStatus(uint32_t guid, bool login) {
-    std::string query;
-    if (login) {
-        query = fmt::format("INSERT INTO `players_online` VALUES ({})", guid);
-    } else {
-        query = fmt::format("DELETE FROM `players_online` WHERE `player_id` = {}", guid);
-    }
-    g_database().executeQuery(query);
+	std::string query;
+	if (login) {
+		query = fmt::format("INSERT INTO `players_online` VALUES ({})", guid);
+	} else {
+		query = fmt::format("DELETE FROM `players_online` WHERE `player_id` = {}", guid);
+	}
+	g_database().executeQuery(query);
 }
