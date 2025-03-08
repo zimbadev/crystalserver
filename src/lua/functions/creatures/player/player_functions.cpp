@@ -3490,6 +3490,7 @@ int PlayerFunctions::luaPlayerSetGhostMode(lua_State* L) {
 				it.second->vip()->notifyStatusChange(player, VipStatus_t::OFFLINE);
 			}
 		}
+		IOLoginData::updateOnlineStatus(player->getGUID(), false);
 	} else {
 		for (const auto &it : g_game().getPlayers()) {
 			if (!it.second->isAccessPlayer()) {
@@ -3497,6 +3498,7 @@ int PlayerFunctions::luaPlayerSetGhostMode(lua_State* L) {
 				it.second->vip()->notifyStatusChange(player, status);
 			}
 		}
+		IOLoginData::updateOnlineStatus(player->getGUID(), true);
 	}
 	Lua::pushBoolean(L, true);
 	return 1;
