@@ -51,6 +51,7 @@ public:
 	static void removeVIPGroupEntry(uint8_t groupId, uint32_t accountId);
 	static void addGuidVIPGroupEntry(uint8_t groupId, uint32_t accountId, uint32_t guid);
 	static void removeGuidVIPGroupEntry(uint32_t accountId, uint32_t guid);
+	static void updateOnlineStatus(uint32_t guid, bool login);
 
 private:
 	static bool savePlayerGuard(const std::shared_ptr<Player> &player);
