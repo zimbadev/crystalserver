@@ -75,9 +75,9 @@ function createItem.onSay(player, words, param)
 		result = player:addItem(itemType:getId(), count, true, 0, CONST_SLOT_WHEREEVER, tier)
 	else
 		if itemType:getCharges() > 0 then
-            result = player:addItem(itemType:getId(), charges)
+			result = player:addItem(itemType:getId(), charges)
 		else
-            result = player:addItem(itemType:getId(), count)
+			result = player:addItem(itemType:getId(), count)
 		end
 	end
 
