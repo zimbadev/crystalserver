@@ -20,9 +20,9 @@ function gloothBag.onUse(player, item, fromPosition, target, toPosition, isHotke
 		if chance >= randomItem.chanceFrom and chance <= randomItem.chanceTo then
 			if randomItem.itemId then
 				local gift = randomItem.itemId
-				local count = randomItem.count or 1
+				local count = randomItem.count
 				if type(count) == "table" then
-					count = math.random(count[1], count[2])
+					count = ItemType(randomItem.itemId):getCharges()
 				end
 
 				player:addItem(gift, count)
