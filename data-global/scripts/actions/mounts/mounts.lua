@@ -46,6 +46,7 @@ local config = {
 	[12320] = { NAME = "Wailing Widow", ID = 1, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 40, FAIL_MSG = { { 1, "The widow has run away." }, { 2, "The widow has eaten the sweet bait." } }, SUCCESS_MSG = "You have tamed the widow.", ACHIEV = "Spin-Off" },
 	[21186] = { NAME = "Walker", ID = 43, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 2, "This walker is incompatible with your control unit." }, { 4, "This walker is incompatible with your control unit." } }, SUCCESS_MSG = "You tamed the walker.", ACHIEV = "Gear Up" },
 	[17858] = { NAME = "Water Buffalo", ID = 35, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 1, "The water buffalo got scared and ran away." }, { 3, "The water buffalo is trying to nibble." } }, SUCCESS_MSG = "You tamed a water buffalo.", ACHIEV = "Swamp Beast" },
+	[37397] = { NAME = "wind-up loco", ID = 194, BREAK = false, TYPE = TYPE_ITEM, CHANCE = 100, FAIL_MSG = {}, SUCCESS_MSG = "You wind the small locomotive up. It starts to move ... and grows!", ACHIEV = "Engine Driver" },
 	[12802] = { NAME = "Wild Horse", ID = 17, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 15, FAIL_MSG = { { 1, "The horse runs away." }, { 2, "The horse ate the oats." } }, SUCCESS_MSG = "You have tamed the horse.", ACHIEV = "Lucky Horseshoe" },
 	[34258] = { NAME = "White Lion", ID = 174, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 50, FAIL_MSG = { { 1, "The White Lion runs away." }, { 2, "The White Lion ate the flower." } }, SUCCESS_MSG = "You have tamed the white lion.", ACHIEV = "Well Roared, Lion!" },
 }
@@ -145,6 +146,9 @@ function mounts.onUse(cid, item, fromPosition, itemEx, toPosition)
 			if rand > mount.CHANCE then
 				doFailAction(cid, mount, toPosition, item, itemEx, mount.BREAK)
 				return true
+			end
+			if itemEx.itemid == 37398 then
+				Item(itemEx.uid):remove(1)
 			end
 			if mount.ACHIEV then
 				player:addAchievement(mount.ACHIEV)
