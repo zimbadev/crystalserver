@@ -20,12 +20,10 @@ This project was created a long time ago to distribute a stable and safe distro 
 To connect to the server and to take a stable experience, you can
 use the [Game Client](https://github.com/jprzimba/gameclient/releases) or [mehah's OTCLient](https://github.com/mehah/otclient).
 
-You can see the complete change log for Crystal Server at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/CHANGELOG.md).
-
 If you want edit the map, use the [Remere's Map Editor](https://github.com/jprzimba/rme-crystalserver/releases).
 
 You are subject to our code of conduct, read
-at [this link](https://github.com/jprzimba/crystalserver/blob/main/markdowns/CODE_OF_CONDUCT.md).
+at [this link](https://github.com/jprzimba/crystalserver/blob/main/CODE_OF_CONDUCT.md).
 
 You can use your own tool to generate Monster Loot and Monster Elements at [this link](https://crystalsever.vercel.app).
 
