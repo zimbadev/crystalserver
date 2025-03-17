@@ -43,7 +43,7 @@ public:
 	bool onRecvMessage(NetworkMessage &msg);
 	bool sendRecvMessageCallback(NetworkMessage &msg);
 	virtual void onRecvFirstMessage(NetworkMessage &msg) = 0;
-	virtual void onConnect() { }
+	virtual void sendLoginChallenge() { }
 
 	bool isConnectionExpired() const;
 
