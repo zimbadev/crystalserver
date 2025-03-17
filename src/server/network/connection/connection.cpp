@@ -113,8 +113,7 @@ void Connection::closeSocket() {
 void Connection::accept(Protocol_ptr protocolPtr) {
 	connectionState = CONNECTION_STATE_IDENTIFYING;
 	protocol = std::move(protocolPtr);
-
-	g_dispatcher().addEvent([eventProtocol = protocol] { eventProtocol->onConnect(); }, __FUNCTION__, std::chrono::milliseconds(CONNECTION_WRITE_TIMEOUT * 1000).count());
+	g_dispatcher().addEvent([eventProtocol = protocol] { eventProtocol->sendLoginChallenge(); }, __FUNCTION__, std::chrono::milliseconds(CONNECTION_WRITE_TIMEOUT * 1000).count());
 
 	acceptInternal(false);
 }
@@ -218,7 +217,7 @@ void Connection::parseHeader(const std::error_code &error) {
 	}
 
 	uint16_t size = m_msg.getLengthHeader();
-	if (std::dynamic_pointer_cast<ProtocolGame>(protocol)) {
+	if (std::static_pointer_cast<ProtocolGame>(protocol)) {
 		size = (size * 8) + 4;
 	}
 
