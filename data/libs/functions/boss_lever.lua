@@ -118,10 +118,10 @@ end
 ---@param player Player
 ---@return number
 function BossLever:lastEncounterTime(player)
-	if not player or self.disableCooldown then
-		return 0
-	end
-	return player:getBossCooldown(self.name)
+    if not player or not player:isPlayer() or self.disableCooldown then
+        return 0
+    end
+    return player:getBossCooldown(self.name)
 end
 
 ---@param self BossLever
@@ -147,115 +147,117 @@ end
 ---@param player Player
 ---@return boolean
 function BossLever:onUse(player)
-	local monsterName = MonsterType(self.name):getName()
-	local isParticipant = false
-	for _, v in ipairs(self.playerPositions) do
-		if Position(v.pos) == player:getPosition() then
-			isParticipant = true
-		end
-	end
-	if not isParticipant then
-		return false
-	end
+    local monsterName = MonsterType(self.name):getName()
+    local isParticipant = false
+    for _, v in ipairs(self.playerPositions) do
+        if Position(v.pos) == player:getPosition() then
+            isParticipant = true
+        end
+    end
+    if not isParticipant then
+        return false
+    end
 
-	if self.disabled then
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The boss is temporarily disabled.")
-		return true
-	end
+    if self.disabled then
+        player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The boss is temporarily disabled.")
+        return true
+    end
 
-	local zone = self:getZone()
-	if zone:countPlayers(IgnoredByMonsters) > 0 then
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "There's already someone fighting with " .. monsterName .. ".")
-		return true
-	end
+    local zone = self:getZone()
+    if zone:countPlayers(IgnoredByMonsters) > 0 then
+        player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "There's already someone fighting with " .. monsterName .. ".")
+        return true
+    end
 
-	self.lever = Lever()
-	local lever = self.lever
-	lever:setPositions(self.playerPositions)
-	lever:setCondition(function(creature)
-		if not creature or not creature:isPlayer() then
-			return true
-		end
+    self.lever = Lever()
+    local lever = self.lever
+    lever:setPositions(self.playerPositions)
+    lever:setCondition(function(creature)
+        if not creature or not creature:isPlayer() then
+            return true
+        end
 
-		local checkAccountType = creature:getAccountType() < ACCOUNT_TYPE_GAMEMASTER
-		local isGameTester = player:hasFlag(PlayerFlag_IsGameTester)
-		if checkAccountType and not isGameTester and creature:getLevel() < self.requiredLevel then
-			local message = "All players need to be level " .. self.requiredLevel .. " or higher."
-			creature:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
-			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
-			return false
-		end
+        local checkAccountType = creature:getAccountType() < ACCOUNT_TYPE_GAMEMASTER
+        local isGameTester = player:hasFlag(PlayerFlag_IsGameTester)
+        if checkAccountType and not isGameTester and creature:getLevel() < self.requiredLevel then
+            local message = "All players need to be level " .. self.requiredLevel .. " or higher."
+            creature:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
+            player:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
+            return false
+        end
 
-		local infoPositions = lever:getInfoPositions()
-		if creature:getGroup():getId() < GROUP_TYPE_GOD and checkAccountType and not isGameTester and self:lastEncounterTime(creature) > os.time() then
-			for _, posInfo in pairs(infoPositions) do
-				local currentPlayer = posInfo.creature
-				if currentPlayer then
-					local lastEncounter = self:lastEncounterTime(currentPlayer)
-					local currentTime = os.time()
-					if lastEncounter and currentTime < lastEncounter then
-						local timeLeft = lastEncounter - currentTime
-						local timeMessage = Game.getTimeInWords(timeLeft) .. " to face " .. self.name .. " again!"
-						local message = "You have to wait " .. timeMessage
+        local infoPositions = lever:getInfoPositions()
+        if creature:getGroup():getId() < GROUP_TYPE_GOD and checkAccountType and not isGameTester and self:lastEncounterTime(creature) > os.time() then
+            for _, posInfo in pairs(infoPositions) do
+                local currentPlayer = posInfo.creature
+                if currentPlayer and currentPlayer:isPlayer() then
+                    local lastEncounter = self:lastEncounterTime(currentPlayer)
+                    local currentTime = os.time()
+                    if lastEncounter and currentTime < lastEncounter then
+                        local timeLeft = lastEncounter - currentTime
+                        local timeMessage = Game.getTimeInWords(timeLeft) .. " to face " .. self.name .. " again!"
+                        local message = "You have to wait " .. timeMessage
 
-						if currentPlayer ~= player then
-							player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "A member in your team has to wait " .. timeMessage)
-						end
+                        if currentPlayer ~= player then
+                            player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "A member in your team has to wait " .. timeMessage)
+                        end
 
-						currentPlayer:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
-						currentPlayer:getPosition():sendMagicEffect(CONST_ME_POFF)
-					end
-				end
-			end
-			return false
-		end
+                        currentPlayer:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
+                        currentPlayer:getPosition():sendMagicEffect(CONST_ME_POFF)
+                    end
+                end
+            end
+            return false
+        end
 
-		return self.onUseExtra(creature, infoPositions) ~= false
-	end)
+        return self.onUseExtra(creature, infoPositions) ~= false
+    end)
 
-	lever:checkPositions()
-	if #lever:getPlayers() < self.minPlayers then
-		lever:executeOnPlayers(function(creature)
-			local message = string.format("You need %d qualified players for this challenge.", self.minPlayers)
-			creature:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
-			creature:getPosition():sendMagicEffect(CONST_ME_POFF)
-		end)
-		return false
-	end
-	if lever:checkConditions() then
-		zone:removeMonsters()
-		for _, monster in pairs(self.monsters) do
-			Game.createMonster(monster.name, monster.pos, true, true)
-		end
-		if self.createBoss then
-			if not self.createBoss() then
-				return true
-			end
-		elseif self.bossPosition then
-			logger.debug("BossLever:onUse - creating boss: {}", self.name)
-			local monster = Game.createMonster(self.name, self.bossPosition, true, true)
-			if not monster then
-				return true
-			end
-			monster:registerEvent("BossLeverOnDeath")
-		end
-		lever:teleportPlayers()
-		if self.encounter then
-			local encounter = Encounter(self.encounter)
-			encounter:reset()
-			encounter:start()
-		end
-		self:setLastEncounterTime(os.time() + self.timeToFightAgain)
-		if self.timeoutEvent then
-			stopEvent(self.timeoutEvent)
-			self.timeoutEvent = nil
-		end
-		self.timeoutEvent = addEvent(function(zn)
-			zn:refresh()
-			zn:removePlayers()
-		end, self.timeToDefeat * 1000, zone)
-	end
-	return true
+    lever:checkPositions()
+    if #lever:getPlayers() < self.minPlayers then
+        lever:executeOnPlayers(function(creature)
+            if creature:isPlayer() then
+                local message = string.format("You need %d qualified players for this challenge.", self.minPlayers)
+                creature:sendTextMessage(MESSAGE_EVENT_ADVANCE, message)
+                creature:getPosition():sendMagicEffect(CONST_ME_POFF)
+            end
+        end)
+        return false
+    end
+    if lever:checkConditions() then
+        zone:removeMonsters()
+        for _, monster in pairs(self.monsters) do
+            Game.createMonster(monster.name, monster.pos, true, true)
+        end
+        if self.createBoss then
+            if not self.createBoss() then
+                return true
+            end
+        elseif self.bossPosition then
+            logger.debug("BossLever:onUse - creating boss: {}", self.name)
+            local monster = Game.createMonster(self.name, self.bossPosition, true, true)
+            if not monster then
+                return true
+            end
+            monster:registerEvent("BossLeverOnDeath")
+        end
+        lever:teleportPlayers()
+        if self.encounter then
+            local encounter = Encounter(self.encounter)
+            encounter:reset()
+            encounter:start()
+        end
+        self:setLastEncounterTime(os.time() + self.timeToFightAgain)
+        if self.timeoutEvent then
+            stopEvent(self.timeoutEvent)
+            self.timeoutEvent = nil
+        end
+        self.timeoutEvent = addEvent(function(zn)
+            zn:refresh()
+            zn:removePlayers()
+        end, self.timeToDefeat * 1000, zone)
+    end
+    return true
 end
 
 ---@param Zone
