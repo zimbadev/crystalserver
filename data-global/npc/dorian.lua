@@ -185,7 +185,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 6 then
-			if player:removeItem(7369, 1) then
+			if player:removeItem(7870, 1) then
 				player:setStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Mission05, 2)
 				player:setStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Questline, 6)
 				npcHandler:say("That goblet is hardly worth all this trouble but we had to insist on our payment. However, I assume you are eager for more missions, so just ask.", npc, creature)
