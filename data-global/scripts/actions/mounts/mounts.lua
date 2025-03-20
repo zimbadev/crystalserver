@@ -17,7 +17,7 @@ local config = {
 	[31576] = { NAME = "Gryphon", ID = 144, BREAK = false, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 1, "Gryphon has run away." } }, SUCCESS_MSG = "You have tamed the gryphon.", ACHIEV = "Gryphon Rider" },
 	[30171] = { NAME = "Hibernal Moth", ID = 131, BREAK = false, TYPE = TYPE_MONSTER, CHANCE = 20, FAIL_MSG = { { 2, "The hibernal moth is not interested in your lantern and flies away." }, { 4, "The hibernal moth is not interested in your lantern and flies away." } }, SUCCESS_MSG = "You have tamed a hibernal moth.", ACHIEV = "Moth Whisperer" },
 	[12305] = { NAME = "inoperative tin lizzard", ID = 8, BREAK = true, TYPE = TYPE_ITEM, CHANCE = 40, FAIL_MSG = { { 2, "The key broke inside." } }, SUCCESS_MSG = "You wind up the tin lizzard.", ACHIEV = "Knock on Wood" },
-	[12801] = { NAME = "inoperative uniwheel", ID = 15, BREAK = true, TYPE = TYPE_ITEM, CHANCE = 40, FAIL_MSG = { { 3, "The oil have no effect." }, { 2, "Splosh!" } }, SUCCESS_MSG = "The strange wheel seems to vibrate and slowly starts turning continuously.", ACHIEV = "Stuntman" },
+	[12801] = { NAME = "inoperative uniwheel", ID = 15, BREAK = true, TYPE = TYPE_ITEM, CHANCE = 40, FAIL_MSG = { { 3, "The oil have no effect." }, { 2, "Splosh! It looks like most of the special oil this can was holding was spilt without any effect." } }, SUCCESS_MSG = "Vroooomratatatatatatat. The strange wheel seems to vibrate and slowly starts turning continuously.", ACHIEV = "Stuntman" },
 	[16153] = { NAME = "Ironblight", ID = 29, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 1, "The ironblight managed to run away." }, { 2, "Oh no! The magnet lost its power!" }, { 3, "The ironblight is fighting against the magnetic force." } }, SUCCESS_MSG = "You tamed the ironblight.", ACHIEV = "Magnetised" },
 	[30170] = { NAME = "Lacewing Moth", ID = 130, BREAK = false, TYPE = TYPE_MONSTER, CHANCE = 20, FAIL_MSG = { { 2, "The lacewing moth is not interested in your lantern and flies away." }, { 4, "The lacewing moth is not interested in your lantern and flies away." } }, SUCCESS_MSG = "You have tamed a lancewing moth.", ACHIEV = "Lacewing Catcher" },
 	[14143] = { NAME = "Ladybug", ID = 27, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 1, "The ladybug got scared and ran away." }, { 3, "The ladybug is trying to nibble." } }, SUCCESS_MSG = "You tame a lady bug.", ACHIEV = "Lovely Dots" },
@@ -47,7 +47,7 @@ local config = {
 	[21186] = { NAME = "Walker", ID = 43, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 2, "This walker is incompatible with your control unit." }, { 4, "This walker is incompatible with your control unit." } }, SUCCESS_MSG = "You tamed the walker.", ACHIEV = "Gear Up" },
 	[17858] = { NAME = "Water Buffalo", ID = 35, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 1, "The water buffalo got scared and ran away." }, { 3, "The water buffalo is trying to nibble." } }, SUCCESS_MSG = "You tamed a water buffalo.", ACHIEV = "Swamp Beast" },
 	[37397] = { NAME = "wind-up loco", ID = 194, BREAK = false, TYPE = TYPE_ITEM, CHANCE = 100, FAIL_MSG = {}, SUCCESS_MSG = "You wind the small locomotive up. It starts to move ... and grows!", ACHIEV = "Engine Driver" },
-	[12802] = { NAME = "Wild Horse", ID = 17, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 15, FAIL_MSG = { { 1, "The horse runs away." }, { 2, "The horse ate the oats." } }, SUCCESS_MSG = "You have tamed the horse.", ACHIEV = "Lucky Horseshoe" },
+	[12802] = { NAME = "Wild Horse", ID = 17, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 15, FAIL_MSG = { { 1, "Weeeheeeehee. With its last strength the horse the horse runs to safety." }, { 2, "The wild horse happily munches the sugar oat and runs on." } }, SUCCESS_MSG = "*snort* The horse eats the sugar oat and accepts you as its new master.", ACHIEV = "Lucky Horseshoe" },
 	[34258] = { NAME = "White Lion", ID = 174, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 50, FAIL_MSG = { { 1, "The White Lion runs away." }, { 2, "The White Lion ate the flower." } }, SUCCESS_MSG = "You have tamed the white lion.", ACHIEV = "Well Roared, Lion!" },
 }
 
@@ -143,7 +143,7 @@ function mounts.onUse(cid, item, fromPosition, itemEx, toPosition)
 		--Item Mount
 	elseif targetItem ~= nil and mount.TYPE == TYPE_ITEM then
 		if mount.NAME == targetItem:getName() then
-			if rand > mount.CHANCE then
+			if rand < mount.CHANCE then
 				doFailAction(cid, mount, toPosition, item, itemEx, mount.BREAK)
 				return true
 			end
