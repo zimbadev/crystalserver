@@ -2825,6 +2825,7 @@ uint16_t Player::getDisplayXpBoostPercent() const {
 
 void Player::setXpBoostPercent(uint16_t percent) {
 	xpBoostPercent = percent;
+	sendStats();
 }
 
 uint16_t Player::getStaminaXpBoost() const {
