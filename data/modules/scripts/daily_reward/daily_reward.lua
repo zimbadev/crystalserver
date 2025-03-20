@@ -454,25 +454,29 @@ function Player.selectDailyReward(self, msg)
 		-- Adding items to store inbox
 		local inbox = self:getStoreInbox()
 		local inboxItems = inbox:getItems()
-		if not inbox or #inboxItems >= inbox:getMaxCapacity() then
+		if not inbox or #inboxItems + totalCounter > inbox:getMaxCapacity() then
 			self:sendError("You do not have enough space in your store inbox.")
 			return false
 		end
 
 		local description = ""
 		for k, v in ipairs(items) do
-			if dailyTable.itemCharges then
-				local inboxItem = inbox:addItem(v.itemId, dailyTable.itemCharges) -- adding charges for each item
+			local itemType = ItemType(v.itemId)
+			if itemType:isStackable() then
+				local inboxItem = inbox:addItem(v.itemId, v.count)
 				if inboxItem then
 					inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
 				end
+				description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= columnsPicked and ", " or ".")
 			else
-				local inboxItem = inbox:addItem(v.itemId, v.count) -- adding single item w/o charges
-				if inboxItem then
-					inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+				for i = 1, v.count do
+					local inboxItem = inbox:addItem(v.itemId, 1)
+					if inboxItem then
+						inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+					end
 				end
+				description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= columnsPicked and ", " or ".")
 			end
-			description = description .. "" .. rewardCount .. "x " .. ItemType(v.itemId):getName() .. (k ~= columnsPicked and ", " or ".")
 		end
 		dailyRewardMessage = "Picked items: " .. description
 	elseif dailyTable.type == DAILY_REWARD_TYPE_XP_BOOST then
