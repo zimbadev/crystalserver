@@ -160,6 +160,27 @@ bool Outfits::loadFromXml() {
 			}
 		}
 
+		if (auto imbuingNode = outfitNode.child("imbuing")) {
+			for (auto imbuing : imbuingNode.children()) {
+				std::string imbuingName = imbuing.name();
+				int32_t imbuingValue = imbuing.attribute("value").as_int();
+
+				if (imbuingName == "lifeLeechChance" || imbuingName == "lifeleechchance") {
+					outfit->lifeLeechChance += imbuingValue;
+				} else if (imbuingName == "lifeleechAmount" || imbuingName == "lifeleechamount") {
+					outfit->lifeLeechAmount += imbuingValue;
+				} else if (imbuingName == "manaLeechChance" || imbuingName == "manaleechchance") {
+					outfit->manaLeechChance += imbuingValue;
+				} else if (imbuingName == "manaLeechAmount" || imbuingName == "manaleechamount") {
+					outfit->manaLeechAmount += imbuingValue;
+				} else if (imbuingName == "criticalChance" || imbuingName == "criticalchance") {
+					outfit->criticalChance += imbuingValue;
+				} else if (imbuingName == "criticalDamage" || imbuingName == "criticaldamage") {
+					outfit->criticalDamage += imbuingValue;
+				}
+			}
+		}
+
 		outfits[type].emplace_back(outfit);
 	}
 
@@ -280,6 +301,33 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 		}
 	}
 
+	// Apply life leech
+	if (outfit->lifeLeechChance > 0) {
+		player->setVarSkill(SKILL_LIFE_LEECH_CHANCE, outfit->lifeLeechChance);
+	}
+
+	if (outfit->lifeLeechAmount > 0) {
+		player->setVarSkill(SKILL_LIFE_LEECH_AMOUNT, outfit->lifeLeechAmount);
+	}
+
+	// Apply mana leech
+	if (outfit->manaLeechChance > 0) {
+		player->setVarSkill(SKILL_MANA_LEECH_CHANCE, outfit->manaLeechChance);
+	}
+
+	if (outfit->manaLeechAmount > 0) {
+		player->setVarSkill(SKILL_MANA_LEECH_AMOUNT, outfit->manaLeechAmount);
+	}
+
+	// Apply critical hit
+	if (outfit->criticalChance > 0) {
+		player->setVarSkill(SKILL_CRITICAL_HIT_CHANCE, outfit->criticalChance);
+	}
+
+	if (outfit->criticalDamage > 0) {
+		player->setVarSkill(SKILL_CRITICAL_HIT_DAMAGE, outfit->criticalDamage);
+	}
+
 	// Apply stats
 	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
 		if (outfit->stats[s]) {
@@ -331,6 +379,33 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 		if (outfit->skills[i]) {
 			player->setVarSkill(static_cast<skills_t>(i), -outfit->skills[i]);
 		}
+	}
+
+	// Remove life leech
+	if (outfit->lifeLeechChance > 0) {
+		player->setVarSkill(SKILL_LIFE_LEECH_CHANCE, -outfit->lifeLeechChance);
+	}
+
+	if (outfit->lifeLeechAmount > 0) {
+		player->setVarSkill(SKILL_LIFE_LEECH_AMOUNT, -outfit->lifeLeechAmount);
+	}
+
+	// Remove mana leech
+	if (outfit->manaLeechChance > 0) {
+		player->setVarSkill(SKILL_MANA_LEECH_CHANCE, -outfit->manaLeechChance);
+	}
+
+	if (outfit->manaLeechAmount > 0) {
+		player->setVarSkill(SKILL_MANA_LEECH_AMOUNT, -outfit->manaLeechAmount);
+	}
+
+	// Remove critical hit
+	if (outfit->criticalChance > 0) {
+		player->setVarSkill(SKILL_CRITICAL_HIT_CHANCE, -outfit->criticalChance);
+	}
+
+	if (outfit->criticalDamage > 0) {
+		player->setVarSkill(SKILL_CRITICAL_HIT_DAMAGE, -outfit->criticalDamage);
 	}
 
 	// Remove stats

@@ -17,6 +17,14 @@
 			<cap value="100" />
 			<magicLevel value="1" />
 		</stats>
+		<imbuing>
+			<lifeleechchance value="100" />
+			<lifeleechamount value="100" />
+			<manaleechchance value="100" />
+			<manaleechamount value="100" />
+			<criticalchance value="100" />
+			<criticaldamage value="100" />
+		</imbuing>
 	</outfit>
 	-->
 	<!-- Female -->
@@ -143,23 +151,7 @@
 	<outfit type="0" looktype="1777" name="Beekeeper" premium="no" unlocked="no" enabled="yes" from="store" />
 
 	<!-- Male -->
-	<outfit type="1" looktype="128" name="Citizen" premium="no" unlocked="yes" enabled="yes" healthGain="5" healthTicks="5" manaGain="5" manaTicks="5" manaShield="no" speed="220" attackSpeed="500">
-		<skills>
-			<fist value="1" />
-			<club value="2" />
-			<axe value="3" />
-			<sword value="4" />
-			<distance value="5" />
-			<shielding value="6" />
-			<fishing value="7" />
-		</skills>
-		<stats>
-			<maxHealth value="5" />
-			<maxMana value="5" />
-			<cap value="100" />
-			<magicLevel value="1" />
-		</stats>
-	</outfit>
+	<outfit type="1" looktype="128" name="Citizen" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="1" looktype="129" name="Hunter" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="1" looktype="130" name="Mage" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="1" looktype="131" name="Knight" premium="no" unlocked="yes" enabled="yes" />
