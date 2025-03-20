@@ -255,7 +255,7 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		LuaVariant var;
 		var.type = VARIANT_NUMBER;
 		var.number = target->getID();
-		executeUseWeapon(player, var);			
+		executeUseWeapon(player, var);
 	} else {
 		CombatDamage damage;
 		const WeaponType_t weaponType = item->getWeaponType();
