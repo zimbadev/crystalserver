@@ -25,6 +25,10 @@ static constexpr int32_t NETWORKMESSAGE_MAXSIZE = 65500;
 
 static constexpr int32_t INPUTMESSAGE_MAXSIZE = 4096;
 
+static constexpr int32_t CHANNEL_GUILD = 0x00;
+static constexpr int32_t CHANNEL_PARTY = 0x01;
+static constexpr int32_t CHANNEL_PRIVATE = 0xFFFF;
+
 // This is in miliseconds
 static constexpr int32_t EVENT_IMBUEMENT_INTERVAL = 1000;
 static constexpr uint8_t IMBUEMENT_MAX_TIER = 3;

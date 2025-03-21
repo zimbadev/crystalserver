@@ -461,12 +461,6 @@ enum GuildLevel_t : uint8_t {
 	GUILDLEVEL_LEADER = 3
 };
 
-enum Channels_t {
-	CHANNEL_GUILD = 0x00,
-	CHANNEL_PARTY = 0x01,
-	CHANNEL_PRIVATE = 0xFFFF
-};
-
 enum Skulls_t : uint8_t {
 	SKULL_NONE = 0,
 	SKULL_YELLOW = 1,
