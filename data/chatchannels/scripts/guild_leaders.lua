@@ -1,5 +1,5 @@
 function canJoin(player)
-	return player:getGuildLevel() == 3 or player:getGroup():getAccess()
+	return player:getGuildLevel() == GUILDLEVEL_LEADER or player:getGroup():getAccess()
 end
 
 function onSpeak(player, type, message)

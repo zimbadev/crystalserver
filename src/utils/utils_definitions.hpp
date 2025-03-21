@@ -454,6 +454,13 @@ enum PartyAnalyzerAction_t : uint8_t {
 	PARTYANALYZERACTION_PRICEVALUE = 2,
 };
 
+enum GuildLevel_t : uint8_t {
+	GUILDLEVEL_NONE = 0,
+	GUILDLEVEL_MEMBER = 1,
+	GUILDLEVEL_VICE = 2,
+	GUILDLEVEL_LEADER = 3
+};
+
 enum Skulls_t : uint8_t {
 	SKULL_NONE = 0,
 	SKULL_YELLOW = 1,

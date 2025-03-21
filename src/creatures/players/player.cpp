@@ -11025,7 +11025,7 @@ BidErrorMessage Player::canBidHouse(uint32_t houseId) {
 		return NotEnoughMoney;
 	}
 	if (house->isGuildhall()) {
-		if (getGuildRank() && getGuildRank()->level != 3) {
+		if (getGuildRank() && getGuildRank()->level != GUILDLEVEL_LEADER) {
 			return Guildhall;
 		}
 		if (getGuild() && getGuild()->getBankBalance() < (house->getRent() + house->getHighestBid())) {

@@ -282,7 +282,7 @@ bool PlayerTitle::checkMap(uint32_t amount) const {
 bool PlayerTitle::checkOther(const std::string &name) const {
 	if (name == "Guild Leader") {
 		const auto &rank = m_player.getGuildRank();
-		return rank && rank->level == 3;
+		return rank && rank->level == GUILDLEVEL_LEADER;
 	} else if (name == "Proconsul of Iksupan") {
 		// Win Ancient Aucar Outfits complete so fight with Atab and be teleported to the arena.
 	} else if (name == "Admirer of the Crown") {

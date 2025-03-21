@@ -582,7 +582,7 @@ bool Chat::talkToChannel(const std::shared_ptr<Player> &player, SpeakClasses typ
 
 	if (channelId == CHANNEL_GUILD) {
 		const auto &rank = player->getGuildRank();
-		if (rank && rank->level > 1) {
+		if (rank && rank->level > GUILDLEVEL_MEMBER) {
 			type = TALKTYPE_CHANNEL_O;
 		} else if (type != TALKTYPE_CHANNEL_Y) {
 			type = TALKTYPE_CHANNEL_Y;
