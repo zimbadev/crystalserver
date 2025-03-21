@@ -121,6 +121,7 @@ void LuaEnums::init(lua_State* L) {
 	initWheelEnums(L);
 	initAttributeConditionSubIdEnums(L);
 	initConcoctionsEnum(L);
+	initGuildsEnum(L);
 }
 
 void LuaEnums::initOthersEnums(lua_State* L) {
@@ -469,6 +470,13 @@ void LuaEnums::initConcoctionsEnum(lua_State* L) {
 	registerEnumNamespace(L, luaNamespace, Concoction_t::HolyAmplification);
 	registerEnumNamespace(L, luaNamespace, Concoction_t::DeathAmplification);
 	registerEnumNamespace(L, luaNamespace, Concoction_t::PhysicalAmplification);
+}
+
+void LuaEnums::initGuildsEnum(lua_State* L) {
+	registerEnum(L, GUILDLEVEL_NONE);
+	registerEnum(L, GUILDLEVEL_MEMBER);
+	registerEnum(L, GUILDLEVEL_VICE);
+	registerEnum(L, GUILDLEVEL_LEADER);
 }
 
 void LuaEnums::initConstMeEnums(lua_State* L) {

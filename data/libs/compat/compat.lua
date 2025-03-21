@@ -1054,6 +1054,17 @@ function getGuildId(guildName)
 	return guildId
 end
 
+function getGuildNameById(id)
+	local result = db.storeQuery("SELECT `name` FROM `guilds` WHERE `id` = " .. id .. ";")
+	if not result then
+		return nil
+	end
+
+	local guildName = Result.getString(result, "name")
+	Result.free(result)
+	return guildName
+end
+
 function getHouseName(houseId)
 	local h = House(houseId)
 	return h and h:getName() or false
