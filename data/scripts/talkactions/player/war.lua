@@ -125,8 +125,7 @@ function handleWarInvite(player, guildId, enemy, enemyName, duration)
 	local beginning, ending = os.time(), warHours
 	ending = ending ~= 0 and (beginning + (ending * 3600)) or 0
 
-	db.query("INSERT INTO `guild_wars` (`guild1`, `guild2`, `name1`, `name2`, `started`, `ended`) VALUES (" ..
-			guildId .. ", " .. enemy .. ", " .. db.escapeString(getPlayerGuildName(player)) .. ", " .. db.escapeString(enemyName) .. ", " .. beginning .. ", " .. ending .. ");")
+	db.query("INSERT INTO `guild_wars` (`guild1`, `guild2`, `name1`, `name2`, `started`, `ended`) VALUES (" .. guildId .. ", " .. enemy .. ", " .. db.escapeString(getPlayerGuildName(player)) .. ", " .. db.escapeString(enemyName) .. ", " .. beginning .. ", " .. ending .. ");")
 	broadcastMessage(getPlayerGuildName(player) .. " has invited " .. enemyName .. " for war that will last " .. warHours .. " hours.", MESSAGE_ADMINISTRATOR)
 end
 
