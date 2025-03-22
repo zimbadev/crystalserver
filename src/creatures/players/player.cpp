@@ -3000,6 +3000,16 @@ bool Player::canDoPotionAction() const {
 	return nextPotionAction <= OTSYS_TIME();
 }
 
+void Player::setNextExAction(int64_t time) {
+	if (time > nextExAction) {
+		nextExAction = time;
+	}
+}
+
+bool Player::canDoExAction() const {
+	return nextExAction <= OTSYS_TIME();
+}
+
 void Player::cancelPush() {
 	if (actionTaskEventPush != 0) {
 		g_dispatcher().stopEvent(actionTaskEventPush);

@@ -302,7 +302,6 @@ bool ConfigManager::load() {
 	loadIntConfig(L, MAX_DAMAGE_REFLECTION, "maxDamageReflection", 200);
 	loadIntConfig(L, MAX_ELEMENTAL_RESISTANCE, "maxElementalResistance", 200);
 	loadIntConfig(L, MAX_MARKET_OFFERS_AT_A_TIME_PER_PLAYER, "maxMarketOffersAtATimePerPlayer", 100);
-	loadIntConfig(L, MARKET_ACTION_EXAUSTRION, "marketActionExhaustation", 1000);
 	loadIntConfig(L, MAX_MESSAGEBUFFER, "maxMessageBuffer", 4);
 	loadIntConfig(L, MAX_PACKETS_PER_SECOND, "maxPacketsPerSecond", 25);
 	loadIntConfig(L, MAX_PLAYERS_OUTSIDE_PZ_PER_ACCOUNT, "maxPlayersOutsidePZPerAccount", 1);
@@ -396,7 +395,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, DAYS_TO_CLOSE_BID, "daysToCloseBid", 7);
 	loadIntConfig(L, ANIMUS_MASTERY_MONSTERS_TO_INCREASE_XP_MULTIPLIER, "animusMasteryMonstersToIncreaseXpMultiplier", 10);
 	loadIntConfig(L, FREE_TOWN_ID, "freeTownId", 8);
-	loadIntConfig(L, VIP_ACTION_EXAUSTRION, "vipListActionExhaustation", 1000);
+	loadIntConfig(L, UI_ACTIONS_DELAY_INTERVAL, "uiActionsDelay", 1000);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");

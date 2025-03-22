@@ -973,6 +973,9 @@ public:
 	void setNextPotionAction(int64_t time);
 	bool canDoPotionAction() const;
 
+	void setNextExAction(int64_t time);
+	bool canDoExAction() const;
+
 	void cancelPush();
 
 	void setModuleDelay(uint8_t byteortype, int16_t delay);
@@ -1492,6 +1495,7 @@ private:
 	int64_t lastPong;
 	int64_t lastLoad;
 	int64_t nextAction = 0;
+	int64_t nextExAction = 0;
 	int64_t nextPotionAction = 0;
 	int64_t lastQuickLootNotification = 0;
 	int64_t lastWalking = 0;
