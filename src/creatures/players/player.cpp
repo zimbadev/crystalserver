@@ -3010,6 +3010,16 @@ bool Player::canDoExAction() const {
 	return nextExAction <= OTSYS_TIME();
 }
 
+void Player::setNextMarketAction(int64_t time) {
+	if (time > nextMarketAction) {
+		nextMarketAction = time;
+	}
+}
+
+bool Player::canDoMarketAction() const {
+	return nextMarketAction <= OTSYS_TIME();
+}
+
 void Player::cancelPush() {
 	if (actionTaskEventPush != 0) {
 		g_dispatcher().stopEvent(actionTaskEventPush);

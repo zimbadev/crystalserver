@@ -976,6 +976,9 @@ public:
 	void setNextExAction(int64_t time);
 	bool canDoExAction() const;
 
+	void setNextMarketAction(int64_t time);
+	bool canDoMarketAction() const;
+
 	void cancelPush();
 
 	void setModuleDelay(uint8_t byteortype, int16_t delay);
@@ -1497,6 +1500,7 @@ private:
 	int64_t nextAction = 0;
 	int64_t nextExAction = 0;
 	int64_t nextPotionAction = 0;
+	int64_t nextMarketAction = 0;
 	int64_t lastQuickLootNotification = 0;
 	int64_t lastWalking = 0;
 	uint64_t asyncOngoingTasks = 0;

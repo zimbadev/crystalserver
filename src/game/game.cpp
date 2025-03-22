@@ -9146,7 +9146,7 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 		return;
 	}
 
-	if (!player->canDoExAction()) {
+	if (!player->canDoMarketAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -9221,7 +9221,7 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 	player->sendMarketBrowseItem(it.id, buyOffers, sellOffers, tier);
 
 	// Exhausted for create offert in the market
-	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
+	player->setNextMarketAction(OTSYS_TIME() + g_configManager().getNumber(MARKET_ACTIONS_DELAY_INTERVAL) - 10);
 	g_saveManager().savePlayer(player);
 }
 
@@ -9235,7 +9235,7 @@ void Game::playerCancelMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		return;
 	}
 
-	if (!player->canDoExAction()) {
+	if (!player->canDoMarketAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -9305,7 +9305,7 @@ void Game::playerCancelMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 	// Send market window again for update stats
 	player->sendMarketEnter(player->getLastDepotId());
 	// Exhausted for cancel offer in the market
-	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
+	player->setNextMarketAction(OTSYS_TIME() + g_configManager().getNumber(MARKET_ACTIONS_DELAY_INTERVAL) - 10);
 	g_saveManager().savePlayer(player);
 }
 
@@ -9322,7 +9322,7 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		return;
 	}
 
-	if (!player->canDoExAction()) {
+	if (!player->canDoMarketAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -9582,7 +9582,7 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 	offer.timestamp += marketOfferDuration;
 	player->sendMarketAcceptOffer(offer);
 	// Exhausted for accept offer in the market
-	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
+	player->setNextMarketAction(OTSYS_TIME() + g_configManager().getNumber(MARKET_ACTIONS_DELAY_INTERVAL) - 10);
 	g_saveManager().savePlayer(player);
 }
 
