@@ -5994,7 +5994,12 @@ void Game::playerRequestAddVip(uint32_t playerId, const std::string &name) {
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	auto vipListExhaustation = g_configManager().getNumber(VIP_ACTION_EXAUSTRION);
+	if (vipListExhaustation < 0) {
+		vipListExhaustation = 1000;
+	}
+
+	if (player->isUIExhausted(vipListExhaustation)) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -6039,7 +6044,12 @@ void Game::playerRequestRemoveVip(uint32_t playerId, uint32_t guid) {
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	auto vipListExhaustation = g_configManager().getNumber(VIP_ACTION_EXAUSTRION);
+	if (vipListExhaustation < 0) {
+		vipListExhaustation = 1000;
+	}
+
+	if (player->isUIExhausted(vipListExhaustation)) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -6054,7 +6064,12 @@ void Game::playerRequestEditVip(uint32_t playerId, uint32_t guid, const std::str
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	auto vipListExhaustation = g_configManager().getNumber(VIP_ACTION_EXAUSTRION);
+	if (vipListExhaustation < 0) {
+		vipListExhaustation = 1000;
+	}
+
+	if (player->isUIExhausted(vipListExhaustation)) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -9100,7 +9115,12 @@ bool checkCanInitCreateMarketOffer(const std::shared_ptr<Player> &player, uint8_
 		return false;
 	}
 
-	if (player->isUIExhausted(1000)) {
+	auto marketActionExhaustation = g_configManager().getNumber(MARKET_ACTION_EXAUSTRION);
+	if (marketActionExhaustation < 0) {
+		marketActionExhaustation = 1000;
+	}
+
+	if (player->isUIExhausted(marketActionExhaustation)) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return false;
 	}
@@ -9229,7 +9249,12 @@ void Game::playerCancelMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		return;
 	}
 
-	if (player->isUIExhausted(1000)) {
+	auto marketActionExhaustation = g_configManager().getNumber(MARKET_ACTION_EXAUSTRION);
+	if (marketActionExhaustation < 0) {
+		marketActionExhaustation = 1000;
+	}
+
+	if (player->isUIExhausted(marketActionExhaustation)) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -9316,7 +9341,12 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		return;
 	}
 
-	if (player->isUIExhausted(1000)) {
+	auto marketActionExhaustation = g_configManager().getNumber(MARKET_ACTION_EXAUSTRION);
+	if (marketActionExhaustation < 0) {
+		marketActionExhaustation = 1000;
+	}
+
+	if (player->isUIExhausted(marketActionExhaustation)) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
