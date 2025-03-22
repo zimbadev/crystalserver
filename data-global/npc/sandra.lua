@@ -117,7 +117,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			if player:getStorageValue(Storage.Quest.U7_8.MageAndSummonerOutfits.AddonBelt) == 1 and player:removeItem(5958, 1) then
 				npcHandler:say("Congratulations! Here, from now on you can wear our lovely potion belt as accessory.", npc, creature)
 				player:setStorageValue(Storage.Quest.U7_8.MageAndSummonerOutfits.AddonBelt, 2)
-				player:addOutfitAddon(130, 1) --male mage addon
+				player:addOutfitAddon(138, 1) --female mage addon
 				player:addOutfitAddon(133, 1) --male summoner addon
 				player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
 			else
