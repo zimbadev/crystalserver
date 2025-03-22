@@ -1039,10 +1039,6 @@ public:
 	void removeItemImbuementStats(const Imbuement* imbuement);
 	void updateImbuementTrackerStats() const;
 
-	// User Interface action exhaustion
-	bool isUIExhausted(uint32_t exhaustionTime = 250) const;
-	void updateUIExhausted();
-
 	bool isQuickLootListedItem(const std::shared_ptr<Item> &item) const;
 
 	bool updateKillTracker(const std::shared_ptr<Container> &corpse, const std::string &playerName, const Outfit_t &creatureOutfit) const;
@@ -1493,7 +1489,6 @@ private:
 	int64_t skullTicks = 0;
 	int64_t lastWalkthroughAttempt = 0;
 	int64_t lastToggleMount = 0;
-	int64_t lastUIInteraction = 0;
 	int64_t lastPing;
 	int64_t lastPong;
 	int64_t lastLoad;

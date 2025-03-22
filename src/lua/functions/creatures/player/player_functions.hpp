@@ -325,8 +325,8 @@ class PlayerFunctions {
 
 	static int luaPlayerGetForgeSlivers(lua_State* L);
 	static int luaPlayerGetForgeCores(lua_State* L);
-	static int luaPlayerIsUIExhausted(lua_State* L);
-	static int luaPlayerUpdateUIExhausted(lua_State* L);
+	static int luaPlayerCanDoExAction(lua_State* L);
+	static int luaPlayerSetNextExAction(lua_State* L);
 
 	static int luaPlayerSetFaction(lua_State* L);
 	static int luaPlayerGetFaction(lua_State* L);

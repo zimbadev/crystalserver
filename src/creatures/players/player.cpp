@@ -2961,16 +2961,6 @@ void Player::updateImbuementTrackerStats() const {
 	}
 }
 
-// User Interface action exhaustion
-
-bool Player::isUIExhausted(uint32_t exhaustionTime) const {
-	return (OTSYS_TIME() - lastUIInteraction < exhaustionTime);
-}
-
-void Player::updateUIExhausted() {
-	lastUIInteraction = OTSYS_TIME();
-}
-
 bool Player::isQuickLootListedItem(const std::shared_ptr<Item> &item) const {
 	if (!item) {
 		return false;
