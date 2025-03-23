@@ -54,3 +54,10 @@ Before [creating a pull request](https://github.com/jprzimba/crystalserver/pulls
 * There are people that doesn't play the game on the official server, so explain your changes to help understand what
   are you changing and why.
 * Avoid opening a Pull Request to just update one line of a XML file.
+
+
+### Download Latest Executable
+* Follow the steps in the video below to download the latest executable available, compiled by GitHub Actions.
+
+https://github.com/user-attachments/assets/58089db8-c86b-43ed-9601-556af2405a80
+
