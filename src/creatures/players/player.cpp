@@ -3749,10 +3749,9 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 					removeBlessing(i, 1);
 				}
 
-				const auto &playerAmulet = getThing(CONST_SLOT_NECKLACE);
-				bool usingAol = (playerAmulet && playerAmulet->getItem()->getID() == ITEM_AMULETOFLOSS);
-				if (usingAol) {
-					removeItemOfType(ITEM_AMULETOFLOSS, 1, -1);
+				const auto &aol = getEquippedItem(CONST_SLOT_NECKLACE);
+				if (aol && Item::items[aol->getID()].preventLoss != 0) {
+					removeItemOfType(ITEM_AMULETOFLOSS, 1, -1, false);
 				}
 			}
 		}
