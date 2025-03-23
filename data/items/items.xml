@@ -6975,7 +6975,7 @@
 		</attribute>
 	</item>
 	<item id="3057" article="an" name="amulet of loss">
-		<attribute key="charges" value="1"/>
+		<attribute key="preventloss" value="1"/>
 		<attribute key="weight" value="420"/>
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="necklace"/>
