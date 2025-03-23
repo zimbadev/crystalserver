@@ -347,8 +347,9 @@ void PlayerFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "Player", "getForgeSlivers", PlayerFunctions::luaPlayerGetForgeSlivers);
 	Lua::registerMethod(L, "Player", "getForgeCores", PlayerFunctions::luaPlayerGetForgeCores);
-	Lua::registerMethod(L, "Player", "isUIExhausted", PlayerFunctions::luaPlayerIsUIExhausted);
-	Lua::registerMethod(L, "Player", "updateUIExhausted", PlayerFunctions::luaPlayerUpdateUIExhausted);
+
+	Lua::registerMethod(L, "Player", "canDoExAction", PlayerFunctions::luaPlayerCanDoExAction);
+	Lua::registerMethod(L, "Player", "setNextExAction", PlayerFunctions::luaPlayerSetNextExAction);
 
 	Lua::registerMethod(L, "Player", "setFaction", PlayerFunctions::luaPlayerSetFaction);
 	Lua::registerMethod(L, "Player", "getFaction", PlayerFunctions::luaPlayerGetFaction);
@@ -4011,8 +4012,8 @@ int PlayerFunctions::luaPlayerGetFaction(lua_State* L) {
 	return 1;
 }
 
-int PlayerFunctions::luaPlayerIsUIExhausted(lua_State* L) {
-	// player:isUIExhausted()
+int PlayerFunctions::luaPlayerCanDoExAction(lua_State* L) {
+	// player:canDoExAction()
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (!player) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
@@ -4020,21 +4021,20 @@ int PlayerFunctions::luaPlayerIsUIExhausted(lua_State* L) {
 		return 0;
 	}
 
-	const uint16_t time = Lua::getNumber<uint16_t>(L, 2);
-	Lua::pushBoolean(L, player->isUIExhausted(time));
+	Lua::pushBoolean(L, player->canDoExAction());
 	return 1;
 }
 
-int PlayerFunctions::luaPlayerUpdateUIExhausted(lua_State* L) {
-	// player:updateUIExhausted(exhaustionTime = 250)
+int PlayerFunctions::luaPlayerSetNextExAction(lua_State* L) {
+	// player:setNextExAction(time)
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (!player) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
 		Lua::pushBoolean(L, false);
 		return 0;
 	}
-
-	player->updateUIExhausted();
+	const uint16_t time = Lua::getNumber<uint16_t>(L, 2);
+	player->setNextExAction(time);
 	Lua::pushBoolean(L, true);
 	return 1;
 }

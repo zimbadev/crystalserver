@@ -973,6 +973,12 @@ public:
 	void setNextPotionAction(int64_t time);
 	bool canDoPotionAction() const;
 
+	void setNextExAction(int64_t time);
+	bool canDoExAction() const;
+
+	void setNextMarketAction(int64_t time);
+	bool canDoMarketAction() const;
+
 	void cancelPush();
 
 	void setModuleDelay(uint8_t byteortype, int16_t delay);
@@ -1032,10 +1038,6 @@ public:
 	void addItemImbuementStats(const Imbuement* imbuement);
 	void removeItemImbuementStats(const Imbuement* imbuement);
 	void updateImbuementTrackerStats() const;
-
-	// User Interface action exhaustion
-	bool isUIExhausted(uint32_t exhaustionTime = 250) const;
-	void updateUIExhausted();
 
 	bool isQuickLootListedItem(const std::shared_ptr<Item> &item) const;
 
@@ -1487,12 +1489,13 @@ private:
 	int64_t skullTicks = 0;
 	int64_t lastWalkthroughAttempt = 0;
 	int64_t lastToggleMount = 0;
-	int64_t lastUIInteraction = 0;
 	int64_t lastPing;
 	int64_t lastPong;
 	int64_t lastLoad;
 	int64_t nextAction = 0;
+	int64_t nextExAction = 0;
 	int64_t nextPotionAction = 0;
+	int64_t nextMarketAction = 0;
 	int64_t lastQuickLootNotification = 0;
 	int64_t lastWalking = 0;
 	uint64_t asyncOngoingTasks = 0;

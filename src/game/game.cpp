@@ -5384,8 +5384,7 @@ void Game::playerBuyItem(uint32_t playerId, uint16_t itemId, uint8_t count, uint
 		return;
 	}
 
-	// Check npc say exhausted
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -5407,8 +5406,8 @@ void Game::playerBuyItem(uint32_t playerId, uint16_t itemId, uint8_t count, uint
 		}
 	}
 
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 	merchant->onPlayerBuyItem(player, it.id, count, amount, ignoreCap, inBackpacks);
-	player->updateUIExhausted();
 }
 
 void Game::playerSellItem(uint32_t playerId, uint16_t itemId, uint8_t count, uint16_t amount, bool ignoreEquipped) {
@@ -5436,14 +5435,13 @@ void Game::playerSellItem(uint32_t playerId, uint16_t itemId, uint8_t count, uin
 		return;
 	}
 
-	// Check npc say exhausted
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
 	merchant->onPlayerSellItem(player, it.id, count, amount, ignoreEquipped);
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerCloseShop(uint32_t playerId) {
@@ -5855,13 +5853,13 @@ void Game::playerRequestDepotItems(uint32_t playerId) {
 		return;
 	}
 
-	if (player->isUIExhausted(500)) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
 	player->requestDepotItems();
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerRequestCloseDepotSearch(uint32_t playerId) {
@@ -5880,13 +5878,13 @@ void Game::playerRequestDepotSearchItem(uint32_t playerId, uint16_t itemId, uint
 		return;
 	}
 
-	if (player->isUIExhausted(500)) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
 	player->requestDepotSearchItem(itemId, tier);
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerRequestDepotSearchRetrieve(uint32_t playerId, uint16_t itemId, uint8_t tier, uint8_t type) {
@@ -5895,13 +5893,13 @@ void Game::playerRequestDepotSearchRetrieve(uint32_t playerId, uint16_t itemId, 
 		return;
 	}
 
-	if (player->isUIExhausted(500)) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
 	player->retrieveAllItemsFromDepotSearch(itemId, tier, type == 1);
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerRequestOpenContainerFromDepotSearch(uint32_t playerId, const Position &pos) {
@@ -5910,13 +5908,13 @@ void Game::playerRequestOpenContainerFromDepotSearch(uint32_t playerId, const Po
 		return;
 	}
 
-	if (player->isUIExhausted(500)) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
 	player->openContainerFromDepotSearch(pos);
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerCancelAttackAndFollow(uint32_t playerId) {
@@ -5994,6 +5992,11 @@ void Game::playerRequestAddVip(uint32_t playerId, const std::string &name) {
 		return;
 	}
 
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
+		return;
+	}
+
 	std::shared_ptr<Player> vipPlayer = getPlayerByName(name);
 	if (!vipPlayer) {
 		uint32_t guid;
@@ -6024,6 +6027,8 @@ void Game::playerRequestAddVip(uint32_t playerId, const std::string &name) {
 			player->vip()->add(vipPlayer->getGUID(), vipPlayer->getName(), VipStatus_t::OFFLINE);
 		}
 	}
+
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerRequestRemoveVip(uint32_t playerId, uint32_t guid) {
@@ -6032,7 +6037,13 @@ void Game::playerRequestRemoveVip(uint32_t playerId, uint32_t guid) {
 		return;
 	}
 
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
+		return;
+	}
+
 	player->vip()->remove(guid);
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerRequestEditVip(uint32_t playerId, uint32_t guid, const std::string &description, uint32_t icon, bool notify, std::vector<uint8_t> vipGroupsId) {
@@ -6041,12 +6052,23 @@ void Game::playerRequestEditVip(uint32_t playerId, uint32_t guid, const std::str
 		return;
 	}
 
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
+		return;
+	}
+
 	player->vip()->edit(guid, description, icon, notify, vipGroupsId);
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerApplyImbuement(uint32_t playerId, uint16_t imbuementid, uint8_t slot, bool protectionCharm) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
+		return;
+	}
+
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
@@ -6071,11 +6093,17 @@ void Game::playerApplyImbuement(uint32_t playerId, uint16_t imbuementid, uint8_t
 	}
 
 	player->onApplyImbuement(imbuement, item, slot, protectionCharm);
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerClearImbuement(uint32_t playerid, uint8_t slot) {
 	const auto &player = getPlayerByID(playerid);
 	if (!player) {
+		return;
+	}
+
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
@@ -6089,6 +6117,7 @@ void Game::playerClearImbuement(uint32_t playerid, uint8_t slot) {
 	}
 
 	player->onClearImbuement(item, slot);
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerCloseImbuementWindow(uint32_t playerid) {
@@ -6128,7 +6157,13 @@ void Game::playerRequestOutfit(uint32_t playerId) {
 		return;
 	}
 
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
+		return;
+	}
+
 	player->sendOutfitWindow();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerToggleMount(uint32_t playerId, bool mount) {
@@ -6137,7 +6172,13 @@ void Game::playerToggleMount(uint32_t playerId, bool mount) {
 		return;
 	}
 
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
+		return;
+	}
+
 	player->toggleMount(mount);
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, uint8_t isMountRandomized /* = 0*/) {
@@ -6221,6 +6262,12 @@ void Game::playerShowQuestLog(uint32_t playerId) {
 		return;
 	}
 
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
+		return;
+	}
+
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 	g_events().eventPlayerOnRequestQuestLog(player);
 	g_callbacks().executeCallback(EventCallback_t::playerOnRequestQuestLog, &EventCallback::playerOnRequestQuestLog, player);
 }
@@ -6408,8 +6455,7 @@ void Game::playerSpeakToNpc(const std::shared_ptr<Player> &player, const std::st
 		return;
 	}
 
-	// Check npc say exhausted
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -6422,7 +6468,7 @@ void Game::playerSpeakToNpc(const std::shared_ptr<Player> &player, const std::st
 		spectator->getNpc()->onCreatureSay(player, TALKTYPE_PRIVATE_PN, text);
 	}
 
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 std::shared_ptr<Task> Game::createPlayerTask(uint32_t delay, std::function<void(void)> f, const std::string &context) const {
@@ -8865,8 +8911,7 @@ void Game::playerNpcGreet(uint32_t playerId, uint32_t npcId) {
 		return;
 	}
 
-	// Check npc say exhausted
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -8887,7 +8932,7 @@ void Game::playerNpcGreet(uint32_t playerId, uint32_t npcId) {
 		internalCreatureSay(player, TALKTYPE_PRIVATE_PN, "sail", false, &npcsSpectators);
 	}
 
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerLeaveMarket(uint32_t playerId) {
@@ -9057,11 +9102,6 @@ bool checkCanInitCreateMarketOffer(const std::shared_ptr<Player> &player, uint8_
 		return false;
 	}
 
-	if (player->isUIExhausted(1000)) {
-		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
-		return false;
-	}
-
 	if (it.id == 0 || it.wareId == 0) {
 		offerStatus << "Failed to load offer or item id";
 		return false;
@@ -9099,6 +9139,11 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 	// Make sure everything is ok before the create market offer starts
 	if (!checkCanInitCreateMarketOffer(player, type, it, amount, price, offerStatus)) {
 		g_logger().error("{} - Player {} had an error on init offer on the market, error code: {}", __FUNCTION__, player->getName(), offerStatus.str());
+		return;
+	}
+
+	if (!player->canDoMarketAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
@@ -9172,7 +9217,7 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 	player->sendMarketBrowseItem(it.id, buyOffers, sellOffers, tier);
 
 	// Exhausted for create offert in the market
-	player->updateUIExhausted();
+	player->setNextMarketAction(OTSYS_TIME() + g_configManager().getNumber(MARKET_ACTIONS_DELAY_INTERVAL) - 10);
 	g_saveManager().savePlayer(player);
 }
 
@@ -9186,7 +9231,7 @@ void Game::playerCancelMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		return;
 	}
 
-	if (player->isUIExhausted(1000)) {
+	if (!player->canDoMarketAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -9256,7 +9301,7 @@ void Game::playerCancelMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 	// Send market window again for update stats
 	player->sendMarketEnter(player->getLastDepotId());
 	// Exhausted for cancel offer in the market
-	player->updateUIExhausted();
+	player->setNextMarketAction(OTSYS_TIME() + g_configManager().getNumber(MARKET_ACTIONS_DELAY_INTERVAL) - 10);
 	g_saveManager().savePlayer(player);
 }
 
@@ -9273,7 +9318,7 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		return;
 	}
 
-	if (player->isUIExhausted(1000)) {
+	if (!player->canDoMarketAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -9533,7 +9578,7 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 	offer.timestamp += marketOfferDuration;
 	player->sendMarketAcceptOffer(offer);
 	// Exhausted for accept offer in the market
-	player->updateUIExhausted();
+	player->setNextMarketAction(OTSYS_TIME() + g_configManager().getNumber(MARKET_ACTIONS_DELAY_INTERVAL) - 10);
 	g_saveManager().savePlayer(player);
 }
 
@@ -9608,12 +9653,10 @@ void Game::playerForgeFuseItems(uint32_t playerId, ForgeAction_t actionType, uin
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
-
-	player->updateUIExhausted();
 
 	uint8_t coreCount = (usedCore ? 1 : 0) + (reduceTierLoss ? 1 : 0);
 	auto baseSuccess = static_cast<uint8_t>(g_configManager().getNumber(FORGE_BASE_SUCCESS_RATE));
@@ -9626,6 +9669,7 @@ void Game::playerForgeFuseItems(uint32_t playerId, ForgeAction_t actionType, uin
 	auto chance = uniform_random(0, 10000);
 	uint8_t bonus = convergence ? 0 : forgeBonus(chance);
 
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 	player->forgeFuseItems(actionType, firstItemId, tier, secondItemId, success, reduceTierLoss, convergence, bonus, coreCount);
 }
 
@@ -9635,12 +9679,12 @@ void Game::playerForgeTransferItemTier(uint32_t playerId, ForgeAction_t actionTy
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 	player->forgeTransferItemTier(actionType, donorItemId, tier, receiveItemId, convergence);
 }
 
@@ -9650,12 +9694,12 @@ void Game::playerForgeResourceConversion(uint32_t playerId, ForgeAction_t action
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 	player->forgeResourceConversion(actionType);
 }
 
@@ -9665,12 +9709,12 @@ void Game::playerBrowseForgeHistory(uint32_t playerId, uint8_t page) {
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 	player->forgeHistory(page);
 }
 
@@ -9680,12 +9724,10 @@ void Game::playerBosstiarySlot(uint32_t playerId, uint8_t slotId, uint32_t selec
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
-
-	player->updateUIExhausted();
 
 	uint32_t bossIdSlot = player->getSlotBossId(slotId);
 
@@ -9698,6 +9740,7 @@ void Game::playerBosstiarySlot(uint32_t playerId, uint8_t slotId, uint32_t selec
 		player->addRemoveTime();
 	}
 
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 	player->setSlotBossId(slotId, selectedBossId);
 }
 
@@ -9742,7 +9785,7 @@ void Game::playerSetMonsterPodium(uint32_t playerId, uint32_t monsterRaceId, con
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -9808,7 +9851,7 @@ void Game::playerSetMonsterPodium(uint32_t playerId, uint32_t monsterRaceId, con
 		spectator->getPlayer()->sendUpdateTileItem(tile, pos, item);
 	}
 
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerRotatePodium(uint32_t playerId, const Position &pos, uint8_t stackPos, const uint16_t itemId) {
@@ -9944,13 +9987,13 @@ void Game::playerOpenWheel(uint32_t playerId, uint32_t ownerId) {
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
 	player->wheel()->sendOpenWheelWindow(ownerId);
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerSaveWheel(uint32_t playerId, NetworkMessage &msg) {
@@ -9959,12 +10002,12 @@ void Game::playerSaveWheel(uint32_t playerId, NetworkMessage &msg) {
 		return;
 	}
 
-	if (player->isUIExhausted(1000)) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
 
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 	player->wheel()->saveSlotPointsOnPressSaveButton(msg);
 }
 
@@ -9974,7 +10017,7 @@ void Game::playerWheelGemAction(uint32_t playerId, NetworkMessage &msg) {
 		return;
 	}
 
-	if (player->isUIExhausted()) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -10004,7 +10047,7 @@ void Game::playerWheelGemAction(uint32_t playerId, NetworkMessage &msg) {
 			g_logger().error("[{}] player {} is trying to do invalid action {} on wheel", __FUNCTION__, player->getName(), action);
 			break;
 	}
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 /* Player Methods end
