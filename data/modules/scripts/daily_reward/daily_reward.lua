@@ -454,7 +454,7 @@ function Player.selectDailyReward(self, msg)
 		-- Adding items to store inbox
 		local inbox = self:getStoreInbox()
 		local inboxItems = inbox:getItems()
-		if not inbox or #inboxItems + totalCounter > inbox:getMaxCapacity() then
+		if not inbox or #inboxItems + #items > inbox:getMaxCapacity() then
 			self:sendError("You do not have enough space in your store inbox.")
 			return false
 		end
@@ -462,21 +462,40 @@ function Player.selectDailyReward(self, msg)
 		local description = ""
 		for k, v in ipairs(items) do
 			local itemType = ItemType(v.itemId)
-			if itemType:isStackable() then
-				local inboxItem = inbox:addItem(v.itemId, v.count)
-				if inboxItem then
-					inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
-				end
-				description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= columnsPicked and ", " or ".")
-			else
-				for i = 1, v.count do
-					local inboxItem = inbox:addItem(v.itemId, 1)
+			if dailyTable.itemCharges then
+				-- apply charges to non stackable items
+				if not itemType:isStackable() then
+					for i = 1, v.count do
+						local inboxItem = inbox:addItem(v.itemId, 1)
+						if inboxItem then
+							inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+							inboxItem:setAttribute(ITEM_ATTRIBUTE_CHARGES, dailyTable.itemCharges) -- Cargas SOLO aquí
+						end
+					end
+				else
+					-- add stackable items
+					local inboxItem = inbox:addItem(v.itemId, v.count)
 					if inboxItem then
 						inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
-						inboxItem:setAttribute(ITEM_ATTRIBUTE_CHARGES, 500)
 					end
 				end
-				description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= columnsPicked and ", " or ".")
+				description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= #items and ", " or ".")
+			else
+				-- items without charges defined with normal behaivor
+				if itemType:isStackable() then
+					local inboxItem = inbox:addItem(v.itemId, v.count)
+					if inboxItem then
+						inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+					end
+				else
+					for i = 1, v.count do
+						local inboxItem = inbox:addItem(v.itemId, 1)
+						if inboxItem then
+							inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+						end
+					end
+				end
+				description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= #items and ", " or ".")
 			end
 		end
 		dailyRewardMessage = "Picked items: " .. description
@@ -499,7 +518,7 @@ function Player.selectDailyReward(self, msg)
 	if dailyRewardMessage then
 		-- Registering history
 		DailyReward.insertHistory(self:getGuid(), self:getDayStreak(), "Claimed reward no. \z
-            " .. self:getDayStreak() + 1 .. ". " .. dailyRewardMessage)
+			" .. self:getDayStreak() + 1 .. ". " .. dailyRewardMessage)
 		DailyReward.processReward(playerId, target)
 	end
 
