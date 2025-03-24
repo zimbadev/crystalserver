@@ -585,6 +585,10 @@ void Game::setWorldType(WorldType_t type) {
 }
 
 const std::unique_ptr<TeamFinder> &Game::getTeamFinder(const std::shared_ptr<Player> &player) const {
+	if (!player) {
+		return TeamFinderNull;
+	}
+
 	auto it = teamFinderMap.find(player->getGUID());
 	if (it != teamFinderMap.end()) {
 		return it->second;
@@ -594,6 +598,10 @@ const std::unique_ptr<TeamFinder> &Game::getTeamFinder(const std::shared_ptr<Pla
 }
 
 const std::unique_ptr<TeamFinder> &Game::getOrCreateTeamFinder(const std::shared_ptr<Player> &player) {
+	if (!player) {
+		return TeamFinderNull;
+	}
+
 	auto it = teamFinderMap.find(player->getGUID());
 	if (it != teamFinderMap.end()) {
 		return it->second;
