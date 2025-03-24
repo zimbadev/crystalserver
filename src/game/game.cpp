@@ -11253,19 +11253,28 @@ void Game::playerCyclopediaHouseRejectTransfer(uint32_t playerId, uint32_t house
 }
 
 bool Game::processBankAuction(std::shared_ptr<Player> player, const std::shared_ptr<House> &house, uint64_t bid, bool replace /* = false*/) {
-	if (!replace && player->getBankBalance() < (house->getRent() + bid)) {
+	if (!player || !house) {
 		return false;
 	}
-	if (player->getBankBalance() < bid) {
+
+	if (bid <= 0) {
 		return false;
 	}
+
 	uint64_t balance = player->getBankBalance();
+	if (!replace && balance < (house->getRent() + bid)) {
+		return false;
+	}
+	if (balance < bid) {
+		return false;
+	}
+
 	if (replace) {
 		player->setBankBalance(balance - (bid - house->getInternalBid()));
 	} else {
 		player->setBankBalance(balance - (house->getRent() + bid));
 	}
-	player->sendResourceBalance(RESOURCE_BANK, player->getBankBalance());
+	player->sendResourceBalance(RESOURCE_BANK, balance);
 	if (house->getBidderName() != player->getName()) {
 		const auto otherPlayer = g_game().getPlayerByName(house->getBidderName());
 		if (!otherPlayer) {
