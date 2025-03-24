@@ -389,121 +389,140 @@ function Player.sendCollectionResource(self, byte, value)
 end
 
 function Player.selectDailyReward(self, msg)
-    local playerId = self:getId()
+	local playerId = self:getId()
 
-    if DailyReward.isRewardTaken(playerId) and not DailyReward.testMode then
-        self:sendError("You have already collected your daily reward.")
-        return false
-    end
+	if DailyReward.isRewardTaken(playerId) and not DailyReward.testMode then
+		self:sendError("You have already collected your daily reward.")
+		return false
+	end
 
-    local target = msg:getByte() -- 0 -> shrine / 1 -> tibia panel
-    if not DailyReward.isShrine(target) then
-        if self:getCollectionTokens() < 1 then
-            self:sendError("You do not have enough collection tokens to proceed.")
-            return false
-        end
-        self:setCollectionTokens(self:getCollectionTokens() - 1)
-    end
+	local target = msg:getByte() -- 0 -> shrine / 1 -> tibia panel
+	if not DailyReward.isShrine(target) then
+		if self:getCollectionTokens() < 1 then
+			self:sendError("You do not have enough collection tokens to proceed.")
+			return false
+		end
+		self:setCollectionTokens(self:getCollectionTokens() - 1)
+	end
 
-    local dailyTable = DailyReward.rewards[self:getDayStreak() + 1]
-    if not dailyTable then
-        self:sendError("Something went wrong and we cannot process this request.")
-        return false
-    end
+	local dailyTable = DailyReward.rewards[self:getDayStreak() + 1]
+	if not dailyTable then
+		self:sendError("Something went wrong and we cannot process this request.")
+		return false
+	end
 
-    local rewardCount = dailyTable.freeAccount
-    if (configManager.getBoolean(configKeys.VIP_SYSTEM_ENABLED) and self:isVip()) or self:isPremium() then
-        rewardCount = dailyTable.premiumAccount
-    end
+	local rewardCount = dailyTable.freeAccount
+	if (configManager.getBoolean(configKeys.VIP_SYSTEM_ENABLED) and self:isVip()) or self:isPremium() then
+		rewardCount = dailyTable.premiumAccount
+	end
 
-    local dailyRewardMessage = false
+	local dailyRewardMessage = false
 
-    -- Items as reward
-    if dailyTable.type == DAILY_REWARD_TYPE_ITEM then
-        local items = {}
-        local possibleItems = DailyRewardItems[self:getVocation():getBaseId()]
-        if dailyTable.items then
-            possibleItems = dailyTable.items
-        end
+	-- Items as reward
+	if dailyTable.type == DAILY_REWARD_TYPE_ITEM then
+		local items = {}
+		local possibleItems = DailyRewardItems[self:getVocation():getBaseId()]
+		if dailyTable.items then
+			possibleItems = dailyTable.items
+		end
 
-        -- Creating items table
-        local columnsPicked = msg:getByte() -- Columns picked
-        local orderedCounter = 0
-        local totalCounter = 0
-        for i = 1, columnsPicked do
-            local itemId = msg:getU16()
-            local count = msg:getByte()
-            orderedCounter = orderedCounter + count
-            for index, val in ipairs(possibleItems) do
-                if val == itemId then
-                    items[i] = { itemId = itemId, count = count }
-                    totalCounter = totalCounter + count
-                    break
-                end
-            end
-        end
+		-- Creating items table
+		local columnsPicked = msg:getByte() -- Columns picked
+		local orderedCounter = 0
+		local totalCounter = 0
+		for i = 1, columnsPicked do
+			local itemId = msg:getU16()
+			local count = msg:getByte()
+			orderedCounter = orderedCounter + count
+			for index, val in ipairs(possibleItems) do
+				if val == itemId then
+					items[i] = { itemId = itemId, count = count }
+					totalCounter = totalCounter + count
+					break
+				end
+			end
+		end
 
-        if totalCounter > rewardCount then
-            logger.info("Player with name {} is trying to get totalCounter: {} more than rewardCount: {}!", self:getName(), totalCounter, rewardCount)
-        end
-        if totalCounter ~= orderedCounter then
-            logger.error("Player with name {} is trying to get wrong daily reward", self:getName())
-            return false
-        end
+		if totalCounter > rewardCount then
+			logger.info("Player with name {} is trying to get totalCounter: {} more than rewardCount: {}!", self:getName(), totalCounter, rewardCount)
+		end
+		if totalCounter ~= orderedCounter then
+			logger.error("Player with name {} is trying to get wrong daily reward", self:getName())
+			return false
+		end
 
-        -- Adding items to store inbox
-        local inbox = self:getStoreInbox()
-        local inboxItems = inbox:getItems()
-        if not inbox or #inboxItems + totalCounter > inbox:getMaxCapacity() then
-            self:sendError("You do not have enough space in your store inbox.")
-            return false
-        end
+		-- Adding items to store inbox
+		local inbox = self:getStoreInbox()
+		local inboxItems = inbox:getItems()
+		if not inbox or #inboxItems + #items > inbox:getMaxCapacity() then
+			self:sendError("You do not have enough space in your store inbox.")
+			return false
+		end
 
-        local description = ""
-        for k, v in ipairs(items) do
-            local itemType = ItemType(v.itemId)
-            if itemType:isStackable() then
-                local inboxItem = inbox:addItem(v.itemId, v.count)
-                if inboxItem then
-                    inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
-                end
-                description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= columnsPicked and ", " or ".")
-            else
-                for i = 1, v.count do
-                    local inboxItem = inbox:addItem(v.itemId, 1)
-                    if inboxItem then
-                        inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
-						inboxItem:setAttribute(ITEM_ATTRIBUTE_CHARGES, 500)
-                    end
-                end
-                description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= columnsPicked and ", " or ".")
-            end
-        end
-        dailyRewardMessage = "Picked items: " .. description
-    elseif dailyTable.type == DAILY_REWARD_TYPE_XP_BOOST then
-        local rewardCountReviewed = rewardCount
-        local xpBoostLeftMinutes = self:kv():get("daily-reward-xp-boost") or 0
-        if xpBoostLeftMinutes > 0 then
-            rewardCountReviewed = rewardCountReviewed - xpBoostLeftMinutes
-        end
+		local description = ""
+		for k, v in ipairs(items) do
+			local itemType = ItemType(v.itemId)
+			if dailyTable.itemCharges then
+				-- apply charges to non stackable items
+				if not itemType:isStackable() then
+					for i = 1, v.count do
+						local inboxItem = inbox:addItem(v.itemId, 1)
+						if inboxItem then
+							inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+							inboxItem:setAttribute(ITEM_ATTRIBUTE_CHARGES, dailyTable.itemCharges) -- Cargas SOLO aquí
+						end
+					end
+				else
+					-- add stackable items
+					local inboxItem = inbox:addItem(v.itemId, v.count)
+					if inboxItem then
+						inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+					end
+				end
+				description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= #items and ", " or ".")
+			else
+				-- items without charges defined with normal behaivor
+				if itemType:isStackable() then
+					local inboxItem = inbox:addItem(v.itemId, v.count)
+					if inboxItem then
+						inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+					end
+				else
+					for i = 1, v.count do
+						local inboxItem = inbox:addItem(v.itemId, 1)
+						if inboxItem then
+							inboxItem:setAttribute(ITEM_ATTRIBUTE_STORE, systemTime())
+						end
+					end
+				end
+				description = description .. "" .. v.count .. "x " .. itemType:getName() .. (k ~= #items and ", " or ".")
+			end
+		end
+		dailyRewardMessage = "Picked items: " .. description
+	elseif dailyTable.type == DAILY_REWARD_TYPE_XP_BOOST then
+		local rewardCountReviewed = rewardCount
+		local xpBoostLeftMinutes = self:kv():get("daily-reward-xp-boost") or 0
+		if xpBoostLeftMinutes > 0 then
+			rewardCountReviewed = rewardCountReviewed - xpBoostLeftMinutes
+		end
 
-        self:setXpBoostTime(self:getXpBoostTime() + (rewardCountReviewed * 60))
-        self:kv():set("daily-reward-xp-boost", rewardCount)
-        self:setXpBoostPercent(50)
-        dailyRewardMessage = "Picked reward: XP Bonus for " .. rewardCount .. " minutes."
-    elseif dailyTable.type == DAILY_REWARD_TYPE_PREY_REROLL then
-        self:addPreyCards(rewardCount)
-        dailyRewardMessage = "Picked reward: " .. rewardCount .. "x Prey bonus reroll(s)."
-    end
+		self:setXpBoostTime(self:getXpBoostTime() + (rewardCountReviewed * 60))
+		self:kv():set("daily-reward-xp-boost", rewardCount)
+		self:setXpBoostPercent(50)
+		dailyRewardMessage = "Picked reward: XP Bonus for " .. rewardCount .. " minutes."
+	elseif dailyTable.type == DAILY_REWARD_TYPE_PREY_REROLL then
+		self:addPreyCards(rewardCount)
+		dailyRewardMessage = "Picked reward: " .. rewardCount .. "x Prey bonus reroll(s)."
+	end
 
-    if dailyRewardMessage then
-        -- Registering history
-        DailyReward.insertHistory(self:getGuid(), self:getDayStreak(), "Claimed reward no. \z
-            " .. self:getDayStreak() + 1 .. ". " .. dailyRewardMessage)
-        DailyReward.processReward(playerId, target)
-    end
+	if dailyRewardMessage then
+		-- Registering history
+		DailyReward.insertHistory(self:getGuid(), self:getDayStreak(), "Claimed reward no. \z
+			" .. self:getDayStreak() + 1 .. ". " .. dailyRewardMessage)
+		DailyReward.processReward(playerId, target)
+	end
 
-    return true
+	return true
 end
 
 function Player.sendError(self, error)
