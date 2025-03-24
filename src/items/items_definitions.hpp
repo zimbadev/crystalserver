@@ -629,6 +629,7 @@ enum ItemParseAttributes_t {
 	ITEM_PARSE_USEDBYGUESTS,
 	ITEM_PARSE_SCRIPT,
 	ITEM_PARSE_AUGMENT,
+	ITEM_PARSE_PREVENT_LOSS
 };
 
 struct ImbuementInfo {

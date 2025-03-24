@@ -8650,7 +8650,7 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 		return;
 	}
 
-	if (player->isUIExhausted(500)) {
+	if (!player->canDoExAction()) {
 		player->sendCancelMessage("You need to wait to do this again.");
 		return;
 	}
@@ -8691,7 +8691,7 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 			break;
 	}
 
-	player->updateUIExhausted();
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void ProtocolGame::sendCreatureHelpers(uint32_t creatureId, uint16_t helpers) {

@@ -2961,16 +2961,6 @@ void Player::updateImbuementTrackerStats() const {
 	}
 }
 
-// User Interface action exhaustion
-
-bool Player::isUIExhausted(uint32_t exhaustionTime) const {
-	return (OTSYS_TIME() - lastUIInteraction < exhaustionTime);
-}
-
-void Player::updateUIExhausted() {
-	lastUIInteraction = OTSYS_TIME();
-}
-
 bool Player::isQuickLootListedItem(const std::shared_ptr<Item> &item) const {
 	if (!item) {
 		return false;
@@ -2998,6 +2988,26 @@ void Player::setNextPotionAction(int64_t time) {
 
 bool Player::canDoPotionAction() const {
 	return nextPotionAction <= OTSYS_TIME();
+}
+
+void Player::setNextExAction(int64_t time) {
+	if (time > nextExAction) {
+		nextExAction = time;
+	}
+}
+
+bool Player::canDoExAction() const {
+	return nextExAction <= OTSYS_TIME();
+}
+
+void Player::setNextMarketAction(int64_t time) {
+	if (time > nextMarketAction) {
+		nextMarketAction = time;
+	}
+}
+
+bool Player::canDoMarketAction() const {
+	return nextMarketAction <= OTSYS_TIME();
 }
 
 void Player::cancelPush() {
@@ -3749,10 +3759,9 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 					removeBlessing(i, 1);
 				}
 
-				const auto &playerAmulet = getThing(CONST_SLOT_NECKLACE);
-				bool usingAol = (playerAmulet && playerAmulet->getItem()->getID() == ITEM_AMULETOFLOSS);
-				if (usingAol) {
-					removeItemOfType(ITEM_AMULETOFLOSS, 1, -1);
+				const auto &aol = getEquippedItem(CONST_SLOT_NECKLACE);
+				if (aol && Item::items[aol->getID()].preventLoss != 0) {
+					removeItemOfType(ITEM_AMULETOFLOSS, 1, -1, false);
 				}
 			}
 		}
