@@ -11270,11 +11270,11 @@ bool Game::processBankAuction(std::shared_ptr<Player> player, const std::shared_
 	}
 
 	if (replace) {
-		player->setBankBalance(balance - (bid - house->getInternalBid()));
+		player->setBankBalance(player->getBankBalance() - (bid - house->getInternalBid()));
 	} else {
-		player->setBankBalance(balance - (house->getRent() + bid));
+		player->setBankBalance(player->getBankBalance() - (house->getRent() + bid));
 	}
-	player->sendResourceBalance(RESOURCE_BANK, balance);
+	player->sendResourceBalance(RESOURCE_BANK, player->getBankBalance());
 	if (house->getBidderName() != player->getName()) {
 		const auto otherPlayer = g_game().getPlayerByName(house->getBidderName());
 		if (!otherPlayer) {
