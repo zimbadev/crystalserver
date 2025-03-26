@@ -976,6 +976,9 @@ public:
 	void setNextExAction(int64_t time);
 	bool canDoExAction() const;
 
+	void setNextImbuement(int64_t time);
+	bool canDoImbuement() const;
+
 	void setNextMarketAction(int64_t time);
 	bool canDoMarketAction() const;
 
@@ -1494,6 +1497,7 @@ private:
 	int64_t lastLoad;
 	int64_t nextAction = 0;
 	int64_t nextExAction = 0;
+	int64_t nextImbuementAction = 0;
 	int64_t nextPotionAction = 0;
 	int64_t nextMarketAction = 0;
 	int64_t lastQuickLootNotification = 0;

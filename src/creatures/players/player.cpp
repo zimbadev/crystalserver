@@ -3000,6 +3000,16 @@ bool Player::canDoExAction() const {
 	return nextExAction <= OTSYS_TIME();
 }
 
+void Player::setNextImbuement(int64_t time) {
+	if (time > nextImbuementAction) {
+		nextImbuementAction = time;
+	}
+}
+
+bool Player::canDoImbuement() const {
+	return nextImbuementAction <= OTSYS_TIME();
+}
+
 void Player::setNextMarketAction(int64_t time) {
 	if (time > nextMarketAction) {
 		nextMarketAction = time;

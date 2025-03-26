@@ -422,6 +422,7 @@ pushWhenAttacking = false
 -- UI Exhaustation (client actions)
 uiActionsDelay = 500
 marketActionsDelay = 1200
+imbueActionsDelay = 1500
 
 -- Map
 -- Note: Set mapName without .otbm at the end.
