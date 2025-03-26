@@ -6463,6 +6463,11 @@ void Game::playerSpeakToNpc(const std::shared_ptr<Player> &player, const std::st
 		return;
 	}
 
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
+		return;
+	}
+
 	for (const auto &spectator : Spectators().find<Creature>(player->getPosition()).filter<Npc>()) {
 		if (!player->canSpeakWithHireling(spectator->getNpc()->getSpeechBubble())) {
 			continue;
@@ -6470,6 +6475,8 @@ void Game::playerSpeakToNpc(const std::shared_ptr<Player> &player, const std::st
 
 		spectator->getNpc()->onCreatureSay(player, TALKTYPE_PRIVATE_PN, text);
 	}
+
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 std::shared_ptr<Task> Game::createPlayerTask(uint32_t delay, std::function<void(void)> f, const std::string &context) const {
