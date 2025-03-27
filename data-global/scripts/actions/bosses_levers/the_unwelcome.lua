@@ -19,18 +19,18 @@ local config = {
 }
 
 local function spawnBosses(leverPosition)
-    Game.createMonster("Brother Worm", Position(33708, 31531, 14))
-    Position(33708, 31531, 14):sendMagicEffect(CONST_ME_TELEPORT)
+	Game.createMonster("Brother Worm", Position(33708, 31531, 14))
+	Position(33708, 31531, 14):sendMagicEffect(CONST_ME_TELEPORT)
 end
 
 local lever = BossLever(config)
 local originalOnUse = lever.onUse
 function lever:onUse(creature, item, position, fromPosition)
-    local ret = originalOnUse(self, creature, item, position, fromPosition)
-    if ret then
-        addEvent(spawnBosses, 100, position)
-    end
-    return ret
+	local ret = originalOnUse(self, creature, item, position, fromPosition)
+	if ret then
+		addEvent(spawnBosses, 100, position)
+	end
+	return ret
 end
 lever:position({ x = 33735, y = 31537, z = 14 })
 lever:register()
