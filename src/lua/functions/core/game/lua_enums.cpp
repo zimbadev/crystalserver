@@ -122,12 +122,10 @@ void LuaEnums::init(lua_State* L) {
 	initAttributeConditionSubIdEnums(L);
 	initConcoctionsEnum(L);
 	initGuildsEnum(L);
+	initWorldTypeEnums(L);
 }
 
 void LuaEnums::initOthersEnums(lua_State* L) {
-	registerEnum(L, WORLD_TYPE_NO_PVP);
-	registerEnum(L, WORLD_TYPE_PVP);
-	registerEnum(L, WORLD_TYPE_PVP_ENFORCED);
 	registerEnum(L, AMMO_NONE);
 	registerEnum(L, AMMO_BOLT);
 	registerEnum(L, AMMO_ARROW);
@@ -239,6 +237,14 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 	registerEnum(L, SCREENSHOT_TYPE_TREASUREFOUND);
 	registerEnum(L, SCREENSHOT_TYPE_SKILLUP);
 	registerEnum(L, SCREENSHOT_TYPE_GIFTOFLIFE);
+}
+
+void LuaEnums::initWorldTypeEnums(lua_State* L) {
+	registerEnum(L, WORLDTYPE_OPTIONAL);
+	registerEnum(L, WORLDTYPE_OPEN);
+	registerEnum(L, WORLDTYPE_HARDCORE);
+	registerEnum(L, WORLDTYPE_FIRST);
+	registerEnum(L, WORLDTYPE_LAST);
 }
 
 void LuaEnums::initAccountEnums(lua_State* L) {

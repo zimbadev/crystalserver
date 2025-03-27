@@ -456,8 +456,13 @@ int GameFunctions::luaGameGetWorldType(lua_State* L) {
 int GameFunctions::luaGameSetWorldType(lua_State* L) {
 	// Game.setWorldType(type)
 	const WorldType_t type = Lua::getNumber<WorldType_t>(L, 1);
-	g_game().setWorldType(type);
-	Lua::pushBoolean(L, true);
+	if (type >= WORLDTYPE_FIRST && type <= WORLDTYPE_LAST) {
+		g_game().setWorldType(type);
+		Lua::pushBoolean(L, true);
+	} else {
+		Lua::pushBoolean(L, false);
+	}
+
 	return 1;
 }
 

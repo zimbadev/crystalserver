@@ -3409,7 +3409,7 @@ void ProtocolGame::sendCreatureEmblem(const std::shared_ptr<Creature> &creature)
 }
 
 void ProtocolGame::sendCreatureSkull(const std::shared_ptr<Creature> &creature) {
-	if (g_game().getWorldType() != WORLD_TYPE_PVP) {
+	if (g_game().getWorldType() != WORLDTYPE_OPEN) {
 		return;
 	}
 
@@ -6588,7 +6588,7 @@ void ProtocolGame::sendPartyCreatureShield(const std::shared_ptr<Creature> &targ
 }
 
 void ProtocolGame::sendPartyCreatureSkull(const std::shared_ptr<Creature> &target) {
-	if (g_game().getWorldType() != WORLD_TYPE_PVP) {
+	if (g_game().getWorldType() != WORLDTYPE_OPEN) {
 		return;
 	}
 

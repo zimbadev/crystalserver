@@ -8325,7 +8325,7 @@ void Game::updateCreatureWalkthrough(const std::shared_ptr<Creature> &creature) 
 }
 
 void Game::updateCreatureSkull(const std::shared_ptr<Creature> &creature) const {
-	if (getWorldType() != WORLD_TYPE_PVP) {
+	if (getWorldType() != WORLDTYPE_OPEN) {
 		return;
 	}
 

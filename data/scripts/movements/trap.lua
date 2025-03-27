@@ -1,7 +1,7 @@
 local traps = {
 	[2145] = { transformTo = 2146, damage = { -50, -100 } },
 	[2148] = { damage = { -50, -100 } },
-	[3482] = { transformTo = 3481, damage = { -15, -30 }, ignorePlayer = (Game.getWorldType() == WORLD_TYPE_NO_PVP) },
+	[3482] = { transformTo = 3481, damage = { -15, -30 }, ignorePlayer = (Game.getWorldType() == WORLDTYPE_OPTIONAL) },
 	[3944] = { transformTo = 3945, damage = { -15, -30 }, type = COMBAT_EARTHDAMAGE },
 	[12368] = { ignorePlayer = true },
 }

@@ -151,16 +151,16 @@ int CrystalServer::run() {
 
 void CrystalServer::setWorldType() {
 	const std::string worldType = asLowerCaseString(g_configManager().getString(WORLD_TYPE));
-	if (worldType == "pvp") {
-		g_game().setWorldType(WORLD_TYPE_PVP);
-	} else if (worldType == "no-pvp") {
-		g_game().setWorldType(WORLD_TYPE_NO_PVP);
-	} else if (worldType == "pvp-enforced") {
-		g_game().setWorldType(WORLD_TYPE_PVP_ENFORCED);
+	if (worldType == "open" || worldType == "2" || worldType == "openpvp" || worldType == "pvp" || worldType == "normal") {
+		g_game().setWorldType(WORLDTYPE_OPEN);
+	} else if (worldType == "optional" || worldType == "1" || worldType == "optionalpvp" || worldType == "safe" || worldType == "nopvp" || worldType == "no-pvp" || worldType == "secure") {
+		g_game().setWorldType(WORLDTYPE_OPTIONAL);
+	} else if (worldType == "hardcore" || worldType == "3" || worldType == "hardcorepvp" || worldType == "war" || worldType == "pvp-enforced" || worldType == "enforced") {
+		g_game().setWorldType(WORLDTYPE_HARDCORE);
 	} else {
 		throw FailedToInitializeCrystalServer(
 			fmt::format(
-				"Unknown world type: {}, valid world types are: pvp, no-pvp and pvp-enforced",
+				"Unknown world type: {}, valid world types are: open, optional and hardcore",
 				g_configManager().getString(WORLD_TYPE)
 			)
 		);

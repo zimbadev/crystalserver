@@ -409,7 +409,7 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 			return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 		}
 
-		if (g_game().getWorldType() == WORLD_TYPE_NO_PVP) {
+		if (g_game().getWorldType() == WORLDTYPE_OPTIONAL) {
 			if (attacker->getPlayer() || (attackerMaster && attackerMaster->getPlayer())) {
 				if (targetPlayer) {
 					if (!isInPvpZone(attacker, target)) {
@@ -846,7 +846,7 @@ void Combat::CombatDispelFunc(const std::shared_ptr<Creature> &, const std::shar
 	if (params.dispelType == CONDITION_INVISIBLE) {
 		if (const auto &player = target->getPlayer()) {
 			const auto &item = player->getEquippedItem(CONST_SLOT_RING);
-			if (item && item->getID() == ITEM_STEALTH_RING_ACTIVATED && (g_game().getWorldType() == WORLD_TYPE_PVP_ENFORCED || player->getTile()->hasFlag(TILESTATE_PVPZONE)) && normal_random(1, 100) <= 10) {
+			if (item && item->getID() == ITEM_STEALTH_RING_ACTIVATED && (g_game().getWorldType() == WORLDTYPE_HARDCORE || player->getTile()->hasFlag(TILESTATE_PVPZONE)) && normal_random(1, 100) <= 10) {
 				g_game().internalRemoveItem(item);
 			}
 		}
@@ -907,7 +907,7 @@ void Combat::combatTileEffects(const CreatureVector &spectators, const std::shar
 			}
 
 			if (casterPlayer) {
-				if (g_game().getWorldType() == WORLD_TYPE_NO_PVP || tile->hasFlag(TILESTATE_NOPVPZONE)) {
+				if (g_game().getWorldType() == WORLDTYPE_OPTIONAL || tile->hasFlag(TILESTATE_NOPVPZONE)) {
 					if (itemId == ITEM_FIREFIELD_PVP_FULL) {
 						itemId = ITEM_FIREFIELD_NOPVP;
 					} else if (itemId == ITEM_POISONFIELD_PVP) {
@@ -2273,7 +2273,7 @@ void AreaCombat::setupExtArea(const std::list<uint32_t> &list, uint32_t rows) {
 
 void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 	// remove magic walls/wild growth
-	if ((!isBlocking() && g_game().getWorldType() == WORLD_TYPE_NO_PVP && id == ITEM_MAGICWALL_SAFE) || id == ITEM_WILDGROWTH_SAFE) {
+	if ((!isBlocking() && g_game().getWorldType() == WORLDTYPE_OPTIONAL && id == ITEM_MAGICWALL_SAFE) || id == ITEM_WILDGROWTH_SAFE) {
 		if (!creature->isInGhostMode()) {
 			g_game().internalRemoveItem(static_self_cast<Item>(), 1);
 		}
@@ -2288,7 +2288,7 @@ void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 		if (ownerId) {
 			bool harmfulField = true;
 			const auto &itemTile = getTile();
-			if (g_game().getWorldType() == WORLD_TYPE_NO_PVP || (itemTile && itemTile->hasFlag(TILESTATE_NOPVPZONE))) {
+			if (g_game().getWorldType() == WORLDTYPE_OPTIONAL || (itemTile && itemTile->hasFlag(TILESTATE_NOPVPZONE))) {
 				const auto &ownerPlayer = g_game().getPlayerByGUID(ownerId);
 				if (ownerPlayer) {
 					harmfulField = false;

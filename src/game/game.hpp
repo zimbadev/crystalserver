@@ -904,7 +904,7 @@ private:
 	bool browseField = false;
 
 	GameState_t gameState = GAME_STATE_NORMAL;
-	WorldType_t worldType = WORLD_TYPE_PVP;
+	WorldType_t worldType = WORLDTYPE_OPEN;
 
 	LightState_t lightState = LIGHT_STATE_DAY;
 	LightState_t currentLightState = lightState;
