@@ -4,6 +4,7 @@ local traps = {
 	[3482] = { transformTo = 3481, damage = { -15, -30 }, ignorePlayer = (Game.getWorldType() == WORLDTYPE_OPTIONAL) },
 	[3944] = { transformTo = 3945, damage = { -15, -30 }, type = COMBAT_EARTHDAMAGE },
 	[12368] = { ignorePlayer = true },
+	[44530] = { transformTo = 44529, damage = { -50, -100 } },
 }
 
 local trap = MoveEvent()
