@@ -63,6 +63,10 @@ setConditionFormula = Condition.setFormula
 addDamageCondition = Condition.addDamage
 addOutfitCondition = Condition.setOutfit
 
+WORLD_TYPE_NO_PVP = WORLDTYPE_OPTIONAL
+WORLD_TYPE_PVP = WORLDTYPE_OPEN
+WORLD_TYPE_PVP_ENFORCED = WORLDTYPE_HARDCORE
+
 function doCombat(cid, combat, var)
 	local line = debug.getinfo(2).currentline
 	local source = debug.getinfo(2).source:match("@?(.*)")

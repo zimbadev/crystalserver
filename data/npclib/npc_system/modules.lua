@@ -155,7 +155,7 @@ if Modules == nil then
 			error("StdModule.bless called without any npcHandler instance.")
 		end
 
-		if not npcHandler:checkInteraction(npc, player) or Game.getWorldType() == WORLD_TYPE_PVP_ENFORCED then
+		if not npcHandler:checkInteraction(npc, player) or Game.getWorldType() == WORLDTYPE_HARDCORE then
 			return false
 		end
 

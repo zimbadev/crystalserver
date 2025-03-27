@@ -75,4 +75,5 @@ private:
 	static void effectsSoundEnums(lua_State* L);
 	static void initWheelEnums(lua_State* L);
 	static void initGuildsEnum(lua_State* L);
+	static void initWorldTypeEnums(lua_State* L);
 };
