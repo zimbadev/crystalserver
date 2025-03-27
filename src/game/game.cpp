@@ -6075,7 +6075,7 @@ void Game::playerApplyImbuement(uint32_t playerId, uint16_t imbuementid, uint8_t
 		return;
 	}
 
-	if (!player->canDoExAction()) {
+	if (!player->canDoImbuement()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -6101,7 +6101,7 @@ void Game::playerApplyImbuement(uint32_t playerId, uint16_t imbuementid, uint8_t
 	}
 
 	player->onApplyImbuement(imbuement, item, slot, protectionCharm);
-	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
+	player->setNextImbuement(OTSYS_TIME() + g_configManager().getNumber(IMBUEMENT_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerClearImbuement(uint32_t playerid, uint8_t slot) {
@@ -6110,7 +6110,7 @@ void Game::playerClearImbuement(uint32_t playerid, uint8_t slot) {
 		return;
 	}
 
-	if (!player->canDoExAction()) {
+	if (!player->canDoImbuement()) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		return;
 	}
@@ -6125,7 +6125,7 @@ void Game::playerClearImbuement(uint32_t playerid, uint8_t slot) {
 	}
 
 	player->onClearImbuement(item, slot);
-	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
+	player->setNextImbuement(OTSYS_TIME() + g_configManager().getNumber(IMBUEMENT_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerCloseImbuementWindow(uint32_t playerid) {
@@ -6463,6 +6463,11 @@ void Game::playerSpeakToNpc(const std::shared_ptr<Player> &player, const std::st
 		return;
 	}
 
+	if (!player->canDoExAction()) {
+		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
+		return;
+	}
+
 	for (const auto &spectator : Spectators().find<Creature>(player->getPosition()).filter<Npc>()) {
 		if (!player->canSpeakWithHireling(spectator->getNpc()->getSpeechBubble())) {
 			continue;
@@ -6470,6 +6475,8 @@ void Game::playerSpeakToNpc(const std::shared_ptr<Player> &player, const std::st
 
 		spectator->getNpc()->onCreatureSay(player, TALKTYPE_PRIVATE_PN, text);
 	}
+
+	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 std::shared_ptr<Task> Game::createPlayerTask(uint32_t delay, std::function<void(void)> f, const std::string &context) const {
