@@ -76400,6 +76400,15 @@ Granted by TibiaGoals.com"/>
 		<attribute key="decayTo" value="0"/>
 		<attribute key="duration" value="5"/>
 	</item>
+	<item id="44529" name="slits">
+		<attribute key="duration" value="10"/>
+		<attribute key="decayTo" value="44530"/>
+	</item>
+	<item id="44530" name="blades">
+		<attribute key="primarytype" value="fields"/>
+		<attribute key="duration" value="10"/>
+		<attribute key="decayTo" value="44529"/>
+	</item>
 	<item id="44602" article="a" name="lesser guardian gem" plural="lesser guardian gems">
 		<attribute key="description" value="Shines with the strength of knights" />
 		<attribute key="loottype" value="valuable" />
