@@ -69,8 +69,9 @@ jobs:
           vcpkgGitURL: "https://github.com/microsoft/vcpkg.git"
           vcpkgGitCommitId: ${{ env.VCPKG_GIT_COMMIT_ID }}
 
-      - name: Get latest CMake and ninja
-        uses: lukka/get-cmake@main
+      - name: Install CMake 3.5
+        run: |
+          choco install cmake --version=3.5.2 -y
 
       - name: Run CMake
         uses: lukka/run-cmake@main
