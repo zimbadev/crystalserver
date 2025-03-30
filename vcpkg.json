@@ -9,7 +9,7 @@
     "bext-ut",
     "curl",
     "eventpp",
-    "libmariadb",
+    "libmysql",
     "luajit",
     "magic-enum",
     "mio",

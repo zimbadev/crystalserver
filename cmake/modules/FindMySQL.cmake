@@ -58,7 +58,7 @@ IF (WIN32)
 		ADD_DEFINITIONS(-DDBUG_OFF)
 	ENDIF (CMAKE_BUILD_TYPE STREQUAL Debug)
 
-	FIND_LIBRARY(MYSQL_LIB NAMES mariadbclient libmariadb
+	FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient libmysql
 			PATHS
 				 $ENV{MYSQL_DIR}/lib/${libsuffixDist}
 				 $ENV{MYSQL_DIR}/libmysql
@@ -68,7 +68,7 @@ IF (WIN32)
 				 $ENV{ProgramFiles}/MySQL/*/lib/${libsuffixDist}
 				 $ENV{SystemDrive}/MySQL/*/lib/${libsuffixDist})
 ELSE (WIN32)
-	FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient mariadbclient libmariadb libmariadbclient
+	FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient libmysql
 				 PATHS
 				 $ENV{MYSQL_DIR}/libmysql/.libs
 				 $ENV{MYSQL_DIR}/lib

@@ -15,7 +15,7 @@
       pugixml.lib;
       lua51.lib;
       mpir.lib;
-      libmariadb.lib;
+      libmysql.lib;
       abseil_dll.lib;
       argon2.lib;
     </CRYSTAL_COMMON_LIBDEPS>

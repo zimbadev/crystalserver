@@ -1,7 +1,7 @@
 name: crystalserver
 services:
   database:
-    image: mariadb:latest
+    image: libmysql:latest
     restart: unless-stopped
     env_file:
       - '.env'

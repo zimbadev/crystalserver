@@ -84,7 +84,7 @@ target_link_libraries(${PROJECT_NAME}_lib
         pugixml::pugixml
         spdlog::spdlog
         unofficial::argon2::libargon2
-        unofficial::libmariadb
+        libmysql
         protobuf
         Boost::locale
 )

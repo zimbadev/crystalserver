@@ -36,7 +36,7 @@ find_package(mio REQUIRED)
 find_package(pugixml CONFIG REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(unofficial-argon2 CONFIG REQUIRED)
-find_package(unofficial-libmariadb CONFIG REQUIRED)
+find_package(libmysql CONFIG REQUIRED)
 
 find_path(BOOST_DI_INCLUDE_DIRS "boost/di.hpp")
 
