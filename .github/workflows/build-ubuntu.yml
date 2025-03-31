@@ -93,6 +93,8 @@ jobs:
 
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@main
+        with:
+          cmakeVersion: 3.27.0
 
       - name: Run CMake
         uses: lukka/run-cmake@main
