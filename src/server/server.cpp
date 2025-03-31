@@ -160,12 +160,23 @@ void ServicePort::open(uint16_t port) {
 	pendingStart = false;
 
 	try {
-		if (g_configManager().getBoolean(BIND_ONLY_GLOBAL_ADDRESS)) {
-			acceptor = std::make_unique<asio::ip::tcp::acceptor>(io_service, asio::ip::tcp::endpoint(asio::ip::address(asio::ip::address_v4::from_string(g_configManager().getString(IP))), serverPort));
+		std::string ipString = g_configManager().getString(IP);
+		asio::ip::address ipAddress;
+
+		if (asio::ip::address::from_string(ipString).is_v6()) {
+			ipAddress = asio::ip::address_v6::from_string(ipString);
 		} else {
-			acceptor = std::make_unique<asio::ip::tcp::acceptor>(io_service, asio::ip::tcp::endpoint(asio::ip::address(asio::ip::address_v4(INADDR_ANY)), serverPort));
+			ipAddress = asio::ip::address_v4::from_string(ipString);
 		}
 
+		asio::ip::tcp::endpoint endpoint;
+		if (g_configManager().getBoolean(BIND_ONLY_GLOBAL_ADDRESS)) {
+			endpoint = asio::ip::tcp::endpoint(ipAddress, serverPort);
+		} else {
+			endpoint = asio::ip::tcp::endpoint(asio::ip::address_v4::any(), serverPort);
+		}
+
+		acceptor = std::make_unique<asio::ip::tcp::acceptor>(io_service, endpoint);
 		acceptor->set_option(asio::ip::tcp::no_delay(true));
 
 		accept();
