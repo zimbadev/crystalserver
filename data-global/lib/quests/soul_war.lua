@@ -1233,7 +1233,7 @@ function Monster:tryTeleportToPlayer(sayMessage)
 	for i, spectator in ipairs(spectators) do
 		if spectator:isPlayer() then
 			local player = spectator:getPlayer()
-			if player:getTaintNameByNumber(1, true) and player:getSoulWarZoneMonster() ~= nil then
+            if player:getTaintNameByNumber(1) and player:getSoulWarZoneMonster() ~= nil then
 				local distance = self:getPosition():getDistance(player:getPosition())
 				if distance > maxDistance then
 					maxDistance = distance
