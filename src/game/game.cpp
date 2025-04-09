@@ -10766,12 +10766,12 @@ ReturnValue Game::beforeCreatureZoneChange(const std::shared_ptr<Creature> &crea
 	}
 
 	// fromZones - toZones = zones that creature left
-	const auto zonesLeaving = fromZones | std::views::filter([&](const auto& z) {
+	auto zonesLeaving = fromZones | std::views::filter([&](const auto& z) {
 		return toZones.find(z) == toZones.end();
 	});
 
 	// toZones - fromZones = zones that creature entered
-	const auto zonesEntering = toZones | std::views::filter([&](const auto& z) {
+	auto zonesEntering = toZones | std::views::filter([&](const auto& z) {
 		return fromZones.find(z) == fromZones.end();
 	});
 
@@ -10801,12 +10801,12 @@ void Game::afterCreatureZoneChange(const std::shared_ptr<Creature> &creature, co
 	}
 
 	// fromZones - toZones = zones that creature left
-	const auto zonesLeaving = fromZones | std::views::filter([&](const auto& z) {
+	auto zonesLeaving = fromZones | std::views::filter([&](const auto& z) {
 		return toZones.find(z) == toZones.end();
 	});
 
 	// toZones - fromZones = zones that creature entered
-	const auto zonesEntering = toZones | std::views::filter([&](const auto& z) {
+	auto zonesEntering = toZones | std::views::filter([&](const auto& z) {
 		return fromZones.find(z) == fromZones.end();
 	});
 
