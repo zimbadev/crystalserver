@@ -16,8 +16,9 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "creatures/appearance/mounts/mounts.hpp"
-
+#include "creatures/combat/condition.hpp"
 #include "config/configmanager.hpp"
+#include "creatures/players/player.hpp"
 #include "game/game.hpp"
 #include "utils/pugicast.hpp"
 #include "utils/tools.hpp"
@@ -43,16 +44,111 @@ bool Mounts::loadFromXml() {
 			continue;
 		}
 
-		int32_t attackSpeedValue = mountNode.attribute("attackspeed") ? pugi::cast<int32_t>(mountNode.attribute("attackspeed").value()) : 0;
-		mounts.emplace(std::make_shared<Mount>(
+		auto mount = std::make_shared<Mount>(
 			static_cast<uint8_t>(pugi::cast<uint16_t>(mountNode.attribute("id").value())),
 			lookType,
 			mountNode.attribute("name").as_string(),
 			pugi::cast<int32_t>(mountNode.attribute("speed").value()),
 			mountNode.attribute("premium").as_bool(),
-			mountNode.attribute("type").as_string(),
-			attackSpeedValue
-		));
+			mountNode.attribute("type").as_string()
+		);
+
+		mount->manaShield = mountNode.attribute("manashield").as_bool() || mountNode.attribute("manaShield").as_bool();
+		mount->invisible = mountNode.attribute("invisible").as_bool();
+		mount->attackSpeed = mountNode.attribute("attackSpeed").as_int() || mountNode.attribute("attackspeed").as_int();
+		
+		if (auto healthGainAttr = mountNode.attribute("healthGain")) {
+			mount->healthGain = healthGainAttr.as_int();
+			mount->regeneration = true;
+		}
+
+		if (auto healthTicksAttr = mountNode.attribute("healthTicks")) {
+			mount->healthTicks = healthTicksAttr.as_int();
+			mount->regeneration = true;
+		}
+
+		if (auto manaGainAttr = mountNode.attribute("manaGain")) {
+			mount->manaGain = manaGainAttr.as_int();
+			mount->regeneration = true;
+		}
+
+		if (auto manaTicksAttr = mountNode.attribute("manaTicks")) {
+			mount->manaTicks = manaTicksAttr.as_int();
+			mount->regeneration = true;
+		}
+
+		if (auto skillsNode = mountNode.child("skills")) {
+			for (auto skillNode : skillsNode.children()) {
+				std::string skillName = skillNode.name();
+				int32_t skillValue = skillNode.attribute("value").as_int();
+
+				if (skillName == "fist") {
+					mount->skills[SKILL_FIST] += skillValue;
+				} else if (skillName == "club") {
+					mount->skills[SKILL_CLUB] += skillValue;
+				} else if (skillName == "axe") {
+					mount->skills[SKILL_AXE] += skillValue;
+				} else if (skillName == "sword") {
+					mount->skills[SKILL_SWORD] += skillValue;
+				} else if (skillName == "distance" || skillName == "dist") {
+					mount->skills[SKILL_DISTANCE] += skillValue;
+				} else if (skillName == "shielding" || skillName == "shield") {
+					mount->skills[SKILL_SHIELD] = skillValue;
+				} else if (skillName == "fishing" || skillName == "fish") {
+					mount->skills[SKILL_FISHING] += skillValue;
+				} else if (skillName == "melee") {
+					mount->skills[SKILL_FIST] += skillValue;
+					mount->skills[SKILL_CLUB] += skillValue;
+					mount->skills[SKILL_SWORD] += skillValue;
+					mount->skills[SKILL_AXE] += skillValue;
+				} else if (skillName == "weapon" || skillName == "weapons") {
+					mount->skills[SKILL_CLUB] += skillValue;
+					mount->skills[SKILL_SWORD] += skillValue;
+					mount->skills[SKILL_AXE] += skillValue;
+					mount->skills[SKILL_DISTANCE] += skillValue;
+				}
+			}
+		}
+
+		if (auto statsNode = mountNode.child("stats")) {
+			for (auto statNode : statsNode.children()) {
+				std::string statName = statNode.name();
+				int32_t statValue = statNode.attribute("value").as_int();
+
+				if (statName == "maxHealth" || statName == "maxhealth") {
+					mount->stats[STAT_MAXHITPOINTS] += statValue;
+				} else if (statName == "maxMana" || statName == "maxmana") {
+					mount->stats[STAT_MAXMANAPOINTS] += statValue;
+				} else if (statName == "cap" || statName == "capacity") {
+					mount->stats[STAT_CAPACITY] += statValue * 100;
+				} else if (statName == "magLevel" || statName == "magicLevel" || statName == "magiclevel" || statName == "ml") {
+					mount->stats[STAT_MAGICPOINTS] += statValue;
+				}
+			}
+		}
+
+		if (auto imbuingNode = mountNode.child("imbuing")) {
+			for (auto imbuing : imbuingNode.children()) {
+				std::string imbuingName = imbuing.name();
+				int32_t imbuingValue = imbuing.attribute("value").as_int();
+
+				if (imbuingName == "lifeLeechChance" || imbuingName == "lifeleechchance") {
+					mount->lifeLeechChance += imbuingValue;
+				} else if (imbuingName == "lifeleechAmount" || imbuingName == "lifeleechamount") {
+					mount->lifeLeechAmount += imbuingValue;
+				} else if (imbuingName == "manaLeechChance" || imbuingName == "manaleechchance") {
+					mount->manaLeechChance += imbuingValue;
+				} else if (imbuingName == "manaLeechAmount" || imbuingName == "manaleechamount") {
+					mount->manaLeechAmount += imbuingValue;
+				} else if (imbuingName == "criticalChance" || imbuingName == "criticalchance") {
+					mount->criticalChance += imbuingValue;
+				} else if (imbuingName == "criticalDamage" || imbuingName == "criticaldamage") {
+					mount->criticalDamage += imbuingValue;
+				}
+			}
+		}
+
+		mounts.insert(mount);
 	}
 	return true;
 }
@@ -80,4 +176,165 @@ std::shared_ptr<Mount> Mounts::getMountByClientID(uint16_t clientId) {
 	});
 
 	return it != mounts.end() ? *it : nullptr;
+}
+
+bool Mounts::addAttributes(uint32_t playerId, uint8_t mountId) {
+	const auto &player = g_game().getPlayerByID(playerId);
+	if (!player) {
+		return false;
+	}
+
+	auto mount = getMountByID(mountId);
+	if (!mount) {
+		g_logger().warn("[Mounts::addAttributes] Mount with ID {} not found.", mountId);
+		return false;
+	}
+
+	// Apply Conditions
+	if (mount->manaShield) {
+		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_MANASHIELD, -1, 0);
+		player->addCondition(condition);
+	}
+
+	if (mount->invisible) {
+		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_INVISIBLE, -1, 0);
+		player->addCondition(condition);
+	}
+
+	if (mount->regeneration) {
+		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_REGENERATION, -1, 0);
+		if (mount->healthGain) {
+			condition->setParam(CONDITION_PARAM_HEALTHGAIN, mount->healthGain);
+		}
+
+		if (mount->healthTicks) {
+			condition->setParam(CONDITION_PARAM_HEALTHTICKS, mount->healthTicks);
+		}
+
+		if (mount->manaGain) {
+			condition->setParam(CONDITION_PARAM_MANAGAIN, mount->manaGain);
+		}
+
+		if (mount->manaTicks) {
+			condition->setParam(CONDITION_PARAM_MANATICKS, mount->manaTicks);
+		}
+
+		player->addCondition(condition);
+	}
+
+	// Apply skills
+	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
+		if (mount->skills[i]) {
+			player->setVarSkill(static_cast<skills_t>(i), mount->skills[i]);
+		}
+	}
+
+	// Apply life leech
+	if (mount->lifeLeechChance > 0) {
+		player->setVarSkill(SKILL_LIFE_LEECH_CHANCE, mount->lifeLeechChance);
+	}
+
+	if (mount->lifeLeechAmount > 0) {
+		player->setVarSkill(SKILL_LIFE_LEECH_AMOUNT, mount->lifeLeechAmount);
+	}
+
+	// Apply mana leech
+	if (mount->manaLeechChance > 0) {
+		player->setVarSkill(SKILL_MANA_LEECH_CHANCE, mount->manaLeechChance);
+	}
+
+	if (mount->manaLeechAmount > 0) {
+		player->setVarSkill(SKILL_MANA_LEECH_AMOUNT, mount->manaLeechAmount);
+	}
+
+	// Apply critical hit
+	if (mount->criticalChance > 0) {
+		player->setVarSkill(SKILL_CRITICAL_HIT_CHANCE, mount->criticalChance);
+	}
+
+	if (mount->criticalDamage > 0) {
+		player->setVarSkill(SKILL_CRITICAL_HIT_DAMAGE, mount->criticalDamage);
+	}
+
+	// Apply stats
+	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
+		if (mount->stats[s]) {
+			player->setVarStats(static_cast<stats_t>(s), mount->stats[s]);
+		}
+	}
+
+	player->sendStats();
+	player->sendSkills();
+	return true;
+}
+
+bool Mounts::removeAttributes(uint32_t playerId, uint8_t mountId) {
+	const auto &player = g_game().getPlayerByID(playerId);
+	if (!player) {
+		return false;
+	}
+
+	auto mount = getMountByID(mountId);
+	if (!mount) {
+		g_logger().warn("[Mounts::removeAttributes] Mount with ID {} not found.", mountId);
+		return false;
+	}
+
+	// Remove conditions
+	if (mount->manaShield) {
+		player->removeCondition(CONDITION_MANASHIELD, CONDITIONID_OUTFIT);
+	}
+
+	if (mount->invisible) {
+		player->removeCondition(CONDITION_INVISIBLE, CONDITIONID_OUTFIT);
+	}
+
+	if (mount->regeneration) {
+		player->removeCondition(CONDITION_REGENERATION, CONDITIONID_OUTFIT);
+	}
+
+	// Revert Skills
+	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
+		if (mount->skills[i]) {
+			player->setVarSkill(static_cast<skills_t>(i), -mount->skills[i]);
+		}
+	}
+
+	// Revert Life Leech
+	if (mount->lifeLeechChance > 0) {
+		player->setVarSkill(SKILL_LIFE_LEECH_CHANCE, -mount->lifeLeechChance);
+	}
+
+	if (mount->lifeLeechAmount > 0) {
+		player->setVarSkill(SKILL_LIFE_LEECH_AMOUNT, -mount->lifeLeechAmount);
+	}
+
+	// Revert Mana Leech
+	if (mount->manaLeechChance > 0) {
+		player->setVarSkill(SKILL_MANA_LEECH_CHANCE, -mount->manaLeechChance);
+	}
+
+	if (mount->manaLeechAmount > 0) {
+		player->setVarSkill(SKILL_MANA_LEECH_AMOUNT, -mount->manaLeechAmount);
+	}
+
+	// Revert Critical Hit
+	if (mount->criticalChance > 0) {
+		player->setVarSkill(SKILL_CRITICAL_HIT_CHANCE, -mount->criticalChance);
+	}
+
+	if (mount->criticalDamage > 0) {
+		player->setVarSkill(SKILL_CRITICAL_HIT_DAMAGE, -mount->criticalDamage);
+	}
+
+	// Revert Stats
+	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
+		if (mount->stats[s]) {
+			player->setVarStats(static_cast<stats_t>(s), -mount->stats[s]);
+		}
+	}
+
+	player->sendStats();
+	player->sendSkills();
+	return true;
 }

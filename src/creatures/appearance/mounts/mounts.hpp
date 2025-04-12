@@ -18,26 +18,53 @@
 #pragma once
 
 struct Mount {
-	Mount(uint8_t initId, uint16_t initClientId, std::string initName, int32_t initSpeed, bool initPremium, std::string initType, int32_t initAttackSpeed) :
+	Mount(uint8_t initId, uint16_t initClientId, std::string initName, int32_t initSpeed, bool initPremium, std::string initType) :
 		name(std::move(initName)), speed(initSpeed), clientId(initClientId), id(initId), premium(initPremium),
-		type(std::move(initType)), attackSpeed(initAttackSpeed) { }
+		type(std::move(initType)) {
+		std::memset(skills, 0, sizeof(skills));
+		std::memset(stats, 0, sizeof(stats));
+	}
 
-	std::string name;
-	int32_t speed;
-	uint16_t clientId;
-	uint8_t id;
-	bool premium;
-	std::string type;
-	int32_t attackSpeed;
+	std::string name = "";
+	std::string type = "";
+
+	uint16_t clientId = 0;
+	uint8_t id = 0;
+
+	bool premium = false;
+	bool regeneration = false;
+	bool manaShield = false;
+	bool invisible = false;
+
+	int32_t speed = 0;
+	int32_t attackSpeed = 0;
+	int32_t healthGain = 0;
+	int32_t healthTicks = 0;
+	int32_t manaGain = 0;
+	int32_t manaTicks = 0;
+
+	int32_t lifeLeechChance = 0;
+	int32_t lifeLeechAmount = 0;
+	int32_t manaLeechChance = 0;
+	int32_t manaLeechAmount = 0;
+	int32_t criticalChance = 0;
+	int32_t criticalDamage = 0;
+
+	int32_t skills[SKILL_LAST + 1] = { 0 };
+	int32_t stats[STAT_LAST + 1] = { 0 };
 };
 
 class Mounts {
 public:
 	bool reload();
 	bool loadFromXml();
+
 	std::shared_ptr<Mount> getMountByID(uint8_t id);
 	std::shared_ptr<Mount> getMountByName(const std::string &name);
 	std::shared_ptr<Mount> getMountByClientID(uint16_t clientId);
+
+	bool addAttributes(uint32_t playerId, uint8_t mountId);
+	bool removeAttributes(uint32_t playerId, uint8_t mountId);
 
 	[[nodiscard]] const phmap::parallel_flat_hash_set<std::shared_ptr<Mount>> &getMounts() const {
 		return mounts;
