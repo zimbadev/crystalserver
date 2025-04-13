@@ -166,6 +166,7 @@
 		<flags>
 			<flag isgametester="1" />
 			<flag hasfulllight="1" />
+			<flag canwearallmounts="1" />
 		</flags>
 	</group>
 </groups>

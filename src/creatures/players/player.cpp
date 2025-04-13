@@ -7473,6 +7473,15 @@ bool Player::toggleMount(bool mount) {
 		if (currentMount->speed != 0) {
 			g_game().changeSpeed(static_self_cast<Player>(), currentMount->speed);
 		}
+
+		if (mountsAttributes) {
+			mountsAttributes = g_game().mounts->removeAttributes(getID(), currentMount->id);
+		}
+
+		const auto &mountAttr = g_game().mounts->getMountByID(currentMount->id);
+		if (mountAttr) {
+			mountsAttributes = g_game().mounts->addAttributes(getID(), currentMount->id);
+		}
 	} else {
 		if (!isMounted()) {
 			return false;
@@ -10271,6 +10280,11 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 		const auto &outfit = Outfits::getInstance().getOutfitByLookType(getPlayer(), defaultOutfit.lookType);
 		if (outfit) {
 			outfitAttributes = Outfits::getInstance().addAttributes(getID(), defaultOutfit.lookType, getSex(), defaultOutfit.lookAddons);
+		}
+
+		const auto &mount = g_game().mounts->getMountByID(defaultOutfit.lookMount);
+		if (isMounted() && mount) {
+			mountsAttributes = g_game().mounts->addAttributes(getID(), defaultOutfit.lookMount);
 		}
 
 		// Refresh bosstiary tracker onLogin

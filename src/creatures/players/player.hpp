@@ -1644,6 +1644,7 @@ private:
 	bool imbuementTrackerWindowOpen = false;
 	bool requestedOutfit = false;
 	bool outfitAttributes = false;
+	bool mountsAttributes = false;
 
 	// Hazard system
 	int64_t lastHazardSystemCriticalHit = 0;

@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mounts>
-	<mount id="1" clientid="368" name="Widow Queen" speed="10" premium="yes" type="quest" />
+	<mount id="1" clientid="368" name="Widow Queen" speed="10" premium="yes" type="quest">
+		<skills>
+			<fist value="1" />
+			<club value="2" />
+			<axe value="3" />
+			<sword value="4" />
+			<distance value="5" />
+			<shielding value="6" />
+			<fishing value="7" />
+		</skills>
+		<stats>
+			<maxHealth value="5" />
+			<maxMana value="5" />
+			<cap value="100" />
+			<magicLevel value="1" />
+		</stats>
+		<imbuing>
+			<lifeleechchance value="100" />
+			<lifeleechamount value="100" />
+			<manaleechchance value="100" />
+			<manaleechamount value="100" />
+			<criticalchance value="100" />
+			<criticaldamage value="100" />
+		</imbuing>
+	</mount>
 	<mount id="2" clientid="369" name="Racing Bird" speed="10" premium="yes" type="quest" />
 	<mount id="3" clientid="370" name="War Bear" speed="10" premium="yes" type="quest" />
 	<mount id="4" clientid="371" name="Black Sheep" speed="10" premium="yes" type="quest" />
