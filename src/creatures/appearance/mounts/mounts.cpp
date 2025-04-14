@@ -56,7 +56,7 @@ bool Mounts::loadFromXml() {
 		mount->manaShield = mountNode.attribute("manashield").as_bool() || mountNode.attribute("manaShield").as_bool();
 		mount->invisible = mountNode.attribute("invisible").as_bool();
 		mount->attackSpeed = mountNode.attribute("attackSpeed").as_int() || mountNode.attribute("attackspeed").as_int();
-		
+
 		if (auto healthGainAttr = mountNode.attribute("healthGain")) {
 			mount->healthGain = healthGainAttr.as_int();
 			mount->regeneration = true;
@@ -273,7 +273,6 @@ bool Mounts::removeAttributes(uint32_t playerId, uint8_t mountId) {
 	if (!player) {
 		return false;
 	}
-
 
 	auto it = std::find_if(mounts.begin(), mounts.end(), [mountId](const std::shared_ptr<Mount> &mount) {
 		return mount->id == mountId;

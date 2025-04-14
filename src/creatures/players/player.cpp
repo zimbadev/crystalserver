@@ -6355,10 +6355,9 @@ bool Player::changeMount(uint8_t mountId, bool checkList) {
 		}
 
 		mountAttributes = !g_game().mounts->removeAttributes(getID(), currentMount->id);
-		
 	}
 
-	if (mount) {		
+	if (mount) {
 		mountAttributes = g_game().mounts->addAttributes(getID(), mountId);
 	}
 
@@ -10328,7 +10327,7 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 				if (mountAttributes) {
 					mountAttributes = g_game().mounts->removeAttributes(getID(), currentMount->id);
 				}
-				
+
 				mountAttributes = g_game().mounts->addAttributes(getID(), currentMount->id);
 			}
 		}
