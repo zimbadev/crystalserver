@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include "creatures/creatures_definitions.hpp"
 
 struct Mount {
 	Mount(uint8_t initId, uint16_t initClientId, std::string initName, int32_t initSpeed, bool initPremium, std::string initType) :
