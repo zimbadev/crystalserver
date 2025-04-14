@@ -676,3 +676,8 @@ metricsPrometheusAddress = "0.0.0.0:9464"
 --- OStream
 metricsEnableOstream = false
 metricsOstreamInterval = 1000
+
+--- Outfit/Mount Bonus
+
+toggleCumulativeBonusOutfit = false
+toggleCumulativeBonusMount = true

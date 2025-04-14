@@ -6286,6 +6286,11 @@ void Player::changeSoul(int32_t soulChange) {
 }
 
 bool Player::changeOutfit(Outfit_t outfit, bool checkList) {
+	bool cumulativeOutfitBonus = g_configManager().getBoolean(TOGGLE_CUMULATIVE_BONUS_OUTFIT);
+	if (cumulativeOutfitBonus) {
+		return false;
+	}
+
 	auto outfitId = Outfits::getInstance().getOutfitId(getSex(), outfit.lookType);
 	if (checkList && (!canWearOutfit(outfitId, outfit.lookAddons) || !requestedOutfit)) {
 		return false;
@@ -6339,6 +6344,12 @@ bool Player::canWearOutfit(uint16_t lookType, uint8_t addons) const {
 }
 
 bool Player::changeMount(uint8_t mountId, bool checkList) {
+	bool cumulativeMountBonus = g_configManager().getBoolean(TOGGLE_CUMULATIVE_BONUS_MOUNT);
+
+	if (cumulativeMountBonus) {
+		return false;
+	}
+
 	const auto &mount = g_game().mounts->getMountByID(mountId);
 	if (!mount) {
 		return false;
@@ -7593,7 +7604,11 @@ void Player::dismount() {
 	}
 
 	if (mountAttributes) {
-		mountAttributes = !g_game().mounts->removeAttributes(getID(), mount->id);
+		bool cumulativeMountBonus = g_configManager().getBoolean(TOGGLE_CUMULATIVE_BONUS_MOUNT);
+		if (mountAttributes && !cumulativeMountBonus) {
+			mountAttributes = !g_game().mounts->removeAttributes(getID(), mount->id);
+		}
+		
 	}
 
 	defaultOutfit.lookMount = 0;
@@ -10305,30 +10320,60 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 	if (isLogin && creature == getPlayer()) {
 		onEquipInventory();
 
-		const auto &outfit = Outfits::getInstance().getOutfitByLookType(getPlayer(), defaultOutfit.lookType);
-		if (outfit) {
-			outfitAttributes = Outfits::getInstance().addAttributes(getID(), defaultOutfit.lookType, getSex(), defaultOutfit.lookAddons);
+		bool cumulativeOutfitBonus = g_configManager().getBoolean(TOGGLE_CUMULATIVE_BONUS_OUTFIT);
+		bool cumulativeMountBonus = g_configManager().getBoolean(TOGGLE_CUMULATIVE_BONUS_MOUNT);
+
+		if (cumulativeOutfitBonus) {
+			
+			const auto playerOutfits = Outfits::getInstance().getOutfits(getSex());
+			for (auto it = outfits.begin(); it != outfits.end();) {
+				const auto &entry = *it;
+				const auto playerOutfit = std::find_if(playerOutfits.begin(), playerOutfits.end(), [&entry](const std::shared_ptr<Outfit> &outfit) {
+					return outfit->lookType == entry.lookType;
+				});
+
+				if (playerOutfit != playerOutfits.end() && canWearOutfit(entry.lookType, 3)) {							
+						outfitAttributes = Outfits::getInstance().addAttributes(getID(), entry.lookType, getSex(), 3);
+				}
+				++it;
+			}
+
+		}else {
+			const auto &outfit = Outfits::getInstance().getOutfitByLookType(getPlayer(), defaultOutfit.lookType);
+			if (outfit) {
+				outfitAttributes = Outfits::getInstance().addAttributes(getID(), defaultOutfit.lookType, getSex(), defaultOutfit.lookAddons);
+			}
 		}
 
-		if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) && getCurrentMount() != 0) {
-			toggleMount(true);
-
-			uint8_t currentMountId = getLastMount();
-			if (currentMountId == 0) {
-				return;
-			}
-
-			if (isRandomMounted()) {
-				currentMountId = getRandomMountId();
-			}
-
-			const auto &currentMount = g_game().mounts->getMountByID(currentMountId);
-			if (hasMount(currentMount)) {
-				if (mountAttributes) {
-					mountAttributes = g_game().mounts->removeAttributes(getID(), currentMount->id);
+	
+		if (cumulativeMountBonus) {
+			const auto playerMounts = g_game().mounts->getMounts();
+			for (const auto &mount : playerMounts) {
+				if (hasMount(mount)) {
+					mountAttributes = g_game().mounts->addAttributes(getID(), mount->id);
 				}
-
-				mountAttributes = g_game().mounts->addAttributes(getID(), currentMount->id);
+			}
+		}else {
+			if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) && getCurrentMount() != 0) {
+				toggleMount(true);
+	
+				uint8_t currentMountId = getLastMount();
+				if (currentMountId == 0) {
+					return;
+				}
+	
+				if (isRandomMounted()) {
+					currentMountId = getRandomMountId();
+				}
+	
+				const auto &currentMount = g_game().mounts->getMountByID(currentMountId);
+				if (hasMount(currentMount)) {
+					if (mountAttributes) {
+						mountAttributes = g_game().mounts->removeAttributes(getID(), currentMount->id);
+					}
+	
+					mountAttributes = g_game().mounts->addAttributes(getID(), currentMount->id);
+				}
 			}
 		}
 
