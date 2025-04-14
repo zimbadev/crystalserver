@@ -192,17 +192,17 @@ bool Mounts::addAttributes(uint32_t playerId, uint8_t mountId) {
 
 	// Apply Conditions
 	if (mount->manaShield) {
-		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_MANASHIELD, -1, 0);
+		const auto &condition = Condition::createCondition(CONDITIONID_MOUNT, CONDITION_MANASHIELD, -1, 0);
 		player->addCondition(condition);
 	}
 
 	if (mount->invisible) {
-		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_INVISIBLE, -1, 0);
+		const auto &condition = Condition::createCondition(CONDITIONID_MOUNT, CONDITION_INVISIBLE, -1, 0);
 		player->addCondition(condition);
 	}
 
 	if (mount->regeneration) {
-		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_REGENERATION, -1, 0);
+		const auto &condition = Condition::createCondition(CONDITIONID_MOUNT, CONDITION_REGENERATION, -1, 0);
 		if (mount->healthGain) {
 			condition->setParam(CONDITION_PARAM_HEALTHGAIN, mount->healthGain);
 		}
@@ -274,7 +274,13 @@ bool Mounts::removeAttributes(uint32_t playerId, uint8_t mountId) {
 		return false;
 	}
 
-	auto mount = getMountByID(mountId);
+
+	auto it = std::find_if(mounts.begin(), mounts.end(), [mountId](const std::shared_ptr<Mount> &mount) {
+		return mount->id == mountId;
+	});
+
+	auto mount = *it;
+
 	if (!mount) {
 		g_logger().warn("[Mounts::removeAttributes] Mount with ID {} not found.", mountId);
 		return false;
@@ -282,15 +288,15 @@ bool Mounts::removeAttributes(uint32_t playerId, uint8_t mountId) {
 
 	// Remove conditions
 	if (mount->manaShield) {
-		player->removeCondition(CONDITION_MANASHIELD, CONDITIONID_OUTFIT);
+		player->removeCondition(CONDITION_MANASHIELD, CONDITIONID_MOUNT);
 	}
 
 	if (mount->invisible) {
-		player->removeCondition(CONDITION_INVISIBLE, CONDITIONID_OUTFIT);
+		player->removeCondition(CONDITION_INVISIBLE, CONDITIONID_MOUNT);
 	}
 
 	if (mount->regeneration) {
-		player->removeCondition(CONDITION_REGENERATION, CONDITIONID_OUTFIT);
+		player->removeCondition(CONDITION_REGENERATION, CONDITIONID_MOUNT);
 	}
 
 	// Revert Skills

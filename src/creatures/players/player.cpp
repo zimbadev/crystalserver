@@ -6338,6 +6338,33 @@ bool Player::canWearOutfit(uint16_t lookType, uint8_t addons) const {
 	return false;
 }
 
+bool Player::changeMount(uint8_t mountId, bool checkList) {
+	const auto &mount = g_game().mounts->getMountByID(mountId);
+	if (!mount) {
+		return false;
+	}
+
+	if (checkList && (!hasMount(mount))) {
+		return false;
+	}
+
+	if (mountAttributes) {
+		const auto &currentMount = g_game().mounts->getMountByID(getLastMount());
+		if (!currentMount) {
+			return false;
+		}
+
+		mountAttributes = !g_game().mounts->removeAttributes(getID(), currentMount->id);
+		
+	}
+
+	if (mount) {		
+		mountAttributes = g_game().mounts->addAttributes(getID(), mountId);
+	}
+
+	return true;
+}
+
 void Player::genReservedStorageRange() {
 	// generate outfits range
 	uint32_t outfits_key = PSTRG_OUTFITS_RANGE_START;
@@ -6764,13 +6791,15 @@ uint32_t Player::getAttackSpeed() const {
 	bool onFistAttackSpeed = g_configManager().getBoolean(TOGGLE_ATTACK_SPEED_ONFIST);
 	uint32_t MAX_ATTACK_SPEED = g_configManager().getNumber(MAX_SPEED_ATTACKONFIST);
 
-	const auto &mount = g_game().mounts->getMountByID(getCurrentMount());
-	if (isMounted() && mount) {
-		if (mount->attackSpeed > 0) {
-			if (mount->attackSpeed >= vocation->getAttackSpeed()) {
-				modifiers = 0;
-			} else {
-				modifiers += mount->attackSpeed;
+	if (mountAttributes) {
+		const auto &mount = g_game().mounts->getMountByClientID(defaultOutfit.lookMount);
+		if (isMounted() && mount) {
+			if (mount->attackSpeed > 0) {
+				if (mount->attackSpeed >= vocation->getAttackSpeed()) {
+					modifiers = 0;
+				} else {
+					modifiers += mount->attackSpeed;
+				}
 			}
 		}
 	}
@@ -7474,13 +7503,9 @@ bool Player::toggleMount(bool mount) {
 			g_game().changeSpeed(static_self_cast<Player>(), currentMount->speed);
 		}
 
-		if (mountsAttributes) {
-			mountsAttributes = g_game().mounts->removeAttributes(getID(), currentMount->id);
-		}
-
 		const auto &mountAttr = g_game().mounts->getMountByID(currentMount->id);
-		if (mountAttr) {
-			mountsAttributes = g_game().mounts->addAttributes(getID(), currentMount->id);
+		if (!changeMount(currentMount->id, true)) {
+			g_logger().error("Could not change mount: {}", currentMount->id);
 		}
 	} else {
 		if (!isMounted()) {
@@ -7566,6 +7591,10 @@ void Player::dismount() {
 	const auto &mount = g_game().mounts->getMountByID(getCurrentMount());
 	if (mount && mount->speed > 0) {
 		g_game().changeSpeed(static_self_cast<Player>(), -mount->speed);
+	}
+
+	if (mountAttributes) {
+		mountAttributes = !g_game().mounts->removeAttributes(getID(), mount->id);
 	}
 
 	defaultOutfit.lookMount = 0;
@@ -10282,9 +10311,26 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 			outfitAttributes = Outfits::getInstance().addAttributes(getID(), defaultOutfit.lookType, getSex(), defaultOutfit.lookAddons);
 		}
 
-		const auto &mount = g_game().mounts->getMountByID(defaultOutfit.lookMount);
-		if (isMounted() && mount) {
-			mountsAttributes = g_game().mounts->addAttributes(getID(), defaultOutfit.lookMount);
+		if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) && getCurrentMount() != 0) {
+			toggleMount(true);
+
+			uint8_t currentMountId = getLastMount();
+			if (currentMountId == 0) {
+				return;
+			}
+
+			if (isRandomMounted()) {
+				currentMountId = getRandomMountId();
+			}
+
+			const auto &currentMount = g_game().mounts->getMountByID(currentMountId);
+			if (hasMount(currentMount)) {
+				if (mountAttributes) {
+					mountAttributes = g_game().mounts->removeAttributes(getID(), currentMount->id);
+				}
+				
+				mountAttributes = g_game().mounts->addAttributes(getID(), currentMount->id);
+			}
 		}
 
 		// Refresh bosstiary tracker onLogin
@@ -10334,10 +10380,6 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 				}
 			}
 			sendBlessStatus();
-		}
-
-		if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) && getCurrentMount() != 0) {
-			toggleMount(true);
 		}
 
 		g_game().changePlayerSpeed(static_self_cast<Player>(), 0);
