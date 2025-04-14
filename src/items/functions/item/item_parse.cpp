@@ -89,7 +89,7 @@ void ItemParse::initParse(const std::string &stringValue, pugi::xml_node attribu
 	ItemParse::parsePrimaryType(stringValue, valueAttribute, itemType);
 	ItemParse::parseHouseRelated(stringValue, valueAttribute, itemType);
 	ItemParse::parseUnscriptedItems(stringValue, attributeNode, valueAttribute, itemType);
-	ItemParse::parsePeventLoss(stringValue, valueAttribute, itemType);
+	ItemParse::parsePreventLoss(stringValue, valueAttribute, itemType);
 }
 
 void ItemParse::parseDummyRate(pugi::xml_node attributeNode, ItemType &itemType) {
@@ -266,7 +266,7 @@ void ItemParse::parseWriteables(const std::string &stringValue, pugi::xml_attrib
 	}
 }
 
-void ItemParse::parsePeventLoss(const std::string &stringValue, pugi::xml_attribute valueAttribute, ItemType &itemType) {
+void ItemParse::parsePreventLoss(const std::string &stringValue, pugi::xml_attribute valueAttribute, ItemType &itemType) {
 	if (stringValue == "preventloss") {
 		itemType.preventLoss = pugi::cast<uint16_t>(valueAttribute.value());
 	}

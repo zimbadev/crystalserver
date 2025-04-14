@@ -335,7 +335,7 @@ private:
 	static void parsePrimaryType(std::string_view stringValue, pugi::xml_attribute valueAttribute, ItemType &itemType);
 	static void parseHouseRelated(std::string_view stringValue, pugi::xml_attribute valueAttribute, ItemType &itemType);
 	static void parseUnscriptedItems(std::string_view stringValue, pugi::xml_node attributeNode, pugi::xml_attribute valueAttribute, ItemType &itemType);
-	static void parsePeventLoss(const std::string &stringValue, pugi::xml_attribute valueAttribute, ItemType &itemType);
+	static void parsePreventLoss(const std::string &stringValue, pugi::xml_attribute valueAttribute, ItemType &itemType);
 
 private:
 	// Parent of the function: static void parseField
