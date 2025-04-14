@@ -17,6 +17,7 @@
 
 #include "creatures/appearance/mounts/mounts.hpp"
 #include "creatures/combat/condition.hpp"
+#include "creatures/creatures_definitions.hpp"
 #include "config/configmanager.hpp"
 #include "creatures/players/player.hpp"
 #include "game/game.hpp"
