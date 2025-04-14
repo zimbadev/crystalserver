@@ -122,7 +122,7 @@ void Item::setImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration) {
 	setCustomAttribute(std::to_string(ITEM_IMBUEMENT_SLOT + slot), valueDuration);
 }
 
-void Item::addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration) {
+bool Item::addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration) {
 	const auto &player = getHoldingPlayer();
 	if (!player) {
 		return false;
