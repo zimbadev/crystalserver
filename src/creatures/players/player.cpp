@@ -6288,7 +6288,7 @@ void Player::changeSoul(int32_t soulChange) {
 bool Player::changeOutfit(Outfit_t outfit, bool checkList) {
 	bool cumulativeOutfitBonus = g_configManager().getBoolean(TOGGLE_CUMULATIVE_BONUS_OUTFIT);
 	if (cumulativeOutfitBonus) {
-		return false;
+		return true;
 	}
 
 	auto outfitId = Outfits::getInstance().getOutfitId(getSex(), outfit.lookType);
@@ -6347,7 +6347,7 @@ bool Player::changeMount(uint8_t mountId, bool checkList) {
 	bool cumulativeMountBonus = g_configManager().getBoolean(TOGGLE_CUMULATIVE_BONUS_MOUNT);
 
 	if (cumulativeMountBonus) {
-		return false;
+		return true;
 	}
 
 	const auto &mount = g_game().mounts->getMountByID(mountId);

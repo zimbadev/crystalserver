@@ -6247,11 +6247,8 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, uint8_t isMoun
 			}
 		}
 
-		if (player->changeMount(mount->id, true)) {
-			g_logger().debug("Attributes found for mount: {}", mount->id);
-			// mountAttributes = g_game().mounts->addAttributes(getID(), currentMount->id);
-		} else {
-			g_logger().debug("Attributes not found for mount: {}", mount->id);
+		if (!player->changeMount(mount->id, true)) {
+			g_logger().debug("[changeMount] Attributes not found for mount: {}", mount->id);
 		}
 
 		player->setCurrentMount(mount->id);
