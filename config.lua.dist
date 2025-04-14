@@ -268,6 +268,7 @@ partyAutoShareExperience = true
 partyShareRangeMultiplier = 1.5
 partyShareLootBoosts = false
 partyShareLootBoostsDimishingFactor = 0.7
+experienceShareActivity = 2 * 60 * 1000
 
 -- Tibiadrome concoctions
 tibiadromeConcoctionCooldown = 24 * 60 * 60 -- 24 hours
