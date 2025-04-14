@@ -670,7 +670,7 @@ public:
 	 * @return false
 	 */
 	bool getImbuementInfo(uint8_t slot, ImbuementInfo* imbuementInfo) const;
-	void addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration);
+	bool addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration);
 	/**
 	 * @brief Decay imbuement time duration, only use this for decay the imbuement time
 	 *

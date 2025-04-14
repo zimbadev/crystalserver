@@ -125,29 +125,31 @@ void Item::setImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration) {
 void Item::addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration) {
 	const auto &player = getHoldingPlayer();
 	if (!player) {
-		return;
+		return false;
 	}
 
 	// Get imbuement by the id
 	const Imbuement* imbuement = g_imbuements().getImbuement(imbuementId);
 	if (!imbuement) {
-		return;
+		return false;
 	}
 
 	// Get category imbuement for acess category id
 	const CategoryImbuement* categoryImbuement = g_imbuements().getCategoryByID(imbuement->getCategory());
 	if (!hasImbuementType(static_cast<ImbuementTypes_t>(categoryImbuement->id), imbuement->getBaseID())) {
-		return;
+		return false;
 	}
 
 	// Checks if the item already has the imbuement category id
 	if (hasImbuementCategoryId(categoryImbuement->id)) {
 		g_logger().error("[Item::setImbuement] - An error occurred while player with name {} try to apply imbuement, item already contains imbuement of the same type: {}", player->getName(), imbuement->getName());
 		player->sendImbuementResult("An error ocurred, please reopen imbuement window.");
-		return;
+		return false;
 	}
 
 	setImbuement(slot, imbuementId, duration);
+
+	return true;
 }
 
 bool Item::hasImbuementCategoryId(uint16_t categoryId) const {
