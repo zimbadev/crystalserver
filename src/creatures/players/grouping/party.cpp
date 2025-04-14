@@ -620,7 +620,7 @@ bool Party::isPlayerActive(const std::shared_ptr<Player> &player) {
 		return false;
 	}
 	const uint64_t timeDiff = OTSYS_TIME() - it->second;
-	return timeDiff <= 2 * 60 * 1000;
+	return timeDiff <= g_configManager().getNumber(EXPERIENCE_SHARE_ACTIVITY);
 }
 
 SharedExpStatus_t Party::getSharedExperienceStatus() {
