@@ -171,39 +171,34 @@ function Hazard:register()
 		player:setHazardSystemPoints(0)
 	end
 
+
+	function event.onSpawn(creature, position)
+		local monster = creature:getMonster()
+		if not monster then
+			return true
+		end
+
+		local zones = position:getZones()
+		if not zones then
+			return true
+		end
+	
+		for _, zone in ipairs(zones) do
+			local hazard = Hazard.getByName(zone:getName())
+			if hazard then
+				monster:hazard(true)
+				monster:hazardCrit(hazard.crit)
+				monster:hazardDodge(hazard.dodge)
+				monster:hazardDamageBoost(hazard.damageBoost)
+				monster:hazardDefenseBoost(hazard.defenseBoost)
+			end
+		end
+	end
+
 	Hazard.areas[self.name] = self
 	event:register()
 end
 
 function Hazard.getByName(name)
 	return Hazard.areas[name]
-end
-
-if not HazardMonster then
-	HazardMonster = { eventName = "HazardMonster" }
-end
-
-function HazardMonster.onSpawn(monster, position)
-	local monsterType = monster:getType()
-	if not monsterType then
-		return false
-	end
-
-	local zones = position:getZones()
-	if not zones then
-		return true
-	end
-
-	logger.debug("Monster {} spawned in hazard zone, position {}", monster:getName(), position:toString())
-	for _, zone in ipairs(zones) do
-		local hazard = Hazard.getByName(zone:getName())
-		if hazard then
-			monster:hazard(true)
-			monster:hazardCrit(hazard.crit)
-			monster:hazardDodge(hazard.dodge)
-			monster:hazardDamageBoost(hazard.damageBoost)
-			monster:hazardDefenseBoost(hazard.defenseBoost)
-		end
-	end
-	return true
 end
