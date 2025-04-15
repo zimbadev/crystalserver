@@ -1561,7 +1561,7 @@ void ProtocolGame::checkCreatureAsKnown(uint32_t id, bool &known, uint32_t &remo
 
 			// We need to protect party players from removing
 			const auto &checkPlayer = creature->getPlayer();
-			if (!checkPlayer || (checkPlayer->getParty() != player->getParty() && !canSee(creature))) {
+			if ((checkPlayer && (checkPlayer->getParty() != player->getParty() && !canSee(creature))) || (!checkPlayer && !canSee(creature))) {
 				removeCreature(creatureId);
 				removedKnown = creatureId;
 				return;
