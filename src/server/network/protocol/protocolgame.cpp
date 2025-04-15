@@ -7956,24 +7956,33 @@ void ProtocolGame::AddPlayerSkills(NetworkMessage &msg) {
 		}
 	}
 
-	for (uint8_t i = SKILL_CRITICAL_HIT_CHANCE; i <= SKILL_LAST; ++i) {
-		if (!oldProtocol && (i == SKILL_LIFE_LEECH_CHANCE || i == SKILL_MANA_LEECH_CHANCE)) {
-			continue;
-		}
-		auto skill = static_cast<skills_t>(i);
-		msg.add<uint16_t>(std::min<int32_t>(player->getSkillLevel(skill), std::numeric_limits<uint16_t>::max()));
-		msg.add<uint16_t>(player->getBaseSkill(skill));
-	}
 
 	if (!oldProtocol) {
-		// 13.10 list (U8 + U16)
-		msg.addByte(0);
-		// Version 12.81 new skill (Fatal, Dodge and Momentum)
-		sendForgeSkillStats(msg);
-
-		// used for imbuement (Feather)
-		msg.add<uint32_t>(player->getCapacity()); // total capacity
-		msg.add<uint32_t>(player->getBaseCapacity()); // base total capacity
+		msg.addByte(0x00); // unknown
+		msg.add<uint32_t>(0x00); // Cap
+		msg.add<uint32_t>(0x00); // Cap
+		msg.add<uint16_t>(0x00); // damage / healing
+		msg.add<uint16_t>(0x00); // max damage
+		msg.addByte(0x00); // CIPBIA ELEMENTAL
+		msg.addDouble(0x00); // damage
+		msg.addByte(0x00); // getCipbiaElement
+		msg.addDouble(0x00); // life leech
+		msg.addDouble(0x00); // mana leech
+		msg.addDouble(0x00); // critical
+		msg.addDouble(0x00); // critical hit damage
+		msg.addDouble(0x00); // ONSLAUGHT
+		msg.add<uint16_t>(0x00); // defense
+		msg.add<uint16_t>(0x00); // armor
+		msg.addDouble(0x00); // mitigation
+		msg.addDouble(0x00); // ruse
+		msg.add<uint16_t>(0x00); // reflect
+		msg.addByte(0x00); // size protections (se maior que 1 ativar 1 Byte e 1 Double)
+		// msg.addByte(0x00); // getCipbiaElement
+		// msg.addDouble(0x00); // value protection
+		msg.addDouble(0x00); // Momentum
+		msg.addDouble(0x00); // trancedance
+		msg.addDouble(0x00); // amplification
+		writeToOutputBuffer(msg);
 	}
 }
 
