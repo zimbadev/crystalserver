@@ -7956,7 +7956,6 @@ void ProtocolGame::AddPlayerSkills(NetworkMessage &msg) {
 		}
 	}
 
-
 	if (!oldProtocol) {
 		msg.addByte(0x00); // unknown
 		msg.add<uint32_t>(0x00); // Cap
