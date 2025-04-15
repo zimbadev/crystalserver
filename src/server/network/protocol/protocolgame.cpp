@@ -987,6 +987,10 @@ void ProtocolGame::parsePacketDead(uint8_t recvbyte) {
 			return;
 		}
 
+		for (const auto &[key, user] : g_game().getPlayers()) {
+			user->vip()->notifyStatusChange(player, VipStatus_t::ONLINE, false);
+		}
+
 		sendAddCreature(player, player->getPosition(), 0, false);
 		addBless();
 		resetPlayerDeathTime();
