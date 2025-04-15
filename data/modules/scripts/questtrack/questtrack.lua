@@ -3,7 +3,7 @@ function onRecvbyte(player, msg, byte)
 		local quests = {}
 		local missions = msg:getByte()
 		for i = 1, missions do
-			local questId = msg:getU16() 
+			local questId = msg:getU16()
 			local questName = msg:getString()
 
 			quests[#quests + 1] = {
