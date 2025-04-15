@@ -7958,8 +7958,8 @@ void ProtocolGame::AddPlayerSkills(NetworkMessage &msg) {
 
 	if (!oldProtocol) {
 		msg.addByte(0x00); // unknown
-		msg.add<uint32_t>(0x00); // Cap
-		msg.add<uint32_t>(0x00); // Cap
+		msg.add<uint32_t>(player->getCapacity()); // total capacity
+		msg.add<uint32_t>(player->getBaseCapacity()); // base total capacity
 		msg.add<uint16_t>(0x00); // damage / healing
 		msg.add<uint16_t>(0x00); // max damage
 		msg.addByte(0x00); // CIPBIA ELEMENTAL
@@ -7970,11 +7970,19 @@ void ProtocolGame::AddPlayerSkills(NetworkMessage &msg) {
 		msg.addDouble(0x00); // critical
 		msg.addDouble(0x00); // critical hit damage
 		msg.addDouble(0x00); // ONSLAUGHT
-		msg.add<uint16_t>(0x00); // defense
-		msg.add<uint16_t>(0x00); // armor
-		msg.addDouble(0x00); // mitigation
+
+		msg.add<uint16_t>(player->getArmor());
+		msg.add<uint16_t>(player->getDefense());
+
+		// Wheel of destiny mitigation
+		if (g_configManager().getBoolean(TOGGLE_WHEELSYSTEM)) {
+			msg.addDouble(player->getMitigation()); // FIX ME wrong value
+		} else {
+			msg.addDouble(0);
+		}
+
 		msg.addDouble(0x00); // ruse
-		msg.add<uint16_t>(0x00); // reflect
+		msg.add<uint16_t>(static_cast<uint16_t>(player->getReflectFlat(COMBAT_PHYSICALDAMAGE)));
 		msg.addByte(0x00); // size protections (se maior que 1 ativar 1 Byte e 1 Double)
 		// msg.addByte(0x00); // getCipbiaElement
 		// msg.addDouble(0x00); // value protection
