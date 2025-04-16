@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mounts>
+	<!-- Example of new attributies 
 	<mount id="1" clientid="368" name="Widow Queen" speed="10" premium="yes" type="quest">
 		<skills>
 			<fist value="1" />
@@ -25,6 +26,8 @@
 			<criticaldamage value="100" />
 		</imbuing>
 	</mount>
+	-->
+	<mount id="1" clientid="368" name="Widow Queen" speed="10" premium="yes" type="quest" />
 	<mount id="2" clientid="369" name="Racing Bird" speed="10" premium="yes" type="quest" />
 	<mount id="3" clientid="370" name="War Bear" speed="10" premium="yes" type="quest" />
 	<mount id="4" clientid="371" name="Black Sheep" speed="10" premium="yes" type="quest" />
