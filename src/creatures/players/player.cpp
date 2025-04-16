@@ -2399,12 +2399,16 @@ void Player::onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<
 		return;
 	}
 
+	if (!item->addImbuement(slot, imbuement->getID(), baseImbuement->duration)) {
+		g_logger().error("[Player::onApplyImbuement] - An error occurred while player with name {} trying to apply imbuement in a different item than the opened in the window, probably trying to abuse bug", this->getName());
+		return;
+	}
+
 	// Update imbuement stats item if the item is equipped
 	if (item->getParent() == getPlayer()) {
 		addItemImbuementStats(imbuement);
 	}
 
-	item->addImbuement(slot, imbuement->getID(), baseImbuement->duration);
 	updateImbuementTrackerStats();
 	openImbuementWindow(item);
 }

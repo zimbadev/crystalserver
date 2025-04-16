@@ -1276,15 +1276,6 @@ bool Game::removeCreature(const std::shared_ptr<Creature> &creature, bool isLogo
 	return true;
 }
 
-void Game::executeDeath(uint32_t creatureId) {
-	metrics::method_latency measure(__METRICS_METHOD_NAME__);
-	std::shared_ptr<Creature> creature = getCreatureByID(creatureId);
-	if (creature && !creature->isRemoved()) {
-		afterCreatureZoneChange(creature, creature->getZones(), {});
-		creature->onDeath();
-	}
-}
-
 void Game::playerTeleport(uint32_t playerId, const Position &newPosition) {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	const auto &player = getPlayerByID(playerId);
@@ -6189,7 +6180,7 @@ void Game::playerToggleMount(uint32_t playerId, bool mount) {
 	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
-void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, uint8_t isMountRandomized /* = 0*/) {
+void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted, /* = false */  uint8_t isMountRandomized /* = 0*/) {
 	if (!g_configManager().getBoolean(ALLOW_CHANGEOUTFIT)) {
 		return;
 	}
@@ -6203,7 +6194,7 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, uint8_t isMoun
 		return;
 	}
 
-	if (player->isWearingSupportOutfit()) {
+	if (player->isWearingSupportOutfit() || !isMounted) {
 		outfit.lookMount = 0;
 		isMountRandomized = 0;
 	}
@@ -10769,29 +10760,20 @@ void Game::setTransferPlayerHouseItems(uint32_t houseId, uint32_t playerId) {
 	transferHouseItemsToPlayer[houseId] = playerId;
 }
 
-template <typename T>
-std::vector<T> setDifference(const std::unordered_set<T> &setA, const std::unordered_set<T> &setB) {
-	std::vector<T> setResult;
-	setResult.reserve(setA.size());
-
-	for (const auto &elem : setA) {
-		if (!setB.contains(elem)) {
-			setResult.emplace_back(elem);
-		}
-	}
-
-	return setResult;
-}
-
 ReturnValue Game::beforeCreatureZoneChange(const std::shared_ptr<Creature> &creature, const std::unordered_set<std::shared_ptr<Zone>> &fromZones, const std::unordered_set<std::shared_ptr<Zone>> &toZones, bool force /* = false*/) const {
 	if (!creature) {
 		return RETURNVALUE_NOTPOSSIBLE;
 	}
 
 	// fromZones - toZones = zones that creature left
-	const auto &zonesLeaving = setDifference(fromZones, toZones);
+	auto zonesLeaving = fromZones | std::views::filter([&](const auto& z) {
+		return toZones.find(z) == toZones.end();
+	});
+
 	// toZones - fromZones = zones that creature entered
-	const auto &zonesEntering = setDifference(toZones, fromZones);
+	auto zonesEntering = toZones | std::views::filter([&](const auto& z) {
+		return fromZones.find(z) == fromZones.end();
+	});
 
 	if (zonesLeaving.empty() && zonesEntering.empty()) {
 		return RETURNVALUE_NOERROR;
@@ -10813,28 +10795,28 @@ ReturnValue Game::beforeCreatureZoneChange(const std::shared_ptr<Creature> &crea
 	return RETURNVALUE_NOERROR;
 }
 
-void Game::afterCreatureZoneChange(const std::shared_ptr<Creature> &creatures, const std::unordered_set<std::shared_ptr<Zone>> &fromZones, const std::unordered_set<std::shared_ptr<Zone>> &toZones) const {
-	auto creature = creatures;
+void Game::afterCreatureZoneChange(const std::shared_ptr<Creature> &creature, const std::unordered_set<std::shared_ptr<Zone>> &fromZones, const std::unordered_set<std::shared_ptr<Zone>> &toZones) const {
 	if (!creature) {
 		return;
 	}
 
 	// fromZones - toZones = zones that creature left
-	const auto &zonesLeaving = setDifference(fromZones, toZones);
+	auto zonesLeaving = fromZones | std::views::filter([&](const auto& z) {
+		return toZones.find(z) == toZones.end();
+	});
+
 	// toZones - fromZones = zones that creature entered
-	const auto &zonesEntering = setDifference(toZones, fromZones);
+	auto zonesEntering = toZones | std::views::filter([&](const auto& z) {
+		return fromZones.find(z) == fromZones.end();
+	});
 
 	for (const auto &zone : zonesLeaving) {
 		zone->creatureRemoved(creature);
-	}
-	for (const auto &zone : zonesEntering) {
-		zone->creatureAdded(creature);
-	}
-
-	for (const auto &zone : zonesLeaving) {
 		g_callbacks().executeCallback(EventCallback_t::zoneAfterCreatureLeave, &EventCallback::zoneAfterCreatureLeave, zone, creature);
 	}
+
 	for (const auto &zone : zonesEntering) {
+		zone->creatureAdded(creature);
 		g_callbacks().executeCallback(EventCallback_t::zoneAfterCreatureEnter, &EventCallback::zoneAfterCreatureEnter, zone, creature);
 	}
 }

@@ -987,6 +987,10 @@ void ProtocolGame::parsePacketDead(uint8_t recvbyte) {
 			return;
 		}
 
+		for (const auto &[key, user] : g_game().getPlayers()) {
+			user->vip()->notifyStatusChange(player, VipStatus_t::ONLINE, false);
+		}
+
 		sendAddCreature(player, player->getPosition(), 0, false);
 		addBless();
 		resetPlayerDeathTime();
@@ -1721,9 +1725,9 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg) {
 				g_logger().debug("Bool isMounted: {}", isMounted);
 
 				uint8_t isMountRandomized = msg.getByte();
-				g_game().playerChangeOutfit(player->getID(), newOutfit, isMountRandomized);
+				g_game().playerChangeOutfit(player->getID(), newOutfit, isMounted, isMountRandomized);
 			} else {
-				g_game().playerChangeOutfit(player->getID(), newOutfit, 0);
+				g_game().playerChangeOutfit(player->getID(), newOutfit, false, 0);
 			}
 		} else if (outfitType == 1) {
 			// This value probably has something to do with try outfit variable inside outfit window dialog

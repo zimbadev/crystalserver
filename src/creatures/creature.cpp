@@ -753,8 +753,15 @@ void Creature::changeHealth(int32_t healthChange, bool sendHealthChange /* = tru
 	if (sendHealthChange && oldHealth != health) {
 		g_game().addCreatureHealth(static_self_cast<Creature>());
 	}
+
 	if (health <= 0) {
-		g_dispatcher().addEvent([creatureId = getID()] { g_game().executeDeath(creatureId); }, "Game::executeDeath");
+		g_dispatcher().addEvent([self = std::weak_ptr<Creature>(getCreature())] {
+			if (const auto &creature = self.lock()) {
+				if (!creature->isRemoved()) {
+					creature->onDeath();
+				}
+			}
+		}, "Creature::onDeath");
 	}
 }
 
