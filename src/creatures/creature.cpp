@@ -761,7 +761,8 @@ void Creature::changeHealth(int32_t healthChange, bool sendHealthChange /* = tru
 					creature->onDeath();
 				}
 			}
-		}, "Creature::onDeath");
+		},
+		                        "Creature::onDeath");
 	}
 }
 
