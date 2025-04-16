@@ -2409,6 +2409,7 @@ void Player::onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<
 		addItemImbuementStats(imbuement);
 	}
 
+	sendSkills(); // skills need to be updated because now it shows in the player skills window
 	updateImbuementTrackerStats();
 	openImbuementWindow(item);
 }
@@ -2445,6 +2446,7 @@ void Player::onClearImbuement(const std::shared_ptr<Item> &item, uint8_t slot) {
 	}
 
 	item->clearImbuement(slot, imbuementInfo.imbuement->getID());
+	sendSkills(); // skills need to be updated because now it shows in the player skills window
 	updateImbuementTrackerStats();
 	this->openImbuementWindow(item);
 }
