@@ -2249,16 +2249,10 @@ ReturnValue Game::internalMoveItem(std::shared_ptr<Cylinder> fromCylinder, std::
 
 	auto fromContainer = fromCylinder ? fromCylinder->getContainer() : nullptr;
 	auto toContainer = toCylinder ? toCylinder->getContainer() : nullptr;
-	auto player = actor ? actor->getPlayer() : nullptr;
-	if (player) {
-		// Update containers
-		player->onSendContainer(toContainer);
-		player->onSendContainer(fromContainer);
-	}
 
 	// Actor related actions
 	if (fromCylinder && actor && toCylinder) {
-		if (!fromContainer || !toContainer || !player) {
+		if (!fromContainer || !toContainer) {
 			return ret;
 		}
 
