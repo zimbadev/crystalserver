@@ -20,8 +20,8 @@
 
 struct Mount {
 	Mount(uint8_t initId, uint16_t initClientId, std::string initName, int32_t initSpeed, bool initPremium, std::string initType) :
-		name(std::move(initName)), speed(initSpeed), clientId(initClientId), id(initId), premium(initPremium),
-		type(std::move(initType)) {
+		name(std::move(initName)), type(std::move(initType)), clientId(initClientId), id(initId), premium(initPremium),
+		speed(initSpeed) {
 		std::memset(skills, 0, sizeof(skills));
 		std::memset(stats, 0, sizeof(stats));
 	}
