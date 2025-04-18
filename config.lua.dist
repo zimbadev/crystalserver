@@ -678,6 +678,5 @@ metricsEnableOstream = false
 metricsOstreamInterval = 1000
 
 --- Outfit/Mount Bonus
-
 toggleCumulativeBonusOutfit = false
 toggleCumulativeBonusMount = true
