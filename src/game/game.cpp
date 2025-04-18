@@ -6238,6 +6238,12 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted
 			}
 		}
 
+		if (player->changeMount(mount->id, true)) {
+			g_logger().debug("Attributes found for mount: {}", mount->id);
+		} else {
+			g_logger().debug("Attributes not found for mount: {}", mount->id);
+		}
+
 		player->setCurrentMount(mount->id);
 		changeSpeed(player, deltaSpeedChange);
 	} else if (player->isMounted()) {

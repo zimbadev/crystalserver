@@ -749,6 +749,7 @@ public:
 	bool getOutfitAddons(const std::shared_ptr<Outfit> &outfit, uint8_t &addons) const;
 
 	bool changeOutfit(Outfit_t outfit, bool checkList);
+	bool changeMount(uint8_t mountId, bool checkList);
 	void hasRequestedOutfit(bool v) {
 		requestedOutfit = v;
 	}
@@ -1644,6 +1645,7 @@ private:
 	bool imbuementTrackerWindowOpen = false;
 	bool requestedOutfit = false;
 	bool outfitAttributes = false;
+	bool mountAttributes = false;
 
 	// Hazard system
 	int64_t lastHazardSystemCriticalHit = 0;

@@ -367,6 +367,7 @@ void LuaEnums::initConditionIdEnums(lua_State* L) {
 	registerEnum(L, CONDITIONID_RING);
 	registerEnum(L, CONDITIONID_AMMO);
 	registerEnum(L, CONDITIONID_OUTFIT);
+	registerEnum(L, CONDITIONID_MOUNT);
 }
 
 void LuaEnums::initConditionParamEnums(lua_State* L) {
