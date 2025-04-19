@@ -581,10 +581,21 @@ function Player:onGainExperience(target, exp, rawExp)
 		local stack = target:getForgeStack()
 		if stack >= 1 and stack <= 15 then
 			stackBonus = math.min(stack * 10, 150)
+			exp = exp * (1 + stackBonus / 100)
 		end
 	end
 
-	exp = exp * (1 + stackBonus / 100)
+	-- Soul War Experience by Taint
+	if SoulWarQuest then
+		local monsterType = target:getType()
+		if monsterType and monsterType:getName() and table.contains(SoulWarQuest.bagYouDesireMonsters, monsterType:getName()) then
+			local taintLevel = self:getTaintLevel()
+			if taintLevel > 0 then
+				local taintBoost = SoulWarQuest.taintExperienceBoostMap[taintLevel] and SoulWarQuest.taintExperienceBoostMap[taintLevel].boost or 0
+				exp = exp * (1 + taintBoost / 100)
+			end
+		end
+	end
 
 	-- Final Adjustments: Low Level Bonus and Base Rate
 	local lowLevelBonusExp = self:getFinalLowLevelBonus()

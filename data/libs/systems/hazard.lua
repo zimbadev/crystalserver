@@ -171,7 +171,6 @@ function Hazard:register()
 		player:setHazardSystemPoints(0)
 	end
 
-
 	function event.onSpawn(creature, position)
 		local monster = creature:getMonster()
 		if not monster then
@@ -182,7 +181,7 @@ function Hazard:register()
 		if not zones then
 			return true
 		end
-	
+
 		for _, zone in ipairs(zones) do
 			local hazard = Hazard.getByName(zone:getName())
 			if hazard then
