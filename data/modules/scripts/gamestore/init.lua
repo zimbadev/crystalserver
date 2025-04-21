@@ -1787,7 +1787,7 @@ function GameStore.processExpBoostPurchase(player)
 	player:setXpBoostPercent(50)
 	player:setXpBoostTime(currentXpBoostTime + 3600)
 
-	if expBoostCount == -1 or expBoostCount > 0 or expBoostCount > 5 then
+	if expBoostCount == -1 or expBoostCount > 5 then
 		expBoostCount = 1
 	end
 end
@@ -2071,7 +2071,7 @@ function Player.makeCoinTransaction(self, offer, desc)
 		desc = offer.name
 	end
 
-	if offer.Type == GameStore.OfferTypes.OFFER_TYPE_EXPBOOST or GameStore.OfferTypes.OFFER_TYPE_EXPBOOSTCUSTOM then
+	if offer.Type == GameStore.OfferTypes.OFFER_TYPE_EXPBOOST then
 		local expBoostCount = self:getStorageValue(GameStore.Storages.expBoostCount)
 
 		if expBoostCount == -1 or expBoostCount == 0 or expBoostCount > 5 then
