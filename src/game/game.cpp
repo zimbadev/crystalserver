@@ -10218,29 +10218,32 @@ bool Game::hasDistanceEffect(uint16_t effectId) {
 }
 
 void Game::createLuaItemsOnMap() {
-	for (const auto [position, itemId] : mapLuaItemsStored) {
+	std::string positionStr;
+	for (const auto &[position, itemId] : mapLuaItemsStored) {
+		if (position.x == 0) {
+			continue;
+		}
+
+		const auto &tile = g_game().map.getTile(position);
+		if (!tile) {
+			positionStr = position.toString();
+			g_logger().warn("[Game::createLuaItemsOnMap] - Tile is wrong or not found position: {}", positionStr);
+			continue;
+		}
+
+		if (g_game().findItemOfType(tile, itemId, false, -1)) {
+			positionStr = position.toString();
+			g_logger().warn("[Game::createLuaItemsOnMap] - Cannot create item with id {} on position {}, item already exists", itemId, positionStr);
+			continue;
+		}
+
 		const auto &item = Item::CreateItem(itemId, 1);
 		if (!item) {
 			g_logger().warn("[Game::createLuaItemsOnMap] - Cannot create item with id {}", itemId);
 			continue;
 		}
 
-		if (position.x != 0) {
-			const auto &tile = g_game().map.getTile(position);
-			if (!tile) {
-				g_logger().warn("[Game::createLuaItemsOnMap] - Tile is wrong or not found position: {}", position.toString());
-
-				continue;
-			}
-
-			// If the item already exists on the map, then ignore it and send warning
-			if (g_game().findItemOfType(tile, itemId, false, -1)) {
-				g_logger().warn("[Game::createLuaItemsOnMap] - Cannot create item with id {} on position {}, item already exists", itemId, position.toString());
-				continue;
-			}
-
-			g_game().internalAddItem(tile, item, INDEX_WHEREEVER, FLAG_NOLIMIT);
-		}
+		g_game().internalAddItem(tile, item, INDEX_WHEREEVER, FLAG_NOLIMIT);
 	}
 }
 
