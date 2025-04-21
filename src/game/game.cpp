@@ -6180,7 +6180,7 @@ void Game::playerToggleMount(uint32_t playerId, bool mount) {
 	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
-void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted, /* = false */  uint8_t isMountRandomized /* = 0*/) {
+void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted, /* = false */ uint8_t isMountRandomized /* = 0*/) {
 	if (!g_configManager().getBoolean(ALLOW_CHANGEOUTFIT)) {
 		return;
 	}
@@ -10772,14 +10772,14 @@ ReturnValue Game::beforeCreatureZoneChange(const std::shared_ptr<Creature> &crea
 	}
 
 	// fromZones - toZones = zones that creature left
-	auto zonesLeaving = fromZones | std::views::filter([&](const auto& z) {
-		return toZones.find(z) == toZones.end();
-	});
+	auto zonesLeaving = fromZones | std::views::filter([&](const auto &z) {
+							return toZones.find(z) == toZones.end();
+						});
 
 	// toZones - fromZones = zones that creature entered
-	auto zonesEntering = toZones | std::views::filter([&](const auto& z) {
-		return fromZones.find(z) == fromZones.end();
-	});
+	auto zonesEntering = toZones | std::views::filter([&](const auto &z) {
+							 return fromZones.find(z) == fromZones.end();
+						 });
 
 	if (zonesLeaving.empty() && zonesEntering.empty()) {
 		return RETURNVALUE_NOERROR;
@@ -10807,14 +10807,14 @@ void Game::afterCreatureZoneChange(const std::shared_ptr<Creature> &creature, co
 	}
 
 	// fromZones - toZones = zones that creature left
-	auto zonesLeaving = fromZones | std::views::filter([&](const auto& z) {
-		return toZones.find(z) == toZones.end();
-	});
+	auto zonesLeaving = fromZones | std::views::filter([&](const auto &z) {
+							return toZones.find(z) == toZones.end();
+						});
 
 	// toZones - fromZones = zones that creature entered
-	auto zonesEntering = toZones | std::views::filter([&](const auto& z) {
-		return fromZones.find(z) == fromZones.end();
-	});
+	auto zonesEntering = toZones | std::views::filter([&](const auto &z) {
+							 return fromZones.find(z) == fromZones.end();
+						 });
 
 	for (const auto &zone : zonesLeaving) {
 		zone->creatureRemoved(creature);
