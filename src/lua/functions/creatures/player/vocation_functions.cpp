@@ -344,7 +344,7 @@ int VocationFunctions::luaVocationGetAbsorbPercent(lua_State* L) {
 		return 1;
 	}
 
-	CombatType_t combat = static_cast<CombatType_t>(Lua::getNumber<int16_t>(L, 2));
+	auto combat = static_cast<CombatType_t>(Lua::getNumber<int16_t>(L, 2));
 	int16_t absorbPercent = vocation->getAbsorbPercent(combat);
 	lua_pushnumber(L, absorbPercent);
 	return 1;
@@ -358,7 +358,7 @@ int VocationFunctions::luaVocationIncreaseAbsorbPercent(lua_State* L) {
 		return 1;
 	}
 
-	CombatType_t combat = static_cast<CombatType_t>(Lua::getNumber<int16_t>(L, 2));
+	auto combat = static_cast<CombatType_t>(Lua::getNumber<int16_t>(L, 2));
 	int16_t value = static_cast<int16_t>(Lua::getNumber<int16_t>(L, 3));
 	vocation->increaseAbsorbPercent(combat, value);
 	return 1;

@@ -849,7 +849,7 @@ bool IOLoginDataSave::savePlayerNamesAndChangeName(const std::shared_ptr<Player>
 	Database &db = Database::getInstance();
 	std::ostringstream query;
 
-	const time_t now = time(nullptr);
+	const auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
 	// find former name
 	std::string formerName = oldName;

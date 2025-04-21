@@ -275,7 +275,7 @@ bool Mounts::removeAttributes(uint32_t playerId, uint8_t mountId) {
 		return false;
 	}
 
-	auto it = std::find_if(mounts.begin(), mounts.end(), [mountId](const std::shared_ptr<Mount> &mount) {
+	auto it = std::ranges::find_if(mounts, [mountId](const std::shared_ptr<Mount> &mount) {
 		return mount->id == mountId;
 	});
 

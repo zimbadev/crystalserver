@@ -105,8 +105,8 @@ bool Item::hasImbuementAttribute(const std::string &attributeSlot) const {
 }
 
 bool Item::getImbuementInfo(uint8_t slot, ImbuementInfo* imbuementInfo) const {
-	std::string attributeSlot = std::to_string(ITEM_IMBUEMENT_SLOT + slot);
-	if (!hasImbuementAttribute(attributeSlot)) {
+	if (std::string attributeSlot = std::to_string(ITEM_IMBUEMENT_SLOT + slot); 
+		!hasImbuementAttribute(attributeSlot)) {
 		return false;
 	}
 
