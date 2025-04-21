@@ -2077,16 +2077,8 @@ function Player.makeCoinTransaction(self, offer, desc)
 		if expBoostCount == -1 or expBoostCount == 0 or expBoostCount > 5 then
 			expBoostCount = 1
 		end
-		if expBoostCount <= 1 then
-			offer.price = GameStore.ExpBoostValues[1]
-		elseif expBoostCount == 2 then
-			offer.price = GameStore.ExpBoostValues[2]
-		elseif expBoostCount == 3 then
-			offer.price = GameStore.ExpBoostValues[3]
-		elseif expBoostCount == 4 then
-			offer.price = GameStore.ExpBoostValues[4]
-		elseif expBoostCount == 5 then
-			offer.price = GameStore.ExpBoostValues[5]
+		if GameStore.ExpBoostValues[expBoostCount] then
+			offer.price = GameStore.ExpBoostValues[expBoostCount]
 		else
 			offer.price = offer.price
 		end
