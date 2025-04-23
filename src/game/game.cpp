@@ -10239,7 +10239,8 @@ void Game::createLuaItemsOnMap() {
 
 		const auto &item = Item::CreateItem(itemId, 1);
 		if (!item) {
-			g_logger().warn("[Game::createLuaItemsOnMap] - Cannot create item with id {}", itemId);
+			positionStr = position.toString();
+			g_logger().warn("[Game::createLuaItemsOnMap] - Cannot create item with id {} on position {}", itemId, positionStr);
 			continue;
 		}
 
