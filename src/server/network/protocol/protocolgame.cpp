@@ -131,7 +131,7 @@ namespace {
 	 */
 	void handleImbuementDamage(NetworkMessage &msg, const std::shared_ptr<Player> &player) {
 		bool imbueDmg = false;
-		std::shared_ptr<Item> weapon = player->getWeapon(CONST_SLOT_LEFT);
+		std::shared_ptr<Item> weapon = player->getWeapon();
 		if (weapon) {
 			uint8_t slots = Item::items[weapon->getID()].imbuementSlot;
 			if (slots > 0) {
@@ -7967,7 +7967,7 @@ void ProtocolGame::AddPlayerSkills(NetworkMessage &msg) {
 		msg.add<uint32_t>(player->getBaseCapacity()); // base total capacity
 
 		// damage/healing, max damage and converted damage based on weapon type
-		std::shared_ptr<Item> weapon = player->getWeapon(CONST_SLOT_LEFT);
+		std::shared_ptr<Item> weapon = player->getWeapon();
 		if (weapon) {
 			const ItemType &it = Item::items[weapon->getID()];
 			if (it.weaponType == WEAPON_WAND) {
