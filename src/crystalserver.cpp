@@ -219,7 +219,7 @@ void CrystalServer::logInfos() {
 #endif
 
 	logger.info("A server developed by: {}", SOFTWARE_DEVELOPERS);
-	logger.info("Visit our GitHub:  https://github.com/jprzimba/crystalserver");
+	logger.info("Visit our GitHub:  https://github.com/zimbadev/crystalserver");
 }
 
 /**

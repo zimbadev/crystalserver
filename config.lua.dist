@@ -632,7 +632,7 @@ startupDatabaseOptimization = true
 -- Status server information
 ownerName = "Tryller"
 ownerEmail = "@gmail.com"
-url = "https://github.com/jprzimba/crystalserver"
+url = "https://github.com/zimbadev/crystalserver"
 location = "South America"
 
 -- Sends Discord webhook notifications on startup, raids and shutdown.
