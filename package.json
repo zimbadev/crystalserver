@@ -1,6 +1,6 @@
 {
-  "name": "crystalserver",
-  "version": "4.0",
+  "name": "zimbadev-crystalserver",
+  "version": "4.0.4",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zimbadev/crystalserver.git"
