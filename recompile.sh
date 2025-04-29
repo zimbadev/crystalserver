@@ -90,13 +90,13 @@ build_crystalserver() {
 
 # Function to move the generated executable
 move_executable() {
-	local executable_name="Crystal Server"
+	local executable_name="crystalserver"
 	cd ..
 	if [ -e "$executable_name" ]; then
 		info "Saving old build"
 		mv ./"$executable_name" ./"$executable_name".old
 	fi
-	info "Moving the generated executable to the Crystal Server folder directory..."
+	info "Moving the generated executable to the crystalserver folder directory..."
 	cp ./build/linux-release/bin/"$executable_name" ./"$executable_name"
 	info "Build completed successfully!"
 }

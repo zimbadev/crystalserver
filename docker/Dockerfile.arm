@@ -37,6 +37,7 @@ VOLUME [ "/data" ]
 COPY --from=build /srv/build/linux-release/bin/crystalserver /bin/crystalserver
 COPY LICENSE *.sql key.pem /crystalserver/
 COPY data /crystalserver/data
+COPY data-crystal /crystalserver/data-crystal
 COPY data-global /crystalserver/data-global
 COPY config.lua.dist /crystalserver/config.lua
 
