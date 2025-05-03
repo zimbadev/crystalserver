@@ -284,8 +284,10 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "getClient", PlayerFunctions::luaPlayerGetClient);
 
 	Lua::registerMethod(L, "Player", "getHouse", PlayerFunctions::luaPlayerGetHouse);
+	Lua::registerMethod(L, "Player", "getAllHouses", PlayerFunctions::luaPlayerGetAllHouses);
 	Lua::registerMethod(L, "Player", "sendHouseWindow", PlayerFunctions::luaPlayerSendHouseWindow);
 	Lua::registerMethod(L, "Player", "setEditHouse", PlayerFunctions::luaPlayerSetEditHouse);
+	Lua::registerMethod(L, "Player", "sendHouseAuctionMessage", PlayerFunctions::luaPlayerSendHouseAuctionMessage);
 
 	Lua::registerMethod(L, "Player", "setGhostMode", PlayerFunctions::luaPlayerSetGhostMode);
 
@@ -3410,6 +3412,47 @@ int PlayerFunctions::luaPlayerGetHouse(lua_State* L) {
 	} else {
 		lua_pushnil(L);
 	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetAllHouses(lua_State* L) {
+	// player:getAllHouses()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	auto houses = g_game().map.houses.getAllHousesByPlayerId(player->getGUID());
+	lua_newtable(L);
+	int index = 1;
+	for (const auto &house : houses) {
+		if (house) {
+			lua_pushnumber(L, index++);
+			Lua::pushUserdata<House>(L, house);
+			Lua::setMetatable(L, -1, "House");
+			lua_settable(L, -3);
+		}
+	}
+
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendHouseAuctionMessage(lua_State* L) {
+	// player:sendHouseAuctionMessage(houseId, type, index, bidSuccess)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	uint32_t houseId = Lua::getNumber<uint32_t>(L, 2);
+	uint8_t type = Lua::getNumber<uint8_t>(L, 3);
+	uint8_t index = Lua::getNumber<uint8_t>(L, 4);
+	bool bidSuccess = Lua::getBoolean(L, 5, false);
+	player->sendHouseAuctionMessage(houseId, static_cast<HouseAuctionType>(type), index, bidSuccess);
+
+	lua_pushboolean(L, true);
 	return 1;
 }
 
