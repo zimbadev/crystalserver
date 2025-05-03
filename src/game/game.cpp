@@ -10999,7 +10999,7 @@ void Game::playerCyclopediaHousesByTown(uint32_t playerId, const std::string &to
 	player->sendCyclopediaHouseList(houses);
 }
 
-int32_t Game::getHighestBidCountByPlayerName(const std::string& playerName) {
+int32_t Game::getHighestBidCountByPlayerName(const std::string &playerName) {
 	int count = 0;
 	const auto &housesList = g_game().map.houses.getHouses();
 	for (const auto &it : housesList) {
