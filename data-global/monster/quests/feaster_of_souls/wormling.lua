@@ -14,8 +14,11 @@ monster.outfit = {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 monster.raceId = 26
 
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 monster.health = 5000

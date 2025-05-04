@@ -586,6 +586,7 @@ function Player:onGainExperience(target, exp, rawExp)
 	end
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	-- Soul War Experience by Taint
 	if SoulWarQuest then
 		local monsterType = target:getType()
@@ -598,6 +599,8 @@ function Player:onGainExperience(target, exp, rawExp)
 		end
 	end
 =======
+=======
+>>>>>>> Stashed changes
 -- Soul War Experience by Taint
  	if SoulWarQuest then
  		local monsterType = target:getType()
@@ -609,6 +612,9 @@ function Player:onGainExperience(target, exp, rawExp)
  			end
  		end
  	end
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 	-- Final Adjustments: Low Level Bonus and Base Rate

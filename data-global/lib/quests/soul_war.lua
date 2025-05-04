@@ -23,6 +23,7 @@ SoulWarQuest = {
 		[34007] = 0.10, -- 10% for the smallest pool
 	},
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 	taintExperienceBoostMap = { -- Experience Boost per taint (In percentage %)
 		[1] = { boost = 4.5 },
@@ -33,6 +34,8 @@ SoulWarQuest = {
 	},
 
 =======
+=======
+>>>>>>> Stashed changes
 	taintExperienceBoostMap = { -- Experience Boost per taint (In percentage %)
  		[1] = { boost = 4.5 },
  		[2] = { boost = 9.2 },
@@ -40,6 +43,9 @@ SoulWarQuest = {
  		[4] = { boost = 19.2 },
  		[5] = { boost = 24.6 },
  	},
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 	timeToIncreaseCrueltyDefense = 15, -- In seconds, it will increase every 15 seconds if don't use mortal essence in greedy maw
 	useGreedMawCooldown = 30, -- In seconds
@@ -1294,6 +1300,7 @@ end
 
 function Monster:tryTeleportToPlayer(sayMessage)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 	local range = 30
 	local spectators = Game.getSpectators(self:getPosition(), false, false, range, range, range, range)
 	local maxDistance = 0
@@ -1312,6 +1319,8 @@ function Monster:tryTeleportToPlayer(sayMessage)
 		end
 	end
 =======
+=======
+>>>>>>> Stashed changes
  local range = 30
     local spectators = Game.getSpectators(self:getPosition(), false, false, range, range, range, range)
     local maxDistance = 0
@@ -1330,6 +1339,9 @@ function Monster:tryTeleportToPlayer(sayMessage)
             end
         end
     end
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 	if farthestPlayer and math.random(100) <= 10 then
