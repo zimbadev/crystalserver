@@ -181,6 +181,8 @@ local function changeArea()
 		stopEvent(areaDevourer2)
 		stopEvent(areaDevourer3)
 		stopEvent(areaDevourer4)
+		stopEvent(areaDevourer5)
+		stopEvent(areaDevourer6)
 		for _, online in ipairs(Game.getPlayers()) do
 			if online:isPlayer() then
 				if online:getStorageValue(14334) >= 1 then
@@ -400,11 +402,6 @@ function heartDestructionFinal.onUse(player, item, fromPosition, itemEx, toPosit
 					if rageTile and rageTile:isPlayer() then
 						storeRage[#storeRage + 1] = rageTile
 					end
-				end
-
-				if #storeHunger < 1 or #storeDestruction < 1 or #storeRage < 1 then
-					player:sendTextMessage(19, "You need at least 3 players, each in a column.")
-					return true
 				end
 
 				if doCheckArea() == false then

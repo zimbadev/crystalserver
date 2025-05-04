@@ -3189,4 +3189,14 @@ ItemUnique = {
 		itemId = 9253,
 		itemPos = { x = 33755, y = 32161, z = 14 },
 	},
+	-- Wooden Mouthpiece
+	[58001] = {
+		itemId = 23740,
+		itemPos = {x = 33017, y = 32923, z = 4},
+	},
+	-- Rookgaard Quiver
+	[58103] = {
+		itemId = 2472,
+		itemPos = {x = 32102, y = 32127, z = 4},
+	},
 }

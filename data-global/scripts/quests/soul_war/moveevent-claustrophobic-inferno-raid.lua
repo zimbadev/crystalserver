@@ -3,6 +3,8 @@ local secondRaid = MoveEvent()
 local thirdRaid = MoveEvent()
 
 local spawnMonsterName = "Brachiodemon"
+local spawnMonsterName2 = "Infernal Demon"
+local spawnMonsterName3 = "Infernal Phantom"
 
 -- Registering encounters, stages and move events
 for raidNumber, raid in ipairs(SoulWarQuest.claustrophobicInfernoRaids) do
@@ -21,7 +23,15 @@ for raidNumber, raid in ipairs(SoulWarQuest.claustrophobicInfernoRaids) do
 			:addSpawnMonsters({
 				{
 					name = spawnMonsterName,
-					positions = raid.spawns,
+					positions = raid.spawnsBrachias,
+				},
+				{
+					name = spawnMonsterName2,
+					positions = raid.spawnsDemons,
+				},
+				{
+					name = spawnMonsterName3,
+					positions = raid.spawnsPhantons,
 				},
 			})
 			:autoAdvance(SoulWarQuest.claustrophobicInfernoRaids.spawnTime * 1000)

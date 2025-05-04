@@ -1,17 +1,21 @@
 local function targetFunction(creature, target)
-	local player = creature:getPlayer()
-	local min = ((player:getLevel() / 5) + (player:getMagicLevel() * 5.7) + 26)
-	local max = ((player:getLevel() / 5) + (player:getMagicLevel() * 10.43) + 62)
+    local player = creature:getPlayer()
+    if not player then
+        return false
+    end
 
-	local bosses = { "leiden", "ravennous hunger", "dorokoll the mystic", "eshtaba the conjurer", "eliz the unyielding", "mezlon the defiler", "malkhar deathbringer", "containment crystal" }
-	local master = target:getMaster()
-	if target:isMonster() and not master or master and master:isMonster() then
-		if not table.contains(bosses, target:getName():lower()) then
-			return true
-		end
-	end
-
-	doTargetCombatHealth(creature, target, COMBAT_HEALING, min, max, CONST_ME_NONE, ORIGIN_SPELL, "Mass Healing")
+    local bosses = { "leiden" }
+    local minHeal = ((player:getLevel() / 5) + (player:getMagicLevel() * 5.7) + 26)
+    local maxHeal = ((player:getLevel() / 5) + (player:getMagicLevel() * 10.43) + 62)
+    local damage = -((player:getLevel() / 5) + (player:getMagicLevel() * 10.43) + 62)
+    if target:isMonster() and table.contains(bosses, target:getName():lower()) then
+        target:addHealth(damage)
+        target:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+        return true
+    else
+        doTargetCombatHealth(creature, target, COMBAT_HEALING, minHeal, maxHeal, CONST_ME_MAGIC_BLUE, ORIGIN_SPELL, "Mass Healing")
+        return true
+    end
 end
 
 function onTargetCreature(creature, target)
@@ -35,7 +39,7 @@ local function createCombat(area, combatFunc)
 end
 
 local combat = createCombat(AREA_CIRCLE3X3, "onTargetCreature")
-local combatWOD = createCombat(AREA_CIRCLE3X4, "onTargetCreatureWOD")
+local combatWOD = createCombat(AREA_CIRCLE5X5, "onTargetCreatureWOD")
 
 local spell = Spell("instant")
 

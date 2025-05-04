@@ -13,6 +13,10 @@ monster.outfit = {
 	lookMount = 0,
 }
 
+monster.events = {
+	"LeidenDeath",
+}
+
 monster.health = 30000
 monster.maxHealth = 30000
 monster.race = "blood"
@@ -50,10 +54,6 @@ monster.flags = {
 	canWalkOnEnergy = true,
 	canWalkOnFire = true,
 	canWalkOnPoison = true,
-}
-
-monster.events = {
-	"LeidenHeal",
 }
 
 monster.light = {
