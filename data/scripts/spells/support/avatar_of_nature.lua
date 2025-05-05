@@ -21,8 +21,15 @@ function spell.onCastSpell(creature, variant)
 	creature:addCondition(condition)
 	creature:avatarTimer((os.time() * 1000) + duration)
 	creature:reloadData()
-	addEvent(ReloadDataEvent, duration, creature:getId())
-	return true
+	
+    addEvent(function(cid)
+        local c = Creature(cid)
+        if c then
+            c:reloadData()
+        end
+    end, duration, creature:getId())
+    
+    return true
 end
 
 spell:group("support")
