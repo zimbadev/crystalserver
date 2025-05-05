@@ -4,32 +4,32 @@ condition:setOutfit({ lookType = 1594 }) -- Avatar of Light lookType
 local spell = Spell("instant")
 
 function spell.onCastSpell(creature, variant)
-    if not creature or not creature:isPlayer() then
-        return false
-    end
+	if not creature or not creature:isPlayer() then
+		return false
+	end
 
-    local grade = creature:revelationStageWOD("Avatar of Light")
-    if grade == 0 then
-        creature:sendCancelMessage("You cannot cast this spell")
-        creature:getPosition():sendMagicEffect(CONST_ME_POFF)
-        return false
-    end
+	local grade = creature:revelationStageWOD("Avatar of Light")
+	if grade == 0 then
+		creature:sendCancelMessage("You cannot cast this spell")
+		creature:getPosition():sendMagicEffect(CONST_ME_POFF)
+		return false
+	end
 
-    local duration = 15000
-    condition:setTicks(duration)
-    creature:getPosition():sendMagicEffect(CONST_ME_AVATAR_APPEAR)
-    creature:addCondition(condition)
-    creature:avatarTimer((os.time() * 1000) + duration)
-    creature:reloadData()
-	
-    addEvent(function(cid)
-        local c = Creature(cid)
-        if c then
-            c:reloadData()
-        end
-    end, duration, creature:getId())
-    
-    return true
+	local duration = 15000
+	condition:setTicks(duration)
+	creature:getPosition():sendMagicEffect(CONST_ME_AVATAR_APPEAR)
+	creature:addCondition(condition)
+	creature:avatarTimer((os.time() * 1000) + duration)
+	creature:reloadData()
+
+	addEvent(function(cid)
+		local c = Creature(cid)
+		if c then
+			c:reloadData()
+		end
+	end, duration, creature:getId())
+
+	return true
 end
 
 spell:group("support")
