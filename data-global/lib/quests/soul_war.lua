@@ -22,20 +22,6 @@ SoulWarQuest = {
 		[34006] = 0.15, -- 15% for a medium-sized pool
 		[34007] = 0.10, -- 10% for the smallest pool
 	},
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-
-	taintExperienceBoostMap = { -- Experience Boost per taint (In percentage %)
-		[1] = { boost = 4.5 },
-		[2] = { boost = 9.2 },
-		[3] = { boost = 14.1 },
-		[4] = { boost = 19.2 },
-		[5] = { boost = 24.6 },
-	},
-
-=======
-=======
->>>>>>> Stashed changes
 	taintExperienceBoostMap = { -- Experience Boost per taint (In percentage %)
  		[1] = { boost = 4.5 },
  		[2] = { boost = 9.2 },
@@ -43,10 +29,6 @@ SoulWarQuest = {
  		[4] = { boost = 19.2 },
  		[5] = { boost = 24.6 },
  	},
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 	timeToIncreaseCrueltyDefense = 15, -- In seconds, it will increase every 15 seconds if don't use mortal essence in greedy maw
 	useGreedMawCooldown = 30, -- In seconds
 	goshnarsCrueltyDefenseChange = 2, -- Defense change, the amount that will decrease or increase defense, the defense cannot decrease more than the monster's original defense amount
@@ -1299,28 +1281,6 @@ function Player:resetTaints(skipCheckTime)
 end
 
 function Monster:tryTeleportToPlayer(sayMessage)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-	local range = 30
-	local spectators = Game.getSpectators(self:getPosition(), false, false, range, range, range, range)
-	local maxDistance = 0
-	local farthestPlayer = nil
-	for i, spectator in ipairs(spectators) do
-		if spectator:isPlayer() then
-			local player = spectator:getPlayer()
-			if player:getTaintNameByNumber(1) and player:getSoulWarZoneMonster() ~= nil then
-				local distance = self:getPosition():getDistance(player:getPosition())
-				if distance > maxDistance then
-					maxDistance = distance
-					farthestPlayer = player
-					logger.trace("Found player {} to teleport", player:getName())
-				end
-			end
-		end
-	end
-=======
-=======
->>>>>>> Stashed changes
  local range = 30
     local spectators = Game.getSpectators(self:getPosition(), false, false, range, range, range, range)
     local maxDistance = 0
@@ -1339,10 +1299,6 @@ function Monster:tryTeleportToPlayer(sayMessage)
             end
         end
     end
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
 	if farthestPlayer and math.random(100) <= 10 then
 		local playerPosition = farthestPlayer:getPosition()

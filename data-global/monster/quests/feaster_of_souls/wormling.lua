@@ -13,14 +13,6 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-monster.raceId = 26
-
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 monster.health = 5000
 monster.maxHealth = 5000
 monster.race = "venom"
