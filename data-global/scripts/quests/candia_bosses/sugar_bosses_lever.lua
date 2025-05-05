@@ -17,12 +17,10 @@ local config = {
 	},
 	exit = Position(33397, 32201, 9),
 	monsters = {
-        { name = "Sugar Mommy", pos = Position(33374, 32220, 9) },
+		{ name = "Sugar Mommy", pos = Position(33374, 32220, 9) },
 	},
-
 }
 
 local leverSugarBosses = BossLever(config)
 leverSugarBosses:position(Position(33339, 32220, 9))
 leverSugarBosses:register()
-

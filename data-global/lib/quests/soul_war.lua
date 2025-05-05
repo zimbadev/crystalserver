@@ -23,12 +23,12 @@ SoulWarQuest = {
 		[34007] = 0.10, -- 10% for the smallest pool
 	},
 	taintExperienceBoostMap = { -- Experience Boost per taint (In percentage %)
- 		[1] = { boost = 4.5 },
- 		[2] = { boost = 9.2 },
- 		[3] = { boost = 14.1 },
- 		[4] = { boost = 19.2 },
- 		[5] = { boost = 24.6 },
- 	},
+		[1] = { boost = 4.5 },
+		[2] = { boost = 9.2 },
+		[3] = { boost = 14.1 },
+		[4] = { boost = 19.2 },
+		[5] = { boost = 24.6 },
+	},
 	timeToIncreaseCrueltyDefense = 15, -- In seconds, it will increase every 15 seconds if don't use mortal essence in greedy maw
 	useGreedMawCooldown = 30, -- In seconds
 	goshnarsCrueltyDefenseChange = 2, -- Defense change, the amount that will decrease or increase defense, the defense cannot decrease more than the monster's original defense amount
@@ -204,7 +204,7 @@ SoulWarQuest = {
 				Position(34036, 31053, 10),
 				Position(34020, 31072, 10),
 				Position(34007, 31070, 10),
-				Pos
+				Pos,
 			},
 			exitPosition = { x = 34011, y = 31028, z = 10 },
 			getZone = function()
@@ -369,11 +369,11 @@ SoulWarQuest = {
 				to = Position(33755, 31673, 14),
 			},
 			timeToFightAgain = 0, -- TODO: Remove later
-		onUseExtra = function(player)
-			local storageKey = "goshnarsGreedMonstersSpawned"
+			onUseExtra = function(player)
+				local storageKey = "goshnarsGreedMonstersSpawned"
 
-			local lastFightTime = SoulWarQuest.kvSoulWar:get("goshnarsGreedLastFight") or 0
-			local currentTime = os.time()
+				local lastFightTime = SoulWarQuest.kvSoulWar:get("goshnarsGreedLastFight") or 0
+				local currentTime = os.time()
 
 				if currentTime >= lastFightTime then
 					SoulWarQuest.kvSoulWar:remove(storageKey)
@@ -1281,24 +1281,24 @@ function Player:resetTaints(skipCheckTime)
 end
 
 function Monster:tryTeleportToPlayer(sayMessage)
- local range = 30
-    local spectators = Game.getSpectators(self:getPosition(), false, false, range, range, range, range)
-    local maxDistance = 0
-    local farthestPlayer = nil
-    
-    for i, spectator in ipairs(spectators) do
-        if spectator:isPlayer() then
-            local player = spectator:getPlayer()
-            if player:getTaintNameByNumber(1) and player:getSoulWarZoneMonster() ~= nil then
-                local distance = self:getPosition():getDistance(player:getPosition())
-                if distance > maxDistance then
-                    maxDistance = distance
-                    farthestPlayer = player
-                    logger.trace("Found player {} to teleport", player:getName())
-                end
-            end
-        end
-    end
+	local range = 30
+	local spectators = Game.getSpectators(self:getPosition(), false, false, range, range, range, range)
+	local maxDistance = 0
+	local farthestPlayer = nil
+
+	for i, spectator in ipairs(spectators) do
+		if spectator:isPlayer() then
+			local player = spectator:getPlayer()
+			if player:getTaintNameByNumber(1) and player:getSoulWarZoneMonster() ~= nil then
+				local distance = self:getPosition():getDistance(player:getPosition())
+				if distance > maxDistance then
+					maxDistance = distance
+					farthestPlayer = player
+					logger.trace("Found player {} to teleport", player:getName())
+				end
+			end
+		end
+	end
 
 	if farthestPlayer and math.random(100) <= 10 then
 		local playerPosition = farthestPlayer:getPosition()

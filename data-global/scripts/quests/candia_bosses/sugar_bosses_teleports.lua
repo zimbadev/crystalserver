@@ -1,16 +1,16 @@
 local config = {
 	[1] = {
-		teleportPosition = {x = 33397, y = 32200, z = 9},
+		teleportPosition = { x = 33397, y = 32200, z = 9 },
 		exitPosition = Position(33337, 32223, 9),
 		requiredLevel = 300,
 	},
 	[2] = {
-		teleportPosition = {x = 33338, y = 32227, z = 9},
+		teleportPosition = { x = 33338, y = 32227, z = 9 },
 		exitPosition = Position(33397, 32201, 9),
 		requiredLevel = 300,
 	},
 	[3] = {
-		teleportPosition = {x = 33372, y = 32241, z = 9},
+		teleportPosition = { x = 33372, y = 32241, z = 9 },
 		exitPosition = Position(33336, 32222, 9),
 		requiredLevel = 300,
 	},

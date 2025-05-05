@@ -21,26 +21,26 @@ local entrances = {
 local teleportEvent = Action()
 
 function teleportEvent.onUse(player, item, fromPosition, target, toPosition, isHotkey)
-    if not player then
-        return false
-    end
+	if not player then
+		return false
+	end
 
-    local access = player:kv():scoped("rotten-blood-quest"):get("access") or 0
-    if access < 5 then
-        player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You should pay respect to the Bloodshade guarding this realm before entering.")
-        player:teleportTo(fromPosition, true)
-        return false
-    end
+	local access = player:kv():scoped("rotten-blood-quest"):get("access") or 0
+	if access < 5 then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You should pay respect to the Bloodshade guarding this realm before entering.")
+		player:teleportTo(fromPosition, true)
+		return false
+	end
 
-    for _, entrance in pairs(entrances) do
-        if toPosition == entrance.position then
-            player:teleportTo(entrance.destination)
-            player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
-            return true
-        end
-    end
+	for _, entrance in pairs(entrances) do
+		if toPosition == entrance.position then
+			player:teleportTo(entrance.destination)
+			player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
+			return true
+		end
+	end
 
-    return false
+	return false
 end
 
 for _, entrance in pairs(entrances) do
@@ -57,44 +57,44 @@ local entrance = {
 local bakragoreEntrance = Action()
 
 function bakragoreEntrance.onUse(player, item, fromPosition, target, toPosition, isHotkey)
-    if not player then
-        return false
-    end
+	if not player then
+		return false
+	end
 
-    if player:getLevel() < 250 then
-        player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You need at least level 250 to enter.")
-        player:teleportTo(fromPosition, true)
-        return false
-    end
+	if player:getLevel() < 250 then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You need at least level 250 to enter.")
+		player:teleportTo(fromPosition, true)
+		return false
+	end
 
-    local now, text = os.time(), ""
-    for _, bossName in pairs({ "murcion", "chagorz", "ichgahal", "vemiath" }) do
-        local cooldown = player:kv():scoped("rotten-blood-quest"):scoped(bossName):get("cooldown") or 0
-        if cooldown <= now then
-            text = text .. "\n" .. bossName:titleCase()
-        end
-    end
+	local now, text = os.time(), ""
+	for _, bossName in pairs({ "murcion", "chagorz", "ichgahal", "vemiath" }) do
+		local cooldown = player:kv():scoped("rotten-blood-quest"):scoped(bossName):get("cooldown") or 0
+		if cooldown <= now then
+			text = text .. "\n" .. bossName:titleCase()
+		end
+	end
 
-    if text ~= "" then
-        player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You still need to defeat: " .. text)
-        player:teleportTo(fromPosition, true)
-        return false
-    end
+	if text ~= "" then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You still need to defeat: " .. text)
+		player:teleportTo(fromPosition, true)
+		return false
+	end
 
-    local taints = player:kv():scoped("rotten-blood-quest"):get("taints") or 0
-    if taints < 4 then
-        player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("You have %i taints.", taints))
-        player:teleportTo(fromPosition, true)
-        return false
-    end
+	local taints = player:kv():scoped("rotten-blood-quest"):get("taints") or 0
+	if taints < 4 then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("You have %i taints.", taints))
+		player:teleportTo(fromPosition, true)
+		return false
+	end
 
-    if toPosition == entrance.position then
-        player:teleportTo(entrance.destination)
-        player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
-        return true
-    end
+	if toPosition == entrance.position then
+		player:teleportTo(entrance.destination)
+		player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
+		return true
+	end
 
-    return false
+	return false
 end
 
 bakragoreEntrance:position(entrance.position)

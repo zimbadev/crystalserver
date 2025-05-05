@@ -6,33 +6,33 @@ healingCombat:setParameter(COMBAT_PARAM_TARGETCASTERORTOPMOST, true)
 healingCombat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 
 function onGetHealingValues(player, level, maglevel)
-    local min = (level / 5) + (maglevel * 3.2) + 20
-    local max = (level / 5) + (maglevel * 5.4) + 40
-    return min, max
+	local min = (level / 5) + (maglevel * 3.2) + 20
+	local max = (level / 5) + (maglevel * 5.4) + 40
+	return min, max
 end
 healingCombat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetHealingValues")
 
 local rune = Spell("rune")
 
 function rune.onCastSpell(creature, var, isHotkey)
-    local target = Creature(var:getNumber()) or creature:getTarget()
-    
-    if not target or not target:isCreature() then
-        return false
-    end
+	local target = Creature(var:getNumber()) or creature:getTarget()
 
-    if target:isMonster() and target:getName():lower() == "leiden" then
-        local damage = -((creature:getLevel() / 5) + (creature:getMagicLevel() * 5.4) + 40)
-        target:addHealth(damage)
-        target:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
-        return true
-    end
+	if not target or not target:isCreature() then
+		return false
+	end
 
-    if target:isMonster() then
-        return false
-    end
+	if target:isMonster() and target:getName():lower() == "leiden" then
+		local damage = -((creature:getLevel() / 5) + (creature:getMagicLevel() * 5.4) + 40)
+		target:addHealth(damage)
+		target:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+		return true
+	end
 
-    return healingCombat:execute(creature, Variant(target:getId()))
+	if target:isMonster() then
+		return false
+	end
+
+	return healingCombat:execute(creature, Variant(target:getId()))
 end
 
 rune:id(4)

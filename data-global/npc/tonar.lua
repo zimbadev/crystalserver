@@ -57,32 +57,32 @@ npcType.onCloseChannel = function(npc, creature)
 end
 
 local function creatureSayCallback(npc, creature, type, message)
-    local player = Player(creature)
-    local playerId = player:getId()
+	local player = Player(creature)
+	local playerId = player:getId()
 
-    if not npcHandler:checkInteraction(npc, creature) then
-        return false
-    end
-    local scarabOcarinaStorage = 2642025
-    if MsgContains(message, "scarab") or MsgContains(message, "ocarina") then
+	if not npcHandler:checkInteraction(npc, creature) then
+		return false
+	end
+	local scarabOcarinaStorage = 2642025
+	if MsgContains(message, "scarab") or MsgContains(message, "ocarina") then
 		if player:getStorageValue(scarabOcarinaStorage) >= 1 then
 			npcHandler:say("How does it sound? Did you liked it? Well, that's all I can do for you.", npc, creature)
 		end
-            npcHandler:say("An sacarb ocarina you say? Hmmm. I can make you one with an intact scarab shell that is not smudgy. Did you got any by any chance?", npc, creature)
-            npcHandler:setTopic(playerId, 1)
-    elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 1 then
-        if player:removeItem(4195, 1) then
-            npcHandler:say("Excelent. Hands at work then. ... Here is your scarab ocarina.", npc, creature)
-            player:addItem(43740, 1)
-            player:setStorageValue(scarabOcarinaStorage, 1)
-            npcHandler:setTopic(playerId, 0)
-        else
-            npcHandler:say("Do you really have it there? Uh, I said not smudgy. If you got one wait some minutes for it to decompose.", npc, creature)
-            npcHandler:setTopic(playerId, 0)
-        end
-    end
+		npcHandler:say("An sacarb ocarina you say? Hmmm. I can make you one with an intact scarab shell that is not smudgy. Did you got any by any chance?", npc, creature)
+		npcHandler:setTopic(playerId, 1)
+	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 1 then
+		if player:removeItem(4195, 1) then
+			npcHandler:say("Excelent. Hands at work then. ... Here is your scarab ocarina.", npc, creature)
+			player:addItem(43740, 1)
+			player:setStorageValue(scarabOcarinaStorage, 1)
+			npcHandler:setTopic(playerId, 0)
+		else
+			npcHandler:say("Do you really have it there? Uh, I said not smudgy. If you got one wait some minutes for it to decompose.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		end
+	end
 
-    return true
+	return true
 end
 
 -- Travel

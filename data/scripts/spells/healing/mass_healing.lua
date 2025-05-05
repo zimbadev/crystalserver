@@ -1,21 +1,21 @@
 local function targetFunction(creature, target)
-    local player = creature:getPlayer()
-    if not player then
-        return false
-    end
+	local player = creature:getPlayer()
+	if not player then
+		return false
+	end
 
-    local bosses = { "leiden" }
-    local minHeal = ((player:getLevel() / 5) + (player:getMagicLevel() * 5.7) + 26)
-    local maxHeal = ((player:getLevel() / 5) + (player:getMagicLevel() * 10.43) + 62)
-    local damage = -((player:getLevel() / 5) + (player:getMagicLevel() * 10.43) + 62)
-    if target:isMonster() and table.contains(bosses, target:getName():lower()) then
-        target:addHealth(damage)
-        target:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
-        return true
-    else
-        doTargetCombatHealth(creature, target, COMBAT_HEALING, minHeal, maxHeal, CONST_ME_MAGIC_BLUE, ORIGIN_SPELL, "Mass Healing")
-        return true
-    end
+	local bosses = { "leiden" }
+	local minHeal = ((player:getLevel() / 5) + (player:getMagicLevel() * 5.7) + 26)
+	local maxHeal = ((player:getLevel() / 5) + (player:getMagicLevel() * 10.43) + 62)
+	local damage = -((player:getLevel() / 5) + (player:getMagicLevel() * 10.43) + 62)
+	if target:isMonster() and table.contains(bosses, target:getName():lower()) then
+		target:addHealth(damage)
+		target:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+		return true
+	else
+		doTargetCombatHealth(creature, target, COMBAT_HEALING, minHeal, maxHeal, CONST_ME_MAGIC_BLUE, ORIGIN_SPELL, "Mass Healing")
+		return true
+	end
 end
 
 function onTargetCreature(creature, target)

@@ -38,21 +38,21 @@ function lloydPrepareDeath.onPrepareDeath(creature, lastHitKiller, mostDamageKil
 	end
 
 	local reborn = false
-	
-if prismCount <= 4 then
-    local monsterData = monsters[prismCount]
-    if monsterData then
-        local tile = Tile(monsterData.pos)
-        if tile then
-            local creature = tile:getTopCreature()
-            if creature then
-                creature:remove()
-                Game.createMonster(monsterData.cosmicNormal, Position(monsterData.pos), true, true)
-                reborn = true
-            end
-        end
-    end
-end
+
+	if prismCount <= 4 then
+		local monsterData = monsters[prismCount]
+		if monsterData then
+			local tile = Tile(monsterData.pos)
+			if tile then
+				local creature = tile:getTopCreature()
+				if creature then
+					creature:remove()
+					Game.createMonster(monsterData.cosmicNormal, Position(monsterData.pos), true, true)
+					reborn = true
+				end
+			end
+		end
+	end
 
 	if reborn then
 		creature:teleportTo(Position(32799, 32826, 14))
