@@ -96,6 +96,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:addAchievement("Bone Brother")
 			npcHandler:setTopic(playerId, 0)
 			player:addItem(768, 1)
+			player:setStorageValue(Storage.Quest.U7_9.NightmareOutfits.KnightwatchTowerDoor, 1)
 		elseif npcHandler:getTopic(playerId) == 3 then
 			if player:removeItem(6499, 500) then
 				player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
@@ -123,7 +124,6 @@ local function creatureSayCallback(npc, creature, type, message)
 				player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
 				player:setStorageValue(Storage.Quest.U7_9.BrotherhoodOutfits.Outfits, 4)
 				player:setStorageValue(Storage.Quest.U7_9.BrotherhoodOutfits.Door, 1)
-				player:setStorageValue(Storage.Quest.U7_9.NightmareOutfits.KnightwatchTowerDoor, 1)
 				player:addAchievement("Dread Lord")
 				npcHandler:say("You advanced to {Dread Lord} rank! You are now able to use teleports of fourth floor of Knightwatch Tower and to create addon scrolls.", npc, creature)
 			else
