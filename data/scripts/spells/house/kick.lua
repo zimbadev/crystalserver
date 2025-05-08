@@ -2,24 +2,35 @@ local spell = Spell("instant")
 
 function spell.onCastSpell(player, variant)
 	local targetPlayer = Player(variant:getString()) or player
-	local guest = targetPlayer:getTile():getHouse()
-	local owner = player:getTile():getHouse()
-
-	-- Owner kick yourself from house
-	if targetPlayer == player then
-		player:getPosition():sendMagicEffect(CONST_ME_POFF)
-		player:teleportTo(owner:getExitPosition())
-		player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
-		return true
-	end
-
-	if not owner:canEditAccessList(GUEST_LIST, player) then
+	local targetTile = targetPlayer:getTile()
+	if not targetTile then
 		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
 		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return false
 	end
 
-	if not owner or not guest or not guest:kickPlayer(player, targetPlayer) then
+	local guestHouse = targetTile:getHouse()
+	local ownerHouse = player:getTile():getHouse()
+
+	if targetPlayer == player then
+		if not ownerHouse then
+			player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
+			player:getPosition():sendMagicEffect(CONST_ME_POFF)
+			return false
+		end
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
+		player:teleportTo(ownerHouse:getExitPosition())
+		player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
+		return true
+	end
+
+	if not ownerHouse or not ownerHouse:canEditAccessList(GUEST_LIST, player) then
+		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
+		return false
+	end
+
+	if not guestHouse or not guestHouse:kickPlayer(player, targetPlayer) then
 		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
 		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return false
