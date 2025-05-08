@@ -22,7 +22,6 @@ SoulWarQuest = {
 		[34006] = 0.15, -- 15% for a medium-sized pool
 		[34007] = 0.10, -- 10% for the smallest pool
 	},
-
 	taintExperienceBoostMap = { -- Experience Boost per taint (In percentage %)
 		[1] = { boost = 4.5 },
 		[2] = { boost = 9.2 },
@@ -30,7 +29,6 @@ SoulWarQuest = {
 		[4] = { boost = 19.2 },
 		[5] = { boost = 24.6 },
 	},
-
 	timeToIncreaseCrueltyDefense = 15, -- In seconds, it will increase every 15 seconds if don't use mortal essence in greedy maw
 	useGreedMawCooldown = 30, -- In seconds
 	goshnarsCrueltyDefenseChange = 2, -- Defense change, the amount that will decrease or increase defense, the defense cannot decrease more than the monster's original defense amount
@@ -137,19 +135,30 @@ SoulWarQuest = {
 				{ x = 34015, y = 31049, z = 9 },
 			},
 			zone = Zone("raid.first-claustrophobic-inferno"),
-			spawns = {
-				Position(33991, 31064, 9),
-				Position(34034, 31060, 9),
-				Position(34028, 31067, 9),
-				Position(34020, 31067, 9),
-				Position(34008, 31067, 9),
-				Position(34001, 31059, 9),
-				Position(33992, 31069, 9),
-				Position(34002, 31072, 9),
-				Position(34013, 31074, 9),
-				Position(33998, 31060, 9),
-				Position(34039, 31065, 9),
-				Position(34032, 31072, 9),
+			spawnsBrachias = {
+				Position(33994, 31068, 9),
+				Position(33998, 31062, 9),
+				Position(34012, 31061, 9),
+				Position(34006, 31075, 9),
+				Position(34037, 31072, 9),
+				Position(34026, 31063, 9),
+				Position(34034, 31057, 9),
+				Position(34019, 31067, 9),
+				Position(34040, 31064, 9),
+			},
+			spawnsDemons = {
+				Position(33994, 31073, 9),
+				Position(34015, 31075, 9),
+				Position(34034, 31070, 9),
+			},
+			spawnsPhantons = {
+				Position(34018, 31058, 9),
+				Position(33997, 31058, 9),
+				Position(34008, 31066, 9),
+				Position(34013, 31070, 9),
+				Position(34037, 31060, 9),
+				Position(34026, 31073, 9),
+				Position(34006, 31058, 9),
 			},
 			exitPosition = { x = 34009, y = 31083, z = 9 },
 			getZone = function()
@@ -167,18 +176,35 @@ SoulWarQuest = {
 				{ x = 34010, y = 31075, z = 10 },
 			},
 			zone = Zone("raid.second-claustrophobic-inferno"),
-			spawns = {
-				Position(33999, 31046, 10),
-				Position(34011, 31047, 10),
-				Position(34015, 31052, 10),
-				Position(34021, 31044, 10),
-				Position(34029, 31054, 10),
-				Position(34037, 31052, 10),
-				Position(34037, 31060, 10),
-				Position(34023, 31062, 10),
-				Position(34012, 31061, 10),
-				Position(33998, 31061, 10),
-				Position(34005, 31052, 10),
+			spawnsBrachias = {
+				Position(33999, 31048, 10),
+				Position(33996, 31053, 10),
+				Position(33996, 31061, 10),
+				Position(34006, 31056, 10),
+				Position(34010, 31066, 10),
+				Position(34019, 31068, 10),
+				Position(34023, 31063, 10),
+				Position(34013, 31046, 10),
+				Position(34022, 31045, 10),
+				Position(34036, 31063, 10),
+				Position(34035, 31047, 10),
+			},
+			spawnsDemons = {
+				Position(34017, 31040, 10),
+				Position(34001, 31058, 10),
+				Position(34016, 31056, 10),
+				Position(34028, 31046, 10),
+				Position(34030, 31058, 10),
+			},
+			spawnsPhantons = {
+				Position(33991, 31059, 10),
+				Position(34005, 31045, 10),
+				Position(34006, 31051, 10),
+				Position(34020, 31051, 10),
+				Position(34036, 31053, 10),
+				Position(34020, 31072, 10),
+				Position(34007, 31070, 10),
+				Pos,
 			},
 			exitPosition = { x = 34011, y = 31028, z = 10 },
 			getZone = function()
@@ -199,29 +225,37 @@ SoulWarQuest = {
 				{ x = 34014, y = 31036, z = 11 },
 			},
 			zone = Zone("raid.third-claustrophobic-inferno"),
-			spawns = {
-				Position(34005, 31049, 11),
-				Position(33999, 31051, 11),
-				Position(33995, 31055, 11),
-				Position(33999, 31068, 11),
-				Position(34016, 31068, 11),
-				Position(34030, 31070, 11),
-				Position(34038, 31066, 11),
-				Position(34038, 31051, 11),
-				Position(34033, 31051, 11),
-				Position(34025, 31049, 11),
-				Position(34013, 31058, 11),
-				Position(34021, 31059, 11),
-				Position(34027, 31063, 11),
-				Position(34007, 31063, 11),
-				Position(34004, 31059, 11),
+			spawnsBrachias = {
+				Position(34016, 31047, 11),
+				Position(34007, 31047, 11),
+				Position(33998, 31051, 11),
+				Position(33993, 31057, 11),
+				Position(33995, 31065, 11),
+				Position(34006, 31069, 11),
+				Position(34007, 31060, 11),
+				Position(34020, 31060, 11),
+				Position(34032, 31058, 11),
+				Position(34032, 31067, 11),
+				Position(34039, 31067, 11),
+			},
+			spawnsDemons = {
+				Position(33998, 31061, 11),
+				Position(34012, 31060, 11),
+				Position(34030, 31063, 11),
+			},
+			spawnsPhantons = {
+				Position(34001, 31047, 11),
+				Position(34013, 31064, 11),
+				Position(34007, 31053, 11),
+				Position(34023, 31054, 11),
+				Position(34038, 31053, 11),
 			},
 			exitPosition = { x = 34014, y = 31085, z = 11 },
 			getZone = function()
 				return SoulWarQuest.claustrophobicInfernoRaids[3].zone
 			end,
 		},
-		spawnTime = 10, -- seconds
+		spawnTime = 20, -- seconds
 		suriviveTime = 2 * 60, -- 2 minutes
 		timeToKick = 5, -- seconds
 	},
@@ -335,10 +369,23 @@ SoulWarQuest = {
 				to = Position(33755, 31673, 14),
 			},
 			timeToFightAgain = 0, -- TODO: Remove later
-			onUseExtra = function()
-				CreateGoshnarsGreedMonster("Greedbeast", Position(33744, 31666, 14))
-				CreateGoshnarsGreedMonster("Soulsnatcher", Position(33747, 31668, 14))
-				CreateGoshnarsGreedMonster("Weak Soul", Position(33750, 31666, 14))
+			onUseExtra = function(player)
+				local storageKey = "goshnarsGreedMonstersSpawned"
+
+				local lastFightTime = SoulWarQuest.kvSoulWar:get("goshnarsGreedLastFight") or 0
+				local currentTime = os.time()
+
+				if currentTime >= lastFightTime then
+					SoulWarQuest.kvSoulWar:remove(storageKey)
+					SoulWarQuest.kvSoulWar:set("goshnarsGreedLastFight", currentTime + 20 * 60 * 60)
+				end
+
+				if not SoulWarQuest.kvSoulWar:get(storageKey) then
+					CreateGoshnarsGreedMonster("Greedbeast", Position(33744, 31666, 14))
+					CreateGoshnarsGreedMonster("Soulsnatcher", Position(33747, 31668, 14))
+					CreateGoshnarsGreedMonster("Weak Soul", Position(33750, 31666, 14))
+					SoulWarQuest.kvSoulWar:set(storageKey, true)
+				end
 			end,
 			exit = Position(33621, 31427, 10),
 			timeToFightAgain = 20 * 60 * 60, -- 20 hours
@@ -1238,6 +1285,7 @@ function Monster:tryTeleportToPlayer(sayMessage)
 	local spectators = Game.getSpectators(self:getPosition(), false, false, range, range, range, range)
 	local maxDistance = 0
 	local farthestPlayer = nil
+
 	for i, spectator in ipairs(spectators) do
 		if spectator:isPlayer() then
 			local player = spectator:getPlayer()
