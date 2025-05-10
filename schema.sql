@@ -288,6 +288,18 @@ CREATE TABLE IF NOT EXISTS `boosted_creature` (
 
 INSERT INTO `boosted_creature` (`boostname`, `date`, `raceid`) VALUES ('default', 0, 0);
 
+
+CREATE TABLE IF NOT EXISTS `player_oldnames` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`player_id` int(11) NOT NULL,
+	`former_name` varchar(255) NOT NULL DEFAULT '',
+	`name` varchar(255) NOT NULL,
+	`old_name` varchar(255) NOT NULL,
+	`date` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	INDEX `player_id_index` (`player_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- Tabble Structure `daily_reward_history`
 CREATE TABLE IF NOT EXISTS `daily_reward_history` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
