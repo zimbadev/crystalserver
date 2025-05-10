@@ -11318,4 +11318,3 @@ bool Player::isFirstOnStack() const {
 
 	return this == bottomPlayer.get();
 }
-

@@ -2384,7 +2384,7 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 		if (const auto &playerWeapon = player->getInventoryItem(CONST_SLOT_LEFT); playerWeapon && playerWeapon->getTier() > 0) {
 			double fatalChance = playerWeapon->getFatalChance();
 			if (const auto &playerBoots = player->getInventoryItem(CONST_SLOT_FEET); playerBoots && playerBoots->getTier()) {
-				fatalChance *= 1;// + (playerBoots->getAmplificationChance() / 100);
+				fatalChance *= 1; // + (playerBoots->getAmplificationChance() / 100);
 			}
 			canApplyFatal = (fatalChance > 0 && uniform_random(0, 10000) / 100.0 < fatalChance);
 		}
