@@ -59,6 +59,7 @@ function Player.resetTrackedMissions(self, missions)
 		if questName and questId and missionIndex then
 			if self:missionIsStarted(questId, missionIndex) then
 				local data = {
+					questId = questId,
 					missionId = missionId,
 					questName = questName,
 					missionName = self:getMissionName(questId, missionIndex),
@@ -257,6 +258,9 @@ end
 function Player.getMissionName(self, questId, missionId)
 	local mission = Game.getMission(questId, missionId)
 	if mission then
+		if self:missionIsCompleted(questId, missionId) then
+			return mission.name .. " (completed)"
+		end
 		return mission.name
 	end
 	return ""
@@ -298,7 +302,6 @@ function Player.sendQuestLog(self)
 			msg:addByte(self:questIsCompleted(questId) and 1 or 0)
 		end
 	end
-
 	msg:sendToPlayer(self)
 	msg:delete()
 end
@@ -335,9 +338,9 @@ function Player.sendTrackedQuests(self, remainingQuests, missions)
 	msg:addByte(remainingQuests)
 	msg:addByte(#missions)
 	for _, mission in ipairs(missions) do
+		msg:addU16(mission.questId)
 		msg:addU16(mission.missionId)
 		msg:addString(mission.questName)
-		msg:addByte(self:questIsCompleted(mission.missionId) and 1 or 0)
 		msg:addString(mission.missionName)
 		msg:addString(mission.missionDesc)
 	end
@@ -349,7 +352,9 @@ function Player.sendUpdateTrackedQuest(self, mission)
 	local msg = NetworkMessage()
 	msg:addByte(0xD0)
 	msg:addByte(0x00)
+	msg:addU16(mission.questId)
 	msg:addU16(mission.missionId)
+	msg:addString(mission.questName)
 	msg:addString(mission.missionName)
 	msg:addString(mission.missionDesc)
 	msg:sendToPlayer(self)
