@@ -371,7 +371,7 @@ public:
 
 	void sendOpenWheelWindow(uint32_t ownerId) const;
 
-	uint16_t getPointsBySlotType(uint8_t slotType) const;
+	uint16_t getPointsBySlotType(WheelSlots_t slotType) const;
 
 	const std::array<uint16_t, 37> &getSlots() const;
 

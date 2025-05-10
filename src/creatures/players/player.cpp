@@ -73,6 +73,7 @@
 #include "lua/creature/movement.hpp"
 #include "map/spectators.hpp"
 #include "creatures/players/vocations/vocation.hpp"
+#include "creatures/players/wheel/wheel_definitions.hpp"
 
 MuteCountMap Player::muteCountMap;
 
@@ -409,6 +410,147 @@ int32_t Player::getWeaponSkill(const std::shared_ptr<Item> &item) const {
 	return attackSkill;
 }
 
+uint16_t Player::getDistanceAttackSkill(const int32_t attackSkill, const int32_t weaponAttack) const {
+	// Correct calculation of getWeaponSkill function (getMaxWeaponDamage) for Paladins
+	const double skillFactor = (attackSkill + 4) / 28.;
+	return weaponAttack * skillFactor - weaponAttack;
+}
+
+uint16_t Player::getAttackSkill(const std::shared_ptr<Item> &item) const {
+	if (!item) {
+		return getSkillLevel(SKILL_FIST);
+	}
+
+	int32_t attackSkill;
+
+	const WeaponType_t &weaponType = item->getWeaponType();
+	switch (weaponType) {
+		case WEAPON_SWORD: {
+			attackSkill = getSkillLevel(SKILL_SWORD);
+			break;
+		}
+
+		case WEAPON_CLUB: {
+			attackSkill = getSkillLevel(SKILL_CLUB);
+			break;
+		}
+
+		case WEAPON_AXE: {
+			attackSkill = getSkillLevel(SKILL_AXE);
+			break;
+		}
+
+		case WEAPON_MISSILE:
+		case WEAPON_DISTANCE: {
+			attackSkill = getSkillLevel(SKILL_DISTANCE);
+			break;
+		}
+
+		default: {
+			attackSkill = 0;
+			break;
+		}
+	}
+
+	// Correct calculation of getWeaponSkill function (getMaxWeaponDamage)
+	const double skillFactor = (attackSkill + 4) / 28.;
+	const auto weaponAttack = item->getAttack();
+	return weaponAttack * skillFactor - weaponAttack;
+}
+
+uint8_t Player::getWeaponSkillId(const std::shared_ptr<Item> &item) const {
+	uint8_t skillId;
+	const WeaponType_t &weaponType = item->getWeaponType();
+	switch (weaponType) {
+		case WEAPON_SWORD: {
+			skillId = 8;
+			break;
+		}
+
+		case WEAPON_CLUB: {
+			skillId = 9;
+			break;
+		}
+
+		case WEAPON_AXE: {
+			skillId = 10;
+			break;
+		}
+
+		default: {
+			skillId = 11;
+			break;
+		}
+	}
+
+	return skillId;
+}
+
+uint16_t Player::calculateFlatDamageHealing() const {
+	uint16_t constA = 0;
+	uint16_t constB = 0;
+	double constC = 0;
+	if (level < 500) {
+		constA = 0;
+		constB = 0;
+		constC = 0.2f;
+	} else if (level >= 500 && level <= 1100) {
+		constA = 100;
+		constB = 500;
+		constC = 0.1667f;
+	} else if (level >= 1100 && level <= 1800) {
+		constA = 200;
+		constB = 1101;
+		constC = 0.1429f;
+	} else if (level >= 1800 && level <= 2600) {
+		constA = 300;
+		constB = 1800;
+		constC = 0.1250f;
+	} else if (level > 2600) {
+		constA = 400;
+		constB = 2600;
+		constC = 0.111f;
+	}
+
+	return constA + (level - constB) * constC;
+}
+
+uint16_t Player::attackTotal(uint16_t flatBonus, uint16_t equipment, uint16_t skill) const {
+	double fightFactor = 0;
+	switch (fightMode) {
+		case FIGHTMODE_ATTACK: {
+			fightFactor = 1.2f * equipment;
+			break;
+		}
+
+		case FIGHTMODE_BALANCED: {
+			fightFactor = 1.0f * equipment;
+			break;
+		}
+
+		case FIGHTMODE_DEFENSE: {
+			fightFactor = 0.6f * equipment;
+			break;
+		}
+
+		default: {
+			fightFactor = 1.0f * equipment;
+			break;
+		}
+	}
+
+	fightFactor = std::floor(fightFactor);
+
+	const double skillFactor = (skill + 4) / 28.;
+
+	return flatBonus + (fightFactor * skillFactor);
+}
+
+uint16_t Player::attackRawTotal(uint16_t flatBonus, uint16_t equipment, uint16_t skill) const {
+	const double skillFactor = (skill + 4) / 28.;
+	return flatBonus + (equipment * skillFactor);
+}
+
 int32_t Player::getArmor() const {
 	int32_t armor = 0;
 
@@ -455,16 +597,12 @@ float Player::getMitigation() const {
 	return wheel()->calculateMitigation();
 }
 
-int32_t Player::getDefense() const {
+int32_t Player::getDefense(bool sendToClient /* = false*/) const {
 	int32_t defenseSkill = getSkillLevel(SKILL_FIST);
 	int32_t defenseValue = 7;
 	std::shared_ptr<Item> weapon;
 	std::shared_ptr<Item> shield;
-	try {
-		getShieldAndWeapon(shield, weapon);
-	} catch (const std::exception &e) {
-		g_logger().error("{} got exception {}", getName(), e.what());
-	}
+	getShieldAndWeapon(shield, weapon);
 
 	if (weapon) {
 		defenseValue = weapon->getDefense() + weapon->getExtraDefense();
@@ -472,7 +610,9 @@ int32_t Player::getDefense() const {
 	}
 
 	if (shield) {
-		defenseValue = weapon != nullptr ? shield->getDefense() + weapon->getExtraDefense() : shield->getDefense();
+		defenseValue = (weapon != nullptr)
+			? shield->getDefense() + weapon->getExtraDefense()
+			: shield->getDefense();
 		// Wheel of destiny - Combat Mastery
 		if (shield->getDefense() > 0) {
 			defenseValue += wheel()->getMajorStatConditional("Combat Mastery", WheelMajor_t::DEFENSE);
@@ -485,13 +625,14 @@ int32_t Player::getDefense() const {
 			case FIGHTMODE_ATTACK:
 			case FIGHTMODE_BALANCED:
 				return 1;
-
 			case FIGHTMODE_DEFENSE:
 				return 2;
 		}
 	}
 
-	return (defenseSkill / 4. + 2.23) * defenseValue * 0.15 * getDefenseFactor() * vocation->defenseMultiplier;
+	auto defenseScalingFactor = shield ? 0.16f : (weapon && weapon->getDefense() > 0 ? 0.146f : 0.15f);
+
+	return ((defenseSkill / 4.0 + 2.23) * defenseValue * getDefenseFactor(sendToClient) * defenseScalingFactor) * vocation->defenseMultiplier;
 }
 
 float Player::getAttackFactor() const {
@@ -507,17 +648,48 @@ float Player::getAttackFactor() const {
 	}
 }
 
-float Player::getDefenseFactor() const {
+float Player::getDefenseFactor(bool sendToClient /* = false*/) const {
 	switch (fightMode) {
 		case FIGHTMODE_ATTACK:
+			if (sendToClient) {
+				return 0.5f;
+			}
+
 			return (OTSYS_TIME() - lastAttack) < getAttackSpeed() ? 0.5f : 1.0f;
 		case FIGHTMODE_BALANCED:
+			if (sendToClient) {
+				return 0.75f;
+			}
+
 			return (OTSYS_TIME() - lastAttack) < getAttackSpeed() ? 0.75f : 1.0f;
 		case FIGHTMODE_DEFENSE:
 			return 1.0f;
 		default:
 			return 1.0f;
 	}
+}
+
+std::vector<double> Player::getDamageAccuracy(const ItemType &it) const {
+	std::vector<double> accuracy = {};
+	const auto distanceValue = getSkillLevel(SKILL_DISTANCE);
+	if (it.ammoType == AMMO_BOLT || it.ammoType == AMMO_ARROW) {
+		accuracy.push_back(std::min<double>(90, (1.20f * (distanceValue + 1))));
+		accuracy.push_back(std::min<double>(90, (3.20f * distanceValue)));
+		accuracy.push_back(std::min<double>(90, (2.00f * distanceValue)));
+		accuracy.push_back(std::min<double>(90, (1.55f * distanceValue)));
+		accuracy.push_back(std::min<double>(90, (1.20f * (distanceValue + 1))));
+		accuracy.push_back(std::min<double>(90, distanceValue));
+	} else {
+		accuracy.push_back(std::min<double>(75, distanceValue + 1));
+		accuracy.push_back(std::min<double>(75, 2.40f * (distanceValue + 8)));
+		accuracy.push_back(std::min<double>(75, 1.55f * (distanceValue + 6)));
+		accuracy.push_back(std::min<double>(75, 1.25f * (distanceValue + 3)));
+		accuracy.push_back(std::min<double>(75, distanceValue + 1));
+		accuracy.push_back(std::min<double>(75, 0.80f * (distanceValue + 3)));
+		accuracy.push_back(std::min<double>(75, 0.70f * (distanceValue + 2)));
+	}
+
+	return accuracy;
 }
 
 void Player::setLastWalkthroughAttempt(int64_t walkthroughAttempt) {

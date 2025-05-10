@@ -65,7 +65,7 @@ public:
 	RaceType_t getRace() const override;
 	float getMitigation() const override;
 	int32_t getArmor() const override;
-	int32_t getDefense() const override;
+	int32_t getDefense(bool = false) const override;
 
 	void addDefense(int32_t defense);
 

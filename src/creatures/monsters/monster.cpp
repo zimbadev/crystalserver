@@ -193,7 +193,7 @@ void Monster::addReflectElement(CombatType_t combatType, int32_t percent) {
 	m_reflectElementMap[combatType] += percent;
 }
 
-int32_t Monster::getDefense() const {
+int32_t Monster::getDefense(bool) const {
 	auto mtypeDefense = mType->info.defense;
 	if (mtypeDefense != 0) {
 		g_logger().trace("[{}] old defense {}", __FUNCTION__, mtypeDefense);

@@ -406,13 +406,13 @@ public:
 	virtual float getMitigation() const {
 		return 0;
 	}
-	virtual int32_t getDefense() const {
+	virtual int32_t getDefense(bool = false) const {
 		return 0;
 	}
 	virtual float getAttackFactor() const {
 		return 1.0f;
 	}
-	virtual float getDefenseFactor() const {
+	virtual float getDefenseFactor(bool = false) const {
 		return 1.0f;
 	}
 

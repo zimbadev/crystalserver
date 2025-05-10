@@ -693,6 +693,15 @@ public:
 	WeaponType_t getWeaponType() const;
 	int32_t getWeaponSkill(const std::shared_ptr<Item> &item) const;
 	void getShieldAndWeapon(std::shared_ptr<Item> &shield, std::shared_ptr<Item> &weapon) const;
+	uint16_t calculateFlatDamageHealing() const;
+	uint16_t attackTotal(uint16_t flatBonus, uint16_t equipment, uint16_t skill) const;
+	uint16_t attackRawTotal(uint16_t flatBonus, uint16_t equipment, uint16_t skill) const;
+	uint16_t getDistanceAttackSkill(const int32_t attackSkill, const int32_t weaponAttack) const;
+	uint16_t getAttackSkill(const std::shared_ptr<Item> &item) const;
+	uint8_t getWeaponSkillId(const std::shared_ptr<Item> &item) const;
+	uint16_t getDefenseEquipment() const;
+	double getCombatTacticsMitigation() const;
+	std::vector<double> getDamageAccuracy(const ItemType &it) const;
 
 	void drainHealth(const std::shared_ptr<Creature> &attacker, int32_t damage) override;
 	void drainMana(const std::shared_ptr<Creature> &attacker, int32_t manaLoss) override;
@@ -701,9 +710,9 @@ public:
 	int32_t getSkill(skills_t skilltype, SkillsId_t skillinfo) const;
 
 	int32_t getArmor() const override;
-	int32_t getDefense() const override;
+	int32_t getDefense(bool sendToClient = false) const override;
 	float getAttackFactor() const override;
-	float getDefenseFactor() const override;
+	float getDefenseFactor(bool sendToClient) const override;
 	float getMitigation() const override;
 
 	void addInFightTicks(bool pzlock = false);

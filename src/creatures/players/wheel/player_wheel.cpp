@@ -35,7 +35,7 @@
 
 static PlayerWheelGem emptyGem = {};
 
-std::array<int32_t, COMBAT_COUNT> m_resistance = { 0 };
+const std::array<int32_t, COMBAT_COUNT> m_resistance = { 0 };
 
 const static std::vector<WheelGemBasicModifier_t> wheelGemBasicSlot1Allowed = {
 	WheelGemBasicModifier_t::General_FireResistance,
@@ -315,7 +315,7 @@ namespace {
 		return 0;
 	}
 
-	std::vector<PromotionScroll> WheelOfDestinyPromotionScrolls = {
+	const static std::vector<PromotionScroll> WheelOfDestinyPromotionScrolls = {
 		{ 43946, "abridged", 3 },
 		{ 43947, "basic", 5 },
 		{ 43948, "revised", 9 },
@@ -858,8 +858,8 @@ uint16_t PlayerWheel::getUnusedPoints() const {
 
 	totalPoints += m_modsMaxGrade;
 
-	for (uint8_t i = WheelSlots_t::SLOT_FIRST; i <= WheelSlots_t::SLOT_LAST; ++i) {
-		totalPoints -= getPointsBySlotType(static_cast<WheelSlots_t>(i));
+	for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+		totalPoints -= getPointsBySlotType(slot);
 	}
 
 	return totalPoints;
@@ -1473,8 +1473,8 @@ void PlayerWheel::sendOpenWheelWindow(NetworkMessage &msg, uint32_t ownerId) {
 
 	msg.add<uint16_t>(getWheelPoints(false)); // Points (false param for not send extra points)
 	msg.add<uint16_t>(getExtraPoints()); // Extra points
-	for (uint8_t i = WheelSlots_t::SLOT_FIRST; i <= WheelSlots_t::SLOT_LAST; ++i) {
-		msg.add<uint16_t>(getPointsBySlotType(i));
+	for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+		msg.add<uint16_t>(getPointsBySlotType(slot));
 	}
 	addPromotionScrolls(msg);
 	addGems(msg);
@@ -1563,7 +1563,7 @@ void PlayerWheel::saveSlotPointsOnPressSaveButton(NetworkMessage &msg) {
 	// Creates a vector to store slot information in order.
 	std::vector<SlotInfo> sortedTable;
 	// Iterates over all slots, getting the points for each slot from the message. If the slot points exceed
-	for (uint8_t slot = WheelSlots_t::SLOT_FIRST; slot <= WheelSlots_t::SLOT_LAST; ++slot) {
+	for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
 		auto slotPoints = msg.get<uint16_t>(); // Points per Slot
 		auto maxPointsPerSlot = getMaxPointsPerSlot(static_cast<WheelSlots_t>(slot));
 		if (slotPoints > maxPointsPerSlot) {
@@ -1579,11 +1579,11 @@ void PlayerWheel::saveSlotPointsOnPressSaveButton(NetworkMessage &msg) {
 		}
 
 		// The slot information is then added to the vector in order.
-		sortedTable.emplace_back(order, slot, slotPoints);
+		sortedTable.emplace_back(order, enumToValue(slot), slotPoints);
 	}
 
 	// After iterating over all slots, the vector is sorted according to the slot order.
-	std::ranges::sort(sortedTable.begin(), sortedTable.end(), [](const SlotInfo &a, const SlotInfo &b) {
+	std::ranges::sort(sortedTable, [](const SlotInfo &a, const SlotInfo &b) {
 		return a.order < b.order;
 	});
 
@@ -1867,7 +1867,6 @@ bool PlayerWheel::saveDBPlayerSlotPointsOnLogout() const {
 
 uint16_t PlayerWheel::getExtraPoints() const {
 	if (m_player.getLevel() < 51) {
-		g_logger().error("Character level must be above 50.");
 		return 0;
 	}
 
@@ -2442,11 +2441,11 @@ void PlayerWheel::loadDedicationAndConvictionPerks() {
 		return;
 	}
 
-	for (uint8_t i = WheelSlots_t::SLOT_FIRST; i <= WheelSlots_t::SLOT_LAST; ++i) {
-		const uint16_t points = getPointsBySlotType(static_cast<WheelSlots_t>(i));
+	for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+		const uint16_t points = getPointsBySlotType(slot);
 		if (points > 0) {
 			VocationBonusFunction internalData = nullptr;
-			auto it = wheelFunctions.find(static_cast<WheelSlots_t>(i));
+			auto it = wheelFunctions.find(slot);
 			if (it != wheelFunctions.end()) {
 				internalData = it->second;
 			}
@@ -3744,9 +3743,9 @@ void PlayerWheel::sendOpenWheelWindow(uint32_t ownerId) const {
 	}
 }
 
-uint16_t PlayerWheel::getPointsBySlotType(uint8_t slotType) const {
+uint16_t PlayerWheel::getPointsBySlotType(WheelSlots_t slotType) const {
 	try {
-		return m_wheelSlots.at(slotType);
+		return m_wheelSlots.at(static_cast<std::size_t>(slotType));
 	} catch (const std::out_of_range &e) {
 		g_logger().error("[{}]. Index {} is out of range, invalid slot type. Error message: {}", __FUNCTION__, slotType, e.what());
 		return 0;
@@ -3821,15 +3820,15 @@ float PlayerWheel::calculateMitigation() const {
 	float distanceFactor = 1.0f;
 	switch (m_player.fightMode) {
 		case FIGHTMODE_ATTACK: {
-			fightFactor = 0.67f;
+			fightFactor = 0.8f;
 			break;
 		}
 		case FIGHTMODE_BALANCED: {
-			fightFactor = 0.84f;
+			fightFactor = 1.0f;
 			break;
 		}
 		case FIGHTMODE_DEFENSE: {
-			fightFactor = 1.0f;
+			fightFactor = 1.2f;
 			break;
 		}
 		default:

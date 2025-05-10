@@ -167,7 +167,7 @@ namespace {
 	 *
 	 * @param[in] player The pointer to the player whose equipped items are considered.
 	 */
-	void calculateAbsorbValues(const std::shared_ptr<Player> &player, NetworkMessage &msg, uint8_t &combats) {
+	 void calculateAbsorbValues(const std::shared_ptr<Player> &player, NetworkMessage &msg, uint8_t &combats, bool fromPlayerSkills = false) {
 		alignas(16) uint16_t damageModifiers[COMBAT_COUNT] = { 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000 };
 
 		for (int32_t slot = CONST_SLOT_FIRST; slot <= CONST_SLOT_LAST; ++slot) {
@@ -234,10 +234,13 @@ namespace {
 			}
 
 			if (damageModifiers[i] != 10000) {
-				int16_t clientModifier = std::clamp(10000 - static_cast<int16_t>(damageModifiers[i]), -10000, 10000);
+				double clientModifier = (10000 - static_cast<int16_t>(damageModifiers[i])) / 10000.;
 				g_logger().debug("[{}] CombatType: {}, Damage Modifier: {}, Resulting Client Modifier: {}", __FUNCTION__, i, damageModifiers[i], clientModifier);
+				if (!fromPlayerSkills) {
+					msg.addByte(0x04);
+				}
 				msg.addByte(getCipbiaElement(indexToCombatType(i)));
-				msg.addDouble(clientModifier / 10000.0, 4);
+				msg.addDouble(clientModifier);
 				++combats;
 			}
 		}
@@ -3640,9 +3643,6 @@ void ProtocolGame::sendCyclopediaCharacterCombatStats() {
 		msg.add<uint16_t>(std::min<int32_t>(player->getSkillLevel(skill), std::numeric_limits<uint16_t>::max()));
 		msg.add<uint16_t>(0);
 	}
-
-	// Version 12.81 new skill (Fatal, Dodge and Momentum)
-	sendForgeSkillStats(msg);
 
 	// Cleave (12.70)
 	msg.add<uint16_t>(static_cast<uint16_t>(player->getCleavePercent()));
@@ -8006,203 +8006,123 @@ void ProtocolGame::AddPlayerSkills(NetworkMessage &msg) {
 		}
 	}
 
-	// the addDouble needs to pass a parameter precision to work properly, i'm using 5 for now but still need to check
-	if (!oldProtocol) {
-		msg.addByte(0x00); // unknown
-		msg.add<uint32_t>(player->getCapacity()); // total capacity
-		msg.add<uint32_t>(player->getBaseCapacity()); // base total capacity
+	// 13.10 List (U8 + U16)
+	msg.addByte(0);
 
-		// damage/healing, max damage and converted damage based on weapon type
-		std::shared_ptr<Item> weapon = player->getWeapon();
-		if (weapon) {
-			const ItemType &it = Item::items[weapon->getID()];
-			if (it.weaponType == WEAPON_WAND) {
-				msg.add<uint16_t>(it.maxHitChance / 100); // damage / healing
-				msg.addByte(it.abilities->elementType); // getCipbiaElement
+	// Used for Imbuement (Feather)
+	msg.add<uint32_t>(player->getCapacity()); // Total Capacity
+	msg.add<uint32_t>(player->getBaseCapacity()); // Base Total Capacity
 
-				msg.addByte(static_cast<uint32_t>(it.maxHitChance) / 100); // max damage
-				msg.addByte(getCipbiaElement(it.abilities->elementType)); // getCipbiaElement
+	const auto flatBonus = player->calculateFlatDamageHealing();
+	msg.add<uint16_t>(flatBonus); // Flat Damage and Healing Total
 
-				msg.addDouble(0x00); // converted damage
-				msg.addByte(CIPBIA_ELEMENTAL_ENERGY); // getCipbiaElement
-
-			} else if (it.weaponType == WEAPON_DISTANCE || it.weaponType == WEAPON_AMMO || it.weaponType == WEAPON_MISSILE) {
-				int32_t attackValue = weapon->getAttack();
-				if (it.weaponType == WEAPON_AMMO) {
-					std::shared_ptr<Item> weaponItem = player->getWeapon(true);
-					if (weaponItem) {
-						attackValue += weaponItem->getAttack();
-					}
-				}
-
-				int32_t attackSkill = player->getSkillLevel(SKILL_DISTANCE);
-				float attackFactor = player->getAttackFactor();
-				uint32_t maxDamage = static_cast<uint32_t>(Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, attackValue, attackFactor, true) * player->getVocation()->distDamageMultiplier);
-				if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
-					maxDamage += static_cast<uint32_t>(Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, attackValue - weapon->getAttack() + it.abilities->elementDamage, attackFactor, true) * player->getVocation()->distDamageMultiplier);
-				}
-
-				if (attackValue) {
-					msg.add<uint16_t>(attackValue); // damage / healing
-				} else {
-					msg.addByte(0);
-				}
-
-				msg.add<uint16_t>(maxDamage); // max damage
-				msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL); // getCipbiaElement
-
-				if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
-
-				} else {
-					handleImbuementDamage(msg, player); // converted damage
-				}
-
-			} else {
-				int32_t attackValue = std::max<int32_t>(0, weapon->getAttack());
-				int32_t attackSkill = player->getWeaponSkill(weapon);
-				float attackFactor = player->getAttackFactor();
-				uint32_t maxDamage = static_cast<uint32_t>(Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, attackValue, attackFactor, true) * player->getVocation()->meleeDamageMultiplier);
-				if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
-					maxDamage += static_cast<uint32_t>(Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, it.abilities->elementDamage, attackFactor, true) * player->getVocation()->meleeDamageMultiplier);
-				}
-
-				if (attackValue) {
-					msg.add<uint16_t>(attackValue); // damage / healing
-				} else {
-					msg.addByte(0);
-				}
-				msg.add<uint16_t>(maxDamage); // max damage
-				msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL);
-
-				handleImbuementDamage(msg, player); // converted damage
+	const auto &weapon = player->getWeapon();
+	if (weapon) {
+		const ItemType &it = Item::items[weapon->getID()];
+		if (it.weaponType == WEAPON_WAND) {
+			msg.add<uint16_t>(it.maxHitChance);
+			msg.addByte(getCipbiaElement(it.combatType));
+			msg.addDouble(0.0);
+			msg.addByte(0x00);
+		} else if (it.weaponType == WEAPON_DISTANCE || it.weaponType == WEAPON_AMMO || it.weaponType == WEAPON_MISSILE) {
+			int32_t physicalAttack = std::max<int32_t>(0, weapon->getAttack());
+			int32_t elementalAttack = 0;
+			if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
+				elementalAttack = std::max<int32_t>(0, it.abilities->elementDamage);
 			}
-		} else {
-			float attackFactor = player->getAttackFactor();
-			int32_t attackSkill = player->getSkillLevel(SKILL_FIST);
-			int32_t attackValue = 7;
+			int32_t attackValue = physicalAttack + elementalAttack;
+			if (it.weaponType == WEAPON_AMMO) {
+				std::shared_ptr<Item> weaponItem = player->getWeapon(true);
+				if (weaponItem) {
+					attackValue += weaponItem->getAttack();
+				}
+			}
 
-			int32_t maxDamage = Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, attackValue, attackFactor, true);
+			int32_t distanceValue = player->getSkillLevel(SKILL_DISTANCE);
+			const auto attackTotal = player->attackTotal(flatBonus, attackValue, distanceValue);
 
-			msg.add<uint16_t>(attackValue); // damage / healing
-
-			msg.add<uint16_t>(maxDamage); // max damage
+			msg.add<uint16_t>(attackTotal);
 			msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL);
 
-			msg.addDouble(0x00); // converted damage
-			msg.addByte(CIPBIA_ELEMENTAL_ENERGY); // getCipbiaElement
-		}
-
-		const auto lifeLeechAmount = player->getSkillLevel(SKILL_LIFE_LEECH_AMOUNT) / 10;
-		const auto manaLeechAmount = player->getSkillLevel(SKILL_MANA_LEECH_AMOUNT) / 10;
-		const auto criticalChance = player->getSkillLevel(SKILL_CRITICAL_HIT_CHANCE) / 10;
-		const auto criticalDamage = player->getSkillLevel(SKILL_CRITICAL_HIT_DAMAGE) / 10;
-
-		if (lifeLeechAmount > 0) {
-			msg.addDouble(lifeLeechAmount, 5); // 5 means the precision - check which is correct
-		} else {
-			msg.addDouble(0x00);
-		}
-		if (manaLeechAmount > 0) {
-			msg.addDouble(manaLeechAmount, 5); // 5 means the precision - check which is correct
-		} else {
-			msg.addDouble(0x00);
-		}
-		if (criticalChance > 0) {
-			msg.addDouble(criticalChance, 5); // 5 means the precision - check which is correct
-		} else {
-			msg.addDouble(0x00);
-		}
-		if (criticalDamage > 0) {
-			msg.addDouble(criticalDamage, 5); // 5 means the precision - check which is correct
-		} else {
-			msg.addDouble(0x00);
-		}
-
-		double_t amplificationChance = 0;
-		if (const auto &feetItem = player->getInventoryItem(CONST_SLOT_FEET); feetItem) {
-			amplificationChance += 0; // feetItem->getAmplificationChance(); // code prepared for the amplification feature.
-		}
-
-		double_t onslaught = 0;
-		if (const auto &item = player->getInventoryItem(CONST_SLOT_LEFT); item) {
-			const ItemType &it = Item::items[item->getID()];
-			if (it.isWeapon()) {
-				onslaught = item->getFatalChance() / 100.0;
+			// Converted Damage
+			if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
+				if (physicalAttack) {
+					msg.addDouble(elementalAttack / static_cast<double>(attackValue));
+				} else {
+					msg.addDouble(0.0);
+				}
+				msg.addByte(getCipbiaElement(it.abilities->elementType));
+			} else {
+				handleImbuementDamage(msg, player);
 			}
-			onslaught += onslaught * amplificationChance;
-			msg.addDouble(onslaught, 5); // 5 means the precision - check which is correct
 		} else {
-			msg.addDouble(0x00); // ONSLAUGHT
-		}
-
-		msg.add<uint16_t>(player->getDefense());
-		msg.add<uint16_t>(player->getArmor());
-
-		// Wheel of destiny mitigation
-		if (g_configManager().getBoolean(TOGGLE_WHEELSYSTEM)) {
-			msg.addDouble(player->getMitigation() / 10, 5); // 5 means the precision - check which is correct
-		} else {
-			msg.addDouble(0);
-		}
-
-		double_t ruse = 0;
-		if (const auto &item = player->getInventoryItem(CONST_SLOT_ARMOR); item) {
-			const ItemType &it = Item::items[item->getID()];
-			if (it.isArmor()) {
-				ruse = item->getDodgeChance() / 100.0;
+			int32_t physicalAttack = std::max<int32_t>(0, weapon->getAttack());
+			int32_t elementalAttack = 0;
+			if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
+				elementalAttack = std::max<int32_t>(0, it.abilities->elementDamage);
 			}
-			ruse += ruse * amplificationChance;
-			msg.addDouble(ruse, 5);
-		} else {
-			msg.addDouble(0x00); // ruse
-		}
+			int32_t weaponAttack = physicalAttack + elementalAttack;
+			int32_t weaponSkill = player->getWeaponSkill(weapon);
+			const auto attackTotal = player->attackTotal(flatBonus, weaponAttack, weaponSkill);
 
-		msg.add<uint16_t>(static_cast<uint16_t>(player->getReflectFlat(COMBAT_PHYSICALDAMAGE))); // Reflect
+			msg.add<uint16_t>(attackTotal);
+			msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL);
 
-		// Store the "combats" to increase in absorb values function and send to client later
-		uint8_t combats = 0;
-		auto startCombats = msg.getBufferPosition();
-		msg.skipBytes(1);
-		// Calculate and parse the combat absorbs values
-		calculateAbsorbValues(player, msg, combats);
-		// Now set the buffer position skiped and send the total combats count
-		auto endCombats = msg.getBufferPosition();
-		msg.setBufferPosition(startCombats);
-		msg.addByte(combats);
-		msg.setBufferPosition(endCombats);
-
-		double_t momentum = 0;
-		if (const auto &item = player->getInventoryItem(CONST_SLOT_HEAD); item) {
-			const ItemType &it = Item::items[item->getID()];
-			if (it.isHelmet()) {
-				momentum = item->getMomentumChance() / 100.0;
+			// Converted Damage
+			if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
+				if (physicalAttack) {
+					msg.addDouble(elementalAttack / static_cast<double>(weaponAttack));
+				} else {
+					msg.addDouble(0);
+				}
+				msg.addByte(getCipbiaElement(it.abilities->elementType));
+			} else {
+				handleImbuementDamage(msg, player);
 			}
-			momentum += momentum * amplificationChance;
-			msg.addDouble(momentum, 5);
-		} else {
-			msg.addDouble(0x00); // momentum
 		}
+	} else {
+		uint16_t attackValue = 7;
+		int32_t fistValue = player->getSkillLevel(SKILL_FIST);
+		const auto attackTotal = player->attackTotal(flatBonus, attackValue, fistValue);
 
-		double_t transcendence = 0;
-		if (const auto &item = player->getInventoryItem(CONST_SLOT_LEGS); item) {
-			const ItemType &it = Item::items[item->getID()];
-			if (it.isLegs()) {
-				transcendence = item->getTranscendenceChance() / 100.0;
-			}
-			transcendence += transcendence * amplificationChance;
-			msg.addDouble(transcendence, 5);
-		} else {
-			msg.addDouble(0x00); // transcendence
-		}
+		msg.add<uint16_t>(attackTotal);
+		msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL);
 
-		if (amplificationChance > 0) {
-			msg.addDouble(amplificationChance, 5); // amplification
-		} else {
-			msg.addDouble(0x00); // amplification
-		}
-
-		writeToOutputBuffer(msg);
+		msg.addDouble(0.0);
+		msg.addByte(0x00);
 	}
+
+	// Imbuements
+	msg.addDouble(player->getSkillLevel(SKILL_LIFE_LEECH_AMOUNT) / 10000.); // Life Leech
+	msg.addDouble(player->getSkillLevel(SKILL_MANA_LEECH_AMOUNT) / 10000.); // Mana Leech
+	msg.addDouble(player->getSkillLevel(SKILL_CRITICAL_HIT_CHANCE) / 10000.); // Crit Chance
+	msg.addDouble(player->getSkillLevel(SKILL_CRITICAL_HIT_DAMAGE) / 10000.); // Crit Extra Damage
+	msg.addDouble(getForgeSkillStat(CONST_SLOT_LEFT)); // Onslaught
+
+	msg.add<uint16_t>(player->getDefense(true));
+	msg.add<uint16_t>(player->getArmor());
+	msg.addDouble(player->getMitigation() / 100.); // Mitigation
+	msg.addDouble(getForgeSkillStat(CONST_SLOT_ARMOR)); // Dodge (Ruse)
+	msg.add<uint16_t>(static_cast<uint16_t>(player->getReflectFlat(COMBAT_PHYSICALDAMAGE))); // Damage Reflection
+
+	// Store the "combats" to increase in absorb values function and send to client later
+	uint8_t combats = 0;
+	auto startCombats = msg.getBufferPosition();
+	msg.skipBytes(1);
+
+	// Calculate and parse the combat absorbs values
+	calculateAbsorbValues(player, msg, combats, true);
+
+	// Now set the buffer position skiped and send the total combats count
+	auto endCombats = msg.getBufferPosition();
+	msg.setBufferPosition(startCombats);
+	msg.addByte(combats);
+	msg.setBufferPosition(endCombats);
+
+	// Forge Bonus
+	msg.addDouble(getForgeSkillStat(CONST_SLOT_HEAD)); // Momentum
+	msg.addDouble(getForgeSkillStat(CONST_SLOT_LEGS)); // Transcedence
+	msg.addDouble(getForgeSkillStat(CONST_SLOT_FEET, false)); // Amplification
 }
 
 void ProtocolGame::AddOutfit(NetworkMessage &msg, const Outfit_t &outfit, bool addMount /* = true*/) {
@@ -9088,34 +9008,36 @@ void ProtocolGame::getForgeInfoMap(const std::shared_ptr<Item> &item, std::map<u
 	}
 }
 
-void ProtocolGame::sendForgeSkillStats(NetworkMessage &msg) const {
+double ProtocolGame::getForgeSkillStat(Slots_t slot, bool applyAmplification /*= true*/) const {
 	if (oldProtocol) {
-		return;
+		return 0;
 	}
 
-	std::vector<Slots_t> slots { CONST_SLOT_LEFT, CONST_SLOT_ARMOR, CONST_SLOT_HEAD, CONST_SLOT_LEGS };
-	for (const auto &slot : slots) {
-		double_t skill = 0;
-		if (const auto &item = player->getInventoryItem(slot); item) {
-			const ItemType &it = Item::items[item->getID()];
-			if (it.isWeapon()) {
-				skill = item->getFatalChance() * 100;
-			}
-			if (it.isArmor()) {
-				skill = item->getDodgeChance() * 100;
-			}
-			if (it.isHelmet()) {
-				skill = item->getMomentumChance() * 100;
-			}
-			if (it.isLegs()) {
-				skill = item->getTranscendenceChance() * 100;
-			}
+	double skill = 0;
+	if (const auto &item = player->getInventoryItem(slot); item) {
+		const ItemType &it = Item::items[item->getID()];
+		if (it.isWeapon()) {
+			skill = item->getFatalChance();
 		}
-
-		auto skillCast = static_cast<uint16_t>(skill);
-		msg.add<uint16_t>(skillCast);
-		msg.add<uint16_t>(skillCast);
+		if (it.isArmor()) {
+			skill = item->getDodgeChance();
+		}
+		if (it.isHelmet()) {
+			skill = item->getMomentumChance();
+		}
+		if (it.isLegs()) {
+			skill = item->getTranscendenceChance();
+		}
 	}
+
+	if (applyAmplification) {
+		const auto &boots = player->getInventoryItem(CONST_SLOT_FEET);
+		if (slot != CONST_SLOT_FEET && boots) {
+			skill *= 1 ;//+ (boots->getAmplificationChance() / 100);
+		}
+	}
+
+	return skill / 100;
 }
 
 void ProtocolGame::sendBosstiaryData() {
