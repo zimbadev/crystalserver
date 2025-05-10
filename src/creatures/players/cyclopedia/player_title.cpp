@@ -248,7 +248,8 @@ bool PlayerTitle::checkHighscore(uint8_t skill) const {
 	auto resultValue = result->getNumber<uint32_t>(fieldCheck);
 	g_logger().debug("top id: {}, player id: {}", resultValue, m_player.getGUID());
 
-	return resultValue == m_player.getGUID();;
+	return resultValue == m_player.getGUID();
+	;
 }
 
 bool PlayerTitle::checkBestiary(const std::string &name, uint16_t race, bool isBoss /* = false*/, uint32_t amount) const {

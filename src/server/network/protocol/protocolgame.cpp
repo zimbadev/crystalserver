@@ -167,7 +167,7 @@ namespace {
 	 *
 	 * @param[in] player The pointer to the player whose equipped items are considered.
 	 */
-	 void calculateAbsorbValues(const std::shared_ptr<Player> &player, NetworkMessage &msg, uint8_t &combats, bool fromPlayerSkills = false) {
+	void calculateAbsorbValues(const std::shared_ptr<Player> &player, NetworkMessage &msg, uint8_t &combats, bool fromPlayerSkills = false) {
 		alignas(16) uint16_t damageModifiers[COMBAT_COUNT] = { 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000 };
 
 		for (int32_t slot = CONST_SLOT_FIRST; slot <= CONST_SLOT_LAST; ++slot) {
@@ -3153,7 +3153,6 @@ void ProtocolGame::parseSendResourceBalance() {
 		player->getMaxCharmPoints(),
 		player->getMaxMinorCharmEchoes()
 	);
-
 }
 
 void ProtocolGame::sendCharmResourceBalance(CharmResource_t resourceType, uint32_t value) {
@@ -9033,7 +9032,7 @@ double ProtocolGame::getForgeSkillStat(Slots_t slot, bool applyAmplification /*=
 	if (applyAmplification) {
 		const auto &boots = player->getInventoryItem(CONST_SLOT_FEET);
 		if (slot != CONST_SLOT_FEET && boots) {
-			skill *= 1 ;//+ (boots->getAmplificationChance() / 100);
+			skill *= 1; //+ (boots->getAmplificationChance() / 100);
 		}
 	}
 
