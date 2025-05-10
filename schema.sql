@@ -288,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `boosted_creature` (
 
 INSERT INTO `boosted_creature` (`boostname`, `date`, `raceid`) VALUES ('default', 0, 0);
 
-
+-- Table structure `player_oldnames`
 CREATE TABLE IF NOT EXISTS `player_oldnames` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`player_id` int(11) NOT NULL,
