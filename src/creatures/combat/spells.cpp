@@ -617,6 +617,10 @@ bool Spell::playerRuneSpellCheck(const std::shared_ptr<Player> &player, const Po
 		return false;
 	}
 
+	if (g_game().getWorldType() == WORLDTYPE_OPTIONAL && !needTarget && !player->isFirstOnStack()) {
+		return false;
+	}
+
 	const auto &topVisibleCreature = tile->getBottomVisibleCreature(player);
 	if ((blockingCreature && topVisibleCreature) || (blockingSolid && tile->hasFlag(TILESTATE_BLOCKSOLID) && !topVisibleCreature)) {
 		player->sendCancelMessage(RETURNVALUE_NOTENOUGHROOM);

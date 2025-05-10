@@ -1352,6 +1352,7 @@ public:
 	uint16_t getPlayerVocationEnum() const;
 
 	void resetOldCharms();
+	bool isFirstOnStack() const;
 
 	/*******************************************************************************
 	 * Deflect Condition

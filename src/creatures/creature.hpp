@@ -574,7 +574,11 @@ public:
 		return position;
 	}
 
-	std::shared_ptr<Tile> getTile() override final {
+	std::shared_ptr<Tile> getTile() final {
+		return m_tile.lock();
+	}
+
+	std::shared_ptr<Tile> getTile() const final {
 		return m_tile.lock();
 	}
 
@@ -706,6 +710,9 @@ public:
 	void setCharmChanceModifier(int8_t value) {
 		charmChanceModifier = value;
 	}
+
+	void setCombatDamage(const CombatDamage &damage);
+	CombatDamage getCombatDamage() const;
 
 protected:
 	enum FlagAsyncClass_t : uint8_t {
@@ -885,4 +892,5 @@ private:
 	}
 
 	uint8_t m_flagAsyncTask = 0;
+	CombatDamage m_combatDamage;
 };

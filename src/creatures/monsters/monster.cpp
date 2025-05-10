@@ -2321,6 +2321,8 @@ void Monster::death(const std::shared_ptr<Creature> &) {
 	if (monsterForgeClassification > ForgeClassifications_t::FORGE_NORMAL_MONSTER) {
 		g_game().removeForgeMonster(getID(), monsterForgeClassification, true);
 	}
+	const auto &attackedCreature = getAttackedCreature();
+	const auto &targetPlayer = attackedCreature ? attackedCreature->getPlayer() : nullptr;
 	setAttackedCreature(nullptr);
 
 	for (const auto &summon : m_summons) {
@@ -2336,11 +2338,26 @@ void Monster::death(const std::shared_ptr<Creature> &) {
 	clearFriendList();
 	onIdleStatus();
 
-	if (mType) {
-		g_game().sendSingleSoundEffect(static_self_cast<Monster>()->getPosition(), mType->info.deathSound, getMonster());
+	setDead(true);
+
+	if (!mType) {
+		return;
 	}
 
-	setDead(true);
+	g_game().sendSingleSoundEffect(static_self_cast<Monster>()->getPosition(), mType->info.deathSound, getMonster());
+
+	if (!targetPlayer) {
+		return;
+	}
+
+	auto [activeCharm, _] = g_iobestiary().getCharmFromTarget(targetPlayer, mType);
+	if (activeCharm == CHARM_CARNAGE) {
+		const auto &charm = g_iobestiary().getBestiaryCharm(activeCharm);
+		const auto charmTier = targetPlayer->getCharmTier(activeCharm);
+		if (charm && charm->chance[charmTier] >= normal_random(1, 10000) / 100.0) {
+			g_iobestiary().parseCharmCombat(charm, targetPlayer, getMonster());
+		}
+	}
 }
 
 std::shared_ptr<Item> Monster::getCorpse(const std::shared_ptr<Creature> &lastHitCreature, const std::shared_ptr<Creature> &mostDamageCreature) {

@@ -11298,3 +11298,24 @@ void Player::resetOldCharms() {
 
 	g_logger().info("Player: {}, recalculated charm points based on unlocked bestiary: {}", getName(), totalRefund);
 }
+
+bool Player::isFirstOnStack() const {
+	const auto &playerTile = getTile();
+	if (!playerTile) {
+		return false;
+	}
+
+	const auto &bottomCreature = playerTile->getBottomCreature();
+	const auto &bottomPlayer = bottomCreature ? bottomCreature->getPlayer() : nullptr;
+	if (!bottomPlayer) {
+		return false;
+	}
+
+	if (hasCondition(CONDITION_SPELLCOOLDOWN)) {
+		g_logger().warn("[isFirstOnStack] cooldown error for player: {}", getName());
+		return false;
+	}
+
+	return this == bottomPlayer.get();
+}
+
