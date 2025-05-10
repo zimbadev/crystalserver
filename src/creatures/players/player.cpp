@@ -1537,6 +1537,41 @@ void Player::setCharmPoints(uint32_t points) {
 	charmPoints = points;
 }
 
+uint32_t Player::getMinorCharmEchoes() const {
+	return minorCharmEchoes;
+}
+
+void Player::setMinorCharmEchoes(uint32_t points) {
+	minorCharmEchoes = points;
+}
+
+uint32_t Player::getMaxCharmPoints() const {
+	return maxCharmPoints;
+}
+
+void Player::setMaxCharmPoints(uint32_t points) {
+	maxCharmPoints = points;
+}
+
+uint32_t Player::getMaxMinorCharmEchoes() const {
+	return maxMinorCharmEchoes;
+}
+
+void Player::setMaxMinorCharmEchoes(uint32_t points) {
+	maxMinorCharmEchoes = points;
+}
+
+uint8_t Player::getCharmTier(charmRune_t charmId) const {
+	if (charmId == CHARM_NONE || charmId > charmsArray.size()) {
+		return 0;
+	}
+	return charmsArray[charmId].tier;
+}
+
+void Player::setCharmTier(charmRune_t charmId, uint8_t newTier) {
+	charmsArray[charmId].tier = newTier;
+}
+
 bool Player::hasCharmExpansion() const {
 	return charmExpansion;
 }
@@ -1562,20 +1597,39 @@ int32_t Player::getUnlockedRunesBit() const {
 }
 
 void Player::setImmuneCleanse(ConditionType_t conditiontype) {
-	cleanseCondition.first = conditiontype;
-	cleanseCondition.second = OTSYS_TIME() + 10000;
+	if (conditiontype == CONDITION_FEARED) {
+		setImmuneFear(11000);
+	} else {
+		for (auto &[type, time] : cleanseConditions) {
+			if (type != conditiontype) {
+				continue;
+			}
+
+			time = OTSYS_TIME() + 11000;
+			return;
+		}
+		cleanseConditions.emplace_back(conditiontype, OTSYS_TIME() + 11000);
+	}
 }
 
 bool Player::isImmuneCleanse(ConditionType_t conditiontype) const {
 	const uint64_t timenow = OTSYS_TIME();
-	if ((cleanseCondition.first == conditiontype)
-	    && (timenow <= cleanseCondition.second)) {
+	if (conditiontype == CONDITION_FEARED) {
+		return isImmuneFear();
+	}
+
+	for (const auto &[type, time] : cleanseConditions) {
+		if (type != conditiontype || timenow > time) {
+			continue;
+		}
+
 		return true;
 	}
+
 	return false;
 }
 
-void Player::setImmuneFear() {
+void Player::setImmuneFear(uint32_t immuneTime /* = 10000 */) {
 	m_fearCondition.first = CONDITION_FEARED;
 	m_fearCondition.second = OTSYS_TIME() + 10000;
 }
@@ -1595,140 +1649,38 @@ bool Player::isImmuneRoot() const {
 	return (m_rootCondition.first == CONDITION_ROOTED) && (timenow <= m_rootCondition.second);
 }
 
-uint16_t Player::parseRacebyCharm(charmRune_t charmId, bool set, uint16_t newRaceid) {
+uint16_t Player::parseRacebyCharm(charmRune_t charmId, bool set /*= false*/, uint16_t newRaceid /*= 0*/) {
 	uint16_t raceid = 0;
 	switch (charmId) {
 		case CHARM_WOUND:
-			if (set) {
-				charmRuneWound = newRaceid;
-			} else {
-				raceid = charmRuneWound;
-			}
-			break;
 		case CHARM_ENFLAME:
-			if (set) {
-				charmRuneEnflame = newRaceid;
-			} else {
-				raceid = charmRuneEnflame;
-			}
-			break;
 		case CHARM_POISON:
-			if (set) {
-				charmRunePoison = newRaceid;
-			} else {
-				raceid = charmRunePoison;
-			}
-			break;
 		case CHARM_FREEZE:
-			if (set) {
-				charmRuneFreeze = newRaceid;
-			} else {
-				raceid = charmRuneFreeze;
-			}
-			break;
 		case CHARM_ZAP:
-			if (set) {
-				charmRuneZap = newRaceid;
-			} else {
-				raceid = charmRuneZap;
-			}
-			break;
 		case CHARM_CURSE:
-			if (set) {
-				charmRuneCurse = newRaceid;
-			} else {
-				raceid = charmRuneCurse;
-			}
-			break;
 		case CHARM_CRIPPLE:
-			if (set) {
-				charmRuneCripple = newRaceid;
-			} else {
-				raceid = charmRuneCripple;
-			}
-			break;
 		case CHARM_PARRY:
-			if (set) {
-				charmRuneParry = newRaceid;
-			} else {
-				raceid = charmRuneParry;
-			}
-			break;
 		case CHARM_DODGE:
-			if (set) {
-				charmRuneDodge = newRaceid;
-			} else {
-				raceid = charmRuneDodge;
-			}
-			break;
 		case CHARM_ADRENALINE:
-			if (set) {
-				charmRuneAdrenaline = newRaceid;
-			} else {
-				raceid = charmRuneAdrenaline;
-			}
-			break;
 		case CHARM_NUMB:
-			if (set) {
-				charmRuneNumb = newRaceid;
-			} else {
-				raceid = charmRuneNumb;
-			}
-			break;
 		case CHARM_CLEANSE:
-			if (set) {
-				charmRuneCleanse = newRaceid;
-			} else {
-				raceid = charmRuneCleanse;
-			}
-			break;
 		case CHARM_BLESS:
-			if (set) {
-				charmRuneBless = newRaceid;
-			} else {
-				raceid = charmRuneBless;
-			}
-			break;
 		case CHARM_SCAVENGE:
-			if (set) {
-				charmRuneScavenge = newRaceid;
-			} else {
-				raceid = charmRuneScavenge;
-			}
-			break;
 		case CHARM_GUT:
-			if (set) {
-				charmRuneGut = newRaceid;
-			} else {
-				raceid = charmRuneGut;
-			}
-			break;
 		case CHARM_LOW:
-			if (set) {
-				charmRuneLowBlow = newRaceid;
-			} else {
-				raceid = charmRuneLowBlow;
-			}
-			break;
 		case CHARM_DIVINE:
-			if (set) {
-				charmRuneDivine = newRaceid;
-			} else {
-				raceid = charmRuneDivine;
-			}
-			break;
 		case CHARM_VAMP:
-			if (set) {
-				charmRuneVamp = newRaceid;
-			} else {
-				raceid = charmRuneVamp;
-			}
-			break;
 		case CHARM_VOID:
+		case CHARM_SAVAGE:
+		case CHARM_FATAL:
+		case CHARM_VOIDINVERSION:
+		case CHARM_CARNAGE:
+		case CHARM_OVERPOWER:
+		case CHARM_OVERFLUX:
 			if (set) {
-				charmRuneVoid = newRaceid;
+				charmsArray[charmId].raceId = newRaceid;
 			} else {
-				raceid = charmRuneVoid;
+				raceid = charmsArray[charmId].raceId;
 			}
 			break;
 		default:
@@ -3628,10 +3580,14 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		double deathLossPercent = getLostPercent() * (unfairFightReduction / 100.);
 
 		// Charm bless bestiary
-		if (lastHitCreature && lastHitCreature->getMonster() && charmRuneBless != 0) {
+		const auto charmBless = charmsArray[CHARM_BLESS];
+		const auto charmBlessRaceId = charmBless.raceId;
+		const auto &charm = g_iobestiary().getBestiaryCharm(CHARM_BLESS);
+		if (charm && lastHitCreature && lastHitCreature->getMonster() && charmBlessRaceId != 0) {
 			const auto &mType = g_monsters().getMonsterType(lastHitCreature->getName());
-			if (mType && mType->info.raceid == charmRuneBless) {
-				deathLossPercent = (deathLossPercent * 90) / 100;
+			if (mType && mType->info.raceid == charmBlessRaceId) {
+				const auto percentReduction = charm->chance[charmBless.tier] / 100;
+				deathLossPercent -= deathLossPercent * percentReduction;
 			}
 		}
 
@@ -5190,6 +5146,7 @@ void Player::parseAttackDealtHazardSystem(CombatDamage &damage, const std::share
 		if (chance <= stage) {
 			damage.primary.value = 0;
 			damage.secondary.value = 0;
+			damage.hazardDodge = true;
 			return;
 		}
 	}
@@ -5880,6 +5837,26 @@ void Player::onAddCondition(ConditionType_t type) {
 	}
 
 	sendIcons();
+}
+
+void Player::onCleanseCondition(ConditionType_t type) const {
+	static const std::unordered_map<ConditionType_t, std::string_view> conditionMessages = {
+		{ CONDITION_POISON, "poisoned" },
+		{ CONDITION_FIRE, "burning" },
+		{ CONDITION_ENERGY, "electrified" },
+		{ CONDITION_FREEZING, "freezing" },
+		{ CONDITION_CURSED, "cursed" },
+		{ CONDITION_DAZZLED, "dazzled" },
+		{ CONDITION_BLEEDING, "bleeding" },
+		{ CONDITION_PARALYZE, "paralyzed" },
+		{ CONDITION_ROOTED, "rooted" },
+		{ CONDITION_FEARED, "feared" }
+	};
+
+	auto it = conditionMessages.find(type);
+	if (it != conditionMessages.end()) {
+		sendTextMessage(MESSAGE_PARTY, fmt::format("You are no longer {}. (cleanse charm)", it->second));
+	}
 }
 
 void Player::onAddCombatCondition(ConditionType_t type) {
@@ -10924,9 +10901,9 @@ void Player::sendFYIBox(const std::string &message) const {
 	}
 }
 
-void Player::BestiarysendCharms() const {
+void Player::sendBestiaryCharms() const {
 	if (client) {
-		client->BestiarysendCharms();
+		client->sendBestiaryCharms();
 	}
 }
 
@@ -11114,4 +11091,38 @@ AcceptTransferErrorMessage Player::canAcceptTransferHouse(uint32_t houseId) {
 		return AlreadyAccepted;
 	}
 	return Success;
+}
+
+void Player::resetOldCharms() {
+	const auto &bestiaryList = g_game().getBestiaryList();
+	const auto &charmList = g_game().getCharmList();
+	uint16_t unlockedCharms = 0;
+	for (const auto &charm : charmList) {
+		if (g_iobestiary().hasCharmUnlockedRuneBit(charm, getUnlockedRunesBit())) {
+			++unlockedCharms;
+		}
+	}
+
+	uint16_t totalRefund = 0;
+	for (const auto &[raceId, monsterName] : bestiaryList) {
+		const auto &mtype = g_monsters().getMonsterType(monsterName);
+		if (mtype && getBestiaryKillCount(raceId) >= mtype->info.bestiaryToUnlock) {
+			totalRefund += mtype->info.bestiaryCharmsPoints;
+			unlockedCharms++;
+		}
+	}
+
+	bool unlockedAllCharms = unlockedCharms == 19;
+	if (unlockedAllCharms) {
+		totalRefund += 17400;
+		g_logger().info("Player: {}, has all charms unlocked. Bonus points: 17400", getName());
+	}
+
+	uint32_t myCharms = getCharmPoints();
+	totalRefund += myCharms;
+
+	setMaxCharmPoints(totalRefund);
+	setCharmPoints(totalRefund);
+
+	g_logger().info("Player: {}, recalculated charm points based on unlocked bestiary: {}", getName(), totalRefund);
 }

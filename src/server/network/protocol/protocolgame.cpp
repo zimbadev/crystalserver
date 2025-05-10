@@ -2368,7 +2368,7 @@ void ProtocolGame::parseBestiarysendRaces() {
 	}
 	writeToOutputBuffer(msg);
 
-	player->BestiarysendCharms();
+	player->sendBestiaryCharms();
 }
 
 void ProtocolGame::sendBestiaryEntryChanged(uint16_t raceid) {
@@ -2424,7 +2424,6 @@ void ProtocolGame::parseBestiarysendMonsterData(NetworkMessage &msg) {
 		newmsg.add<uint16_t>(0);
 		newmsg.add<uint16_t>(0);
 	}
-
 	newmsg.add<uint32_t>(killCounter);
 
 	newmsg.add<uint16_t>(mtype->info.bestiaryFirstUnlock);
@@ -2497,18 +2496,6 @@ void ProtocolGame::parseBestiarysendMonsterData(NetworkMessage &msg) {
 
 		newmsg.add<uint16_t>(1);
 		newmsg.addString(mtype->info.bestiaryLocations);
-	}
-
-	if (currentLevel > 3) {
-		charmRune_t mType_c = g_iobestiary().getCharmFromTarget(player, mtype);
-		if (mType_c != CHARM_NONE) {
-			newmsg.addByte(1);
-			newmsg.addByte(mType_c);
-			newmsg.add<uint32_t>(player->getLevel() * 100);
-		} else {
-			newmsg.addByte(0);
-			newmsg.addByte(1);
-		}
 	}
 
 	writeToOutputBuffer(newmsg);
@@ -2892,10 +2879,10 @@ void ProtocolGame::parseSendBuyCharmRune(NetworkMessage &msg) {
 		return;
 	}
 
-	auto runeID = static_cast<charmRune_t>(msg.getByte());
 	uint8_t action = msg.getByte();
-	auto raceid = msg.get<uint16_t>();
-	g_iobestiary().sendBuyCharmRune(player, runeID, action, raceid);
+	auto charmId = static_cast<charmRune_t>(msg.getByte());
+	uint16_t raceId = msg.get<uint16_t>();
+	g_iobestiary().sendBuyCharmRune(player, action, charmId, raceId);
 }
 
 void ProtocolGame::refreshCyclopediaMonsterTracker(const std::unordered_set<std::shared_ptr<MonsterType>> &trackerSet, bool isBoss) {
@@ -2940,58 +2927,88 @@ void ProtocolGame::refreshCyclopediaMonsterTracker(const std::unordered_set<std:
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::BestiarysendCharms() {
+void ProtocolGame::sendBestiaryCharms() {
 	if (!player || oldProtocol) {
 		return;
 	}
 
-	int32_t removeRuneCost = player->getLevel() * 100;
+	const auto playerLevel = player->getLevel();
+	uint64_t resetAllCharmsCost = 100000 + (playerLevel > 100 ? playerLevel * 11000 : 0);
 	if (player->hasCharmExpansion()) {
-		removeRuneCost = (removeRuneCost * 75) / 100;
+		resetAllCharmsCost = (resetAllCharmsCost * 75) / 100;
 	}
+
 	NetworkMessage msg;
 	msg.addByte(0xD8);
-	msg.add<uint32_t>(player->getCharmPoints());
+	msg.add<uint64_t>(resetAllCharmsCost);
 
-	const auto charmList = g_game().getCharmList();
+	const auto &charmList = g_game().getCharmList();
 	msg.addByte(charmList.size());
 	for (const auto &c_type : charmList) {
 		msg.addByte(c_type->id);
-		msg.addString(c_type->name);
-		msg.addString(c_type->description);
-		msg.addByte(0); // Unknown
-		msg.add<uint16_t>(c_type->points);
+		const auto &charmPoints = c_type->points;
 		if (g_iobestiary().hasCharmUnlockedRuneBit(c_type, player->getUnlockedRunesBit())) {
-			msg.addByte(1);
-			uint16_t raceid = player->parseRacebyCharm(c_type->id, false, 0);
-			if (raceid > 0) {
-				msg.addByte(1);
-				msg.add<uint16_t>(raceid);
-				msg.add<uint32_t>(removeRuneCost);
+			const auto charmTier = player->getCharmTier(c_type->id);
+			msg.addByte(charmTier);
+			uint16_t raceId = player->parseRacebyCharm(c_type->id);
+			if (raceId > 0) {
+				msg.addByte(0x01);
+				msg.add<uint16_t>(raceId);
+				uint32_t removeCharmCost = player->getLevel() * 100;
+				if (player->hasCharmExpansion()) {
+					removeCharmCost = (removeCharmCost * 75) / 100;
+				}
+				msg.add<uint32_t>(removeCharmCost);
 			} else {
-				msg.addByte(0);
+				msg.addByte(0x00);
 			}
 		} else {
-			msg.addByte(0);
-			msg.addByte(0);
+			msg.addByte(0x00);
+			msg.addByte(0x00);
 		}
 	}
-	msg.addByte(4); // Unknown
 
-	auto finishedMonstersSet = g_iobestiary().getBestiaryFinished(player);
-	for (charmRune_t charmRune : g_iobestiary().getCharmUsedRuneBitAll(player)) {
-		const auto tmpCharm = g_iobestiary().getBestiaryCharm(charmRune);
-		uint16_t tmp_raceid = player->parseRacebyCharm(tmpCharm->id, false, 0);
+	std::list<charmRune_t> usedCharms = g_iobestiary().getCharmUsedRuneBitAll(player);
+	uint8_t availableCharmSlots;
+	if (player->isPremium() && player->hasCharmExpansion()) {
+		availableCharmSlots = 0xFF;
+	} else {
+		uint8_t totalCharmSlots = player->isPremium() ? 6 : 2;
+		availableCharmSlots = totalCharmSlots - usedCharms.size();
+	}
 
-		std::erase(finishedMonstersSet, tmp_raceid);
+	msg.addByte(availableCharmSlots);
+
+	auto finishedMonstersSet = g_iobestiary().getBestiaryStageTwo(player);
+	std::unordered_map<uint16_t, uint8_t> charmsAssigned;
+	for (charmRune_t charmRune : usedCharms) {
+		const auto &tmpCharm = g_iobestiary().getBestiaryCharm(charmRune);
+		if (!tmpCharm) {
+			continue;
+		}
+
+		uint16_t tmpRaceId = player->parseRacebyCharm(tmpCharm->id);
+		charmsAssigned[tmpRaceId]++;
+	}
+
+	for (const auto &[raceId, amount] : charmsAssigned) {
+		if (amount >= 2) {
+			std::erase(finishedMonstersSet, raceId);
+		}
 	}
 
 	msg.add<uint16_t>(finishedMonstersSet.size());
-	for (uint16_t raceid_tmp : finishedMonstersSet) {
-		msg.add<uint16_t>(raceid_tmp);
+	for (uint16_t tmpRaceId : finishedMonstersSet) {
+		msg.add<uint32_t>(tmpRaceId);
 	}
 
 	writeToOutputBuffer(msg);
+	sendCharmResourcesBalance(
+		player->getCharmPoints(),
+		player->getMinorCharmEchoes(),
+		player->getMaxCharmPoints(),
+		player->getMaxMinorCharmEchoes()
+	);
 }
 
 void ProtocolGame::parseBestiarysendCreatures(NetworkMessage &msg) {
@@ -3126,6 +3143,28 @@ void ProtocolGame::parseSendResourceBalance() {
 		sliverCount,
 		coreCount
 	);
+
+	sendCharmResourcesBalance(
+		player->getCharmPoints(),
+		player->getMinorCharmEchoes(),
+		player->getMaxCharmPoints(),
+		player->getMaxMinorCharmEchoes()
+	);
+
+}
+
+void ProtocolGame::sendCharmResourceBalance(CharmResource_t resourceType, uint32_t value) {
+	if (oldProtocol) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0xEE);
+
+	msg.addByte(resourceType);
+	msg.add<uint32_t>(value);
+
+	writeToOutputBuffer(msg);
 }
 
 void ProtocolGame::parseInviteToParty(NetworkMessage &msg) {
@@ -5003,6 +5042,13 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType, uint64_t value) 
 	msg.add<uint64_t>(value);
 	writeToOutputBuffer(msg);
 }
+
+void ProtocolGame::sendCharmResourcesBalance(uint32_t charm /*= 0*/, uint32_t minorCharm /*= 0*/, uint32_t maxCharm /*= 0*/, uint32_t maxMinorCharm /*= 0*/) {
+	sendCharmResourceBalance(RESOURCE_CHARM, charm);
+	sendCharmResourceBalance(RESOURCE_MINOR_CHARM, minorCharm);
+	sendCharmResourceBalance(RESOURCE_MAX_CHARM, maxCharm);
+	sendCharmResourceBalance(RESOURCE_MAX_MINOR_CHARM, maxMinorCharm);
+};
 
 void ProtocolGame::sendSaleItemList(const std::vector<ShopBlock> &shopVector, const std::map<uint16_t, uint16_t> &inventoryMap) {
 	sendResourceBalance(RESOURCE_BANK, player->getBankBalance());

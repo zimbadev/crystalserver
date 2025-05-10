@@ -970,8 +970,12 @@ bool Monster::isTarget(const std::shared_ptr<Creature> &creature) {
 	return true;
 }
 
+void Monster::setFatalHoldDuration(int32_t value) {
+	fatalHoldDuration = value;
+}
+
 bool Monster::isFleeing() const {
-	return !isSummon() && getHealth() <= runAwayHealth && challengeFocusDuration <= 0 && challengeMeleeDuration <= 0;
+	return !isSummon() && getHealth() <= runAwayHealth && challengeFocusDuration <= 0 && challengeMeleeDuration <= 0 && fatalHoldDuration <= 0;
 }
 
 bool Monster::selectTarget(const std::shared_ptr<Creature> &creature) {
@@ -1271,6 +1275,14 @@ void Monster::onThinkTarget(uint32_t interval) {
 
 				if (challengeFocusDuration <= 0) {
 					challengeFocusDuration = 0;
+				}
+			}
+
+			if (fatalHoldDuration > 0 && runAwayHealth > 0) {
+				fatalHoldDuration -= interval;
+
+				if (fatalHoldDuration <= 0) {
+					fatalHoldDuration = 0;
 				}
 			}
 

@@ -790,39 +790,45 @@ void Combat::CombatConditionFunc(const std::shared_ptr<Creature> &caster, const 
 		return;
 	}
 
-	for (const auto &condition : params.conditionList) {
-		std::shared_ptr<Player> player = nullptr;
-		if (target) {
-			player = target->getPlayer();
-		}
-		if (player) {
-			// Cleanse charm rune (target as player)
-			if (player->isImmuneCleanse(condition->getType())) {
-				player->sendCancelMessage("You are still immune against this spell.");
-				return;
-			} else if (caster && caster->getMonster()) {
-				uint16_t playerCharmRaceid = player->parseRacebyCharm(CHARM_CLEANSE, false, 0);
-				if (playerCharmRaceid != 0) {
-					const auto &mType = g_monsters().getMonsterType(caster->getName());
-					if (mType && playerCharmRaceid == mType->info.raceid) {
-						const auto charm = g_iobestiary().getBestiaryCharm(CHARM_CLEANSE);
-						if (charm && (charm->chance > normal_random(0, 100))) {
-							if (player->hasCondition(condition->getType())) {
-								player->removeCondition(condition->getType());
-							}
-							player->setImmuneCleanse(condition->getType());
-							player->sendCancelMessage(charm->cancelMsg);
-							return;
+	const auto &targetPlayer = target ? target->getPlayer() : nullptr;
+	const auto &casterMonster = caster ? caster->getMonster() : nullptr;
+
+	if (targetPlayer && casterMonster) {
+		const auto &cleansableConditions = targetPlayer->getCleansableConditions();
+
+		if (!cleansableConditions.empty()) {
+			uint16_t playerCharmRaceid = targetPlayer->parseRacebyCharm(CHARM_CLEANSE);
+			if (playerCharmRaceid != 0) {
+				const auto &mType = casterMonster->getMonsterType();
+				if (mType && playerCharmRaceid == mType->info.raceid) {
+					const auto &charm = g_iobestiary().getBestiaryCharm(CHARM_CLEANSE);
+					const auto charmTier = targetPlayer->getCharmTier(CHARM_CLEANSE);
+					if (charm && (charm->chance[charmTier] >= normal_random(0, 10000) / 100.0)) {
+						uint16_t conditionIndex = uniform_random(0, cleansableConditions.size() - 1);
+						const auto &condition = cleansableConditions[conditionIndex];
+						const auto conditionType = condition->getType();
+						if (targetPlayer->hasCondition(conditionType)) {
+							targetPlayer->removeCondition(conditionType);
 						}
+						targetPlayer->setImmuneCleanse(conditionType);
+						if (!charm->cancelMessage.empty()) {
+							targetPlayer->onCleanseCondition(conditionType);
+						}
+
+						return;
 					}
 				}
 			}
+		}
+	}
 
-			if (condition->getType() == CONDITION_FEARED && !checkFearConditionAffected(player)) {
+	for (const auto &condition : params.conditionList) {
+		if (targetPlayer) {
+			if (condition->getType() != CONDITION_FEARED && targetPlayer->isImmuneCleanse(condition->getType())) {
 				return;
 			}
 
-			if (condition->getType() == CONDITION_ROOTED && !checkRootConditionAffected(player)) {
+			if (condition->getType() == CONDITION_FEARED && !checkFearConditionAffected(targetPlayer)) {
 				return;
 			}
 		}

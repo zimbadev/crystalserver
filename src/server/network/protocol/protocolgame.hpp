@@ -191,7 +191,7 @@ private:
 
 	void parseBestiarysendRaces();
 	void parseBestiarysendCreatures(NetworkMessage &msg);
-	void BestiarysendCharms();
+	void sendBestiaryCharms();
 	void sendBestiaryEntryChanged(uint16_t raceid);
 	void refreshCyclopediaMonsterTracker(const std::unordered_set<std::shared_ptr<MonsterType>> &trackerSet, bool isBoss);
 	void sendTeamFinderList();
@@ -380,6 +380,8 @@ private:
 	void sendGameNews();
 	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);
 	void sendResourceBalance(Resource_t resourceType, uint64_t value);
+	void sendCharmResourcesBalance(uint32_t charm = 0, uint32_t minorCharm = 0, uint32_t maxCharm = 0, uint32_t maxMinorCharm = 0);
+	void sendCharmResourceBalance(CharmResource_t resourceType, uint32_t value);
 	void sendSaleItemList(const std::vector<ShopBlock> &shopVector, const std::map<uint16_t, uint16_t> &inventoryMap);
 	void sendMarketEnter(uint32_t depotId);
 	void updateCoinBalance();

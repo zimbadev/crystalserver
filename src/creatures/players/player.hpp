@@ -92,6 +92,11 @@ using UsersMap = std::map<uint32_t, std::shared_ptr<Player>>;
 using InvitedMap = std::map<uint32_t, std::shared_ptr<Player>>;
 using HouseMap = std::map<uint32_t, std::shared_ptr<House>>;
 
+struct CharmInfo {
+	uint16_t raceId = 0;
+	uint8_t tier = 0;
+};
+
 struct ForgeHistory {
 	ForgeAction_t actionType = ForgeAction_t::FUSION;
 	uint8_t tier = 0;
@@ -216,7 +221,7 @@ public:
 
 	void sendFYIBox(const std::string &message) const;
 
-	void BestiarysendCharms() const;
+	void sendBestiaryCharms() const;
 	void addBestiaryKillCount(uint16_t raceid, uint32_t amount);
 	uint32_t getBestiaryKillCount(uint16_t raceid) const;
 
@@ -706,6 +711,7 @@ public:
 	uint64_t getGainedExperience(const std::shared_ptr<Creature> &attacker) const override;
 
 	// combat event functions
+	void onCleanseCondition(ConditionType_t type) const;
 	void onAddCondition(ConditionType_t type) override;
 	void onAddCombatCondition(ConditionType_t type) override;
 	void onEndCondition(ConditionType_t type) override;
@@ -1062,6 +1068,14 @@ public:
 	void setItemCustomPrice(uint16_t itemId, uint64_t price);
 	uint32_t getCharmPoints() const;
 	void setCharmPoints(uint32_t points);
+	uint32_t getMinorCharmEchoes() const;
+	void setMinorCharmEchoes(uint32_t points);
+	uint32_t getMaxCharmPoints() const;
+	void setMaxCharmPoints(uint32_t points);
+	uint32_t getMaxMinorCharmEchoes() const;
+	void setMaxMinorCharmEchoes(uint32_t points);
+	uint8_t getCharmTier(charmRune_t charmId) const;
+	void setCharmTier(charmRune_t charmId, uint8_t newTier);
 	bool hasCharmExpansion() const;
 	void setCharmExpansion(bool onOff);
 	void setUsedRunesBit(int32_t bit);
@@ -1070,11 +1084,11 @@ public:
 	int32_t getUnlockedRunesBit() const;
 	void setImmuneCleanse(ConditionType_t conditiontype);
 	bool isImmuneCleanse(ConditionType_t conditiontype) const;
-	void setImmuneFear();
+	void setImmuneFear(uint32_t immuneTime = 10000);
 	bool isImmuneFear() const;
 	void setImmuneRoot();
 	bool isImmuneRoot() const;
-	uint16_t parseRacebyCharm(charmRune_t charmId, bool set, uint16_t newRaceid);
+	uint16_t parseRacebyCharm(charmRune_t charmId, bool set = false, uint16_t newRaceid = 0);
 
 	uint64_t getItemCustomPrice(uint16_t itemId, bool buyPrice = false) const;
 	uint16_t getFreeBackpackSlots() const;
@@ -1327,6 +1341,8 @@ public:
 	bool canSpeakWithHireling(uint8_t speechbubble);
 
 	uint16_t getPlayerVocationEnum() const;
+
+	void resetOldCharms();
 
 	/*******************************************************************************
 	 * Deflect Condition
@@ -1582,29 +1598,16 @@ private:
 
 	// Bestiary
 	bool charmExpansion = false;
-	uint16_t charmRuneWound = 0;
-	uint16_t charmRuneEnflame = 0;
-	uint16_t charmRunePoison = 0;
-	uint16_t charmRuneFreeze = 0;
-	uint16_t charmRuneZap = 0;
-	uint16_t charmRuneCurse = 0;
-	uint16_t charmRuneCripple = 0;
-	uint16_t charmRuneParry = 0;
-	uint16_t charmRuneDodge = 0;
-	uint16_t charmRuneAdrenaline = 0;
-	uint16_t charmRuneNumb = 0;
-	uint16_t charmRuneCleanse = 0;
-	uint16_t charmRuneBless = 0;
-	uint16_t charmRuneScavenge = 0;
-	uint16_t charmRuneGut = 0;
-	uint16_t charmRuneLowBlow = 0;
-	uint16_t charmRuneDivine = 0;
-	uint16_t charmRuneVamp = 0;
-	uint16_t charmRuneVoid = 0;
+
+	std::array<CharmInfo, magic_enum::enum_count<charmRune_t>() + 1> charmsArray = {};
 	uint32_t charmPoints = 0;
+	uint32_t minorCharmEchoes = 0;
+	uint32_t maxCharmPoints = 0;
+	uint32_t maxMinorCharmEchoes = 0;
 	int32_t UsedRunesBit = 0;
 	int32_t UnlockedRunesBit = 0;
-	std::pair<ConditionType_t, uint64_t> cleanseCondition = { CONDITION_NONE, 0 };
+
+	std::vector<std::pair<ConditionType_t, uint64_t>> cleanseConditions;
 
 	std::pair<ConditionType_t, uint64_t> m_fearCondition = { CONDITION_NONE, 0 };
 	std::pair<ConditionType_t, uint64_t> m_rootCondition = { CONDITION_NONE, 0 };
