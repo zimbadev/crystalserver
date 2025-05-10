@@ -213,6 +213,18 @@ double Item::getTranscendenceChance() const {
 	);
 }
 
+double Item::getAmplificationChance() const {
+	if (getTier() == 0) {
+		return 0;
+	}
+	return quadraticPoly(
+		g_configManager().getFloat(AMPLIFICATION_CHANCE_FORMULA_A),
+		g_configManager().getFloat(AMPLIFICATION_CHANCE_FORMULA_B),
+		g_configManager().getFloat(AMPLIFICATION_CHANCE_FORMULA_C),
+		getTier()
+	);
+}
+
 uint8_t Item::getTier() const {
 	if (!hasAttribute(ItemAttribute_t::TIER)) {
 		return 0;
@@ -2144,23 +2156,38 @@ SoundEffect_t Item::getMovementSound(const std::shared_ptr<Cylinder> &toCylinder
 }
 
 std::string Item::parseClassificationDescription(const std::shared_ptr<Item> &item) {
-	std::ostringstream string;
-	if (item && item->getClassification() >= 1) {
-		string << std::endl
-			   << "Classification: " << std::to_string(item->getClassification()) << " Tier: " << std::to_string(item->getTier());
-		if (item->getTier() != 0) {
-			if (Item::items[item->getID()].weaponType != WEAPON_NONE) {
-				string << fmt::format(" ({:.2f}% Onslaught).", item->getFatalChance());
-			} else if (g_game().getObjectCategory(item) == OBJECTCATEGORY_HELMETS) {
-				string << fmt::format(" ({:.2f}% Momentum).", item->getMomentumChance());
-			} else if (g_game().getObjectCategory(item) == OBJECTCATEGORY_ARMORS) {
-				string << fmt::format(" ({:.2f}% Ruse).", item->getDodgeChance());
-			} else if (g_game().getObjectCategory(item) == OBJECTCATEGORY_LEGS) {
-				string << fmt::format(" ({:.2f}% Transcendence).", item->getTranscendenceChance());
-			}
+	if (!item) {
+		return "";
+	}
+
+	auto itemTier = item->getTier();
+	if (itemTier == 0) {
+		return "0";
+	}
+
+	std::string description;
+	if (Item::items[item->getID()].weaponType != WEAPON_NONE) {
+		description = fmt::format(" ({:.2f}% Onslaught)", item->getFatalChance());
+	} else {
+		switch (g_game().getObjectCategory(item)) {
+			case OBJECTCATEGORY_HELMETS:
+				description = fmt::format(" ({:.2f}% Momentum)", item->getMomentumChance());
+				break;
+			case OBJECTCATEGORY_ARMORS:
+				description = fmt::format(" ({:.2f}% Ruse)", item->getDodgeChance());
+				break;
+			case OBJECTCATEGORY_LEGS:
+				description = fmt::format(" ({:.2f}% Transcendence)", item->getTranscendenceChance());
+				break;
+			case OBJECTCATEGORY_BOOTS:
+				description = fmt::format(" ({:.2f}% Amplification)", item->getAmplificationChance());
+				break;
+			default:
+				break;
 		}
 	}
-	return string.str();
+
+	return fmt::format("{}{}", itemTier, description);
 }
 
 std::string Item::parseShowDurationSpeed(int32_t speed, bool &begin) {

@@ -9434,9 +9434,20 @@ bool Player::saySpell(SpeakClasses type, const std::string &text, bool isGhostMo
 }
 
 void Player::triggerMomentum() {
-	double_t chance = 0;
-	if (const auto &item = getInventoryItem(CONST_SLOT_HEAD)) {
-		chance += item->getMomentumChance();
+	const auto &item = getInventoryItem(CONST_SLOT_HEAD);
+	if (!item) {
+		return;
+	}
+
+	if (!item->getTier()) {
+		return;
+	}
+
+	double_t chance = item->getMomentumChance();
+	const auto &playerBoots = getInventoryItem(CONST_SLOT_FEET);
+	if (playerBoots && playerBoots->getTier()) {
+		double_t amplificationChange = playerBoots->getAmplificationChance() / 100;
+		chance *= 1 + amplificationChange;
 	}
 
 	chance += m_wheelPlayer->getBonusData().momentum;
@@ -9497,7 +9508,13 @@ void Player::triggerTranscendance() {
 		return;
 	}
 
-	const double_t chance = item->getTranscendenceChance();
+	double_t chance = item->getTranscendenceChance();
+	const auto &playerBoots = getInventoryItem(CONST_SLOT_FEET);
+	if (playerBoots && playerBoots->getTier()) {
+		double_t amplificationChange = playerBoots->getAmplificationChance() / 100;
+		chance *= 1 + amplificationChange;
+	}
+
 	const double_t randomChance = uniform_random(0, 10000) / 100.;
 	if (getZoneType() != ZONE_PROTECTION && checkLastAggressiveActionWithin(2000) && ((OTSYS_TIME() / 1000) % 2) == 0 && chance > 0 && randomChance < chance) {
 		int64_t duration = g_configManager().getNumber(TRANSCENDANCE_AVATAR_DURATION);
@@ -11048,10 +11065,20 @@ bool Player::hasPermittedConditionInPZ() const {
 }
 
 uint16_t Player::getDodgeChance() const {
-	uint16_t chance = 0;
-	if (const auto &playerArmor = getInventoryItem(CONST_SLOT_ARMOR);
-	    playerArmor != nullptr && playerArmor->getTier()) {
-		chance += static_cast<uint16_t>(playerArmor->getDodgeChance() * 100);
+	const auto &playerArmor = getInventoryItem(CONST_SLOT_ARMOR);
+	if (!playerArmor) {
+		return 0;
+	}
+
+	if (!playerArmor->getTier()) {
+		return 0;
+	}
+
+	uint16_t chance = static_cast<uint16_t>(playerArmor->getDodgeChance() * 100);
+	const auto &playerBoots = getInventoryItem(CONST_SLOT_FEET);
+	if (playerBoots && playerBoots->getTier()) {
+		double_t amplificationChance = playerBoots->getAmplificationChance() / 100;
+		chance += (static_cast<uint16_t>(chance * (1 + amplificationChance))) * 100;
 	}
 
 	chance += m_wheelPlayer->getStat(WheelStat_t::DODGE);

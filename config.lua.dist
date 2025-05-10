@@ -199,6 +199,10 @@ transcendanceChanceFormulaA = 0.0127
 transcendanceChanceFormulaB = 0.1070
 transcendanceChanceFormulaC = 0.0073
 
+amplificationChanceFormulaA = 0.4
+amplificationChanceFormulaB = 1.7
+amplificationChanceFormulaC = 0.4
+
 transcendanceAvatarDuration = 7000
 
 -- Bestiary & Bosstiary system

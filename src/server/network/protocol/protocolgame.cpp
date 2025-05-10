@@ -6194,14 +6194,20 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId, uint8_t tier) {
 
 			double chance;
 			if (it.isWeapon()) {
-				chance = 0.5 * tier + 0.05 * ((tier - 1) * (tier - 1));
+				chance = (0.05 * tier * tier) + (0.4 * tier) + 0.05;
 				ss << fmt::format("{} ({:.2f}% Onslaught)", static_cast<uint16_t>(tier), chance);
 			} else if (it.isHelmet()) {
-				chance = 2 * tier + 0.05 * ((tier - 1) * (tier - 1));
+				chance = (0.05 * tier * tier) + (1.9 * tier) + 0.05;
 				ss << fmt::format("{} ({:.2f}% Momentum)", static_cast<uint16_t>(tier), chance);
 			} else if (it.isArmor()) {
 				chance = (0.0307576 * tier * tier) + (0.440697 * tier) + 0.026;
 				ss << fmt::format("{} ({:.2f}% Ruse)", static_cast<uint16_t>(tier), chance);
+			} else if (it.isLegs()) {
+				chance = (0.0127 * tier * tier) + (0.1070 * tier) + 0.0073;
+				ss << fmt::format("{} ({:.2f}% Transcendence)", static_cast<uint16_t>(tier), chance);
+			} else if (it.isBoots()) {
+				chance = (0.4 * tier * tier) + (1.7 * tier) + 0.4;
+				ss << fmt::format("{} ({:.2f}% Amplification)", static_cast<uint16_t>(tier), chance);
 			}
 			msg.addString(ss.str());
 		} else if (it.upgradeClassification > 0 && tier == 0) {
@@ -9027,12 +9033,15 @@ double ProtocolGame::getForgeSkillStat(Slots_t slot, bool applyAmplification /*=
 		if (it.isLegs()) {
 			skill = item->getTranscendenceChance();
 		}
+		if (it.isBoots()) {
+			skill = item->getAmplificationChance();
+		}
 	}
 
 	if (applyAmplification) {
 		const auto &boots = player->getInventoryItem(CONST_SLOT_FEET);
 		if (slot != CONST_SLOT_FEET && boots) {
-			skill *= 1; //+ (boots->getAmplificationChance() / 100);
+			skill *= 1 + (boots->getAmplificationChance() / 100);
 		}
 	}
 
