@@ -428,6 +428,7 @@ public:
 	void removeCombatCondition(ConditionType_t type);
 	std::shared_ptr<Condition> getCondition(ConditionType_t type) const;
 	std::shared_ptr<Condition> getCondition(ConditionType_t type, ConditionId_t conditionId, uint32_t subId = 0) const;
+	std::vector<std::shared_ptr<Condition>> getCleansableConditions() const;
 	std::vector<std::shared_ptr<Condition>> getConditionsByType(ConditionType_t type) const;
 	void executeConditions(uint32_t interval);
 	bool hasCondition(ConditionType_t type, uint32_t subId = 0) const;

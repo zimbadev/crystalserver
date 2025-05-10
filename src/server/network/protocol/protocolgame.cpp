@@ -144,7 +144,7 @@ namespace {
 					if (imbuementInfo.duration > 0) {
 						auto imbuement = *imbuementInfo.imbuement;
 						if (imbuement.combatType != COMBAT_NONE) {
-							msg.addByte(static_cast<uint32_t>(imbuement.elementDamage));
+							msg.addDouble(static_cast<double>(imbuement.elementDamage) / 100);
 							msg.addByte(getCipbiaElement(imbuement.combatType));
 							imbueDmg = true;
 							break;
@@ -154,8 +154,8 @@ namespace {
 			}
 		}
 		if (!imbueDmg) {
-			msg.addByte(0);
-			msg.addByte(0);
+			msg.addDouble(0x00); // converted damage
+			msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL); // getCipbiaElement
 		}
 	}
 
@@ -237,7 +237,7 @@ namespace {
 				int16_t clientModifier = std::clamp(10000 - static_cast<int16_t>(damageModifiers[i]), -10000, 10000);
 				g_logger().debug("[{}] CombatType: {}, Damage Modifier: {}, Resulting Client Modifier: {}", __FUNCTION__, i, damageModifiers[i], clientModifier);
 				msg.addByte(getCipbiaElement(indexToCombatType(i)));
-				msg.add<int16_t>(clientModifier);
+				msg.addDouble(clientModifier / 10000.0, 4);
 				++combats;
 			}
 		}
@@ -2374,7 +2374,7 @@ void ProtocolGame::parseBestiarysendRaces() {
 	}
 	writeToOutputBuffer(msg);
 
-	player->BestiarysendCharms();
+	player->sendBestiaryCharms();
 }
 
 void ProtocolGame::sendBestiaryEntryChanged(uint16_t raceid) {
@@ -2430,7 +2430,6 @@ void ProtocolGame::parseBestiarysendMonsterData(NetworkMessage &msg) {
 		newmsg.add<uint16_t>(0);
 		newmsg.add<uint16_t>(0);
 	}
-
 	newmsg.add<uint32_t>(killCounter);
 
 	newmsg.add<uint16_t>(mtype->info.bestiaryFirstUnlock);
@@ -2503,18 +2502,6 @@ void ProtocolGame::parseBestiarysendMonsterData(NetworkMessage &msg) {
 
 		newmsg.add<uint16_t>(1);
 		newmsg.addString(mtype->info.bestiaryLocations);
-	}
-
-	if (currentLevel > 3) {
-		charmRune_t mType_c = g_iobestiary().getCharmFromTarget(player, mtype);
-		if (mType_c != CHARM_NONE) {
-			newmsg.addByte(1);
-			newmsg.addByte(mType_c);
-			newmsg.add<uint32_t>(player->getLevel() * 100);
-		} else {
-			newmsg.addByte(0);
-			newmsg.addByte(1);
-		}
 	}
 
 	writeToOutputBuffer(newmsg);
@@ -2898,10 +2885,10 @@ void ProtocolGame::parseSendBuyCharmRune(NetworkMessage &msg) {
 		return;
 	}
 
-	auto runeID = static_cast<charmRune_t>(msg.getByte());
 	uint8_t action = msg.getByte();
-	auto raceid = msg.get<uint16_t>();
-	g_iobestiary().sendBuyCharmRune(player, runeID, action, raceid);
+	auto charmId = static_cast<charmRune_t>(msg.getByte());
+	uint16_t raceId = msg.get<uint16_t>();
+	g_iobestiary().sendBuyCharmRune(player, action, charmId, raceId);
 }
 
 void ProtocolGame::refreshCyclopediaMonsterTracker(const std::unordered_set<std::shared_ptr<MonsterType>> &trackerSet, bool isBoss) {
@@ -2946,58 +2933,88 @@ void ProtocolGame::refreshCyclopediaMonsterTracker(const std::unordered_set<std:
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::BestiarysendCharms() {
+void ProtocolGame::sendBestiaryCharms() {
 	if (!player || oldProtocol) {
 		return;
 	}
 
-	int32_t removeRuneCost = player->getLevel() * 100;
+	const auto playerLevel = player->getLevel();
+	uint64_t resetAllCharmsCost = 100000 + (playerLevel > 100 ? playerLevel * 11000 : 0);
 	if (player->hasCharmExpansion()) {
-		removeRuneCost = (removeRuneCost * 75) / 100;
+		resetAllCharmsCost = (resetAllCharmsCost * 75) / 100;
 	}
+
 	NetworkMessage msg;
 	msg.addByte(0xD8);
-	msg.add<uint32_t>(player->getCharmPoints());
+	msg.add<uint64_t>(resetAllCharmsCost);
 
-	const auto charmList = g_game().getCharmList();
+	const auto &charmList = g_game().getCharmList();
 	msg.addByte(charmList.size());
 	for (const auto &c_type : charmList) {
 		msg.addByte(c_type->id);
-		msg.addString(c_type->name);
-		msg.addString(c_type->description);
-		msg.addByte(0); // Unknown
-		msg.add<uint16_t>(c_type->points);
+		const auto &charmPoints = c_type->points;
 		if (g_iobestiary().hasCharmUnlockedRuneBit(c_type, player->getUnlockedRunesBit())) {
-			msg.addByte(1);
-			uint16_t raceid = player->parseRacebyCharm(c_type->id, false, 0);
-			if (raceid > 0) {
-				msg.addByte(1);
-				msg.add<uint16_t>(raceid);
-				msg.add<uint32_t>(removeRuneCost);
+			const auto charmTier = player->getCharmTier(c_type->id);
+			msg.addByte(charmTier);
+			uint16_t raceId = player->parseRacebyCharm(c_type->id);
+			if (raceId > 0) {
+				msg.addByte(0x01);
+				msg.add<uint16_t>(raceId);
+				uint32_t removeCharmCost = player->getLevel() * 100;
+				if (player->hasCharmExpansion()) {
+					removeCharmCost = (removeCharmCost * 75) / 100;
+				}
+				msg.add<uint32_t>(removeCharmCost);
 			} else {
-				msg.addByte(0);
+				msg.addByte(0x00);
 			}
 		} else {
-			msg.addByte(0);
-			msg.addByte(0);
+			msg.addByte(0x00);
+			msg.addByte(0x00);
 		}
 	}
-	msg.addByte(4); // Unknown
 
-	auto finishedMonstersSet = g_iobestiary().getBestiaryFinished(player);
-	for (charmRune_t charmRune : g_iobestiary().getCharmUsedRuneBitAll(player)) {
-		const auto tmpCharm = g_iobestiary().getBestiaryCharm(charmRune);
-		uint16_t tmp_raceid = player->parseRacebyCharm(tmpCharm->id, false, 0);
+	std::list<charmRune_t> usedCharms = g_iobestiary().getCharmUsedRuneBitAll(player);
+	uint8_t availableCharmSlots;
+	if (player->isPremium() && player->hasCharmExpansion()) {
+		availableCharmSlots = 0xFF;
+	} else {
+		uint8_t totalCharmSlots = player->isPremium() ? 6 : 2;
+		availableCharmSlots = totalCharmSlots - usedCharms.size();
+	}
 
-		std::erase(finishedMonstersSet, tmp_raceid);
+	msg.addByte(availableCharmSlots);
+
+	auto finishedMonstersSet = g_iobestiary().getBestiaryStageTwo(player);
+	std::unordered_map<uint16_t, uint8_t> charmsAssigned;
+	for (charmRune_t charmRune : usedCharms) {
+		const auto &tmpCharm = g_iobestiary().getBestiaryCharm(charmRune);
+		if (!tmpCharm) {
+			continue;
+		}
+
+		uint16_t tmpRaceId = player->parseRacebyCharm(tmpCharm->id);
+		charmsAssigned[tmpRaceId]++;
+	}
+
+	for (const auto &[raceId, amount] : charmsAssigned) {
+		if (amount >= 2) {
+			std::erase(finishedMonstersSet, raceId);
+		}
 	}
 
 	msg.add<uint16_t>(finishedMonstersSet.size());
-	for (uint16_t raceid_tmp : finishedMonstersSet) {
-		msg.add<uint16_t>(raceid_tmp);
+	for (uint16_t tmpRaceId : finishedMonstersSet) {
+		msg.add<uint32_t>(tmpRaceId);
 	}
 
 	writeToOutputBuffer(msg);
+	sendCharmResourcesBalance(
+		player->getCharmPoints(),
+		player->getMinorCharmEchoes(),
+		player->getMaxCharmPoints(),
+		player->getMaxMinorCharmEchoes()
+	);
 }
 
 void ProtocolGame::parseBestiarysendCreatures(NetworkMessage &msg) {
@@ -3132,6 +3149,28 @@ void ProtocolGame::parseSendResourceBalance() {
 		sliverCount,
 		coreCount
 	);
+
+	sendCharmResourcesBalance(
+		player->getCharmPoints(),
+		player->getMinorCharmEchoes(),
+		player->getMaxCharmPoints(),
+		player->getMaxMinorCharmEchoes()
+	);
+
+}
+
+void ProtocolGame::sendCharmResourceBalance(CharmResource_t resourceType, uint32_t value) {
+	if (oldProtocol) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0xEE);
+
+	msg.addByte(resourceType);
+	msg.add<uint32_t>(value);
+
+	writeToOutputBuffer(msg);
 }
 
 void ProtocolGame::parseInviteToParty(NetworkMessage &msg) {
@@ -5009,6 +5048,13 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType, uint64_t value) 
 	msg.add<uint64_t>(value);
 	writeToOutputBuffer(msg);
 }
+
+void ProtocolGame::sendCharmResourcesBalance(uint32_t charm /*= 0*/, uint32_t minorCharm /*= 0*/, uint32_t maxCharm /*= 0*/, uint32_t maxMinorCharm /*= 0*/) {
+	sendCharmResourceBalance(RESOURCE_CHARM, charm);
+	sendCharmResourceBalance(RESOURCE_MINOR_CHARM, minorCharm);
+	sendCharmResourceBalance(RESOURCE_MAX_CHARM, maxCharm);
+	sendCharmResourceBalance(RESOURCE_MAX_MINOR_CHARM, maxMinorCharm);
+};
 
 void ProtocolGame::sendSaleItemList(const std::vector<ShopBlock> &shopVector, const std::map<uint16_t, uint16_t> &inventoryMap) {
 	sendResourceBalance(RESOURCE_BANK, player->getBankBalance());
@@ -7966,24 +8012,202 @@ void ProtocolGame::AddPlayerSkills(NetworkMessage &msg) {
 		}
 	}
 
-	for (uint8_t i = SKILL_CRITICAL_HIT_CHANCE; i <= SKILL_LAST; ++i) {
-		if (!oldProtocol && (i == SKILL_LIFE_LEECH_CHANCE || i == SKILL_MANA_LEECH_CHANCE)) {
-			continue;
-		}
-		auto skill = static_cast<skills_t>(i);
-		msg.add<uint16_t>(std::min<int32_t>(player->getSkillLevel(skill), std::numeric_limits<uint16_t>::max()));
-		msg.add<uint16_t>(player->getBaseSkill(skill));
-	}
-
+	// the addDouble needs to pass a parameter precision to work properly, i'm using 5 for now but still need to check
 	if (!oldProtocol) {
-		// 13.10 list (U8 + U16)
-		msg.addByte(0);
-		// Version 12.81 new skill (Fatal, Dodge and Momentum)
-		sendForgeSkillStats(msg);
-
-		// used for imbuement (Feather)
+		msg.addByte(0x00); // unknown
 		msg.add<uint32_t>(player->getCapacity()); // total capacity
 		msg.add<uint32_t>(player->getBaseCapacity()); // base total capacity
+
+		// damage/healing, max damage and converted damage based on weapon type
+		std::shared_ptr<Item> weapon = player->getWeapon();
+		if (weapon) {
+			const ItemType &it = Item::items[weapon->getID()];
+			if (it.weaponType == WEAPON_WAND) {
+				msg.add<uint16_t>(it.maxHitChance / 100); // damage / healing
+				msg.addByte(it.abilities->elementType); // getCipbiaElement
+
+				msg.addByte(static_cast<uint32_t>(it.maxHitChance) / 100); // max damage
+				msg.addByte(getCipbiaElement(it.abilities->elementType)); // getCipbiaElement
+
+				msg.addDouble(0x00); // converted damage
+				msg.addByte(CIPBIA_ELEMENTAL_ENERGY); // getCipbiaElement
+
+			} else if (it.weaponType == WEAPON_DISTANCE || it.weaponType == WEAPON_AMMO || it.weaponType == WEAPON_MISSILE) {
+				int32_t attackValue = weapon->getAttack();
+				if (it.weaponType == WEAPON_AMMO) {
+					std::shared_ptr<Item> weaponItem = player->getWeapon(true);
+					if (weaponItem) {
+						attackValue += weaponItem->getAttack();
+					}
+				}
+
+				int32_t attackSkill = player->getSkillLevel(SKILL_DISTANCE);
+				float attackFactor = player->getAttackFactor();
+				uint32_t maxDamage = static_cast<uint32_t>(Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, attackValue, attackFactor, true) * player->getVocation()->distDamageMultiplier);
+				if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
+					maxDamage += static_cast<uint32_t>(Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, attackValue - weapon->getAttack() + it.abilities->elementDamage, attackFactor, true) * player->getVocation()->distDamageMultiplier);
+				}
+
+				if (attackValue) {
+					msg.add<uint16_t>(attackValue); // damage / healing
+				} else {
+					msg.addByte(0);
+				}
+
+				msg.add<uint16_t>(maxDamage); // max damage
+				msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL); // getCipbiaElement
+
+				if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
+
+				} else {
+					handleImbuementDamage(msg, player); // converted damage
+				}
+
+			} else {
+				int32_t attackValue = std::max<int32_t>(0, weapon->getAttack());
+				int32_t attackSkill = player->getWeaponSkill(weapon);
+				float attackFactor = player->getAttackFactor();
+				uint32_t maxDamage = static_cast<uint32_t>(Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, attackValue, attackFactor, true) * player->getVocation()->meleeDamageMultiplier);
+				if (it.abilities && it.abilities->elementType != COMBAT_NONE) {
+					maxDamage += static_cast<uint32_t>(Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, it.abilities->elementDamage, attackFactor, true) * player->getVocation()->meleeDamageMultiplier);
+				}
+
+				if (attackValue) {
+					msg.add<uint16_t>(attackValue); // damage / healing
+				} else {
+					msg.addByte(0);
+				}
+				msg.add<uint16_t>(maxDamage); // max damage
+				msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL);
+
+				handleImbuementDamage(msg, player); // converted damage
+			}
+		} else {
+			float attackFactor = player->getAttackFactor();
+			int32_t attackSkill = player->getSkillLevel(SKILL_FIST);
+			int32_t attackValue = 7;
+
+			int32_t maxDamage = Weapons::getMaxWeaponDamage(player->getLevel(), attackSkill, attackValue, attackFactor, true);
+
+			msg.add<uint16_t>(attackValue); // damage / healing
+
+			msg.add<uint16_t>(maxDamage); // max damage
+			msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL);
+
+			msg.addDouble(0x00); // converted damage
+			msg.addByte(CIPBIA_ELEMENTAL_ENERGY); // getCipbiaElement
+		}
+
+		const auto lifeLeechAmount = player->getSkillLevel(SKILL_LIFE_LEECH_AMOUNT) / 10;
+		const auto manaLeechAmount = player->getSkillLevel(SKILL_MANA_LEECH_AMOUNT) / 10;
+		const auto criticalChance = player->getSkillLevel(SKILL_CRITICAL_HIT_CHANCE) / 10;
+		const auto criticalDamage = player->getSkillLevel(SKILL_CRITICAL_HIT_DAMAGE) / 10;
+
+		if (lifeLeechAmount > 0) {
+			msg.addDouble(lifeLeechAmount, 5); // 5 means the precision - check which is correct
+		} else {
+			msg.addDouble(0x00);
+		}
+		if (manaLeechAmount > 0) {
+			msg.addDouble(manaLeechAmount, 5); // 5 means the precision - check which is correct
+		} else {
+			msg.addDouble(0x00);
+		}
+		if (criticalChance > 0) {
+			msg.addDouble(criticalChance, 5); // 5 means the precision - check which is correct
+		} else {
+			msg.addDouble(0x00);
+		}
+		if (criticalDamage > 0) {
+			msg.addDouble(criticalDamage, 5); // 5 means the precision - check which is correct
+		} else {
+			msg.addDouble(0x00);
+		}
+
+		double_t amplificationChance = 0;
+		if (const auto &feetItem = player->getInventoryItem(CONST_SLOT_FEET); feetItem) {
+			amplificationChance += 0; // feetItem->getAmplificationChance(); // code prepared for the amplification feature.
+		}
+
+		double_t onslaught = 0;
+		if (const auto &item = player->getInventoryItem(CONST_SLOT_LEFT); item) {
+			const ItemType &it = Item::items[item->getID()];
+			if (it.isWeapon()) {
+				onslaught = item->getFatalChance() / 100.0;
+			}
+			onslaught += onslaught * amplificationChance;
+			msg.addDouble(onslaught, 5); // 5 means the precision - check which is correct
+		} else {
+			msg.addDouble(0x00); // ONSLAUGHT
+		}
+
+		msg.add<uint16_t>(player->getDefense());
+		msg.add<uint16_t>(player->getArmor());
+
+		// Wheel of destiny mitigation
+		if (g_configManager().getBoolean(TOGGLE_WHEELSYSTEM)) {
+			msg.addDouble(player->getMitigation() / 10, 5); // 5 means the precision - check which is correct
+		} else {
+			msg.addDouble(0);
+		}
+
+		double_t ruse = 0;
+		if (const auto &item = player->getInventoryItem(CONST_SLOT_ARMOR); item) {
+			const ItemType &it = Item::items[item->getID()];
+			if (it.isArmor()) {
+				ruse = item->getDodgeChance() / 100.0;
+			}
+			ruse += ruse * amplificationChance;
+			msg.addDouble(ruse, 5);
+		} else {
+			msg.addDouble(0x00); // ruse
+		}
+
+		msg.add<uint16_t>(static_cast<uint16_t>(player->getReflectFlat(COMBAT_PHYSICALDAMAGE))); // Reflect
+
+		// Store the "combats" to increase in absorb values function and send to client later
+		uint8_t combats = 0;
+		auto startCombats = msg.getBufferPosition();
+		msg.skipBytes(1);
+		// Calculate and parse the combat absorbs values
+		calculateAbsorbValues(player, msg, combats);
+		// Now set the buffer position skiped and send the total combats count
+		auto endCombats = msg.getBufferPosition();
+		msg.setBufferPosition(startCombats);
+		msg.addByte(combats);
+		msg.setBufferPosition(endCombats);
+
+		double_t momentum = 0;
+		if (const auto &item = player->getInventoryItem(CONST_SLOT_HEAD); item) {
+			const ItemType &it = Item::items[item->getID()];
+			if (it.isHelmet()) {
+				momentum = item->getMomentumChance() / 100.0;
+			}
+			momentum += momentum * amplificationChance;
+			msg.addDouble(momentum, 5);
+		} else {
+			msg.addDouble(0x00); // momentum
+		}
+
+		double_t transcendence = 0;
+		if (const auto &item = player->getInventoryItem(CONST_SLOT_LEGS); item) {
+			const ItemType &it = Item::items[item->getID()];
+			if (it.isLegs()) {
+				transcendence = item->getTranscendenceChance() / 100.0;
+			}
+			transcendence += transcendence * amplificationChance;
+			msg.addDouble(transcendence, 5);
+		} else {
+			msg.addDouble(0x00); // transcendence
+		}
+
+		if (amplificationChance > 0) {
+			msg.addDouble(amplificationChance, 5); // amplification
+		} else {
+			msg.addDouble(0x00); // amplification
+		}
+
+		writeToOutputBuffer(msg);
 	}
 }
 
@@ -8238,7 +8462,7 @@ void ProtocolGame::sendUpdateImpactTracker(CombatType_t type, int32_t amount) {
 	}
 
 	auto clientElement = getCipbiaElement(type);
-	if (clientElement == CIPBIA_ELEMENTAL_UNDEFINED) {
+	if (clientElement < CIPBIA_ELEMENTAL_FIRST || clientElement > CIPBIA_ELEMENTAL_LAST) {
 		return;
 	}
 
@@ -8261,7 +8485,7 @@ void ProtocolGame::sendUpdateInputAnalyzer(CombatType_t type, int32_t amount, co
 	}
 
 	auto clientElement = getCipbiaElement(type);
-	if (clientElement == CIPBIA_ELEMENTAL_UNDEFINED) {
+	if (clientElement < CIPBIA_ELEMENTAL_FIRST || clientElement > CIPBIA_ELEMENTAL_LAST) {
 		return;
 	}
 
