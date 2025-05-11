@@ -686,14 +686,13 @@ bool Creature::dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, cons
 			if (corpseContainer && player && !disallowedCorpses) {
 				const auto &monster = getMonster();
 				if (monster && !monster->isRewardBoss()) {
-					std::ostringstream lootMessage;
 					auto collorMessage = player->getProtocolVersion() > 1200;
-					lootMessage << "Loot of " << getNameDescription() << ": " << corpseContainer->getContentDescription(collorMessage) << ".";
 					auto suffix = corpseContainer->getAttribute<std::string>(ItemAttribute_t::LOOTMESSAGE_SUFFIX);
+					std::string lootMessage = fmt::format("Loot of {}: {}", getNameDescription(), corpseContainer->getContentDescription(collorMessage));
 					if (!suffix.empty()) {
-						lootMessage << suffix;
+						lootMessage = fmt::format("{} ({})", lootMessage, suffix);
 					}
-					player->sendLootMessage(lootMessage.str());
+					player->sendLootMessage(fmt::format("{}.", lootMessage));
 				}
 
 				FindPathParams fpp;
