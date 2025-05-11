@@ -1541,45 +1541,51 @@ void ProtocolGame::GetFloorDescription(NetworkMessage &msg, int32_t x, int32_t y
 }
 
 void ProtocolGame::checkCreatureAsKnown(uint32_t id, bool &known, uint32_t &removedKnown) {
-	if (auto [creatureKnown, creatureInserted] = knownCreatureSet.insert(id);
-	    !creatureInserted) {
+	auto [_, inserted] = knownCreatureSet.insert(id);
+	if (!inserted) {
 		known = true;
 		return;
 	}
+
 	known = false;
-	if (knownCreatureSet.size() > 1300) {
+	creatureOrder.push_back(id);
+
+	if (knownCreatureSet.size() > MAX_KNOWN_CREATURES) {
 		// Look for a creature to remove
-		for (auto it = knownCreatureSet.begin(), end = knownCreatureSet.end(); it != end; ++it) {
-			if (*it == id) {
+		for (auto it = creatureOrder.begin(); it != creatureOrder.end(); ++it) {
+			uint32_t creatureId = *it;
+			if (creatureId == id) {
 				continue;
 			}
+
+			const auto &creature = g_game().getCreatureByID(creatureId);
+			if (!creature) {
+				removeCreature(creatureId);
+				removedKnown = creatureId;
+				return;
+			}
+
 			// We need to protect party players from removing
-			const auto &creature = g_game().getCreatureByID(*it);
-			const auto &checkPlayer = creature ? creature->getPlayer() : nullptr;
-			if (checkPlayer) {
-				if (player->getParty() != checkPlayer->getParty() && !canSee(creature)) {
-					removedKnown = *it;
-					knownCreatureSet.erase(it);
-					return;
-				}
-			} else if (!canSee(creature)) {
-				removedKnown = *it;
-				knownCreatureSet.erase(it);
+			const auto &checkPlayer = creature->getPlayer();
+			if ((checkPlayer && (checkPlayer->getParty() != player->getParty() && !canSee(creature))) || (!checkPlayer && !canSee(creature))) {
+				removeCreature(creatureId);
+				removedKnown = creatureId;
 				return;
 			}
 		}
 
-		// Bad situation. Let's just remove anyone.
-		auto it = knownCreatureSet.begin();
-		if (*it == id) {
-			++it;
-		}
-
-		removedKnown = *it;
-		knownCreatureSet.erase(it);
+		// If we get here, we will remove an older creature
+		uint32_t oldestCreature = creatureOrder.front();
+		removeCreature(oldestCreature);
+		removedKnown = oldestCreature;
 	} else {
 		removedKnown = 0;
 	}
+}
+
+void ProtocolGame::removeCreature(uint32_t id) {
+	knownCreatureSet.erase(id);
+	creatureOrder.remove(id);
 }
 
 bool ProtocolGame::canSee(const std::shared_ptr<Creature> &c) const {

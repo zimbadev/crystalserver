@@ -31,9 +31,9 @@ npcConfig.flags = {
 npcConfig.voices = {
 	interval = 15000,
 	chance = 50,
-	{ text = "Im eager for a bath in the lake." },
-	{ text = "Im interested in shiny precious things, if you have some." },
-	{ text = "No, you cant have this cloak." },
+	{ text = "I'm eager for a bath in the lake." },
+	{ text = "I'm interested in shiny precious things, if you have some." },
+	{ text = "No, you can't have this cloak." },
 }
 
 local keywordHandler = KeywordHandler:new()
@@ -63,10 +63,39 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
-npcHandler:setMessage(MESSAGE_GREET, "Greatings, mortal beigin.")
-npcHandler:setMessage(MESSAGE_SENDTRADE, "Yes, i have some potions and runes if you are interested. Or do you want to buy only potions or only runes?oh if you want sell or buy gems, your may also ask me.")
-npcHandler:setMessage(MESSAGE_FAREWELL, "May enlightenment be your path, |PLAYERNAME|.")
-npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
+local function creatureSayCallback(npc, creature, type, message)
+	local player = Player(creature)
+	local playerId = player:getId()
+
+	if not npcHandler:checkInteraction(npc, creature) then
+		return false
+	end
+	local swanCloakStorage = 2032025
+	local ThreatenedDreams = Storage.Quest.U11_40.ThreatenedDreams
+	if MsgContains(message, "cloak") or MsgContains(message, "swan") then
+		if player:getStorageValue(ThreatenedDreams.Mission03[1]) < 4 then
+			npcHandler:say("We can talk about this later if you help Maelyrra first.", npc, creature)
+		end
+		if player:getStorageValue(ThreatenedDreams.Mission03[1]) == 4 and player:getStorageValue(swanCloakStorage) < 1 then
+			npcHandler:say("You did us a great favour, mortal being! Well, as I promised I will craft you a feathery cloak. Bring me one hundred swan feathers and I will make them into a beautiful robe. Do you have enough feathers yet?", npc, creature)
+			npcHandler:setTopic(playerId, 1)
+		else
+			return false
+		end
+	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 1 then
+		if player:removeItem(26181, 100) then
+			npcHandler:say("Very good. I will craft the cloak for you. ... Here, take the cloak I crafted for you. Thanks again for helping us, mortal being.", npc, creature)
+			player:addItem(25779, 1)
+			player:setStorageValue(swanCloakStorage, 1)
+			npcHandler:setTopic(playerId, 0)
+		else
+			npcHandler:say("You don't have enough swan feathers.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		end
+	end
+
+	return true
+end
 
 npcConfig.shop = {
 	{ itemName = "amber with a bug", clientId = 32624, sell = 41000 },
@@ -194,6 +223,7 @@ npcConfig.shop = {
 	{ itemName = "sudden death rune", clientId = 3155, buy = 162 },
 	{ itemName = "summer dress", clientId = 8046, sell = 1500 },
 	{ itemName = "supreme health potion", clientId = 23375, buy = 650 },
+	{ itemName = "swan feather", clientId = 26181, buy = 500 },
 	{ itemName = "thunderstorm rune", clientId = 3202, buy = 52 },
 	{ itemName = "tiger eye", clientId = 24961, sell = 350 },
 	{ itemName = "ultimate healing rune", clientId = 3160, buy = 175 },
@@ -214,6 +244,14 @@ npcConfig.shop = {
 	{ itemName = "wood cape", clientId = 3575, sell = 5000 },
 	{ itemName = "wooden spellbook", clientId = 25699, sell = 12000 },
 }
+
+npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
+
+npcHandler:setMessage(MESSAGE_GREET, "Greetings, mortal being.")
+npcHandler:setMessage(MESSAGE_SENDTRADE, "Yes, I have some potions and runes if you are interested. Or do you want to buy only potions or only runes? Oh, if you want sell or buy gems, you may also ask me. I am also interested in {swan} feathers.")
+npcHandler:setMessage(MESSAGE_FAREWELL, "May enlightenment be your path, |PLAYERNAME|.")
+
+npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)

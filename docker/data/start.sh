@@ -29,10 +29,6 @@ echo "OT_SERVER_TEST_ACCOUNTS:[$OT_SERVER_TEST_ACCOUNTS]"
 echo "OT_SERVER_DATA:[$OT_SERVER_DATA]"
 
 echo ""
-echo "================================"
-echo ""
-
-echo ""
 echo "===== Wait For The DB To Be Up ====="
 echo ""
 
@@ -68,7 +64,7 @@ echo ""
 if [[ $(mysql -u "$OT_DB_USER" -p"$OT_DB_PASSWORD" -h "$OT_DB_HOST" -e 'SHOW TABLES LIKE "server_config"' -D "$OT_DB_DATABASE") ]]; then
 	echo "Table server_config exists so we don't need to import"
 else
-	echo "Import crystalserver-Server Schema"
+	echo "Import Crystal Server Schema"
 	mysql -u "$OT_DB_USER" -p"$OT_DB_PASSWORD" -h "$OT_DB_HOST" --port="$OT_DB_PORT" -D "$OT_DB_DATABASE" <schema.sql
 
 	echo ""

@@ -544,7 +544,7 @@ sortLootByChance = false
 
 -- Screenshots
 -- Set enableScreenshots to true to anable game screenshots.
-enableScreenshots = true
+enableScreenshots = false
 
 -- Rates
 -- NOTE: rateExp, rateSkill and rateMagic is used when 'rateUseStages = false' - or a fallback only
@@ -634,7 +634,7 @@ startupDatabaseOptimization = true
 -- Status server information
 ownerName = "Tryller"
 ownerEmail = "@gmail.com"
-url = "https://github.com/jprzimba/crystalserver"
+url = "https://github.com/zimbadev/crystalserver"
 location = "South America"
 
 -- Sends Discord webhook notifications on startup, raids and shutdown.

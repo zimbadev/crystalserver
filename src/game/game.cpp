@@ -2249,16 +2249,10 @@ ReturnValue Game::internalMoveItem(std::shared_ptr<Cylinder> fromCylinder, std::
 
 	auto fromContainer = fromCylinder ? fromCylinder->getContainer() : nullptr;
 	auto toContainer = toCylinder ? toCylinder->getContainer() : nullptr;
-	auto player = actor ? actor->getPlayer() : nullptr;
-	if (player) {
-		// Update containers
-		player->onSendContainer(toContainer);
-		player->onSendContainer(fromContainer);
-	}
 
 	// Actor related actions
 	if (fromCylinder && actor && toCylinder) {
-		if (!fromContainer || !toContainer || !player) {
+		if (!fromContainer || !toContainer) {
 			return ret;
 		}
 
@@ -6236,6 +6230,12 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted
 			if (prevMount) {
 				deltaSpeedChange -= prevMount->speed;
 			}
+		}
+
+		if (player->changeMount(mount->id, true)) {
+			g_logger().debug("Attributes found for mount: {}", mount->id);
+		} else {
+			g_logger().debug("Attributes not found for mount: {}", mount->id);
 		}
 
 		player->setCurrentMount(mount->id);
@@ -10261,29 +10261,33 @@ bool Game::hasDistanceEffect(uint16_t effectId) {
 }
 
 void Game::createLuaItemsOnMap() {
-	for (const auto [position, itemId] : mapLuaItemsStored) {
-		const auto &item = Item::CreateItem(itemId, 1);
-		if (!item) {
-			g_logger().warn("[Game::createLuaItemsOnMap] - Cannot create item with id {}", itemId);
+	std::string positionStr;
+	for (const auto &[position, itemId] : mapLuaItemsStored) {
+		if (position.x == 0) {
 			continue;
 		}
 
-		if (position.x != 0) {
-			const auto &tile = g_game().map.getTile(position);
-			if (!tile) {
-				g_logger().warn("[Game::createLuaItemsOnMap] - Tile is wrong or not found position: {}", position.toString());
-
-				continue;
-			}
-
-			// If the item already exists on the map, then ignore it and send warning
-			if (g_game().findItemOfType(tile, itemId, false, -1)) {
-				g_logger().warn("[Game::createLuaItemsOnMap] - Cannot create item with id {} on position {}, item already exists", itemId, position.toString());
-				continue;
-			}
-
-			g_game().internalAddItem(tile, item, INDEX_WHEREEVER, FLAG_NOLIMIT);
+		const auto &tile = g_game().map.getTile(position);
+		if (!tile) {
+			positionStr = position.toString();
+			g_logger().warn("[Game::createLuaItemsOnMap] - Tile is wrong or not found position: {}", positionStr);
+			continue;
 		}
+
+		if (g_game().findItemOfType(tile, itemId, false, -1)) {
+			positionStr = position.toString();
+			g_logger().warn("[Game::createLuaItemsOnMap] - Cannot create item with id {} on position {}, item already exists", itemId, positionStr);
+			continue;
+		}
+
+		const auto &item = Item::CreateItem(itemId, 1);
+		if (!item) {
+			positionStr = position.toString();
+			g_logger().warn("[Game::createLuaItemsOnMap] - Cannot create item with id {} on position {}", itemId, positionStr);
+			continue;
+		}
+
+		g_game().internalAddItem(tile, item, INDEX_WHEREEVER, FLAG_NOLIMIT);
 	}
 }
 

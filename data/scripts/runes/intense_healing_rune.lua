@@ -1,28 +1,38 @@
-local combat = Combat()
-combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HEALING)
-combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_MAGIC_BLUE)
-combat:setParameter(COMBAT_PARAM_AGGRESSIVE, 0)
-combat:setParameter(COMBAT_PARAM_TARGETCASTERORTOPMOST, 1)
-combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
+local healingCombat = Combat()
+healingCombat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HEALING)
+healingCombat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_MAGIC_BLUE)
+healingCombat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
+healingCombat:setParameter(COMBAT_PARAM_TARGETCASTERORTOPMOST, true)
+healingCombat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 
-function onGetFormulaValues(player, level, maglevel)
+function onGetHealingValues(player, level, maglevel)
 	local min = (level / 5) + (maglevel * 3.2) + 20
 	local max = (level / 5) + (maglevel * 5.4) + 40
 	return min, max
 end
-
-combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
+healingCombat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetHealingValues")
 
 local rune = Spell("rune")
 
 function rune.onCastSpell(creature, var, isHotkey)
-	if Monster(var:getNumber(1073762188)) then
-		creature:sendCancelMessage("Sorry, not possible.")
-		creature:getPosition():sendMagicEffect(CONST_ME_POFF)
+	local target = Creature(var:getNumber()) or creature:getTarget()
+
+	if not target or not target:isCreature() then
 		return false
-	else
-		return combat:execute(creature, var)
 	end
+
+	if target:isMonster() and target:getName():lower() == "leiden" then
+		local damage = -((creature:getLevel() / 5) + (creature:getMagicLevel() * 5.4) + 40)
+		target:addHealth(damage)
+		target:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+		return true
+	end
+
+	if target:isMonster() then
+		return false
+	end
+
+	return healingCombat:execute(creature, Variant(target:getId()))
 end
 
 rune:id(4)
@@ -39,5 +49,5 @@ rune:cooldown(1 * 1000)
 rune:groupCooldown(1 * 1000)
 rune:isAggressive(false)
 rune:needTarget(true)
-rune:isBlocking(true) -- True = Solid / False = Creature
+rune:isBlocking(true)
 rune:register()

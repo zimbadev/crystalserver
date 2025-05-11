@@ -14,12 +14,18 @@ combat:setArea(createCombatArea({
 function onTargetTile(creature, pos)
 	local tile = Tile(pos)
 	if tile then
-		if tile:getTopCreature() and tile:getTopCreature():isMonster() then
-			if tile:getTopCreature():getName():lower() == "leiden" then
-				tile:getTopCreature():registerEvent("SpawnBoss")
-				tile:getTopCreature():addHealth(-math.random(3000, 6000))
-			elseif tile:getTopCreature():getName():lower() == "ravenous hunger" then
-				tile:getTopCreature():addHealth(math.random(3000, 6000))
+		local topCreature = tile:getTopCreature()
+		if topCreature and topCreature:isMonster() then
+			if topCreature:getName():lower() == "leiden" then
+				topCreature:registerEvent("SpawnBoss")
+				local damage = -math.random(3000, 6000)
+				local newHealth = topCreature:getHealth() + damage
+				if newHealth <= 0 then
+					topCreature:unregisterEvent("LeidenDeath")
+				end
+				topCreature:addHealth(damage)
+			elseif topCreature:getName():lower() == "ravenous hunger" then
+				topCreature:addHealth(math.random(3000, 6000))
 			end
 			return
 		end

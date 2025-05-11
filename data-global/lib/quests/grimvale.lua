@@ -15,14 +15,10 @@ local function loadMap()
 	Game.loadMap(DATA_DIRECTORY .. "/world/world_changes/full_moon/final.otbm")
 end
 
-local function removeFeroxa(feroxa)
-	if not feroxa then
-		return true
-	end
-
-	feroxa = Game.createMonster("Feroxa", Position(33380, 31537, 11), true, true)
-	if feroxa then
-		addEvent(removeFeroxa, 5 * 60 * 1000, feroxa:getId())
+local function removeFeroxa(feroxaId)
+	local monster = Monster(feroxaId)
+	if monster then
+		monster:remove()
 	end
 end
 
@@ -34,17 +30,22 @@ local function final()
 			spec:teleportTo(Position(33419, 31539, 10))
 		end
 	end
+
 	local teleport = Tile(Position(33430, 31537, 11)):getItemById(1949)
 	if teleport and teleport:isTeleport() then
 		teleport:transform(22761)
 		teleport:setDestination(Position(33419, 31539, 10))
 		teleport:setActionId(12450)
 	end
+
 	if spec then
 		spec:say("You are the contenders. This is your only chance to break the Curse of The Full Moon. Make it count!", TALKTYPE_MONSTER_SAY, false, nil, Position(33419, 31539, 10))
 	end
+
 	local feroxa = Game.createMonster("Feroxa", Position(33380, 31537, 11), true, true)
-	addEvent(removeFeroxa, 5 * 60 * 1000, feroxa:getId())
+	if feroxa then
+		addEvent(removeFeroxa, 20 * 60 * 60 * 1000, feroxa:getId()) -- 20 hours to kill feroxa
+	end
 end
 
 function removeItems()
