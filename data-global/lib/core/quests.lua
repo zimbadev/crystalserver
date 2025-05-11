@@ -6660,7 +6660,7 @@ if not Quests then
 						[2] = "Speak with The Forgemaster and ask about the 'key'.",
 						[3] = "You have defeated Arbaziloth 10 times and got your reward at The Doomforge.",
 					},
-				},			
+				},
 			},
 		},
 	}

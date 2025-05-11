@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-
-}
+monster.events = {}
 
 monster.health = 32000
 monster.maxHealth = 32000
@@ -62,19 +60,17 @@ monster.light = {
 }
 
 monster.voices = {
-		interval = 5000,
-		chance = 10,
-		{ text = "BOOM!", yell = true },
-		{ text = "Lil' imp causing big boom! Hehehehe!", yell = false },
-		{ text = "Making BOOM is much fun!", yell = false },
-		{ text = "Me love destroy toy!", yell = false },
+	interval = 5000,
+	chance = 10,
+	{ text = "BOOM!", yell = true },
+	{ text = "Lil' imp causing big boom! Hehehehe!", yell = false },
+	{ text = "Making BOOM is much fun!", yell = false },
+	{ text = "Me love destroy toy!", yell = false },
 }
 
-monster.loot = {
-}
+monster.loot = {}
 
-monster.attacks = {
-}
+monster.attacks = {}
 
 monster.defenses = {
 	defense = 80,

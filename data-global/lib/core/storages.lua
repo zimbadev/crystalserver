@@ -2850,19 +2850,19 @@ Storage = {
 			},
 		},
 		U14_10 = { -- update 14.10 - Reserved Storages 47971 - 47975 reserved to 3 miniBosses (47976, 47977, 47978)
-		NoRestForTheWicked = {
-			Questlog = 47971,
-			KillArbaziloth = {
-				Questline = 47972,
+			NoRestForTheWicked = {
+				Questlog = 47971,
+				KillArbaziloth = {
+					Questline = 47972,
 				},
-			ForgemasterDoor = { 
-				Questline = 47973,
-				Reward = 47974,
-			},		
-			ForgeMaster = {
-				AccessDoor = 47975,
+				ForgemasterDoor = {
+					Questline = 47973,
+					Reward = 47974,
 				},
-			},	
+				ForgeMaster = {
+					AccessDoor = 47975,
+				},
+			},
 		},
 	},
 

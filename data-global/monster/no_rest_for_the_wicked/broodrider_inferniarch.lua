@@ -90,7 +90,7 @@ monster.loot = {
 	{ name = "Power Bolt", chance = 24500, maxCount = 35 },
 	{ name = "Onyx Chip", chance = 24500, maxCount = 5 },
 	{ name = "Broodrider Saddle", chance = 24500, maxCount = 1 },
-	{ name = "broodrider inferniarch soul core", chance = 100 }, 
+	{ name = "broodrider inferniarch soul core", chance = 100 },
 }
 
 monster.attacks = {

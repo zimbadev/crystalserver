@@ -82,20 +82,20 @@ monster.voices = {
 monster.loot = {
 	{ name = "Platinum Coin", chance = 16500, maxCount = 40 },
 	{ name = "Demonic Core Essence", chance = 1000, maxCount = 1 },
-	{ name = "Small Sapphire", chance = 12500, maxCount = 5 }, 
-	{ name = "Gorger Antlers", chance = 9300, maxCount = 1 }, 
-	{ name = "Spiked Squelcher", chance = 14500, maxCount = 1 }, 
+	{ name = "Small Sapphire", chance = 12500, maxCount = 5 },
+	{ name = "Gorger Antlers", chance = 9300, maxCount = 1 },
+	{ name = "Spiked Squelcher", chance = 14500, maxCount = 1 },
 	{ name = "Mummified Demon Finger", chance = 1500, maxCount = 1 },
 	{ name = "Demonic Matter", chance = 1000, maxCount = 1 },
-	{ name = "Spiked Squelcher", chance = 14500, maxCount = 1 }, 	
+	{ name = "Spiked Squelcher", chance = 14500, maxCount = 1 },
 	{ id = 3053, chance = 5000, maxCount = 1 }, -- Time ring
 	{ id = 3040, chance = 5000, maxCount = 1 }, -- gold nugget
 	{ id = 3093, chance = 5000, maxCount = 1 }, -- club ring
-	--{ name = "gorger inferniarch soul core", chance = 100 }, 
+	--{ name = "gorger inferniarch soul core", chance = 100 },
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 150, maxDamage = -300 },	
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 150, maxDamage = -300 },
 	{ name = "extended electrify chain", interval = 2000, chance = 15, minDamage = -130, maxDamage = -438, range = 7 },
 	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_DEATHDAMAGE, minDamage = -1, maxDamage = -450, range = 1, effect = CONST_ME_REAPER, target = true },
 	{ name = "combat", interval = 1000, chance = 20, type = COMBAT_DEATHDAMAGE, minDamage = -1, maxDamage = -450, radius = 4, effect = CONST_ME_MORTAREA, target = false },

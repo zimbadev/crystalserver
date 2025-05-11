@@ -17,9 +17,8 @@ local config = {
 	},
 	exit = Position(34058, 32403, 14),
 	monsters = {
-        { name = "The Forgemaster", pos = Position(34033, 32330, 14) },
+		{ name = "The Forgemaster", pos = Position(34033, 32330, 14) },
 	},
-
 }
 
 Game.setStorageValue("globalArbazilothHeal", 0)
@@ -27,4 +26,3 @@ Game.setStorageValue("globalArbazilothHeal", 0)
 local leverArbaziloth = BossLever(config)
 leverArbaziloth:position(Position(34058, 32394, 14))
 leverArbaziloth:register()
-

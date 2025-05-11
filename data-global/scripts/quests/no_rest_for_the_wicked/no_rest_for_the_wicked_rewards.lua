@@ -18,7 +18,6 @@ function theForgeRewards.onUse(player, item, fromPosition, target, toPosition, i
 		player:setStorageValue(Storage.Quest.U14_10.NoRestForTheWicked.ForgemasterDoor.Questline, 3)
 		player:addItem(rewards[item.uid], 1)
 		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have found " .. ItemType(rewards[item.uid]):getName() .. ".")
-
 	else
 		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The chest is empty.")
 	end
@@ -30,4 +29,3 @@ for uniqueId, info in pairs(rewards) do
 end
 
 theForgeRewards:register()
-

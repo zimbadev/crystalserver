@@ -71,8 +71,7 @@ monster.voices = {
 	{ text = "BOOM!", yell = true },
 }
 
-monster.loot = {
-}
+monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -620 },
@@ -115,58 +114,58 @@ local areaTopLeft = Position(34027, 32322, 14)
 local areaBottomRight = Position(34042, 32341, 14)
 
 local function findBossInArea(fromPos, toPos)
-    for x = fromPos.x, toPos.x do
-        for y = fromPos.y, toPos.y do
-            local tile = Tile(Position(x, y, fromPos.z))
-            if tile then
-                local creatures = tile:getCreatures()
-                for _, creature in ipairs(creatures) do
-                    if creature:isMonster() and (creature:getName():lower() == "arbaziloth" or creature:getName():lower() == "weakened arbaziloth") then
-                        return creature
-                    end
-                end
-            end
-        end
-    end
-    return nil
+	for x = fromPos.x, toPos.x do
+		for y = fromPos.y, toPos.y do
+			local tile = Tile(Position(x, y, fromPos.z))
+			if tile then
+				local creatures = tile:getCreatures()
+				for _, creature in ipairs(creatures) do
+					if creature:isMonster() and (creature:getName():lower() == "arbaziloth" or creature:getName():lower() == "weakened arbaziloth") then
+						return creature
+					end
+				end
+			end
+		end
+	end
+	return nil
 end
 
 local function healBossAndDamagePlayers(boss, position)
-    boss:addHealth(15000)
-    
-    for dx = -7, 7 do
-        for dy = -7, 7 do
-            local effectPos = Position(position.x + dx, position.y + dy, position.z)
-            if Tile(effectPos) then 
-                effectPos:sendMagicEffect(CONST_ME_PURPLESMOKE)
-            end
-        end
-    end
-    
-    for dx = -7, 7 do
-        for dy = -7, 7 do
-            local damagePos = Position(position.x + dx, position.y + dy, position.z)
-            local tile = Tile(damagePos)
-            if tile then
-                local creatures = tile:getCreatures()
-                for _, creature in ipairs(creatures) do
-                    if creature:isPlayer() then
-                        creature:addHealth(-1500)
-                    end
-                end
-            end
-        end
-    end
+	boss:addHealth(15000)
+
+	for dx = -7, 7 do
+		for dy = -7, 7 do
+			local effectPos = Position(position.x + dx, position.y + dy, position.z)
+			if Tile(effectPos) then
+				effectPos:sendMagicEffect(CONST_ME_PURPLESMOKE)
+			end
+		end
+	end
+
+	for dx = -7, 7 do
+		for dy = -7, 7 do
+			local damagePos = Position(position.x + dx, position.y + dy, position.z)
+			local tile = Tile(damagePos)
+			if tile then
+				local creatures = tile:getCreatures()
+				for _, creature in ipairs(creatures) do
+					if creature:isPlayer() then
+						creature:addHealth(-1500)
+					end
+				end
+			end
+		end
+	end
 end
 
 mType.onThink = function(monster, interval)
-    if monster:getName():lower() == "overcharged demon" and monster:getHealth() > 0 and monster:getHealth() < 5000 then
-        local boss = findBossInArea(areaTopLeft, areaBottomRight)
-        if boss then
-            healBossAndDamagePlayers(boss, boss:getPosition())
-            monster:remove()
-        end
-    end
+	if monster:getName():lower() == "overcharged demon" and monster:getHealth() > 0 and monster:getHealth() < 5000 then
+		local boss = findBossInArea(areaTopLeft, areaBottomRight)
+		if boss then
+			healBossAndDamagePlayers(boss, boss:getPosition())
+			monster:remove()
+		end
+	end
 end
 
 mType:register(monster)
