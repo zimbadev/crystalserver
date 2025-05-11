@@ -7693,7 +7693,9 @@ void Game::sendMessages(
 		}
 
 		if (tmpPlayer == attackerPlayer && attackerPlayer != targetPlayer) {
-			buildMessageAsAttacker(target, damage, message, ss, damageString);
+			const auto &boots = tmpPlayer->getInventoryItem(CONST_SLOT_FEET);
+			bool amplifiedFatal = boots ? boots->getTier() > 0 : false;
+			buildMessageAsAttacker(target, damage, message, ss, damageString, amplifiedFatal, attackerPlayer);
 		} else if (tmpPlayer == targetPlayer) {
 			buildMessageAsTarget(attacker, damage, attackerPlayer, targetPlayer, message, ss, damageString);
 		} else {
@@ -7768,15 +7770,39 @@ void Game::buildMessageAsTarget(
 
 void Game::buildMessageAsAttacker(
 	const std::shared_ptr<Creature> &target, const CombatDamage &damage, TextMessage &message,
-	std::stringstream &ss, const std::string &damageString
+	std::stringstream &ss, const std::string &damageString, bool amplified, const std::shared_ptr<Player> &attackerPlayer
 ) const {
 	ss.str({});
 	ss << ucfirst(target->getNameDescription()) << " loses " << damageString << " due to your " << (damage.critical ? "critical " : " ") << "attack.";
+
+	if (damage.critical && target->getMonster() && attackerPlayer) {
+		const auto &targetMonster = target->getMonster();
+		static const std::pair<charmRune_t, std::string_view> charms[] = {
+			{ CHARM_LOW, " (low blow charm)" },
+			{ CHARM_SAVAGE, " (savage blow charm)" }
+		};
+
+		for (const auto &[charmType, charmText] : charms) {
+			if (targetMonster->checkCanApplyCharm(attackerPlayer, charmType)) {
+				ss << charmText;
+				break;
+			}
+		}
+	}
+
 	if (damage.extension) {
 		ss << " " << damage.exString;
 	}
+
+	if (damage.critical) {
+		const auto &targetMonster = target->getMonster();
+		if (targetMonster && attackerPlayer && targetMonster->checkCanApplyCharm(attackerPlayer, CHARM_LOW)) {
+			ss << " (low blow charm)";
+		}
+	}
+
 	if (damage.fatal) {
-		ss << " (Onslaught)";
+		ss << (amplified ? " (Amplified Onslaught)" : " (Onslaught)");
 	}
 	message.type = MESSAGE_DAMAGE_DEALT;
 	message.text = ss.str();

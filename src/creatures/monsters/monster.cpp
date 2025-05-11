@@ -2813,3 +2813,23 @@ void Monster::onExecuteAsyncTasks() {
 		updateIdleStatus();
 	}
 }
+
+bool Monster::checkCanApplyCharm(const std::shared_ptr<Player> &player, charmRune_t charmRune) const {
+	if (!player) {
+		return false;
+	}
+
+	uint16_t playerCharmRaceid = player->parseRacebyCharm(charmRune, false, 0);
+	if (playerCharmRaceid != 0) {
+		const auto &mType = g_monsters().getMonsterType(getName());
+		if (mType && playerCharmRaceid == mType->info.raceid) {
+			const auto &charm = g_iobestiary().getBestiaryCharm(charmRune);
+			if (charm) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
