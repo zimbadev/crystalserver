@@ -548,8 +548,8 @@ local function creatureSayCallback(npc, creature, type, message)
 			-- Spectral Stone
 		elseif npcHandler:getTopic(playerId) == 32 then
 			npcHandler:say({
-			"Good, just take this spectral essence and use it on the strange carving in this building as well as on the corresponding tile in our base at Port Hope ...",
-			"As soon as you have charged the portal tiles that way, report about the spectral portals."
+				"Good, just take this spectral essence and use it on the strange carving in this building as well as on the corresponding tile in our base at Port Hope ...",
+				"As soon as you have charged the portal tiles that way, report about the spectral portals.",
 			}, npc, creature)
 			player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.TheSpectralStone, 53)
 			player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.SpectralStoneDoor, 1)
