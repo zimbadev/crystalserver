@@ -4965,11 +4965,6 @@ void Player::stashContainer(const StashContainerList &itemDict) {
 		}
 	}
 
-	if (getStashSize(stashItemDict) > g_configManager().getNumber(STASH_ITEMS)) {
-		sendCancelMessage("You don't have capacity in the Supply Stash to stow all this item->");
-		return;
-	}
-
 	uint32_t totalStowed = 0;
 	std::ostringstream retString;
 	uint16_t refreshDepotSearchOnItem = 0;
@@ -8704,15 +8699,25 @@ bool Player::isGuildMate(const std::shared_ptr<Player> &player) const {
 }
 
 bool Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
-	const uint32_t stackCount = 100u;
+	const ItemType &itemType = Item::items[itemId];
+	if (itemType.stackable) {
+		while (itemCount > 0) {
+			const auto addValue = itemCount > 100 ? 100 : itemCount;
+			itemCount -= addValue;
+			const auto &newItem = Item::CreateItem(itemId, addValue);
 
-	while (itemCount > 0) {
-		const auto addValue = itemCount > stackCount ? stackCount : itemCount;
-		itemCount -= addValue;
-		const auto &newItem = Item::CreateItem(itemId, addValue);
+			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
+				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
+			}
+		}
+	} else {
+		while (itemCount > 0) {
+			--itemCount;
+			const auto &newItem = Item::CreateItem(itemId);
 
-		if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
-			g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
+			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
+				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
+			}
 		}
 	}
 
@@ -8737,7 +8742,7 @@ void sendStowItems(const std::shared_ptr<Item> &item, const std::shared_ptr<Item
 }
 
 void Player::stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool allItems) {
-	if (!item || (!item->isItemStorable() && item->getID() != ITEM_GOLD_POUCH)) {
+	if (!item || !item->isItemStorable()) {
 		sendCancelMessage("This item cannot be stowed here.");
 		return;
 	}
@@ -9163,7 +9168,7 @@ void Player::requestDepotSearchItem(uint16_t itemId, uint8_t tier) {
 	uint32_t stashCount = 0;
 
 	if (const ItemType &iType = Item::items[itemId];
-	    iType.stackable && iType.wareId > 0) {
+	    iType.wareId > 0 && tier == 0) {
 		stashCount = getStashItemCount(itemId);
 	}
 

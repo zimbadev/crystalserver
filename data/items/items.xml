@@ -54374,7 +54374,7 @@ hands of its owner. Granted by TibiaRoyal.com" />
 		<attribute key="weaponType" value="club" />
 		<attribute key="slotType" value="two-handed" />
 	</item>
-	<item id="28750" name="your supply stash">
+	<item id="28750" name="your stash">
 		<attribute key="primarytype" value="utilities" />
 		<attribute key="containersize" value="10" />
 		<attribute key="usedbyhouseguests" value="1" />

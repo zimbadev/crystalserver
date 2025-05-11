@@ -507,7 +507,7 @@ enum NameEval_t : uint8_t {
 
 enum ItemID_t : uint16_t {
 	ITEM_BROWSEFIELD = 470, // for internal use
-	ITEM_SUPPLY_STASH_INDEX = 1, // for internal use
+	ITEM_STASH_INDEX = 1, // for internal use
 	ITEM_DEPOT_NULL = 22796, // for internal use - Actual Item ID: 168
 	ITEM_DECORATION_KIT = 23398, // For internal use (wrap item)
 	ITEM_DOCUMENT_RO = 2834, // Read-only
