@@ -2832,4 +2832,3 @@ bool Monster::checkCanApplyCharm(const std::shared_ptr<Player> &player, charmRun
 
 	return false;
 }
-
