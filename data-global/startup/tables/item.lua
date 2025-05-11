@@ -3189,6 +3189,47 @@ ItemUnique = {
 		itemId = 9253,
 		itemPos = { x = 33755, y = 32161, z = 14 },
 	},
+	-- No Rest For The Wicked Quest
+	[57237] = {
+		itemId = 2472,
+		itemPos = {x = 34087, y = 32346, z = 14},
+	},
+	[57238] = {
+		itemId = 2472,
+		itemPos = {x = 34089, y = 32346, z = 14},
+	},
+	[57239] = {
+		itemId = 2472,
+		itemPos = {x = 34091, y = 32346, z = 14},
+	},
+	[57240] = {
+		itemId = 2472,
+		itemPos = {x = 34093, y = 32346, z = 14},
+	},
+	[57241] = {
+		itemId = 2472,
+		itemPos = {x = 34095, y = 32346, z = 14},
+	},
+	[57242] = {
+		itemId = 2472,
+		itemPos = {x = 34097, y = 32346, z = 14},
+	},
+	[57243] = {
+		itemId = 2472,
+		itemPos = {x = 34099, y = 32346, z = 14},
+	},
+	[57244] = {
+		itemId = 2472,
+		itemPos = {x = 34101, y = 32346, z = 14},
+	},
+	[57245] = {
+		itemId = 2472,
+		itemPos = {x = 34103, y = 32346, z = 14},
+	},
+	[57246] = {
+		itemId = 2472,
+		itemPos = {x = 34105, y = 32346, z = 14},
+	},
 	-- Wooden Mouthpiece
 	[58001] = {
 		itemId = 23740,

@@ -2316,6 +2316,9 @@
 	<npc centerx="33277" centery="32390" centerz="8" radius="1">
 		<npc name="Mazarius" x="0" y="0" z="8" spawntime="60" />
 	</npc>
+	<npc centerx="33873" centery="32407" centerz="8" radius="1">
+		<npc name="Ortelio" x="1" y="0" z="8" spawntime="60" />
+	</npc>
 	<npc centerx="31939" centery="32502" centerz="8" radius="1">
 		<npc name="Jamesfrancis" x="0" y="0" z="8" spawntime="60" />
 	</npc>
@@ -2907,6 +2910,9 @@
 	</npc>
 	<npc centerx="32834" centery="32289" centerz="14" radius="1">
 		<npc name="A Ghostly Woman" x="0" y="0" z="14" spawntime="60" />
+	</npc>
+	<npc centerx="34068" centery="32333" centerz="14" radius="1">
+		<npc name="The Forgemaster" x="0" y="0" z="14" spawntime="60" />
 	</npc>
 	<npc centerx="32755" centery="32346" centerz="14" radius="1">
 		<npc name="A Ghostly Guardian" x="0" y="0" z="14" spawntime="60" />

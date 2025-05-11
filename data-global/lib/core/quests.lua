@@ -6633,5 +6633,35 @@ if not Quests then
 				},
 			},
 		},
+		[50] = {
+			name = "No Rest for the Wicked",
+			startStorageId = Storage.Quest.U14_10.NoRestForTheWicked.Questlog,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "With friends like these...",
+					storageId = Storage.Quest.U14_10.NoRestForTheWicked.KillArbaziloth.Questline,
+					missionId = 10457,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Defeat Arbaziloth at inner Azzilon Castle.",
+						[2] = "You have defeated Arbaziloth.",
+					},
+				},
+				[2] = {
+					name = "The Doomforge",
+					storageId = Storage.Quest.U14_10.NoRestForTheWicked.ForgemasterDoor.Questline,
+					missionId = 10458,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "Defeat the Arbaziloth 10 times to access The Doomforge reward room.",
+						[2] = "Speak with The Forgemaster and ask about the 'key'.",
+						[3] = "You have defeated Arbaziloth 10 times and got your reward at The Doomforge.",
+					},
+				},			
+			},
+		},
 	}
 end
