@@ -125,7 +125,6 @@ local function creatureSayCallback(npc, creature, type, message)
 		elseif npcHandler:getTopic(playerId) == 3 then
 			player:addItem(129, 1)
 			npcHandler:say("Fine! Here is the contract. Please sign it. Talk to me about it again when you're done.", npc, creature)
-			player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract, 1)
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 4 then
 			if not player:removeItem(128, 1) then
@@ -134,7 +133,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				return true
 			end
 
-			player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract, 2)
+			player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract, 1)
 			npcHandler:say("Excellent! I will start working right away! Now that I am going to be rich, I will take the opportunity to tell some people what I REALLY think about them!", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		end
