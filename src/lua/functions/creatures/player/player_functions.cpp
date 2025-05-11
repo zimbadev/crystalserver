@@ -2121,12 +2121,12 @@ int PlayerFunctions::luaPlayerSetGroup(lua_State* L) {
 
 int PlayerFunctions::luaPlayerSetSpecialContainersAvailable(lua_State* L) {
 	// player:setSpecialContainersAvailable(stashMenu, marketMenu, depotSearchMenu)
-	const bool supplyStashMenu = Lua::getBoolean(L, 2, false);
+	const bool stashMenu = Lua::getBoolean(L, 2, false);
 	const bool marketMenu = Lua::getBoolean(L, 3, false);
 	const bool depotSearchMenu = Lua::getBoolean(L, 4, false);
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (player) {
-		player->setSpecialMenuAvailable(supplyStashMenu, marketMenu, depotSearchMenu);
+		player->setSpecialMenuAvailable(stashMenu, marketMenu, depotSearchMenu);
 		Lua::pushBoolean(L, true);
 	} else {
 		lua_pushnil(L);

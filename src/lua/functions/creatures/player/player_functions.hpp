@@ -167,7 +167,6 @@ class PlayerFunctions {
 	static int luaPlayerGetGroup(lua_State* L);
 	static int luaPlayerSetGroup(lua_State* L);
 
-	static int luaPlayerIsSupplyStashAvailable(lua_State* L);
 	static int luaPlayerGetStashCounter(lua_State* L);
 	static int luaPlayerOpenStash(lua_State* L);
 	static int luaPlayerSetSpecialContainersAvailable(lua_State* L);

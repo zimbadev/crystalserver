@@ -1959,16 +1959,16 @@ std::shared_ptr<DepotLocker> Player::getDepotLocker(uint32_t depotId) {
 	}
 
 	// We need to make room for supply stash on 12+ protocol versions and remove it for 10x.
-	const bool createSupplyStash = !client->oldProtocol;
+	const bool createStash = !client->oldProtocol;
 
-	auto depotLocker = std::make_shared<DepotLocker>(ITEM_LOCKER, createSupplyStash ? 4 : 3);
+	auto depotLocker = std::make_shared<DepotLocker>(ITEM_LOCKER, createStash ? 4 : 3);
 	depotLocker->setDepotId(depotId);
 	const auto &marketItem = Item::CreateItem(ITEM_MARKET);
 	depotLocker->internalAddThing(marketItem);
 	depotLocker->internalAddThing(inbox);
-	if (createSupplyStash) {
-		const auto &supplyStashPtr = Item::CreateItem(ITEM_SUPPLY_STASH);
-		depotLocker->internalAddThing(supplyStashPtr);
+	if (createStash) {
+		const auto &stashPtr = Item::CreateItem(ITEM_STASH);
+		depotLocker->internalAddThing(stashPtr);
 	}
 	const auto &depotChest = Item::CreateItemAsContainer(ITEM_DEPOT, static_cast<uint16_t>(g_configManager().getNumber(DEPOT_BOXES)));
 	for (uint32_t i = g_configManager().getNumber(DEPOT_BOXES); i > 0; i--) {
@@ -6571,7 +6571,7 @@ void Player::genReservedStorageRange() {
 	}
 }
 
-void Player::setSpecialMenuAvailable(bool supplyStashBool, bool marketMenuBool, bool depotSearchBool) {
+void Player::setSpecialMenuAvailable(bool stashBool, bool marketMenuBool, bool depotSearchBool) {
 	// Closing depot search when player have special container disabled and it's still open.
 	if (isDepotSearchOpen() && !depotSearchBool && depotSearch) {
 		depotSearchOnItem = { 0, 0 };
@@ -6581,7 +6581,7 @@ void Player::setSpecialMenuAvailable(bool supplyStashBool, bool marketMenuBool, 
 	// Menu option 'stow, stow container ...'
 	// Menu option 'show in market'
 	// Menu option to open depot search
-	supplyStash = supplyStashBool;
+	stashMenuAvailable = stashBool;
 	marketMenu = marketMenuBool;
 	depotSearch = depotSearchBool;
 	if (client) {

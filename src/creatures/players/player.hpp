@@ -413,7 +413,7 @@ public:
 	bool isInMarket() const {
 		return inMarket;
 	}
-	void setSpecialMenuAvailable(bool supplyStashBool, bool marketMenuBool, bool depotSearchBool);
+	void setSpecialMenuAvailable(bool stashBool, bool marketMenuBool, bool depotSearchBool);
 	bool isDepotSearchOpen() const {
 		return depotSearchOnItem.first != 0;
 	}
@@ -426,8 +426,8 @@ public:
 	bool isDepotSearchAvailable() const {
 		return depotSearch;
 	}
-	bool isSupplyStashMenuAvailable() const {
-		return supplyStash;
+	bool isStashMenuAvailable() const {
+		return stashMenuAvailable;
 	}
 	bool isMarketMenuAvailable() const {
 		return marketMenu;
@@ -1652,7 +1652,7 @@ private:
 	bool logged = false;
 	bool scheduledSaleUpdate = false;
 	bool inEventMovePush = false;
-	bool supplyStash = false; // Menu option 'stow, stow container ...'
+	bool stashMenuAvailable = false; // Menu option 'stow, stow container ...'
 	bool marketMenu = false; // Menu option 'show in market'
 	bool exerciseTraining = false;
 	bool moved = false;

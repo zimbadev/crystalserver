@@ -8438,7 +8438,7 @@ void ProtocolGame::sendSpecialContainersAvailable() {
 
 	NetworkMessage msg;
 	msg.addByte(0x2A);
-	msg.addByte(player->isSupplyStashMenuAvailable() ? 0x01 : 0x00);
+	msg.addByte(player->isStashMenuAvailable() ? 0x01 : 0x00);
 	msg.addByte(player->isMarketMenuAvailable() ? 0x01 : 0x00);
 	writeToOutputBuffer(msg);
 }
@@ -8961,7 +8961,7 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 		return;
 	}
 
-	if (!player->isSupplyStashMenuAvailable()) {
+	if (!player->isStashMenuAvailable()) {
 		player->sendCancelMessage("You can't use supply stash right now.");
 		return;
 	}
