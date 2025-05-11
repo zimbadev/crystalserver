@@ -7865,14 +7865,12 @@ void Game::applyManaLeech(
 		return;
 	}
 	// Void charm rune
-	if (targetMonster) {
-		if (uint16_t playerCharmRaceidVoid = attackerPlayer->parseRacebyCharm(CHARM_VOID, false, 0);
-		    playerCharmRaceidVoid != 0 && playerCharmRaceidVoid == targetMonster->getRaceId()) {
-			if (const auto charm = g_iobestiary().getBestiaryCharm(CHARM_VOID)) {
-				manaSkill += charm->percent;
-			}
+	if (targetMonster && attackerPlayer->parseRacebyCharm(CHARM_VOID) == targetMonster->getRaceId()) {
+		if (const auto &charm = g_iobestiary().getBestiaryCharm(CHARM_VOID)) {
+			manaSkill += charm->chance[attackerPlayer->getCharmTier(CHARM_VOID)] * 100;
 		}
 	}
+
 	CombatParams tmpParams;
 	CombatDamage tmpDamage;
 
@@ -7896,14 +7894,12 @@ void Game::applyLifeLeech(
 	if (normal_random(0, 100) >= lifeChance) {
 		return;
 	}
-	if (targetMonster) {
-		if (uint16_t playerCharmRaceidVamp = attackerPlayer->parseRacebyCharm(CHARM_VAMP, false, 0);
-		    playerCharmRaceidVamp != 0 && playerCharmRaceidVamp == targetMonster->getRaceId()) {
-			if (const auto lifec = g_iobestiary().getBestiaryCharm(CHARM_VAMP)) {
-				lifeSkill += lifec->percent;
-			}
+	if (targetMonster && attackerPlayer->parseRacebyCharm(CHARM_VAMP) == targetMonster->getRaceId()) {
+		if (const auto &charm = g_iobestiary().getBestiaryCharm(CHARM_VAMP)) {
+			lifeSkill += charm->chance[attackerPlayer->getCharmTier(CHARM_VAMP)] * 100;
 		}
 	}
+
 	CombatParams tmpParams;
 	CombatDamage tmpDamage;
 
