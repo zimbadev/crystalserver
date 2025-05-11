@@ -8667,8 +8667,8 @@ void Game::playerFriendSystemAction(const std::shared_ptr<Player> &player, uint8
 }
 
 void Game::playerCyclopediaCharacterInfo(const std::shared_ptr<Player> &player, uint32_t characterID, CyclopediaCharacterInfoType_t characterInfoType, uint16_t entriesPerPage, uint16_t page) {
-	uint32_t playerGUID = player->getGUID();
-	if (characterID != playerGUID) {
+	uint32_t playerID = player->getID();
+	if (playerID != characterID) {
 		// For now allow viewing only our character since we don't have tournaments supported
 		player->sendCyclopediaCharacterNoData(characterInfoType, 2);
 		return;
@@ -8680,9 +8680,6 @@ void Game::playerCyclopediaCharacterInfo(const std::shared_ptr<Player> &player, 
 			break;
 		case CYCLOPEDIA_CHARACTERINFO_GENERALSTATS:
 			player->sendCyclopediaCharacterGeneralStats();
-			break;
-		case CYCLOPEDIA_CHARACTERINFO_COMBATSTATS:
-			player->sendCyclopediaCharacterCombatStats();
 			break;
 		case CYCLOPEDIA_CHARACTERINFO_RECENTDEATHS:
 			player->cyclopedia()->loadDeathHistory(page, entriesPerPage);
@@ -8696,11 +8693,11 @@ void Game::playerCyclopediaCharacterInfo(const std::shared_ptr<Player> &player, 
 		case CYCLOPEDIA_CHARACTERINFO_ITEMSUMMARY: {
 			const ItemsTierCountList &inventoryItems = player->getInventoryItemsId(true);
 			const ItemsTierCountList &storeInboxItems = player->getStoreInboxItemsId();
-			const StashItemList &supplyStashItems = player->getStashItems();
+			const StashItemList &stashItems = player->getStashItems();
 			const ItemsTierCountList &depotBoxItems = player->getDepotChestItemsId();
 			const ItemsTierCountList &inboxItems = player->getDepotInboxItemsId();
 
-			player->sendCyclopediaCharacterItemSummary(inventoryItems, storeInboxItems, supplyStashItems, depotBoxItems, inboxItems);
+			player->sendCyclopediaCharacterItemSummary(inventoryItems, storeInboxItems, stashItems, depotBoxItems, inboxItems);
 			break;
 		}
 		case CYCLOPEDIA_CHARACTERINFO_OUTFITSMOUNTS:
@@ -8717,6 +8714,18 @@ void Game::playerCyclopediaCharacterInfo(const std::shared_ptr<Player> &player, 
 			break;
 		case CYCLOPEDIA_CHARACTERINFO_TITLES:
 			player->sendCyclopediaCharacterTitles();
+			break;
+		case CYCLOPEDIA_CHARACTERINFO_WHEEL:
+			playerOpenWheel(playerID, characterID);
+			break;
+		case CYCLOPEDIA_CHARACTERINFO_OFFENCESTATS:
+			player->sendCyclopediaCharacterOffenceStats();
+			break;
+		case CYCLOPEDIA_CHARACTERINFO_DEFENCESTATS:
+			player->sendCyclopediaCharacterDefenceStats();
+			break;
+		case CYCLOPEDIA_CHARACTERINFO_MISCSTATS:
+			player->sendCyclopediaCharacterMiscStats();
 			break;
 		default:
 			player->sendCyclopediaCharacterNoData(characterInfoType, 1);

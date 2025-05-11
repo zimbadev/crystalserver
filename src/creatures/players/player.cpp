@@ -597,6 +597,28 @@ float Player::getMitigation() const {
 	return wheel()->calculateMitigation();
 }
 
+double Player::getCombatTacticsMitigation() const {
+	double fightFactor = 0.0;
+	switch (fightMode) {
+		case FIGHTMODE_ATTACK: {
+			fightFactor = 0.8f;
+			break;
+		}
+		case FIGHTMODE_BALANCED: {
+			fightFactor = 1.0f;
+			break;
+		}
+		case FIGHTMODE_DEFENSE: {
+			fightFactor = 1.2f;
+			break;
+		}
+		default:
+			break;
+	}
+
+	return fightFactor;
+}
+
 int32_t Player::getDefense(bool sendToClient /* = false*/) const {
 	int32_t defenseSkill = getSkillLevel(SKILL_FIST);
 	int32_t defenseValue = 7;
@@ -633,6 +655,26 @@ int32_t Player::getDefense(bool sendToClient /* = false*/) const {
 	auto defenseScalingFactor = shield ? 0.16f : (weapon && weapon->getDefense() > 0 ? 0.146f : 0.15f);
 
 	return ((defenseSkill / 4.0 + 2.23) * defenseValue * getDefenseFactor(sendToClient) * defenseScalingFactor) * vocation->defenseMultiplier;
+}
+
+uint16_t Player::getDefenseEquipment() const {
+	uint16_t defenseValue = 6;
+	std::shared_ptr<Item> weapon;
+	std::shared_ptr<Item> shield;
+	getShieldAndWeapon(shield, weapon);
+
+	if (weapon) {
+		defenseValue = weapon->getDefense() + weapon->getExtraDefense();
+	}
+
+	if (shield) {
+		defenseValue = weapon != nullptr ? shield->getDefense() + weapon->getExtraDefense() : shield->getDefense();
+		if (shield->getDefense() > 0) {
+			defenseValue += wheel()->getMajorStatConditional("Combat Mastery", WheelMajor_t::DEFENSE);
+		}
+	}
+
+	return defenseValue;
 }
 
 float Player::getAttackFactor() const {
@@ -8046,12 +8088,6 @@ void Player::sendCyclopediaCharacterGeneralStats() const {
 	}
 }
 
-void Player::sendCyclopediaCharacterCombatStats() const {
-	if (client) {
-		client->sendCyclopediaCharacterCombatStats();
-	}
-}
-
 void Player::sendCyclopediaCharacterRecentDeaths(uint16_t page, uint16_t pages, const std::vector<RecentDeathEntry> &entries) const {
 	if (client) {
 		client->sendCyclopediaCharacterRecentDeaths(page, pages, entries);
@@ -8070,9 +8106,9 @@ void Player::sendCyclopediaCharacterAchievements(uint16_t secretsUnlocked, const
 	}
 }
 
-void Player::sendCyclopediaCharacterItemSummary(const ItemsTierCountList &inventoryItems, const ItemsTierCountList &storeInboxItems, const StashItemList &supplyStashItems, const ItemsTierCountList &depotBoxItems, const ItemsTierCountList &inboxItems) const {
+void Player::sendCyclopediaCharacterItemSummary(const ItemsTierCountList &inventoryItems, const ItemsTierCountList &storeInboxItems, const StashItemList &stashItems, const ItemsTierCountList &depotBoxItems, const ItemsTierCountList &inboxItems) const {
 	if (client) {
-		client->sendCyclopediaCharacterItemSummary(inventoryItems, storeInboxItems, supplyStashItems, depotBoxItems, inboxItems);
+		client->sendCyclopediaCharacterItemSummary(inventoryItems, storeInboxItems, stashItems, depotBoxItems, inboxItems);
 	}
 }
 
@@ -8103,6 +8139,24 @@ void Player::sendCyclopediaCharacterBadges() const {
 void Player::sendCyclopediaCharacterTitles() const {
 	if (client) {
 		client->sendCyclopediaCharacterTitles();
+	}
+}
+
+void Player::sendCyclopediaCharacterOffenceStats() const {
+	if (client) {
+		client->sendCyclopediaCharacterOffenceStats();
+	}
+}
+
+void Player::sendCyclopediaCharacterDefenceStats() const {
+	if (client) {
+		client->sendCyclopediaCharacterDefenceStats();
+	}
+}
+
+void Player::sendCyclopediaCharacterMiscStats() const {
+	if (client) {
+		client->sendCyclopediaCharacterMiscStats();
 	}
 }
 
