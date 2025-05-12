@@ -1244,17 +1244,24 @@ uint64_t Player::getMoney() const {
 		}
 	};
 
+	std::vector<std::shared_ptr<Container>> containers;
+	containers.reserve(32);
+
 	for (int32_t i = CONST_SLOT_FIRST; i <= CONST_SLOT_LAST; ++i) {
 		const auto &item = inventory[i];
 		if (!item) {
 			continue;
 		}
 
-		if (const auto &container = item->getContainer()) {
-			countMoneyInContainer(countMoneyInContainer, container);
+		if (auto container = item->getContainer()) {
+			containers.push_back(container);
 		} else {
 			moneyCount += item->getWorth();
 		}
+	}
+
+	for (const auto &container : containers) {
+		countMoneyInContainer(countMoneyInContainer, container);
 	}
 
 	return moneyCount;
@@ -4549,6 +4556,7 @@ std::shared_ptr<Cylinder> Player::queryDestination(int32_t &index, const std::sh
 		const bool isStackable = item->isStackable();
 
 		std::vector<std::shared_ptr<Container>> containers;
+		containers.reserve(32);
 
 		for (uint32_t slotIndex = CONST_SLOT_FIRST; slotIndex <= CONST_SLOT_AMMO; ++slotIndex) {
 			std::shared_ptr<Item> inventoryItem = inventory[slotIndex];
@@ -4584,20 +4592,20 @@ std::shared_ptr<Cylinder> Player::queryDestination(int32_t &index, const std::sh
 			}
 		}
 
-		size_t i = 0;
-		while (i < containers.size()) {
-			std::shared_ptr<Container> tmpContainer = containers[i++];
+		size_t i = static_cast<size_t>(-1);
+		while (++i < containers.size()) {
+			std::shared_ptr<Container> tmpContainer = containers[i];
 			if (!autoStack || !isStackable) {
 				// we need to find first empty container as fast as we can for non-stackable items
-				uint32_t n = tmpContainer->capacity() - tmpContainer->size();
-				while (n) {
-					if (tmpContainer->queryAdd(tmpContainer->capacity() - n, item, item->getItemCount(), flags) == RETURNVALUE_NOERROR) {
-						index = tmpContainer->capacity() - n;
+				uint32_t c = tmpContainer->capacity();
+				uint32_t n = c - tmpContainer->size();
+				while (--n < c) {
+					int32_t testIndex = c - n - 1;
+					if (tmpContainer->queryAdd(testIndex, item, item->getItemCount(), flags) == RETURNVALUE_NOERROR) {
+						index = testIndex;
 						destItem = nullptr;
 						return tmpContainer;
 					}
-
-					n--;
 				}
 
 				for (const auto &tmpContainerItem : tmpContainer->getItemList()) {
@@ -4631,7 +4639,7 @@ std::shared_ptr<Cylinder> Player::queryDestination(int32_t &index, const std::sh
 					containers.push_back(subContainer);
 				}
 
-				n++;
+				++n;
 			}
 
 			if (n < tmpContainer->capacity() && tmpContainer->queryAdd(n, item, item->getItemCount(), flags) == RETURNVALUE_NOERROR) {
@@ -4881,6 +4889,7 @@ bool Player::removeItemOfType(uint16_t itemId, uint32_t amount, int32_t subType,
 	}
 
 	std::vector<std::shared_ptr<Item>> itemList;
+	itemList.reserve(32);
 
 	uint32_t count = 0;
 	for (int32_t i = CONST_SLOT_FIRST; i <= CONST_SLOT_LAST; i++) {
@@ -8096,6 +8105,7 @@ void Player::postAddNotification(const std::shared_ptr<Thing> &thing, const std:
 		if (creature == getPlayer()) {
 			// check containers
 			std::vector<std::shared_ptr<Container>> containers;
+			containers.reserve(openContainers.size());
 
 			for (const auto &[containerId, containerInfo] : openContainers) {
 				const auto &container = containerInfo.container;
@@ -10583,6 +10593,8 @@ void Player::onSendContainer(const std::shared_ptr<Container> &container) {
 
 void Player::autoCloseContainers(const std::shared_ptr<Container> &container) {
 	std::vector<uint32_t> closeList;
+	closeList.reserve(openContainers.size());
+
 	for (const auto &[containerId, containerInfo] : openContainers) {
 		auto tmpContainer = containerInfo.container;
 		while (tmpContainer) {

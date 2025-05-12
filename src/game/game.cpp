@@ -2604,6 +2604,8 @@ std::shared_ptr<Item> Game::findItemOfType(const std::shared_ptr<Cylinder> &cyli
 	}
 
 	std::vector<std::shared_ptr<Container>> containers;
+	containers.reserve(32);
+
 	for (size_t i = cylinder->getFirstIndex(), j = cylinder->getLastIndex(); i < j; ++i) {
 		const std::shared_ptr<Thing> &thing = cylinder->getThing(i);
 		if (!thing) {
@@ -2627,9 +2629,9 @@ std::shared_ptr<Item> Game::findItemOfType(const std::shared_ptr<Cylinder> &cyli
 		}
 	}
 
-	size_t i = 0;
-	while (i < containers.size()) {
-		const std::shared_ptr<Container> &container = containers[i++];
+	size_t i = static_cast<size_t>(-1);
+	while (++i < containers.size()) {
+		const std::shared_ptr<Container> &container = containers[i];
 		for (const auto &item : container->getItemList()) {
 			if (item->getID() == itemId && (subType == -1 || subType == item->getSubType())) {
 				return item;
@@ -2649,11 +2651,17 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 		g_logger().error("[{}] cylinder is nullptr", __FUNCTION__);
 		return false;
 	}
+
 	if (money == 0) {
 		return true;
 	}
+
 	std::vector<std::shared_ptr<Container>> containers;
-	std::multimap<uint32_t, std::shared_ptr<Item>> moneyMap;
+	containers.reserve(32);
+
+	std::vector<std::pair<uint32_t, std::shared_ptr<Item>>> moneyMap;
+	moneyMap.reserve(32);
+
 	uint64_t moneyCount = 0;
 	for (size_t i = cylinder->getFirstIndex(), j = cylinder->getLastIndex(); i < j; ++i) {
 		const std::shared_ptr<Thing> &thing = cylinder->getThing(i);
@@ -2671,13 +2679,14 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 			const uint32_t worth = item->getWorth();
 			if (worth != 0) {
 				moneyCount += worth;
-				moneyMap.emplace(worth, item);
+				moneyMap.emplace_back(worth, item);
 			}
 		}
 	}
-	size_t i = 0;
-	while (i < containers.size()) {
-		const std::shared_ptr<Container> &container = containers[i++];
+
+	size_t i = static_cast<size_t>(-1);
+	while (++i < containers.size()) {
+		const std::shared_ptr<Container> &container = containers[i];
 		for (const std::shared_ptr<Item> &item : container->getItemList()) {
 			const std::shared_ptr<Container> &tmpContainer = item->getContainer();
 			if (tmpContainer) {
@@ -2686,7 +2695,7 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 				const uint32_t worth = item->getWorth();
 				if (worth != 0) {
 					moneyCount += worth;
-					moneyMap.emplace(worth, item);
+					moneyMap.emplace_back(worth, item);
 				}
 			}
 		}
@@ -5280,9 +5289,11 @@ void Game::playerLookInTrade(uint32_t playerId, bool lookAtCounterOffer, uint8_t
 	}
 
 	std::vector<std::shared_ptr<Container>> containers { tradeContainer };
+	containers.reserve(32);
+
 	size_t i = 0;
-	while (i < containers.size()) {
-		std::shared_ptr<Container> container = containers[i++];
+	do {
+		std::shared_ptr<Container> container = containers[i];
 		for (const std::shared_ptr<Item> &item : container->getItemList()) {
 			std::shared_ptr<Container> tmpContainer = item->getContainer();
 			if (tmpContainer) {
@@ -5295,7 +5306,7 @@ void Game::playerLookInTrade(uint32_t playerId, bool lookAtCounterOffer, uint8_t
 				return;
 			}
 		}
-	}
+	} while (++i < containers.size());
 }
 
 void Game::playerCloseTrade(uint32_t playerId) {
