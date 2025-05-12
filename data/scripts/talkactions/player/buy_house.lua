@@ -3,6 +3,7 @@ local buyHouse = TalkAction("!buyhouse")
 function buyHouse.onSay(player, words, param)
 	if configManager.getBoolean(configKeys.CYCLOPEDIA_HOUSE_AUCTION) then
 		player:sendTextMessage(MESSAGE_FAILURE, "Command have been disabled by the administrator.")
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
 
@@ -13,12 +14,14 @@ function buyHouse.onSay(player, words, param)
 
 	if not player:isPremium() then
 		player:sendCancelMessage("You need a premium account.")
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
 
 	local houseBuyLevel = configManager.getNumber(configKeys.HOUSE_BUY_LEVEL)
 	if player:getLevel() < houseBuyLevel then
 		player:sendCancelMessage("You need to be level " .. houseBuyLevel .. " to buy a house.")
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
 
@@ -32,16 +35,21 @@ function buyHouse.onSay(player, words, param)
 
 	if not house or playerPos ~= houseEntry then
 		player:sendCancelMessage("You have to be looking at the door of the house you would like to buy.")
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
 
 	if house:getOwnerGuid() > 0 then
 		player:sendCancelMessage("This house already has an owner.")
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
 
-	if player:getHouse() then
-		player:sendCancelMessage("You are already the owner of a house.")
+	local maxHousesLimit = configManager.getNumber(configKeys.MAX_HOUSES_LIMIT)
+	local playerHouses = player:getAllHouses()
+	if #playerHouses > maxHousesLimit then
+		player:sendCancelMessage("You cannot buy more houses. The maximum number of houses you can own is " .. maxHousesLimit .. ".")
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
 
@@ -53,6 +61,7 @@ function buyHouse.onSay(player, words, param)
 	local price = house:getPrice()
 	if not player:removeMoneyBank(price) then
 		player:sendCancelMessage("You do not have enough money.")
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
 	metrics.addCounter("balance_decrease", remainsPrice, {

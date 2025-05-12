@@ -407,6 +407,7 @@ houseLoseAfterInactivity = 30 -- days; 0 = never
 onlyInvitedCanMoveHouseItems = true
 togglehouseTransferOnRestart = true
 bedsOnlyPremium = true
+maxHousesLimit = 3
 
 -- Item Usage
 timeBetweenActions = 200

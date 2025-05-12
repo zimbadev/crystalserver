@@ -264,8 +264,10 @@ class PlayerFunctions {
 	static int luaPlayerGetClient(lua_State* L);
 
 	static int luaPlayerGetHouse(lua_State* L);
+	static int luaPlayerGetAllHouses(lua_State* L);
 	static int luaPlayerSendHouseWindow(lua_State* L);
 	static int luaPlayerSetEditHouse(lua_State* L);
+	static int luaPlayerSendHouseAuctionMessage(lua_State* L);
 
 	static int luaPlayerSetGhostMode(lua_State* L);
 

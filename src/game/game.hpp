@@ -310,6 +310,7 @@ public:
 	static std::string getSkillNameById(uint8_t &skill);
 
 	// House Auction
+	int32_t getHighestBidCountByPlayerName(const std::string &playerName);
 	void playerCyclopediaHousesByTown(uint32_t playerId, const std::string &townName);
 	void playerCyclopediaHouseBid(uint32_t playerId, uint32_t houseId, uint64_t bidValue);
 	void playerCyclopediaHouseMoveOut(uint32_t playerId, uint32_t houseId, uint32_t timestamp);
