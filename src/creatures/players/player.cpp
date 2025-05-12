@@ -11180,24 +11180,20 @@ bool Player::hasPermittedConditionInPZ() const {
 
 uint16_t Player::getDodgeChance() const {
 	const auto &playerArmor = getInventoryItem(CONST_SLOT_ARMOR);
-	if (!playerArmor) {
+	if (!playerArmor || !playerArmor->getTier()) {
 		return 0;
 	}
 
-	if (!playerArmor->getTier()) {
-		return 0;
-	}
-
-	uint16_t chance = static_cast<uint16_t>(playerArmor->getDodgeChance() * 100);
+	double chance = playerArmor->getDodgeChance();
 	const auto &playerBoots = getInventoryItem(CONST_SLOT_FEET);
 	if (playerBoots && playerBoots->getTier()) {
-		double_t amplificationChance = playerBoots->getAmplificationChance() / 100;
-		chance += (static_cast<uint16_t>(chance * (1 + amplificationChance))) * 100;
+		double amplification = playerBoots->getAmplificationChance() / 100.0;
+		chance *= (1.0 + amplification);
 	}
 
-	chance += m_wheelPlayer->getStat(WheelStat_t::DODGE);
-
-	return chance;
+	uint16_t finalChance = static_cast<uint16_t>(chance * 100.0);
+	finalChance += m_wheelPlayer->getStat(WheelStat_t::DODGE);
+	return finalChance;
 }
 
 uint8_t Player::isRandomMounted() const {
