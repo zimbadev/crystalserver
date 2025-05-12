@@ -333,7 +333,13 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 
 	if (attacker) {
 		const auto &attackerMaster = attacker->getMaster();
+		const auto &masterAttackerPlayer = attackerMaster ? attackerMaster->getPlayer() : nullptr;
+		const auto &masterAttackerMonster = attackerMaster ? attackerMaster->getMonster() : nullptr;
 		const auto &attackerPlayer = attacker->getPlayer();
+		const auto &attackerMonster = attacker->getMonster();
+		const auto &targetMonster = target ? target->getMonster() : nullptr;
+		const auto &targetMaster = target ? target->getMaster() : nullptr;
+		const auto &targetMasterPlayer = targetMaster ? targetMaster->getPlayer() : nullptr;
 		if (targetPlayer) {
 			if (targetPlayer->hasFlag(PlayerFlags_t::CannotBeAttacked)) {
 				return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
@@ -363,7 +369,7 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 			}
 
 			if (attackerMaster) {
-				if (const auto &masterAttackerPlayer = attackerMaster->getPlayer()) {
+				if (masterAttackerPlayer) {
 					if (masterAttackerPlayer->hasFlag(PlayerFlags_t::CannotAttackPlayer)) {
 						return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
 					}
@@ -378,13 +384,13 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 				}
 			}
 
-			if (attacker->getMonster() && (!attackerMaster || attackerMaster->getMonster())) {
-				if (attacker->getFaction() != FACTION_DEFAULT && !attacker->getMonster()->isEnemyFaction(targetPlayer->getFaction())) {
+			if (attackerMonster && (!attackerMaster || masterAttackerMonster)) {
+				if (attacker->getFaction() != FACTION_DEFAULT && !attackerMonster->isEnemyFaction(targetPlayer->getFaction())) {
 					return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
 				}
 			}
-		} else if (target && target->getMonster()) {
-			if (attacker->getFaction() != FACTION_DEFAULT && attacker->getFaction() != FACTION_PLAYER && attacker->getMonster() && !attacker->getMonster()->isEnemyFaction(target->getFaction())) {
+		} else if (targetMonster) {
+			if (attacker->getFaction() != FACTION_DEFAULT && attacker->getFaction() != FACTION_PLAYER && attackerMonster && !attackerMonster->isEnemyFaction(target->getFaction())) {
 				return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 			}
 
@@ -393,14 +399,12 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 					return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 				}
 
-				if (target->isSummon() && target->getMaster()->getPlayer() && target->getZoneType() == ZONE_NOPVP) {
+				if (target->isSummon() && targetMasterPlayer && target->getZoneType() == ZONE_NOPVP) {
 					return RETURNVALUE_ACTIONNOTPERMITTEDINANOPVPZONE;
 				}
-			} else if (attacker->getMonster()) {
-				const auto &targetMaster = target->getMaster();
-
-				if ((!targetMaster || !targetMaster->getPlayer()) && attacker->getFaction() == FACTION_DEFAULT) {
-					if (!attackerMaster || !attackerMaster->getPlayer()) {
+			} else if (attackerMonster) {
+				if ((!targetMaster || !targetMasterPlayer) && attacker->getFaction() == FACTION_DEFAULT) {
+					if (!attackerMaster || !masterAttackerPlayer) {
 						return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 					}
 				}
@@ -410,14 +414,14 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 		}
 
 		if (g_game().getWorldType() == WORLDTYPE_OPTIONAL) {
-			if (attacker->getPlayer() || (attackerMaster && attackerMaster->getPlayer())) {
+			if (attackerPlayer || masterAttackerPlayer) {
 				if (targetPlayer) {
 					if (!isInPvpZone(attacker, target)) {
 						return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
 					}
 				}
 
-				if (target && target->isSummon() && target->getMaster()->getPlayer()) {
+				if (target && target->isSummon() && targetMasterPlayer) {
 					if (!isInPvpZone(attacker, target)) {
 						return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 					}

@@ -11214,6 +11214,12 @@ void Player::sendFYIBox(const std::string &message) const {
 	}
 }
 
+void Player::parseBestiarySendRaces() const {
+	if (client) {
+		client->parseBestiarySendRaces();
+	}
+}
+
 void Player::sendBestiaryCharms() const {
 	if (client) {
 		client->sendBestiaryCharms();

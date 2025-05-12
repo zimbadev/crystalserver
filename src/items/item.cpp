@@ -1363,7 +1363,7 @@ Item::getDescriptions(const ItemType &it, const std::shared_ptr<Item> &item /*= 
 					ss << ", ";
 				}
 
-				ss << fmt::format("{} {:+}%", getCombatName(indexToCombatType(i)), it.abilities->fieldAbsorbPercent[i]);
+				ss << fmt::format("{} {:+}%", getCombatName(indexToCombatType(i)), it.abilities->absorbPercent[i]);
 				protection = true;
 			}
 			if (protection) {
@@ -1501,16 +1501,6 @@ Item::getDescriptions(const ItemType &it, const std::shared_ptr<Item> &item /*= 
 			}
 
 			for (size_t i = 0; i < COMBAT_COUNT; ++i) {
-				if (it.abilities->absorbPercent[i] == 0) {
-					continue;
-				}
-
-				ss.str("");
-				ss << getCombatName(indexToCombatType(i)) << ' '
-				   << std::showpos << it.abilities->absorbPercent[i] << std::noshowpos << '%';
-				descriptions.emplace_back("Protection", ss.str());
-			}
-			for (size_t i = 0; i < COMBAT_COUNT; ++i) {
 				if (it.abilities->fieldAbsorbPercent[i] == 0) {
 					continue;
 				}
@@ -1546,7 +1536,7 @@ Item::getDescriptions(const ItemType &it, const std::shared_ptr<Item> &item /*= 
 		}
 
 		if (it.upgradeClassification > 0) {
-			descriptions.emplace_back("Tier", std::to_string(item->getTier()));
+			descriptions.emplace_back("Tier", getTierEffectDescription(item));
 		}
 
 		std::string slotName;
@@ -2156,6 +2146,13 @@ SoundEffect_t Item::getMovementSound(const std::shared_ptr<Cylinder> &toCylinder
 }
 
 std::string Item::parseClassificationDescription(const std::shared_ptr<Item> &item) {
+	if (item && item->getClassification() >= 1) {
+		return fmt::format("\nClassification: {} Tier: {}", item->getClassification(), getTierEffectDescription(item));
+	}
+	return "";
+}
+
+std::string Item::getTierEffectDescription(const std::shared_ptr<Item> &item) {
 	if (!item) {
 		return "";
 	}
@@ -2165,29 +2162,29 @@ std::string Item::parseClassificationDescription(const std::shared_ptr<Item> &it
 		return "0";
 	}
 
-	std::string description;
+	std::string effectDescription;
 	if (Item::items[item->getID()].weaponType != WEAPON_NONE) {
-		description = fmt::format(" ({:.2f}% Onslaught)", item->getFatalChance());
+		effectDescription = fmt::format(" ({:.2f}% Onslaught)", item->getFatalChance());
 	} else {
 		switch (g_game().getObjectCategory(item)) {
 			case OBJECTCATEGORY_HELMETS:
-				description = fmt::format(" ({:.2f}% Momentum)", item->getMomentumChance());
+				effectDescription = fmt::format(" ({:.2f}% Momentum)", item->getMomentumChance());
 				break;
 			case OBJECTCATEGORY_ARMORS:
-				description = fmt::format(" ({:.2f}% Ruse)", item->getDodgeChance());
+				effectDescription = fmt::format(" ({:.2f}% Ruse)", item->getDodgeChance());
 				break;
 			case OBJECTCATEGORY_LEGS:
-				description = fmt::format(" ({:.2f}% Transcendence)", item->getTranscendenceChance());
+				effectDescription = fmt::format(" ({:.2f}% Transcendence)", item->getTranscendenceChance());
 				break;
 			case OBJECTCATEGORY_BOOTS:
-				description = fmt::format(" ({:.2f}% Amplification)", item->getAmplificationChance());
+				effectDescription = fmt::format(" ({:.2f}% Amplification)", item->getAmplificationChance());
 				break;
 			default:
 				break;
 		}
 	}
 
-	return fmt::format("{}{}", itemTier, description);
+	return fmt::format("{}{}", itemTier, effectDescription);
 }
 
 std::string Item::parseShowDurationSpeed(int32_t speed, bool &begin) {

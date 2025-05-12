@@ -221,6 +221,7 @@ public:
 
 	void sendFYIBox(const std::string &message) const;
 
+	void parseBestiarySendRaces() const;
 	void sendBestiaryCharms() const;
 	void addBestiaryKillCount(uint16_t raceid, uint32_t amount);
 	uint32_t getBestiaryKillCount(uint16_t raceid) const;

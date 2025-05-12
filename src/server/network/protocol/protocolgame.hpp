@@ -34,6 +34,7 @@ enum Resource_t : uint8_t;
 enum class VipStatus_t : uint8_t;
 enum SpellGroup_t : uint8_t;
 enum Slots_t : uint8_t;
+enum skills_t : int8_t;
 enum CombatType_t : uint8_t;
 enum SoundEffect_t : uint16_t;
 enum class SourceEffect_t : uint8_t;
@@ -192,8 +193,8 @@ private:
 	void parseSendResourceBalance();
 	void parseRuleViolationReport(NetworkMessage &msg);
 
-	void parseBestiarysendRaces();
-	void parseBestiarysendCreatures(NetworkMessage &msg);
+	void parseBestiarySendRaces();
+	void parseBestiarySendCreatures(NetworkMessage &msg);
 	void sendBestiaryCharms();
 	void sendBestiaryEntryChanged(uint16_t raceid);
 	void refreshCyclopediaMonsterTracker(const std::unordered_set<std::shared_ptr<MonsterType>> &trackerSet, bool isBoss);

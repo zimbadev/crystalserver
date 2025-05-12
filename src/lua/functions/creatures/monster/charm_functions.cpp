@@ -27,6 +27,7 @@ void CharmFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "Charm", "name", CharmFunctions::luaCharmName);
 	Lua::registerMethod(L, "Charm", "description", CharmFunctions::luaCharmDescription);
+	Lua::registerMethod(L, "Charm", "category", CharmFunctions::luaCharmCategory);
 	Lua::registerMethod(L, "Charm", "type", CharmFunctions::luaCharmType);
 	Lua::registerMethod(L, "Charm", "points", CharmFunctions::luaCharmPoints);
 	Lua::registerMethod(L, "Charm", "damageType", CharmFunctions::luaCharmDamageType);
@@ -76,6 +77,18 @@ int CharmFunctions::luaCharmDescription(lua_State* L) {
 		Lua::pushString(L, charm->description);
 	} else {
 		charm->description = Lua::getString(L, 2);
+		Lua::pushBoolean(L, true);
+	}
+	return 1;
+}
+
+int CharmFunctions::luaCharmCategory(lua_State* L) {
+	// get: charm:category() set: charm:category(charmCategory_t)
+	const auto &charm = Lua::getUserdataShared<Charm>(L, 1);
+	if (lua_gettop(L) == 1) {
+		lua_pushnumber(L, charm->category);
+	} else {
+		charm->category = Lua::getNumber<charmCategory_t>(L, 2);
 		Lua::pushBoolean(L, true);
 	}
 	return 1;

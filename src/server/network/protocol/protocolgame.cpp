@@ -131,7 +131,7 @@ namespace {
 	 */
 	void handleImbuementDamage(NetworkMessage &msg, const std::shared_ptr<Player> &player) {
 		bool imbueDmg = false;
-		std::shared_ptr<Item> weapon = player->getWeapon();
+		const auto &weapon = player->getWeapon();
 		if (weapon) {
 			uint8_t slots = Item::items[weapon->getID()].imbuementSlot;
 			if (slots > 0) {
@@ -143,8 +143,9 @@ namespace {
 
 					if (imbuementInfo.duration > 0) {
 						auto imbuement = *imbuementInfo.imbuement;
-						if (imbuement.combatType != COMBAT_NONE) {
-							msg.addDouble(static_cast<double>(imbuement.elementDamage) / 100);
+						bool hasValidCombat = imbuement.combatType != COMBAT_NONE && imbuement.combatType < COMBAT_COUNT;
+						if (hasValidCombat) {
+							msg.addDouble(imbuement.elementDamage / 100.);
 							msg.addByte(getCipbiaElement(imbuement.combatType));
 							imbueDmg = true;
 							break;
@@ -153,9 +154,10 @@ namespace {
 				}
 			}
 		}
+
 		if (!imbueDmg) {
-			msg.addDouble(0x00); // converted damage
-			msg.addByte(CIPBIA_ELEMENTAL_PHYSICAL); // getCipbiaElement
+			msg.addDouble(0);
+			msg.addByte(0);
 		}
 	}
 
@@ -1374,10 +1376,10 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			parseVipGroupActions(msg);
 			break;
 		case 0xE1:
-			parseBestiarysendRaces();
+			parseBestiarySendRaces();
 			break;
 		case 0xE2:
-			parseBestiarysendCreatures(msg);
+			parseBestiarySendCreatures(msg);
 			break;
 		case 0xE3:
 			parseBestiarysendMonsterData(msg);
@@ -2388,7 +2390,7 @@ void ProtocolGame::parseRuleViolationReport(NetworkMessage &msg) {
 	g_game().playerReportRuleViolationReport(player->getID(), targetName, reportType, reportReason, comment, translation);
 }
 
-void ProtocolGame::parseBestiarysendRaces() {
+void ProtocolGame::parseBestiarySendRaces() {
 	if (oldProtocol) {
 		return;
 	}
@@ -3060,7 +3062,7 @@ void ProtocolGame::sendBestiaryCharms() {
 	);
 }
 
-void ProtocolGame::parseBestiarysendCreatures(NetworkMessage &msg) {
+void ProtocolGame::parseBestiarySendCreatures(NetworkMessage &msg) {
 	if (!player || oldProtocol) {
 		return;
 	}
@@ -6348,7 +6350,7 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId, uint8_t tier) {
 			msg.add<uint16_t>(0x00);
 			// Magic shield capacity
 			msg.add<uint16_t>(0x00);
-			// Damage reflection modifie
+			// Damage reflection modifier
 			msg.add<uint16_t>(0x00);
 			// Perfect shot modifier
 			msg.add<uint16_t>(0x00);

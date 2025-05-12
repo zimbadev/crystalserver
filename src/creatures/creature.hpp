@@ -91,10 +91,10 @@ public:
 	Creature(const Creature &) = delete;
 	Creature &operator=(const Creature &) = delete;
 
-	std::shared_ptr<Creature> getCreature() override final {
+	std::shared_ptr<Creature> getCreature() final {
 		return static_self_cast<Creature>();
 	}
-	std::shared_ptr<const Creature> getCreature() const override final {
+	std::shared_ptr<const Creature> getCreature() const final {
 		return static_self_cast<Creature>();
 	}
 	std::shared_ptr<Player> getPlayer() override {
@@ -184,13 +184,13 @@ public:
 		directionLocked = locked;
 	}
 
-	int32_t getThrowRange() const override final {
+	int32_t getThrowRange() const final {
 		return 1;
 	}
 	bool isPushable() override {
 		return getWalkDelay() <= 0;
 	}
-	bool isRemoved() override final {
+	bool isRemoved() final {
 		return isInternalRemoved;
 	}
 	virtual bool canSeeInvisibility() const {
@@ -570,7 +570,7 @@ public:
 
 	void setParent(std::weak_ptr<Cylinder> cylinder) final;
 
-	const Position &getPosition() override final {
+	const Position &getPosition() final {
 		return position;
 	}
 
