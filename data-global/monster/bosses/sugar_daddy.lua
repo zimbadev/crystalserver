@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Sugar Daddy")
 local monster = {}
 
 monster.description = "Sugar Daddy"
-monster.experience = 15550
+monster.experience = 45000
 monster.outfit = {
 	lookType = 1764,
 	lookHead = 0,
@@ -18,11 +18,11 @@ monster.bosstiary = {
 	bossRace = RARITY_BANE,
 }
 
-monster.health = 9500
-monster.maxHealth = 9500
+monster.health = 45000
+monster.maxHealth = 45000
 monster.race = "blood"
 monster.corpse = 48416
-monster.speed = 250
+monster.speed = 150
 monster.manaCost = 0
 
 monster.changeTarget = {
@@ -31,10 +31,10 @@ monster.changeTarget = {
 }
 
 monster.strategiesTarget = {
-	nearest = 70,
-	health = 10,
-	damage = 10,
-	random = 10,
+	nearest = 10,
+	health = 0,
+	damage = 90,
+	random = 0,
 }
 
 monster.flags = {
@@ -80,10 +80,10 @@ monster.loot = {
 	{ id = 3039, chance = 94465, maxCount = 1 }, -- red gem
 	{ name = "white gem", chance = 5600, maxCount = 1 },
 	{ id = 48114, chance = 1000 }, -- peppermint backpack
-	{ id = 45643, chance = 555 }, -- biscuit barrier
-	{ id = 45644, chance = 1009 }, -- candy-coated quiver
-	{ id = 45639, chance = 555 }, -- cocoa grimoire
-	{ id = 45640, chance = 555 }, -- creamy grimoire
+	{ id = 45643, chance = 1000 }, -- biscuit barrier
+	{ id = 45644, chance = 1000 }, -- candy-coated quiver
+	{ id = 45639, chance = 1000 }, -- cocoa grimoire
+	{ id = 45640, chance = 1000 }, -- creamy grimoire
 	{ id = 45641, chance = 2300 }, -- candy necklace
 	{ id = 45642, chance = 7650 }, -- ring of temptation
 	{ id = 48254, chance = 11655, maxCount = 1 }, -- churro heart
@@ -95,10 +95,12 @@ monster.loot = {
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 20, minDamage = 0, maxDamage = -550 },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_DEATHDAMAGE, minDamage = -300, maxDamage = -500, range = 6, effect = CONST_ME_MORTAREA, target = true },
-	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_ENERGYDAMAGE, minDamage = -200, maxDamage = -300, radius = 12, effect = CONST_ME_PIXIE_EXPLOSION, target = false },
-	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_EARTHDAMAGE, minDamage = -250, maxDamage = -410, radius = 12, effect = CONST_ME_HEARTS, target = false },
+	{ name = "melee", interval = 2000, chance = 20, minDamage = 0, maxDamage = -1550 },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_DEATHDAMAGE, minDamage = -1300, maxDamage = -1500, range = 6, effect = CONST_ME_MORTAREA, target = true },
+	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_ENERGYDAMAGE, minDamage = -1200, maxDamage = -1300, radius = 12, effect = CONST_ME_PIXIE_EXPLOSION, target = false },
+	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_EARTHDAMAGE, minDamage = -1050, maxDamage = -1110, radius = 12, effect = CONST_ME_HEARTS, target = false },
+	{ name = "root area", interval = 20000, chance = 100, target = false },
+	{ name = "sugar daddy cake", interval = 10000, chance = 50, target = true },
 }
 
 monster.defenses = {

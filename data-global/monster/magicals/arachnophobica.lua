@@ -85,7 +85,7 @@ monster.loot = {
 	{ name = "silver amulet", chance = 15000 },
 	{ id = 3091, chance = 11050 }, -- sword ring
 	{ name = "spider fangs", chance = 11800 },
-	{ name = "mind stone", chance = 17800 },
+	--{ name = "mind stone", chance = 17800 },
 	{ name = "wand of cosmic energy", chance = 17800 },
 	{ name = "magma amulet", chance = 8900 },
 	{ name = "elven amulet", chance = 8100, maxCount = 2 },
