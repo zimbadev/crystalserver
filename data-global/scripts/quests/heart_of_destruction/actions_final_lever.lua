@@ -16,7 +16,7 @@ function sparkDevourerSpawn()
 
 	if sparkSpawnCount > 0 then
 		for i = 1, sparkSpawnCount do
-			Game.createMonster("Spark of Destruction2", positions[i], false, true)
+			Game.createMonster("Spark of Destruction", positions[i], false, true)
 		end
 		sparkSpawnCount = 0
 	end
@@ -211,10 +211,10 @@ local function changeArea()
 		end
 
 		Game.createMonster("World Devourer", { x = 32271, y = 31347, z = 14 }, false, true)
-		Game.createMonster("Spark of Destruction2", { x = 32268, y = 31341, z = 14 }, false, true)
-		Game.createMonster("Spark of Destruction2", { x = 32275, y = 31342, z = 14 }, false, true)
-		Game.createMonster("Spark of Destruction2", { x = 32269, y = 31352, z = 14 }, false, true)
-		Game.createMonster("Spark of Destruction2", { x = 32277, y = 31351, z = 14 }, false, true)
+		Game.createMonster("Spark of Destruction", { x = 32268, y = 31341, z = 14 }, false, true)
+		Game.createMonster("Spark of Destruction", { x = 32275, y = 31342, z = 14 }, false, true)
+		Game.createMonster("Spark of Destruction", { x = 32269, y = 31352, z = 14 }, false, true)
+		Game.createMonster("Spark of Destruction", { x = 32277, y = 31351, z = 14 }, false, true)
 		sparkSpawnCount = 0
 		devourerSummon = 0
 		areaDevourer5 = addEvent(clearDevourer, 30 * 60000)
