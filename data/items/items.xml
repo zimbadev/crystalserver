@@ -82303,4 +82303,343 @@ Granted by TibiaGoals.com" />
 			<attribute key="slot" value="hand" />
 		</attribute>
 	</item>
+	<item id="49891" article="a" name="skin of Twisterror">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="1900" />
+	</item>
+	<item id="49892" article="a" name="skin of Gralvalon">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="1900" />
+	</item>
+	<item id="49893" article="a" name="skin of Malvaroth">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="1900" />
+	</item>
+	<item id="49894" article="a" name="demonic matter">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="49904" article="a" name="some troll food">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="49908" article="a" name="mummified demon finger">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="49909" article="a" name="demonic core essence">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item fromid="49970" toid="49978" article="a" name="inferniarch god's head" />
+	<item id="49987" article="a" name="dead spellreaper inferniarch">
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="49988" article="a" name="dead spellreaper inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49987" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="49989" article="a" name="dead spellreaper inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49988" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="49990" article="a" name="dead spellreaper inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49989" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="49991" article="a" name="dead hellhunter inferniarch">
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="49992" article="a" name="dead hellhunter inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49995" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="49993" article="a" name="dead hellhunter inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49992" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="49994" article="a" name="dead hellhunter inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49993" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="49995" article="a" name="dead brinebrute inferniarch">
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="49996" article="a" name="dead brinebrute inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49995" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="49997" article="a" name="dead brinebrute inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49996" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="49998" article="a" name="dead brinebrute inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49997" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="49999" article="a" name="dead sineater inferniarch">
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="50000" article="a" name="dead sineater inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="49999" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50001" article="a" name="dead sineater inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50000" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50002" article="a" name="dead sineater inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50001" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50003" article="a" name="dead broodrider inferniarch">
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="50004" article="a" name="dead broodrider inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50003" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50005" article="a" name="dead broodrider inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50004" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50006" article="a" name="dead broodrider inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50005" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50007" article="a" name="dead gorger inferniarch">
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="50008" article="a" name="dead gorger inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50007" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50009" article="a" name="dead gorger inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50008" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50010" article="a" name="dead gorger inferniarch">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50009" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50027" article="a" name="dead arbaziloth">
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="50028" article="a" name="dead arbaziloth">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50027" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50029" article="a" name="dead arbaziloth">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50028" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50039" article="a" name="dead twisterror">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50040" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50040" article="a" name="dead twisterror">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50041" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50041" article="a" name="dead twisterror">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50042" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50042" article="a" name="dead twisterror">
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="50043" article="a" name="dead gralvalon">
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="50044" article="a" name="dead gralvalon">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50043" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50045" article="a" name="dead gralvalon">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50044" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50046" article="a" name="dead gralvalon">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50045" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50047" article="a" name="dead malvaroth">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+	</item>
+	<item id="50048" article="a" name="dead malvaroth">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50047" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50049" article="a" name="dead malvaroth">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50048" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50050" article="a" name="dead malvaroth">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="50049" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50054" article="a" name="spellreaper staff totem">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50055" article="a" name="hellhunter eye">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50056" article="a" name="brinebrute claw">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50057" article="a" name="sineater wing">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50058" article="a" name="broodrider saddle">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50059" article="a" name="gorger antlers">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50060" article="a" name="demon claws">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50061" article="a" name="demon skull">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50064" article="a" name="demon in a green box">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="description" value="A primal demonic mount is imprisoned in this box." />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50067" article="a" name="Arbaziloth shoulder piece">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item fromid="50069" toid="50072" name="stairs">
+		<attribute key="primarytype" value="dropdowns" />
+		<attribute key="floorchange" value="down" />
+	</item>
+	<item fromid="50082" toid="50085" name="stairs">
+		<attribute key="primarytype" value="dropdowns" />
+		<attribute key="floorchange" value="down" />
+	</item>
+	<item id="50101" article="a" name="bloodstained scythe">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="50102" article="a" name="dead corpse">
+		<attribute key="containerSize" value="8" />
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="60" />
+		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="50103" article="an" name="spellreaper inferniarch soul core">
+		<attribute key="primarytype" value="soul cores" />
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core." />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="50104" article="an" name="hellhunter inferniarch soul core">
+		<attribute key="primarytype" value="soul cores" />
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core." />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="50105" article="an" name="brinebrute inferniarch soul core">
+		<attribute key="primarytype" value="soul cores" />
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core." />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="50106" article="an" name="sineater inferniarch soul core">
+		<attribute key="primarytype" value="soul cores" />
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core." />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="50107" article="an" name="broodrider inferniarch soul core">
+		<attribute key="primarytype" value="soul cores" />
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core." />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="50108" article="an" name="gorger inferniarch soul core">
+		<attribute key="primarytype" value="soul cores" />
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core." />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="50122" article="a" name="stair" />
+	<item id="50123" article="a" name="stair" />
+	<item id="50124" article="a" name="arbaziloth santa">
+		<attribute key="primarytype" value="dolls and bears" />
+		<attribute key="weight" value="100" />
+	</item>
 </items>
