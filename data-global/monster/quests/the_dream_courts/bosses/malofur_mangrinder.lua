@@ -104,7 +104,7 @@ monster.loot = {
 	{ id = 23533, chance = 5560 }, -- ring of red plasma
 	{ name = "ring of the sky", chance = 2780 },
 	{ name = "royal star", chance = 52780 },
-	{ name = "silver token", chance = 100000, maxCount = 2},
+	{ name = "silver token", chance = 100000, maxCount = 2 },
 	{ name = "skull staff", chance = 8330 },
 	{ name = "soul stone", chance = 8330 },
 	{ name = "supreme health potion", chance = 80000, maxCount = 29 },

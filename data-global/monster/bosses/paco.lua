@@ -101,7 +101,7 @@ monster.voices = {
 	{ text = "What do you do when you're not pretending to be tough?", yell = false },
 	{ text = "Am I supposed to be scared of you or somethin'?", yell = false },
 }
-	
+
 monster.loot = {
 	{ id = 2920, chance = 3300 }, -- torch
 	{ name = "small ruby", chance = 150 },

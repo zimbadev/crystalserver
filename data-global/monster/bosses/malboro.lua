@@ -36,7 +36,6 @@ monster.events = {
 	"MalboroTeleport",
 }
 
-
 monster.flags = {
 	summonable = false,
 	attackable = true,
@@ -107,7 +106,7 @@ monster.attacks = {
 	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_FIREDAMAGE, minDamage = -800, maxDamage = -2400, length = 7, spread = 0, effect = CONST_ME_FIREAREA, target = false },
 	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_FIREDAMAGE, minDamage = -490, maxDamage = -1500, radius = 3, effect = CONST_ME_EXPLOSIONHIT, target = false },
 	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_ENERGYDAMAGE, minDamage = -1080, maxDamage = -2460, range = 7, radius = 2, shootEffect = CONST_ANI_ENERGY, effect = CONST_ME_ENERGYHIT, target = true },
-	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_ENERGYDAMAGE, minDamage = -920, maxDamage = -2000, range = 7, shootEffect = CONST_ANI_ENERGYBALL, effect = CONST_ME_ENERGYHIT, target = true },	
+	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_ENERGYDAMAGE, minDamage = -920, maxDamage = -2000, range = 7, shootEffect = CONST_ANI_ENERGYBALL, effect = CONST_ME_ENERGYHIT, target = true },
 }
 
 monster.defenses = {
