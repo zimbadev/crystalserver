@@ -108,8 +108,8 @@ monster.loot = {
 	{ id = 8052, chance = 500 }, -- swamplair armor
 	{ id = 20203, chance = 1000 }, -- trapped bad dream monster
 	{ id = 24954, chance = 500, unique = true }, -- part of a rune
-	{ id = 22721, chance = 100000 }, -- gold token
-	{ id = 22516, chance = 100000 }, -- silver token
+	{ id = 22721, chance = 50000 }, -- gold token
+	{ id = 22516, chance = 40000 }, -- silver token
 }
 
 monster.attacks = {

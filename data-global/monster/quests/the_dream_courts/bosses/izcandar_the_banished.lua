@@ -92,7 +92,7 @@ monster.loot = {
 	{ name = "giant sapphire", chance = 3130 },
 	{ id = 282, chance = 33330 }, -- giant shimmering pearl
 	{ name = "gold ingot", chance = 33330 },
-	{ name = "gold token", chance = 71880 },
+	{ name = "gold token", chance = 75000 },
 	{ name = "green gem", chance = 21880, maxCount = 2 },
 	{ name = "huge chunk of crude iron", chance = 33330 },
 	{ name = "izcandar's snow globe", chance = 3130 },

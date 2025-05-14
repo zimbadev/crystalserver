@@ -101,7 +101,7 @@ monster.loot = {
 	{ name = "terra rod", chance = 11145 },
 	{ name = "crystal coin", chance = 10241 },
 	{ name = "stone skin amulet", chance = 10241 },
-	{ name = "silver token", chance = 8735, maxCount = 3 },
+	{ name = "silver token", chance = 6190 },
 	{ name = "terra legs", chance = 8735 },
 	{ name = "terra mantle", chance = 7831 },
 	{ name = "raw watermelon tourmaline", chance = 7229 },
