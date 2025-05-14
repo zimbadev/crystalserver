@@ -34,7 +34,8 @@ enum SpawnType_t : uint8_t {
 };
 
 enum Cipbia_Elementals_t : uint8_t {
-	CIPBIA_ELEMENTAL_PHYSICAL = 0,
+	CIPBIA_ELEMENTAL_FIRST = 0,
+	CIPBIA_ELEMENTAL_PHYSICAL = CIPBIA_ELEMENTAL_FIRST,
 	CIPBIA_ELEMENTAL_FIRE = 1,
 	CIPBIA_ELEMENTAL_EARTH = 2,
 	CIPBIA_ELEMENTAL_ENERGY = 3,
@@ -46,7 +47,7 @@ enum Cipbia_Elementals_t : uint8_t {
 	CIPBIA_ELEMENTAL_LIFEDRAIN = 9,
 	CIPBIA_ELEMENTAL_MANADRAIN = 10,
 	CIPBIA_ELEMENTAL_AGONY = 11,
-	CIPBIA_ELEMENTAL_UNDEFINED = 12,
+	CIPBIA_ELEMENTAL_LAST = CIPBIA_ELEMENTAL_AGONY,
 };
 
 enum MagicEffectClasses : uint16_t {
@@ -506,7 +507,7 @@ enum NameEval_t : uint8_t {
 
 enum ItemID_t : uint16_t {
 	ITEM_BROWSEFIELD = 470, // for internal use
-	ITEM_SUPPLY_STASH_INDEX = 1, // for internal use
+	ITEM_STASH_INDEX = 1, // for internal use
 	ITEM_DEPOT_NULL = 22796, // for internal use - Actual Item ID: 168
 	ITEM_DECORATION_KIT = 23398, // For internal use (wrap item)
 	ITEM_DOCUMENT_RO = 2834, // Read-only
@@ -577,7 +578,7 @@ enum ItemID_t : uint16_t {
 	ITEM_INBOX = 12902,
 	ITEM_MARKET = 12903,
 	ITEM_STORE_INBOX = 23396,
-	ITEM_SUPPLY_STASH = 28750,
+	ITEM_STASH = 28750,
 
 	ITEM_MALE_CORPSE = 4240,
 	ITEM_FEMALE_CORPSE = 4247,

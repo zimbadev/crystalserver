@@ -111,6 +111,7 @@ if Modules == nil then
 			else
 				npcHandler:say(parameters.text, npc, player)
 				player:setVocation(promotion)
+				player:addMinorCharmEchoes(100)
 				player:kv():set("promoted", true)
 			end
 		else
@@ -155,7 +156,7 @@ if Modules == nil then
 			error("StdModule.bless called without any npcHandler instance.")
 		end
 
-		if not npcHandler:checkInteraction(npc, player) or Game.getWorldType() == WORLDTYPE_HARDCORE then
+		if not npcHandler:checkInteraction(npc, player) or Game.getWorldType() == WORLD_TYPE_PVP_ENFORCED then
 			return false
 		end
 
@@ -243,12 +244,10 @@ if Modules == nil then
 				player:addAchievementProgress("Ship's Kobold", 1250)
 
 				-- What a foolish Quest - Mission 3
-				if IsRunningGlobalDatapack() then
-					if Storage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer ~= nil then
-						if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer) > os.time() then
-							if destination ~= Position(32660, 31957, 15) then -- kazordoon steamboat
-								player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer, 1)
-							end
+				if Storage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer ~= nil then
+					if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer) > os.time() then
+						if destination ~= Position(32660, 31957, 15) then -- kazordoon steamboat
+							player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.PieBoxTimer, 1)
 						end
 					end
 				end

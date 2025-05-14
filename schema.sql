@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
     CONSTRAINT `server_config_pk` PRIMARY KEY (`config`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '50'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
+INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '52'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -288,6 +288,18 @@ CREATE TABLE IF NOT EXISTS `boosted_creature` (
 
 INSERT INTO `boosted_creature` (`boostname`, `date`, `raceid`) VALUES ('default', 0, 0);
 
+-- Table structure `player_oldnames`
+CREATE TABLE IF NOT EXISTS `player_oldnames` (
+	`id` int(11) NOT NULL AUTO_INCREMENT,
+	`player_id` int(11) NOT NULL,
+	`former_name` varchar(255) NOT NULL DEFAULT '',
+	`name` varchar(255) NOT NULL,
+	`old_name` varchar(255) NOT NULL,
+	`date` int(11) NOT NULL,
+	PRIMARY KEY (`id`),
+	INDEX `player_id_index` (`player_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- Tabble Structure `daily_reward_history`
 CREATE TABLE IF NOT EXISTS `daily_reward_history` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -550,31 +562,18 @@ CREATE TABLE IF NOT EXISTS `players_online` (
 
 -- Table structure `player_charm`
 CREATE TABLE IF NOT EXISTS `player_charms` (
-    `player_guid` INT(250) NOT NULL,
-    `charm_points` VARCHAR(250) NULL,
-    `charm_expansion` BOOLEAN NULL,
-    `rune_wound` INT(250) NULL,
-    `rune_enflame` INT(250) NULL,
-    `rune_poison` INT(250) NULL,
-    `rune_freeze` INT(250) NULL,
-    `rune_zap` INT(250) NULL,
-    `rune_curse` INT(250) NULL,
-    `rune_cripple` INT(250) NULL,
-    `rune_parry` INT(250) NULL,
-    `rune_dodge` INT(250) NULL,
-    `rune_adrenaline` INT(250) NULL,
-    `rune_numb` INT(250) NULL,
-    `rune_cleanse` INT(250) NULL,
-    `rune_bless` INT(250) NULL,
-    `rune_scavenge` INT(250) NULL,
-    `rune_gut` INT(250) NULL,
-    `rune_low_blow` INT(250) NULL,
-    `rune_divine` INT(250) NULL,
-    `rune_vamp` INT(250) NULL,
-    `rune_void` INT(250) NULL,
-    `UsedRunesBit` VARCHAR(250) NULL,
-    `UnlockedRunesBit` VARCHAR(250) NULL,
-    `tracker list` BLOB NULL
+    `player_id` int(11) NOT NULL,
+    `charm_points` SMALLINT NOT NULL DEFAULT '0',
+    `minor_charm_echoes` SMALLINT NOT NULL DEFAULT '0',
+    `max_charm_points` SMALLINT NOT NULL DEFAULT '0',
+    `max_minor_charm_echoes` SMALLINT NOT NULL DEFAULT '0',
+    `charm_expansion` BOOLEAN NOT NULL DEFAULT FALSE,
+    `UsedRunesBit` INT NOT NULL DEFAULT '0',
+    `UnlockedRunesBit` INT NOT NULL DEFAULT '0',
+    `charms` BLOB NULL,
+    `tracker list` BLOB NULL,
+    CONSTRAINT `player_charms_players_fk`
+        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `player_statements`
