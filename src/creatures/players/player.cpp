@@ -1845,7 +1845,7 @@ bool Player::isImmuneCleanse(ConditionType_t conditiontype) const {
 
 void Player::setImmuneFear(uint32_t immuneTime /* = 10000 */) {
 	m_fearCondition.first = CONDITION_FEARED;
-	m_fearCondition.second = OTSYS_TIME() + 10000;
+	m_fearCondition.second = OTSYS_TIME() + immuneTime;
 }
 
 bool Player::isImmuneFear() const {
@@ -11455,7 +11455,7 @@ bool Player::isFirstOnStack() const {
 	}
 
 	if (hasCondition(CONDITION_SPELLCOOLDOWN)) {
-		g_logger().warn("[isFirstOnStack] cooldown error for player: {}", getName());
+		g_logger().debug("[isFirstOnStack] cooldown error for player: {}", getName());
 		return false;
 	}
 
