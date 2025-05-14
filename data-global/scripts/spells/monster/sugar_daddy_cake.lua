@@ -16,12 +16,12 @@ combat:addCondition(exhaustHealGroup)
 local spell = Spell("instant")
 
 function spell.onCastSpell(creature, var)
-    local target = creature:getTarget()
-    if not target or not target:isPlayer() then
-        return false
-    end
-    
-    return combat:execute(creature, var)
+	local target = creature:getTarget()
+	if not target or not target:isPlayer() then
+		return false
+	end
+
+	return combat:execute(creature, var)
 end
 
 spell:name("sugar daddy cake")
