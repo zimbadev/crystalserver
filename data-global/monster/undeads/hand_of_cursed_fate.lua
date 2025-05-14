@@ -86,7 +86,7 @@ monster.loot = {
 	{ name = "yellow gem", chance = 5940 },
 	{ id = 3051, chance = 3150 }, -- energy ring
 	{ name = "platinum amulet", chance = 1005 },
-	--{ name = "mind stone", chance = 9090 },
+	{ name = "mind stone", chance = 9090 },
 	{ name = "wand of inferno", chance = 5590 },
 	{ name = "boots of haste", chance = 540 },
 	{ name = "protection amulet", chance = 8740 },

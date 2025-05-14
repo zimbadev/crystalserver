@@ -93,7 +93,7 @@ monster.loot = {
 	{ name = "elven amulet", chance = 1800 },
 	{ name = "garlic necklace", chance = 2640 },
 	{ name = "platinum amulet", chance = 2600 },
-	--{ name = "mind stone", chance = 1800 },
+	{ name = "mind stone", chance = 1800 },
 	{ name = "glacial rod", chance = 520 },
 	{ name = "shockwave amulet", chance = 620 },
 	{ name = "strange symbol", chance = 720 },

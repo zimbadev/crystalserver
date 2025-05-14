@@ -100,7 +100,7 @@ monster.loot = {
 	{ name = "strange symbol", chance = 20000 },
 	{ name = "orb", chance = 6666 },
 	{ name = "life crystal", chance = 12500 },
-	--{ name = "mind stone", chance = 20000 },
+	{ name = "mind stone", chance = 20000 },
 	{ name = "boots of haste", chance = 12500 },
 	{ name = "protection amulet", chance = 20000 },
 	{ id = 3098, chance = 33333 }, -- ring of healing

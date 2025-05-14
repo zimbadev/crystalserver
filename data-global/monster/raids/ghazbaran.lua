@@ -96,7 +96,7 @@ monster.loot = {
 	{ id = 3049, chance = 12500 }, -- stealth ring
 	{ name = "strange symbol", chance = 11111 },
 	{ name = "life crystal", chance = 12500 },
-	--{ name = "mind stone", chance = 20000 },
+	{ name = "mind stone", chance = 20000 },
 	{ name = "gold ring", chance = 20000 },
 	{ id = 3098, chance = 20000 }, -- ring of healing
 	{ name = "twin axe", chance = 11111 },
