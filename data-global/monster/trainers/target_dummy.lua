@@ -1,7 +1,7 @@
-local mType = Game.createMonsterType("Training Machine")
+local mType = Game.createMonsterType("Target Dummy")
 local monster = {}
 
-monster.description = "a training machine"
+monster.description = "a target dummy"
 monster.experience = 0
 monster.outfit = {
 	lookType = 1142,
@@ -9,7 +9,7 @@ monster.outfit = {
 
 monster.health = 1000000
 monster.maxHealth = monster.health
-monster.race = "venom"
+monster.race = "undead"
 monster.corpse = 0
 monster.speed = 0
 
