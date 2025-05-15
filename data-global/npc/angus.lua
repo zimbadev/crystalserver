@@ -146,7 +146,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.TheSpectralStone, 52)
 			player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.QuestLine, 52)
 			npcHandler:setTopic(playerId, 0)
-		elseif player:getStorageValue(Storage.Quest.U7_6.ExplorerSociety.TheSpectralStone) == 52 and player:getStorageValue(Storage.Quest.U7_6.ExplorerSociety.QuestLine) == 52 and player:getStorageValue(Storage.Quest.U7_6.ExplorerSociety.SpectralStone) == 1 then
+		elseif player:getStorageValue(Storage.Quest.U7_6.ExplorerSociety.TheSpectralStone) == 52 and player:getStorageValue(Storage.Quest.U7_6.ExplorerSociety.QuestLine) == 52 and player:getStorageValue(Storage.Quest.U7_6.ExplorerSociety.SpectralStone) == 2 then
 			npcHandler:say("The reports from Northport have already arrived here and our progress is astonishing. We think it is possible to create an astral bridge between our bases. Are you interested to assist us with this?", npc, creature)
 			npcHandler:setTopic(playerId, 32)
 			-- Spectral stone
@@ -547,12 +547,15 @@ local function creatureSayCallback(npc, creature, type, message)
 			-- Spectral Dress
 			-- Spectral Stone
 		elseif npcHandler:getTopic(playerId) == 32 then
-			npcHandler:say("Good, just take this spectral essence and use it on the strange carving in this building as well as on the corresponding tile in our base at Northport ...", "As soon as you have charged the portal tiles that way, report about the spectral portals.", npc, creature)
-			npcHandler:setTopic(playerId, 0)
+			npcHandler:say({
+				"Good, just take this spectral essence and use it on the strange carving in this building as well as on the corresponding tile in our base at Northport ...",
+				"As soon as you have charged the portal tiles that way, report about the spectral portals.",
+			}, npc, creature)
 			player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.TheSpectralStone, 53)
 			player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.SpectralStoneDoor, 1)
 			player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.QuestLine, 53)
 			player:addItem(4840, 1) -- Spectral stone
+			npcHandler:setTopic(playerId, 0)
 			-- Spectral Stone
 			-- Skull Of Ratha / Giant Smithhammer
 		elseif npcHandler:getTopic(playerId) == 33 then
