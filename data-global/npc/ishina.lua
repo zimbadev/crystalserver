@@ -58,7 +58,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		return false
 	end
 
-	if player:getSex() == PLAYERSEX_FEMALE and MsgContains(message, "outfit") and player:getStorageValue(Storage.Quest.U7_6.ExplorerSociety.TheOrcPowder) >= 34 and player:getStorageValue(Storage.Quest.U7_6.ExplorerSociety.QuestLine) >= 44 then
+	if player:getSex() == PLAYERSEX_FEMALE and MsgContains(message, "outfit") and player:getStorageValue(Storage.Quest.U7_6.ExplorerSociety.TheOrcPowder) >= 35 then
 		if player:getStorageValue(Storage.Quest.U7_8.OrientalOutfits.FirstOrientalAddon) < 1 then
 			npcHandler:say("My jewelled belt? Of course I could make one for you, but I have a small request. Would you fulfil a task for me?", npc, creature)
 			npcHandler:setTopic(playerId, 1)

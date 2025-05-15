@@ -240,6 +240,7 @@ QuestDoorTable = {
 	{ closedDoor = 39351, openDoor = 39353 },
 	{ closedDoor = 39352, openDoor = 39354 },
 	{ closedDoor = 42744, openDoor = 42745 },
+	{ closedDoor = 5745, openDoor = 5746 },
 }
 
 -- Level doors.
