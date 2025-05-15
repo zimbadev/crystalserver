@@ -1021,6 +1021,8 @@
 		<attribute key="decayTo" value="608"/>
 	</item>
 	<item id="610" article="a" name="hole">
+		<attribute key="duration" value="10"/>
+		<attribute key="decayTo" value="6683"/>
 		<attribute key="floorchange" value="down"/>
 	</item>
 	<item id="611" article="a" name="snow heap">
