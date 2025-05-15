@@ -31,9 +31,9 @@ local config = {
 			end
 		end
 	end,
-	exit = Position(32182, 31250, 14),
+	exit = Position(32104, 31329, 12),
 }
 
 local lever = BossLever(config)
-lever:aid(14325)
+lever:position({ x = 32245, y = 31244, z = 14 })
 lever:register()
