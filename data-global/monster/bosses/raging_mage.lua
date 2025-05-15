@@ -87,7 +87,7 @@ monster.loot = {
 	{ id = 5911, chance = 31100 }, -- red piece of cloth
 	{ id = 239, chance = 26830, maxCount = 5 }, -- great health potion
 	{ id = 238, chance = 23170, maxCount = 5 }, -- great mana potion
-	{ id = 3062, chance = 9760 }, -- mind stone
+	--{ id = 3062, chance = 9760 }, -- mind stone
 	{ id = 7443, chance = 6710, maxCount = 2 }, -- bullseye potion
 	{ id = 8043, chance = 4880 }, -- focus cape
 	{ id = 3049, chance = 4880 }, -- stealth ring

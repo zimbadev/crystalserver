@@ -78,7 +78,7 @@ monster.voices = {
 
 monster.loot = {
 	{ name = "mantassin tail", chance = 14490 },
-	{ name = "mind stone", chance = 10370 },
+	--{ name = "mind stone", chance = 10370 },
 	{ name = "shrimp", chance = 3950, maxCount = 3 },
 	{ name = "small sapphire", chance = 3540, maxCount = 3 },
 	{ id = 3049, chance = 3290 }, -- stealth ring

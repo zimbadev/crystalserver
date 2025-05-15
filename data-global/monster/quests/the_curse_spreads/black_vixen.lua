@@ -100,6 +100,7 @@ monster.loot = {
 	{ id = 27706, chance = 250 }, -- werefox trophy
 	{ name = "foxtail", chance = 100 },
 	{ name = "wolf backpack", chance = 100 },
+	{ name = "foxtail amulet", chance = 100 },
 	{ name = "silver token", chance = 100 },
 }
 
