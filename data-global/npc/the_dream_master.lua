@@ -91,6 +91,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:addItem(768, 1)
 			player:setStorageValue(Storage.Quest.U7_9.NightmareOutfits.Outfits, 1)
 			player:addAchievement("Nightmare Knight")
+			player:setStorageValue(Storage.Quest.U7_9.NightmareOutfits.KnightwatchTowerDoor, 1)
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 3 then
 			if player:removeItem(6499, 500) then
@@ -119,7 +120,6 @@ local function creatureSayCallback(npc, creature, type, message)
 				player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
 				player:setStorageValue(Storage.Quest.U7_9.NightmareOutfits.Outfits, 4)
 				player:setStorageValue(Storage.Quest.U7_9.NightmareOutfits.Door, 1)
-				player:setStorageValue(Storage.Quest.U7_9.NightmareOutfits.KnightwatchTowerDoor, 1)
 				player:addAchievement("Lord Protector")
 				npcHandler:say("You advanced to {Lord Protector} rank! You are now able to use teleports of fourth floor of Knightwatch Tower and to create addon scrolls.", npc, creature)
 			else
