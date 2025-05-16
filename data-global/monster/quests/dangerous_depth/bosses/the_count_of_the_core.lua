@@ -89,13 +89,13 @@ monster.loot = {
 	{ name = "huge chunk of crude iron", chance = 40000, maxCount = 3 },
 	{ id = 282, chance = 40000 }, -- giant shimmering pearl
 	{ name = "great spirit potion", chance = 20000 },
-	{ name = "silver token", chance = 20000 },
+	{ name = "silver token", chance = 11820 },
 	{ name = "yellow gem", chance = 20000 },
 	{ name = "fire sword", chance = 20000 },
 	{ id = 3039, chance = 20000 }, -- red gem
 	{ name = "green gem", chance = 20000 },
 	{ name = "slightly rusted helmet", chance = 20000 },
-	{ name = "gold token", chance = 20000 },
+	{ name = "gold token", chance = 18180 },
 	{ name = "magic sulphur", chance = 40680 },
 	{ id = 27626, chance = 23730 }, -- chitinous mouth (count)
 	{ name = "blue gem", chance = 22030 },

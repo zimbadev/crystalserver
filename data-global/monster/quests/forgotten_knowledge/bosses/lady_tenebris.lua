@@ -101,8 +101,8 @@ monster.loot = {
 	{ id = 3324, chance = 1000 }, -- skull staff
 	{ id = 3037, chance = 1000 }, -- yellow gem
 	{ id = 16096, chance = 1000 }, -- wand of defiance
-	{ id = 22721, chance = 100000 }, -- gold token
-	{ id = 22516, chance = 100000 }, -- silver token
+	{ id = 22721, chance = 35710 }, -- gold token
+	{ id = 22516, chance = 28570 }, -- silver token
 	{ id = 3341, chance = 200 }, -- arcane staff
 	{ id = 24973, chance = 200 }, -- shadow mask
 	{ id = 24974, chance = 200 }, -- shadow paint

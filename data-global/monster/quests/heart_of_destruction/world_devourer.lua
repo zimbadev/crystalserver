@@ -87,7 +87,7 @@ monster.loot = {
 	{ id = 23510, chance = 10000 }, -- odd organ
 	{ id = 23520, chance = 10000 }, -- plasmatic lightning
 	{ id = 3038, chance = 10000 }, -- green gem
-	{ id = 22721, chance = 100000 }, -- gold token
+	{ id = 22721, chance = 99460, maxCount = 23 }, -- gold token
 	{ id = 7426, chance = 10000 }, -- amber staff
 	{ id = 828, chance = 8000 }, -- lightning headband
 	{ id = 23533, chance = 8000 }, -- ring of red plasma

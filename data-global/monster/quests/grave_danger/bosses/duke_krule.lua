@@ -86,7 +86,7 @@ monster.loot = {
 	{ name = "berserk potion", minCount = 0, maxCount = 10, chance = 12000 },
 	{ name = "piece of draconian steel", minCount = 0, maxCount = 3, chance = 9000 },
 	{ name = "green gem", minCount = 0, maxCount = 2, chance = 12000 },
-	{ name = "silver token", minCount = 0, maxCount = 2, chance = 9500 },
+	{ name = "silver token", maxCount = 3, chance = 100000 },
 	{ name = "blue gem", chance = 11000 },
 	{ name = "crusader helmet", chance = 6400 },
 	{ name = "gold ingot", minCount = 0, maxCount = 1, chance = 10000 },

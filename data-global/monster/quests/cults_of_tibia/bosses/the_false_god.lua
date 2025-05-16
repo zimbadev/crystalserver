@@ -76,8 +76,8 @@ monster.loot = {
 	{ id = 282, chance = 26900 }, -- giant shimmering pearl (brown)
 	{ name = "magic sulphur", chance = 18920 },
 	{ name = "mino shield", chance = 17620 },
-	{ name = "silver token", chance = 1732 },
-	{ name = "gold token", chance = 1532 },
+	{ name = "silver token", chance = 50000 },
+	{ name = "gold token", chance = 14290 },
 	{ name = "gold coin", chance = 100000, maxCount = 200 },
 	{ name = "platinum coin", chance = 29840, maxCount = 30 },
 	{ name = "piece of hell steel", chance = 12370, maxCount = 9 },

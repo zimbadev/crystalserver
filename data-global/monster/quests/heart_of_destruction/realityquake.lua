@@ -79,7 +79,7 @@ monster.loot = {
 	{ id = 23507, chance = 8000 }, -- crystallized anger
 	{ id = 23508, chance = 8000 }, -- energy vein
 	{ id = 3039, chance = 8000 }, -- red gem
-	{ id = 22721, chance = 100000 }, -- gold token
+	{ id = 22721, chance = 100000, maxCount = 7 }, -- gold token
 	{ id = 23509, chance = 100000 }, -- mysterious remains
 	{ id = 23510, chance = 100000 }, -- odd organ
 	{ id = 281, chance = 4000 }, -- giant shimmering pearl (green)

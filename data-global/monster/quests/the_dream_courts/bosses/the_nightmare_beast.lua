@@ -97,7 +97,7 @@ monster.loot = {
 	{ name = "giant sapphire", chance = 2830 },
 	{ id = 282, chance = 9680 }, -- giant shimmering pearl
 	{ name = "gold ingot", chance = 16129 },
-	{ name = "gold token", chance = 64150 },
+	{ name = "gold token", chance = 81250, maxCount = 3 },
 	{ name = "green gem", chance = 19350 },
 	{ name = "huge chunk of crude iron", chance = 38710 },
 	{ name = "ice shield", chance = 9680 },
@@ -110,7 +110,7 @@ monster.loot = {
 	{ name = "purple tendril lantern", chance = 6600 },
 	{ name = "ring of the sky", chance = 4720 },
 	{ name = "royal star", chance = 48390, maxCount = 193 },
-	{ name = "silver token", chance = 98110, maxCount = 4 },
+	{ name = "silver token", chance = 91670, maxCount = 4 },
 	{ name = "skull staff", chance = 12900 },
 	{ name = "soul stone", chance = 4720 },
 	{ name = "supreme health potion", chance = 58060, maxCount = 29 },

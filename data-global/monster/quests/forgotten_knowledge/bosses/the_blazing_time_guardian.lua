@@ -29,6 +29,11 @@ monster.changeTarget = {
 	chance = 5,
 }
 
+monster.bosstiary = {
+	bossRaceId = 1290,
+	bossRace = RARITY_ARCHFOE,
+}
+
 monster.strategiesTarget = {
 	nearest = 70,
 	health = 10,
@@ -86,7 +91,8 @@ monster.loot = {
 	{ id = 7440, chance = 2000 }, -- mastermind potion
 	{ id = 3098, chance = 2000 }, -- ring of healing
 	{ id = 3324, chance = 1000 }, -- skull staff
-	{ id = 22721, chance = 100000 }, -- gold token
+	{ id = 22721, chance = 14290 }, -- gold token
+	{ id = 22516, chance = 23810 }, -- silver token
 }
 
 monster.attacks = {

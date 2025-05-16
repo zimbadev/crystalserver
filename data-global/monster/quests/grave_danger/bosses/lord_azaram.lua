@@ -86,7 +86,7 @@ monster.loot = {
 	{ name = "piece of hell steel", minCount = 0, maxCount = 4, chance = 9000 },
 	{ id = 3039, minCount = 0, maxCount = 2, chance = 12000 }, -- red gem
 	{ name = "blue gem", minCount = 0, maxCount = 2, chance = 12000 },
-	{ name = "silver token", minCount = 0, maxCount = 2, chance = 9500 },
+	{ name = "silver token", maxCount = 2, chance = 100000 },
 	{ name = "ancient liche bone", chance = 5200 },
 	{ id = 23542, chance = 5200 }, -- collar of blue plasma
 	{ id = 23544, chance = 5200 }, -- collar of red plasma

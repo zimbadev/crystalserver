@@ -85,7 +85,7 @@ monster.loot = {
 	{ id = 23535, chance = 8000, maxCount = 5 }, -- energy bar
 	{ id = 23506, chance = 8000 }, -- plasma pearls
 	{ id = 23510, chance = 100000 }, -- odd organ
-	{ id = 22721, chance = 100000 }, -- gold token
+	{ id = 22721, chance = 100000, maxCount = 4 }, -- gold token
 	{ id = 23509, chance = 100000 }, -- mysterious remains
 	{ id = 3038, chance = 6000 }, -- green gem
 	{ id = 7427, chance = 6000 }, -- chaos mace

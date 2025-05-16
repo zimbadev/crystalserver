@@ -86,13 +86,13 @@ monster.loot = {
 	{ name = "great mana potion", chance = 46150, maxCount = 10 },
 	{ name = "luminous orb", chance = 41030 },
 	{ id = 23542, chance = 38460 }, -- collar of blue plasma
-	{ name = "gold token", chance = 30770 },
+	{ name = "gold token", chance = 3103 },
 	{ id = 282, chance = 30770 }, -- giant shimmering pearl
 	{ name = "rusted armor", chance = 28210 },
 	{ id = 3039, chance = 28210 }, -- red gem
 	{ name = "small emerald", chance = 25640, maxCount = 10 },
 	{ name = "small amethyst", chance = 25640, maxCount = 12 },
-	{ name = "silver token", chance = 25640 },
+	{ name = "silver token", chance = 22410, maxCount = 2 },
 	{ name = "small topaz", chance = 20510, maxCount = 10 },
 	{ name = "small ruby", chance = 17950, maxCount = 18 },
 	{ name = "spellbook of warding", chance = 15380 },

@@ -91,7 +91,7 @@ monster.loot = {
 	{ name = "demon horn", chance = 30000 },
 	{ name = "dreaded cleaver", chance = 30000 },
 	{ id = 281, chance = 30000 }, -- giant shimmering pearl (green)
-	{ name = "gold token", chance = 1000, maxCount = 6 },
+	{ name = "gold token", chance = 40000 },
 	{ name = "green gem", chance = 1000 },
 	{ name = "knowledgeable book", chance = 1000 },
 	{ name = "ominous book", chance = 1000 },
@@ -99,7 +99,7 @@ monster.loot = {
 	{ name = "muck rod", chance = 1000 },
 	{ id = 3039, chance = 1000 }, -- red gem
 	{ name = "slightly rusted shield", chance = 11760 },
-	{ name = "silver Token", chance = 1000, maxCount = 6 },
+	{ name = "silver token", chance = 80000 },
 	{ name = "sinister book", chance = 1000 },
 	{ name = "spellbook of warding", chance = 1000 },
 	{ name = "steel boots", chance = 1000 },

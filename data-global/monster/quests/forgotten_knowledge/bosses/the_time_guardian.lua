@@ -107,8 +107,8 @@ monster.loot = {
 	{ id = 5809, chance = 100, unique = true }, -- soul stone
 	{ id = 3439, chance = 100 }, -- phoenix shield
 	{ id = 7417, chance = 100 }, -- runed sword
-	{ id = 22721, chance = 100000 }, -- gold token
-	{ id = 22516, chance = 100000 }, -- silver token
+	{ id = 22721, chance = 37500 }, -- gold token
+	{ id = 22516, chance = 12500 }, -- silver token
 }
 
 monster.attacks = {

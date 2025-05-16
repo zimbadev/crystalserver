@@ -88,7 +88,7 @@ monster.loot = {
 	{ name = "berserk potion", minCount = 0, maxCount = 10, chance = 12000 },
 	{ name = "piece of draconian steel", minCount = 0, maxCount = 3, chance = 9000 },
 	{ id = 3039, minCount = 0, maxCount = 2, chance = 12000 }, -- red gem
-	{ name = "silver token", minCount = 0, maxCount = 2, chance = 9500 },
+	{ name = "silver token", maxCount = 2, chance = 100000 },
 	{ id = 23542, chance = 5200 }, -- collar of blue plasma
 	{ id = 23544, chance = 5200 }, -- collar of red plasma
 	{ id = 23529, chance = 5000 }, -- ring of blue plasma
