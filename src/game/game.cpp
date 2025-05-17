@@ -2644,6 +2644,68 @@ std::shared_ptr<Item> Game::findItemOfType(const std::shared_ptr<Cylinder> &cyli
 	return nullptr;
 }
 
+bool Game::validRemoveMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money, uint32_t flags /*= 0*/, bool useBalance /*= false*/) {
+	if (cylinder == nullptr) {
+		g_logger().error("[{}] cylinder is nullptr", __FUNCTION__);
+		return false;
+	}
+	if (money == 0) {
+		return true;
+	}
+
+	std::vector<std::shared_ptr<Container>> containers;
+	std::multimap<uint32_t, std::shared_ptr<Item>> moneyMap;
+	uint64_t moneyCount = 0;
+	for (size_t i = cylinder->getFirstIndex(), j = cylinder->getLastIndex(); i < j; ++i) {
+		const std::shared_ptr<Thing> &thing = cylinder->getThing(i);
+		if (!thing) {
+			continue;
+		}
+		const auto &item = thing->getItem();
+		if (!item) {
+			continue;
+		}
+		const std::shared_ptr<Container> &container = item->getContainer();
+		if (container) {
+			containers.push_back(container);
+		} else {
+			const uint32_t worth = item->getWorth();
+			if (worth != 0) {
+				moneyCount += worth;
+				moneyMap.emplace(worth, item);
+			}
+		}
+	}
+	size_t i = 0;
+	while (i < containers.size()) {
+		const std::shared_ptr<Container> &container = containers[i++];
+		for (const std::shared_ptr<Item> &item : container->getItemList()) {
+			const std::shared_ptr<Container> &tmpContainer = item->getContainer();
+			if (tmpContainer) {
+				containers.push_back(tmpContainer);
+			} else {
+				const uint32_t worth = item->getWorth();
+				if (worth != 0) {
+					moneyCount += worth;
+					moneyMap.emplace(worth, item);
+				}
+			}
+		}
+	}
+
+	const auto &player = useBalance ? std::dynamic_pointer_cast<Player>(cylinder) : nullptr;
+	uint64_t balance = 0;
+	if (useBalance && player) {
+		balance = player->getBankBalance();
+	}
+
+	if (moneyCount + balance < money) {
+		return false;
+	}
+
+	return true;
+}
+
 bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money, uint32_t flags /*= 0*/, bool useBalance /*= false*/) {
 	if (cylinder == nullptr) {
 		g_logger().error("[{}] cylinder is nullptr", __FUNCTION__);

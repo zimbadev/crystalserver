@@ -644,6 +644,15 @@ int NpcFunctions::luaNpcSellItem(lua_State* L) {
 		}
 	}
 
+	const auto totalCost = amount * pricePerUnit;
+
+	if (!g_game().validRemoveMoney(player, totalCost, 0, true)) {
+		Lua::pushBoolean(L, false);
+		player->sendCancelMessage(RETURNVALUE_NOTENOUGHROOM);
+		g_logger().error("[NpcFunctions::luaNpcSellItem (validRemoveMoney)] - Player {} possibly tried to abuse a bug buying large amounts of {} on shop for npc {}", player->getName(), itemId, npc->getName());
+		return 1;
+	}
+
 	const auto &[_, itemsPurchased, backpacksPurchased] = g_game().createItem(player, itemId, amount, subType, actionId, ignoreCap, inBackpacks ? ITEM_SHOPPING_BAG : 0);
 
 	std::stringstream ss;
