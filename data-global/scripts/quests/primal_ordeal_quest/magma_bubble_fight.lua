@@ -91,7 +91,7 @@ for i = 0, 4 do
 	})
 
 	if i < 4 then
-		stage:autoAdvance("45s")
+		stage:autoAdvance("120s")
 	end
 end
 
@@ -120,37 +120,41 @@ local function tickShields(player)
 	return newCount
 end
 
-local overheatedDamage = GlobalEvent("self.magma-bubble.overheated.onThink")
-function overheatedDamage.onThink(interval, lastExecution)
-	local players = overheatedZone:getPlayers()
-	for _, player in ipairs(players) do
-		if player:getHealth() <= 0 then
-			goto continue
-		end
-		local shields = tickShields(player)
-		if shields > 0 then
-			local effect = CONST_ME_BLACKSMOKE
-			if shields > 20 then
-				effect = CONST_ME_GREENSMOKE
-			elseif shields > 10 then
-				effect = CONST_ME_YELLOWSMOKE
-			elseif shields > 5 then
-				effect = CONST_ME_REDSMOKE
-			elseif shields > 1 then
-				effect = CONST_ME_PURPLESMOKE
-			end
-			player:getPosition():sendMagicEffect(effect)
-		else
-			local damage = player:getMaxHealth() * 0.6 * -1
-			doTargetCombatHealth(0, player, COMBAT_AGONYDAMAGE, damage, damage, CONST_ME_NONE)
-		end
-		::continue::
+local fireDamageStepIn = MoveEvent()
+function fireDamageStepIn.onStepIn(creature, item, position, fromPosition)
+	local player = creature:getPlayer()
+	if not player then
+		return false
 	end
+		
+	if not overheatedZone:isInZone(player:getPosition()) then
+		return false
+	end
+		
+	local shields = tickShields(player)
+	if shields > 0 then
+		local effect = CONST_ME_BLACKSMOKE
+		if shields > 20 then
+			effect = CONST_ME_GREENSMOKE
+		elseif shields > 10 then
+			effect = CONST_ME_YELLOWSMOKE
+		elseif shields > 5 then
+			effect = CONST_ME_REDSMOKE
+		elseif shields > 1 then
+			effect = CONST_ME_PURPLESMOKE
+		end
+		player:getPosition():sendMagicEffect(effect)
+	else
+		local damage = player:getMaxHealth() * 0.6 * -1
+		doTargetCombatHealth(0, player, COMBAT_AGONYDAMAGE, damage, damage, CONST_ME_NONE)
+	end
+		
 	return true
 end
 
-overheatedDamage:interval(1000)
-overheatedDamage:register()
+fireDamageStepIn:type("stepin")
+fireDamageStepIn:id(39170, 39171, 39172)
+fireDamageStepIn:register()
 
 local crystalsCycle = GlobalEvent("self.magma-bubble.crystals.onThink")
 function crystalsCycle.onThink(interval, lastExecution)
@@ -270,8 +274,8 @@ theEndOfDaysHealth:register()
 
 local magmaCrystalDeath = CreatureEvent("fight.magma-bubble.MagmaCrystalDeath")
 function magmaCrystalDeath.onDeath()
-	local crystals = encounter:countMonsters("magma crystal")
-	if crystals == 0 then
+	local crystals = encounter:countMonsters("magma crystal") - 1
+	if crystals <= 0 then
 		encounter:nextStage()
 	else
 		encounter:broadcast(MESSAGE_EVENT_ADVANCE, "A magma crystal has been destroyed! " .. crystals .. " remaining.")
