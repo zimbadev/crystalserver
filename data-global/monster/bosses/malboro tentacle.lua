@@ -1,10 +1,10 @@
-local mType = Game.createMonsterType("Unchained Fire")
+local mType = Game.createMonsterType("Malboro Tentacle")
 local monster = {}
 
-monster.description = "an unchained fire"
+monster.description = "Malboro Tentacle"
 monster.experience = 0
 monster.outfit = {
-	lookType = 242,
+	lookType = 353,
 	lookHead = 0,
 	lookBody = 0,
 	lookLegs = 0,
@@ -13,21 +13,23 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.health = 12000
-monster.maxHealth = 12000
-monster.race = "fire"
+monster.health = 50000
+monster.maxHealth = 50000
+monster.race = "blood"
 monster.corpse = 0
-monster.speed = 238
+monster.speed = 100
 monster.manaCost = 0
 
 monster.changeTarget = {
-	interval = 4000,
-	chance = 10,
+	interval = 5000,
+	chance = 8,
 }
 
 monster.strategiesTarget = {
-	nearest = 80,
-	random = 20,
+	nearest = 70,
+	health = 10,
+	damage = 10,
+	random = 10,
 }
 
 monster.flags = {
@@ -51,8 +53,8 @@ monster.flags = {
 }
 
 monster.light = {
-	level = 5,
-	color = 206,
+	level = 0,
+	color = 0,
 }
 
 monster.voices = {
@@ -60,29 +62,29 @@ monster.voices = {
 	chance = 10,
 }
 
+monster.loot = {}
+
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = -750, maxDamage = -1700 },
-	{ name = "unchained fire beam", interval = 3100, chance = 38, minDamage = -1000, maxDamage = -1750 },
-	{ name = "unchained fire explosion", interval = 5100, chance = 35, minDamage = -900, maxDamage = -1400 },
+	{ name = "melee", interval = 2000, chance = 100, skill = 150, attack = 120 },
 }
 
 monster.defenses = {
-	defense = 30,
-	armor = 30,
-	mitigation = 1.60,
+	defense = 60,
+	armor = 40,
+	--	mitigation = ???,
 }
 
 monster.elements = {
 	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = 0 },
-	{ type = COMBAT_EARTHDAMAGE, percent = 0 },
-	{ type = COMBAT_FIREDAMAGE, percent = 0 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = 50 },
+	{ type = COMBAT_EARTHDAMAGE, percent = 50 },
+	{ type = COMBAT_FIREDAMAGE, percent = 50 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 0 },
+	{ type = COMBAT_ICEDAMAGE, percent = 50 },
 	{ type = COMBAT_HOLYDAMAGE, percent = 0 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 0 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 50 },
 }
 
 monster.immunities = {
