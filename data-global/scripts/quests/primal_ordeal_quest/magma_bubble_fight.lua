@@ -126,11 +126,11 @@ function fireDamageStepIn.onStepIn(creature, item, position, fromPosition)
 	if not player then
 		return false
 	end
-		
+
 	if not overheatedZone:isInZone(player:getPosition()) then
 		return false
 	end
-		
+
 	local shields = tickShields(player)
 	if shields > 0 then
 		local effect = CONST_ME_BLACKSMOKE
@@ -148,7 +148,7 @@ function fireDamageStepIn.onStepIn(creature, item, position, fromPosition)
 		local damage = player:getMaxHealth() * 0.6 * -1
 		doTargetCombatHealth(0, player, COMBAT_AGONYDAMAGE, damage, damage, CONST_ME_NONE)
 	end
-		
+
 	return true
 end
 
