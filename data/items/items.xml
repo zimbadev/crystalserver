@@ -1020,7 +1020,7 @@
 		<attribute key="decayTo" value="608" />
 	</item>
 	<item id="610" article="a" name="hole">
-		<attribute key="floorchange" value="down" />
+		<attribute key="floorchange" value="down"/>
 	</item>
 	<item id="611" article="a" name="snow heap">
 		<attribute key="primarytype" value="natural products" />
