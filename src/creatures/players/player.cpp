@@ -8821,6 +8821,11 @@ bool Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 }
 
 void sendStowItems(const std::shared_ptr<Item> &item, const std::shared_ptr<Item> &stowItem, StashContainerList &itemDict) {
+	const ItemType &it = Item::items[item->getID()];
+	if (it.isContainer()) {
+		return;
+	}
+
 	if (stowItem->getID() == item->getID()) {
 		itemDict.emplace_back(stowItem, stowItem->getItemCount());
 	}

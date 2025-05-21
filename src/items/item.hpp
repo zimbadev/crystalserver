@@ -465,7 +465,7 @@ public:
 		return items[id].stackable;
 	}
 	bool isStowable() const {
-		return hasMarketAttributes() && !getTier() && items[id].wareId > 0;
+		return hasMarketAttributes() && !getTier() && items[id].wareId > 0 && items[id].wareId == id;
 	}
 	bool isAlwaysOnTop() const {
 		return items[id].alwaysOnTopOrder != 0;
