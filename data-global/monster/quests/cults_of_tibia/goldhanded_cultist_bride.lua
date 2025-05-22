@@ -1,10 +1,10 @@
-local mType = Game.createMonsterType("Goldhanded Cultist")
+local mType = Game.createMonsterType("Goldhanded Cultist Bride")
 local monster = {}
 
-monster.description = "a goldhanded cultist"
+monster.description = "a goldhanded cultist bride"
 monster.experience = 2000
 monster.outfit = {
-	lookType = 132,
+	lookType = 140,
 	lookHead = 114,
 	lookBody = 79,
 	lookLegs = 62,
@@ -13,7 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.raceId = 1481
+monster.raceId = 1482
 monster.Bestiary = {
 	class = "Human",
 	race = BESTY_RACE_HUMAN,
@@ -29,7 +29,7 @@ monster.Bestiary = {
 monster.health = 3000
 monster.maxHealth = 3000
 monster.race = "blood"
-monster.corpse = 4240
+monster.corpse = 4247
 monster.speed = 150
 monster.manaCost = 0
 
@@ -74,8 +74,8 @@ monster.light = {
 monster.voices = {
 	interval = 5000,
 	chance = 10,
-	{ text = "Give me your money!", yell = false },
 	{ text = "Your backpack looks very compelling!", yell = false },
+	{ text = "Money, money, money!", yell = false },
 	{ text = "You can't ever be rich enough!", yell = false },
 }
 
@@ -85,7 +85,6 @@ monster.loot = {
 	{ name = "tiger eye", chance = 17240 },
 	{ name = "opal", chance = 9820 },
 	{ name = "yellow gem", chance = 4950 },
-	{ name = "green gem", chance = 4770 },
 	{ id = 2863, chance = 3430 }, -- golden bag
 	{ name = "golden backpack", chance = 3190 },
 	{ name = "gold ingot", chance = 1360 },
@@ -94,14 +93,15 @@ monster.loot = {
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -350 },
-	{ name = "combat", interval = 3000, chance = 10, type = COMBAT_MANADRAIN, minDamage = -100, maxDamage = -240, effect = CONST_ME_LOSEENERGY, target = true },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -380 },
+	{ name = "combat", interval = 1000, chance = 15, type = COMBAT_LIFEDRAIN, minDamage = 0, maxDamage = -250, range = 5, radius = 2, effect = CONST_ME_DRAWBLOOD, target = true },
 }
 
 monster.defenses = {
 	defense = 20,
 	armor = 30,
 	mitigation = 0.78,
+	{ name = "speed", interval = 2000, chance = 30, speedChange = 290, effect = CONST_ME_MAGIC_RED, target = false, duration = 6000 },
 }
 
 monster.elements = {
