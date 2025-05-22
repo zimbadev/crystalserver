@@ -81,7 +81,7 @@ monster.loot = {
 	{ name = "quara bone", chance = 10000, maxCount = 1 },
 	{ name = "royal spear", chance = 8000, maxCount = 7 },
 	{ name = "great health potion", chance = 6680, maxCount = 2 },
-	{ name = "mind stone", chance = 6440 },
+	--{ name = "mind stone", chance = 6440 },
 	{ name = "assassin star", chance = 5233, maxCount = 10 },
 	{ name = "shrimp", chance = 4510, maxCount = 5 },
 	{ name = "small diamond", chance = 3140, maxCount = 3 },
