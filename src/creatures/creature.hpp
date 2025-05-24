@@ -91,10 +91,10 @@ public:
 	Creature(const Creature &) = delete;
 	Creature &operator=(const Creature &) = delete;
 
-	std::shared_ptr<Creature> getCreature() override final {
+	std::shared_ptr<Creature> getCreature() final {
 		return static_self_cast<Creature>();
 	}
-	std::shared_ptr<const Creature> getCreature() const override final {
+	std::shared_ptr<const Creature> getCreature() const final {
 		return static_self_cast<Creature>();
 	}
 	std::shared_ptr<Player> getPlayer() override {
@@ -184,13 +184,13 @@ public:
 		directionLocked = locked;
 	}
 
-	int32_t getThrowRange() const override final {
+	int32_t getThrowRange() const final {
 		return 1;
 	}
 	bool isPushable() override {
 		return getWalkDelay() <= 0;
 	}
-	bool isRemoved() override final {
+	bool isRemoved() final {
 		return isInternalRemoved;
 	}
 	virtual bool canSeeInvisibility() const {
@@ -406,13 +406,13 @@ public:
 	virtual float getMitigation() const {
 		return 0;
 	}
-	virtual int32_t getDefense() const {
+	virtual int32_t getDefense(bool = false) const {
 		return 0;
 	}
 	virtual float getAttackFactor() const {
 		return 1.0f;
 	}
-	virtual float getDefenseFactor() const {
+	virtual float getDefenseFactor(bool = false) const {
 		return 1.0f;
 	}
 
@@ -428,6 +428,7 @@ public:
 	void removeCombatCondition(ConditionType_t type);
 	std::shared_ptr<Condition> getCondition(ConditionType_t type) const;
 	std::shared_ptr<Condition> getCondition(ConditionType_t type, ConditionId_t conditionId, uint32_t subId = 0) const;
+	std::vector<std::shared_ptr<Condition>> getCleansableConditions() const;
 	std::vector<std::shared_ptr<Condition>> getConditionsByType(ConditionType_t type) const;
 	void executeConditions(uint32_t interval);
 	bool hasCondition(ConditionType_t type, uint32_t subId = 0) const;
@@ -569,11 +570,15 @@ public:
 
 	void setParent(std::weak_ptr<Cylinder> cylinder) final;
 
-	const Position &getPosition() override final {
+	const Position &getPosition() final {
 		return position;
 	}
 
-	std::shared_ptr<Tile> getTile() override final {
+	std::shared_ptr<Tile> getTile() final {
+		return m_tile.lock();
+	}
+
+	std::shared_ptr<Tile> getTile() const final {
 		return m_tile.lock();
 	}
 
@@ -705,6 +710,9 @@ public:
 	void setCharmChanceModifier(int8_t value) {
 		charmChanceModifier = value;
 	}
+
+	void setCombatDamage(const CombatDamage &damage);
+	CombatDamage getCombatDamage() const;
 
 protected:
 	enum FlagAsyncClass_t : uint8_t {
@@ -884,4 +892,5 @@ private:
 	}
 
 	uint8_t m_flagAsyncTask = 0;
+	CombatDamage m_combatDamage;
 };

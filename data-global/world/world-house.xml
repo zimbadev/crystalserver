@@ -153,7 +153,7 @@
 	<house name="Nautic Observer" houseid="2816" entryx="32483" entryy="31825" entryz="7" rent="200000" townid="6" size="220" clientid="20011" beds="4" />
 	<house name="Nordic Stronghold" houseid="2817" entryx="32297" entryy="31675" entryz="7" rent="250000" guildhall="true" townid="6" size="536" clientid="20003" beds="21" />
 	<house name="Senja Clanhall" houseid="2818" entryx="32168" entryy="31664" entryz="7" rent="250000" guildhall="true" townid="6" size="228" clientid="24014" beds="10" />
-	<house name="Seawatch" houseid="2819" entryx="32520" entryy="31600" entryz="7" rent="250000" guildhall="true" townid="6" size="431" clientid="22005" beds="19" />
+	<house name="Seawatch" houseid="2819" entryx="32520" entryy="31600" entryz="7" rent="250000" guildhall="true" townid="6" size="434" clientid="22005" beds="19" />
 	<house name="Dwarven Magnate's Estate" houseid="2820" entryx="32643" entryy="31927" entryz="2" rent="300000" townid="7" size="269" clientid="30107" beds="8" />
 	<house name="Forge Master's Quarters" houseid="2821" entryx="32649" entryy="31889" entryz="8" rent="300000" townid="7" size="79" clientid="30405" beds="10" />
 	<house name="Upper Barracks 13" houseid="2822" entryx="32615" entryy="31923" entryz="5" rent="25000" townid="7" size="16" clientid="30313" beds="2" />
