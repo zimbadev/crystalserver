@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Crystal Server KV Library is designed to offer a simple, efficient, persistent, and thread-safe key-value store. It's an abstraction layer that can support various backends (currently, only MySQL is supported). The library provides features such as scoped access to stored values, LRU caching, and type safety. Additionally, it includes a Lua API for easy integration into Lua-based applications.
+The Canary KV Library is designed to offer a simple, efficient, persistent, and thread-safe key-value store. It's an abstraction layer that can support various backends (currently, only MySQL is supported). The library provides features such as scoped access to stored values, LRU caching, and type safety. Additionally, it includes a Lua API for easy integration into Lua-based applications.
 
 ## Features
 

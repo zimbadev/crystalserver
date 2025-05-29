@@ -5,14 +5,14 @@ include(BaseConfig)
 include(GNUInstallDirs)
 
 # Import configurations, source definitions, and linker settings
-include(CrystalLib)
+include(CanaryLib)
 
 # Define main executable target, set it up and link to main library
 add_executable(${PROJECT_NAME} main.cpp)
 
 if(MSVC)
     # Add executable icon for Windows
-    target_sources(${PROJECT_NAME} PRIVATE ../cmake/crystalserver.rc)
+    target_sources(${PROJECT_NAME} PRIVATE ../cmake/canary.rc)
 endif()
 
 setup_target(${PROJECT_NAME})

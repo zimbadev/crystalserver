@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "utils/tools.hpp"
 
@@ -28,7 +20,8 @@
 #include "absl/debugging/stacktrace.h"
 #include "absl/debugging/symbolize.h"
 
-#include <boost/locale.hpp>
+#include <unordered_set>
+#include <string_view>
 
 void printXMLError(const std::string &where, const std::string &fileName, const pugi::xml_parse_result &result) {
 	g_logger().error("[{}] Failed to load {}: {}", where, fileName, result.description());
@@ -896,7 +889,7 @@ const ImbuementTypeNames imbuementTypeNames = {
 	{ "skillboost distance", IMBUEMENT_SKILLBOOST_DISTANCE },
 	{ "skillboost magic level", IMBUEMENT_SKILLBOOST_MAGIC_LEVEL },
 	{ "increase capacity", IMBUEMENT_INCREASE_CAPACITY },
-	{ "paralysis removal", IMBUEMENT_PARALYSIS_REMOVAL },
+	{ "skillboost fist", IMBUEMENT_SKILLBOOST_FIST }
 };
 
 /**
@@ -1004,13 +997,13 @@ std::string getSkillName(uint8_t skillid) {
 			return "life leech chance";
 
 		case SKILL_LIFE_LEECH_AMOUNT:
-			return "life leech amount";
+			return "life leech";
 
 		case SKILL_MANA_LEECH_CHANCE:
 			return "mana leech chance";
 
 		case SKILL_MANA_LEECH_AMOUNT:
-			return "mana leech amount";
+			return "mana leech";
 
 		case SKILL_MAGLEVEL:
 			return "magic level";
@@ -1099,6 +1092,8 @@ std::string getWeaponName(WeaponType_t weaponType) {
 			return "ammunition";
 		case WEAPON_MISSILE:
 			return "missile";
+		case WEAPON_FIST:
+			return "fist";
 		default:
 			return {};
 	}
@@ -1114,7 +1109,8 @@ WeaponType_t getWeaponType(const std::string &name) {
 		{ "distance", WeaponType_t::WEAPON_DISTANCE },
 		{ "wand", WeaponType_t::WEAPON_WAND },
 		{ "ammo", WeaponType_t::WEAPON_AMMO },
-		{ "missile", WeaponType_t::WEAPON_MISSILE }
+		{ "missile", WeaponType_t::WEAPON_MISSILE },
+		{ "fist", WeaponType_t::WEAPON_FIST }
 	};
 
 	const auto it = type_mapping.find(name);
@@ -1557,6 +1553,9 @@ const char* getReturnMessage(ReturnValue value) {
 
 		case RETURNVALUE_ITEMUNTRADEABLE:
 			return "This item is untradeable.";
+
+		case RETURNVALUE_NOTENOUGHHARMONY:
+			return "You do not have enough harmony.";
 
 		// Any unhandled ReturnValue will go enter here
 		default:
@@ -2007,7 +2006,7 @@ Cipbia_Elementals_t getCipbiaElement(CombatType_t combatType) {
 		case COMBAT_NEUTRALDAMAGE:
 			return CIPBIA_ELEMENTAL_AGONY;
 		default:
-			return CIPBIA_ELEMENTAL_PHYSICAL;
+			return CIPBIA_ELEMENTAL_UNDEFINED;
 	}
 }
 
@@ -2146,6 +2145,11 @@ uint8_t calculateMaxPvpReduction(uint8_t blessCount, bool isPromoted /* = false*
 	return result;
 }
 
-std::string convertToUTF8(const std::string &input) {
-	return boost::locale::conv::to_utf<char>(input, "ISO-8859-1");
-}
+const std::unordered_set<std::string_view> harmonySpells = {
+	"Devastating Knockout",
+	"Greater Tiger Clash",
+	"Mass Spirit Mend",
+	"Spiritual Outburst",
+	"Sweeping Takedown",
+	"Tiger Clash"
+};

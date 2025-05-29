@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "map/house/house.hpp"
 
@@ -438,25 +430,6 @@ bool House::getAccessList(uint32_t listId, std::string &list) const {
 	return door->getAccessList(list);
 }
 
-bool House::isInAccessList(const std::shared_ptr<Player> &player, uint32_t listId) {
-	if (listId == GUEST_LIST) {
-		return guestList.isInList(player);
-	} else if (listId == SUBOWNER_LIST) {
-		return subOwnerList.isInList(player);
-	}
-
-	const auto &door = getDoorByNumber(listId);
-	if (!door) {
-		return false;
-	}
-
-	return door->accessList->isInList(player);
-}
-
-bool House::isInvited(const std::shared_ptr<Player> &player) const {
-	return getHouseAccessLevel(player) != HOUSE_NOT_INVITED;
-}
-
 void House::addDoor(const std::shared_ptr<Door> &door) {
 	doorList.push_back(door);
 	door->setHouse(static_self_cast<House>());
@@ -728,8 +701,7 @@ bool AccessList::isInList(const std::shared_ptr<Player> &player) const {
 		return true;
 	}
 
-	auto playerIt = playerList.find(player->getGUID());
-	if (playerIt != playerList.end()) {
+	if (playerList.contains(player->getGUID())) {
 		return true;
 	}
 

@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -29,11 +21,12 @@ enum class IconBakragore : uint8_t;
 class PlayerFunctions {
 	static void init(lua_State* L);
 
+	static int luaPlayerDisconnect(lua_State* L);
 	static int luaPlayerCreate(lua_State* L);
 
 	static int luaPlayerUnlockAllCharmRunes(lua_State* L);
 	static int luaPlayerResetCharmsMonsters(lua_State* L);
-	static int luaPlayeraddCharmPoints(lua_State* L);
+	static int luaPlayerAddCharmPoints(lua_State* L);
 	static int luaPlayerAddMinorCharmEchoes(lua_State* L);
 	static int luaPlayerGetCharmTier(lua_State* L);
 	static int luaPlayerGetCharmChance(lua_State* L);
@@ -167,14 +160,15 @@ class PlayerFunctions {
 	static int luaPlayerGetGroup(lua_State* L);
 	static int luaPlayerSetGroup(lua_State* L);
 
+	static int luaPlayerIsStashAvailable(lua_State* L);
 	static int luaPlayerGetStashCounter(lua_State* L);
 	static int luaPlayerOpenStash(lua_State* L);
 	static int luaPlayerSetSpecialContainersAvailable(lua_State* L);
 
+	static int luaPlayerCanReceiveLoot(lua_State* L);
+
 	static int luaPlayerGetStamina(lua_State* L);
 	static int luaPlayerSetStamina(lua_State* L);
-
-	static int luaPlayerCanReceiveLoot(lua_State* L);
 
 	static int luaPlayerGetSoul(lua_State* L);
 	static int luaPlayerAddSoul(lua_State* L);
@@ -277,7 +271,6 @@ class PlayerFunctions {
 	static int luaPlayerGetContainerId(lua_State* L);
 	static int luaPlayerGetContainerById(lua_State* L);
 	static int luaPlayerGetContainerIndex(lua_State* L);
-	static int luaPlayerGetOpenContainers(lua_State* L);
 
 	static int luaPlayerGetInstantSpells(lua_State* L);
 	static int luaPlayerCanCast(lua_State* L);
@@ -330,8 +323,8 @@ class PlayerFunctions {
 
 	static int luaPlayerGetForgeSlivers(lua_State* L);
 	static int luaPlayerGetForgeCores(lua_State* L);
-	static int luaPlayerCanDoExAction(lua_State* L);
-	static int luaPlayerSetNextExAction(lua_State* L);
+	static int luaPlayerIsUIExhausted(lua_State* L);
+	static int luaPlayerUpdateUIExhausted(lua_State* L);
 
 	static int luaPlayerSetFaction(lua_State* L);
 	static int luaPlayerGetFaction(lua_State* L);
@@ -376,7 +369,6 @@ class PlayerFunctions {
 
 	static int luaPlayerKV(lua_State* L);
 	static int luaPlayerGetStoreInbox(lua_State* L);
-	static int luaPlayerIsNearDepotBox(lua_State* L);
 
 	static int luaPlayerHasAchievement(lua_State* L);
 	static int luaPlayerAddAchievement(lua_State* L);
@@ -384,9 +376,6 @@ class PlayerFunctions {
 	static int luaPlayerGetAchievementPoints(lua_State* L);
 	static int luaPlayerAddAchievementPoints(lua_State* L);
 	static int luaPlayerRemoveAchievementPoints(lua_State* L);
-
-	static int luaPlayerAddDeflectCondition(lua_State* L);
-	static int luaPlayerRemoveDeflectCondition(lua_State* L);
 
 	static int luaPlayerAddBadge(lua_State* L);
 
@@ -401,9 +390,25 @@ class PlayerFunctions {
 	static int luaPlayerRemoveIconBakragore(lua_State* L);
 
 	static int luaPlayerSendCreatureAppear(lua_State* L);
+
 	static int luaPlayerAddAnimusMastery(lua_State* L);
 	static int luaPlayerRemoveAnimusMastery(lua_State* L);
 	static int luaPlayerHasAnimusMastery(lua_State* L);
+
+	static int luaPlayerGetMapShader(lua_State* L);
+	static int luaPlayerSetMapShader(lua_State* L);
+	static int luaPlayerAddCustomOutfit(lua_State* L);
+	static int luaPlayerRemoveCustomOutfit(lua_State* L);
+
+	static int luaPlayerGetHarmony(lua_State* L);
+	static int luaPlayerSetHarmony(lua_State* L);
+	static int luaPlayerAddHarmony(lua_State* L);
+	static int luaPlayerRemoveHarmony(lua_State* L);
+	static int luaPlayerIsSerene(lua_State* L);
+	static int luaPlayerSetSerene(lua_State* L);
+	static int luaPlayerSetSereneCooldown(lua_State* L);
+	static int luaPlayerGetVirtue(lua_State* L);
+	static int luaPlayerSetVirtue(lua_State* L);
 
 	friend class CreatureFunctions;
 };

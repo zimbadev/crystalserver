@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/core/game/modal_window_functions.hpp"
 
@@ -64,7 +56,7 @@ int ModalWindowFunctions::luaModalWindowCreate(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowGetId(lua_State* L) {
 	// modalWindow:getId()
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		lua_pushnumber(L, window->id);
 	} else {
@@ -75,7 +67,7 @@ int ModalWindowFunctions::luaModalWindowGetId(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowGetTitle(lua_State* L) {
 	// modalWindow:getTitle()
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		Lua::pushString(L, window->title);
 	} else {
@@ -86,7 +78,7 @@ int ModalWindowFunctions::luaModalWindowGetTitle(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowGetMessage(lua_State* L) {
 	// modalWindow:getMessage()
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		Lua::pushString(L, window->message);
 	} else {
@@ -98,7 +90,7 @@ int ModalWindowFunctions::luaModalWindowGetMessage(lua_State* L) {
 int ModalWindowFunctions::luaModalWindowSetTitle(lua_State* L) {
 	// modalWindow:setTitle(text)
 	const std::string &text = Lua::getString(L, 2);
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		window->title = text;
 		Lua::pushBoolean(L, true);
@@ -111,7 +103,7 @@ int ModalWindowFunctions::luaModalWindowSetTitle(lua_State* L) {
 int ModalWindowFunctions::luaModalWindowSetMessage(lua_State* L) {
 	// modalWindow:setMessage(text)
 	const std::string &text = Lua::getString(L, 2);
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		window->message = text;
 		Lua::pushBoolean(L, true);
@@ -123,7 +115,7 @@ int ModalWindowFunctions::luaModalWindowSetMessage(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowGetButtonCount(lua_State* L) {
 	// modalWindow:getButtonCount()
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		lua_pushnumber(L, window->buttons.size());
 	} else {
@@ -134,7 +126,7 @@ int ModalWindowFunctions::luaModalWindowGetButtonCount(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowGetChoiceCount(lua_State* L) {
 	// modalWindow:getChoiceCount()
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		lua_pushnumber(L, window->choices.size());
 	} else {
@@ -147,7 +139,7 @@ int ModalWindowFunctions::luaModalWindowAddButton(lua_State* L) {
 	// modalWindow:addButton(id, text)
 	const std::string &text = Lua::getString(L, 3);
 	uint8_t id = Lua::getNumber<uint8_t>(L, 2);
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		window->buttons.emplace_back(text, id);
 		Lua::pushBoolean(L, true);
@@ -161,7 +153,7 @@ int ModalWindowFunctions::luaModalWindowAddChoice(lua_State* L) {
 	// modalWindow:addChoice(id, text)
 	const std::string &text = Lua::getString(L, 3);
 	uint8_t id = Lua::getNumber<uint8_t>(L, 2);
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		window->choices.emplace_back(text, id);
 		Lua::pushBoolean(L, true);
@@ -173,7 +165,7 @@ int ModalWindowFunctions::luaModalWindowAddChoice(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowGetDefaultEnterButton(lua_State* L) {
 	// modalWindow:getDefaultEnterButton()
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		lua_pushnumber(L, window->defaultEnterButton);
 	} else {
@@ -184,7 +176,7 @@ int ModalWindowFunctions::luaModalWindowGetDefaultEnterButton(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowSetDefaultEnterButton(lua_State* L) {
 	// modalWindow:setDefaultEnterButton(buttonId)
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		window->defaultEnterButton = Lua::getNumber<uint8_t>(L, 2);
 		Lua::pushBoolean(L, true);
@@ -196,7 +188,7 @@ int ModalWindowFunctions::luaModalWindowSetDefaultEnterButton(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowGetDefaultEscapeButton(lua_State* L) {
 	// modalWindow:getDefaultEscapeButton()
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		lua_pushnumber(L, window->defaultEscapeButton);
 	} else {
@@ -207,7 +199,7 @@ int ModalWindowFunctions::luaModalWindowGetDefaultEscapeButton(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowSetDefaultEscapeButton(lua_State* L) {
 	// modalWindow:setDefaultEscapeButton(buttonId)
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		window->defaultEscapeButton = Lua::getNumber<uint8_t>(L, 2);
 		Lua::pushBoolean(L, true);
@@ -219,7 +211,7 @@ int ModalWindowFunctions::luaModalWindowSetDefaultEscapeButton(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowHasPriority(lua_State* L) {
 	// modalWindow:hasPriority()
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		Lua::pushBoolean(L, window->priority);
 	} else {
@@ -230,7 +222,7 @@ int ModalWindowFunctions::luaModalWindowHasPriority(lua_State* L) {
 
 int ModalWindowFunctions::luaModalWindowSetPriority(lua_State* L) {
 	// modalWindow:setPriority(priority)
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		window->priority = Lua::getBoolean(L, 2);
 		Lua::pushBoolean(L, true);
@@ -248,7 +240,7 @@ int ModalWindowFunctions::luaModalWindowSendToPlayer(lua_State* L) {
 		return 1;
 	}
 
-	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1);
+	const auto &window = Lua::getUserdataShared<ModalWindow>(L, 1, "ModalWindow");
 	if (window) {
 		if (!player->hasModalWindowOpen(window->id)) {
 			player->sendModalWindow(*window);

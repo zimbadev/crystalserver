@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "map/mapcache.hpp"
 
@@ -101,9 +93,9 @@ std::shared_ptr<Item> MapCache::createItem(const std::shared_ptr<BasicItem> &Bas
 	if (item->canDecay()) {
 		item->startDecaying();
 	}
+	item->loadedFromMap = true;
+	item->decayDisabled = Item::items[item->getID()].decayTo != -1;
 
-	item->setLoadedFromMap(true);
-	item->setDecayDisabled(Item::items[item->getID()].decayTo != -1);
 	return item;
 }
 
@@ -114,8 +106,10 @@ std::shared_ptr<Tile> MapCache::getOrCreateTileFromCache(const std::shared_ptr<F
 		return oldTile;
 	}
 
+	std::unique_lock l(floor->getMutex());
+
 	const uint8_t z = floor->getZ();
-	const auto map = dynamic_cast<Map*>(this);
+	const auto map = static_cast<Map*>(this);
 
 	std::vector<std::shared_ptr<Creature>> oldCreatureList;
 	if (oldTile) {

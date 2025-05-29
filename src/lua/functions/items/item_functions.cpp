@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/items/item_functions.hpp"
 
@@ -45,7 +37,6 @@ void ItemFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Item", "getUniqueId", ItemFunctions::luaItemGetUniqueId);
 	Lua::registerMethod(L, "Item", "getActionId", ItemFunctions::luaItemGetActionId);
 	Lua::registerMethod(L, "Item", "setActionId", ItemFunctions::luaItemSetActionId);
-	Lua::registerMethod(L, "Item", "setLoadedFromMap", ItemFunctions::luaItemSetLoadedFromMap);
 
 	Lua::registerMethod(L, "Item", "getCount", ItemFunctions::luaItemGetCount);
 	Lua::registerMethod(L, "Item", "getCharges", ItemFunctions::luaItemGetCharges);
@@ -75,6 +66,7 @@ void ItemFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Item", "isOwner", ItemFunctions::luaItemIsOwner);
 	Lua::registerMethod(L, "Item", "getOwnerName", ItemFunctions::luaItemGetOwnerName);
 	Lua::registerMethod(L, "Item", "hasOwner", ItemFunctions::luaItemHasOwner);
+	Lua::registerMethod(L, "Item", "actor", ItemFunctions::luaItemActor);
 
 	Lua::registerMethod(L, "Item", "moveTo", ItemFunctions::luaItemMoveTo);
 	Lua::registerMethod(L, "Item", "transform", ItemFunctions::luaItemTransform);
@@ -101,6 +93,10 @@ void ItemFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "Item", "canReceiveAutoCarpet", ItemFunctions::luaItemCanReceiveAutoCarpet);
 
+	Lua::registerMethod(L, "Item", "setShader", ItemFunctions::luaItemSetShader);
+	Lua::registerMethod(L, "Item", "getShader", ItemFunctions::luaItemGetShader);
+	Lua::registerMethod(L, "Item", "hasShader", ItemFunctions::luaItemHasShader);
+
 	ContainerFunctions::init(L);
 	ImbuementFunctions::init(L);
 	ItemTypeFunctions::init(L);
@@ -124,13 +120,13 @@ int ItemFunctions::luaItemCreate(lua_State* L) {
 
 int ItemFunctions::luaItemIsItem(lua_State* L) {
 	// item:isItem()
-	Lua::pushBoolean(L, Lua::getUserdataShared<const Item>(L, 1) != nullptr);
+	Lua::pushBoolean(L, Lua::getUserdataShared<Item>(L, 1, "Item") != nullptr);
 	return 1;
 }
 
 int ItemFunctions::luaItemGetContainer(lua_State* L) {
 	// item:getContainer()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -149,7 +145,7 @@ int ItemFunctions::luaItemGetContainer(lua_State* L) {
 
 int ItemFunctions::luaItemGetParent(lua_State* L) {
 	// item:getParent()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -167,7 +163,7 @@ int ItemFunctions::luaItemGetParent(lua_State* L) {
 
 int ItemFunctions::luaItemGetTopParent(lua_State* L) {
 	// item:getTopParent()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -185,7 +181,7 @@ int ItemFunctions::luaItemGetTopParent(lua_State* L) {
 
 int ItemFunctions::luaItemGetId(lua_State* L) {
 	// item:getId()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		lua_pushnumber(L, item->getID());
 	} else {
@@ -196,7 +192,7 @@ int ItemFunctions::luaItemGetId(lua_State* L) {
 
 int ItemFunctions::luaItemClone(lua_State* L) {
 	// item:clone()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -265,7 +261,7 @@ int ItemFunctions::luaItemSplit(lua_State* L) {
 
 int ItemFunctions::luaItemRemove(lua_State* L) {
 	// item:remove([count = -1])
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		const auto count = Lua::getNumber<int32_t>(L, 2, -1);
 		Lua::pushBoolean(L, g_game().internalRemoveItem(item, count) == RETURNVALUE_NOERROR);
@@ -277,7 +273,7 @@ int ItemFunctions::luaItemRemove(lua_State* L) {
 
 int ItemFunctions::luaItemGetUniqueId(lua_State* L) {
 	// item:getUniqueId()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		uint32_t uniqueId = item->getAttribute<uint16_t>(ItemAttribute_t::UNIQUEID);
 		if (uniqueId == 0) {
@@ -292,7 +288,7 @@ int ItemFunctions::luaItemGetUniqueId(lua_State* L) {
 
 int ItemFunctions::luaItemGetActionId(lua_State* L) {
 	// item:getActionId()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		const auto actionId = item->getAttribute<uint16_t>(ItemAttribute_t::ACTIONID);
 		lua_pushnumber(L, actionId);
@@ -305,7 +301,7 @@ int ItemFunctions::luaItemGetActionId(lua_State* L) {
 int ItemFunctions::luaItemSetActionId(lua_State* L) {
 	// item:setActionId(actionId)
 	const uint16_t actionId = Lua::getNumber<uint16_t>(L, 2);
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		item->setAttribute(ItemAttribute_t::ACTIONID, actionId);
 		Lua::pushBoolean(L, true);
@@ -315,22 +311,9 @@ int ItemFunctions::luaItemSetActionId(lua_State* L) {
 	return 1;
 }
 
-int ItemFunctions::luaItemSetLoadedFromMap(lua_State* L) {
-	// item:setLoadedFromMap(value)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
-	if (item) {
-		const bool boolValue = Lua::getBoolean(L, 2);
-		item->setLoadedFromMap(boolValue);
-		Lua::pushBoolean(L, true);
-	} else {
-		lua_pushnil(L);
-	}
-	return 1;
-}
-
 int ItemFunctions::luaItemGetCount(lua_State* L) {
 	// item:getCount()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		lua_pushnumber(L, item->getItemCount());
 	} else {
@@ -341,7 +324,7 @@ int ItemFunctions::luaItemGetCount(lua_State* L) {
 
 int ItemFunctions::luaItemGetCharges(lua_State* L) {
 	// item:getCharges()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		lua_pushnumber(L, item->getCharges());
 	} else {
@@ -352,7 +335,7 @@ int ItemFunctions::luaItemGetCharges(lua_State* L) {
 
 int ItemFunctions::luaItemGetFluidType(lua_State* L) {
 	// item:getFluidType()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		lua_pushnumber(L, static_cast<lua_Number>(item->getAttribute<uint16_t>(ItemAttribute_t::FLUIDTYPE)));
 	} else {
@@ -363,7 +346,7 @@ int ItemFunctions::luaItemGetFluidType(lua_State* L) {
 
 int ItemFunctions::luaItemGetWeight(lua_State* L) {
 	// item:getWeight()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		lua_pushnumber(L, item->getWeight());
 	} else {
@@ -374,7 +357,7 @@ int ItemFunctions::luaItemGetWeight(lua_State* L) {
 
 int ItemFunctions::luaItemGetSubType(lua_State* L) {
 	// item:getSubType()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		lua_pushnumber(L, item->getSubType());
 	} else {
@@ -385,7 +368,7 @@ int ItemFunctions::luaItemGetSubType(lua_State* L) {
 
 int ItemFunctions::luaItemGetName(lua_State* L) {
 	// item:getName()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		Lua::pushString(L, item->getName());
 	} else {
@@ -396,7 +379,7 @@ int ItemFunctions::luaItemGetName(lua_State* L) {
 
 int ItemFunctions::luaItemGetPluralName(lua_State* L) {
 	// item:getPluralName()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		Lua::pushString(L, item->getPluralName());
 	} else {
@@ -407,7 +390,7 @@ int ItemFunctions::luaItemGetPluralName(lua_State* L) {
 
 int ItemFunctions::luaItemGetArticle(lua_State* L) {
 	// item:getArticle()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		Lua::pushString(L, item->getArticle());
 	} else {
@@ -418,7 +401,7 @@ int ItemFunctions::luaItemGetArticle(lua_State* L) {
 
 int ItemFunctions::luaItemGetPosition(lua_State* L) {
 	// item:Lua::getPosition()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		Lua::pushPosition(L, item->getPosition());
 	} else {
@@ -429,7 +412,7 @@ int ItemFunctions::luaItemGetPosition(lua_State* L) {
 
 int ItemFunctions::luaItemGetTile(lua_State* L) {
 	// item:getTile()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -447,7 +430,7 @@ int ItemFunctions::luaItemGetTile(lua_State* L) {
 
 int ItemFunctions::luaItemHasAttribute(lua_State* L) {
 	// item:hasAttribute(key)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -468,7 +451,7 @@ int ItemFunctions::luaItemHasAttribute(lua_State* L) {
 
 int ItemFunctions::luaItemGetAttribute(lua_State* L) {
 	// item:getAttribute(key)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -500,7 +483,7 @@ int ItemFunctions::luaItemGetAttribute(lua_State* L) {
 
 int ItemFunctions::luaItemSetAttribute(lua_State* L) {
 	// item:setAttribute(key, value)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -559,7 +542,7 @@ int ItemFunctions::luaItemSetAttribute(lua_State* L) {
 
 int ItemFunctions::luaItemRemoveAttribute(lua_State* L) {
 	// item:removeAttribute(key)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -591,7 +574,7 @@ int ItemFunctions::luaItemRemoveAttribute(lua_State* L) {
 
 int ItemFunctions::luaItemGetCustomAttribute(lua_State* L) {
 	// item:getCustomAttribute(key)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -617,7 +600,7 @@ int ItemFunctions::luaItemGetCustomAttribute(lua_State* L) {
 
 int ItemFunctions::luaItemSetCustomAttribute(lua_State* L) {
 	// item:setCustomAttribute(key, value)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -658,7 +641,7 @@ int ItemFunctions::luaItemSetCustomAttribute(lua_State* L) {
 
 int ItemFunctions::luaItemRemoveCustomAttribute(lua_State* L) {
 	// item:removeCustomAttribute(key)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -676,7 +659,7 @@ int ItemFunctions::luaItemRemoveCustomAttribute(lua_State* L) {
 
 int ItemFunctions::luaItemCanBeMoved(lua_State* L) {
 	// item:canBeMoved()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		Lua::pushBoolean(L, item->canBeMoved());
 	} else {
@@ -687,7 +670,7 @@ int ItemFunctions::luaItemCanBeMoved(lua_State* L) {
 
 int ItemFunctions::luaItemSerializeAttributes(lua_State* L) {
 	// item:serializeAttributes()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		lua_pushnil(L);
 		return 1;
@@ -721,13 +704,13 @@ int ItemFunctions::luaItemMoveTo(lua_State* L) {
 		const LuaData_t type = Lua::getUserdataType(L, 2);
 		switch (type) {
 			case LuaData_t::Container:
-				toCylinder = Lua::getUserdataShared<Container>(L, 2);
+				toCylinder = Lua::getUserdataShared<Container>(L, 2, "Container");
 				break;
 			case LuaData_t::Player:
-				toCylinder = Lua::getUserdataShared<Player>(L, 2);
+				toCylinder = Lua::getUserdataShared<Player>(L, 2, "Player");
 				break;
 			case LuaData_t::Tile:
-				toCylinder = Lua::getUserdataShared<Tile>(L, 2);
+				toCylinder = Lua::getUserdataShared<Tile>(L, 2, "Tile");
 				break;
 			default:
 				toCylinder = nullptr;
@@ -817,7 +800,7 @@ int ItemFunctions::luaItemTransform(lua_State* L) {
 
 int ItemFunctions::luaItemDecay(lua_State* L) {
 	// item:decay(decayId)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		if (Lua::isNumber(L, 2)) {
 			ItemType &it = Item::items.getItemType(item->getID());
@@ -834,13 +817,13 @@ int ItemFunctions::luaItemDecay(lua_State* L) {
 
 int ItemFunctions::luaItemMoveToSlot(lua_State* L) {
 	// item:moveToSlot(player, slot)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item || item->isRemoved()) {
 		lua_pushnil(L);
 		return 1;
 	}
 
-	const auto &player = Lua::getUserdataShared<Player>(L, 2);
+	const auto &player = Lua::getUserdataShared<Player>(L, 2, "Player");
 	if (!player) {
 		lua_pushnil(L);
 		return 1;
@@ -856,7 +839,7 @@ int ItemFunctions::luaItemMoveToSlot(lua_State* L) {
 
 int ItemFunctions::luaItemGetDescription(lua_State* L) {
 	// item:getDescription(distance)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		const int32_t distance = Lua::getNumber<int32_t>(L, 2);
 		Lua::pushString(L, item->getDescription(distance));
@@ -868,7 +851,7 @@ int ItemFunctions::luaItemGetDescription(lua_State* L) {
 
 int ItemFunctions::luaItemHasProperty(lua_State* L) {
 	// item:hasProperty(property)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (item) {
 		const ItemProperty property = Lua::getNumber<ItemProperty>(L, 2);
 		Lua::pushBoolean(L, item->hasProperty(property));
@@ -880,7 +863,7 @@ int ItemFunctions::luaItemHasProperty(lua_State* L) {
 
 int ItemFunctions::luaItemGetImbuement(lua_State* L) {
 	// item:getImbuement()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -911,7 +894,7 @@ int ItemFunctions::luaItemGetImbuement(lua_State* L) {
 
 int ItemFunctions::luaItemGetImbuementSlot(lua_State* L) {
 	// item:getImbuementSlot()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -925,7 +908,7 @@ int ItemFunctions::luaItemGetImbuementSlot(lua_State* L) {
 int ItemFunctions::luaItemSetDuration(lua_State* L) {
 	// item:setDuration(minDuration, maxDuration = 0, decayTo = 0, showDuration = true)
 	// Example: item:setDuration(10000, 20000, 2129, false) = random duration from range 10000/20000
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -962,7 +945,7 @@ int ItemFunctions::luaItemSetDuration(lua_State* L) {
 
 int ItemFunctions::luaItemIsInsideDepot(lua_State* L) {
 	// item:isInsideDepot([includeInbox = false])
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -975,7 +958,7 @@ int ItemFunctions::luaItemIsInsideDepot(lua_State* L) {
 
 int ItemFunctions::luaItemIsContainer(lua_State* L) {
 	// item:isContainer()
-	const auto &item = Lua::getUserdataShared<const Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -989,7 +972,7 @@ int ItemFunctions::luaItemIsContainer(lua_State* L) {
 
 int ItemFunctions::luaItemGetTier(lua_State* L) {
 	// item:getTier()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -1002,7 +985,7 @@ int ItemFunctions::luaItemGetTier(lua_State* L) {
 
 int ItemFunctions::luaItemSetTier(lua_State* L) {
 	// item:setTier(tier)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -1016,7 +999,7 @@ int ItemFunctions::luaItemSetTier(lua_State* L) {
 
 int ItemFunctions::luaItemGetClassification(lua_State* L) {
 	// item:getClassification()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -1029,7 +1012,7 @@ int ItemFunctions::luaItemGetClassification(lua_State* L) {
 
 int ItemFunctions::luaItemCanReceiveAutoCarpet(lua_State* L) {
 	// item:canReceiveAutoCarpet()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -1042,14 +1025,14 @@ int ItemFunctions::luaItemCanReceiveAutoCarpet(lua_State* L) {
 
 int ItemFunctions::luaItemSetOwner(lua_State* L) {
 	// item:setOwner(creature|creatureId)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		return 0;
 	}
 
 	if (Lua::isUserdata(L, 2)) {
-		const auto &creature = Lua::getUserdataShared<Creature>(L, 2);
+		const auto &creature = Lua::getUserdataShared<Creature>(L, 2, "Creature");
 		if (!creature) {
 			Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
 			return 0;
@@ -1072,7 +1055,7 @@ int ItemFunctions::luaItemSetOwner(lua_State* L) {
 
 int ItemFunctions::luaItemGetOwnerId(lua_State* L) {
 	// item:getOwner()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		return 0;
@@ -1089,14 +1072,14 @@ int ItemFunctions::luaItemGetOwnerId(lua_State* L) {
 
 int ItemFunctions::luaItemIsOwner(lua_State* L) {
 	// item:isOwner(creature|creatureId)
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		return 0;
 	}
 
 	if (Lua::isUserdata(L, 2)) {
-		const auto &creature = Lua::getUserdataShared<Creature>(L, 2);
+		const auto &creature = Lua::getUserdataShared<Creature>(L, 2, "Creature");
 		if (!creature) {
 			Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
 			return 0;
@@ -1117,7 +1100,7 @@ int ItemFunctions::luaItemIsOwner(lua_State* L) {
 
 int ItemFunctions::luaItemGetOwnerName(lua_State* L) {
 	// item:getOwnerName()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		return 0;
@@ -1134,12 +1117,67 @@ int ItemFunctions::luaItemGetOwnerName(lua_State* L) {
 
 int ItemFunctions::luaItemHasOwner(lua_State* L) {
 	// item:hasOwner()
-	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
 	if (!item) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
 		return 1;
 	}
 
 	Lua::pushBoolean(L, item->hasOwner());
+	return 1;
+}
+
+int ItemFunctions::luaItemActor(lua_State* L) {
+	// item:actor()
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
+	if (!item) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
+		return 1;
+	}
+
+	if (lua_gettop(L) == 1) {
+		Lua::pushBoolean(L, item->hasActor());
+	} else {
+		item->setActor(Lua::getBoolean(L, 2));
+		Lua::pushBoolean(L, true);
+	}
+
+	return 1;
+}
+
+int ItemFunctions::luaItemHasShader(lua_State* L) {
+	// item:hasShader()
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
+	if (!item) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
+		return 1;
+	}
+	Lua::pushBoolean(L, item->hasShader());
+	return 1;
+}
+
+int ItemFunctions::luaItemGetShader(lua_State* L) {
+	// item:getShader()
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
+	if (!item) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+	Lua::pushString(L, item->getShader());
+	return 1;
+}
+
+int ItemFunctions::luaItemSetShader(lua_State* L) {
+	// item:setShader(shaderName)
+	const auto &item = Lua::getUserdataShared<Item>(L, 1, "Item");
+	if (!item) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_ITEM_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+	item->setShader(Lua::getString(L, 2));
+	g_game().refreshItem(item);
+	Lua::pushBoolean(L, true);
 	return 1;
 }

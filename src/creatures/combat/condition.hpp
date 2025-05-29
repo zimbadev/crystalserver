@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -62,8 +54,6 @@ public:
 	bool isPersistent() const;
 	bool isRemovableOnDeath() const;
 
-	bool creatureCanDeflect(std::shared_ptr<Creature> creature) const;
-
 protected:
 	uint8_t drainBodyStage = 0;
 	int64_t endTime {};
@@ -74,7 +64,7 @@ protected:
 	bool isBuff {};
 	bool m_isPersistent {};
 
-	virtual bool updateCondition(const std::shared_ptr<Condition> &addCondition, std::shared_ptr<Creature> creature = nullptr);
+	virtual bool updateCondition(const std::shared_ptr<Condition> &addCondition);
 
 private:
 	SoundEffect_t tickSound = SoundEffect_t::SILENCE;
@@ -288,7 +278,7 @@ private:
 	bool getNextDamage(int32_t &damage);
 	bool doDamage(const std::shared_ptr<Creature> &creature, int32_t healthChange) const;
 
-	bool updateCondition(const std::shared_ptr<Condition> &addCondition, std::shared_ptr<Creature> creature = nullptr) override;
+	bool updateCondition(const std::shared_ptr<Condition> &addCondition) override;
 };
 
 class ConditionFeared final : public Condition {
@@ -326,20 +316,6 @@ private:
 
 	Position fleeingFromPos; // Caster Position
 	uint8_t fleeIndx = 99;
-};
-
-class ConditionRooted final : public Condition {
-public:
-	ConditionRooted() = default;
-	ConditionRooted(ConditionId_t initId, ConditionType_t initType, int32_t initTicks, bool initBuff, uint32_t initSubId);
-
-	bool startCondition(std::shared_ptr<Creature> creature) override;
-	bool executeCondition(const std::shared_ptr<Creature> &creature, int32_t interval) override;
-	void endCondition(std::shared_ptr<Creature> creature) override;
-	void addCondition(std::shared_ptr<Creature> creature, std::shared_ptr<Condition> condition) override;
-	std::unordered_set<PlayerIcon> getIcons() const override;
-
-	std::shared_ptr<Condition> clone() const override;
 };
 
 class ConditionSpeed final : public Condition {

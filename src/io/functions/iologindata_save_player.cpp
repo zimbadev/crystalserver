@@ -1,28 +1,19 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "io/functions/iologindata_save_player.hpp"
 
 #include "config/configmanager.hpp"
+#include "creatures/players/animus_mastery/animus_mastery.hpp"
 #include "creatures/combat/condition.hpp"
 #include "creatures/monsters/monsters.hpp"
-#include "creatures/players/animus_mastery/animus_mastery.hpp"
 #include "game/game.hpp"
-#include "game/scheduling/save_manager.hpp"
 #include "io/ioprey.hpp"
 #include "items/containers/depot/depotchest.hpp"
 #include "items/containers/inbox/inbox.hpp"
@@ -261,9 +252,10 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	player->animusMastery().serialize(propAnimusMasteryStream);
 	size_t animusMasterySize;
 	const char* animusMastery = propAnimusMasteryStream.getStream(animusMasterySize);
+
 	query << "`animus_mastery` = " << db.escapeBlob(animusMastery, static_cast<uint32_t>(animusMasterySize)) << ",";
 
-	if (g_game().getWorldType() != WORLDTYPE_HARDCORE) {
+	if (g_game().getWorldType() != WORLD_TYPE_PVP_ENFORCED) {
 		int64_t skullTime = 0;
 
 		if (player->skullTicks > 0) {
@@ -318,6 +310,8 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`xpboost_value` = " << player->getXpBoostPercent() << ",";
 	query << "`xpboost_stamina` = " << player->getXpBoostTime() << ",";
 	query << "`quickloot_fallback` = " << (player->quickLootFallbackToMainContainer ? 1 : 0) << ",";
+	query << "`virtue` = " << static_cast<uint16_t>(player->getVirtue()) << ",";
+	query << "`harmony` = " << static_cast<uint16_t>(player->getHarmony()) << ",";
 
 	if (!player->isOffline()) {
 		auto now = std::chrono::system_clock::now();
@@ -354,6 +348,17 @@ bool IOLoginDataSave::savePlayerStash(const std::shared_ptr<Player> &player) {
 
 	DBInsert stashQuery("INSERT INTO `player_stash` (`player_id`,`item_id`,`item_count`) VALUES ");
 	for (const auto &[itemId, itemCount] : player->getStashItems()) {
+		const ItemType& itemType = Item::items[itemId];
+		if (itemType.decayTo >= 0 && itemType.decayTime > 0) {
+			continue;
+		}
+
+		auto wareId = itemType.wareId;
+		if (wareId > 0 && wareId != itemType.id) {
+			g_logger().warn("[{}] - Item ID {} is a ware item, for player: {}, skipping.", __FUNCTION__, itemId, player->getName());
+			continue;
+		}
+
 		query << player->getGUID() << ',' << itemId << ',' << itemCount;
 		if (!stashQuery.addRow(query)) {
 			return false;
@@ -810,61 +815,5 @@ bool IOLoginDataSave::savePlayerStorage(const std::shared_ptr<Player> &player) {
 	if (!storageQuery.execute()) {
 		return false;
 	}
-	return true;
-}
-
-bool IOLoginDataSave::savePlayerStatement(const std::shared_ptr<Player> &player, const std::string &receiver, uint16_t channelId, const std::string &text, uint32_t &statementId) {
-	if (!player) {
-		g_logger().warn("[IOLoginData::savePlayerStatement] - Player nullptr: {}", __FUNCTION__);
-		return false;
-	}
-
-	Database &db = Database::getInstance();
-	std::ostringstream query;
-
-	std::string utf8Text = convertToUTF8(text);
-	query << "INSERT INTO `player_statements` (`player_id`, `receiver`, `channel_id`, `text`, `date`) VALUES ("
-		  << player->getGUID() << ", " << db.escapeString(receiver) << ", " << channelId << ", "
-		  << db.escapeString(utf8Text) << ", " << time(nullptr) << ")";
-
-	if (!db.executeQuery(query.str())) {
-		return false;
-	}
-
-	statementId = db.getLastInsertId();
-	return true;
-}
-
-bool IOLoginDataSave::savePlayerNamesAndChangeName(const std::shared_ptr<Player> &player, const std::string &newName, const std::string &oldName) {
-	if (!player) {
-		g_logger().warn("[IOLoginData::savePlayerStatement] - Player nullptr: {}", __FUNCTION__);
-		return false;
-	}
-
-	Database &db = Database::getInstance();
-	std::ostringstream query;
-
-	const time_t now = time(nullptr);
-
-	// find former name
-	std::string formerName = oldName;
-	auto result = db.storeQuery(fmt::format("SELECT `former_name` FROM `player_oldnames` WHERE `player_id` = {} LIMIT 1", player->getGUID()));
-	if (result) {
-		formerName = result->getString("former_name");
-	}
-
-	query << "INSERT INTO `player_oldnames` (`player_id`, `former_name`, `name`, `old_name`, `date`) VALUES ("
-		  << player->getGUID() << ", " << db.escapeString(formerName) << ", " << db.escapeString(newName) << ", " << db.escapeString(oldName) << ", " << now << ")";
-
-	if (!db.executeQuery(query.str())) {
-		return false;
-	}
-
-	if (player->isOnline()) {
-		player->removePlayer(true, true);
-	}
-
-	player->setName(newName);
-	g_saveManager().savePlayer(player);
 	return true;
 }

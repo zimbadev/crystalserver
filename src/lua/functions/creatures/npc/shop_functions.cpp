@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/creatures/npc/shop_functions.hpp"
 
@@ -46,7 +38,7 @@ int ShopFunctions::luaCreateShop(lua_State* L) {
 int ShopFunctions::luaShopSetId(lua_State* L) {
 	// shop:setId(id)
 
-	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1)) {
+	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1, "Shop")) {
 		if (Lua::isNumber(L, 2)) {
 			shop->shopBlock.itemId = Lua::getNumber<uint16_t>(L, 2);
 			Lua::pushBoolean(L, true);
@@ -63,7 +55,7 @@ int ShopFunctions::luaShopSetId(lua_State* L) {
 
 int ShopFunctions::luaShopSetIdFromName(lua_State* L) {
 	// shop:setIdFromName(name)
-	const auto &shop = Lua::getUserdataShared<Shop>(L, 1);
+	const auto &shop = Lua::getUserdataShared<Shop>(L, 1, "Shop");
 	if (shop && Lua::isString(L, 2)) {
 		auto name = Lua::getString(L, 2);
 		const auto ids = Item::items.nameToItems.equal_range(asLowerCaseString(name));
@@ -96,7 +88,7 @@ int ShopFunctions::luaShopSetIdFromName(lua_State* L) {
 
 int ShopFunctions::luaShopSetNameItem(lua_State* L) {
 	// shop:setNameItem(name)
-	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1)) {
+	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1, "Shop")) {
 		shop->shopBlock.itemName = Lua::getString(L, 2);
 		Lua::pushBoolean(L, true);
 	} else {
@@ -107,7 +99,7 @@ int ShopFunctions::luaShopSetNameItem(lua_State* L) {
 
 int ShopFunctions::luaShopSetCount(lua_State* L) {
 	// shop:setCount(count)
-	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1)) {
+	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1, "Shop")) {
 		shop->shopBlock.itemSubType = Lua::getNumber<uint32_t>(L, 2);
 		Lua::pushBoolean(L, true);
 	} else {
@@ -118,7 +110,7 @@ int ShopFunctions::luaShopSetCount(lua_State* L) {
 
 int ShopFunctions::luaShopSetBuyPrice(lua_State* L) {
 	// shop:setBuyPrice(price)
-	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1)) {
+	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1, "Shop")) {
 		shop->shopBlock.itemBuyPrice = Lua::getNumber<uint32_t>(L, 2);
 		Lua::pushBoolean(L, true);
 	} else {
@@ -129,7 +121,7 @@ int ShopFunctions::luaShopSetBuyPrice(lua_State* L) {
 
 int ShopFunctions::luaShopSetSellPrice(lua_State* L) {
 	// shop:setSellPrice(chance)
-	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1)) {
+	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1, "Shop")) {
 		shop->shopBlock.itemSellPrice = Lua::getNumber<uint32_t>(L, 2);
 		Lua::pushBoolean(L, true);
 	} else {
@@ -140,7 +132,7 @@ int ShopFunctions::luaShopSetSellPrice(lua_State* L) {
 
 int ShopFunctions::luaShopSetStorageKey(lua_State* L) {
 	// shop:setStorageKey(storage)
-	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1)) {
+	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1, "Shop")) {
 		shop->shopBlock.itemStorageKey = Lua::getNumber<uint32_t>(L, 2);
 		Lua::pushBoolean(L, true);
 	} else {
@@ -151,7 +143,7 @@ int ShopFunctions::luaShopSetStorageKey(lua_State* L) {
 
 int ShopFunctions::luaShopSetStorageValue(lua_State* L) {
 	// shop:setStorageValue(value)
-	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1)) {
+	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1, "Shop")) {
 		shop->shopBlock.itemStorageValue = Lua::getNumber<uint32_t>(L, 2);
 		Lua::pushBoolean(L, true);
 	} else {
@@ -162,8 +154,8 @@ int ShopFunctions::luaShopSetStorageValue(lua_State* L) {
 
 int ShopFunctions::luaShopAddChildShop(lua_State* L) {
 	// shop:addChildShop(shop)
-	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1)) {
-		shop->shopBlock.childShop.push_back(Lua::getUserdataShared<Shop>(L, 2)->shopBlock);
+	if (const auto &shop = Lua::getUserdataShared<Shop>(L, 1, "Shop")) {
+		shop->shopBlock.childShop.push_back(Lua::getUserdataShared<Shop>(L, 2, "Shop")->shopBlock);
 	} else {
 		lua_pushnil(L);
 	}

@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -69,12 +61,8 @@ public:
 	bool getMagicShield() const;
 	bool canCombat() const;
 
-	int16_t getAbsorbPercent(CombatType_t combat) const;
-	void increaseAbsorbPercent(CombatType_t combat, int16_t v);
-
 	float meleeDamageMultiplier = 1.0f;
 	float distDamageMultiplier = 1.0f;
-	float wandRodDamageMultiplier = 1.0f;
 	float defenseMultiplier = 1.0f;
 	float armorMultiplier = 1.0f;
 
@@ -84,8 +72,6 @@ public:
 
 	float pvpDamageReceivedMultiplier = 1.0f;
 	float pvpDamageDealtMultiplier = 1.0f;
-
-	int16_t absorbPercent[COMBAT_COUNT] = { 0 };
 
 	std::vector<WheelGemSupremeModifier_t> getSupremeGemModifiers();
 

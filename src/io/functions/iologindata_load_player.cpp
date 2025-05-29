@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "io/functions/iologindata_load_player.hpp"
 
@@ -22,14 +14,7 @@
 #include "creatures/combat/condition.hpp"
 #include "database/database.hpp"
 #include "creatures/monsters/monsters.hpp"
-#include "creatures/players/achievement/player_achievement.hpp"
-#include "creatures/players/cyclopedia/player_badge.hpp"
-#include "creatures/players/cyclopedia/player_cyclopedia.hpp"
-#include "creatures/players/animus_mastery/animus_mastery.hpp"
-#include "creatures/players/cyclopedia/player_title.hpp"
-#include "creatures/players/vip/player_vip.hpp"
 #include "creatures/players/vocations/vocation.hpp"
-#include "creatures/players/wheel/player_wheel.hpp"
 #include "enums/account_coins.hpp"
 #include "enums/account_errors.hpp"
 #include "enums/object_category.hpp"
@@ -136,6 +121,12 @@ bool IOLoginDataLoad::loadPlayerBasicInfo(const std::shared_ptr<Player> &player,
 		return false;
 	}
 
+	auto vocationId = result->getNumber<uint16_t>("vocation");
+	if (!player->setVocation(vocationId)) {
+		g_logger().error("Can't set vocation, player {} has vocation id {} which doesn't exist", player->name, vocationId);
+		return false;
+	}
+
 	player->setGUID(result->getNumber<uint32_t>("id"));
 	player->name = result->getString("name");
 
@@ -149,11 +140,6 @@ bool IOLoginDataLoad::loadPlayerBasicInfo(const std::shared_ptr<Player> &player,
 		return false;
 	}
 	player->setGroup(group);
-
-	if (!player->setVocation(result->getNumber<uint16_t>("vocation"))) {
-		g_logger().error("Player {} has vocation id {} which doesn't exist", player->name, result->getNumber<uint16_t>("vocation"));
-		return false;
-	}
 
 	player->setBankBalance(result->getNumber<uint64_t>("balance"));
 	player->quickLootFallbackToMainContainer = result->getNumber<bool>("quickloot_fallback");
@@ -227,6 +213,8 @@ bool IOLoginDataLoad::loadPlayerBasicInfo(const std::shared_ptr<Player> &player,
 	player->setMaxManaShield(result->getNumber<uint32_t>("max_manashield"));
 
 	player->setMarriageSpouse(result->getNumber<int32_t>("marriage_spouse"));
+	player->setVirtue(static_cast<VirtueMonk_t>(result->getNumber<uint8_t>("virtue")));
+	player->setHarmony(result->getNumber<uint8_t>("harmony"));
 	return true;
 }
 
@@ -294,6 +282,7 @@ void IOLoginDataLoad::loadPlayerAnimusMastery(const std::shared_ptr<Player> &pla
 	const char* attr = result->getStream("animus_mastery", attrSize);
 	PropStream propStream;
 	propStream.init(attr, attrSize);
+
 	player->animusMastery().unserialize(propStream);
 }
 
@@ -303,21 +292,10 @@ void IOLoginDataLoad::loadPlayerDefaultOutfit(const std::shared_ptr<Player> &pla
 		return;
 	}
 
-	const auto &group = g_game().groups.getGroup(result->getNumber<uint16_t>("group_id"));
-	if (!group) {
-		g_logger().error("Player {} has group id {} which doesn't exist", player->name, result->getNumber<uint16_t>("group_id"));
-		return;
-	}
-
+	player->defaultOutfit.lookType = result->getNumber<uint16_t>("looktype");
 	if (g_configManager().getBoolean(WARN_UNSAFE_SCRIPTS) && player->defaultOutfit.lookType != 0 && !g_game().isLookTypeRegistered(player->defaultOutfit.lookType)) {
 		g_logger().warn("[{}] An unregistered creature looktype type with id '{}' was blocked to prevent client crash.", __FUNCTION__, player->defaultOutfit.lookType);
 		return;
-	}
-
-	if (!group || !group->outfit) {
-		player->defaultOutfit.lookType = result->getNumber<uint16_t>("looktype");
-	} else {
-		player->defaultOutfit.lookType = group->outfit;
 	}
 
 	player->defaultOutfit.lookHead = static_cast<uint8_t>(result->getNumber<uint16_t>("lookhead"));
@@ -345,7 +323,7 @@ void IOLoginDataLoad::loadPlayerSkullSystem(const std::shared_ptr<Player> &playe
 		return;
 	}
 
-	if (g_game().getWorldType() != WORLDTYPE_HARDCORE) {
+	if (g_game().getWorldType() != WORLD_TYPE_PVP_ENFORCED) {
 		const time_t skullSeconds = result->getNumber<time_t>("skulltime") - time(nullptr);
 		if (skullSeconds > 0) {
 			// ensure that we round up the number of ticks
@@ -367,12 +345,17 @@ void IOLoginDataLoad::loadPlayerSkill(const std::shared_ptr<Player> &player, con
 		return;
 	}
 
+	auto vocationPtr = player->getVocation();
+	if (!vocationPtr) {
+		return;
+	}
+
 	static const std::array<std::string, 13> skillNames = { "skill_fist", "skill_club", "skill_sword", "skill_axe", "skill_dist", "skill_shielding", "skill_fishing", "skill_critical_hit_chance", "skill_critical_hit_damage", "skill_life_leech_chance", "skill_life_leech_amount", "skill_mana_leech_chance", "skill_mana_leech_amount" };
 	static const std::array<std::string, 13> skillNameTries = { "skill_fist_tries", "skill_club_tries", "skill_sword_tries", "skill_axe_tries", "skill_dist_tries", "skill_shielding_tries", "skill_fishing_tries", "skill_critical_hit_chance_tries", "skill_critical_hit_damage_tries", "skill_life_leech_chance_tries", "skill_life_leech_amount_tries", "skill_mana_leech_chance_tries", "skill_mana_leech_amount_tries" };
 	for (size_t i = 0; i < skillNames.size(); ++i) {
 		auto skillLevel = result->getNumber<uint16_t>(skillNames[i]);
 		auto skillTries = result->getNumber<uint64_t>(skillNameTries[i]);
-		uint64_t nextSkillTries = player->vocation->getReqSkillTries(static_cast<uint8_t>(i), skillLevel + 1);
+		uint64_t nextSkillTries = vocationPtr->getReqSkillTries(static_cast<uint8_t>(i), skillLevel + 1);
 		if (skillTries > nextSkillTries) {
 			skillTries = 0;
 		}
@@ -463,7 +446,19 @@ void IOLoginDataLoad::loadPlayerStashItems(const std::shared_ptr<Player> &player
 	query << "SELECT `item_count`, `item_id`  FROM `player_stash` WHERE `player_id` = " << player->getGUID();
 	if ((result = db.storeQuery(query.str()))) {
 		do {
-			player->addItemOnStash(result->getNumber<uint16_t>("item_id"), result->getNumber<uint32_t>("item_count"));
+			auto itemId = result->getNumber<uint16_t>("item_id");
+			const ItemType& itemType = Item::items[itemId];
+			if (itemType.decayTo >= 0 && itemType.decayTime > 0) {
+				continue;
+			}
+
+			auto wareId = itemType.wareId;
+			if (wareId > 0 && wareId != itemType.id) {
+				g_logger().warn("[{}] - Item ID {} is a ware item, for player: {}, skipping.", __FUNCTION__, itemId, player->getName());
+				continue;
+			}
+
+			player->addItemOnStash(itemId, result->getNumber<uint32_t>("item_count"));
 		} while (result->next());
 	}
 }
@@ -780,14 +775,14 @@ void IOLoginDataLoad::loadPlayerVip(const std::shared_ptr<Player> &player, DBRes
 	std::string query = fmt::format("SELECT `player_id` FROM `account_viplist` WHERE `account_id` = {}", accountId);
 	if ((result = db.storeQuery(query))) {
 		do {
-			player->vip()->addInternal(result->getNumber<uint32_t>("player_id"));
+			player->vip().addInternal(result->getNumber<uint32_t>("player_id"));
 		} while (result->next());
 	}
 
 	query = fmt::format("SELECT `id`, `name`, `customizable` FROM `account_vipgroups` WHERE `account_id` = {}", accountId);
 	if ((result = db.storeQuery(query))) {
 		do {
-			player->vip()->addGroupInternal(
+			player->vip().addGroupInternal(
 				result->getNumber<uint8_t>("id"),
 				result->getString("name"),
 				result->getNumber<uint8_t>("customizable") == 0 ? false : true
@@ -798,7 +793,7 @@ void IOLoginDataLoad::loadPlayerVip(const std::shared_ptr<Player> &player, DBRes
 	query = fmt::format("SELECT `player_id`, `vipgroup_id` FROM `account_vipgrouplist` WHERE `account_id` = {}", accountId);
 	if ((result = db.storeQuery(query))) {
 		do {
-			player->vip()->addGuidToGroupInternal(
+			player->vip().addGuidToGroupInternal(
 				result->getNumber<uint8_t>("vipgroup_id"),
 				result->getNumber<uint32_t>("player_id")
 			);
@@ -904,14 +899,18 @@ void IOLoginDataLoad::loadPlayerTaskHuntingClass(const std::shared_ptr<Player> &
 }
 
 void IOLoginDataLoad::loadPlayerForgeHistory(const std::shared_ptr<Player> &player, DBResult_ptr result) {
-	if (!result || !player) {
-		g_logger().warn("[{}] - Player or Result nullptr", __FUNCTION__);
+	if (!player) {
+		g_logger().warn("[{}] - Player nullptr", __FUNCTION__);
 		return;
 	}
 
-	std::ostringstream query;
-	query << "SELECT * FROM `forge_history` WHERE `player_id` = " << player->getGUID();
-	if ((result = Database::getInstance().storeQuery(query.str()))) {
+	auto playerGUID = player->getGUID();
+
+	auto query = fmt::format(
+		"SELECT id, action_type, description, done_at, is_success FROM forge_history WHERE player_id = {}",
+		playerGUID
+	);
+	if ((result = Database::getInstance().storeQuery(query))) {
 		do {
 			auto actionEnum = magic_enum::enum_value<ForgeAction_t>(result->getNumber<uint16_t>("action_type"));
 			ForgeHistory history;
@@ -1012,17 +1011,17 @@ void IOLoginDataLoad::loadPlayerInitializeSystem(const std::shared_ptr<Player> &
 	}
 
 	// Wheel loading
-	player->wheel()->loadDBPlayerSlotPointsOnLogin();
-	player->wheel()->loadRevealedGems();
-	player->wheel()->loadActiveGems();
-	player->wheel()->loadKVModGrades();
-	player->wheel()->loadKVScrolls();
-	player->wheel()->initializePlayerData();
+	player->wheel().loadDBPlayerSlotPointsOnLogin();
+	player->wheel().loadRevealedGems();
+	player->wheel().loadActiveGems();
+	player->wheel().loadKVModGrades();
+	player->wheel().loadKVScrolls();
+	player->wheel().initializePlayerData();
 
-	player->achiev()->loadUnlockedAchievements();
-	player->badge()->checkAndUpdateNewBadges();
-	player->title()->checkAndUpdateNewTitles();
-	player->cyclopedia()->loadSummaryData();
+	player->achiev().loadUnlockedAchievements();
+	player->badge().checkAndUpdateNewBadges();
+	player->title().checkAndUpdateNewTitles();
+	player->cyclopedia().loadSummaryData();
 
 	player->initializePrey();
 	player->initializeTaskHunting();

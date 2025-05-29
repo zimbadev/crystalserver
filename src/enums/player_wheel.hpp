@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -190,4 +182,23 @@ enum class WheelGemSupremeModifier_t : uint8_t {
 	Druid_RevelationMastery_AvatarOfNature,
 	Druid_RevelationMastery_BlessingOfTheGrove,
 	Druid_RevelationMastery_TwinBursts,
+
+	Monk_AvatarOfBalance_Cooldown,
+	Monk_SpiritMend_HealingIncrease,
+	Monk_SpiritualOutburst_DamageIncrease,
+	Monk_SpiritualOutburst_CriticalExtraDamage,
+	Monk_ForcefulUppercut_DamageIncrease,
+	Monk_ForcefulUppercut_CriticalExtraDamage,
+	Monk_FurryofBlows_DamageIncrease,
+	Monk_FurryofBlows_CriticalExtraDamage,
+	Monk_GreaterFurryofBlows_DamageIncrease,
+	Monk_GreaterFurryofBlows_CriticalExtraDamage,
+	Monk_SweepingTakedown_DamageIncrease,
+	Monk_SweepingTakedown_CriticalExtraDamage,
+	Monk_FocusSerenety,
+	Monk_FocusHarmony,
+	Monk_MassSpiritMand_HealingIncrease,
+	Monk_RevelationMastery_AvatarOfBalance,
+	Monk_RevelationMastery_SpiritualOutburst,
+	Monk_RevelationMastery_Ascetic,
 };

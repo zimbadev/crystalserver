@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "items/containers/container.hpp"
 
@@ -160,16 +152,13 @@ void Container::addItem(const std::shared_ptr<Item> &item) {
 	item->setParent(getContainer());
 }
 
-StashContainerList Container::getStowableItems() const {
+StashContainerList Container::getStowableItems() {
 	StashContainerList toReturnList;
-	for (const auto &item : itemlist) {
-		if (item->getContainer() != nullptr) {
-			const auto &subContainer = item->getContainer()->getStowableItems();
-			for (const auto &key : subContainer | std::views::keys) {
-				const auto &containerItem = key;
-				toReturnList.emplace_back(containerItem, static_cast<uint32_t>(containerItem->getItemCount()));
-			}
-		} else if (item->isItemStorable()) {
+
+	for (ContainerIterator it = iterator(); it.hasNext(); it.advance()) {
+		const auto &item = *it;
+		const auto &itemType = Item::items.getItemType(item->getID());
+		if (item->isItemStorable() && !itemType.isContainer()) {
 			toReturnList.emplace_back(item, static_cast<uint32_t>(item->getItemCount()));
 		}
 	}
@@ -384,6 +373,7 @@ bool Container::isHoldingItem(const std::shared_ptr<Item> &item) {
 		if (!compareItem || !item) {
 			continue;
 		}
+
 		if (compareItem == item) {
 			return true;
 		}
@@ -443,30 +433,46 @@ void Container::onAddContainerItem(const std::shared_ptr<Item> &item) {
 }
 
 void Container::onUpdateContainerItem(uint32_t index, const std::shared_ptr<Item> &oldItem, const std::shared_ptr<Item> &newItem) {
+	const auto &holdingPlayer = getHoldingPlayer();
+	const auto &thisContainer = getContainer();
+	if (holdingPlayer) {
+		holdingPlayer->sendUpdateContainerItem(thisContainer, index, newItem);
+		holdingPlayer->onUpdateContainerItem(thisContainer, oldItem, newItem);
+		return;
+	}
+
 	const auto spectators = Spectators().find<Player>(getPosition(), false, 2, 2, 2, 2);
 
 	// send to client
 	for (const auto &spectator : spectators) {
-		spectator->getPlayer()->sendUpdateContainerItem(getContainer(), index, newItem);
+		spectator->getPlayer()->sendUpdateContainerItem(thisContainer, index, newItem);
 	}
 
 	// event methods
 	for (const auto &spectator : spectators) {
-		spectator->getPlayer()->onUpdateContainerItem(getContainer(), oldItem, newItem);
+		spectator->getPlayer()->onUpdateContainerItem(thisContainer, oldItem, newItem);
 	}
 }
 
 void Container::onRemoveContainerItem(uint32_t index, const std::shared_ptr<Item> &item) {
+	const auto &holdingPlayer = getHoldingPlayer();
+	const auto &thisContainer = getContainer();
+	if (holdingPlayer) {
+		holdingPlayer->sendRemoveContainerItem(thisContainer, index);
+		holdingPlayer->onRemoveContainerItem(thisContainer, item);
+		return;
+	}
+
 	const auto spectators = Spectators().find<Player>(getPosition(), false, 2, 2, 2, 2);
 
 	// send change to client
 	for (const auto &spectator : spectators) {
-		spectator->getPlayer()->sendRemoveContainerItem(getContainer(), index);
+		spectator->getPlayer()->sendRemoveContainerItem(thisContainer, index);
 	}
 
 	// event methods
 	for (const auto &spectator : spectators) {
-		spectator->getPlayer()->onRemoveContainerItem(getContainer(), item);
+		spectator->getPlayer()->onRemoveContainerItem(thisContainer, item);
 	}
 }
 

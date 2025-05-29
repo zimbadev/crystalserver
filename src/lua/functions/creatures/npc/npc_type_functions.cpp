@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/creatures/npc/npc_type_functions.hpp"
 
@@ -112,7 +104,7 @@ int NpcTypeFunctions::luaNpcTypeCreate(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeIsPushable(lua_State* L) {
 	// get: npcType:isPushable() set: npcType:isPushable(bool)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, npcType->info.pushable);
@@ -128,7 +120,7 @@ int NpcTypeFunctions::luaNpcTypeIsPushable(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeFloorChange(lua_State* L) {
 	// get: npcType:floorChange() set: npcType:floorChange(bool)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, npcType->info.floorChange);
@@ -144,7 +136,7 @@ int NpcTypeFunctions::luaNpcTypeFloorChange(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeCanSpawn(lua_State* L) {
 	// monsterType:canSpawn(pos)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	const Position &position = Lua::getPosition(L, 2);
 	if (npcType) {
 		Lua::pushBoolean(L, npcType->canSpawn(position));
@@ -156,7 +148,7 @@ int NpcTypeFunctions::luaNpcTypeCanSpawn(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeCanPushItems(lua_State* L) {
 	// get: npcType:canPushItems() set: npcType:canPushItems(bool)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, npcType->info.canPushItems);
@@ -172,7 +164,7 @@ int NpcTypeFunctions::luaNpcTypeCanPushItems(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeCanPushCreatures(lua_State* L) {
 	// get: npcType:canPushCreatures() set: npcType:canPushCreatures(bool)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, npcType->info.canPushCreatures);
@@ -188,7 +180,7 @@ int NpcTypeFunctions::luaNpcTypeCanPushCreatures(lua_State* L) {
 
 int32_t NpcTypeFunctions::luaNpcTypeName(lua_State* L) {
 	// get: npcType:name() set: npcType:name(name)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushString(L, npcType->name);
@@ -204,7 +196,7 @@ int32_t NpcTypeFunctions::luaNpcTypeName(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeNameDescription(lua_State* L) {
 	// get: npcType:nameDescription() set: npcType:nameDescription(desc)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushString(L, npcType->nameDescription);
@@ -220,7 +212,7 @@ int NpcTypeFunctions::luaNpcTypeNameDescription(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeHealth(lua_State* L) {
 	// get: npcType:health() set: npcType:health(health)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, npcType->info.health);
@@ -236,7 +228,7 @@ int NpcTypeFunctions::luaNpcTypeHealth(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeMaxHealth(lua_State* L) {
 	// get: npcType:maxHealth() set: npcType:maxHealth(health)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, npcType->info.healthMax);
@@ -252,13 +244,13 @@ int NpcTypeFunctions::luaNpcTypeMaxHealth(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeAddShopItem(lua_State* L) {
 	// npcType:addShopItem(shop)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		lua_pushnil(L);
 		return 1;
 	}
 
-	const auto &shop = Lua::getUserdataShared<Shop>(L, 2);
+	const auto &shop = Lua::getUserdataShared<Shop>(L, 2, "Shop");
 	if (shop) {
 		npcType->loadShop(npcType, shop->shopBlock);
 		Lua::pushBoolean(L, true);
@@ -270,7 +262,7 @@ int NpcTypeFunctions::luaNpcTypeAddShopItem(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeAddVoice(lua_State* L) {
 	// npcType:addVoice(sentence, interval, chance, yell)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		voiceBlock_t voice;
 		voice.text = Lua::getString(L, 2);
@@ -287,7 +279,7 @@ int NpcTypeFunctions::luaNpcTypeAddVoice(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeGetVoices(lua_State* L) {
 	// npcType:getVoices()
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		lua_pushnil(L);
 		return 1;
@@ -306,7 +298,7 @@ int NpcTypeFunctions::luaNpcTypeGetVoices(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeGetCreatureEvents(lua_State* L) {
 	// npcType:getCreatureEvents()
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		lua_pushnil(L);
 		return 1;
@@ -323,7 +315,7 @@ int NpcTypeFunctions::luaNpcTypeGetCreatureEvents(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeRegisterEvent(lua_State* L) {
 	// npcType:registerEvent(name)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		npcType->info.scripts.insert(Lua::getString(L, 2));
 		Lua::pushBoolean(L, true);
@@ -342,7 +334,7 @@ int NpcTypeFunctions::luaNpcTypeEventOnCallback(lua_State* L) {
 	// npcType:onBuyItem(callback)
 	// npcType:onSellItem(callback)
 	// npcType:onCheckItem(callback)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (npcType->loadCallback(&g_scripts().getScriptInterface())) {
 			Lua::pushBoolean(L, true);
@@ -357,7 +349,7 @@ int NpcTypeFunctions::luaNpcTypeEventOnCallback(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeEventType(lua_State* L) {
 	// npcType:eventType(event)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		npcType->info.eventType = Lua::getNumber<NpcsEvent_t>(L, 2);
 		Lua::pushBoolean(L, true);
@@ -369,7 +361,7 @@ int NpcTypeFunctions::luaNpcTypeEventType(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeOutfit(lua_State* L) {
 	// get: npcType:outfit() set: npcType:outfit(outfit)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushOutfit(L, npcType->info.outfit);
@@ -391,7 +383,7 @@ int NpcTypeFunctions::luaNpcTypeOutfit(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeBaseSpeed(lua_State* L) {
 	// npcType:getBaseSpeed()
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, npcType->info.baseSpeed);
@@ -407,7 +399,7 @@ int NpcTypeFunctions::luaNpcTypeBaseSpeed(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeWalkInterval(lua_State* L) {
 	// get: npcType:walkInterval() set: npcType:walkInterval(interval)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, npcType->info.walkInterval);
@@ -423,7 +415,7 @@ int NpcTypeFunctions::luaNpcTypeWalkInterval(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeWalkRadius(lua_State* L) {
 	// get: npcType:walkRadius() set: npcType:walkRadius(id)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, npcType->info.walkRadius);
@@ -439,7 +431,7 @@ int NpcTypeFunctions::luaNpcTypeWalkRadius(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeLight(lua_State* L) {
 	// get: npcType:light() set: npcType:light(color, level)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		lua_pushnil(L);
 		return 1;
@@ -459,7 +451,7 @@ int NpcTypeFunctions::luaNpcTypeLight(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeYellChance(lua_State* L) {
 	// get: npcType:yellChance() set: npcType:yellChance(chance)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			if (lua_gettop(L) == 1) {
@@ -480,7 +472,7 @@ int NpcTypeFunctions::luaNpcTypeYellChance(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeYellSpeedTicks(lua_State* L) {
 	// get: npcType:yellSpeedTicks() set: npcType:yellSpeedTicks(rate)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, npcType->info.yellSpeedTicks);
@@ -500,7 +492,7 @@ int NpcTypeFunctions::luaNpcTypeYellSpeedTicks(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeRespawnTypePeriod(lua_State* L) {
 	// npcType:respawnTypePeriod()
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, npcType->info.respawnType.period);
@@ -516,7 +508,7 @@ int NpcTypeFunctions::luaNpcTypeRespawnTypePeriod(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeRespawnTypeIsUnderground(lua_State* L) {
 	// npcType:respawnTypeIsUnderground()
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (npcType) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, npcType->info.respawnType.underground);
@@ -533,7 +525,7 @@ int NpcTypeFunctions::luaNpcTypeRespawnTypeIsUnderground(lua_State* L) {
 int NpcTypeFunctions::luaNpcTypeSpeechBubble(lua_State* L) {
 	// get = npcType:speechBubble()
 	// set = npcType:speechBubble(newSpeechBubble)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_NPC_TYPE_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -552,7 +544,7 @@ int NpcTypeFunctions::luaNpcTypeSpeechBubble(lua_State* L) {
 int NpcTypeFunctions::luaNpcTypeCurrency(lua_State* L) {
 	// get = npcType:currency()
 	// set = npcType:currency(newCurrency)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_NPC_TYPE_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -570,7 +562,7 @@ int NpcTypeFunctions::luaNpcTypeCurrency(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeSoundChance(lua_State* L) {
 	// get: npcType:soundChance() set: npcType:soundChance(chance)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_NPC_TYPE_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -588,7 +580,7 @@ int NpcTypeFunctions::luaNpcTypeSoundChance(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeSoundSpeedTicks(lua_State* L) {
 	// get: npcType:soundSpeedTicks() set: npcType:soundSpeedTicks(ticks)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_NPC_TYPE_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -606,7 +598,7 @@ int NpcTypeFunctions::luaNpcTypeSoundSpeedTicks(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeAddSound(lua_State* L) {
 	// npcType:addSound(soundId)
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_NPC_TYPE_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -620,7 +612,7 @@ int NpcTypeFunctions::luaNpcTypeAddSound(lua_State* L) {
 
 int NpcTypeFunctions::luaNpcTypeGetSounds(lua_State* L) {
 	// npcType:getSounds()
-	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1, "NpcType");
 	if (!npcType) {
 		lua_pushnil(L);
 		return 1;

@@ -1,31 +1,39 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
 #include "BS_thread_pool.hpp"
 
-class ThreadPool : public BS::thread_pool<BS::tp::none> {
+class ThreadPool {
 public:
 	explicit ThreadPool(Logger &logger, const uint32_t threadCount = std::thread::hardware_concurrency());
 
 	// Ensures that we don't accidentally copy it
 	ThreadPool(const ThreadPool &) = delete;
 	ThreadPool &operator=(const ThreadPool &) = delete;
+
+	static ThreadPool &getInstance();
+
+	template <typename F>
+	void detach_task(F &&f) {
+		pool->detach_task(std::forward<F>(f));
+	}
+
+	template <typename F>
+	auto submit_loop(std::size_t first, std::size_t last, F &&f) {
+		return pool->submit_loop(first, last, std::forward<F>(f));
+	}
+
+	auto get_thread_count() const noexcept {
+		return pool->get_thread_count();
+	}
 
 	void start() const;
 	void shutdown();
@@ -51,5 +59,9 @@ private:
 	std::condition_variable condition;
 
 	Logger &logger;
-	bool stopped = false;
+	std::atomic<bool> stopped { false };
+
+	std::unique_ptr<BS::thread_pool<BS::tp::none>> pool;
 };
+
+constexpr auto g_threadPool = ThreadPool::getInstance;

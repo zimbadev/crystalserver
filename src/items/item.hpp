@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -149,6 +141,12 @@ public:
 		return getCorpseOwner() == static_cast<uint32_t>(std::numeric_limits<int32_t>::max());
 	}
 
+	void setShader(const std::string &shaderName);
+
+	bool hasShader() const;
+
+	std::string getShader() const;
+
 protected:
 	std::unique_ptr<ItemAttribute> &initAttributePtr() {
 		if (!attributePtr) {
@@ -174,16 +172,15 @@ protected:
 		return attributePtr->getAttributeVector();
 	}
 
-	const int64_t &getInteger(ItemAttribute_t type) const {
-		static int64_t emptyInt;
+	int64_t getInteger(ItemAttribute_t type) const {
 		if (!attributePtr) {
-			return emptyInt;
+			return {};
 		}
 
 		return attributePtr->getAttributeValue(type);
 	}
 	const std::string &getString(ItemAttribute_t type) const {
-		static std::string emptyString;
+		static const std::string emptyString;
 		if (!attributePtr) {
 			return emptyString;
 		}
@@ -207,8 +204,10 @@ private:
 
 class Item : virtual public Thing, public ItemProperties, public SharedObject {
 public:
+	// Create a new item batch, it can use custom charges/count and wrappable
+	static std::shared_ptr<Item> createItemBatch(uint16_t itemId, uint32_t count, bool wrappable = false);
 	// Factory member to create item of right type based on type
-	static std::shared_ptr<Item> CreateItem(uint16_t type, uint16_t count = 0, Position* itemPosition = nullptr);
+	static std::shared_ptr<Item> CreateItem(uint16_t type, uint16_t count = 0, Position* itemPosition = nullptr, bool createWrappableItem = false, bool customCharges = false);
 	static std::shared_ptr<Container> CreateItemAsContainer(uint16_t type, uint16_t size);
 	static std::shared_ptr<Item> CreateItem(uint16_t itemId, Position &itemPosition);
 	static Items items;
@@ -465,7 +464,9 @@ public:
 		return items[id].stackable;
 	}
 	bool isStowable() const {
-		return hasMarketAttributes() && !getTier() && items[id].wareId > 0 && items[id].wareId == id;
+		const auto &itemType = items[id];
+		auto wareId = itemType.wareId;
+		return hasMarketAttributes() && !getTier() && wareId > 0 && !itemType.isContainer() && wareId == itemType.id;
 	}
 	bool isAlwaysOnTop() const {
 		return items[id].alwaysOnTopOrder != 0;
@@ -543,6 +544,10 @@ public:
 		return isDummy() || items[id].m_canBeUsedByGuests;
 	}
 
+	bool isDecayDisabled() const {
+		return decayDisabled;
+	}
+
 	const std::string &getName() const {
 		if (hasAttribute(ItemAttribute_t::NAME)) {
 			return getString(ItemAttribute_t::NAME);
@@ -595,7 +600,7 @@ public:
 
 	void setDefaultSubtype();
 	uint16_t getSubType() const;
-	bool isItemStorable() const;
+	bool isItemStorable();
 	void setSubType(uint16_t n);
 	void addUniqueId(uint16_t uniqueId);
 
@@ -629,18 +634,6 @@ public:
 		return loadedFromMap;
 	}
 
-	void setLoadedFromMap(bool value) {
-		loadedFromMap = value;
-	}
-
-	bool isDecayDisabled() const {
-		return decayDisabled;
-	}
-
-	void setDecayDisabled(bool value) {
-		decayDisabled = value;
-	}
-
 	bool isCleanable() const {
 		return !loadedFromMap && canRemove() && isPickupable() && !hasAttribute(ItemAttribute_t::UNIQUEID) && !hasAttribute(ItemAttribute_t::ACTIONID);
 	}
@@ -671,7 +664,7 @@ public:
 	 * @return false
 	 */
 	bool getImbuementInfo(uint8_t slot, ImbuementInfo* imbuementInfo) const;
-	bool addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration);
+	void addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration);
 	/**
 	 * @brief Decay imbuement time duration, only use this for decay the imbuement time
 	 *
@@ -725,6 +718,16 @@ public:
 	bool canBeMoved() const;
 	void checkDecayMapItemOnMove();
 
+	void setActor(bool value) {
+		m_hasActor = value;
+	}
+
+	bool hasActor() const {
+		return m_hasActor;
+	}
+
+	void playerUpdateSupplyTracker();
+
 protected:
 	std::weak_ptr<Cylinder> m_parent;
 
@@ -734,6 +737,7 @@ protected:
 	bool loadedFromMap = false;
 	bool isLootTrackeable = false;
 	bool decayDisabled = false;
+	bool m_hasActor = false;
 
 private:
 	void setImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration);

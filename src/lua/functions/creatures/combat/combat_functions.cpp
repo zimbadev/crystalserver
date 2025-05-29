@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/creatures/combat/combat_functions.hpp"
 
@@ -55,7 +47,7 @@ int CombatFunctions::luaCombatCreate(lua_State* L) {
 
 int CombatFunctions::luaCombatSetParameter(lua_State* L) {
 	// combat:setParameter(key, value)
-	const auto &combat = Lua::getUserdataShared<Combat>(L, 1);
+	const auto &combat = Lua::getUserdataShared<Combat>(L, 1, "Combat");
 	if (!combat) {
 		lua_pushnil(L);
 		return 1;
@@ -75,7 +67,7 @@ int CombatFunctions::luaCombatSetParameter(lua_State* L) {
 
 int CombatFunctions::luaCombatSetFormula(lua_State* L) {
 	// combat:setFormula(type, mina, minb, maxa, maxb)
-	const auto &combat = Lua::getUserdataShared<Combat>(L, 1);
+	const auto &combat = Lua::getUserdataShared<Combat>(L, 1, "Combat");
 	if (!combat) {
 		lua_pushnil(L);
 		return 1;
@@ -106,7 +98,7 @@ int CombatFunctions::luaCombatSetArea(lua_State* L) {
 		return 1;
 	}
 
-	const auto &combat = Lua::getUserdataShared<Combat>(L, 1);
+	const auto &combat = Lua::getUserdataShared<Combat>(L, 1, "Combat");
 	if (combat) {
 		auto areaClone = area->clone();
 		combat->setArea(areaClone);
@@ -119,7 +111,7 @@ int CombatFunctions::luaCombatSetArea(lua_State* L) {
 
 int CombatFunctions::luaCombatSetCondition(lua_State* L) {
 	// combat:addCondition(condition)
-	const std::shared_ptr<Condition> &condition = Lua::getUserdataShared<Condition>(L, 2);
+	const std::shared_ptr<Condition> &condition = Lua::getUserdataShared<Condition>(L, 2, "Condition");
 	auto* combat = Lua::getUserdata<Combat>(L, 1);
 	if (combat && condition) {
 		combat->addCondition(condition->clone());
@@ -132,7 +124,7 @@ int CombatFunctions::luaCombatSetCondition(lua_State* L) {
 
 int CombatFunctions::luaCombatSetCallback(lua_State* L) {
 	// combat:setCallback(key, function)
-	const auto &combat = Lua::getUserdataShared<Combat>(L, 1);
+	const auto &combat = Lua::getUserdataShared<Combat>(L, 1, "Combat");
 	if (!combat) {
 		lua_pushnil(L);
 		return 1;
@@ -157,7 +149,7 @@ int CombatFunctions::luaCombatSetCallback(lua_State* L) {
 
 int CombatFunctions::luaCombatSetOrigin(lua_State* L) {
 	// combat:setOrigin(origin)
-	const auto &combat = Lua::getUserdataShared<Combat>(L, 1);
+	const auto &combat = Lua::getUserdataShared<Combat>(L, 1, "Combat");
 	if (combat) {
 		combat->setOrigin(Lua::getNumber<CombatOrigin>(L, 2));
 		Lua::pushBoolean(L, true);
@@ -169,7 +161,7 @@ int CombatFunctions::luaCombatSetOrigin(lua_State* L) {
 
 int CombatFunctions::luaCombatExecute(lua_State* L) {
 	// combat:execute(creature, variant)
-	const auto &combat = Lua::getUserdataShared<Combat>(L, 1);
+	const auto &combat = Lua::getUserdataShared<Combat>(L, 1, "Combat");
 	if (!combat) {
 		Lua::pushBoolean(L, false);
 		return 1;

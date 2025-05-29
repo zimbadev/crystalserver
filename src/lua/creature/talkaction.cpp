@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/creature/talkaction.hpp"
 
@@ -22,6 +14,8 @@
 #include "creatures/players/player.hpp"
 #include "lua/scripts/scripts.hpp"
 #include "lib/di/container.hpp"
+#include "enums/account_type.hpp"
+#include "enums/account_group_type.hpp"
 
 TalkActions::TalkActions() = default;
 TalkActions::~TalkActions() = default;
@@ -48,8 +42,27 @@ bool TalkActions::checkWord(const std::shared_ptr<Player> &player, SpeakClasses 
 		return false;
 	}
 
-	const auto groupId = player->getGroup()->id;
-	if (groupId < talkActionPtr->getGroupType()) {
+	// Map of allowed group levels for each account type
+	static const std::unordered_map<AccountType, GroupType> allowedGroupLevels = {
+		{ ACCOUNT_TYPE_NORMAL, GROUP_TYPE_NORMAL },
+		{ ACCOUNT_TYPE_TUTOR, GROUP_TYPE_TUTOR },
+		{ ACCOUNT_TYPE_SENIORTUTOR, GROUP_TYPE_SENIORTUTOR },
+		{ ACCOUNT_TYPE_GAMEMASTER, GROUP_TYPE_COMMUNITYMANAGER }, // GAMEMASTER -> COMMUNITYMANAGER (5)
+		{ ACCOUNT_TYPE_GOD, GROUP_TYPE_GOD }
+	};
+
+	// Helper lambda to get the allowed group level for an account
+	auto allowedGroupLevelForAccount = [](AccountType account) -> GroupType {
+		if (auto it = allowedGroupLevels.find(account); it != allowedGroupLevels.end()) {
+			return it->second;
+		}
+
+		g_logger().warn("[TalkActions::checkWord] Invalid account type: {}", account);
+		return GROUP_TYPE_NONE;
+	};
+
+	// Check if player has permission for the talk action
+	if (player->getAccountType() != ACCOUNT_TYPE_GOD && talkActionPtr->getGroupType() > allowedGroupLevelForAccount(static_cast<AccountType>(player->getAccountType()))) {
 		return false;
 	}
 

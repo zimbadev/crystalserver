@@ -1,25 +1,15 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "items/trashholder.hpp"
 
-#include "creatures/players/player.hpp"
 #include "game/game.hpp"
-#include "utils/const.hpp"
 
 ReturnValue TrashHolder::queryAdd(int32_t, const std::shared_ptr<Thing> &thing, uint32_t, uint32_t, const std::shared_ptr<Creature> &actor) {
 	if (!thing) {
@@ -58,46 +48,30 @@ void TrashHolder::addThing(int32_t, const std::shared_ptr<Thing> &thing) {
 		return;
 	}
 
-	if (const auto &item = thing->getItem()) {
-		if (item.get() == this || !item->hasProperty(CONST_PROP_MOVABLE)) {
+	const auto &item = thing->getItem();
+	if (!item) {
+		return;
+	}
+
+	if (item.get() == this || !item->hasProperty(CONST_PROP_MOVABLE)) {
+		return;
+	}
+
+	const ItemType &it = Item::items[id];
+	if (item->isHangable() && it.isGroundTile()) {
+		const std::shared_ptr<Tile> &tile = std::dynamic_pointer_cast<Tile>(getParent());
+		if (tile && tile->hasFlag(TILESTATE_SUPPORTS_HANGABLE)) {
 			return;
 		}
+	}
 
-		const ItemType &it = Item::items[id];
-		if (item->isHangable() && it.isGroundTile()) {
-			const std::shared_ptr<Tile> &tile = std::dynamic_pointer_cast<Tile>(getParent());
-			if (tile && tile->hasFlag(TILESTATE_SUPPORTS_HANGABLE)) {
-				return;
-			}
-		}
+	if (item->isCarpet() || item->getID() == ITEM_DECORATION_KIT) {
+		return;
+	}
+	g_game().internalRemoveItem(item);
 
-		if (item->isCarpet() || item->getID() == ITEM_DECORATION_KIT) {
-			return;
-		}
-
-		if (g_game().isSwimmingPool(shared_from_this(), getTile(), true)) {
-			if (item->getID() == ITEM_WATERBALL_SPLASH) {
-				return;
-			}
-
-			if (item->getID() == ITEM_WATERBALL) {
-				g_game().transformItem(item, ITEM_WATERBALL_SPLASH);
-				return;
-			}
-		}
-
-		g_game().internalRemoveItem(item);
-		if (effect != CONST_ME_NONE) {
-			g_game().addMagicEffect(getPosition(), effect);
-		}
-	} else if (g_game().isSwimmingPool(shared_from_this(), getTile(), false) && thing->getCreature()) {
-		const auto &player = thing->getCreature()->getPlayer();
-		if (player && player->getPosition() == player->getLastPosition()) {
-			// player has just logged in a swimming pool
-			Outfit_t outfit;
-			outfit.lookType = SWIMMING_OUTFIT;
-			g_game().createIllusion(player, outfit, -1);
-		}
+	if (it.magicEffect != CONST_ME_NONE) {
+		g_game().addMagicEffect(getPosition(), it.magicEffect);
 	}
 }
 

@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -121,8 +113,10 @@ public:
 	// SUBOWNER_LIST = subowner list
 	void setAccessList(uint32_t listId, const std::string &textlist);
 	bool getAccessList(uint32_t listId, std::string &list) const;
-	bool isInAccessList(const std::shared_ptr<Player> &player, uint32_t listId);
-	bool isInvited(const std::shared_ptr<Player> &player) const;
+
+	bool isInvited(const std::shared_ptr<Player> &player) const {
+		return getHouseAccessLevel(player) != HOUSE_NOT_INVITED;
+	}
 
 	AccessHouseLevel_t getHouseAccessLevel(const std::shared_ptr<Player> &player) const;
 	bool kickPlayer(const std::shared_ptr<Player> &player, const std::shared_ptr<Player> &target);
@@ -201,10 +195,6 @@ public:
 		return id;
 	}
 
-	const std::string &getOwnerName() const {
-		return ownerName;
-	}
-
 	void addDoor(const std::shared_ptr<Door> &door);
 	void removeDoor(const std::shared_ptr<Door> &door);
 	std::shared_ptr<Door> getDoorByNumber(uint32_t doorId) const;
@@ -249,7 +239,6 @@ public:
 	void setClientId(uint32_t newClientId) {
 		this->m_clientId = newClientId;
 	}
-
 	uint32_t getClientId() const {
 		return m_clientId;
 	}
@@ -257,7 +246,6 @@ public:
 	void setBidder(int32_t bidder) {
 		this->m_bidder = bidder;
 	}
-
 	int32_t getBidder() const {
 		return m_bidder;
 	}
@@ -265,7 +253,6 @@ public:
 	void setBidderName(const std::string &bidderName) {
 		this->m_bidderName = bidderName;
 	}
-
 	std::string getBidderName() const {
 		return m_bidderName;
 	}
@@ -273,7 +260,6 @@ public:
 	void setHighestBid(uint64_t bidValue) {
 		this->m_highestBid = bidValue;
 	}
-
 	uint64_t getHighestBid() const {
 		return m_highestBid;
 	}
@@ -281,7 +267,6 @@ public:
 	void setInternalBid(uint64_t bidValue) {
 		this->m_internalBid = bidValue;
 	}
-
 	uint64_t getInternalBid() const {
 		return m_internalBid;
 	}
@@ -289,7 +274,6 @@ public:
 	void setBidHolderLimit(uint64_t bidValue) {
 		this->m_bidHolderLimit = bidValue;
 	}
-
 	uint64_t getBidHolderLimit() const {
 		return m_bidHolderLimit;
 	}
@@ -297,8 +281,7 @@ public:
 	void calculateBidEndDate(uint8_t daysToEnd);
 	void setBidEndDate(uint32_t bidEndDate) {
 		this->m_bidEndDate = bidEndDate;
-	}
-
+	};
 	uint32_t getBidEndDate() const {
 		return m_bidEndDate;
 	}
@@ -306,7 +289,6 @@ public:
 	void setState(CyclopediaHouseState state) {
 		this->m_state = state;
 	}
-
 	CyclopediaHouseState getState() const {
 		return m_state;
 	}
@@ -314,7 +296,6 @@ public:
 	void setTransferStatus(bool transferStatus) {
 		this->m_transferStatus = transferStatus;
 	}
-
 	bool getTransferStatus() const {
 		return m_transferStatus;
 	}
@@ -322,7 +303,6 @@ public:
 	void setOwnerAccountId(uint32_t accountId) {
 		this->ownerAccountId = accountId;
 	}
-
 	uint32_t getOwnerAccountId() const {
 		return ownerAccountId;
 	}
@@ -330,7 +310,6 @@ public:
 	void setGuildhall(bool isGuildHall) {
 		this->guildHall = isGuildHall;
 	}
-
 	bool isGuildhall() const {
 		return guildHall;
 	}

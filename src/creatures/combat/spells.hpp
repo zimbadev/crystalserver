@@ -1,24 +1,16 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
 #include "lua/creature/actions.hpp"
-#include "creatures/players/wheel/wheel_definitions.hpp"
+#include "creatures/players/components/wheel/wheel_definitions.hpp"
 
 class InstantSpell;
 class RuneSpell;
@@ -135,7 +127,7 @@ public:
 	void setSpellId(uint16_t id);
 
 	void postCastSpell(const std::shared_ptr<Player> &player, bool finishedCast = true, bool payCost = true) const;
-	static void postCastSpell(const std::shared_ptr<Player> &player, uint32_t manaCost, uint32_t soulCost);
+	static void postCastSpell(const std::shared_ptr<Player> &player, uint32_t manaCost, uint32_t soulCost, uint8_t harmonyCost);
 	[[nodiscard]] virtual bool isInstant() const = 0;
 	[[nodiscard]] bool isLearnable() const;
 
@@ -191,8 +183,6 @@ public:
 	void setAllowOnSelf(bool s);
 	[[nodiscard]] bool getLockedPZ() const;
 	void setLockedPZ(bool b);
-	[[nodiscard]] bool getRemoveOnUse() const;
-	void setRemoveOnUse(bool n);
 
 	/**
 	 * @brief Get whether the wheel of destiny is upgraded.
@@ -237,6 +227,9 @@ public:
 	void getCombatDataAugment(const std::shared_ptr<Player> &player, CombatDamage &damage) const;
 	int32_t calculateAugmentSpellCooldownReduction(const std::shared_ptr<Player> &player) const;
 
+	[[nodiscard]] bool getHarmonyCost() const;
+	void setHarmonyCost(bool h);
+
 protected:
 	void applyCooldownConditions(const std::shared_ptr<Player> &player) const;
 	bool playerSpellCheck(const std::shared_ptr<Player> &player) const;
@@ -262,11 +255,10 @@ protected:
 	bool needTarget = false;
 	bool allowOnSelf = true;
 	bool pzLocked = false;
-	bool removeOnUse = false;
 
 	bool whellOfDestinyUpgraded = false;
-	std::array<int32_t, static_cast<uint8_t>(WheelSpellBoost_t::TOTAL_COUNT)> wheelOfDestinyRegularBoost = { 0 };
-	std::array<int32_t, static_cast<uint8_t>(WheelSpellBoost_t::TOTAL_COUNT)> wheelOfDestinyUpgradedBoost = { 0 };
+	std::array<int32_t, magic_enum::enum_count<WheelSpellBoost_t>() + 1> wheelOfDestinyRegularBoost = { 0 };
+	std::array<int32_t, magic_enum::enum_count<WheelSpellBoost_t>() + 1> wheelOfDestinyUpgradedBoost = { 0 };
 
 private:
 	uint32_t mana = 0;
@@ -280,6 +272,7 @@ private:
 	bool learnable = false;
 	bool enabled = true;
 	bool premium = false;
+	bool harmony = false;
 
 	std::string name;
 	std::string m_words;

@@ -1,6 +1,6 @@
  syntax = "proto3";
 
-package Crystal.protobuf.kv;
+package Canary.protobuf.kv;
 
 // Define a message for the ValueWrapper type
 message ValueWrapper {

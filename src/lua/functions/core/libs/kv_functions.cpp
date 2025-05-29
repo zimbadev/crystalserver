@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/core/libs/kv_functions.hpp"
 
@@ -44,7 +36,7 @@ int KVFunctions::luaKVScoped(lua_State* L) {
 	const auto key = Lua::getString(L, -1);
 
 	if (Lua::isUserdata(L, 1)) {
-		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1);
+		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1, "KV");
 		const auto &newScope = scopedKV->scoped(key);
 		Lua::pushUserdata<KV>(L, newScope);
 		Lua::setMetatable(L, -1, "KV");
@@ -69,7 +61,7 @@ int KVFunctions::luaKVSet(lua_State* L) {
 	}
 
 	if (Lua::isUserdata(L, 1)) {
-		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1);
+		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1, "KV");
 		scopedKV->set(key, valueWrapper.value());
 		Lua::pushBoolean(L, true);
 		return 1;
@@ -90,7 +82,7 @@ int KVFunctions::luaKVGet(lua_State* L) {
 		key = Lua::getString(L, -2);
 	}
 	if (Lua::isUserdata(L, 1)) {
-		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1);
+		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1, "KV");
 		valueWrapper = scopedKV->get(key, forceLoad);
 	} else {
 		valueWrapper = g_kv().get(key, forceLoad);
@@ -108,7 +100,7 @@ int KVFunctions::luaKVRemove(lua_State* L) {
 	// KV.remove(key) | scopedKV:remove(key)
 	const auto key = Lua::getString(L, -1);
 	if (Lua::isUserdata(L, 1)) {
-		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1);
+		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1, "KV");
 		scopedKV->remove(key);
 	} else {
 		g_kv().remove(key);
@@ -127,7 +119,7 @@ int KVFunctions::luaKVKeys(lua_State* L) {
 	}
 
 	if (Lua::isUserdata(L, 1)) {
-		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1);
+		const auto &scopedKV = Lua::getUserdataShared<KV>(L, 1, "KV");
 		keys = scopedKV->keys();
 	} else {
 		keys = g_kv().keys(prefix);

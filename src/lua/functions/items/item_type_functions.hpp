@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -43,18 +35,15 @@ private:
 	static int luaItemTypeIsPickupable(lua_State* L);
 	static int luaItemTypeIsKey(lua_State* L);
 	static int luaItemTypeIsQuiver(lua_State* L);
-
 	static int luaItemTypeIsPodium(lua_State* L);
+
 	static int luaItemTypeGetType(lua_State* L);
-	static int luaItemTypeGetGroup(lua_State* L);
 	static int luaItemTypeGetId(lua_State* L);
 	static int luaItemTypeGetName(lua_State* L);
 	static int luaItemTypeGetPluralName(lua_State* L);
 	static int luaItemTypeGetArticle(lua_State* L);
 	static int luaItemTypeGetDescription(lua_State* L);
 	static int luaItemTypeGetSlotPosition(lua_State* L);
-	static int luaItemTypeGetRotateId(lua_State* L);
-	static int luaItemTypeGetWareId(lua_State* L);
 
 	static int luaItemTypeGetCharges(lua_State* L);
 	static int luaItemTypeGetFluidSource(lua_State* L);
@@ -80,8 +69,6 @@ private:
 	static int luaItemTypeGetDecayId(lua_State* L);
 	static int luaItemTypeGetRequiredLevel(lua_State* L);
 	static int luaItemTypeGetAmmoType(lua_State* L);
-	static int luaItemTypeGetCorpseType(lua_State* L);
-	static int luaItemTypeGetClassification(lua_State* L);
 
 	static int luaItemTypeGetSpeed(lua_State* L);
 	static int luaItemTypeGetBaseSpeed(lua_State* L);
@@ -90,9 +77,8 @@ private:
 	static int luaItemTypeGetWrapableTo(lua_State* L);
 	static int luaItemTypeGetVocationString(lua_State* L);
 
-	static int luaItemTypeHasSubType(lua_State* L);
-	static int luaItemTypeGetAbilities(lua_State* L);
+	static int luaItemTypeGetElementalBond(lua_State* L);
+	static int luaItemTypeGetMantra(lua_State* L);
 
-	static int luaItemTypeIsWrapKit(lua_State* L);
-	static int luaItemTypeIsSpellBook(lua_State* L);
+	static int luaItemTypeHasSubType(lua_State* L);
 };

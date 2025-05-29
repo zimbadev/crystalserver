@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/events/global_event_functions.hpp"
 
@@ -48,7 +40,7 @@ int GlobalEventFunctions::luaCreateGlobalEvent(lua_State* L) {
 
 int GlobalEventFunctions::luaGlobalEventType(lua_State* L) {
 	// globalevent:type(callback)
-	const auto &global = Lua::getUserdataShared<GlobalEvent>(L, 1);
+	const auto &global = Lua::getUserdataShared<GlobalEvent>(L, 1, "GlobalEvent");
 	if (global) {
 		const std::string typeName = Lua::getString(L, 2);
 		const std::string tmpStr = asLowerCaseString(typeName);
@@ -78,7 +70,7 @@ int GlobalEventFunctions::luaGlobalEventType(lua_State* L) {
 
 int GlobalEventFunctions::luaGlobalEventRegister(lua_State* L) {
 	// globalevent:register()
-	const auto &globalevent = Lua::getUserdataShared<GlobalEvent>(L, 1);
+	const auto &globalevent = Lua::getUserdataShared<GlobalEvent>(L, 1, "GlobalEvent");
 	if (globalevent) {
 		if (!globalevent->isLoadedScriptId()) {
 			Lua::pushBoolean(L, false);
@@ -98,7 +90,7 @@ int GlobalEventFunctions::luaGlobalEventRegister(lua_State* L) {
 
 int GlobalEventFunctions::luaGlobalEventOnCallback(lua_State* L) {
 	// globalevent:onThink / record / etc. (callback)
-	const auto &globalevent = Lua::getUserdataShared<GlobalEvent>(L, 1);
+	const auto &globalevent = Lua::getUserdataShared<GlobalEvent>(L, 1, "GlobalEvent");
 	if (globalevent) {
 		if (!globalevent->loadScriptId()) {
 			Lua::pushBoolean(L, false);
@@ -113,7 +105,7 @@ int GlobalEventFunctions::luaGlobalEventOnCallback(lua_State* L) {
 
 int GlobalEventFunctions::luaGlobalEventTime(lua_State* L) {
 	// globalevent:time(time)
-	const auto &globalevent = Lua::getUserdataShared<GlobalEvent>(L, 1);
+	const auto &globalevent = Lua::getUserdataShared<GlobalEvent>(L, 1, "GlobalEvent");
 	if (globalevent) {
 		std::string timer = Lua::getString(L, 2);
 		const std::vector<int32_t> params = vectorAtoi(explodeString(timer, ":"));
@@ -176,7 +168,7 @@ int GlobalEventFunctions::luaGlobalEventTime(lua_State* L) {
 
 int GlobalEventFunctions::luaGlobalEventInterval(lua_State* L) {
 	// globalevent:interval(interval)
-	const auto &globalevent = Lua::getUserdataShared<GlobalEvent>(L, 1);
+	const auto &globalevent = Lua::getUserdataShared<GlobalEvent>(L, 1, "GlobalEvent");
 	if (globalevent) {
 		globalevent->setInterval(Lua::getNumber<uint32_t>(L, 2));
 		globalevent->setNextExecution(OTSYS_TIME() + Lua::getNumber<uint32_t>(L, 2));

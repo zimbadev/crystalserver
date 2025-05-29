@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "creatures/players/imbuements/imbuements.hpp"
 
@@ -316,26 +308,6 @@ bool Imbuements::loadFromXml(bool /* reloading */) {
 						}
 
 						imbuement.capacity = pugi::cast<uint32_t>(attr.value());
-					} else if (strcasecmp(effecttype.c_str(), "deflect") == 0) {
-						if (!(attr = childNode.attribute("chance"))) {
-							g_logger().warn("Missing deflect chance for imbuement name {}", imbuement.name);
-							continue;
-						}
-						auto deflectChance = pugi::cast<uint8_t>(attr.value());
-						if (deflectChance <= 0 || deflectChance > 100) {
-							g_logger().warn("Invalid deflect chance for imbuement name {}", imbuement.name);
-							continue;
-						}
-						if (!(attr = childNode.attribute("conditionid"))) {
-							g_logger().warn("Missing deflect condition id for imbuement name {}", imbuement.name);
-							continue;
-						}
-						auto conditionId = pugi::cast<uint8_t>(attr.value());
-						if (conditionId <= 0 || conditionId >= CONDITION_COUNT) {
-							g_logger().warn("Invalid deflect condition id for imbuement name {}", imbuement.name);
-							continue;
-						}
-						imbuement.deflectConditions[static_cast<ConditionType_t>(conditionId)] = deflectChance;
 					}
 				}
 			}
@@ -385,7 +357,7 @@ std::vector<Imbuement*> Imbuements::getImbuements(const std::shared_ptr<Player> 
 		if (g_configManager().getBoolean(TOGGLE_IMBUEMENT_SHRINE_STORAGE)
 		    && imbuement->getStorage() != 0
 		    && player->getStorageValue(imbuement->getStorage() == -1)
-		    && imbuement->getBaseID() >= 1 && imbuement->getBaseID() <= 3) {
+		    && imbuement->getBaseID() >= 1 && imbuement->getBaseID() <= 4) {
 			continue;
 		}
 

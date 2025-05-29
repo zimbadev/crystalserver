@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "server/network/protocol/protocolstatus.hpp"
 
@@ -23,6 +15,10 @@
 #include "game/game.hpp"
 #include "game/scheduling/dispatcher.hpp"
 #include "server/network/message/outputmessage.hpp"
+
+std::string ProtocolStatus::SERVER_NAME = "Canary";
+std::string ProtocolStatus::SERVER_VERSION = "3.0";
+std::string ProtocolStatus::SERVER_DEVELOPERS = "OpenTibiaBR Organization";
 
 std::map<uint32_t, int64_t> ProtocolStatus::ipConnectMap;
 const uint64_t ProtocolStatus::start = OTSYS_TIME(true);
@@ -101,8 +97,8 @@ void ProtocolStatus::sendStatusString() {
 	serverinfo.append_attribute("port") = std::to_string(g_configManager().getNumber(LOGIN_PORT)).c_str();
 	serverinfo.append_attribute("location") = g_configManager().getString(LOCATION).c_str();
 	serverinfo.append_attribute("url") = g_configManager().getString(URL).c_str();
-	serverinfo.append_attribute("server") = SOFTWARE_NAME;
-	serverinfo.append_attribute("version") = SOFTWARE_VERSION;
+	serverinfo.append_attribute("server") = ProtocolStatus::SERVER_NAME.c_str();
+	serverinfo.append_attribute("version") = ProtocolStatus::SERVER_VERSION.c_str();
 	serverinfo.append_attribute("client") = fmt::format("{}.{}", CLIENT_VERSION_UPPER, CLIENT_VERSION_LOWER).c_str();
 
 	pugi::xml_node owner = tsqp.append_child("owner");
@@ -227,8 +223,8 @@ void ProtocolStatus::sendInfo(uint16_t requestedInfo, const std::string &charact
 
 	if (requestedInfo & REQUEST_SERVER_SOFTWARE_INFO) {
 		output->addByte(0x23); // server software info
-		output->addString(SOFTWARE_NAME);
-		output->addString(SOFTWARE_VERSION);
+		output->addString(ProtocolStatus::SERVER_NAME);
+		output->addString(ProtocolStatus::SERVER_VERSION);
 		output->addString(fmt::format("{}.{}", CLIENT_VERSION_UPPER, CLIENT_VERSION_LOWER));
 	}
 	send(output);

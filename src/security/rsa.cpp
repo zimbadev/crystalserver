@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "security/rsa.hpp"
 
@@ -178,11 +170,17 @@ uint16_t RSA::decodeLength(char*&pos) const {
 	if (length & 0x80) {
 		uint8_t numLengthBytes = length & 0x7F;
 		if (numLengthBytes > 4) {
-			g_logger().error("[RSA::loadPEM] - Invalid 'length'");
+			g_logger().error("[RSA::decodeLength] - Invalid 'length'");
 			return 0;
 		}
-		// Copy 'numLengthBytes' bytes from 'pos' into 'buffer', starting at the correct position
-		std::ranges::copy_n(pos, numLengthBytes, buffer.begin() + (4 - numLengthBytes));
+		// Adjust the copy destination to ensure it doesn't overflow
+		auto destIt = buffer.begin() + (4 - numLengthBytes);
+		if (destIt < buffer.begin() || destIt + numLengthBytes > buffer.end()) {
+			g_logger().error("[RSA::decodeLength] - Invalid copy range");
+			return 0;
+		}
+		// Copy 'numLengthBytes' bytes from 'pos' into 'buffer'
+		std::copy_n(pos, numLengthBytes, destIt);
 		pos += numLengthBytes;
 		// Reconstruct 'length' from 'buffer' (big-endian)
 		uint32_t tempLength = 0;
@@ -190,7 +188,7 @@ uint16_t RSA::decodeLength(char*&pos) const {
 			tempLength = (tempLength << 8) | buffer[4 - numLengthBytes + i];
 		}
 		if (tempLength > UINT16_MAX) {
-			g_logger().error("[RSA::loadPEM] - Length too large");
+			g_logger().error("[RSA::decodeLength] - Length too large");
 			return 0;
 		}
 		length = static_cast<uint16_t>(tempLength);

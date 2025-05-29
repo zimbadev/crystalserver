@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "database/database.hpp"
 
@@ -73,15 +65,18 @@ void Database::createDatabaseBackup(bool compress) const {
 	if (!g_configManager().getBoolean(MYSQL_DB_BACKUP)) {
 		return;
 	}
+
 	// Get current time for formatting
 	auto now = std::chrono::system_clock::now();
 	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
 	std::string formattedDate = fmt::format("{:%Y-%m-%d}", fmt::localtime(now_c));
 	std::string formattedTime = fmt::format("{:%H-%M-%S}", fmt::localtime(now_c));
+
 	// Create a backup directory based on the current date
 	std::string backupDir = fmt::format("database_backup/{}/", formattedDate);
 	std::filesystem::create_directories(backupDir);
 	std::string backupFileName = fmt::format("{}backup_{}.sql", backupDir, formattedTime);
+
 	// Create a temporary configuration file for MySQL credentials
 	std::string tempConfigFile = "database_backup.cnf";
 	std::ofstream configFile(tempConfigFile);
@@ -96,17 +91,21 @@ void Database::createDatabaseBackup(bool compress) const {
 		g_logger().error("Failed to create temporary MySQL configuration file.");
 		return;
 	}
+
 	// Execute mysqldump command to create backup file
 	std::string command = fmt::format(
 		"mysqldump --defaults-extra-file={} {} > {}",
 		tempConfigFile, g_configManager().getString(MYSQL_DB), backupFileName
 	);
+
 	int result = std::system(command.c_str());
 	std::filesystem::remove(tempConfigFile);
+
 	if (result != 0) {
 		g_logger().error("Failed to create database backup using mysqldump.");
 		return;
 	}
+
 	// Compress the backup file if requested
 	std::string compressedFileName;
 	compressedFileName = backupFileName + ".gz";
@@ -115,20 +114,25 @@ void Database::createDatabaseBackup(bool compress) const {
 		g_logger().error("Failed to open gzip file for compression.");
 		return;
 	}
+
 	std::ifstream backupFile(backupFileName, std::ios::binary);
 	if (!backupFile.is_open()) {
 		g_logger().error("Failed to open backup file for compression: {}", backupFileName);
 		gzclose(gzFile);
 		return;
 	}
+
 	std::string buffer(8192, '\0');
 	while (backupFile.read(&buffer[0], buffer.size()) || backupFile.gcount() > 0) {
 		gzwrite(gzFile, buffer.data(), backupFile.gcount());
 	}
+
 	backupFile.close();
 	gzclose(gzFile);
 	std::filesystem::remove(backupFileName);
+
 	g_logger().info("Database backup successfully compressed to: {}", compressedFileName);
+
 	// Delete backups older than 7 days
 	auto nowTime = std::chrono::system_clock::now();
 	auto sevenDaysAgo = nowTime - std::chrono::hours(7 * 24); // 7 days in hours
@@ -138,9 +142,9 @@ void Database::createDatabaseBackup(bool compress) const {
 				for (const auto &file : std::filesystem::directory_iterator(entry)) {
 					if (file.path().extension() == ".gz") {
 						auto fileTime = std::filesystem::last_write_time(file);
-						auto sctp = std::chrono::time_point_cast<std::chrono::system_clock::duration>(fileTime - std::filesystem::file_time_type::clock::now() + std::chrono::system_clock::now());
+						auto fileTimeSystemClock = std::chrono::clock_cast<std::chrono::system_clock>(fileTime);
 
-						if (sctp < sevenDaysAgo) {
+						if (fileTimeSystemClock < sevenDaysAgo) {
 							std::filesystem::remove(file);
 							g_logger().info("Deleted old backup file: {}", file.path().string());
 						}

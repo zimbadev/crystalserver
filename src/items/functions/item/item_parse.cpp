@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "items/functions/item/item_parse.hpp"
 
@@ -89,7 +81,8 @@ void ItemParse::initParse(const std::string &stringValue, pugi::xml_node attribu
 	ItemParse::parsePrimaryType(stringValue, valueAttribute, itemType);
 	ItemParse::parseHouseRelated(stringValue, valueAttribute, itemType);
 	ItemParse::parseUnscriptedItems(stringValue, attributeNode, valueAttribute, itemType);
-	ItemParse::parsePreventLoss(stringValue, valueAttribute, itemType);
+	ItemParse::parseElementalBond(stringValue, valueAttribute, itemType);
+	ItemParse::parseMantra(stringValue, valueAttribute, itemType);
 }
 
 void ItemParse::parseDummyRate(pugi::xml_node attributeNode, ItemType &itemType) {
@@ -127,8 +120,11 @@ void ItemParse::parseType(const std::string &stringValue, pugi::xml_node attribu
 			if (itemType.type == ITEM_TYPE_DUMMY) {
 				parseDummyRate(attributeNode, itemType);
 			}
+		} else if (stringValue == "magicshieldpotion") {
+			g_logger().debug("[Items::parseType] - Item {} is a potion", itemType.id);
+			itemType.m_isMagicShieldPotion = true;
 		} else {
-			g_logger().warn("[Items::parseItemNode] - Unknown type: {}", valueAttribute.as_string());
+			g_logger().warn("[Items::parseType] - Unknown type: {}", valueAttribute.as_string());
 		}
 	}
 }
@@ -263,12 +259,6 @@ void ItemParse::parseWriteables(const std::string &stringValue, pugi::xml_attrib
 		itemType.maxTextLen = pugi::cast<uint16_t>(valueAttribute.value());
 	} else if (stringValue == "writeonceitemid") {
 		itemType.writeOnceItemId = pugi::cast<uint16_t>(valueAttribute.value());
-	}
-}
-
-void ItemParse::parsePreventLoss(const std::string &stringValue, pugi::xml_attribute valueAttribute, ItemType &itemType) {
-	if (stringValue == "preventloss") {
-		itemType.preventLoss = pugi::cast<uint16_t>(valueAttribute.value());
 	}
 }
 
@@ -641,6 +631,8 @@ CombatType_t ItemParse::parseFieldCombatType(pugi::xml_attribute valueAttribute)
 		return COMBAT_DROWNDAMAGE;
 	} else if (lowerStringValue == "physical") {
 		return COMBAT_PHYSICALDAMAGE;
+	} else if (lowerStringValue == "agony") {
+		return COMBAT_AGONYDAMAGE;
 	} else {
 		g_logger().warn("[Items::parseItemNode] Unknown field value {}", valueAttribute.as_string());
 	}
@@ -1014,6 +1006,7 @@ void ItemParse::createAndRegisterScript(ItemType &itemType, pugi::xml_node attri
 		}
 
 		weapon->weaponType = weaponType;
+		weapon->elementalBond = itemType.elementalBond;
 		itemType.weaponType = weapon->weaponType;
 		weapon->configureWeapon(itemType);
 		g_logger().trace("Created weapon with type '{}'", getWeaponName(weaponType));
@@ -1277,5 +1270,32 @@ void ItemParse::parseUnscriptedItems(std::string_view stringValue, pugi::xml_nod
 				createAndRegisterScript(itemType, attributeNode, MOVE_EVENT_NONE, weaponType);
 			}
 		}
+	}
+}
+
+void ItemParse::parseElementalBond(const std::string &stringValue, pugi::xml_attribute valueAttribute, ItemType &itemType) {
+	if (stringValue == "elementalbond") {
+		Abilities &abilities = itemType.getAbilities();
+		const std::string &elementalBond = valueAttribute.value();
+		if (elementalBond == "energy") {
+			abilities.elementType = COMBAT_ENERGYDAMAGE;
+		} else if (elementalBond == "earth") {
+			abilities.elementType = COMBAT_EARTHDAMAGE;
+		} else if (elementalBond == "physical") {
+			abilities.elementType = COMBAT_PHYSICALDAMAGE;
+		}
+		itemType.elementalBond = elementalBond;
+	}
+}
+
+void ItemParse::parseMantra(const std::string &stringValue, pugi::xml_attribute valueAttribute, ItemType &itemType) {
+	if (stringValue == "mantra") {
+		const auto value = pugi::cast<int16_t>(valueAttribute.value());
+		Abilities &abilities = itemType.getAbilities();
+		abilities.mantraAbsorbValue[combatTypeToIndex(COMBAT_ENERGYDAMAGE)] += value;
+		abilities.mantraAbsorbValue[combatTypeToIndex(COMBAT_FIREDAMAGE)] += value;
+		abilities.mantraAbsorbValue[combatTypeToIndex(COMBAT_EARTHDAMAGE)] += value;
+		abilities.mantraAbsorbValue[combatTypeToIndex(COMBAT_ICEDAMAGE)] += value;
+		itemType.mantra = value;
 	}
 }

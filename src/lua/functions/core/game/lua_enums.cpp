@@ -1,29 +1,21 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/core/game/lua_enums.hpp"
 
-#include "creatures/players/wheel/wheel_definitions.hpp"
 #include "enums/account_group_type.hpp"
 #include "enums/account_type.hpp"
 #include "enums/item_attribute.hpp"
 #include "game/functions/game_reload.hpp"
 #include "io/io_bosstiary.hpp"
 #include "lua/functions/lua_functions_loader.hpp"
+#include "creatures/players/components/wheel/wheel_definitions.hpp"
 
 constexpr const char* soundNamespace = "SOUND_EFFECT_TYPE_";
 
@@ -121,11 +113,13 @@ void LuaEnums::init(lua_State* L) {
 	initWheelEnums(L);
 	initAttributeConditionSubIdEnums(L);
 	initConcoctionsEnum(L);
-	initGuildsEnum(L);
-	initWorldTypeEnums(L);
+	initVirtueEnums(L);
 }
 
 void LuaEnums::initOthersEnums(lua_State* L) {
+	registerEnum(L, WORLD_TYPE_NO_PVP);
+	registerEnum(L, WORLD_TYPE_PVP);
+	registerEnum(L, WORLD_TYPE_PVP_ENFORCED);
 	registerEnum(L, AMMO_NONE);
 	registerEnum(L, AMMO_BOLT);
 	registerEnum(L, AMMO_ARROW);
@@ -155,12 +149,12 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 
 	// Use with house:getAccessList, house:setAccessList
 	registerEnum(L, GUEST_LIST);
-	registerEnum(L, SUBOWNER_LIST);
 
 	registerEnum(L, LIGHT_STATE_DAY);
 	registerEnum(L, LIGHT_STATE_NIGHT);
 	registerEnum(L, LIGHT_STATE_SUNSET);
 	registerEnum(L, LIGHT_STATE_SUNRISE);
+	registerEnum(L, STORAGEVALUE_EMOTE);
 
 	registerEnum(L, IMMOVABLE_ACTION_ID);
 
@@ -224,6 +218,7 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 	registerEnum(L, WEAPON_WAND);
 	registerEnum(L, WEAPON_AMMO);
 	registerEnum(L, WEAPON_MISSILE);
+	registerEnum(L, WEAPON_FIST);
 
 	registerEnum(L, SCREENSHOT_TYPE_NONE);
 	registerEnum(L, SCREENSHOT_TYPE_ACHIEVEMENT);
@@ -241,14 +236,6 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 	registerEnum(L, SCREENSHOT_TYPE_GIFTOFLIFE);
 }
 
-void LuaEnums::initWorldTypeEnums(lua_State* L) {
-	registerEnum(L, WORLDTYPE_OPTIONAL);
-	registerEnum(L, WORLDTYPE_OPEN);
-	registerEnum(L, WORLDTYPE_HARDCORE);
-	registerEnum(L, WORLDTYPE_FIRST);
-	registerEnum(L, WORLDTYPE_LAST);
-}
-
 void LuaEnums::initAccountEnums(lua_State* L) {
 	registerEnum(L, ACCOUNT_TYPE_NORMAL);
 	registerEnum(L, ACCOUNT_TYPE_TUTOR);
@@ -262,7 +249,6 @@ void LuaEnums::initAccountEnums(lua_State* L) {
 	registerEnum(L, GROUP_TYPE_GAMEMASTER);
 	registerEnum(L, GROUP_TYPE_COMMUNITYMANAGER);
 	registerEnum(L, GROUP_TYPE_GOD);
-	registerEnum(L, GROUP_TYPE_TESTER);
 }
 
 void LuaEnums::initDailyRewardEnums(lua_State* L) {
@@ -368,8 +354,6 @@ void LuaEnums::initConditionIdEnums(lua_State* L) {
 	registerEnum(L, CONDITIONID_FEET);
 	registerEnum(L, CONDITIONID_RING);
 	registerEnum(L, CONDITIONID_AMMO);
-	registerEnum(L, CONDITIONID_OUTFIT);
-	registerEnum(L, CONDITIONID_MOUNT);
 }
 
 void LuaEnums::initConditionParamEnums(lua_State* L) {
@@ -479,13 +463,6 @@ void LuaEnums::initConcoctionsEnum(lua_State* L) {
 	registerEnumNamespace(L, luaNamespace, Concoction_t::HolyAmplification);
 	registerEnumNamespace(L, luaNamespace, Concoction_t::DeathAmplification);
 	registerEnumNamespace(L, luaNamespace, Concoction_t::PhysicalAmplification);
-}
-
-void LuaEnums::initGuildsEnum(lua_State* L) {
-	registerEnum(L, GUILDLEVEL_NONE);
-	registerEnum(L, GUILDLEVEL_MEMBER);
-	registerEnum(L, GUILDLEVEL_VICE);
-	registerEnum(L, GUILDLEVEL_LEADER);
 }
 
 void LuaEnums::initConstMeEnums(lua_State* L) {
@@ -645,6 +622,26 @@ void LuaEnums::initConstMeEnums(lua_State* L) {
 	registerEnum(L, CONST_ME_SIURP);
 	registerEnum(L, CONST_ME_CACAO);
 	registerEnum(L, CONST_ME_CANDY_FLOSS);
+	registerEnum(L, CONST_ME_GREEN_HITAREA);
+	registerEnum(L, CONST_ME_RED_HITAREA);
+	registerEnum(L, CONST_ME_BLUE_HITAREA);
+	registerEnum(L, CONST_ME_YELLOW_HITAREA);
+	registerEnum(L, CONST_ME_WHITE_FLURRYOFBLOWS);
+	registerEnum(L, CONST_ME_GREEN_FLURRYOFBLOWS);
+	registerEnum(L, CONST_ME_PINK_FLURRYOFBLOWS);
+	registerEnum(L, CONST_ME_WHITE_ENERGYPULSE);
+	registerEnum(L, CONST_ME_GREEN_ENERGYPULSE);
+	registerEnum(L, CONST_ME_PINK_ENERGYPULSE);
+	registerEnum(L, CONST_ME_WHITE_TIGERCLASH);
+	registerEnum(L, CONST_ME_GREEN_TIGERCLASH);
+	registerEnum(L, CONST_ME_PINK_TIGERCLASH);
+	registerEnum(L, CONST_ME_WHITE_EXPLOSIONHIT);
+	registerEnum(L, CONST_ME_GREEN_EXPLOSIONHIT);
+	registerEnum(L, CONST_ME_BLUE_EXPLOSIONHIT);
+	registerEnum(L, CONST_ME_PINK_EXPLOSIONHIT);
+	registerEnum(L, CONST_ME_WHITE_ENERGYSHOCK);
+	registerEnum(L, CONST_ME_GREEN_ENERGYSHOCK);
+	registerEnum(L, CONST_ME_YELLOW_ENERGYSHOCK);
 }
 
 void LuaEnums::initConstAniEnums(lua_State* L) {
@@ -951,9 +948,6 @@ void LuaEnums::initItemIdEnums(lua_State* L) {
 	registerEnum(L, ITEM_FORGE_CORE);
 	registerEnum(L, ITEM_PRIMAL_POD);
 	registerEnum(L, ITEM_DECORATION_KIT);
-
-	registerEnum(L, ITEM_WATERBALL);
-	registerEnum(L, ITEM_WATERBALL_SPLASH);
 
 	registerEnum(L, ItemID_t::HIRELING_LAMP);
 }
@@ -1846,4 +1840,11 @@ void LuaEnums::initWheelEnums(lua_State* L) {
 	for (const auto value : magic_enum::enum_values<WheelSpellBoost_t>()) {
 		registerMagicEnumNamespace(L, wheelNamespace, value);
 	}
+}
+
+void LuaEnums::initVirtueEnums(lua_State* L) {
+	registerEnum(L, VIRTUE_NONE);
+	registerEnum(L, VIRTUE_HARMONY);
+	registerEnum(L, VIRTUE_JUSTICE);
+	registerEnum(L, VIRTUE_SUSTAIN);
 }

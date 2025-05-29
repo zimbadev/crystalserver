@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/creatures/combat/spell_functions.hpp"
 
@@ -36,7 +28,6 @@ void SpellFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Spell", "groupCooldown", SpellFunctions::luaSpellGroupCooldown);
 	Lua::registerMethod(L, "Spell", "level", SpellFunctions::luaSpellLevel);
 	Lua::registerMethod(L, "Spell", "magicLevel", SpellFunctions::luaSpellMagicLevel);
-	Lua::registerMethod(L, "Spell", "removeOnUse", SpellFunctions::luaSpellRemoveOnUse);
 	Lua::registerMethod(L, "Spell", "mana", SpellFunctions::luaSpellMana);
 	Lua::registerMethod(L, "Spell", "manaPercent", SpellFunctions::luaSpellManaPercent);
 	Lua::registerMethod(L, "Spell", "soul", SpellFunctions::luaSpellSoul);
@@ -70,6 +61,8 @@ void SpellFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Spell", "allowFarUse", SpellFunctions::luaSpellAllowFarUse);
 	Lua::registerMethod(L, "Spell", "blockWalls", SpellFunctions::luaSpellBlockWalls);
 	Lua::registerMethod(L, "Spell", "checkFloor", SpellFunctions::luaSpellCheckFloor);
+
+	Lua::registerMethod(L, "Spell", "harmony", SpellFunctions::luaSpellHarmony);
 }
 
 int SpellFunctions::luaSpellCreate(lua_State* L) {
@@ -144,7 +137,7 @@ int SpellFunctions::luaSpellCreate(lua_State* L) {
 
 int SpellFunctions::luaSpellOnCastSpell(lua_State* L) {
 	// spell:onCastSpell(callback)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (spell->spellType == SPELL_INSTANT) {
 			const auto &instant = std::static_pointer_cast<InstantSpell>(spell);
@@ -169,7 +162,7 @@ int SpellFunctions::luaSpellOnCastSpell(lua_State* L) {
 
 int SpellFunctions::luaSpellRegister(lua_State* L) {
 	// spell:register()
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (!spell) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_SPELL_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -177,7 +170,7 @@ int SpellFunctions::luaSpellRegister(lua_State* L) {
 	}
 
 	if (spell->spellType == SPELL_INSTANT) {
-		const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+		const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 		const auto &instant = std::static_pointer_cast<InstantSpell>(spellBase);
 		if (!instant->isLoadedScriptId()) {
 			Lua::pushBoolean(L, false);
@@ -185,7 +178,7 @@ int SpellFunctions::luaSpellRegister(lua_State* L) {
 		}
 		Lua::pushBoolean(L, g_spells().registerInstantLuaEvent(instant));
 	} else if (spell->spellType == SPELL_RUNE) {
-		const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+		const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 		const auto &rune = std::static_pointer_cast<RuneSpell>(spellBase);
 		if (rune->getMagicLevel() != 0 || rune->getLevel() != 0) {
 			// Change information in the ItemType to get accurate description
@@ -210,7 +203,7 @@ int SpellFunctions::luaSpellRegister(lua_State* L) {
 int SpellFunctions::luaSpellName(lua_State* L) {
 
 	// spell:name(name)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushString(L, spell->getName());
@@ -226,7 +219,7 @@ int SpellFunctions::luaSpellName(lua_State* L) {
 
 int SpellFunctions::luaSpellId(lua_State* L) {
 	// spell:id(id)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (spell->spellType != SPELL_INSTANT && spell->spellType != SPELL_RUNE) {
 			Lua::reportErrorFunc("The method: 'spell:id(id)' is only for use of instant spells and rune spells");
@@ -247,7 +240,7 @@ int SpellFunctions::luaSpellId(lua_State* L) {
 
 int SpellFunctions::luaSpellGroup(lua_State* L) {
 	// spell:group(primaryGroup[, secondaryGroup])
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, spell->getGroup());
@@ -322,7 +315,7 @@ int SpellFunctions::luaSpellGroup(lua_State* L) {
 
 int SpellFunctions::luaSpellCastSound(lua_State* L) {
 	// get: spell:castSound() set: spell:castSound(effect)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, static_cast<uint16_t>(spell->soundCastEffect));
@@ -338,7 +331,7 @@ int SpellFunctions::luaSpellCastSound(lua_State* L) {
 
 int SpellFunctions::luaSpellImpactSound(lua_State* L) {
 	// get: spell:impactSound() set: spell:impactSound(effect)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, static_cast<uint16_t>(spell->soundImpactEffect));
@@ -354,7 +347,7 @@ int SpellFunctions::luaSpellImpactSound(lua_State* L) {
 
 int SpellFunctions::luaSpellCooldown(lua_State* L) {
 	// spell:cooldown(cooldown)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, spell->getCooldown());
@@ -370,7 +363,7 @@ int SpellFunctions::luaSpellCooldown(lua_State* L) {
 
 int SpellFunctions::luaSpellGroupCooldown(lua_State* L) {
 	// spell:groupCooldown(primaryGroupCd[, secondaryGroupCd])
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, spell->getGroupCooldown());
@@ -392,7 +385,7 @@ int SpellFunctions::luaSpellGroupCooldown(lua_State* L) {
 
 int SpellFunctions::luaSpellLevel(lua_State* L) {
 	// spell:level(lvl)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, spell->getLevel());
@@ -408,7 +401,7 @@ int SpellFunctions::luaSpellLevel(lua_State* L) {
 
 int SpellFunctions::luaSpellMagicLevel(lua_State* L) {
 	// spell:magicLevel(lvl)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, spell->getMagicLevel());
@@ -424,7 +417,7 @@ int SpellFunctions::luaSpellMagicLevel(lua_State* L) {
 
 int SpellFunctions::luaSpellMana(lua_State* L) {
 	// spell:mana(mana)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, spell->getMana());
@@ -440,7 +433,7 @@ int SpellFunctions::luaSpellMana(lua_State* L) {
 
 int SpellFunctions::luaSpellManaPercent(lua_State* L) {
 	// spell:manaPercent(percent)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, spell->getManaPercent());
@@ -456,7 +449,7 @@ int SpellFunctions::luaSpellManaPercent(lua_State* L) {
 
 int SpellFunctions::luaSpellSoul(lua_State* L) {
 	// spell:soul(soul)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, spell->getSoulCost());
@@ -472,7 +465,7 @@ int SpellFunctions::luaSpellSoul(lua_State* L) {
 
 int SpellFunctions::luaSpellRange(lua_State* L) {
 	// spell:range(range)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_pushnumber(L, spell->getRange());
@@ -488,7 +481,7 @@ int SpellFunctions::luaSpellRange(lua_State* L) {
 
 int SpellFunctions::luaSpellPremium(lua_State* L) {
 	// spell:isPremium(bool)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->isPremium());
@@ -504,7 +497,7 @@ int SpellFunctions::luaSpellPremium(lua_State* L) {
 
 int SpellFunctions::luaSpellEnabled(lua_State* L) {
 	// spell:isEnabled(bool)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->isEnabled());
@@ -520,7 +513,7 @@ int SpellFunctions::luaSpellEnabled(lua_State* L) {
 
 int SpellFunctions::luaSpellNeedTarget(lua_State* L) {
 	// spell:needTarget(bool)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->getNeedTarget());
@@ -536,7 +529,7 @@ int SpellFunctions::luaSpellNeedTarget(lua_State* L) {
 
 int SpellFunctions::luaSpellNeedWeapon(lua_State* L) {
 	// spell:needWeapon(bool)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->getNeedWeapon());
@@ -552,7 +545,7 @@ int SpellFunctions::luaSpellNeedWeapon(lua_State* L) {
 
 int SpellFunctions::luaSpellNeedLearn(lua_State* L) {
 	// spell:needLearn(bool)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->getNeedLearn());
@@ -568,7 +561,7 @@ int SpellFunctions::luaSpellNeedLearn(lua_State* L) {
 
 int SpellFunctions::luaSpellSelfTarget(lua_State* L) {
 	// spell:isSelfTarget(bool)
-	if (const auto &spell = Lua::getUserdataShared<Spell>(L, 1)) {
+	if (const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell")) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->getSelfTarget());
 		} else {
@@ -583,7 +576,7 @@ int SpellFunctions::luaSpellSelfTarget(lua_State* L) {
 
 int SpellFunctions::luaSpellBlocking(lua_State* L) {
 	// spell:isBlocking(blockingSolid, blockingCreature)
-	if (const auto &spell = Lua::getUserdataShared<Spell>(L, 1)) {
+	if (const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell")) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->getBlockingSolid());
 			Lua::pushBoolean(L, spell->getBlockingCreature());
@@ -601,7 +594,7 @@ int SpellFunctions::luaSpellBlocking(lua_State* L) {
 
 int SpellFunctions::luaSpellAggressive(lua_State* L) {
 	// spell:isAggressive(bool)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->getAggressive());
@@ -617,7 +610,7 @@ int SpellFunctions::luaSpellAggressive(lua_State* L) {
 
 int SpellFunctions::luaSpellAllowOnSelf(lua_State* L) {
 	// spell:allowOnSelf(bool)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->getAllowOnSelf());
@@ -633,7 +626,7 @@ int SpellFunctions::luaSpellAllowOnSelf(lua_State* L) {
 
 int SpellFunctions::luaSpellPzLocked(lua_State* L) {
 	// spell:isPzLocked(bool)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			Lua::pushBoolean(L, spell->getLockedPZ());
@@ -649,7 +642,7 @@ int SpellFunctions::luaSpellPzLocked(lua_State* L) {
 
 int SpellFunctions::luaSpellVocation(lua_State* L) {
 	// spell:vocation(vocation)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	if (spell) {
 		if (lua_gettop(L) == 1) {
 			lua_createtable(L, 0, 0);
@@ -691,7 +684,7 @@ int SpellFunctions::luaSpellVocation(lua_State* L) {
 // only for InstantSpells
 int SpellFunctions::luaSpellWords(lua_State* L) {
 	// spell:words(words[, separator = ""])
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<InstantSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_INSTANT, it means that this actually is no InstantSpell, so we return nil
@@ -722,7 +715,7 @@ int SpellFunctions::luaSpellWords(lua_State* L) {
 // only for InstantSpells
 int SpellFunctions::luaSpellNeedDirection(lua_State* L) {
 	// spell:needDirection(bool)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<InstantSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_INSTANT, it means that this actually is no InstantSpell, so we return nil
@@ -743,26 +736,10 @@ int SpellFunctions::luaSpellNeedDirection(lua_State* L) {
 	return 1;
 }
 
-int SpellFunctions::luaSpellRemoveOnUse(lua_State* L) {
-	// spell:removeOnUse(bool)
-	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
-	if (spell) {
-		if (lua_gettop(L) == 1) {
-			Lua::pushBoolean(L, spell->getRemoveOnUse());
-		} else {
-			spell->setRemoveOnUse(Lua::getBoolean(L, 2));
-			Lua::pushBoolean(L, true);
-		}
-	} else {
-		lua_pushnil(L);
-	}
-	return 1;
-}
-
 // only for InstantSpells
 int SpellFunctions::luaSpellHasParams(lua_State* L) {
 	// spell:hasParams(bool)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<InstantSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_INSTANT, it means that this actually is no InstantSpell, so we return nil
@@ -786,7 +763,7 @@ int SpellFunctions::luaSpellHasParams(lua_State* L) {
 // only for InstantSpells
 int SpellFunctions::luaSpellHasPlayerNameParam(lua_State* L) {
 	// spell:hasPlayerNameParam(bool)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<InstantSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_INSTANT, it means that this actually is no InstantSpell, so we return nil
@@ -810,7 +787,7 @@ int SpellFunctions::luaSpellHasPlayerNameParam(lua_State* L) {
 // only for InstantSpells
 int SpellFunctions::luaSpellNeedCasterTargetOrDirection(lua_State* L) {
 	// spell:needCasterTargetOrDirection(bool)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<InstantSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_INSTANT, it means that this actually is no InstantSpell, so we return nil
@@ -834,7 +811,7 @@ int SpellFunctions::luaSpellNeedCasterTargetOrDirection(lua_State* L) {
 // only for InstantSpells
 int SpellFunctions::luaSpellIsBlockingWalls(lua_State* L) {
 	// spell:blockWalls(bool)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<InstantSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_INSTANT, it means that this actually is no InstantSpell, so we return nil
@@ -858,7 +835,7 @@ int SpellFunctions::luaSpellIsBlockingWalls(lua_State* L) {
 // only for RuneSpells
 int SpellFunctions::luaSpellRuneId(lua_State* L) {
 	// spell:runeId(id)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<RuneSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_RUNE, it means that this actually is no RuneSpell, so we return nil
@@ -882,7 +859,7 @@ int SpellFunctions::luaSpellRuneId(lua_State* L) {
 // only for RuneSpells
 int SpellFunctions::luaSpellCharges(lua_State* L) {
 	// spell:charges(charges)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<RuneSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_RUNE, it means that this actually is no RuneSpell, so we return nil
@@ -906,7 +883,7 @@ int SpellFunctions::luaSpellCharges(lua_State* L) {
 // only for RuneSpells
 int SpellFunctions::luaSpellAllowFarUse(lua_State* L) {
 	// spell:allowFarUse(bool)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<RuneSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_RUNE, it means that this actually is no RuneSpell, so we return nil
@@ -930,7 +907,7 @@ int SpellFunctions::luaSpellAllowFarUse(lua_State* L) {
 // only for RuneSpells
 int SpellFunctions::luaSpellBlockWalls(lua_State* L) {
 	// spell:blockWalls(bool)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<RuneSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_RUNE, it means that this actually is no RuneSpell, so we return nil
@@ -954,7 +931,7 @@ int SpellFunctions::luaSpellBlockWalls(lua_State* L) {
 // only for RuneSpells
 int SpellFunctions::luaSpellCheckFloor(lua_State* L) {
 	// spell:checkFloor(bool)
-	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1, "Spell");
 	const auto &spell = std::static_pointer_cast<RuneSpell>(spellBase);
 	if (spell) {
 		// if spell != SPELL_RUNE, it means that this actually is no RuneSpell, so we return nil
@@ -967,6 +944,22 @@ int SpellFunctions::luaSpellCheckFloor(lua_State* L) {
 			Lua::pushBoolean(L, spell->getCheckFloor());
 		} else {
 			spell->setCheckFloor(Lua::getBoolean(L, 2));
+			Lua::pushBoolean(L, true);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int SpellFunctions::luaSpellHarmony(lua_State* L) {
+	// spell:harmony([enable])
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1, "Spell");
+	if (spell) {
+		if (lua_gettop(L) == 1) {
+			Lua::pushBoolean(L, spell->getHarmonyCost());
+		} else {
+			spell->setHarmonyCost(Lua::getBoolean(L, 2, false));
 			Lua::pushBoolean(L, true);
 		}
 	} else {

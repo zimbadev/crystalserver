@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/core/game/global_functions.hpp"
 
@@ -21,7 +13,6 @@
 #include "creatures/creature.hpp"
 #include "creatures/combat/condition.hpp"
 #include "creatures/interactions/chat.hpp"
-#include "creatures/players/wheel/player_wheel.hpp"
 #include "creatures/players/player.hpp"
 #include "game/game.hpp"
 #include "game/scheduling/dispatcher.hpp"
@@ -340,7 +331,7 @@ int GlobalFunctions::luaDoAreaCombatHealth(lua_State* L) {
 		damage.runeSpellName = Lua::getString(L, 10);
 		if (creature) {
 			if (const auto &player = creature->getPlayer()) {
-				player->wheel()->getCombatDataSpell(damage);
+				player->wheel().getCombatDataSpell(damage);
 			}
 		}
 
@@ -384,7 +375,7 @@ int GlobalFunctions::luaDoTargetCombatHealth(lua_State* L) {
 	damage.runeSpellName = Lua::getString(L, 10);
 	if (creature) {
 		if (const auto &player = creature->getPlayer()) {
-			player->wheel()->getCombatDataSpell(damage);
+			player->wheel().getCombatDataSpell(damage);
 		}
 	}
 
@@ -422,7 +413,7 @@ int GlobalFunctions::luaDoAreaCombatMana(lua_State* L) {
 		damage.runeSpellName = Lua::getString(L, 9);
 		if (creature) {
 			if (const auto &player = creature->getPlayer()) {
-				player->wheel()->getCombatDataSpell(damage);
+				player->wheel().getCombatDataSpell(damage);
 			}
 		}
 
@@ -467,7 +458,7 @@ int GlobalFunctions::luaDoTargetCombatMana(lua_State* L) {
 	damage.runeSpellName = Lua::getString(L, 8);
 	if (creature) {
 		if (const auto &player = creature->getPlayer()) {
-			player->wheel()->getCombatDataSpell(damage);
+			player->wheel().getCombatDataSpell(damage);
 		}
 	}
 
@@ -485,7 +476,7 @@ int GlobalFunctions::luaDoAreaCombatCondition(lua_State* L) {
 		return 1;
 	}
 
-	const auto &condition = Lua::getUserdataShared<Condition>(L, 4);
+	const auto &condition = Lua::getUserdataShared<Condition>(L, 4, "Condition");
 	if (!condition) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_CONDITION_NOT_FOUND));
 		Lua::pushBoolean(L, false);
@@ -523,7 +514,7 @@ int GlobalFunctions::luaDoTargetCombatCondition(lua_State* L) {
 		return 1;
 	}
 
-	const auto &condition = Lua::getUserdataShared<Condition>(L, 3);
+	const auto &condition = Lua::getUserdataShared<Condition>(L, 3, "Condition");
 	if (!condition) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_CONDITION_NOT_FOUND));
 		Lua::pushBoolean(L, false);

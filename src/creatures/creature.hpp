@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -123,14 +115,6 @@ public:
 
 	virtual CreatureType_t getType() const = 0;
 
-	bool isPlayer() const {
-		return getType() == CreatureType_t::CREATURETYPE_PLAYER;
-	}
-
-	bool isMonster() const {
-		return getType() == CreatureType_t::CREATURETYPE_MONSTER;
-	}
-
 	virtual void setID() = 0;
 	void setRemoved() {
 		isInternalRemoved = true;
@@ -225,7 +209,11 @@ public:
 	}
 
 	bool isAlive() const {
-		return !isDead();
+		return !isLifeless();
+	}
+
+	bool isLifeless() const {
+		return health <= 0;
 	}
 
 	virtual int32_t getMaxHealth() const {
@@ -313,6 +301,9 @@ public:
 	}
 	const Outfit_t getDefaultOutfit() const {
 		return defaultOutfit;
+	}
+	void setDefaultOutfit(Outfit_t outfit) {
+		defaultOutfit = outfit;
 	}
 	bool isWearingSupportOutfit() const {
 		auto outfit = currentOutfit.lookType;
@@ -464,7 +455,7 @@ public:
 	void onDeath();
 	virtual uint64_t getGainedExperience(const std::shared_ptr<Creature> &attacker) const;
 	void addDamagePoints(const std::shared_ptr<Creature> &attacker, int32_t damagePoints);
-	bool hasBeenAttacked(uint32_t attackerId) const;
+	bool hasBeenAttacked(uint32_t attackerId);
 
 	// combat event functions
 	virtual void onAddCondition(ConditionType_t type);
@@ -710,6 +701,17 @@ public:
 	void setCharmChanceModifier(int8_t value) {
 		charmChanceModifier = value;
 	}
+	std::string getShader() const {
+		return shader;
+	}
+	void setShader(const std::string_view shaderName) {
+		shader = shaderName;
+	}
+	void attachEffectById(uint16_t id);
+	void detachEffectById(uint16_t id);
+	std::vector<uint16_t> getAttachedEffectList() const {
+		return attachedEffectList;
+	}
 
 	void setCombatDamage(const CombatDamage &damage);
 	CombatDamage getCombatDamage() const;
@@ -882,9 +884,8 @@ private:
 	void updateCalculatedStepSpeed() {
 		const auto stepSpeed = getStepSpeed();
 		walk.calculatedStepSpeed = 1;
-		const auto tileFriction = walk.groundSpeed;
 		if (stepSpeed > -Creature::speedB) {
-			const auto formula = (1000 * tileFriction) / (Creature::speedA * std::log(stepSpeed + Creature::speedB) - 0.5 + Creature::speedC) - 1.;
+			const auto formula = std::floor((Creature::speedA * log(stepSpeed + Creature::speedB) + Creature::speedC) + .5);
 			walk.calculatedStepSpeed = static_cast<uint16_t>(std::max(formula, 1.));
 		}
 
@@ -893,4 +894,6 @@ private:
 
 	uint8_t m_flagAsyncTask = 0;
 	CombatDamage m_combatDamage;
+	std::vector<uint16_t> attachedEffectList;
+	std::string shader;
 };

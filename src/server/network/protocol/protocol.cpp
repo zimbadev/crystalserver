@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "server/network/protocol/protocol.hpp"
 
@@ -209,11 +201,16 @@ void Protocol::XTEA_encrypt(OutputMessage &outputMessage) const {
 
 bool Protocol::XTEA_decrypt(NetworkMessage &msg) const {
 	uint16_t msgLength = msg.getLength() - (checksumMethod == CHECKSUM_METHOD_NONE ? 2 : 6);
+	uint8_t* buffer = msg.getBuffer() + msg.getBufferPosition();
 	if ((msgLength % 8) != 0) {
+		g_logger().error("XTEA_decrypt Failed - invalid block size: {}", msgLength);
+		for (int i = 0; i < msgLength; ++i) {
+			fmt::print("{:02X} ", buffer[i]);
+		}
+		fmt::print("\n");
 		return false;
 	}
 
-	uint8_t* buffer = msg.getBuffer() + msg.getBufferPosition();
 	size_t messageLength = msgLength;
 
 	XTEA_transform(buffer, messageLength, false);
@@ -221,6 +218,7 @@ bool Protocol::XTEA_decrypt(NetworkMessage &msg) const {
 	uint8_t paddingSize = msg.getByte();
 	uint16_t innerLength = messageLength - paddingSize;
 	if (innerLength + paddingSize > msgLength) {
+		g_logger().error("XTEA_decrypt Failed - invalid inner length: {} + {} > {}", innerLength, paddingSize, msgLength);
 		return false;
 	}
 

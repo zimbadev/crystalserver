@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -34,8 +26,7 @@ enum SpawnType_t : uint8_t {
 };
 
 enum Cipbia_Elementals_t : uint8_t {
-	CIPBIA_ELEMENTAL_FIRST = 0,
-	CIPBIA_ELEMENTAL_PHYSICAL = CIPBIA_ELEMENTAL_FIRST,
+	CIPBIA_ELEMENTAL_PHYSICAL = 0,
 	CIPBIA_ELEMENTAL_FIRE = 1,
 	CIPBIA_ELEMENTAL_EARTH = 2,
 	CIPBIA_ELEMENTAL_ENERGY = 3,
@@ -47,7 +38,7 @@ enum Cipbia_Elementals_t : uint8_t {
 	CIPBIA_ELEMENTAL_LIFEDRAIN = 9,
 	CIPBIA_ELEMENTAL_MANADRAIN = 10,
 	CIPBIA_ELEMENTAL_AGONY = 11,
-	CIPBIA_ELEMENTAL_LAST = CIPBIA_ELEMENTAL_AGONY,
+	CIPBIA_ELEMENTAL_UNDEFINED = 12,
 };
 
 enum MagicEffectClasses : uint16_t {
@@ -214,6 +205,8 @@ enum MagicEffectClasses : uint16_t {
 
 	CONST_ME_AGONY = 249,
 
+	CONST_ME_LOOT_HIGHLIGHT = 252,
+
 	// 13.40
 	CONST_ME_MELTING_CREAM = 263,
 	CONST_ME_REAPER = 264,
@@ -225,7 +218,27 @@ enum MagicEffectClasses : uint16_t {
 	CONST_ME_CACAO = 270,
 	CONST_ME_CANDY_FLOSS = 271,
 
-	CONST_ME_LOOT_HIGHLIGHT = 252,
+	// 15.00
+	CONST_ME_GREEN_HITAREA = 272,
+	CONST_ME_RED_HITAREA = 273,
+	CONST_ME_BLUE_HITAREA = 274,
+	CONST_ME_YELLOW_HITAREA = 275,
+	CONST_ME_WHITE_FLURRYOFBLOWS = 276,
+	CONST_ME_GREEN_FLURRYOFBLOWS = 277,
+	CONST_ME_PINK_FLURRYOFBLOWS = 278,
+	CONST_ME_WHITE_ENERGYPULSE = 279,
+	CONST_ME_GREEN_ENERGYPULSE = 280,
+	CONST_ME_PINK_ENERGYPULSE = 281,
+	CONST_ME_WHITE_TIGERCLASH = 282,
+	CONST_ME_GREEN_TIGERCLASH = 283,
+	CONST_ME_PINK_TIGERCLASH = 284,
+	CONST_ME_WHITE_EXPLOSIONHIT = 285,
+	CONST_ME_GREEN_EXPLOSIONHIT = 286,
+	CONST_ME_BLUE_EXPLOSIONHIT = 287,
+	CONST_ME_PINK_EXPLOSIONHIT = 288,
+	CONST_ME_WHITE_ENERGYSHOCK = 289,
+	CONST_ME_GREEN_ENERGYSHOCK = 290,
+	CONST_ME_YELLOW_ENERGYSHOCK = 291,
 
 	CONST_ME_LAST
 };
@@ -429,6 +442,7 @@ enum WeaponType_t : uint8_t {
 	WEAPON_WAND,
 	WEAPON_AMMO,
 	WEAPON_MISSILE,
+	WEAPON_FIST,
 };
 
 enum Ammo_t : uint8_t {
@@ -453,13 +467,6 @@ enum PartyAnalyzerAction_t : uint8_t {
 	PARTYANALYZERACTION_RESET = 0,
 	PARTYANALYZERACTION_PRICETYPE = 1,
 	PARTYANALYZERACTION_PRICEVALUE = 2,
-};
-
-enum GuildLevel_t : uint8_t {
-	GUILDLEVEL_NONE = 0,
-	GUILDLEVEL_MEMBER = 1,
-	GUILDLEVEL_VICE = 2,
-	GUILDLEVEL_LEADER = 3
 };
 
 enum Skulls_t : uint8_t {
@@ -665,9 +672,6 @@ enum ItemID_t : uint16_t {
 	ITEM_LESSER_FRAGMENT = 46625,
 	ITEM_GREATER_FRAGMENT = 46626,
 
-	ITEM_WATERBALL_SPLASH = 619,
-	ITEM_WATERBALL = 893,
-
 	ITEM_NONE = 0
 };
 
@@ -683,6 +687,7 @@ enum class PlayerFlags_t : uint8_t {
 	IgnoredByMonsters,
 	NotGainInFight,
 	HasInfiniteMana,
+	HasInfiniteHarmony,
 	HasInfiniteSoul,
 	HasNoExhaustion,
 	CannotUseSpells,
@@ -712,12 +717,6 @@ enum class PlayerFlags_t : uint8_t {
 	IsAlwaysPremium,
 	CanMapClickTeleport,
 	IgnoredByNpcs,
-	IsGameTester,
-	CanMoveFromFar,
-	HasFullLight,
-	AllowIdle,
-	NotGainUnjustified,
-	CanWearAllMounts,
 
 	// Must always be the last
 	FlagLast

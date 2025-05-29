@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "creatures/npcs/npc.hpp"
 
@@ -103,6 +95,10 @@ std::string Npc::getDescription(int32_t) {
 
 void Npc::setName(std::string newName) const {
 	npcType->name = std::move(newName);
+}
+
+const std::string &Npc::getLowerName() const {
+	return npcType->m_lowerName;
 }
 
 CreatureType_t Npc::getType() const {
@@ -473,7 +469,7 @@ void Npc::onPlayerSellAllLoot(uint32_t playerId, uint16_t itemId, bool ignore, u
 		auto ss = std::stringstream();
 		if (totalPrice == 0) {
 			ss << "You have no items in your loot pouch.";
-			player->sendTextMessage(MESSAGE_FAILURE, ss.str());
+			player->sendTextMessage(MESSAGE_TRANSACTION, ss.str());
 			return;
 		}
 		if (hasMore) {
@@ -484,7 +480,7 @@ void Npc::onPlayerSellAllLoot(uint32_t playerId, uint16_t itemId, bool ignore, u
 		}
 		ss << "You sold all of the items from your loot pouch for ";
 		ss << totalPrice << " gold.";
-		player->sendTextMessage(MESSAGE_LOOK, ss.str());
+		player->sendTextMessage(MESSAGE_TRANSACTION, ss.str());
 		player->openPlayerContainers();
 	}
 }
@@ -762,10 +758,6 @@ bool Npc::canWalkTo(const Position &fromPos, Direction dir) {
 
 	const auto &toTile = g_game().map.getTile(toPos);
 	if (!toTile || toTile->queryAdd(0, getNpc(), 1, 0) != RETURNVALUE_NOERROR) {
-		return false;
-	}
-
-	if (g_game().isSwimmingPool(nullptr, getTile(), false) != g_game().isSwimmingPool(nullptr, toTile, false)) {
 		return false;
 	}
 

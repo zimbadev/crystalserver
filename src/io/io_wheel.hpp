@@ -1,30 +1,23 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.org/
+ */
 
 #pragma once
 
-// Definitions of wheel of destiny enums
-#include "creatures/players/wheel/wheel_definitions.hpp"
-#include "creatures/players/wheel/wheel_gems.hpp"
-
 #include "creatures/creatures_definitions.hpp"
+#include "creatures/players/components/wheel/wheel_definitions.hpp"
+#include "creatures/players/components/wheel/wheel_spells.hpp"
 
-// It prevents us from including the player.h file
 class Player;
+
+struct PlayerWheelMethodsBonusData;
+
+enum class WheelGemAffinity_t : uint8_t;
 
 /**
  * @brief Represents the bonus data for the wheel of destiny in the game.
@@ -48,7 +41,7 @@ public:
 		};
 
 		struct Revelation {
-			std::array<Stats, static_cast<size_t>(WheelStageEnum_t::TOTAL_COUNT)> stats = {
+			std::array<Stats, magic_enum::enum_count<WheelStageEnum_t>() + 1> stats = {
 				Stats { 4, 4 },
 				Stats { 9, 9 },
 				Stats { 20, 20 }
@@ -76,10 +69,16 @@ public:
 				std::string name;
 			};
 
+			struct Monk {
+				std::array<WheelSpells::Bonus, 3> grade;
+				std::string name;
+			};
+
 			std::array<Druid, 5> druid;
 			std::array<Knight, 5> knight;
 			std::array<Paladin, 5> paladin;
 			std::array<Sorcerer, 5> sorcerer;
+			std::array<Monk, 5> monk;
 		};
 
 		Spells spells;
@@ -234,6 +233,14 @@ private:
 	void initializeSorcererSpells();
 
 	/**
+	 * @brief Initializes the spells for the monk vocation.
+	 * @details This function sets up the spell information for the monk vocation in the wheel bonus data.
+	 * @details It assigns names and specific grades of effects to each spell.
+	 * @note Make sure to call this function before using monk spells.
+	 */
+	void initializeMonkSpells();
+
+	/**
 	 * @brief Checks if the number of points is equal to the player's points in the specified slot type.
 	 * @param player The player whose points will be checked.
 	 * @param points The number of points to be compared.
@@ -269,6 +276,13 @@ private:
 	 * @return true if the vocation ID corresponds to a druid, false otherwise.
 	 */
 	bool isDruid(uint8_t vocationId) const;
+
+	/**
+	 * @brief Checks if the vocation ID corresponds to a Monk.
+	 * @param vocationId The vocation ID to be checked.
+	 * @return true if the vocation ID corresponds to a monk, false otherwise.
+	 */
+	bool isMonk(uint8_t vocationId) const;
 
 	/**
 	 * @brief Adds a spell to the player's bonus data if the number of points is equal to the player's points in the specified slot type.

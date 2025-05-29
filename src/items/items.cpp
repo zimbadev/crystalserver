@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "items/items.hpp"
 
@@ -131,6 +123,10 @@ void ItemType::setImbuementType(ImbuementTypes_t imbuementType, uint16_t slotMax
 	imbuementTypes[imbuementType] = std::min<uint16_t>(IMBUEMENT_MAX_TIER, slotMaxTier);
 }
 
+bool ItemType::triggerExhaustion() const {
+	return isRune() || (type == ITEM_TYPE_POTION && !m_isMagicShieldPotion);
+}
+
 bool Items::reload() {
 	clear();
 	loadFromProtobuf();
@@ -143,7 +139,7 @@ bool Items::reload() {
 }
 
 void Items::loadFromProtobuf() {
-	using namespace Crystal::protobuf::appearances;
+	using namespace Canary::protobuf::appearances;
 
 	bool supportAnimation = g_configManager().getBoolean(OLD_PROTOCOL);
 	for (uint32_t it = 0; it < g_game().m_appearancesPtr->object_size(); ++it) {
@@ -294,83 +290,6 @@ bool Items::loadFromXml() {
 			parseItemNode(itemNode, id++);
 		}
 	}
-
-	// Load bags.xml
-	pugi::xml_document docBags;
-	auto folderBags = g_configManager().getString(CORE_DIRECTORY) + "/items/bags.xml";
-	pugi::xml_parse_result resultBags = docBags.load_file(folderBags.c_str());
-	if (!resultBags) {
-		printXMLError(__FUNCTION__, folderBags, resultBags);
-		return false;
-	}
-
-	for (auto nodeBags : docBags.child("bags").children()) {
-		auto bagItemidAttr = nodeBags.attribute("itemid");
-		if (!bagItemidAttr) {
-			g_logger().warn("[Items::loadFromXml] - No item id found, use id");
-			continue;
-		}
-
-		auto bagNameAttr = nodeBags.attribute("name");
-		if (!bagNameAttr) {
-			g_logger().warn("[Items::loadFromXml] - No item name found, use name");
-			continue;
-		}
-
-		uint16_t itemId = pugi::cast<uint16_t>(bagItemidAttr.value());
-		std::string itemName = bagNameAttr.as_string();
-
-		uint32_t chance = 0;
-		auto chanceAttr = nodeBags.attribute("chance");
-		if (chanceAttr) {
-			chance = pugi::cast<uint32_t>(chanceAttr.value());
-		}
-
-		uint32_t minAmount = 1;
-		auto minAmountAttr = nodeBags.attribute("minAmount");
-		if (minAmountAttr) {
-			minAmount = pugi::cast<uint32_t>(minAmountAttr.value());
-			if (minAmount <= 0) {
-				minAmount = 1;
-			}
-		}
-
-		uint32_t maxAmount = 1;
-		auto maxAmountAttr = nodeBags.attribute("maxAmount");
-		if (maxAmountAttr) {
-			maxAmount = pugi::cast<uint32_t>(maxAmountAttr.value());
-			if (maxAmount <= 0) {
-				maxAmount = 1;
-			}
-		}
-
-		uint64_t minRange = 0;
-		auto minRangeAttr = nodeBags.attribute("minRange");
-		if (minRangeAttr) {
-			minRange = pugi::cast<uint64_t>(minRangeAttr.value());
-		}
-
-		uint64_t maxRange = 0;
-		auto maxRangeAttr = nodeBags.attribute("maxRange");
-		if (maxRangeAttr) {
-			maxRange = pugi::cast<uint64_t>(maxRangeAttr.value());
-		}
-
-		std::string monsterClass = "";
-		auto monsterClassAttr = nodeBags.attribute("class");
-		if (monsterClassAttr) {
-			monsterClass = monsterClassAttr.as_string();
-		}
-
-		uint32_t monsterRaceId = 0;
-		auto monsterRaceIdAttr = nodeBags.attribute("raceId");
-		if (monsterRaceIdAttr) {
-			monsterRaceId = pugi::cast<uint32_t>(monsterRaceIdAttr.value());
-		}
-
-		setItemBag(itemId, itemName, chance, minAmount, maxAmount, minRange, maxRange, monsterClass, monsterRaceId);
-	}
-
 	return true;
 }
 
@@ -482,20 +401,6 @@ bool Items::hasItemType(size_t hasId) const {
 		return true;
 	}
 	return false;
-}
-
-void Items::setItemBag(uint16_t itemId, const std::string &itemName, uint32_t chance, uint32_t minAmount, uint32_t maxAmount, uint64_t minRange, uint64_t maxRange, const std::string &monsterClass, uint32_t monsterRaceId) {
-	BagItemInfo itemInfo;
-	itemInfo.name = itemName;
-	itemInfo.id = itemId;
-	itemInfo.chance = chance;
-	itemInfo.minAmount = minAmount;
-	itemInfo.maxAmount = maxAmount;
-	itemInfo.minRange = minRange;
-	itemInfo.maxRange = maxRange;
-	itemInfo.monsterClass = monsterClass;
-	itemInfo.monsterRaceId = monsterRaceId;
-	bagItems[itemId] = itemInfo;
 }
 
 uint32_t Abilities::getHealthGain() const {

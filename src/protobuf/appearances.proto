@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package Crystal.protobuf.appearances;
+package Canary.protobuf.appearances;
 
 message Coordinate {
 	optional uint32 x = 1;

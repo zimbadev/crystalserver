@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "server/signals.hpp"
 
@@ -47,6 +39,10 @@ Signals::Signals(asio::io_service &service) :
 }
 
 void Signals::asyncWait() {
+	if (g_game().getGameState() == GAME_STATE_SHUTDOWN) {
+		return;
+	}
+
 	set.async_wait([this](std::error_code err, int signal) {
 		if (err) {
 			g_logger().error("[Signals::asyncWait] - "
@@ -63,6 +59,10 @@ void Signals::asyncWait() {
 // as it is called in a new thread.
 // https://github.com/otland/forgottenserver/pull/2473
 void Signals::dispatchSignalHandler(int signal) {
+	if (g_game().getGameState() == GAME_STATE_SHUTDOWN) {
+		return;
+	}
+
 	switch (signal) {
 		case SIGINT: // Shuts the server down
 			g_dispatcher().addEvent(sigintHandler, __FUNCTION__);
@@ -81,7 +81,7 @@ void Signals::dispatchSignalHandler(int signal) {
 		case SIGBREAK: // Shuts the server down
 			g_dispatcher().addEvent(sigbreakHandler, __FUNCTION__);
 			// hold the thread until other threads end
-			inject<ThreadPool>().shutdown();
+			g_threadPool().shutdown();
 			break;
 #endif
 		default:

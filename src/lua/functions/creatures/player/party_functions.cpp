@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/creatures/player/party_functions.hpp"
 
@@ -41,13 +33,11 @@ void PartyFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Party", "isSharedExperienceEnabled", PartyFunctions::luaPartyIsSharedExperienceEnabled);
 	Lua::registerMethod(L, "Party", "shareExperience", PartyFunctions::luaPartyShareExperience);
 	Lua::registerMethod(L, "Party", "setSharedExperience", PartyFunctions::luaPartySetSharedExperience);
-	Lua::registerMethod(L, "Party", "getMinLevel", PartyFunctions::luaPartyGetMinLevel);
-	Lua::registerMethod(L, "Party", "getMaxLevel", PartyFunctions::luaPartyGetMaxLevel);
 }
 
 int32_t PartyFunctions::luaPartyCreate(lua_State* L) {
 	// Party(userdata)
-	const auto &player = Lua::getUserdataShared<Player>(L, 2);
+	const auto &player = Lua::getUserdataShared<Player>(L, 2, "Player");
 	if (!player) {
 		lua_pushnil(L);
 		return 1;
@@ -82,7 +72,7 @@ int PartyFunctions::luaPartyDisband(lua_State* L) {
 
 int PartyFunctions::luaPartyGetLeader(lua_State* L) {
 	// party:getLeader()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (!party) {
 		lua_pushnil(L);
 		return 1;
@@ -106,7 +96,7 @@ int PartyFunctions::luaPartySetLeader(lua_State* L) {
 		return 1;
 	}
 
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party) {
 		Lua::pushBoolean(L, party->passPartyLeadership(player));
 	} else {
@@ -117,7 +107,7 @@ int PartyFunctions::luaPartySetLeader(lua_State* L) {
 
 int PartyFunctions::luaPartyGetMembers(lua_State* L) {
 	// party:getMembers()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (!party) {
 		lua_pushnil(L);
 		return 1;
@@ -135,7 +125,7 @@ int PartyFunctions::luaPartyGetMembers(lua_State* L) {
 
 int PartyFunctions::luaPartyGetMemberCount(lua_State* L) {
 	// party:getMemberCount()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party) {
 		lua_pushnumber(L, party->getMemberCount());
 	} else {
@@ -146,7 +136,7 @@ int PartyFunctions::luaPartyGetMemberCount(lua_State* L) {
 
 int PartyFunctions::luaPartyGetInvitees(lua_State* L) {
 	// party:getInvitees()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party) {
 		lua_createtable(L, party->getInvitationCount(), 0);
 
@@ -164,7 +154,7 @@ int PartyFunctions::luaPartyGetInvitees(lua_State* L) {
 
 int PartyFunctions::luaPartyGetInviteeCount(lua_State* L) {
 	// party:getInviteeCount()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party) {
 		lua_pushnumber(L, party->getInvitationCount());
 	} else {
@@ -175,7 +165,7 @@ int PartyFunctions::luaPartyGetInviteeCount(lua_State* L) {
 
 int PartyFunctions::luaPartyGetUniqueVocationsCount(lua_State* L) {
 	// party:getUniqueVocationsCount()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party) {
 		lua_pushnumber(L, party->getUniqueVocationsCount());
 	} else {
@@ -192,7 +182,7 @@ int PartyFunctions::luaPartyAddInvite(lua_State* L) {
 		return 1;
 	}
 
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party && player) {
 		Lua::pushBoolean(L, party->invitePlayer(player));
 	} else {
@@ -209,7 +199,7 @@ int PartyFunctions::luaPartyRemoveInvite(lua_State* L) {
 		return 1;
 	}
 
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party && player) {
 		Lua::pushBoolean(L, party->removeInvite(player));
 	} else {
@@ -226,7 +216,7 @@ int PartyFunctions::luaPartyAddMember(lua_State* L) {
 		return 1;
 	}
 
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party && player) {
 		Lua::pushBoolean(L, party->joinParty(player));
 	} else {
@@ -243,7 +233,7 @@ int PartyFunctions::luaPartyRemoveMember(lua_State* L) {
 		return 1;
 	}
 
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party && player) {
 		Lua::pushBoolean(L, party->leaveParty(player));
 	} else {
@@ -254,7 +244,7 @@ int PartyFunctions::luaPartyRemoveMember(lua_State* L) {
 
 int PartyFunctions::luaPartyIsSharedExperienceActive(lua_State* L) {
 	// party:isSharedExperienceActive()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party) {
 		Lua::pushBoolean(L, party->isSharedExperienceActive());
 	} else {
@@ -265,7 +255,7 @@ int PartyFunctions::luaPartyIsSharedExperienceActive(lua_State* L) {
 
 int PartyFunctions::luaPartyIsSharedExperienceEnabled(lua_State* L) {
 	// party:isSharedExperienceEnabled()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party) {
 		Lua::pushBoolean(L, party->isSharedExperienceEnabled());
 	} else {
@@ -277,7 +267,7 @@ int PartyFunctions::luaPartyIsSharedExperienceEnabled(lua_State* L) {
 int PartyFunctions::luaPartyShareExperience(lua_State* L) {
 	// party:shareExperience(experience)
 	const uint64_t experience = Lua::getNumber<uint64_t>(L, 2);
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party) {
 		party->shareExperience(experience);
 		Lua::pushBoolean(L, true);
@@ -290,31 +280,9 @@ int PartyFunctions::luaPartyShareExperience(lua_State* L) {
 int PartyFunctions::luaPartySetSharedExperience(lua_State* L) {
 	// party:setSharedExperience(active)
 	const bool active = Lua::getBoolean(L, 2);
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
+	const auto &party = Lua::getUserdataShared<Party>(L, 1, "Party");
 	if (party) {
 		Lua::pushBoolean(L, party->setSharedExperience(party->getLeader(), active));
-	} else {
-		lua_pushnil(L);
-	}
-	return 1;
-}
-
-int PartyFunctions::luaPartyGetMinLevel(lua_State* L) {
-	// party:getMinLevel()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
-	if (party) {
-		lua_pushnumber(L, party->getMinLevel());
-	} else {
-		lua_pushnil(L);
-	}
-	return 1;
-}
-
-int PartyFunctions::luaPartyGetMaxLevel(lua_State* L) {
-	// party:getMaxLevel()
-	const auto &party = Lua::getUserdataShared<Party>(L, 1);
-	if (party) {
-		lua_pushnumber(L, party->getMaxLevel());
 	} else {
 		lua_pushnil(L);
 	}

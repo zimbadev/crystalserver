@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -113,7 +105,7 @@ enum ConditionType_t : uint8_t {
 	CONDITION_DAZZLED = 22,
 	CONDITION_CURSED = 23,
 	CONDITION_EXHAUST_COMBAT = 24, // unused
-	CONDITION_EXHAUST_HEAL = 25, // unused
+	CONDITION_EXHAUST_HEAL = 25,
 	CONDITION_PACIFIED = 26,
 	CONDITION_SPELLCOOLDOWN = 27,
 	CONDITION_SPELLGROUPCOOLDOWN = 28,
@@ -364,8 +356,7 @@ enum charm_t {
 
 enum charmRune_t : int8_t {
 	CHARM_NONE = -1,
-	CHARM_FIRST = 0,
-	CHARM_WOUND = CHARM_FIRST,
+	CHARM_WOUND = 0,
 	CHARM_ENFLAME = 1,
 	CHARM_POISON = 2,
 	CHARM_FREEZE = 3,
@@ -390,7 +381,6 @@ enum charmRune_t : int8_t {
 	CHARM_CARNAGE = 22,
 	CHARM_OVERPOWER = 23,
 	CHARM_OVERFLUX = 24,
-	CHARM_LAST = CHARM_OVERFLUX,
 };
 
 enum ConditionId_t : int8_t {
@@ -406,8 +396,6 @@ enum ConditionId_t : int8_t {
 	CONDITIONID_FEET,
 	CONDITIONID_RING,
 	CONDITIONID_AMMO,
-	CONDITIONID_OUTFIT,
-	CONDITIONID_MOUNT
 };
 
 enum PlayerSex_t : uint8_t {
@@ -742,10 +730,10 @@ enum ChannelEvent_t : uint8_t {
 };
 
 enum class VipStatus_t : uint8_t {
-	OFFLINE = 0,
-	ONLINE = 1,
-	PENDING = 2,
-	TRAINING = 3
+	Offline = 0,
+	Online = 1,
+	Pending = 2,
+	Training = 3
 };
 
 enum Vocation_t : uint16_t {
@@ -758,13 +746,16 @@ enum Vocation_t : uint16_t {
 	VOCATION_ELDER_DRUID = 6,
 	VOCATION_ROYAL_PALADIN = 7,
 	VOCATION_ELITE_KNIGHT = 8,
-	VOCATION_LAST = VOCATION_ELITE_KNIGHT,
+	VOCATION_MONK = 9,
+	VOCATION_EXALTED_MONK = 10,
+	VOCATION_LAST = VOCATION_EXALTED_MONK,
 
 	// Cip tibia client ids
 	VOCATION_KNIGHT_CIP = 1,
 	VOCATION_PALADIN_CIP = 2,
 	VOCATION_SORCERER_CIP = 3,
-	VOCATION_DRUID_CIP = 4
+	VOCATION_DRUID_CIP = 4,
+	VOCATION_MONK_CIP = 5
 };
 
 enum FightMode_t : uint8_t {
@@ -805,9 +796,6 @@ enum CombatType_t : uint8_t {
 	COMBAT_NEUTRALDAMAGE = 13,
 
 	COMBAT_COUNT = 14,
-
-	COMBAT_FIRST = COMBAT_PHYSICALDAMAGE,
-	COMBAT_LAST = COMBAT_NEUTRALDAMAGE,
 
 	// Server read only
 	COMBAT_NONE = 255
@@ -1390,6 +1378,13 @@ enum class CreatureIconQuests_t {
 	BloodDrop,
 };
 
+enum VirtueMonk_t : uint8_t {
+	VIRTUE_NONE = 0,
+	VIRTUE_HARMONY = 1,
+	VIRTUE_JUSTICE = 2,
+	VIRTUE_SUSTAIN = 3,
+};
+
 struct CreatureIcon {
 	CreatureIcon() = default;
 
@@ -1700,6 +1695,10 @@ struct Outfit_t {
 	uint8_t lookMountLegs = 0;
 	uint8_t lookMountFeet = 0;
 	uint16_t lookFamiliarsType = 0;
+	uint16_t lookWing = 0;
+	uint16_t lookAura = 0;
+	uint16_t lookEffect = 0;
+	uint16_t lookShader = 0;
 };
 
 struct voiceBlock_t {

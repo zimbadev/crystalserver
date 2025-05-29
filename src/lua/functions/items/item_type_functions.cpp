@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/items/item_type_functions.hpp"
 
@@ -42,18 +34,15 @@ void ItemTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "ItemType", "isPickupable", ItemTypeFunctions::luaItemTypeIsPickupable);
 	Lua::registerMethod(L, "ItemType", "isKey", ItemTypeFunctions::luaItemTypeIsKey);
 	Lua::registerMethod(L, "ItemType", "isQuiver", ItemTypeFunctions::luaItemTypeIsQuiver);
-
 	Lua::registerMethod(L, "ItemType", "isPodium", ItemTypeFunctions::luaItemTypeIsPodium);
+
 	Lua::registerMethod(L, "ItemType", "getType", ItemTypeFunctions::luaItemTypeGetType);
-	Lua::registerMethod(L, "ItemType", "getGroup", ItemTypeFunctions::luaItemTypeGetGroup);
 	Lua::registerMethod(L, "ItemType", "getId", ItemTypeFunctions::luaItemTypeGetId);
 	Lua::registerMethod(L, "ItemType", "getName", ItemTypeFunctions::luaItemTypeGetName);
 	Lua::registerMethod(L, "ItemType", "getPluralName", ItemTypeFunctions::luaItemTypeGetPluralName);
 	Lua::registerMethod(L, "ItemType", "getArticle", ItemTypeFunctions::luaItemTypeGetArticle);
 	Lua::registerMethod(L, "ItemType", "getDescription", ItemTypeFunctions::luaItemTypeGetDescription);
 	Lua::registerMethod(L, "ItemType", "getSlotPosition", ItemTypeFunctions::luaItemTypeGetSlotPosition);
-	Lua::registerMethod(L, "ItemType", "getRotateId", ItemTypeFunctions::luaItemTypeGetRotateId);
-	Lua::registerMethod(L, "ItemType", "getWareId", ItemTypeFunctions::luaItemTypeGetWareId);
 
 	Lua::registerMethod(L, "ItemType", "getCharges", ItemTypeFunctions::luaItemTypeGetCharges);
 	Lua::registerMethod(L, "ItemType", "getFluidSource", ItemTypeFunctions::luaItemTypeGetFluidSource);
@@ -80,8 +69,6 @@ void ItemTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "ItemType", "getDecayId", ItemTypeFunctions::luaItemTypeGetDecayId);
 	Lua::registerMethod(L, "ItemType", "getRequiredLevel", ItemTypeFunctions::luaItemTypeGetRequiredLevel);
 	Lua::registerMethod(L, "ItemType", "getAmmoType", ItemTypeFunctions::luaItemTypeGetAmmoType);
-	Lua::registerMethod(L, "ItemType", "getCorpseType", ItemTypeFunctions::luaItemTypeGetCorpseType);
-	Lua::registerMethod(L, "ItemType", "getClassification", ItemTypeFunctions::luaItemTypeGetClassification);
 
 	Lua::registerMethod(L, "ItemType", "getDecayTime", ItemTypeFunctions::luaItemTypeGetDecayTime);
 	Lua::registerMethod(L, "ItemType", "getShowDuration", ItemTypeFunctions::luaItemTypeGetShowDuration);
@@ -90,11 +77,10 @@ void ItemTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "ItemType", "getBaseSpeed", ItemTypeFunctions::luaItemTypeGetBaseSpeed);
 	Lua::registerMethod(L, "ItemType", "getVocationString", ItemTypeFunctions::luaItemTypeGetVocationString);
 
-	Lua::registerMethod(L, "ItemType", "hasSubType", ItemTypeFunctions::luaItemTypeHasSubType);
-	Lua::registerMethod(L, "ItemType", "getAbilities", ItemTypeFunctions::luaItemTypeGetAbilities);
+	Lua::registerMethod(L, "ItemType", "getElementalBond", ItemTypeFunctions::luaItemTypeGetElementalBond);
+	Lua::registerMethod(L, "ItemType", "getMantra", ItemTypeFunctions::luaItemTypeGetMantra);
 
-	Lua::registerMethod(L, "ItemType", "isWrapKit", ItemTypeFunctions::luaItemTypeIsWrapKit);
-	Lua::registerMethod(L, "ItemType", "isSpellBook", ItemTypeFunctions::luaItemTypeIsSpellBook);
+	Lua::registerMethod(L, "ItemType", "hasSubType", ItemTypeFunctions::luaItemTypeHasSubType);
 
 	ItemClassificationFunctions::init(L);
 }
@@ -303,7 +289,7 @@ int ItemTypeFunctions::luaItemTypeIsQuiver(lua_State* L) {
 
 int ItemTypeFunctions::luaItemTypeIsPodium(lua_State* L) {
 	// itemType:isPodium()
-	const ItemType* itemType = Lua::getUserdata<const ItemType>(L, 1);
+	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
 		Lua::pushBoolean(L, itemType->isPodium);
 	} else {
@@ -317,17 +303,6 @@ int ItemTypeFunctions::luaItemTypeGetType(lua_State* L) {
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
 		lua_pushnumber(L, itemType->type);
-	} else {
-		lua_pushnil(L);
-	}
-	return 1;
-}
-
-int ItemTypeFunctions::luaItemTypeGetGroup(lua_State* L) {
-	// itemType:getGroup()
-	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
-	if (itemType) {
-		lua_pushnumber(L, itemType->group);
 	} else {
 		lua_pushnil(L);
 	}
@@ -562,28 +537,6 @@ int ItemTypeFunctions::luaItemTypeGetAmmoType(lua_State* L) {
 	return 1;
 }
 
-int ItemTypeFunctions::luaItemTypeGetCorpseType(lua_State* L) {
-	// itemType:getCorpseType()
-	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
-	if (itemType) {
-		lua_pushnumber(L, itemType->corpseType);
-	} else {
-		lua_pushnil(L);
-	}
-	return 1;
-}
-
-int ItemTypeFunctions::luaItemTypeGetClassification(lua_State* L) {
-	// itemType:getClassification()
-	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
-	if (itemType) {
-		lua_pushnumber(L, itemType->upgradeClassification);
-	} else {
-		lua_pushnil(L);
-	}
-	return 1;
-}
-
 int ItemTypeFunctions::luaItemTypeGetElementType(lua_State* L) {
 	// itemType:getElementType()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
@@ -744,115 +697,6 @@ int ItemTypeFunctions::luaItemTypeHasSubType(lua_State* L) {
 	return 1;
 }
 
-int ItemTypeFunctions::luaItemTypeGetAbilities(lua_State* L) {
-	// itemType:getAbilities()
-	auto* itemType = const_cast<ItemType*>(Lua::getUserdata<const ItemType>(L, 1));
-	if (itemType) {
-		Abilities &abilities = itemType->getAbilities();
-
-		lua_createtable(L, 6, 21);
-		Lua::setField(L, "healthGain", abilities.healthGain);
-		Lua::setField(L, "healthTicks", abilities.healthTicks);
-		Lua::setField(L, "manaGain", abilities.manaGain);
-		Lua::setField(L, "manaTicks", abilities.manaTicks);
-		Lua::setField(L, "speed", abilities.speed);
-		Lua::setField(L, "elementDamage", abilities.elementDamage);
-		Lua::setField(L, "elementType", abilities.elementType);
-		Lua::setField(L, "magicShieldCapacityPercent", abilities.magicShieldCapacityPercent);
-		Lua::setField(L, "magicShieldCapacityFlat", abilities.magicShieldCapacityFlat);
-		Lua::setField(L, "cleavePercent", abilities.cleavePercent);
-
-		lua_pushboolean(L, abilities.manaShield);
-		lua_setfield(L, -2, "manaShield");
-		lua_pushboolean(L, abilities.invisible);
-		lua_setfield(L, -2, "invisible");
-		lua_pushboolean(L, abilities.regeneration);
-		lua_setfield(L, -2, "regeneration");
-
-		// conditionImmunities
-		lua_createtable(L, abilities.conditionImmunities.size(), 0);
-		for (size_t i = 0; i < abilities.conditionImmunities.size(); ++i) {
-			lua_pushnumber(L, static_cast<int>(abilities.conditionImmunities[i]));
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "conditionImmunities");
-
-		// conditionSuppressions
-		lua_createtable(L, abilities.conditionSuppressions.size(), 0);
-		for (size_t i = 0; i < abilities.conditionSuppressions.size(); ++i) {
-			lua_pushnumber(L, static_cast<int>(abilities.conditionSuppressions[i]));
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "conditionSuppressions");
-
-		// Stats
-		lua_createtable(L, 0, STAT_LAST + 1);
-		for (int32_t i = STAT_FIRST; i <= STAT_LAST; i++) {
-			lua_pushnumber(L, abilities.stats[i]);
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "stats");
-
-		// Stats percent
-		lua_createtable(L, 0, STAT_LAST + 1);
-		for (int32_t i = STAT_FIRST; i <= STAT_LAST; i++) {
-			lua_pushnumber(L, abilities.statsPercent[i]);
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "statsPercent");
-
-		// Skills
-		lua_createtable(L, 0, SKILL_LAST + 1);
-		for (int32_t i = SKILL_FIRST; i <= SKILL_LAST; i++) {
-			lua_pushnumber(L, abilities.skills[i]);
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "skills");
-
-		// specializedMagicLevel
-		lua_createtable(L, 0, COMBAT_COUNT);
-		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
-			lua_pushnumber(L, abilities.specializedMagicLevel[i]);
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "specializedMagicLevel");
-
-		// Field absorb percent
-		lua_createtable(L, 0, COMBAT_COUNT);
-		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
-			lua_pushnumber(L, abilities.fieldAbsorbPercent[i]);
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "fieldAbsorbPercent");
-
-		// Absorb percent
-		lua_createtable(L, 0, COMBAT_COUNT);
-		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
-			lua_pushnumber(L, abilities.absorbPercent[i]);
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "absorbPercent");
-
-		//// Reflect
-		// Reflect Flat (100% chance)
-		lua_createtable(L, COMBAT_COUNT, 0);
-		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
-			lua_pushnumber(L, abilities.reflectFlat[i]);
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "reflectFlat");
-
-		// Reflect percent
-		lua_createtable(L, 0, COMBAT_COUNT);
-		for (int32_t i = 0; i < COMBAT_COUNT; i++) {
-			lua_pushnumber(L, abilities.reflectPercent[i]);
-			lua_rawseti(L, -2, i + 1);
-		}
-		lua_setfield(L, -2, "reflectPercent");
-	}
-	return 1;
-}
-
 int ItemTypeFunctions::luaItemTypeGetVocationString(lua_State* L) {
 	// itemType:getVocationString()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
@@ -864,44 +708,27 @@ int ItemTypeFunctions::luaItemTypeGetVocationString(lua_State* L) {
 	return 1;
 }
 
-int ItemTypeFunctions::luaItemTypeGetRotateId(lua_State* L) {
-	// itemType:getRotateId()
+int ItemTypeFunctions::luaItemTypeGetElementalBond(lua_State* L) {
+	// itemType:getElementalBond()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
-	if (itemType && itemType->rotatable) {
-		lua_pushnumber(L, itemType->rotateTo);
-	} else {
+	if (!itemType) {
 		lua_pushnil(L);
+		return 1;
+	}
+
+	if (!itemType->elementalBond.empty()) {
+		lua_pushstring(L, itemType->elementalBond.c_str());
+	} else {
+		lua_pushstring(L, "physical");
 	}
 	return 1;
 }
 
-int ItemTypeFunctions::luaItemTypeGetWareId(lua_State* L) {
-	// itemType:getWareId()
+int ItemTypeFunctions::luaItemTypeGetMantra(lua_State* L) {
+	// itemType:getMantra()
 	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
 	if (itemType) {
-		lua_pushnumber(L, itemType->wareId);
-	} else {
-		lua_pushnil(L);
-	}
-	return 1;
-}
-
-int ItemTypeFunctions::luaItemTypeIsWrapKit(lua_State* L) {
-	// itemType:isWrapKit()
-	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
-	if (itemType) {
-		lua_pushnumber(L, itemType->isWrapKit);
-	} else {
-		lua_pushnil(L);
-	}
-	return 1;
-}
-
-int ItemTypeFunctions::luaItemTypeIsSpellBook(lua_State* L) {
-	// itemType:isSpellbook()
-	const auto* itemType = Lua::getUserdata<const ItemType>(L, 1);
-	if (itemType) {
-		lua_pushnumber(L, itemType->spellbook);
+		lua_pushnumber(L, itemType->mantra);
 	} else {
 		lua_pushnil(L);
 	}

@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "creatures/combat/spells.hpp"
 
@@ -21,8 +13,7 @@
 #include "creatures/combat/combat.hpp"
 #include "creatures/combat/condition.hpp"
 #include "creatures/players/player.hpp"
-#include "creatures/players/wheel/player_wheel.hpp"
-#include "creatures/players/wheel/wheel_definitions.hpp"
+#include "creatures/players/components/wheel/wheel_definitions.hpp"
 #include "enums/account_group_type.hpp"
 #include "enums/account_type.hpp"
 #include "game/game.hpp"
@@ -99,11 +90,7 @@ TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player,
 	}
 
 	if (instantSpell->playerCastInstant(player, param)) {
-		if (!player->checkSpellNameInsteadOfWords()) {
-			words = instantSpell->getWords();
-		} else {
-			words = instantSpell->getName();
-		}
+		words = instantSpell->getWords();
 
 		if (instantSpell->getHasParam() && !param.empty()) {
 			words += " \"" + param + "\"";
@@ -508,6 +495,12 @@ bool Spell::playerSpellCheck(const std::shared_ptr<Player> &player) const {
 		return false;
 	}
 
+	if (harmony && player->getHarmony() == 0 && !player->hasFlag(PlayerFlags_t::HasInfiniteHarmony)) {
+		player->sendCancelMessage(RETURNVALUE_NOTENOUGHHARMONY);
+		g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
+		return false;
+	}
+
 	if (isInstant() && getNeedLearn()) {
 		if (!player->hasLearnedInstantSpell(getName())) {
 			player->sendCancelMessage(RETURNVALUE_YOUNEEDTOLEARNTHISSPELL);
@@ -525,6 +518,7 @@ bool Spell::playerSpellCheck(const std::shared_ptr<Player> &player) const {
 			case WEAPON_SWORD:
 			case WEAPON_CLUB:
 			case WEAPON_AXE:
+			case WEAPON_FIST:
 				break;
 
 			default: {
@@ -540,6 +534,14 @@ bool Spell::playerSpellCheck(const std::shared_ptr<Player> &player) const {
 		g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
 		return false;
 	}
+
+	// if (g_game().getWorldType() == WORLD_TYPE_NO_PVP && !player->isFirstOnStack()) {
+	// 	const auto &instantSpell = g_spells().getInstantSpell(getName());
+	// 	if (instantSpell && !instantSpell->getNeedCasterTargetOrDirection() || !getNeedTarget()) {
+	// 		player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
+	// 		return false;
+	// 	}
+	// }
 
 	return true;
 }
@@ -561,7 +563,6 @@ bool Spell::playerInstantSpellCheck(const std::shared_ptr<Player> &player, const
 	}
 
 	const auto &tile = g_game().map.getOrCreateTile(toPos);
-
 	if (blockingCreature && tile->getBottomVisibleCreature(player) != nullptr) {
 		player->sendCancelMessage(RETURNVALUE_NOTENOUGHROOM);
 		g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
@@ -734,7 +735,7 @@ int32_t Spell::calculateAugmentSpellCooldownReduction(const std::shared_ptr<Play
 }
 
 void Spell::applyCooldownConditions(const std::shared_ptr<Player> &player) const {
-	WheelSpellGrade_t spellGrade = player->wheel()->getSpellUpgrade(getName());
+	WheelSpellGrade_t spellGrade = player->wheel().getSpellUpgrade(getName());
 	bool isUpgraded = getWheelOfDestinyUpgraded() && static_cast<uint8_t>(spellGrade) > 0;
 	// Safety check to prevent division by zero
 	auto rateCooldown = g_configManager().getFloat(RATE_SPELL_COOLDOWN);
@@ -748,13 +749,13 @@ void Spell::applyCooldownConditions(const std::shared_ptr<Player> &player) const
 			spellCooldown -= getWheelOfDestinyBoost(WheelSpellBoost_t::COOLDOWN, spellGrade);
 		}
 		int32_t augmentCooldownReduction = calculateAugmentSpellCooldownReduction(player);
-		g_logger().debug("[{}] spell name: {}, spellCooldown: {}, bonus: {}, augment {}", __FUNCTION__, name, spellCooldown, player->wheel()->getSpellBonus(name, WheelSpellBoost_t::COOLDOWN), augmentCooldownReduction);
-		spellCooldown -= player->wheel()->getSpellBonus(name, WheelSpellBoost_t::COOLDOWN);
+		g_logger().debug("[{}] spell name: {}, grade: {}, originalCooldown: {}, spellCooldown: {}, bonus: {}, augment {}", __FUNCTION__, name, spellGrade, cooldown, spellCooldown, player->wheel().getSpellBonus(name, WheelSpellBoost_t::COOLDOWN), augmentCooldownReduction);
+		spellCooldown -= player->wheel().getSpellBonus(name, WheelSpellBoost_t::COOLDOWN);
 		spellCooldown -= augmentCooldownReduction;
 		const int32_t halfBaseCooldown = cooldown / 2;
 		spellCooldown = halfBaseCooldown > spellCooldown ? halfBaseCooldown : spellCooldown; // The cooldown should never be reduced less than half (50%) of its base cooldown
 		if (spellCooldown > 0) {
-			player->wheel()->handleTwinBurstsCooldown(player, name, spellCooldown, rateCooldown);
+			player->wheel().handleTwinBurstsCooldown(player, name, spellCooldown, rateCooldown);
 			const auto &condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_SPELLCOOLDOWN, spellCooldown / rateCooldown, 0, false, m_spellId);
 			player->addCondition(condition);
 		}
@@ -776,9 +777,9 @@ void Spell::applyCooldownConditions(const std::shared_ptr<Player> &player) const
 		if (isUpgraded) {
 			spellSecondaryGroupCooldown -= getWheelOfDestinyBoost(WheelSpellBoost_t::SECONDARY_GROUP_COOLDOWN, spellGrade);
 		}
-		spellSecondaryGroupCooldown -= player->wheel()->getSpellBonus(name, WheelSpellBoost_t::SECONDARY_GROUP_COOLDOWN);
+		spellSecondaryGroupCooldown -= player->wheel().getSpellBonus(name, WheelSpellBoost_t::SECONDARY_GROUP_COOLDOWN);
 		if (spellSecondaryGroupCooldown > 0) {
-			player->wheel()->handleBeamMasteryCooldown(player, name, spellSecondaryGroupCooldown, rateCooldown);
+			player->wheel().handleBeamMasteryCooldown(player, name, spellSecondaryGroupCooldown, rateCooldown);
 			const auto &condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_SPELLGROUPCOOLDOWN, spellSecondaryGroupCooldown / rateCooldown, 0, false, secondaryGroup);
 			player->addCondition(condition);
 		}
@@ -818,11 +819,11 @@ void Spell::postCastSpell(const std::shared_ptr<Player> &player, bool finishedCa
 	}
 
 	if (payCost) {
-		postCastSpell(player, getManaCost(player), getSoulCost());
+		postCastSpell(player, getManaCost(player), getSoulCost(), getHarmonyCost());
 	}
 }
 
-void Spell::postCastSpell(const std::shared_ptr<Player> &player, uint32_t manaCost, uint32_t soulCost) {
+void Spell::postCastSpell(const std::shared_ptr<Player> &player, uint32_t manaCost, uint32_t soulCost, uint8_t harmonyCost) {
 	if (manaCost > 0) {
 		player->addManaSpent(manaCost);
 		player->changeMana(-static_cast<int32_t>(manaCost));
@@ -833,6 +834,10 @@ void Spell::postCastSpell(const std::shared_ptr<Player> &player, uint32_t manaCo
 			player->changeSoul(-static_cast<int32_t>(soulCost));
 		}
 	}
+
+	if (harmonyCost) {
+		player->setHarmony(0);
+	}
 }
 
 bool Spell::isLearnable() const {
@@ -840,12 +845,12 @@ bool Spell::isLearnable() const {
 }
 
 uint32_t Spell::getManaCost(const std::shared_ptr<Player> &player) const {
-	WheelSpellGrade_t spellGrade = player->wheel()->getSpellUpgrade(getName());
+	WheelSpellGrade_t spellGrade = player->wheel().getSpellUpgrade(getName());
 	uint32_t manaRedution = 0;
 	if (getWheelOfDestinyUpgraded() && static_cast<uint8_t>(spellGrade) > 0) {
 		manaRedution += getWheelOfDestinyBoost(WheelSpellBoost_t::MANA, spellGrade);
 	}
-	manaRedution += player->wheel()->getSpellBonus(name, WheelSpellBoost_t::MANA);
+	manaRedution += player->wheel().getSpellBonus(name, WheelSpellBoost_t::MANA);
 
 	if (mana != 0) {
 		if (manaRedution > mana) {
@@ -888,14 +893,6 @@ uint32_t Spell::getMagicLevel() const {
 
 void Spell::setMagicLevel(uint32_t lvl) {
 	magLevel = lvl;
-}
-
-bool Spell::getRemoveOnUse() const {
-	return removeOnUse;
-}
-
-void Spell::setRemoveOnUse(bool n) {
-	removeOnUse = n;
 }
 
 uint32_t Spell::getMana() const {
@@ -1064,7 +1061,32 @@ void Spell::setLockedPZ(bool b) {
 	pzLocked = b;
 }
 
+bool Spell::getHarmonyCost() const {
+	return harmony;
+}
+
+void Spell::setHarmonyCost(bool h) {
+	harmony = h;
+}
+
 InstantSpell::InstantSpell() = default;
+
+static Direction getStraightDirectionTo(const Position &from, const Position &to) {
+	if (from == to) {
+		return DIRECTION_NONE;
+	}
+
+	const int_fast32_t dx = Position::getOffsetX(from, to);
+	const int_fast32_t dy = Position::getOffsetY(from, to);
+
+	if (std::abs(dx) >= std::abs(dy)) {
+		return dx > 0 ? DIRECTION_WEST : DIRECTION_EAST;
+	} else {
+		return dy > 0 ? DIRECTION_NORTH : DIRECTION_SOUTH;
+	}
+
+	return DIRECTION_NONE;
+}
 
 bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std::string &param) const {
 	if (!playerSpellCheck(player)) {
@@ -1162,8 +1184,19 @@ bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std:
 	} else {
 		var.type = VARIANT_POSITION;
 
-		if (needDirection) {
-			var.pos = Spells::getCasterPosition(player, player->getDirection());
+		if (needDirection) { // bool to aim at target
+			const std::shared_ptr<Creature> &target = player->getAttackedCreature();
+			if (target && !target->isRemoved() && target->getHealth() > 0) {
+				const auto it = player->spellActivedAimMap.find(getSpellId());
+				if (it != player->spellActivedAimMap.end() && it->second == 1) {
+					Direction dir = getStraightDirectionTo(player->getPosition(), target->getPosition());
+					var.pos = Spells::getCasterPosition(player, dir);
+				} else {
+					var.pos = Spells::getCasterPosition(player, player->getDirection());
+				}
+			} else {
+				var.pos = Spells::getCasterPosition(player, player->getDirection());
+			}
 		} else {
 			var.pos = player->getPosition();
 		}
@@ -1179,7 +1212,7 @@ bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std:
 	}
 
 	auto worldType = g_game().getWorldType();
-	if (pzLocked && (worldType == WORLDTYPE_OPEN || worldType == WORLDTYPE_HARDCORE)) {
+	if (pzLocked && (worldType == WORLD_TYPE_PVP || worldType == WORLD_TYPE_PVP_ENFORCED)) {
 		player->addInFightTicks(true);
 		player->updateLastAggressiveAction();
 	}
@@ -1427,16 +1460,14 @@ bool RuneSpell::executeUse(const std::shared_ptr<Player> &player, const std::sha
 	}
 
 	postCastSpell(player);
-	if (hasCharges && item) {
-		if (g_configManager().getBoolean(REMOVE_RUNE_CHARGES) || removeOnUse) {
-			int32_t newCount = std::max<int32_t>(0, item->getItemCount() - 1);
-			g_game().transformItem(item, item->getID(), newCount);
-			player->updateSupplyTracker(item);
-		}
+	if (hasCharges && item && g_configManager().getBoolean(REMOVE_RUNE_CHARGES)) {
+		int32_t newCount = std::max<int32_t>(0, item->getItemCount() - 1);
+		g_game().transformItem(item, item->getID(), newCount);
+		player->updateSupplyTracker(item);
 	}
 
 	auto worldType = g_game().getWorldType();
-	if (pzLocked && (worldType == WORLDTYPE_OPEN || worldType == WORLDTYPE_HARDCORE)) {
+	if (pzLocked && (worldType == WORLD_TYPE_PVP || worldType == WORLD_TYPE_PVP_ENFORCED)) {
 		player->addInFightTicks(true);
 		player->updateLastAggressiveAction();
 	}

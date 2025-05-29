@@ -1,25 +1,18 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
 #include "config_enums.hpp"
 
 using ConfigValue = std::variant<std::string, int32_t, bool, float>;
+using OTCFeatures = std::vector<uint8_t>;
 
 class ConfigManager {
 public:
@@ -48,9 +41,16 @@ public:
 	[[nodiscard]] int32_t getNumber(const ConfigKey_t &key, const std::source_location &location = std::source_location::current()) const;
 	[[nodiscard]] bool getBoolean(const ConfigKey_t &key, const std::source_location &location = std::source_location::current()) const;
 	[[nodiscard]] float getFloat(const ConfigKey_t &key, const std::source_location &location = std::source_location::current()) const;
+	OTCFeatures getEnabledFeaturesOTC() const;
+	OTCFeatures getDisabledFeaturesOTC() const;
 
 private:
-	phmap::flat_hash_map<ConfigKey_t, ConfigValue> configs;
+	mutable std::unordered_map<ConfigKey_t, std::string> m_configString;
+	mutable std::unordered_map<ConfigKey_t, bool> m_configBoolean;
+	mutable std::unordered_map<ConfigKey_t, int32_t> m_configInteger;
+	mutable std::unordered_map<ConfigKey_t, float> m_configFloat;
+
+	std::unordered_map<ConfigKey_t, ConfigValue> configs;
 	std::string loadStringConfig(lua_State* L, const ConfigKey_t &key, const char* identifier, const std::string &defaultValue);
 	int32_t loadIntConfig(lua_State* L, const ConfigKey_t &key, const char* identifier, const int32_t &defaultValue);
 	bool loadBoolConfig(lua_State* L, const ConfigKey_t &key, const char* identifier, const bool &defaultValue);
@@ -58,6 +58,9 @@ private:
 
 	std::string configFileLua = { "config.lua" };
 	bool loaded = false;
+	OTCFeatures enabledFeaturesOTC = {};
+	OTCFeatures disabledFeaturesOTC = {};
+	void loadLuaOTCFeatures(lua_State* L);
 };
 
 constexpr auto g_configManager = ConfigManager::getInstance;

@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "io/iologindata.hpp"
 
@@ -24,7 +16,6 @@
 #include "io/functions/iologindata_save_player.hpp"
 #include "game/game.hpp"
 #include "creatures/monsters/monster.hpp"
-#include "creatures/players/wheel/player_wheel.hpp"
 #include "creatures/players/player.hpp"
 #include "lib/metrics/metrics.hpp"
 #include "enums/account_type.hpp"
@@ -110,7 +101,10 @@ bool IOLoginData::loadPlayer(const std::shared_ptr<Player> &player, const DBResu
 
 	try {
 		// First
-		IOLoginDataLoad::loadPlayerBasicInfo(player, result);
+		if (!IOLoginDataLoad::loadPlayerBasicInfo(player, result)) {
+			g_logger().warn("[{}] - Failed to load player basic info", __FUNCTION__);
+			return false;
+		}
 
 		// Experience load
 		IOLoginDataLoad::loadPlayerExperience(player, result);
@@ -175,18 +169,10 @@ bool IOLoginData::loadPlayer(const std::shared_ptr<Player> &player, const DBResu
 		// Load instant spells list
 		IOLoginDataLoad::loadPlayerInstantSpellList(player, result);
 
-		if (disableIrrelevantInfo) {
-			return true;
+		if (!disableIrrelevantInfo) {
+			// Load additional data only if the player is online (e.g., forge, bosstiary)
+			loadOnlyDataForOnlinePlayer(player, result);
 		}
-
-		// load forge history
-		IOLoginDataLoad::loadPlayerForgeHistory(player, result);
-
-		// load bosstiary
-		IOLoginDataLoad::loadPlayerBosstiary(player, result);
-
-		IOLoginDataLoad::loadPlayerInitializeSystem(player);
-		IOLoginDataLoad::loadPlayerUpdateSystem(player);
 
 		return true;
 	} catch (const std::system_error &error) {
@@ -196,6 +182,13 @@ bool IOLoginData::loadPlayer(const std::shared_ptr<Player> &player, const DBResu
 		g_logger().warn("[{}] Error while load player: {}", __FUNCTION__, e.what());
 		return false;
 	}
+}
+
+void IOLoginData::loadOnlyDataForOnlinePlayer(const std::shared_ptr<Player> &player, const DBResult_ptr &result) {
+	IOLoginDataLoad::loadPlayerForgeHistory(player, result);
+	IOLoginDataLoad::loadPlayerBosstiary(player, result);
+	IOLoginDataLoad::loadPlayerInitializeSystem(player);
+	IOLoginDataLoad::loadPlayerUpdateSystem(player);
 }
 
 bool IOLoginData::savePlayer(const std::shared_ptr<Player> &player) {
@@ -265,6 +258,18 @@ bool IOLoginData::savePlayerGuard(const std::shared_ptr<Player> &player) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerTaskHuntingClass] - Failed to save player task hunting class: " + player->getName());
 	}
 
+	// Saves data components that are only valid if the player is online.
+	// Skips execution entirely if the player is offline to avoid overwriting unloaded data.
+	saveOnlyDataForOnlinePlayer(player);
+
+	return true;
+}
+
+void IOLoginData::saveOnlyDataForOnlinePlayer(const std::shared_ptr<Player> &player) {
+	if (player->isOffline()) {
+		return;
+	}
+
 	if (!IOLoginDataSave::savePlayerForgeHistory(player)) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerForgeHistory] - Failed to save player forge history: " + player->getName());
 	}
@@ -273,20 +278,18 @@ bool IOLoginData::savePlayerGuard(const std::shared_ptr<Player> &player) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerBosstiary] - Failed to save player bosstiary: " + player->getName());
 	}
 
-	if (!player->wheel()->saveDBPlayerSlotPointsOnLogout()) {
+	if (!player->wheel().saveDBPlayerSlotPointsOnLogout()) {
 		throw DatabaseException("[PlayerWheel::saveDBPlayerSlotPointsOnLogout] - Failed to save player wheel info: " + player->getName());
 	}
 
-	player->wheel()->saveRevealedGems();
-	player->wheel()->saveActiveGems();
-	player->wheel()->saveKVModGrades();
-	player->wheel()->saveKVScrolls();
+	player->wheel().saveRevealedGems();
+	player->wheel().saveActiveGems();
+	player->wheel().saveKVModGrades();
+	player->wheel().saveKVScrolls();
 
 	if (!IOLoginDataSave::savePlayerStorage(player)) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerStorage] - Failed to save player storage: " + player->getName());
 	}
-
-	return true;
 }
 
 std::string IOLoginData::getNameByGuid(uint32_t guid) {
@@ -438,15 +441,5 @@ void IOLoginData::addGuidVIPGroupEntry(uint8_t groupId, uint32_t accountId, uint
 
 void IOLoginData::removeGuidVIPGroupEntry(uint32_t accountId, uint32_t guid) {
 	std::string query = fmt::format("DELETE FROM `account_vipgrouplist` WHERE `account_id` = {} AND `player_id` = {}", accountId, guid);
-	g_database().executeQuery(query);
-}
-
-void IOLoginData::updateOnlineStatus(uint32_t guid, bool login) {
-	std::string query;
-	if (login) {
-		query = fmt::format("INSERT INTO `players_online` VALUES ({})", guid);
-	} else {
-		query = fmt::format("DELETE FROM `players_online` WHERE `player_id` = {}", guid);
-	}
 	g_database().executeQuery(query);
 }

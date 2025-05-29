@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "kv/value_wrapper_proto.hpp"
 
@@ -22,30 +14,30 @@
 #include <kv.pb.h>
 
 namespace ProtoHelpers {
-	void setProtoStringValue(Crystal::protobuf::kv::ValueWrapper &protoValue, const StringType &arg) {
+	void setProtoStringValue(Canary::protobuf::kv::ValueWrapper &protoValue, const StringType &arg) {
 		protoValue.set_str_value(arg);
 	}
 
-	void setProtoBooleanValue(Crystal::protobuf::kv::ValueWrapper &protoValue, const BooleanType &arg) {
+	void setProtoBooleanValue(Canary::protobuf::kv::ValueWrapper &protoValue, const BooleanType &arg) {
 		protoValue.set_bool_value(arg);
 	}
 
-	void setProtoIntValue(Crystal::protobuf::kv::ValueWrapper &protoValue, const IntType &arg) {
+	void setProtoIntValue(Canary::protobuf::kv::ValueWrapper &protoValue, const IntType &arg) {
 		protoValue.set_int_value(arg);
 	}
 
-	void setProtoDoubleValue(Crystal::protobuf::kv::ValueWrapper &protoValue, const DoubleType &arg) {
+	void setProtoDoubleValue(Canary::protobuf::kv::ValueWrapper &protoValue, const DoubleType &arg) {
 		protoValue.set_double_value(arg);
 	}
 
-	void setProtoArrayValue(Crystal::protobuf::kv::ValueWrapper &protoValue, const ArrayType &arg) {
+	void setProtoArrayValue(Canary::protobuf::kv::ValueWrapper &protoValue, const ArrayType &arg) {
 		const auto arrayValue = protoValue.mutable_array_value();
 		for (const auto &elem : arg) {
 			*arrayValue->add_values() = ProtoSerializable::toProto(elem);
 		}
 	}
 
-	void setProtoMapValue(Crystal::protobuf::kv::ValueWrapper &protoValue, const MapType &arg) {
+	void setProtoMapValue(Canary::protobuf::kv::ValueWrapper &protoValue, const MapType &arg) {
 		const auto mapValue = protoValue.mutable_map_value();
 		for (const auto &[key, value] : arg) {
 			auto* elem = mapValue->add_items();
@@ -55,8 +47,8 @@ namespace ProtoHelpers {
 	}
 }
 
-Crystal::protobuf::kv::ValueWrapper ProtoSerializable::toProto(const ValueWrapper &obj) {
-	Crystal::protobuf::kv::ValueWrapper protoValue;
+Canary::protobuf::kv::ValueWrapper ProtoSerializable::toProto(const ValueWrapper &obj) {
+	Canary::protobuf::kv::ValueWrapper protoValue;
 
 	std::visit(
 		[&protoValue](const auto &arg) {
@@ -81,29 +73,29 @@ Crystal::protobuf::kv::ValueWrapper ProtoSerializable::toProto(const ValueWrappe
 	return protoValue;
 }
 
-ValueWrapper ProtoSerializable::fromProto(const Crystal::protobuf::kv::ValueWrapper &protoValue, uint64_t timestamp) {
+ValueWrapper ProtoSerializable::fromProto(const Canary::protobuf::kv::ValueWrapper &protoValue, uint64_t timestamp) {
 	ValueVariant data;
 	switch (protoValue.value_case()) {
-		case Crystal::protobuf::kv::ValueWrapper::kStrValue:
+		case Canary::protobuf::kv::ValueWrapper::kStrValue:
 			data = protoValue.str_value();
 			break;
-		case Crystal::protobuf::kv::ValueWrapper::kBoolValue:
+		case Canary::protobuf::kv::ValueWrapper::kBoolValue:
 			data = protoValue.bool_value();
 			break;
-		case Crystal::protobuf::kv::ValueWrapper::kIntValue:
+		case Canary::protobuf::kv::ValueWrapper::kIntValue:
 			data = protoValue.int_value();
 			break;
-		case Crystal::protobuf::kv::ValueWrapper::kDoubleValue:
+		case Canary::protobuf::kv::ValueWrapper::kDoubleValue:
 			data = protoValue.double_value();
 			break;
-		case Crystal::protobuf::kv::ValueWrapper::kArrayValue: {
+		case Canary::protobuf::kv::ValueWrapper::kArrayValue: {
 			ArrayType array;
 			for (const auto &protoElem : protoValue.array_value().values()) {
 				array.emplace_back(fromProto(protoElem, timestamp));
 			}
 			data = array;
 		} break;
-		case Crystal::protobuf::kv::ValueWrapper::kMapValue: {
+		case Canary::protobuf::kv::ValueWrapper::kMapValue: {
 			MapType map;
 			for (const auto &protoElem : protoValue.map_value().items()) {
 				map[protoElem.key()] = std::make_shared<ValueWrapper>(fromProto(protoElem.value(), timestamp));

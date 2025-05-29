@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "io/iomap.hpp"
 
@@ -66,7 +58,11 @@ void IOMap::loadMap(Map* map, const Position &pos) {
 	uint32_t majorVersionItems = stream.getU32();
 	stream.getU32(); // minorVersionItems
 
-	if (majorVersionItems != 3) {
+	 if (version > 5) {
+	 	throw IOMapException("Unknown OTBM version detected.");
+	 }
+
+	if (majorVersionItems < 3) {
 		throw IOMapException("This map need to be upgraded by using the latest map editor version to be able to load correctly.");
 	}
 
@@ -167,8 +163,7 @@ void IOMap::parseTileArea(FileStream &stream, Map &map, const Position &pos) {
 				const uint16_t id = stream.getU16();
 				const auto &iType = Item::items[id];
 
-				if (!tile->isHouse() || (!iType.isBed())) {
-
+				if (!tile->isHouse() || !iType.isBed()) {
 					const auto item = std::make_shared<BasicItem>();
 					item->id = id;
 
@@ -190,9 +185,7 @@ void IOMap::parseTileArea(FileStream &stream, Map &map, const Position &pos) {
 				switch (type) {
 					case OTBM_ITEM: {
 						const uint16_t id = stream.getU16();
-
 						const auto &iType = Item::items[id];
-
 						const auto item = std::make_shared<BasicItem>();
 						item->id = id;
 

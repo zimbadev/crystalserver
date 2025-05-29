@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -24,9 +16,18 @@
 #include "items/cylinder.hpp"
 #include "game/movement/position.hpp"
 #include "creatures/creatures_definitions.hpp"
-#include "creatures/players/animus_mastery/animus_mastery.hpp"
 
-class AnimusMastery;
+// Player components are decoupled to reduce complexity. Keeping includes here aids in clarity and maintainability, but avoid including player.hpp in headers to prevent circular dependencies.
+#include "creatures/players/animus_mastery/animus_mastery.hpp"
+#include "creatures/players/components/player_achievement.hpp"
+#include "creatures/players/components/player_badge.hpp"
+#include "creatures/players/components/player_cyclopedia.hpp"
+#include "creatures/players/components/player_title.hpp"
+#include "creatures/players/components/wheel/player_wheel.hpp"
+#include "creatures/players/components/player_vip.hpp"
+#include "creatures/players/components/wheel/wheel_gems.hpp"
+#include "creatures/players/components/player_attached_effects.hpp"
+
 class House;
 class NetworkMessage;
 class Weapon;
@@ -38,12 +39,6 @@ class Imbuement;
 class PreySlot;
 class TaskHuntingSlot;
 class Spell;
-class PlayerWheel;
-class PlayerAchievement;
-class PlayerBadge;
-class PlayerCyclopedia;
-class PlayerTitle;
-class PlayerVIP;
 class Spectators;
 class Account;
 class RewardChest;
@@ -63,6 +58,10 @@ struct ModalWindow;
 struct Achievement;
 struct VIPGroup;
 struct Mount;
+struct Wing;
+struct Effect;
+struct Shader;
+struct Aura;
 struct OutfitEntry;
 struct Outfit;
 struct FamiliarEntry;
@@ -132,7 +131,6 @@ using MuteCountMap = std::map<uint32_t, uint32_t>;
 static constexpr uint16_t PLAYER_MAX_SPEED = std::numeric_limits<uint16_t>::max();
 static constexpr uint16_t PLAYER_MIN_SPEED = 10;
 static constexpr uint8_t PLAYER_SOUND_HEALTH_CHANGE = 10;
-static constexpr int32_t NOTIFY_DEPOT_BOX_RANGE = 1;
 
 class Player final : public Creature, public Cylinder, public Bankable {
 public:
@@ -214,6 +212,7 @@ public:
 	bool hasAnyMount() const;
 	uint8_t getRandomMountId() const;
 	void dismount();
+
 	uint16_t getDodgeChance() const;
 
 	uint8_t isRandomMounted() const;
@@ -399,8 +398,6 @@ public:
 
 	void genReservedStorageRange();
 
-	bool checkLoginDelay(uint32_t playerId) const;
-
 	void setGroup(std::shared_ptr<Group> newGroup) {
 		group = std::move(newGroup);
 	}
@@ -428,7 +425,7 @@ public:
 		return depotSearch;
 	}
 	bool isStashMenuAvailable() const {
-		return stashMenuAvailable;
+		return m_isStashMenuAvailable;
 	}
 	bool isMarketMenuAvailable() const {
 		return marketMenu;
@@ -448,10 +445,6 @@ public:
 
 	void resetIdleTime() {
 		idleTime = 0;
-	}
-
-	void resetLastLoad() {
-		lastLoad = 0;
 	}
 
 	bool isInGhostMode() const override {
@@ -572,9 +565,6 @@ public:
 
 	void setVarStats(stats_t stat, int32_t modifier);
 	int32_t getDefaultStats(stats_t stat) const;
-	int32_t getVarStats(stats_t stat) const {
-		return varStats[stat];
-	}
 
 	void addConditionSuppressions(const std::array<ConditionType_t, ConditionType_t::CONDITION_COUNT> &addCondition);
 	void removeConditionSuppressions();
@@ -632,6 +622,8 @@ public:
 	bool openShopWindow(const std::shared_ptr<Npc> &npc, const std::vector<ShopBlock> &shopItems = {});
 	bool closeShopWindow();
 	bool updateSaleShopList(const std::shared_ptr<Item> &item);
+	void updateSaleShopList();
+	void updateState();
 	bool hasShopItemForSale(uint16_t itemId, uint8_t subType) const;
 
 	void setChaseMode(bool mode);
@@ -650,8 +642,21 @@ public:
 	static bool lastHitIsPlayer(const std::shared_ptr<Creature> &lastHitCreature);
 
 	// stash functions
-	bool addItemFromStash(uint16_t itemId, uint32_t itemCount);
+	ReturnValue addItemFromStash(uint16_t itemId, uint32_t itemCount);
 	void stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool allItems);
+
+	ReturnValue addItemBatchToPaginedContainer(
+		const std::shared_ptr<Container> &container,
+		uint16_t itemId,
+		uint32_t totalCount,
+		uint32_t &actuallyAdded,
+		uint32_t flags = 0,
+		uint8_t tier = 0
+	);
+	std::vector<std::shared_ptr<Container>> getAllContainers(bool onlyFromMainBackpack = true) const;
+	std::shared_ptr<Container> getBackpack() const;
+
+	ReturnValue removeItem(const std::shared_ptr<Item> &item, uint32_t count = 0);
 
 	void changeHealth(int32_t healthChange, bool sendHealthChange = true) override;
 	void changeMana(int32_t manaChange) override;
@@ -708,7 +713,6 @@ public:
 	void drainMana(const std::shared_ptr<Creature> &attacker, int32_t manaLoss) override;
 	void addManaSpent(uint64_t amount);
 	void addSkillAdvance(skills_t skill, uint64_t count);
-	int32_t getSkill(skills_t skilltype, SkillsId_t skillinfo) const;
 
 	int32_t getArmor() const override;
 	int32_t getDefense(bool sendToClient = false) const override;
@@ -758,17 +762,11 @@ public:
 	void sendCreatureSkull(const std::shared_ptr<Creature> &creature) const;
 	void checkSkullTicks(int64_t ticks);
 
-	bool canWearOutfit(uint16_t lookType, uint8_t addons) const;
+	bool canWear(uint16_t lookType, uint8_t addons) const;
 	void addOutfit(uint16_t lookType, uint8_t addons);
 	bool removeOutfit(uint16_t lookType);
 	bool removeOutfitAddon(uint16_t lookType, uint8_t addons);
 	bool getOutfitAddons(const std::shared_ptr<Outfit> &outfit, uint8_t &addons) const;
-
-	bool changeOutfit(Outfit_t outfit, bool checkList);
-	bool changeMount(uint8_t mountId, bool checkList);
-	void hasRequestedOutfit(bool v) {
-		requestedOutfit = v;
-	}
 
 	bool canFamiliar(uint16_t lookType) const;
 	void addFamiliar(uint16_t lookType);
@@ -929,7 +927,6 @@ public:
 	void sendOpenPrivateChannel(const std::string &receiver) const;
 	void sendExperienceTracker(int64_t rawExp, int64_t finalExp) const;
 	void sendOutfitWindow() const;
-
 	// House Auction
 	BidErrorMessage canBidHouse(uint32_t houseId);
 	TransferErrorMessage canTransferHouse(uint32_t houseId, uint32_t newOwnerGUID);
@@ -937,7 +934,6 @@ public:
 	void sendCyclopediaHouseList(const HouseMap &houses) const;
 	void sendResourceBalance(Resource_t resourceType, uint64_t value) const;
 	void sendHouseAuctionMessage(uint32_t houseId, HouseAuctionType type, uint8_t index, bool bidSuccess = false) const;
-
 	// Imbuements
 	void onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<Item> &item, uint8_t slot, bool protectionCharm);
 	void onClearImbuement(const std::shared_ptr<Item> &item, uint8_t slot);
@@ -992,14 +988,18 @@ public:
 	void setNextPotionAction(int64_t time);
 	bool canDoPotionAction() const;
 
-	void setNextExAction(int64_t time);
-	bool canDoExAction() const;
+	void setNextNecklaceAction(int64_t time);
+	bool canEquipNecklace() const;
 
-	void setNextImbuement(int64_t time);
-	bool canDoImbuement() const;
+	void setNextRingAction(int64_t time);
+	bool canEquipRing() const;
 
-	void setNextMarketAction(int64_t time);
-	bool canDoMarketAction() const;
+	void setLoginProtection(int64_t time);
+	bool isLoginProtected() const;
+	void resetLoginProtection();
+
+	void setProtection(bool status);
+	bool isProtected();
 
 	void cancelPush();
 
@@ -1061,6 +1061,10 @@ public:
 	void removeItemImbuementStats(const Imbuement* imbuement);
 	void updateImbuementTrackerStats() const;
 
+	// User Interface action exhaustion
+	bool isUIExhausted(uint32_t exhaustionTime = 250) const;
+	void updateUIExhausted();
+
 	bool isQuickLootListedItem(const std::shared_ptr<Item> &item) const;
 
 	bool updateKillTracker(const std::shared_ptr<Container> &corpse, const std::string &playerName, const Outfit_t &creatureOutfit) const;
@@ -1099,8 +1103,6 @@ public:
 	bool isImmuneCleanse(ConditionType_t conditiontype) const;
 	void setImmuneFear(uint32_t immuneTime = 10000);
 	bool isImmuneFear() const;
-	void setImmuneRoot();
-	bool isImmuneRoot() const;
 	uint16_t parseRacebyCharm(charmRune_t charmId, bool set = false, uint16_t newRaceid = 0);
 
 	uint64_t getItemCustomPrice(uint16_t itemId, bool buyPrice = false) const;
@@ -1271,10 +1273,6 @@ public:
 	bool isConcoctionActive(Concoction_t concotion) const;
 
 	bool checkAutoLoot(bool isBoss) const;
-	bool checkChainSystem() const;
-	bool checkEmoteSpells() const;
-	bool checkSpellNameInsteadOfWords() const;
-	bool checkMute() const;
 
 	QuickLootFilter_t getQuickLootFilter() const;
 
@@ -1307,41 +1305,37 @@ public:
 	 */
 	std::vector<std::shared_ptr<Item>> getEquippedItems() const;
 
-	/**
-	 * @brief Get the equipped item in the specified slot.
-	 * @details This function returns the item currently equipped in the given slot, or nullptr if the slot is empty or invalid.
-	 * @param slot The slot from which to retrieve the equipped item.
-	 * @return A pointer to the equipped item, or nullptr if no item is equipped in the specified slot.
-	 */
-	std::shared_ptr<Item> getEquippedItem(Slots_t slot) const;
-
 	// Player wheel interface
-	std::unique_ptr<PlayerWheel> &wheel();
-	const std::unique_ptr<PlayerWheel> &wheel() const;
+	PlayerWheel &wheel();
+	const PlayerWheel &wheel() const;
 
 	// Player achievement interface
-	std::unique_ptr<PlayerAchievement> &achiev();
-	const std::unique_ptr<PlayerAchievement> &achiev() const;
+	PlayerAchievement &achiev();
+	const PlayerAchievement &achiev() const;
 
 	// Player badge interface
-	std::unique_ptr<PlayerBadge> &badge();
-	const std::unique_ptr<PlayerBadge> &badge() const;
+	PlayerBadge &badge();
+	const PlayerBadge &badge() const;
 
 	// Player title interface
-	std::unique_ptr<PlayerTitle> &title();
-	const std::unique_ptr<PlayerTitle> &title() const;
+	PlayerTitle &title();
+	const PlayerTitle &title() const;
 
-	// Player cyclopedia interface
-	std::unique_ptr<PlayerCyclopedia> &cyclopedia();
-	const std::unique_ptr<PlayerCyclopedia> &cyclopedia() const;
+	// Player summary interface
+	PlayerCyclopedia &cyclopedia();
+	const PlayerCyclopedia &cyclopedia() const;
 
 	// Player vip interface
-	std::unique_ptr<PlayerVIP> &vip();
-	const std::unique_ptr<PlayerVIP> &vip() const;
+	PlayerVIP &vip();
+	const PlayerVIP &vip() const;
 
 	// Player animusMastery interface
 	AnimusMastery &animusMastery();
 	const AnimusMastery &animusMastery() const;
+
+	// Player attached effects interface
+	PlayerAttachedEffects &attachedEffects();
+	const PlayerAttachedEffects &attachedEffects() const;
 
 	void sendLootMessage(const std::string &message) const;
 
@@ -1355,34 +1349,27 @@ public:
 
 	uint16_t getPlayerVocationEnum() const;
 
+	void sendPlayerTyping(const std::shared_ptr<Creature> &creature, uint8_t typing) const;
 	void resetOldCharms();
 	bool isFirstOnStack() const;
 
-	/*******************************************************************************
-	 * Deflect Condition
-	 * Responsible for defining the conditions that when trying to be
-	 * added to the player or being updated, there is a chance to prevent these actions
-	 ******************************************************************************/
-	struct DeflectCondition {
-		DeflectCondition(std::string source, ConditionType_t condition, uint8_t chance) :
-			source(source), condition(condition), chance(chance) { }
-		std::string source;
-		uint8_t chance = 0;
-		ConditionType_t condition = CONDITION_NONE;
-	};
+	// Monk udpate
+	void sendHarmonyProtocol() const;
+	uint8_t getHarmony() const;
+	void setHarmony(const uint8_t harmonyValue);
+	void addHarmony(const uint8_t harmonyValue);
+	void removeHarmony(const uint8_t harmonyValue);
+	void sendSereneProtocol() const;
+	bool isSerene() const;
+	void setSerene(const bool isSerene);
+	uint64_t getSereneCooldown();
+	void setSereneCooldown(const uint64_t addTime);
+	void sendVirtueProtocol() const;
+	void setVirtue(const VirtueMonk_t virtue);
+	VirtueMonk_t getVirtue() const;
+	uint16_t getMantraTotal() const;
 
-	const std::vector<DeflectCondition> &getDeflectConditions() const {
-		return deflectConditions;
-	}
-
-	// Searches according to a conditionType the higest chance found among the player's
-	// deflect conditions. Return defaults to 0 if no condition is met.
-	uint8_t getDeflectConditionChance(const ConditionType_t &conditionType) const;
-
-	// Removes a deflect condition from a player from a given source
-	void removeDeflectCondition(const std::string_view &source, const ConditionType_t &conditionType, const uint8_t &chance);
-
-	void addDeflectCondition(std::string source, ConditionType_t conditionType, uint8_t chance);
+	std::unordered_map<uint16_t, uint8_t> spellActivedAimMap;
 
 private:
 	friend class PlayerLock;
@@ -1416,7 +1403,6 @@ private:
 	void setNextPotionActionTask(const std::shared_ptr<Task> &task);
 
 	void death(const std::shared_ptr<Creature> &lastHitCreature) override;
-	void sendToRook();
 	bool spawn();
 	void despawn();
 	bool dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, const std::shared_ptr<Creature> &mostDamageCreature, bool lastHitUnjustified, bool mostDamageUnjustified) override;
@@ -1522,16 +1508,16 @@ private:
 	int64_t skullTicks = 0;
 	int64_t lastWalkthroughAttempt = 0;
 	int64_t lastToggleMount = 0;
+	int64_t lastUIInteraction = 0;
 	int64_t lastPing;
 	int64_t lastPong;
-	int64_t lastLoad;
 	int64_t nextAction = 0;
-	int64_t nextExAction = 0;
-	int64_t nextImbuementAction = 0;
 	int64_t nextPotionAction = 0;
-	int64_t nextMarketAction = 0;
+	int64_t nextNecklaceAction = 0;
+	int64_t nextRingAction = 0;
 	int64_t lastQuickLootNotification = 0;
 	int64_t lastWalking = 0;
+	int64_t loginProtectionTime = 0;
 	uint64_t asyncOngoingTasks = 0;
 
 	std::vector<Kill> unjustifiedKills;
@@ -1624,7 +1610,6 @@ private:
 	std::vector<std::pair<ConditionType_t, uint64_t>> cleanseConditions;
 
 	std::pair<ConditionType_t, uint64_t> m_fearCondition = { CONDITION_NONE, 0 };
-	std::pair<ConditionType_t, uint64_t> m_rootCondition = { CONDITION_NONE, 0 };
 
 	uint8_t soul = 0;
 	uint8_t levelPercent = 0;
@@ -1653,15 +1638,14 @@ private:
 	bool logged = false;
 	bool scheduledSaleUpdate = false;
 	bool inEventMovePush = false;
-	bool stashMenuAvailable = false; // Menu option 'stow, stow container ...'
+	bool m_isStashMenuAvailable = false; // Menu option 'stow, stow container ...'
 	bool marketMenu = false; // Menu option 'show in market'
 	bool exerciseTraining = false;
 	bool moved = false;
 	bool m_isDead = false;
 	bool imbuementTrackerWindowOpen = false;
-	bool requestedOutfit = false;
-	bool outfitAttributes = false;
-	bool mountAttributes = false;
+	bool shouldForceLogout = true;
+	bool connProtected = false;
 
 	// Hazard system
 	int64_t lastHazardSystemCriticalHit = 0;
@@ -1701,16 +1685,17 @@ private:
 	uint16_t getLookCorpse() const override;
 	void getPathSearchParams(const std::shared_ptr<Creature> &creature, FindPathParams &fpp) override;
 
-	void setDead(bool isDead) {
-		m_isDead = isDead;
-	}
-	bool isDead() const override {
-		return m_isDead;
-	}
+	void setDead(bool isDead);
+	bool isDead() const override;
 
 	void triggerMomentum();
 	void clearCooldowns();
-	void triggerTranscendance();
+	void triggerTranscendence();
+
+	uint8_t m_harmony = 0;
+	bool m_serene = false;
+	uint64_t m_serene_cooldown = 0;
+	VirtueMonk_t m_virtue = VIRTUE_NONE;
 
 	friend class Game;
 	friend class SaveManager;
@@ -1731,14 +1716,16 @@ private:
 	friend class PlayerCyclopedia;
 	friend class PlayerTitle;
 	friend class PlayerVIP;
+	friend class PlayerAttachedEffects;
 
-	std::unique_ptr<PlayerWheel> m_wheelPlayer;
-	std::unique_ptr<PlayerAchievement> m_playerAchievement;
-	std::unique_ptr<PlayerBadge> m_playerBadge;
-	std::unique_ptr<PlayerCyclopedia> m_playerCyclopedia;
-	std::unique_ptr<PlayerTitle> m_playerTitle;
-	std::unique_ptr<PlayerVIP> m_playerVIP;
+	PlayerWheel m_wheelPlayer;
+	PlayerAchievement m_playerAchievement;
+	PlayerBadge m_playerBadge;
+	PlayerCyclopedia m_playerCyclopedia;
+	PlayerTitle m_playerTitle;
+	PlayerVIP m_playerVIP;
 	AnimusMastery m_animusMastery;
+	PlayerAttachedEffects m_playerAttachedEffects;
 
 	std::mutex quickLootMutex;
 
@@ -1769,11 +1756,5 @@ private:
 	int32_t getMarriageSpouse() const {
 		return marriageSpouse;
 	}
-
-	// Stores of conditions to be deflected from various sources, including from "imbuements".
-	// Different DeflectCondition containing the same data may be present.
-	// This is allowed because, for example, if armor and boots have a common imbument,
-	// unequipping the armor does not influence the boot's imbuement.
-	// When present simultaneously, the one with the greatest chance of occurrence will prevail.
-	std::vector<DeflectCondition> deflectConditions;
+	int16_t getMantraAbsorbPercent(int16_t mantraAbsorbValue) const;
 };

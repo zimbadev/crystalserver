@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "creatures/combat/combat.hpp"
 
@@ -25,7 +17,6 @@
 #include "creatures/players/grouping/party.hpp"
 #include "creatures/players/player.hpp"
 #include "creatures/players/imbuements/imbuements.hpp"
-#include "creatures/players/wheel/player_wheel.hpp"
 #include "game/game.hpp"
 #include "game/scheduling/dispatcher.hpp"
 #include "io/iobestiary.hpp"
@@ -38,6 +29,7 @@
 #include "lua/creature/events.hpp"
 #include "map/spectators.hpp"
 #include "creatures/players/player.hpp"
+#include "creatures/players/components/wheel/wheel_definitions.hpp"
 
 int32_t Combat::getLevelFormula(const std::shared_ptr<Player> &player, const std::shared_ptr<Spell> &wheelSpell, const CombatDamage &damage) const {
 	if (!player) {
@@ -46,7 +38,7 @@ int32_t Combat::getLevelFormula(const std::shared_ptr<Player> &player, const std
 
 	uint32_t magicLevelSkill = player->getMagicLevel();
 	// Wheel of destiny - Runic Mastery
-	if (player->wheel()->getInstant("Runic Mastery") && wheelSpell && damage.instantSpellName.empty() && normal_random(0, 100) <= 25) {
+	if (player->wheel().getInstant("Runic Mastery") && wheelSpell && damage.instantSpellName.empty() && normal_random(0, 100) <= 25) {
 		const auto conjuringSpell = g_spells().getInstantSpellByName(damage.runeSpellName);
 		if (conjuringSpell && conjuringSpell != wheelSpell) {
 			uint32_t castResult = conjuringSpell->canCast(player) ? 20 : 10;
@@ -56,6 +48,47 @@ int32_t Combat::getLevelFormula(const std::shared_ptr<Player> &player, const std
 
 	int32_t levelFormula = player->getLevel() * 2 + (player->getMagicLevel() + player->getSpecializedMagicLevel(damage.primary.type, true)) * 3;
 	return levelFormula;
+}
+
+static void applyImproveMonkAttackSpender(const std::shared_ptr<Player> &player, CombatDamage &damage) {
+	if (!player) {
+		return;
+	}
+
+	if (damage.instantSpellName.empty()) {
+		return;
+	}
+
+	const std::string &spellName = damage.instantSpellName;
+	if (harmonySpells.find(spellName) == harmonySpells.end()) {
+		return;
+	}
+
+	const uint8_t harmonyPoints = player->getHarmony();
+	if (harmonyPoints <= 0 || harmonyPoints > 5) {
+		return;
+	}
+
+	uint8_t baseHarmonyBonusPercent = 8; // 8, 16, 32, 64, 128
+
+	if (player->getVirtue() == VIRTUE_HARMONY) {
+		baseHarmonyBonusPercent += (player->isSerene() ? 8 : 4);
+	}
+
+	const uint8_t stage = player->wheel().getStage(WheelStage_t::ASCETIC);
+	if (stage >= 3) {
+		baseHarmonyBonusPercent += 3;
+	} else if (stage >= 2) {
+		baseHarmonyBonusPercent += 2;
+	} else if (stage >= 1) {
+		baseHarmonyBonusPercent += 1;
+	}
+
+	const int32_t totalBonusPercent = static_cast<int32_t>(baseHarmonyBonusPercent * (1 << (harmonyPoints - 1)));
+
+	const float multiplier = 1.0f + (totalBonusPercent / 100.0f);
+	damage.primary.value = static_cast<int32_t>(damage.primary.value * multiplier);
+	damage.secondary.value = static_cast<int32_t>(damage.secondary.value * multiplier);
 }
 
 CombatDamage Combat::getCombatDamage(const std::shared_ptr<Creature> &creature, const std::shared_ptr<Creature> &target) const {
@@ -69,7 +102,7 @@ CombatDamage Combat::getCombatDamage(const std::shared_ptr<Creature> &creature, 
 	std::shared_ptr<Spell> wheelSpell = nullptr;
 	std::shared_ptr<Player> attackerPlayer = creature ? creature->getPlayer() : nullptr;
 	if (attackerPlayer) {
-		wheelSpell = attackerPlayer->wheel()->getCombatDataSpell(damage);
+		wheelSpell = attackerPlayer->wheel().getCombatDataSpell(damage);
 	}
 	// End
 	if (formulaType == COMBAT_FORMULA_DAMAGE) {
@@ -115,6 +148,11 @@ CombatDamage Combat::getCombatDamage(const std::shared_ptr<Creature> &creature, 
 				}
 			}
 		}
+
+		if (attackerPlayer) {
+			applyImproveMonkAttackSpender(attackerPlayer, damage);
+		}
+
 		if (attackerPlayer && wheelSpell && wheelSpell->isInstant()) {
 			wheelSpell->getCombatDataAugment(attackerPlayer, damage);
 		}
@@ -260,9 +298,27 @@ ReturnValue Combat::canTargetCreature(const std::shared_ptr<Player> &player, con
 }
 
 ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Tile> &tile, bool aggressive) {
-	if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
-		return RETURNVALUE_CANNOTTHROW;
+	if (!aggressive) {
+		return RETURNVALUE_NOERROR;
 	}
+
+	if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
+		bool canThrow = false;
+
+		if (const auto fieldList = tile->getItemList()) {
+			for (const auto &findfield : *fieldList) {
+				if (findfield && (findfield->getID() == ITEM_MAGICWALL || findfield->getID() == ITEM_MAGICWALL_SAFE)) {
+					canThrow = true;
+					break;
+				}
+			}
+		}
+
+		if (!canThrow) {
+			return RETURNVALUE_CANNOTTHROW;
+		}
+	}
+
 	if (aggressive && tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
 		return RETURNVALUE_ACTIONNOTPERMITTEDINPROTECTIONZONE;
 	}
@@ -413,7 +469,7 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 			return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 		}
 
-		if (g_game().getWorldType() == WORLDTYPE_OPTIONAL) {
+		if (g_game().getWorldType() == WORLD_TYPE_NO_PVP) {
 			if (attackerPlayer || masterAttackerPlayer) {
 				if (targetPlayer) {
 					if (!isInPvpZone(attacker, target)) {
@@ -653,7 +709,7 @@ void Combat::CombatHealthFunc(const std::shared_ptr<Creature> &caster, const std
 			damage.primary.value *= targetPlayer->getBuff(BUFF_HEALINGRECEIVED) / 100.;
 		}
 
-		damage.damageMultiplier += attackerPlayer->wheel()->getMajorStatConditional("Divine Empowerment", WheelMajor_t::DAMAGE);
+		damage.damageMultiplier += attackerPlayer->wheel().getMajorStatConditional("Divine Empowerment", WheelMajor_t::DAMAGE);
 		g_logger().trace("Wheel Divine Empowerment damage multiplier {}", damage.damageMultiplier);
 	}
 
@@ -802,18 +858,6 @@ bool Combat::checkFearConditionAffected(const std::shared_ptr<Player> &player) {
 	return true;
 }
 
-bool Combat::checkRootConditionAffected(const std::shared_ptr<Player> &player) {
-	if (player->isImmuneRoot()) {
-		return false;
-	}
-
-	if (player->hasCondition(CONDITION_ROOTED)) {
-		return false;
-	}
-
-	return true;
-}
-
 void Combat::CombatConditionFunc(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, const CombatParams &params, CombatDamage* data) {
 	if (params.origin == ORIGIN_MELEE && data && data->primary.value == 0 && data->secondary.value == 0) {
 		return;
@@ -878,15 +922,6 @@ void Combat::CombatConditionFunc(const std::shared_ptr<Creature> &caster, const 
 }
 
 void Combat::CombatDispelFunc(const std::shared_ptr<Creature> &, const std::shared_ptr<Creature> &target, const CombatParams &params, CombatDamage*) {
-	if (params.dispelType == CONDITION_INVISIBLE) {
-		if (const auto &player = target->getPlayer()) {
-			const auto &item = player->getEquippedItem(CONST_SLOT_RING);
-			if (item && item->getID() == ITEM_STEALTH_RING_ACTIVATED && (g_game().getWorldType() == WORLDTYPE_HARDCORE || player->getTile()->hasFlag(TILESTATE_PVPZONE)) && normal_random(1, 100) <= 10) {
-				g_game().internalRemoveItem(item);
-			}
-		}
-	}
-
 	if (target) {
 		target->removeCombatCondition(params.dispelType);
 	}
@@ -942,7 +977,7 @@ void Combat::combatTileEffects(const CreatureVector &spectators, const std::shar
 			}
 
 			if (casterPlayer) {
-				if (g_game().getWorldType() == WORLDTYPE_OPTIONAL || tile->hasFlag(TILESTATE_NOPVPZONE)) {
+				if (g_game().getWorldType() == WORLD_TYPE_NO_PVP || tile->hasFlag(TILESTATE_NOPVPZONE)) {
 					if (itemId == ITEM_FIREFIELD_PVP_FULL) {
 						itemId = ITEM_FIREFIELD_NOPVP;
 					} else if (itemId == ITEM_POISONFIELD_PVP) {
@@ -1067,7 +1102,7 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 	}
 
 	const auto &weaponType = weapon->getWeaponType();
-	if (weaponType == WEAPON_NONE || weaponType == WEAPON_SHIELD) {
+	if (weaponType == WEAPON_NONE || weaponType == WEAPON_SHIELD || weaponType == WEAPON_AMMO || weaponType == WEAPON_DISTANCE || weaponType == WEAPON_MISSILE) {
 		return;
 	}
 
@@ -1104,6 +1139,9 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 	setChainCallback(g_configManager().getNumber(COMBAT_CHAIN_TARGETS), 1, true);
 
 	switch (weaponType) {
+		case WEAPON_FIST:
+			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_FIST), HUMAN_CLOSE_ATK_FIST, CONST_ME_HITAREA);
+			break;
 		case WEAPON_SWORD:
 			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_SWORD), MELEE_ATK_SWORD, CONST_ME_SLASH);
 			break;
@@ -1112,15 +1150,6 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 			break;
 		case WEAPON_AXE:
 			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_AXE), MELEE_ATK_AXE, CONST_ANI_WHIRLWINDAXE);
-			break;
-		case WEAPON_DISTANCE:
-			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_DISTANCE), DIST_ATK_BOW, CONST_ANI_HOLY);
-			break;
-		case WEAPON_AMMO:
-			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_DISTANCE), DIST_ATK_BOW, CONST_ANI_HOLY);
-			break;
-		case WEAPON_MISSILE:
-			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_MISSILE), DIST_ATK_BOW, CONST_ANI_HOLY);
 			break;
 	}
 
@@ -1135,7 +1164,7 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 
 		auto it = elementEffects.find(weapon->getElementType());
 		if (it != elementEffects.end()) {
-			setPlayerCombatValues(COMBAT_FORMULA_LEVELMAGIC, 0, 0, g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_WANDS_AND_RODS), 0);
+			setPlayerCombatValues(COMBAT_FORMULA_SKILL, 0, 0, 1.0, 0);
 			setParam(COMBAT_PARAM_EFFECT, it->second.first);
 			setParam(COMBAT_PARAM_CHAIN_EFFECT, it->second.second);
 		}
@@ -1249,13 +1278,13 @@ void Combat::CombatFunc(const std::shared_ptr<Creature> &caster, const Position 
 	// Calculate the max viewable range and affected creatures
 	for (const auto &tile : tileList) {
 		// If the caster is a player and the world is no pvp, we need to check if there are more than one player in the tile and skip the combat
-		if (casterPlayer && g_game().getWorldType() == WORLDTYPE_OPTIONAL && tile->getPosition() == origin) {
-			if (!casterPlayer->isFirstOnStack()) {
-				casterPlayer->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
-				casterPlayer->sendMagicEffect(origin, CONST_ME_POFF);
-				return;
-			}
-		}
+		// if (casterPlayer && g_game().getWorldType() == WORLD_TYPE_NO_PVP && tile->getPosition() == origin) {
+		// 	if (!casterPlayer->isFirstOnStack()) {
+		// 		casterPlayer->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
+		// 		casterPlayer->sendMagicEffect(origin, CONST_ME_POFF);
+		// 		return;
+		// 	}
+		// }
 
 		const Position &tilePos = tile->getPosition();
 
@@ -1303,7 +1332,7 @@ void Combat::CombatFunc(const std::shared_ptr<Creature> &caster, const Position 
 
 	// Wheel of destiny get beam affected total
 	auto spectators = Spectators().find<Player>(toPos, true, rangeX, rangeX, rangeY, rangeY);
-	uint8_t beamAffectedTotal = casterPlayer ? casterPlayer->wheel()->getBeamAffectedTotal(tmpDamage) : 0;
+	uint8_t beamAffectedTotal = casterPlayer ? casterPlayer->wheel().getBeamAffectedTotal(tmpDamage) : 0;
 	uint8_t beamAffectedCurrent = 0;
 
 	tmpDamage.affected = affectedTargets.size();
@@ -1334,7 +1363,7 @@ void Combat::CombatFunc(const std::shared_ptr<Creature> &caster, const Position 
 				if (!params.aggressive || (caster != creature && Combat::canDoCombat(caster, creature, params.aggressive) == RETURNVALUE_NOERROR)) {
 					// Wheel of destiny update beam mastery damage
 					if (casterPlayer) {
-						casterPlayer->wheel()->updateBeamMasteryDamage(tmpDamage, beamAffectedTotal, beamAffectedCurrent);
+						casterPlayer->wheel().updateBeamMasteryDamage(tmpDamage, beamAffectedTotal, beamAffectedCurrent);
 					}
 
 					if (func) {
@@ -1580,52 +1609,6 @@ std::vector<std::pair<Position, std::vector<uint32_t>>> Combat::pickChainTargets
 			if (!spectator || visited.contains(spectator->getID())) {
 				continue;
 			}
-
-			if (spectator->getZoneType() == ZONE_PROTECTION) {
-				visited.insert(spectator->getID());
-				continue;
-			}
-
-			if (spectator->getNpc()) {
-				visited.insert(spectator->getID());
-				continue;
-			}
-
-			if (spectator == caster) {
-				visited.insert(spectator->getID());
-				continue;
-			}
-
-			const auto &casterPlayer = caster->getPlayer();
-			const auto &casterMonster = caster->getMonster();
-			const auto &spectatorPlayer = spectator->getPlayer();
-			const auto &spectatorSummon = spectator->isSummon();
-
-			if (casterPlayer) {
-				if (casterPlayer->hasSecureMode()) {
-					if (spectatorPlayer) {
-						visited.insert(spectator->getID());
-						continue;
-					}
-
-					if (spectatorSummon && spectator->getMaster() && spectator->getMaster()->getPlayer()) {
-						visited.insert(spectator->getID());
-						continue;
-					}
-				}
-			} else if (casterMonster) {
-				if (spectatorSummon) {
-					const auto &master = spectator->getMaster();
-					if (!master || !master->getPlayer()) {
-						visited.insert(spectator->getID());
-						continue;
-					}
-				} else if (!spectator->getPlayer()) {
-					visited.insert(spectator->getID());
-					continue;
-				}
-			}
-
 			if (!isValidChainTarget(caster, currentTarget, spectator, params, aggressive)) {
 				visited.insert(spectator->getID());
 				continue;
@@ -1666,7 +1649,7 @@ std::vector<std::pair<Position, std::vector<uint32_t>>> Combat::pickChainTargets
 		break;
 	}
 
-	g_logger().debug("[{}] resultMap: {} in {} ms", __METRICS_METHOD_NAME__, resultMap.size(), bm_pickChain.duration());
+	g_logger().debug("[{}] resultMap: {} in {} ms", __FUNCTION__, resultMap.size(), bm_pickChain.duration());
 	return resultMap;
 }
 
@@ -1689,7 +1672,7 @@ uint32_t ValueCallback::getMagicLevelSkill(const std::shared_ptr<Player> &player
 
 	uint32_t magicLevelSkill = player->getMagicLevel();
 	// Wheel of destiny
-	if (player && player->wheel()->getInstant("Runic Mastery") && damage.instantSpellName.empty()) {
+	if (player && player->wheel().getInstant("Runic Mastery") && damage.instantSpellName.empty()) {
 		const std::shared_ptr<Spell> &spell = g_spells().getRuneSpellByName(damage.runeSpellName);
 		// Rune conjuring spell have the same name as the rune item spell.
 		const std::shared_ptr<InstantSpell> &conjuringSpell = g_spells().getInstantSpellByName(damage.runeSpellName);
@@ -2312,7 +2295,7 @@ void AreaCombat::setupExtArea(const std::list<uint32_t> &list, uint32_t rows) {
 
 void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 	// remove magic walls/wild growth
-	if ((!isBlocking() && g_game().getWorldType() == WORLDTYPE_OPTIONAL && id == ITEM_MAGICWALL_SAFE) || id == ITEM_WILDGROWTH_SAFE) {
+	if ((!isBlocking() && g_game().getWorldType() == WORLD_TYPE_NO_PVP && id == ITEM_MAGICWALL_SAFE) || id == ITEM_WILDGROWTH_SAFE) {
 		if (!creature->isInGhostMode()) {
 			g_game().internalRemoveItem(static_self_cast<Item>(), 1);
 		}
@@ -2327,7 +2310,7 @@ void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 		if (ownerId) {
 			bool harmfulField = true;
 			const auto &itemTile = getTile();
-			if (g_game().getWorldType() == WORLDTYPE_OPTIONAL || (itemTile && itemTile->hasFlag(TILESTATE_NOPVPZONE))) {
+			if (g_game().getWorldType() == WORLD_TYPE_NO_PVP || (itemTile && itemTile->hasFlag(TILESTATE_NOPVPZONE))) {
 				const auto &ownerPlayer = g_game().getPlayerByGUID(ownerId);
 				if (ownerPlayer) {
 					harmfulField = false;
@@ -2350,7 +2333,7 @@ void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 				}
 			}
 
-			if (!harmfulField || (OTSYS_TIME() - createTime <= (uint32_t)g_configManager().getNumber(FIELD_OWNERSHIP)) || creature->hasBeenAttacked(ownerId)) {
+			if (!harmfulField || (OTSYS_TIME() - createTime <= 5000) || creature->hasBeenAttacked(ownerId)) {
 				conditionCopy->setParam(CONDITION_PARAM_OWNER, ownerId);
 			}
 		}
@@ -2471,10 +2454,8 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 			// If is single target, apply the damage directly
 			if (isSingleCombat) {
 				damage = targetDamage;
-				continue;
 			}
 
-			// If is multi target, apply the damage to each target
 			targetCreature->setCombatDamage(targetDamage);
 		}
 	} else if (monster) {

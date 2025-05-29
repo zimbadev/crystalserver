@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/creatures/player/group_functions.hpp"
 
@@ -50,7 +42,7 @@ int GroupFunctions::luaGroupCreate(lua_State* L) {
 
 int GroupFunctions::luaGroupGetId(lua_State* L) {
 	// group:getId()
-	const auto &group = Lua::getUserdataShared<Group>(L, 1);
+	const auto &group = Lua::getUserdataShared<Group>(L, 1, "Group");
 	if (group) {
 		lua_pushnumber(L, group->id);
 	} else {
@@ -61,7 +53,7 @@ int GroupFunctions::luaGroupGetId(lua_State* L) {
 
 int GroupFunctions::luaGroupGetName(lua_State* L) {
 	// group:getName()
-	const auto &group = Lua::getUserdataShared<Group>(L, 1);
+	const auto &group = Lua::getUserdataShared<Group>(L, 1, "Group");
 	if (group) {
 		Lua::pushString(L, group->name);
 	} else {
@@ -72,7 +64,7 @@ int GroupFunctions::luaGroupGetName(lua_State* L) {
 
 int GroupFunctions::luaGroupGetFlags(lua_State* L) {
 	// group:getFlags()
-	const auto &group = Lua::getUserdataShared<Group>(L, 1);
+	const auto &group = Lua::getUserdataShared<Group>(L, 1, "Group");
 	if (group) {
 		std::bitset<magic_enum::enum_integer(PlayerFlags_t::FlagLast)> flags;
 		for (uint8_t i = 0; i < magic_enum::enum_integer(PlayerFlags_t::FlagLast); ++i) {
@@ -89,7 +81,7 @@ int GroupFunctions::luaGroupGetFlags(lua_State* L) {
 
 int GroupFunctions::luaGroupGetAccess(lua_State* L) {
 	// group:getAccess()
-	const auto &group = Lua::getUserdataShared<Group>(L, 1);
+	const auto &group = Lua::getUserdataShared<Group>(L, 1, "Group");
 	if (group) {
 		Lua::pushBoolean(L, group->access);
 	} else {
@@ -100,7 +92,7 @@ int GroupFunctions::luaGroupGetAccess(lua_State* L) {
 
 int GroupFunctions::luaGroupGetMaxDepotItems(lua_State* L) {
 	// group:getMaxDepotItems()
-	const auto &group = Lua::getUserdataShared<Group>(L, 1);
+	const auto &group = Lua::getUserdataShared<Group>(L, 1, "Group");
 	if (group) {
 		lua_pushnumber(L, group->maxDepotItems);
 	} else {
@@ -111,7 +103,7 @@ int GroupFunctions::luaGroupGetMaxDepotItems(lua_State* L) {
 
 int GroupFunctions::luaGroupGetMaxVipEntries(lua_State* L) {
 	// group:getMaxVipEntries()
-	const auto &group = Lua::getUserdataShared<Group>(L, 1);
+	const auto &group = Lua::getUserdataShared<Group>(L, 1, "Group");
 	if (group) {
 		lua_pushnumber(L, group->maxVipEntries);
 	} else {
@@ -122,7 +114,7 @@ int GroupFunctions::luaGroupGetMaxVipEntries(lua_State* L) {
 
 int GroupFunctions::luaGroupHasFlag(lua_State* L) {
 	// group:hasFlag(flag)
-	const auto &group = Lua::getUserdataShared<Group>(L, 1);
+	const auto &group = Lua::getUserdataShared<Group>(L, 1, "Group");
 	if (group) {
 		const auto flag = static_cast<PlayerFlags_t>(Lua::getNumber<int>(L, 2));
 		Lua::pushBoolean(L, group->flags[Groups::getFlagNumber(flag)]);

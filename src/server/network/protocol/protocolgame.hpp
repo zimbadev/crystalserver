@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #pragma once
 
@@ -96,8 +88,6 @@ struct TextMessage {
 	} primary, secondary;
 };
 
-static constexpr size_t MAX_KNOWN_CREATURES = 1300;
-
 class ProtocolGame final : public Protocol {
 public:
 	// Static protocol information.
@@ -133,7 +123,6 @@ private:
 	void release() override;
 
 	void checkCreatureAsKnown(uint32_t id, bool &known, uint32_t &removedKnown);
-	void removeCreature(uint32_t id);
 
 	bool canSee(int32_t x, int32_t y, int32_t z) const;
 	bool canSee(const std::shared_ptr<Creature> &) const;
@@ -184,7 +173,7 @@ private:
 	void parseHighscores(NetworkMessage &msg);
 	void parseTaskHuntingAction(NetworkMessage &msg);
 	void sendHighscoresNoData();
-	void sendHighscores(const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationId, uint16_t page, uint16_t pages, uint32_t updateTimer);
+	void sendHighscores(const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationBaseId, uint16_t page, uint16_t pages, uint32_t updateTimer);
 
 	void parseGreet(NetworkMessage &msg);
 	void parseBugReport(NetworkMessage &msg);
@@ -306,6 +295,7 @@ private:
 
 	void sendForgeResult(ForgeAction_t actionType, uint16_t leftItemId, uint8_t leftTier, uint16_t rightItemId, uint8_t rightTier, bool success, uint8_t bonus, uint8_t coreCount, bool convergence);
 	void sendForgeHistory(uint8_t page);
+	void sendForgeSkillStats(NetworkMessage &msg) const;
 	double getForgeSkillStat(Slots_t slot, bool applyAmplification = true) const;
 
 	void sendBosstiaryData();
@@ -408,7 +398,7 @@ private:
 	void sendOutfitWindow();
 	void sendPodiumWindow(const std::shared_ptr<Item> &podium, const Position &position, uint16_t itemId, uint8_t stackpos);
 
-	void sendUpdatedVIPStatus(uint32_t guid, VipStatus_t status);
+	void sendUpdatedVIPStatus(uint32_t guid, VipStatus_t newStatus);
 	void sendVIP(uint32_t guid, const std::string &name, const std::string &description, uint32_t icon, bool notify, VipStatus_t status);
 	void sendVIPGroups();
 
@@ -515,6 +505,16 @@ private:
 
 	// OTCv8
 	void sendFeatures();
+	// OTCR
+	void sendOTCRFeatures();
+	void sendAttachedEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId);
+	void sendDetachEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId);
+	void sendShader(const std::shared_ptr<Creature> &creature, const std::string &shaderName);
+	void sendMapShader(const std::string &shaderName);
+	void sendPlayerTyping(const std::shared_ptr<Creature> &creature, uint8_t typing);
+	void parsePlayerTyping(NetworkMessage &msg);
+	void AddOutfitCustomOTCR(NetworkMessage &msg, const Outfit_t &outfit);
+	void sendOutfitWindowCustomOTCR(NetworkMessage &msg);
 
 	void parseInventoryImbuements(NetworkMessage &msg);
 	void sendInventoryImbuements(const std::map<Slots_t, std::shared_ptr<Item>> &items);
@@ -530,14 +530,18 @@ private:
 	void parseSaveWheel(NetworkMessage &msg);
 	void parseWheelGemAction(NetworkMessage &msg);
 
+	void sendHarmonyProtocol(const uint8_t harmonyValue);
+	void sendSereneProtocol(const bool isSerene);
+	void sendVirtueProtocol(const uint8_t virtueValue);
+	void parseSelectSpellAimProtocol(NetworkMessage &msg);
+
 	friend class Player;
 	friend class PlayerWheel;
 	friend class PlayerVIP;
+	friend class PlayerAttachedEffects;
 
 	std::unordered_set<uint32_t> knownCreatureSet;
 	std::shared_ptr<Player> player = nullptr;
-
-	std::list<uint32_t> creatureOrder;
 
 	uint32_t eventConnect = 0;
 	uint32_t challengeTimestamp = 0;
@@ -553,9 +557,10 @@ private:
 	bool shouldAddExivaRestrictions = false;
 
 	bool oldProtocol = false;
+	bool isOTC = false;
+	bool isOTCR = false;
 
 	uint16_t otclientV8 = 0;
-	bool isOTC = false;
 
 	void sendOpenStash();
 	void parseStashWithdraw(NetworkMessage &msg);

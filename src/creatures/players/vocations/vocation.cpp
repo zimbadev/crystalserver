@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "creatures/players/vocations/vocation.hpp"
 
@@ -177,11 +169,6 @@ bool Vocations::loadFromXml() {
 					voc->distDamageMultiplier = pugi::cast<float>(distDamageAttribute.value());
 				}
 
-				pugi::xml_attribute wandRodDamageAttribute = childNode.attribute("wandRodDamage");
-				if (wandRodDamageAttribute) {
-					voc->wandRodDamageMultiplier = pugi::cast<float>(wandRodDamageAttribute.value());
-				}
-
 				pugi::xml_attribute defenseAttribute = childNode.attribute("defense");
 				if (defenseAttribute) {
 					voc->defenseMultiplier = pugi::cast<float>(defenseAttribute.value());
@@ -207,104 +194,6 @@ bool Vocations::loadFromXml() {
 				auto quality = pugi::cast<uint8_t>(qualityAttr.value());
 				const auto name = nameAttr.as_string();
 				voc->wheelGems[static_cast<WheelGemQuality_t>(quality)] = name;
-			} else if (strcasecmp(childNode.name(), "absorb") == 0) {
-				auto intValue = 0;
-				pugi::xml_attribute percentAllAttr = childNode.attribute("percentall");
-				if (percentAllAttr) {
-					intValue = pugi::cast<int>(percentAllAttr.value());
-					for (uint32_t i = COMBAT_FIRST; i <= COMBAT_LAST; ++i) {
-						CombatType_t combatType = indexToCombatType(i);
-						if (combatType != COMBAT_UNDEFINEDDAMAGE) {
-							voc->increaseAbsorbPercent(combatType, intValue);
-						}
-					}
-				}
-
-				pugi::xml_attribute percentElementsAttr = childNode.attribute("percentelements");
-				if (percentElementsAttr) {
-					intValue = pugi::cast<int>(percentElementsAttr.value());
-					voc->increaseAbsorbPercent(COMBAT_ENERGYDAMAGE, intValue);
-					voc->increaseAbsorbPercent(COMBAT_FIREDAMAGE, intValue);
-					voc->increaseAbsorbPercent(COMBAT_EARTHDAMAGE, intValue);
-					voc->increaseAbsorbPercent(COMBAT_ICEDAMAGE, intValue);
-				}
-
-				pugi::xml_attribute percentMagicAttr = childNode.attribute("percentmagic");
-				if (percentMagicAttr) {
-					intValue = pugi::cast<int>(percentMagicAttr.value());
-					voc->increaseAbsorbPercent(COMBAT_ENERGYDAMAGE, intValue);
-					voc->increaseAbsorbPercent(COMBAT_FIREDAMAGE, intValue);
-					voc->increaseAbsorbPercent(COMBAT_EARTHDAMAGE, intValue);
-					voc->increaseAbsorbPercent(COMBAT_ICEDAMAGE, intValue);
-					voc->increaseAbsorbPercent(COMBAT_HOLYDAMAGE, intValue);
-					voc->increaseAbsorbPercent(COMBAT_DEATHDAMAGE, intValue);
-				}
-
-				pugi::xml_attribute generalAttr;
-				generalAttr = childNode.attribute("percentenergy");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_ENERGYDAMAGE, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentfire");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_FIREDAMAGE, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentearth");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_EARTHDAMAGE, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentice");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_ICEDAMAGE, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentholy");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_HOLYDAMAGE, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentdeath");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_DEATHDAMAGE, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentlifedrain");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_LIFEDRAIN, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentmanadrain");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_MANADRAIN, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentdrown");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_DROWNDAMAGE, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentphysical");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_PHYSICALDAMAGE, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percenthealing");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_HEALING, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentagony");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_AGONYDAMAGE, generalAttr.as_int());
-				}
-
-				generalAttr = childNode.attribute("percentneutral");
-				if (generalAttr) {
-					voc->increaseAbsorbPercent(COMBAT_NEUTRALDAMAGE, generalAttr.as_int());
-				}
 			}
 		}
 	}
@@ -497,7 +386,7 @@ std::vector<WheelGemSupremeModifier_t> Vocation::getSupremeGemModifiers() {
 	if (!m_supremeGemModifiers.empty()) {
 		return m_supremeGemModifiers;
 	}
-	const auto baseVocation = g_vocations().getVocation(getBaseId());
+	const auto baseVocation = g_vocations().getVocation(getFromVocation());
 	auto vocationName = asLowerCaseString(baseVocation->getVocName());
 	auto allModifiers = magic_enum::enum_entries<WheelGemSupremeModifier_t>();
 	g_logger().debug("Loading supreme gem modifiers for vocation: {}", vocationName);
@@ -519,12 +408,4 @@ uint16_t Vocation::getWheelGemId(WheelGemQuality_t quality) {
 	}
 	const auto &gemName = wheelGems[quality];
 	return Item::items.getItemIdByName(gemName);
-}
-
-int16_t Vocation::getAbsorbPercent(CombatType_t combat) const {
-	return absorbPercent[combat];
-}
-
-void Vocation::increaseAbsorbPercent(CombatType_t combat, int16_t v) {
-	absorbPercent[combat] += v;
 }

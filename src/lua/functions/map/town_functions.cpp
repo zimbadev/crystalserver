@@ -1,19 +1,11 @@
-////////////////////////////////////////////////////////////////////////
-// Crystal Server - an opensource roleplaying game
-////////////////////////////////////////////////////////////////////////
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////////////////////////////////////////////////////////////////////
+/**
+ * Canary - A free and open-source MMORPG server emulator
+ * Copyright (©) 2019-2024 OpenTibiaBR <opentibiabr@outlook.com>
+ * Repository: https://github.com/opentibiabr/canary
+ * License: https://github.com/opentibiabr/canary/blob/main/LICENSE
+ * Contributors: https://github.com/opentibiabr/canary/graphs/contributors
+ * Website: https://docs.opentibiabr.com/
+ */
 
 #include "lua/functions/map/town_functions.hpp"
 
@@ -52,7 +44,7 @@ int TownFunctions::luaTownCreate(lua_State* L) {
 
 int TownFunctions::luaTownGetId(lua_State* L) {
 	// town:getId()
-	if (const auto &town = Lua::getUserdataShared<Town>(L, 1)) {
+	if (const auto &town = Lua::getUserdataShared<Town>(L, 1, "Town")) {
 		lua_pushnumber(L, town->getID());
 	} else {
 		lua_pushnil(L);
@@ -62,7 +54,7 @@ int TownFunctions::luaTownGetId(lua_State* L) {
 
 int TownFunctions::luaTownGetName(lua_State* L) {
 	// town:getName()
-	if (const auto &town = Lua::getUserdataShared<Town>(L, 1)) {
+	if (const auto &town = Lua::getUserdataShared<Town>(L, 1, "Town")) {
 		Lua::pushString(L, town->getName());
 	} else {
 		lua_pushnil(L);
@@ -72,7 +64,7 @@ int TownFunctions::luaTownGetName(lua_State* L) {
 
 int TownFunctions::luaTownGetTemplePosition(lua_State* L) {
 	// town:getTemplePosition()
-	if (const auto &town = Lua::getUserdataShared<Town>(L, 1)) {
+	if (const auto &town = Lua::getUserdataShared<Town>(L, 1, "Town")) {
 		Lua::pushPosition(L, town->getTemplePosition());
 	} else {
 		lua_pushnil(L);
