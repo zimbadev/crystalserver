@@ -22,22 +22,22 @@ Reserved player action storage key ranges (const.hpp)
 ]]
 
 Storage = {
-    -- Crystal Server storages
-    CrystalServer = {
-        Citizen = {
-            DesertCity = 9056,
-            Inferno = 9057,
-            Venore = 9058,
-            Karmia = 9059,
-            Tiquanda = 9060,
-            PremiumIsland = 9061,
-            Folda = 9062,
-            LibertyBay = 9063,
-        },
-        AdventurersGuild = {
-            Stone = 52130,
-            FreeStone = 52131,
-        },
+	-- Crystal Server storages
+	CrystalServer = {
+		Citizen = {
+			DesertCity = 9056,
+			Inferno = 9057,
+			Venore = 9058,
+			Karmia = 9059,
+			Tiquanda = 9060,
+			PremiumIsland = 9061,
+			Folda = 9062,
+			LibertyBay = 9063,
+		},
+		AdventurersGuild = {
+			Stone = 52130,
+			FreeStone = 52131,
+		},
 		IceCity = { -- update 8.0 - Reserved Storages 41151 - 41350
 			BarbarianArena = {
 				Arena = 41151,
@@ -73,85 +73,85 @@ Storage = {
 				MeadSuccessSips = 41179,
 			},
 		},
-        Quests = {
-            Behemoth = {
-                GuardianHalberd = 5006,
-                DemonShield = 5007,
-                GoldenArmor = 5008,
-            },
-            CobraBastion = {
-                Questline = 52311,
-            },
-            DemonHelmet = {
-                Lever = 14031,
-                SteelBoots = 5003,
-                DH = 5004,
-                DemonShield = 5005,
-            },
-            Rookgaard = {
-                Mace = 5000,
-                ChainHelmet = 5001,
-                ChainArmor = 5002,
-            },
-            WelcomeToCrystalServer = {
-                Start = 40000,
-                Mission = 40001,
-            },
-        },
-        HydrasCampLever = 14030,
-        TrainingRoom = {
-            NORTH = 2017,
-            SOUTH = 2018,
-            WEST = 2019,
-            EAST = 2020,
-        },
-        UnderWater = {
-            S1 = 4550,
-            S2 = 4551,
-            S3 = 4552,
-            S4 = 4553,
-            S5 = 4554,
-            S6 = 4555,
-            S7 = 4556,
-            S8 = 4557,
-        },
-        Portals = {
-            S1 = 4558,
-            S2 = 4559,
-        },
-    },
+		Quests = {
+			Behemoth = {
+				GuardianHalberd = 5006,
+				DemonShield = 5007,
+				GoldenArmor = 5008,
+			},
+			CobraBastion = {
+				Questline = 52311,
+			},
+			DemonHelmet = {
+				Lever = 14031,
+				SteelBoots = 5003,
+				DH = 5004,
+				DemonShield = 5005,
+			},
+			Rookgaard = {
+				Mace = 5000,
+				ChainHelmet = 5001,
+				ChainArmor = 5002,
+			},
+			WelcomeToCrystalServer = {
+				Start = 40000,
+				Mission = 40001,
+			},
+		},
+		HydrasCampLever = 14030,
+		TrainingRoom = {
+			NORTH = 2017,
+			SOUTH = 2018,
+			WEST = 2019,
+			EAST = 2020,
+		},
+		UnderWater = {
+			S1 = 4550,
+			S2 = 4551,
+			S3 = 4552,
+			S4 = 4553,
+			S5 = 4554,
+			S6 = 4555,
+			S7 = 4556,
+			S8 = 4557,
+		},
+		Portals = {
+			S1 = 4558,
+			S2 = 4559,
+		},
+	},
 
-    Quest = {
-        Key = {
-            ID1000 = 103,
-        },
-        ExampleQuest = {
-            Example = 9000,
-            Door = 9001,
-        },
+	Quest = {
+		Key = {
+			ID1000 = 103,
+		},
+		ExampleQuest = {
+			Example = 9000,
+			Door = 9001,
+		},
 
-        -- DODAJEMY DEMON OAK TUTAJ
-        U8_2 = {
-            TheDemonOak = {
-                AxeBlowsBird = 10001,
-                AxeBlowsLeft = 10002,
-                AxeBlowsRight = 10003,
-                AxeBlowsFace = 10004,
-                Done = 10005,
-                Progress = 10006,
-                Squares = 10007
-            }
-        }
-    },
+		-- DODAJEMY DEMON OAK TUTAJ
+		U8_2 = {
+			TheDemonOak = {
+				AxeBlowsBird = 10001,
+				AxeBlowsLeft = 10002,
+				AxeBlowsRight = 10003,
+				AxeBlowsFace = 10004,
+				Done = 10005,
+				Progress = 10006,
+				Squares = 10007,
+			},
+		},
+	},
 
-    Imbuement = 30004,
+	Imbuement = 30004,
 }
 
 GlobalStorage = {
-    ExampleQuest = {
-        Example = 60000,
-    },
-    KeysUpdate = 40000, -- Reserved storage from 40000 - 40000
+	ExampleQuest = {
+		Example = 60000,
+	},
+	KeysUpdate = 40000, -- Reserved storage from 40000 - 40000
 }
 
 startupGlobalStorages = {}

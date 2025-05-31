@@ -43,15 +43,15 @@ deathEvent:register()
 
 local serverstartup = GlobalEvent("SvargrondArenaBossDeathStartup")
 function serverstartup.onStartup()
-    for _, arena in pairs(SvargrondArena.arenas) do
-        for _, bossName in pairs(arena.creatures) do
-            local mType = MonsterType(bossName)
-            if not mType then
-                logger.error("[SvargrondArenaBossDeathStartup] boss with name {} is not a valid MonsterType", bossName)
-            else
-                mType:registerEvent("SvargrondArenaBossDeath")
-            end
-        end
-    end
+	for _, arena in pairs(SvargrondArena.arenas) do
+		for _, bossName in pairs(arena.creatures) do
+			local mType = MonsterType(bossName)
+			if not mType then
+				logger.error("[SvargrondArenaBossDeathStartup] boss with name {} is not a valid MonsterType", bossName)
+			else
+				mType:registerEvent("SvargrondArenaBossDeath")
+			end
+		end
+	end
 end
 serverstartup:register()
