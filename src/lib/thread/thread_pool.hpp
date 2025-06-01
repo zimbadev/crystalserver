@@ -19,9 +19,9 @@
 
 #include "BS_thread_pool.hpp"
 
-class ThreadPool : public BS::thread_pool<BS::tp::none> {
+class ThreadPool : public BS::thread_pool {
 public:
-	explicit ThreadPool(Logger &logger, const uint32_t threadCount = std::thread::hardware_concurrency());
+	explicit ThreadPool(Logger &logger);
 
 	// Ensures that we don't accidentally copy it
 	ThreadPool(const ThreadPool &) = delete;
