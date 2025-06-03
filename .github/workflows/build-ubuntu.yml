@@ -90,6 +90,7 @@ jobs:
         with:
           vcpkgGitURL: "https://github.com/microsoft/vcpkg.git"
           vcpkgGitCommitId: ${{ env.VCPKG_GIT_COMMIT_ID }}
+          doNotCache: true
 
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@main
