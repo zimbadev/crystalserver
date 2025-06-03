@@ -72,7 +72,6 @@ target_link_libraries(${PROJECT_NAME}_lib
         PUBLIC
         ${GMP_LIBRARIES}
         ${LUAJIT_LIBRARIES}
-        CURL::libcurl
         ZLIB::ZLIB
         absl::any absl::log absl::base absl::bits
         asio::asio

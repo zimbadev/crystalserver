@@ -27,7 +27,7 @@ info "Installing system dependencies (this requires your password)..."
 case "$DISTRO" in
     ubuntu|debian)
         sudo apt update && sudo apt dist-upgrade -y
-        sudo apt install -y git cmake build-essential autoconf libtool ca-certificates curl zip unzip tar pkg-config ninja-build ccache linux-headers-$(uname -r) acl snapd
+        sudo apt install -y git cmake build-essential autoconf libtool ca-certificates zip unzip tar pkg-config ninja-build ccache linux-headers-$(uname -r) acl snapd
 
         sudo apt remove --purge cmake -y || true
         hash -r
@@ -35,11 +35,11 @@ case "$DISTRO" in
         ;;
     arch)
         sudo pacman -Syu --noconfirm
-        sudo pacman -S --noconfirm git cmake base-devel autoconf libtool ca-certificates curl zip unzip tar pkgconf ninja ccache linux-headers acl gcc
+        sudo pacman -S --noconfirm git cmake base-devel autoconf libtool ca-certificates zip unzip tar pkgconf ninja ccache linux-headers acl gcc
         ;;
     fedora)
         sudo dnf update -y
-        sudo dnf install -y git cmake gcc gcc-c++ make autoconf libtool ca-certificates curl zip unzip tar pkgconf-pkg-config ninja-build ccache kernel-devel acl
+        sudo dnf install -y git cmake gcc gcc-c++ make autoconf libtool ca-certificates zip unzip tar pkgconf-pkg-config ninja-build ccache kernel-devel acl
         ;;
     *)
         error "Unsupported distribution: $DISTRO"

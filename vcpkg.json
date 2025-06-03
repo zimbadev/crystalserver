@@ -7,7 +7,6 @@
     "asio",
     "bext-di",
     "bext-ut",
-    "curl",
     "eventpp",
     "libmariadb",
     "luajit",
