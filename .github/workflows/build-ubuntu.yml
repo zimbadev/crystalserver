@@ -1,4 +1,3 @@
----
 name: Build - Ubuntu
 
 on:
@@ -17,6 +16,7 @@ on:
 env:
   CMAKE_BUILD_PARALLEL_LEVEL: 2
   MAKEFLAGS: "-j 2"
+  VCPKG_GIT_COMMIT_ID: d6995a0cf3cafda5e9e52749fad075dd62bfd90c  # builtin-baseline from vcpkg.json
 
 jobs:
   cancel-runs:
@@ -49,8 +49,9 @@ jobs:
         uses: actions/checkout@main
 
       - name: Install Linux Dependencies
-        run: >
-          sudo apt-get update && sudo apt-get install ccache linux-headers-"$(uname -r)"
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ccache linux-headers-"$(uname -r)"
 
       - name: Switch to gcc-13 on Ubuntu 22.04
         if: matrix.os == 'ubuntu-22.04'
@@ -70,7 +71,7 @@ jobs:
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 --slave /usr/bin/g++ g++ /usr/bin/g++-14 --slave /usr/bin/gcov gcov /usr/bin/gcov-14
           sudo update-alternatives --set gcc /usr/bin/gcc-14
 
-      - name: CCache
+      - name: Enable CCache
         uses: hendrikmuhs/ccache-action@main
         with:
           max-size: "1G"
@@ -78,31 +79,25 @@ jobs:
           restore-keys: |
             ccache-${{ matrix.os }}
 
-      - name: Restore artifacts and install vcpkg
-        id: vcpkg-step
-        run: |
-          vcpkgCommitId=$(grep '.builtin-baseline' vcpkg.json | awk -F: '{print $2}' | tr -d '," ')
-          echo "vcpkg commit ID: $vcpkgCommitId"
-          echo "VCPKG_GIT_COMMIT_ID=$vcpkgCommitId" >> "$GITHUB_ENV"
-
-      - name: Get vcpkg commit id from vcpkg.json
-        uses: lukka/run-vcpkg@main
+      - name: Install vcpkg dependencies (with cache)
+        uses: lukka/run-vcpkg@v11
         with:
           vcpkgGitURL: "https://github.com/microsoft/vcpkg.git"
           vcpkgGitCommitId: ${{ env.VCPKG_GIT_COMMIT_ID }}
-          doNotCache: true
+          runVcpkgInstall: true
+          doNotCache: false
 
-      - name: Get latest CMake and ninja
+      - name: Install latest CMake and ninja
         uses: lukka/get-cmake@main
 
-      - name: Run CMake
+      - name: Configure and Build
         uses: lukka/run-cmake@main
         with:
           configurePreset: ${{ matrix.buildtype }}
           buildPreset: ${{ matrix.buildtype }}
           configurePresetAdditionalArgs: "['-DBUILD_TESTS=ON']"
 
-      - name: Create and Upload Artifact
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@main
         with:
           name: crystalserver-${{ matrix.os }}-${{ matrix.buildtype }}-${{ github.sha }}
@@ -113,8 +108,3 @@ jobs:
         run: |
           cd ${{ github.workspace }}/build/${{ matrix.buildtype }}/tests/unit
           ctest --verbose
-
-#      - name: Run Integration Tests
-#        run: |
-#          cd ${{ github.workspace }}/build/${{ matrix.buildtype }}/tests/integration
-#          ctest --verbose
