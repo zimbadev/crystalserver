@@ -18,12 +18,12 @@
 			<magicLevel value="1" />
 		</stats>
 		<imbuing>
-			<lifeleechchance value="100" />
-			<lifeleechamount value="100" />
-			<manaleechchance value="100" />
-			<manaleechamount value="100" />
-			<criticalchance value="100" />
-			<criticaldamage value="100" />
+			<lifeleechchance value="1" />
+			<lifeleechamount value="1" />
+			<manaleechchance value="1" />
+			<manaleechamount value="1" />
+			<criticalchance value="1" />
+			<criticaldamage value="1" />
 		</imbuing>
 	</mount>
 	-->
