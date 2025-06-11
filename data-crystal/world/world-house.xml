@@ -83,9 +83,8 @@
 	<house name="Folda House III" houseid="83" entryx="232" entryy="317" entryz="7" rent="10000" townid="7" size="32" clientid="0" beds="3" />
 	<house name="Folda House IV" houseid="84" entryx="232" entryy="323" entryz="7" rent="10000" townid="7" size="32" clientid="0" beds="3" />
 	<house name="Folda House V" houseid="85" entryx="232" entryy="329" entryz="7" rent="10000" townid="7" size="32" clientid="0" beds="3" />
-	<house name="Folda House VI" houseid="86" entryx="240" entryy="341" entryz="7" rent="1000" townid="7" size="85" clientid="0" beds="3" />
-	<house name="Folda House VII" houseid="87" entryx="251" entryy="339" entryz="7" rent="1000" townid="7" size="21" clientid="0" beds="3" />
-	<house name="Folda House VIII" houseid="88" entryx="256" entryy="339" entryz="7" rent="1000" townid="7" size="21" clientid="0" beds="3" />
+	<house name="Folda House VI" houseid="87" entryx="251" entryy="339" entryz="7" rent="1000" townid="7" size="21" clientid="0" beds="3" />
+	<house name="Folda House VII" houseid="88" entryx="256" entryy="339" entryz="7" rent="1000" townid="7" size="21" clientid="0" beds="3" />
 	<house name="Folda House IX" houseid="89" entryx="237" entryy="322" entryz="7" rent="1000" townid="7" size="31" clientid="0" beds="3" />
 	<house name="Liberty Bay House I" houseid="90" entryx="562" entryy="684" entryz="7" rent="10000" townid="8" size="110" clientid="0" beds="3" />
 	<house name="Liberty Bay House II" houseid="91" entryx="560" entryy="706" entryz="7" rent="10000" townid="8" size="95" clientid="0" beds="3" />
