@@ -104,4 +104,7 @@
 	<house name="Liberty Bay House XVI" houseid="105" entryx="517" entryy="691" entryz="7" rent="10000" townid="8" size="29" clientid="0" beds="3" />
 	<house name="Liberty Bay House XVII" houseid="106" entryx="518" entryy="697" entryz="7" rent="10000" townid="8" size="31" clientid="0" beds="3" />
 	<house name="Karmia House II" houseid="107" entryx="457" entryy="527" entryz="7" rent="7000" townid="1" size="68" clientid="0" beds="3" />
+	<house name="Frostania West I" houseid="108" entryx="263" entryy="307" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="1" />
+	<house name="Frostania West II" houseid="109" entryx="267" entryy="307" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="1" />
+	<house name="Frostania West III" houseid="110" entryx="271" entryy="307" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
 </houses>
