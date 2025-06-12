@@ -14,7 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
-	"HuskyDeath",
+
 }
 
 monster.raceId = 325

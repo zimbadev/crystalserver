@@ -18,6 +18,7 @@
 * Premium Island = 9061
 * Folda = 9062,
 * Liberty Bay = 9063
+* Frostania = 9064
 
 **`Hydras Camp`**
  * 14030

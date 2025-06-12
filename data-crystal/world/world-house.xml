@@ -104,7 +104,24 @@
 	<house name="Liberty Bay House XVI" houseid="105" entryx="517" entryy="691" entryz="7" rent="10000" townid="8" size="29" clientid="0" beds="3" />
 	<house name="Liberty Bay House XVII" houseid="106" entryx="518" entryy="697" entryz="7" rent="10000" townid="8" size="31" clientid="0" beds="3" />
 	<house name="Karmia House II" houseid="107" entryx="457" entryy="527" entryz="7" rent="7000" townid="1" size="68" clientid="0" beds="3" />
-	<house name="Frostania West I" houseid="108" entryx="263" entryy="307" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="1" />
-	<house name="Frostania West II" houseid="109" entryx="267" entryy="307" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="1" />
-	<house name="Frostania West III" houseid="110" entryx="271" entryy="307" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
+	<house name="Frostania SW I" houseid="108" entryx="263" entryy="307" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="1" />
+	<house name="Frostania SW II" houseid="109" entryx="267" entryy="307" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="1" />
+	<house name="Frostania SW III" houseid="110" entryx="271" entryy="307" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
+	<house name="Frostania SW IV" houseid="111" entryx="268" entryy="317" entryz="6" rent="0" townid="10" size="105" clientid="0" beds="3" />
+	<house name="Frostania SW V" houseid="112" entryx="279" entryy="309" entryz="6" rent="0" townid="10" size="107" clientid="0" beds="3" />
+	<house name="Frostania SW VI" houseid="113" entryx="290" entryy="304" entryz="6" rent="0" townid="10" size="109" clientid="0" beds="3" />
+	<house name="Frostania SW VII" houseid="115" entryx="280" entryy="303" entryz="6" rent="0" townid="10" size="103" clientid="0" beds="0" />
+	<house name="Frostania South I" houseid="116" entryx="298" entryy="294" entryz="6" rent="0" townid="10" size="43" clientid="0" beds="0" />
+	<house name="Frostania South II" houseid="117" entryx="300" entryy="299" entryz="6" rent="0" townid="10" size="107" clientid="0" beds="0" />
+	<house name="Frostania South IV" houseid="118" entryx="310" entryy="299" entryz="6" rent="0" townid="10" size="104" clientid="0" beds="0" />
+	<house name="Frostania South III" houseid="119" entryx="306" entryy="295" entryz="6" rent="0" townid="10" size="112" clientid="0" beds="0" />
+	<house name="Frostania South VI" houseid="120" entryx="320" entryy="297" entryz="6" rent="0" townid="10" size="105" clientid="0" beds="3" />
+	<house name="Frostania South V" houseid="121" entryx="322" entryy="294" entryz="6" rent="0" townid="10" size="44" clientid="0" beds="0" />
+	<house name="Frostania SW VIII" houseid="123" entryx="291" entryy="289" entryz="6" rent="0" townid="10" size="103" clientid="0" beds="0" />
+	<house name="Frostania West I" houseid="124" entryx="289" entryy="281" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
+	<house name="Frostania West II" houseid="125" entryx="289" entryy="275" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
+	<house name="Frostania West III" houseid="127" entryx="289" entryy="269" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
+	<house name="Frostanie NW I" houseid="132" entryx="290" entryy="263" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="0" />
+	<house name="Frostania NW II" houseid="133" entryx="290" entryy="257" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="0" />
+	<house name="Frostania NW III" houseid="134" entryx="296" entryy="255" entryz="6" rent="0" guildhall="true" townid="10" size="142" clientid="0" beds="18" />
 </houses>

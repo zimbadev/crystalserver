@@ -33,6 +33,7 @@ Storage = {
 			PremiumIsland = 9061,
 			Folda = 9062,
 			LibertyBay = 9063,
+			Frostania = 9064,
 		},
 		AdventurersGuild = {
 			Stone = 52130,
