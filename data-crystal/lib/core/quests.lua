@@ -39,6 +39,6 @@ if not Quests then
 					},
 				},
 			},
-		}
+		},
 	}
 end
