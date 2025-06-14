@@ -6,9 +6,9 @@ TODO
 
 SvargrondArena = {
 	-- Settings
-	kickTime = 600,
-	kickPosition = Position({ x = 386, y = 229, z = 6 }),
-	rewardPosition = Position({ x = 357, y = 211, z = 6 }),
+	kickTime         = 600,
+	kickPosition     = Position({x = 386, y = 229, z = 6}),
+	rewardPosition   = Position({x = 357, y = 211, z = 6}),
 
 	-- used to store event ids
 	kickEvents = {},
@@ -24,12 +24,12 @@ SvargrondArena = {
 
 -- Script automatically derives other pit positions from this one
 local firstPit = {
-	fromPos = { x = 340, y = 225, z = 7 },
-	toPos = { x = 349, y = 234, z = 7 },
-	center = { x = 345, y = 229, z = 7 },
-	pillar = { x = 339, y = 229, z = 7 },
-	tp = { x = 339, y = 229, z = 7 },
-	summon = { x = 345, y = 231, z = 7 },
+	fromPos = {x = 340, y = 225, z = 7},
+	toPos   = {x = 349, y = 234, z = 7},
+	center  = {x = 345, y = 229, z = 7},
+	pillar  = {x = 339, y = 229, z = 7},
+	tp      = {x = 339, y = 229, z = 7},
+	summon  = {x = 345, y = 231, z = 7},
 }
 
 PITS = {
