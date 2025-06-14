@@ -69,12 +69,11 @@ local function playerAddItem(params, item)
 		-- Because it generate bug in the item description
 		if itemType:isKey() or itemType:getId(21392) then
 			-- If is key not in container, uses the "isKey = true" variab
-			keyItem = player:addItem(params.itemid, params.count)
+			local keyItem = player:addItem(params.itemid, params.count)
 			keyItem:setActionId(params.storage)
 		end
 	else
-		addItem = player:addItem(params.itemid, params.count)
-		-- If the item is writeable, just put its unique and the text in the "AttributeTable"
+		local addItem = player:addItem(params.itemid, params.count)
 		local attribute = AttributeTable[item.uid]
 		if attribute then
 			addItem:setAttribute(ITEM_ATTRIBUTE_TEXT, attribute.text)
@@ -89,12 +88,12 @@ local function playerAddItem(params, item)
 	if params.useKV then
 		player:questKV(params.questName):set("completed", true)
 		if params.timer then
-			player:questKV(params.questName):set("params.questName", os.time() + params.time * 3600) -- multiplicação por hora
+			player:questKV(params.questName):set("params.questName", os.time() + params.time * 3600)
 		end
 	else
 		player:setStorageValue(params.storage, 1)
 		if params.timer then
-			player:setStorageValue(params.timer, os.time() + params.time * 3600) -- multiplicação por hora
+			player:setStorageValue(params.timer, os.time() + params.time * 3600)
 		end
 	end
 	return true
@@ -102,37 +101,32 @@ end
 
 local function playerAddContainerItem(params, item)
 	local player = params.player
-
 	local reward = params.containerReward
-	local itemType = ItemType(params.itemid)
-	if itemType:isKey() then
-		keyItem = reward:addItem(params.itemid, params.count)
-		if params.storage then
-			keyItem:setActionId(params.action)
-		end
-	else
-		local rewardItem = reward:addItem(params.itemid, params.count)
-		local attribute = AttributeTable[item.uid]
-		if attribute and rewardItem then
-			rewardItem:setAttribute(ITEM_ATTRIBUTE_TEXT, attribute.text)
-		end
-	end
-
+	local attribute = AttributeTable[item.uid]
 	local achievement = achievementTable[item.uid]
-	if achievement then
-		player:addAchievement(achievement)
+	for i = 1, #params.items do
+		local rewardEntry = params.items[i]
+		local itemid = rewardEntry[1]
+		local count = rewardEntry[2]
+		local addedItem = reward:addItem(itemid, count)
+		if attribute and addedItem then
+			addedItem:setAttribute(ITEM_ATTRIBUTE_TEXT, attribute.text)
+		end
 	end
 
 	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have found a " .. getItemName(params.itemBagName) .. ".")
+	if achievement then
+		player:addAchievement(achievement)
+	end
 	if params.useKV then
 		player:questKV(params.questName):set("completed", true)
 		if params.timer then
-			player:questKV(params.questName):set("params.questName", os.time() + params.time * 3600) -- multiplicação por hora
+			player:questKV(params.questName):set("params.questName", os.time() + params.time * 3600)
 		end
 	else
 		player:setStorageValue(params.storage, 1)
 		if params.timer then
-			player:setStorageValue(params.timer, os.time() + params.time * 3600) -- multiplicação por hora
+			player:setStorageValue(params.timer, os.time() + params.time * 3600)
 		end
 	end
 	return true
@@ -148,7 +142,6 @@ function questReward.onUse(player, item, fromPosition, itemEx, toPosition)
 
 	if setting.weight then
 		local message = "You have found a " .. getItemName(setting.container) .. "."
-
 		local backpack = player:getSlotItem(CONST_SLOT_BACKPACK)
 		if not backpack or backpack:getEmptySlots(true) < 1 then
 			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, message .. " But you have no room to take it.")
@@ -186,17 +179,30 @@ function questReward.onUse(player, item, fromPosition, itemEx, toPosition)
 		setting.reward[1][2] = setting.randomReward[randomReward][2]
 	end
 
-	local container = player:addItem(setting.container)
-	for i = 1, #setting.reward do
-		local itemid = setting.reward[i][1]
-		local count = setting.reward[i][2]
-		local itemDescriptions = getItemDescriptions(itemid)
-		local itemArticle = itemDescriptions.article
-		local itemName = itemDescriptions.name
-		local itemBagName = setting.container
-		local itemBag = container
+	if setting.container then
+		local container = player:addItem(setting.container)
+		local addContainerItemParams = {
+			player = player,
+			items = setting.reward,
+			weight = setting.weight,
+			storage = setting.storage,
+			action = setting.keyAction,
+			itemBagName = setting.container,
+			containerReward = container,
+			questName = setting.questName,
+			useKV = setting.useKV,
+		}
+		if not playerAddContainerItem(addContainerItemParams, item) then
+			return true
+		end
+	else
+		for i = 1, #setting.reward do
+			local itemid = setting.reward[i][1]
+			local count = setting.reward[i][2]
+			local itemDescriptions = getItemDescriptions(itemid)
+			local itemArticle = itemDescriptions.article
+			local itemName = itemDescriptions.name
 
-		if not setting.container then
 			local addItemParams = {
 				player = player,
 				itemid = itemid,
@@ -223,26 +229,8 @@ function questReward.onUse(player, item, fromPosition, itemEx, toPosition)
 			else
 				addItemParams.message = "You have found " .. itemArticle .. " " .. itemName
 			end
+
 			if not playerAddItem(addItemParams, item) then
-				return true
-			end
-		end
-
-		if setting.container then
-			local addContainerItemParams = {
-				player = player,
-				itemid = itemid,
-				count = count,
-				weight = setting.weight,
-				storage = setting.storage,
-				action = setting.keyAction,
-				itemBagName = itemBagName,
-				containerReward = itemBag,
-				questName = setting.questName,
-				useKV = setting.useKV,
-			}
-
-			if not playerAddContainerItem(addContainerItemParams, item) then
 				return true
 			end
 		end
