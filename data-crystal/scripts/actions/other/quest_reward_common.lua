@@ -205,3 +205,13 @@ for uniqueRange = 10000, 12000 do
 end
 
 questReward:register()
+
+
+
+local questCount = 0
+for _ in pairs(ChestUnique) do
+    questCount = questCount + 1
+end
+
+
+print("\27[32m[QuestRewardSystem] Loaded Quest: " .. questCount .. "\27[0m")
