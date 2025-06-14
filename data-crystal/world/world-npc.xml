@@ -170,14 +170,8 @@
 	<npc centerx="401" centery="407" centerz="7" radius="5">
 		<npc name="Mark" x="0" y="0" z="7" spawntime="60" direction="2" />
 	</npc>
-	<npc centerx="784" centery="407" centerz="7" radius="5">
-		<npc name="George" x="0" y="0" z="7" spawntime="60" direction="2" />
-	</npc>
 	<npc centerx="466" centery="409" centerz="7" radius="5">
 		<npc name="Jimbim" x="0" y="0" z="7" spawntime="60" direction="2" />
-	</npc>
-	<npc centerx="785" centery="414" centerz="7" radius="5">
-		<npc name="Adolfo" x="-1" y="0" z="7" spawntime="60" direction="2" />
 	</npc>
 	<npc centerx="387" centery="416" centerz="7" radius="5">
 		<npc name="Roger" x="0" y="0" z="7" spawntime="60" direction="2" />

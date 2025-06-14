@@ -1553,9 +1553,6 @@
 	<monster centerx="327" centery="410" centerz="7" radius="5">
 		<monster name="Blood Crab" x="-2" y="1" z="7" spawntime="60" />
 	</monster>
-	<monster centerx="793" centery="411" centerz="7" radius="5">
-		<monster name="Rabbit" x="1" y="4" z="7" spawntime="60" />
-	</monster>
 	<monster centerx="635" centery="417" centerz="7" radius="5">
 		<monster name="Hydra" x="-1" y="1" z="7" spawntime="40" />
 	</monster>
@@ -1565,16 +1562,6 @@
 		<monster name="Demon Skeleton" x="9" y="-3" z="7" spawntime="60" />
 		<monster name="Demon Skeleton" x="-4" y="4" z="7" spawntime="60" />
 		<monster name="Demon Skeleton" x="2" y="7" z="7" spawntime="60" />
-	</monster>
-	<monster centerx="759" centery="418" centerz="7" radius="20">
-		<monster name="Rabbit" x="-6" y="-13" z="7" spawntime="60" />
-		<monster name="Spider" x="0" y="-9" z="7" spawntime="60" />
-		<monster name="Rabbit" x="-5" y="-6" z="7" spawntime="60" />
-		<monster name="Spider" x="7" y="0" z="7" spawntime="60" />
-		<monster name="Spider" x="-6" y="3" z="7" spawntime="60" />
-		<monster name="Rabbit" x="-7" y="9" z="7" spawntime="60" />
-		<monster name="Spider" x="3" y="13" z="7" spawntime="60" />
-		<monster name="Rabbit" x="6" y="14" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="597" centery="421" centerz="7" radius="1">
 		<monster name="Hydra" x="0" y="0" z="7" spawntime="60" />
@@ -1617,9 +1604,6 @@
 	<monster centerx="574" centery="434" centerz="7" radius="5">
 		<monster name="Tiger" x="1" y="1" z="7" spawntime="60" />
 		<monster name="Tarantula" x="-3" y="3" z="7" spawntime="60" />
-	</monster>
-	<monster centerx="784" centery="434" centerz="7" radius="5">
-		<monster name="Spider" x="-1" y="1" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="621" centery="438" centerz="7" radius="1">
 		<monster name="Hydra" x="0" y="0" z="7" spawntime="60" />
@@ -3070,9 +3054,6 @@
 	<monster centerx="274" centery="382" centerz="8" radius="5">
 		<monster name="Quara Mantassin" x="0" y="0" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="745" centery="382" centerz="8" radius="3">
-		<monster name="Hydra" x="2" y="-2" z="8" spawntime="90" />
-	</monster>
 	<monster centerx="238" centery="388" centerz="8" radius="5">
 		<monster name="Quara Mantassin" x="0" y="1" z="8" spawntime="60" />
 	</monster>
@@ -3104,15 +3085,8 @@
 		<monster name="Dwarf" x="-2" y="-1" z="8" spawntime="40" />
 		<monster name="Dwarf" x="3" y="0" z="8" spawntime="40" />
 	</monster>
-	<monster centerx="743" centery="403" centerz="8" radius="5">
-		<monster name="Troll" x="-2" y="-4" z="8" spawntime="60" />
-		<monster name="Troll" x="0" y="1" z="8" spawntime="60" />
-	</monster>
 	<monster centerx="339" centery="404" centerz="8" radius="2">
 		<monster name="Quara Constrictor" x="-1" y="-1" z="8" spawntime="60" />
-	</monster>
-	<monster centerx="765" centery="406" centerz="8" radius="5">
-		<monster name="Troll" x="0" y="-1" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="346" centery="410" centerz="8" radius="2">
 		<monster name="Quara Constrictor" x="0" y="0" z="8" spawntime="60" />
@@ -3121,12 +3095,6 @@
 		<monster name="Dwarf" x="-4" y="-3" z="8" spawntime="40" />
 		<monster name="Dwarf" x="5" y="0" z="8" spawntime="40" />
 	</monster>
-	<monster centerx="745" centery="412" centerz="8" radius="5">
-		<monster name="Troll" x="0" y="1" z="8" spawntime="60" />
-	</monster>
-	<monster centerx="761" centery="415" centerz="8" radius="5">
-		<monster name="Troll" x="1" y="-1" z="8" spawntime="60" />
-	</monster>
 	<monster centerx="349" centery="416" centerz="8" radius="2">
 		<monster name="Quara Constrictor" x="0" y="0" z="8" spawntime="60" />
 	</monster>
@@ -3134,22 +3102,8 @@
 		<monster name="Vampire" x="1" y="-3" z="8" spawntime="40" />
 		<monster name="Vampire" x="-1" y="4" z="8" spawntime="40" />
 	</monster>
-	<monster centerx="794" centery="417" centerz="8" radius="15">
-		<monster name="Rat" x="-8" y="-9" z="8" spawntime="60" />
-		<monster name="Rat" x="8" y="-9" z="8" spawntime="60" />
-		<monster name="Rat" x="-3" y="-6" z="8" spawntime="60" />
-		<monster name="Rat" x="3" y="-6" z="8" spawntime="60" />
-		<monster name="Rat" x="0" y="1" z="8" spawntime="60" />
-		<monster name="Rat" x="-5" y="4" z="8" spawntime="60" />
-		<monster name="Rat" x="3" y="6" z="8" spawntime="60" />
-		<monster name="Rat" x="-8" y="9" z="8" spawntime="60" />
-		<monster name="Rat" x="8" y="9" z="8" spawntime="60" />
-	</monster>
 	<monster centerx="486" centery="418" centerz="8" radius="5">
 		<monster name="Dwarf" x="-3" y="-2" z="8" spawntime="40" />
-	</monster>
-	<monster centerx="753" centery="419" centerz="8" radius="5">
-		<monster name="Troll" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="566" centery="420" centerz="8" radius="5">
 		<monster name="Hydra" x="4" y="-1" z="8" spawntime="60" />
@@ -3187,9 +3141,6 @@
 	<monster centerx="357" centery="427" centerz="8" radius="2">
 		<monster name="Quara Constrictor" x="1" y="0" z="8" spawntime="60" />
 	</monster>
-	<monster centerx="758" centery="427" centerz="8" radius="5">
-		<monster name="Troll" x="-2" y="0" z="8" spawntime="60" />
-	</monster>
 	<monster centerx="319" centery="429" centerz="8" radius="8">
 		<monster name="Quara Constrictor" x="-4" y="-3" z="8" spawntime="60" />
 		<monster name="Quara Constrictor" x="4" y="-1" z="8" spawntime="60" />
@@ -3206,9 +3157,6 @@
 		<monster name="Hydra" x="4" y="-3" z="8" spawntime="40" />
 		<monster name="Hydra" x="-2" y="2" z="8" spawntime="40" />
 	</monster>
-	<monster centerx="760" centery="435" centerz="8" radius="5">
-		<monster name="Troll" x="-1" y="1" z="8" spawntime="60" />
-	</monster>
 	<monster centerx="258" centery="436" centerz="8" radius="5">
 		<monster name="Vampire" x="2" y="-4" z="8" spawntime="40" />
 		<monster name="Vampire" x="-3" y="0" z="8" spawntime="40" />
@@ -3222,14 +3170,6 @@
 	</monster>
 	<monster centerx="357" centery="438" centerz="8" radius="2">
 		<monster name="Quara Constrictor" x="0" y="1" z="8" spawntime="60" />
-	</monster>
-	<monster centerx="749" centery="438" centerz="8" radius="5">
-		<monster name="Troll" x="-2" y="0" z="8" spawntime="60" />
-		<monster name="Island Troll" x="-5" y="5" z="8" spawntime="60" />
-	</monster>
-	<monster centerx="783" centery="439" centerz="8" radius="5">
-		<monster name="Poison Spider" x="-1" y="-3" z="8" spawntime="60" />
-		<monster name="Spider" x="-1" y="2" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="519" centery="441" centerz="8" radius="5">
 		<monster name="Dworc Fleshhunter" x="-1" y="1" z="8" spawntime="60" />
@@ -3248,12 +3188,6 @@
 		<monster name="Hydra" x="5" y="-8" z="8" spawntime="40" />
 		<monster name="Hydra" x="-11" y="-2" z="8" spawntime="40" />
 		<monster name="Hydra" x="-1" y="7" z="8" spawntime="40" />
-	</monster>
-	<monster centerx="779" centery="444" centerz="8" radius="5">
-		<monster name="Poison Spider" x="-2" y="2" z="8" spawntime="60" />
-	</monster>
-	<monster centerx="786" centery="444" centerz="8" radius="5">
-		<monster name="Poison Spider" x="1" y="1" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="623" centery="445" centerz="8" radius="5">
 		<monster name="Hydra" x="-3" y="3" z="8" spawntime="40" />
@@ -5294,16 +5228,10 @@
 	<monster centerx="378" centery="393" centerz="9" radius="1">
 		<monster name="Troll" x="0" y="0" z="9" spawntime="60" />
 	</monster>
-	<monster centerx="741" centery="402" centerz="9" radius="5">
-		<monster name="Orc" x="2" y="0" z="9" spawntime="60" />
-	</monster>
 	<monster centerx="251" centery="403" centerz="9" radius="5">
 		<monster name="Necromancer" x="0" y="-1" z="9" spawntime="60" />
 		<monster name="Necromancer" x="-2" y="0" z="9" spawntime="60" />
 		<monster name="Necromancer" x="2" y="0" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="732" centery="405" centerz="9" radius="5">
-		<monster name="Orc" x="1" y="-2" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="365" centery="407" centerz="9" radius="5">
 		<monster name="Skeleton" x="3" y="-2" z="9" spawntime="60" />
@@ -5335,9 +5263,6 @@
 		<monster name="Ghoul" x="2" y="6" z="9" spawntime="60" />
 		<monster name="Ghoul" x="0" y="8" z="9" spawntime="60" />
 	</monster>
-	<monster centerx="730" centery="410" centerz="9" radius="5">
-		<monster name="Orc" x="-1" y="3" z="9" spawntime="60" />
-	</monster>
 	<monster centerx="241" centery="412" centerz="9" radius="5">
 		<monster name="Necromancer" x="1" y="0" z="9" spawntime="60" />
 	</monster>
@@ -5352,14 +5277,6 @@
 	<monster centerx="251" centery="419" centerz="9" radius="5">
 		<monster name="Necromancer" x="-3" y="-2" z="9" spawntime="60" />
 		<monster name="Necromancer" x="3" y="-2" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="779" centery="422" centerz="9" radius="15">
-		<monster name="Skeleton" x="-1" y="-5" z="9" spawntime="60" />
-		<monster name="Skeleton" x="-11" y="-1" z="9" spawntime="60" />
-		<monster name="Skeleton" x="9" y="-1" z="9" spawntime="60" />
-		<monster name="Skeleton" x="-8" y="7" z="9" spawntime="60" />
-		<monster name="Skeleton" x="12" y="7" z="9" spawntime="60" />
-		<monster name="Skeleton" x="-5" y="15" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="470" centery="423" centerz="9" radius="30">
 		<monster name="Dwarf Guard" x="-1" y="-26" z="9" spawntime="60" />
@@ -6262,13 +6179,6 @@
 		<monster name="Hero" x="1" y="-3" z="10" spawntime="40" />
 		<monster name="Hero" x="1" y="2" z="10" spawntime="40" />
 	</monster>
-	<monster centerx="746" centery="412" centerz="10" radius="5">
-		<monster name="Minotaur" x="0" y="-5" z="10" spawntime="120" />
-		<monster name="Minotaur" x="3" y="-4" z="10" spawntime="120" />
-		<monster name="Minotaur" x="-3" y="-1" z="10" spawntime="120" />
-		<monster name="Minotaur" x="3" y="-1" z="10" spawntime="120" />
-		<monster name="Minotaur" x="1" y="4" z="10" spawntime="120" />
-	</monster>
 	<monster centerx="284" centery="413" centerz="10" radius="5">
 		<monster name="Crypt Shambler" x="-1" y="-2" z="10" spawntime="60" />
 		<monster name="Gargoyle" x="1" y="-1" z="10" spawntime="60" />
@@ -6291,11 +6201,6 @@
 	</monster>
 	<monster centerx="240" centery="414" centerz="10" radius="5">
 		<monster name="Necromancer" x="-1" y="0" z="10" spawntime="60" />
-	</monster>
-	<monster centerx="734" centery="416" centerz="10" radius="5">
-		<monster name="Minotaur" x="-3" y="-1" z="10" spawntime="60" />
-		<monster name="Minotaur" x="5" y="0" z="10" spawntime="120" />
-		<monster name="Minotaur" x="3" y="5" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="255" centery="419" centerz="10" radius="5">
 		<monster name="Necromancer" x="3" y="-1" z="10" spawntime="60" />
