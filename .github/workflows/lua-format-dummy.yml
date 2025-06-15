@@ -1,4 +1,7 @@
 ---
+permissions:
+  contents: write
+
 name: Lua-format (dumy)
 
 on:
