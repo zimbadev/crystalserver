@@ -40,5 +40,27 @@ if not Quests then
 				},
 			},
 		},
+			[2] = {
+			name = "The Inquisition",
+			startStorageId = Storage.Quest.U8_0.TheInquisitionQuest.Questline,
+			startStorageValue = 2,
+			missions = {
+				[1] = {
+					name = "The Shadow Nexus",
+					storageId = Storage.Quest.U8_0.TheInquisitionQuest.Mission07,
+					missionId = 10251,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "Your mission is to go to the Demon Forge and slay seven of The Ruthless Seven Minions. \z
+						The Demon Forge is located in the Thyranox Hero Cave, through a portal after the Vampire Shield Quest.",
+						[2] = "You destroyed the shadow nexus! Get back to Karmia City and report your mission to Henricus.",
+						[3] = "Now ask to Henricus for a outfit. He will give you the 2nd addon of the Demon Hunter Outfits.",
+						[4] = "You got the the second addon of Demon Hunter Outfit! Go now to the reward room and choose one wisely!",
+						[5] = "You have completed The Inquisition Quest! You can now buy the Blessing of the Inquisition!",
+					},
+				},
+			},
+		},
 	}
 end

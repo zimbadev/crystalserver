@@ -135,15 +135,24 @@ Storage = {
 				ScrapperDoor = 41172,
 				WarlordDoor = 41173,
 			},
+            TheInquisitionQuest = {
+                Reward = 41707,
+				RewardRoomText = 41708,
+                Questline = 41691,
+				Mission07 = 41698,
+				RewardDoor = 41699,
+                EnterTeleport = 41706,
+
         },
+    },
     },
 
     Imbuement = 30004,
 }
 
 GlobalStorage = {
-    ExampleQuest = {
-        Example = 60000,
+    Quest = {
+        Inquisition = 65013,
     },
     KeysUpdate = 40000, -- Reserved storage from 40000 - 40000
 }

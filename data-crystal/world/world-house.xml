@@ -60,22 +60,22 @@
 	<house name="Venore House XIII" houseid="60" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="25" clientid="0" beds="3" />
 	<house name="Venore House XIV" houseid="61" entryx="401" entryy="435" entryz="7" rent="8000" townid="5" size="26" clientid="0" beds="3" />
 	<house name="Venore House XV" houseid="62" entryx="404" entryy="435" entryz="7" rent="8000" townid="5" size="26" clientid="0" beds="3" />
-	<house name="Premium Island House I" houseid="63" entryx="447" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island House II" houseid="64" entryx="461" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island House III" houseid="65" entryx="459" entryy="645" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
-	<house name="Premium Island House IV" houseid="66" entryx="459" entryy="653" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
-	<house name="Premium Island House V" houseid="67" entryx="462" entryy="645" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
-	<house name="Premium Island House VI" houseid="68" entryx="462" entryy="653" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
-	<house name="Premium Island House VII" houseid="69" entryx="433" entryy="665" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island House VIII" houseid="70" entryx="447" entryy="665" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island HouseIX" houseid="71" entryx="430" entryy="672" entryz="7" rent="11000" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island House X" houseid="72" entryx="433" entryy="672" entryz="7" rent="11000" townid="6" size="37" clientid="0" beds="3" />
-	<house name="Premium Island House XI" houseid="73" entryx="422" entryy="659" entryz="7" rent="9000" townid="6" size="37" clientid="0" beds="3" />
-	<house name="Premium Island House XII" houseid="74" entryx="422" entryy="651" entryz="7" rent="9000" townid="6" size="43" clientid="0" beds="3" />
-	<house name="Premium Island House XIII" houseid="75" entryx="422" entryy="643" entryz="7" rent="9000" townid="6" size="43" clientid="0" beds="3" />
-	<house name="Premium Island House XIV" houseid="76" entryx="421" entryy="658" entryz="6" rent="7500" townid="6" size="31" clientid="0" beds="3" />
-	<house name="Premium Island House XV" houseid="77" entryx="421" entryy="651" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
-	<house name="Premium Island House XVI" houseid="78" entryx="421" entryy="643" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
+	<house name="Thyranox House I" houseid="63" entryx="447" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox House II" houseid="64" entryx="461" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox House III" houseid="65" entryx="459" entryy="645" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
+	<house name="Thyranox House IV" houseid="66" entryx="459" entryy="653" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
+	<house name="Thyranox House V" houseid="67" entryx="462" entryy="645" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
+	<house name="Thyranox House VI" houseid="68" entryx="462" entryy="653" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
+	<house name="Thyranox House VII" houseid="69" entryx="433" entryy="665" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox House VIII" houseid="70" entryx="447" entryy="665" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox HouseIX" houseid="71" entryx="430" entryy="672" entryz="7" rent="11000" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox House X" houseid="72" entryx="433" entryy="672" entryz="7" rent="11000" townid="6" size="37" clientid="0" beds="3" />
+	<house name="Thyranox House XI" houseid="73" entryx="422" entryy="659" entryz="7" rent="9000" townid="6" size="37" clientid="0" beds="3" />
+	<house name="Thyranox House XII" houseid="74" entryx="422" entryy="651" entryz="7" rent="9000" townid="6" size="43" clientid="0" beds="3" />
+	<house name="Thyranox House XIII" houseid="75" entryx="422" entryy="643" entryz="7" rent="9000" townid="6" size="43" clientid="0" beds="3" />
+	<house name="Thyranox House XIV" houseid="76" entryx="421" entryy="658" entryz="6" rent="7500" townid="6" size="31" clientid="0" beds="3" />
+	<house name="Thyranox House XV" houseid="77" entryx="421" entryy="651" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
+	<house name="Thyranox House XVI" houseid="78" entryx="421" entryy="643" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
 	<house name="Venore House XVI" houseid="79" entryx="404" entryy="406" entryz="7" rent="10000" townid="5" size="52" clientid="0" beds="3" />
 	<house name="Venore House XVII" houseid="80" entryx="413" entryy="406" entryz="7" rent="10000" townid="5" size="52" clientid="0" beds="3" />
 	<house name="Folda House I" houseid="81" entryx="255" entryy="310" entryz="7" rent="10000" townid="7" size="30" clientid="0" beds="3" />
