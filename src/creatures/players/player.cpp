@@ -6059,7 +6059,8 @@ void Player::onCleanseCondition(ConditionType_t type) const {
 		{ CONDITION_BLEEDING, "bleeding" },
 		{ CONDITION_PARALYZE, "paralyzed" },
 		{ CONDITION_ROOTED, "rooted" },
-		{ CONDITION_FEARED, "feared" }
+		{ CONDITION_FEARED, "feared" },
+		{ CONDITION_AGONY, "agonyed" },
 	};
 
 	auto it = conditionMessages.find(type);
