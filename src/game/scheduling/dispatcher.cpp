@@ -30,13 +30,8 @@ Dispatcher &Dispatcher::getInstance() {
 void Dispatcher::init() {
 	UPDATE_OTSYS_TIME();
 
-	auto dispatcherStarted = std::make_shared<std::promise<void>>();
-	auto futureStarted = dispatcherStarted->get_future();
-
-	threadPool.detach_task([this, dispatcherStarted]() mutable {
+	threadPool.detach_task([this] {
 		std::unique_lock asyncLock(dummyMutex);
-
-		dispatcherStarted->set_value();
 
 		while (!threadPool.isStopped()) {
 			UPDATE_OTSYS_TIME();
@@ -50,10 +45,6 @@ void Dispatcher::init() {
 			}
 		}
 	});
-
-	if (futureStarted.wait_for(std::chrono::seconds(5)) != std::future_status::ready) {
-		throw std::logic_error("Failed to initialize dispatcher: timeout waiting for thread start");
-	}
 }
 
 void Dispatcher::executeSerialEvents(const uint8_t groupId) {

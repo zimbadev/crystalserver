@@ -58,9 +58,7 @@ private:
 	RSA &rsa;
 	ServiceManager &serviceManager;
 
-	LoaderStatus loaderStatus = LoaderStatus::LOADING;
-	std::mutex loaderMutex;
-	std::condition_variable loaderCV;
+	std::atomic<LoaderStatus> loaderStatus = LoaderStatus::LOADING;
 
 	void logInfos();
 	static void toggleForceCloseButton();

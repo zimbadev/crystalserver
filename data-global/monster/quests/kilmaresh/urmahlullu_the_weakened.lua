@@ -89,7 +89,7 @@ monster.loot = {
 	{ name = "magma monocle", chance = 15380 },
 	{ name = "yellow gem", chance = 15380 },
 	{ name = "crystal coin", chance = 11540, maxCount = 5 },
-	{ name = "silver token", chance = 7690, maxCount = 5 },
+	{ name = "silver token", chance = 6740, maxCount = 5 },
 	{ name = "violet gem", chance = 7690 },
 	{ name = "urmahlullu's paw", chance = 7690 },
 	{ id = 281, chance = 7690 }, -- giant shimmering pearl

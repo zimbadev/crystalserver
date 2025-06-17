@@ -8,31 +8,32 @@ on:
   push:
     paths:
       - "data*/**"
+
 jobs:
   lua-formatter:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Git
-        if: ${{ github.ref != 'refs/heads/main' }}
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
-      - name: Actions checkout
-        if: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Checkout PR branch
         uses: actions/checkout@v3
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: JohnnyMorganz/stylua-action@v3
+      - name: Run Stylua
+        uses: JohnnyMorganz/stylua-action@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: latest
           args: .
 
-      - name: Run add and commit
-        if: ${{ github.ref != 'refs/heads/main' }}
+      - name: Commit and push (only for branches in this repo, not forks)
+        if: github.repository == github.event.pull_request.head.repo.full_name && github.ref != 'refs/heads/main'
         uses: EndBug/add-and-commit@v9
         with:
           author_name: GitHub Actions
@@ -40,3 +41,7 @@ jobs:
           message: "Lua code format - (Stylua)"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Echo info if not pushed
+        if: github.repository != github.event.pull_request.head.repo.full_name
+        run: echo "Branch pochodzi z forka — nie wykonano push. Sprawdź log formatera w tym workflow."

@@ -1,5 +1,5 @@
 function onUpdateDatabase()
-	logger.info("Updating database to version 50 (feat: support to 14.11)")
+	logger.info("Updating database to version 52 (feat: support to 14.11)")
 
 	db.query([[
 		ALTER TABLE `player_charms`
@@ -44,7 +44,7 @@ function onUpdateDatabase()
 	db.query([[
 		ALTER TABLE player_charms
 		ADD CONSTRAINT player_charms_players_fk
-		FOREIGN KEY (player_id) REFERENCES players (id)
+		FOREIGN KEY (player_id) REFERENCES players (id) ON DELETE CASCADE
 	]])
 
 	db.query([[

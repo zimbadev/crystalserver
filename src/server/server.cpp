@@ -153,7 +153,6 @@ void ServicePort::openAcceptor(const std::weak_ptr<ServicePort> &weak_service, u
 	}
 }
 
-// --- Zaktualizowana funkcja open: domena LUB IP, tylko IPv4 ---
 void ServicePort::open(uint16_t port) {
 	close();
 
@@ -162,36 +161,52 @@ void ServicePort::open(uint16_t port) {
 
 	try {
 		std::string ipString = g_configManager().getString(IP);
-		asio::ip::address_v4 ipAddress;
+		asio::ip::address ipAddress;
 		bool resolved = false;
 
 		try {
-			// Najpierw próbujemy jako IPv4
 			ipAddress = asio::ip::address_v4::from_string(ipString);
 			resolved = true;
 		} catch (const std::exception &) {
-			// Jeśli nie jest to IP, rozwiąż jako domenę
-			asio::ip::tcp::resolver resolver(io_service);
-			asio::ip::tcp::resolver::results_type results = resolver.resolve(ipString, std::to_string(port));
+			try {
+				ipAddress = asio::ip::address_v6::from_string(ipString);
+				resolved = true;
+			} catch (const std::exception &) {
+				asio::ip::tcp::resolver resolver(io_service);
+				asio::ip::tcp::resolver::results_type results = resolver.resolve(ipString, std::to_string(port));
 
-			for (const auto &entry : results) {
-				if (entry.endpoint().address().is_v4()) {
-					ipAddress = entry.endpoint().address().to_v4();
-					resolved = true;
-					break;
+				for (const auto &entry : results) {
+					if (entry.endpoint().address().is_v6()) {
+						ipAddress = entry.endpoint().address().to_v6();
+						resolved = true;
+						break;
+					}
+				}
+				if (!resolved) {
+					for (const auto &entry : results) {
+						if (entry.endpoint().address().is_v4()) {
+							ipAddress = entry.endpoint().address().to_v4();
+							resolved = true;
+							break;
+						}
+					}
 				}
 			}
 		}
 
 		if (!resolved) {
-			throw std::runtime_error("Could not resolve IPv4 address for: " + ipString);
+			throw std::runtime_error("Could not resolve any IP address for: " + ipString);
 		}
 
 		asio::ip::tcp::endpoint endpoint;
 		if (g_configManager().getBoolean(BIND_ONLY_GLOBAL_ADDRESS)) {
 			endpoint = asio::ip::tcp::endpoint(ipAddress, serverPort);
 		} else {
-			endpoint = asio::ip::tcp::endpoint(asio::ip::address_v4::any(), serverPort);
+			if (ipAddress.is_v6()) {
+				endpoint = asio::ip::tcp::endpoint(asio::ip::address_v6::any(), serverPort);
+			} else {
+				endpoint = asio::ip::tcp::endpoint(asio::ip::address_v4::any(), serverPort);
+			}
 		}
 
 		acceptor = std::make_unique<asio::ip::tcp::acceptor>(io_service, endpoint);
@@ -211,7 +226,6 @@ void ServicePort::open(uint16_t port) {
 		);
 	}
 }
-// -------------------------------------------------------------
 
 void ServicePort::close() const {
 	if (acceptor && acceptor->is_open()) {

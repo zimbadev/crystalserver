@@ -54,12 +54,12 @@ struct Outfit {
 	int32_t manaGain = 0;
 	int32_t manaTicks = 0;
 
-	int32_t lifeLeechChance = 0;
-	int32_t lifeLeechAmount = 0;
-	int32_t manaLeechChance = 0;
-	int32_t manaLeechAmount = 0;
-	int32_t criticalChance = 0;
-	int32_t criticalDamage = 0;
+	double lifeLeechChance = 0;
+	double lifeLeechAmount = 0;
+	double manaLeechChance = 0;
+	double manaLeechAmount = 0;
+	double criticalChance = 0;
+	double criticalDamage = 0;
 
 	int32_t skills[SKILL_LAST + 1] = { 0 };
 	int32_t stats[STAT_LAST + 1] = { 0 };

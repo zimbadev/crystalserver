@@ -52,9 +52,9 @@ monster.light = {
 }
 
 monster.summon = {
-	maxSummons = 10,
+	maxSummons = 1,
 	summons = {
-		{ name = "Enthralled Demon", chance = 25, interval = 2000, count = 10 },
+		{ name = "rift invader", chance = 100, interval = 15000, count = 1 },
 	},
 }
 

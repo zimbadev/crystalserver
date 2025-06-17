@@ -27,16 +27,10 @@ local config = {
 	},
 	exit = Position(33319, 32318, 13),
 	monsters = {
-		{ name = "rift invader", pos = Position(33385, 31466, 14) },
-		{ name = "rift invader", pos = Position(33396, 31466, 14) },
-		{ name = "rift invader", pos = Position(33392, 31480, 14) },
-		{ name = "rift invader", pos = Position(33392, 31468, 14) },
-		{ name = "rift invader", pos = Position(33385, 31473, 14) },
-		{ name = "rift invader", pos = Position(33398, 31478, 14) },
-		{ name = "rift invader", pos = Position(33384, 31478, 14) },
-		{ name = "rift invader", pos = Position(33390, 31463, 14) },
-		{ name = "rift invader", pos = Position(33400, 31473, 14) },
-		{ name = "rift invader", pos = Position(33400, 31465, 14) },
+		{ name = "Enthralled Demon", pos = Position(33385, 31466, 14) },
+		{ name = "Enthralled Demon", pos = Position(33396, 31466, 14) },
+		{ name = "Enthralled Demon", pos = Position(33392, 31480, 14) },
+		{ name = "Enthralled Demon", pos = Position(33392, 31468, 14) },
 	},
 	onUseExtra = function(player)
 		local crystals = {

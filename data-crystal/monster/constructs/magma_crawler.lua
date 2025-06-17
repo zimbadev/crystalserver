@@ -102,6 +102,7 @@ monster.loot = {
 	{ name = "magma clump", chance = 11600 },
 	{ name = "blazing bone", chance = 11500 },
 	{ name = "blazing bone", chance = 12220 },
+	{ name = "fire bug", chance = 1220 },
 }
 
 monster.attacks = {

@@ -73,7 +73,7 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ id = 22721, chance = 100000, maxCount = 4 }, -- gold token
+	{ id = 22721, chance = 100000, maxCount = 7 }, -- gold token
 	{ id = 23509, chance = 100000 }, -- mysterious remains
 	{ id = 23510, chance = 100000 }, -- odd organ
 	{ id = 3031, chance = 100000, maxCount = 200 }, -- gold coin

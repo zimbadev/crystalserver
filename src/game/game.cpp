@@ -1504,6 +1504,11 @@ void Game::playerMoveCreature(const std::shared_ptr<Player> &player, const std::
 			return;
 		}
 
+		if (!Position::areInRange<1, 1, 0>(movingCreaturePos, player->getPosition())) {
+			player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
+			return;
+		}
+
 		if (player != movingCreature) {
 			if (toTile->hasFlag(TILESTATE_BLOCKPATH)) {
 				player->sendCancelMessage(RETURNVALUE_NOTENOUGHROOM);
@@ -1543,7 +1548,6 @@ void Game::playerMoveCreature(const std::shared_ptr<Player> &player, const std::
 		if (ret != RETURNVALUE_NOERROR) {
 			player->sendCancelMessage(ret);
 		}
-		player->setLastPosition(player->getPosition());
 	});
 }
 
@@ -4775,6 +4779,11 @@ void Game::playerBrowseField(uint32_t playerId, const Position &pos) {
 void Game::playerStowItem(uint32_t playerId, const Position &pos, uint16_t itemId, uint8_t stackpos, uint8_t count, bool allItems) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
+		return;
+	}
+
+	if (!player->isNearDepotBox()) {
+		player->sendCancelMessage("You need to be close to the deposit box to stow items.");
 		return;
 	}
 

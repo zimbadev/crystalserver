@@ -9,6 +9,7 @@ local config = {
 		{ fromPos = Position(422, 629, 7), toPos = Position(429, 636, 7), townId = TOWNS_LIST.PREMIUM_ISLAND },
 		{ fromPos = Position(240, 306, 7), toPos = Position(245, 313, 7), townId = TOWNS_LIST.FOLDA },
 		{ fromPos = Position(545, 705, 7), toPos = Position(550, 711, 7), townId = TOWNS_LIST.LIBERTY_BAY },
+		{ fromPos = Position(310, 274, 4), toPos = Position(317, 282, 4), townId = TOWNS_LIST.FROSTANIA },
 	},
 }
 

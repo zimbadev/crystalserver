@@ -115,16 +115,9 @@ int CrystalServer::run() {
 					g_webhook().sendMessage(":green_circle: Server is now **online**");
 				}
 
-				{
-					std::scoped_lock lock(loaderMutex);
-					loaderStatus = LoaderStatus::LOADED;
-					loaderCV.notify_all();
-				}
+				loaderStatus = LoaderStatus::LOADED;
 			} catch (FailedToInitializeCrystalServer &err) {
-				{
-					std::scoped_lock lock(loaderMutex);
-					loaderStatus = LoaderStatus::FAILED;
-				}
+				loaderStatus = LoaderStatus::FAILED;
 				logger.error(err.what());
 
 				logger.error("The program will close after pressing the enter key...");
@@ -133,38 +126,13 @@ int CrystalServer::run() {
 					getchar();
 				}
 			}
+
+			loaderStatus.notify_one();
 		},
 		__FUNCTION__
 	);
 
-	constexpr auto timeout = std::chrono::minutes(10);
-	constexpr auto warnEvery = std::chrono::seconds(120);
-	auto start = std::chrono::steady_clock::now();
-	auto lastLog = start;
-
-	while (true) {
-		{
-			std::scoped_lock lock(loaderMutex);
-			if (loaderStatus != LoaderStatus::LOADING) {
-				break;
-			}
-		}
-
-		auto now = std::chrono::steady_clock::now();
-
-		if (now - lastLog >= warnEvery) {
-			logger.warn("Startup still running ({} s)…", std::chrono::duration_cast<std::chrono::seconds>(now - start).count());
-			lastLog = now;
-		}
-
-		if (now - start > timeout) {
-			logger.error("Startup exceeded {} minutes – aborting.", std::chrono::duration_cast<std::chrono::minutes>(timeout).count());
-			shutdown();
-			return EXIT_FAILURE;
-		}
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	}
+	loaderStatus.wait(LoaderStatus::LOADING);
 
 	if (loaderStatus == LoaderStatus::FAILED || !serviceManager.is_running()) {
 		logger.error("No services running. The server is NOT online!");
