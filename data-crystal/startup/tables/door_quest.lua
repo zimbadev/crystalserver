@@ -8,26 +8,26 @@ QuestDoorAction = {
 	[Storage.Quest.U8_0.BarbarianArena.PitDoor] = {
 		itemId = false,
 		itemPos = {
-			{x = 368, y = 229, z = 7},
-			{x = 368, y = 230, z = 7},
-			{x = 368, y = 231, z = 7},
+			{ x = 368, y = 229, z = 7 },
+			{ x = 368, y = 230, z = 7 },
+			{ x = 368, y = 231, z = 7 },
 		},
 	},
 	[Storage.Quest.U8_0.BarbarianArena.GreenhornDoor] = {
 		itemId = false,
-		itemPos = { {x = 362, y = 197, z = 7} },
+		itemPos = { { x = 362, y = 197, z = 7 } },
 	},
 	[Storage.Quest.U8_0.BarbarianArena.ScrapperDoor] = {
 		itemId = false,
-		itemPos = { {x = 362, y = 190, z = 7} },
+		itemPos = { { x = 362, y = 190, z = 7 } },
 	},
 	[Storage.Quest.U8_0.BarbarianArena.WarlordDoor] = {
 		itemId = false,
-		itemPos = { {x = 362, y = 183, z = 7} },
+		itemPos = { { x = 362, y = 183, z = 7 } },
 	},
-		[Storage.Quest.U8_0.TheInquisitionQuest.RewardDoor] = {
+	[Storage.Quest.U8_0.TheInquisitionQuest.RewardDoor] = {
 		itemId = false,
-		itemPos = { {x = 436, y = 434, z = 8} },
+		itemPos = { { x = 436, y = 434, z = 8 } },
 	},
 }
 

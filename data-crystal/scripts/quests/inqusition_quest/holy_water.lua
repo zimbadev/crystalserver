@@ -1,7 +1,7 @@
 local shadowNexusPosition = Position(3074, 4333, 6)
 local effectPositions = {
-    Position(3073, 4333, 6),
-    Position(3075, 4333, 6),
+	Position(3073, 4333, 6),
+	Position(3075, 4333, 6),
 }
 
 local function revertItem(position, itemId, transformId)
