@@ -284,6 +284,9 @@
 	<npc centerx="554" centery="721" centerz="7" radius="5">
 		<npc name="Lara" x="0" y="0" z="7" spawntime="60" />
 	</npc>
+	<npc centerx="437" centery="436" centerz="8" radius="1">
+		<npc name="Henricus" x="0" y="0" z="8" spawntime="60" />
+	</npc>
 	<npc centerx="429" centery="448" centerz="8" radius="1">
 		<npc name="Alice" x="-1" y="0" z="8" spawntime="60" />
 	</npc>
