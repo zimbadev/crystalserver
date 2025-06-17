@@ -9,7 +9,6 @@ on:
     paths:
       - "data*/**"
 
-# Add this permissions block here
 permissions:
   contents: write # This grants write access to the repository content
 
@@ -22,6 +21,7 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
+
       - name: Actions checkout
         if: ${{ github.ref != 'refs/heads/main' }}
         uses: actions/checkout@v3
