@@ -4782,6 +4782,11 @@ void Game::playerStowItem(uint32_t playerId, const Position &pos, uint16_t itemI
 		return;
 	}
 
+	if (!player->isNearDepotBox()) {
+		player->sendCancelMessage("You need to be close to the deposit box to stow items.");
+		return;
+	}
+
 	if (!player->isPremium()) {
 		player->sendCancelMessage(RETURNVALUE_YOUNEEDPREMIUMACCOUNT);
 		return;
