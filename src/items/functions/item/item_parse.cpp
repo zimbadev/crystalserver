@@ -627,6 +627,7 @@ std::tuple<ConditionId_t, ConditionType_t> ItemParse::parseFieldConditions(pugi:
 		return std::make_tuple(conditionId, conditionType);
 	} else if (lowerStringValue == "agony") {
 		conditionType = CONDITION_AGONY;
+		return std::make_tuple(conditionId, conditionType);
 	} else {
 		g_logger().warn("[Items::parseItemNode] Unknown field value {}", valueAttribute.as_string());
 	}

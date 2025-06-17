@@ -1020,9 +1020,9 @@
 		<attribute key="decayTo" value="608" />
 	</item>
 	<item id="610" article="a" name="hole">
-		<attribute key="duration" value="10"/>
-		<attribute key="decayTo" value="6683"/>
-		<attribute key="floorchange" value="down"/>
+		<attribute key="duration" value="10" />
+		<attribute key="decayTo" value="6683" />
+		<attribute key="floorchange" value="down" />
 	</item>
 	<item id="611" article="a" name="snow heap">
 		<attribute key="primarytype" value="natural products" />
@@ -74931,6 +74931,19 @@ Granted by TibiaGoals.com" />
 	</item>
 	<item id="42745" article="a" name="open door">
 		<attribute key="type" value="door" />
+	</item>
+	<item id="43297" article="a" name="agony field">
+		<attribute key="type" value="magicfield" />
+		<attribute key="decayTo" value="0" />
+		<attribute key="duration" value="248" />
+		<attribute key="field" value="agony">
+			<attribute key="ticks" value="5000" />
+			<attribute key="start" value="260" />
+			<attribute key="damage" value="100" />
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="eventType" value="stepin" />
+		</attribute>
 	</item>
 	<item id="43952" article="a" name="closed door">
 		<attribute key="type" value="door" />
