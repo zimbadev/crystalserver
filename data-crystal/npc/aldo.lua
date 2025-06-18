@@ -24,7 +24,7 @@ npcConfig.flags = {
 }
 
 npcConfig.shop = {
-	{ itemName = "brass helmet", clientId = 3354, buy = 120, sell = 30 },
+	{ itemName = "brass helmet", clientId = 3354, buy = 130, sell = 30 },
 	{ itemName = "brass legs", clientId = 3372, buy = 195, sell = 49 },
 	{ itemName = "chain helmet", clientId = 3352, buy = 52, sell = 17 },
 	{ itemName = "chain legs", clientId = 3558, buy = 80, sell = 25 },
