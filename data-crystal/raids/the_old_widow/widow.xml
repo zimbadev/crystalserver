@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<raid>
+	<!--Announcements-->
+	<announce delay="1000" type="Event" message="The mating season of the giant spiders is at hand. Leave the plains of havoc as fast as you can." />
+	<announce delay="180000" type="Event" message="Giant spiders have gathered on the plains of havoc for their mating season. Beware!" />
+	<!--Single Spawns-->
+	<singlespawn delay="100000" name="Ferumbras" x="479" y="671" z="8"/>
+	<!--Area Spawns-->
+	<areaspawn delay="170000" fromx="474" fromy="670" fromz="8" tox="482" toy="672" toz="8">
+		<monster name="Giant Spider" amount="10" />
+	</areaspawn>
+</raid>

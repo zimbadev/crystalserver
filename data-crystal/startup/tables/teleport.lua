@@ -46,4 +46,8 @@ TeleportUnique = {
 		itemId = 1949,
 		itemPos = { x = 547, y = 705, z = 7 },
 	},
+	[Storage.CrystalServer.Citizen.Frostania] = {
+		itemId = 1949,
+		itemPos = { x = 313, y = 274, z = 4 },
+	},
 }

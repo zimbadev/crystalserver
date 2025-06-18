@@ -60,22 +60,22 @@
 	<house name="Venore House XIII" houseid="60" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="25" clientid="0" beds="3" />
 	<house name="Venore House XIV" houseid="61" entryx="401" entryy="435" entryz="7" rent="8000" townid="5" size="26" clientid="0" beds="3" />
 	<house name="Venore House XV" houseid="62" entryx="404" entryy="435" entryz="7" rent="8000" townid="5" size="26" clientid="0" beds="3" />
-	<house name="Premium Island House I" houseid="63" entryx="447" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island House II" houseid="64" entryx="461" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island House III" houseid="65" entryx="459" entryy="645" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
-	<house name="Premium Island House IV" houseid="66" entryx="459" entryy="653" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
-	<house name="Premium Island House V" houseid="67" entryx="462" entryy="645" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
-	<house name="Premium Island House VI" houseid="68" entryx="462" entryy="653" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
-	<house name="Premium Island House VII" houseid="69" entryx="433" entryy="665" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island House VIII" houseid="70" entryx="447" entryy="665" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island HouseIX" houseid="71" entryx="430" entryy="672" entryz="7" rent="11000" townid="6" size="40" clientid="0" beds="3" />
-	<house name="Premium Island House X" houseid="72" entryx="433" entryy="672" entryz="7" rent="11000" townid="6" size="37" clientid="0" beds="3" />
-	<house name="Premium Island House XI" houseid="73" entryx="422" entryy="659" entryz="7" rent="9000" townid="6" size="37" clientid="0" beds="3" />
-	<house name="Premium Island House XII" houseid="74" entryx="422" entryy="651" entryz="7" rent="9000" townid="6" size="43" clientid="0" beds="3" />
-	<house name="Premium Island House XIII" houseid="75" entryx="422" entryy="643" entryz="7" rent="9000" townid="6" size="43" clientid="0" beds="3" />
-	<house name="Premium Island House XIV" houseid="76" entryx="421" entryy="658" entryz="6" rent="7500" townid="6" size="31" clientid="0" beds="3" />
-	<house name="Premium Island House XV" houseid="77" entryx="421" entryy="651" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
-	<house name="Premium Island House XVI" houseid="78" entryx="421" entryy="643" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
+	<house name="Thyranox House I" houseid="63" entryx="447" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox House II" houseid="64" entryx="461" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox House III" houseid="65" entryx="459" entryy="645" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
+	<house name="Thyranox House IV" houseid="66" entryx="459" entryy="653" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
+	<house name="Thyranox House V" houseid="67" entryx="462" entryy="645" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
+	<house name="Thyranox House VI" houseid="68" entryx="462" entryy="653" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
+	<house name="Thyranox House VII" houseid="69" entryx="433" entryy="665" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox House VIII" houseid="70" entryx="447" entryy="665" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox HouseIX" houseid="71" entryx="430" entryy="672" entryz="7" rent="11000" townid="6" size="40" clientid="0" beds="3" />
+	<house name="Thyranox House X" houseid="72" entryx="433" entryy="672" entryz="7" rent="11000" townid="6" size="37" clientid="0" beds="3" />
+	<house name="Thyranox House XI" houseid="73" entryx="422" entryy="659" entryz="7" rent="9000" townid="6" size="37" clientid="0" beds="3" />
+	<house name="Thyranox House XII" houseid="74" entryx="422" entryy="651" entryz="7" rent="9000" townid="6" size="43" clientid="0" beds="3" />
+	<house name="Thyranox House XIII" houseid="75" entryx="422" entryy="643" entryz="7" rent="9000" townid="6" size="43" clientid="0" beds="3" />
+	<house name="Thyranox House XIV" houseid="76" entryx="421" entryy="658" entryz="6" rent="7500" townid="6" size="31" clientid="0" beds="3" />
+	<house name="Thyranox House XV" houseid="77" entryx="421" entryy="651" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
+	<house name="Thyranox House XVI" houseid="78" entryx="421" entryy="643" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
 	<house name="Venore House XVI" houseid="79" entryx="404" entryy="406" entryz="7" rent="10000" townid="5" size="52" clientid="0" beds="3" />
 	<house name="Venore House XVII" houseid="80" entryx="413" entryy="406" entryz="7" rent="10000" townid="5" size="52" clientid="0" beds="3" />
 	<house name="Folda House I" houseid="81" entryx="255" entryy="310" entryz="7" rent="10000" townid="7" size="30" clientid="0" beds="3" />
@@ -83,9 +83,8 @@
 	<house name="Folda House III" houseid="83" entryx="232" entryy="317" entryz="7" rent="10000" townid="7" size="32" clientid="0" beds="3" />
 	<house name="Folda House IV" houseid="84" entryx="232" entryy="323" entryz="7" rent="10000" townid="7" size="32" clientid="0" beds="3" />
 	<house name="Folda House V" houseid="85" entryx="232" entryy="329" entryz="7" rent="10000" townid="7" size="32" clientid="0" beds="3" />
-	<house name="Folda House VI" houseid="86" entryx="240" entryy="341" entryz="7" rent="1000" townid="7" size="85" clientid="0" beds="3" />
-	<house name="Folda House VII" houseid="87" entryx="251" entryy="339" entryz="7" rent="1000" townid="7" size="21" clientid="0" beds="3" />
-	<house name="Folda House VIII" houseid="88" entryx="256" entryy="339" entryz="7" rent="1000" townid="7" size="21" clientid="0" beds="3" />
+	<house name="Folda House VI" houseid="87" entryx="251" entryy="339" entryz="7" rent="1000" townid="7" size="21" clientid="0" beds="3" />
+	<house name="Folda House VII" houseid="88" entryx="256" entryy="339" entryz="7" rent="1000" townid="7" size="21" clientid="0" beds="3" />
 	<house name="Folda House IX" houseid="89" entryx="237" entryy="322" entryz="7" rent="1000" townid="7" size="31" clientid="0" beds="3" />
 	<house name="Liberty Bay House I" houseid="90" entryx="562" entryy="684" entryz="7" rent="10000" townid="8" size="110" clientid="0" beds="3" />
 	<house name="Liberty Bay House II" houseid="91" entryx="560" entryy="706" entryz="7" rent="10000" townid="8" size="95" clientid="0" beds="3" />
@@ -105,4 +104,43 @@
 	<house name="Liberty Bay House XVI" houseid="105" entryx="517" entryy="691" entryz="7" rent="10000" townid="8" size="29" clientid="0" beds="3" />
 	<house name="Liberty Bay House XVII" houseid="106" entryx="518" entryy="697" entryz="7" rent="10000" townid="8" size="31" clientid="0" beds="3" />
 	<house name="Karmia House II" houseid="107" entryx="457" entryy="527" entryz="7" rent="7000" townid="1" size="68" clientid="0" beds="3" />
+	<house name="Frostania SW I" houseid="108" entryx="263" entryy="307" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="1" />
+	<house name="Frostania SW II" houseid="109" entryx="267" entryy="307" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="1" />
+	<house name="Frostania SW III" houseid="110" entryx="271" entryy="307" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
+	<house name="Frostania SW IV" houseid="111" entryx="268" entryy="317" entryz="6" rent="0" townid="10" size="105" clientid="0" beds="3" />
+	<house name="Frostania SW V" houseid="112" entryx="279" entryy="309" entryz="6" rent="0" townid="10" size="107" clientid="0" beds="3" />
+	<house name="Frostania SW VI" houseid="113" entryx="290" entryy="304" entryz="6" rent="0" townid="10" size="109" clientid="0" beds="3" />
+	<house name="Frostania SW VII" houseid="115" entryx="280" entryy="303" entryz="6" rent="0" townid="10" size="103" clientid="0" beds="0" />
+	<house name="Frostania South I" houseid="116" entryx="298" entryy="294" entryz="6" rent="0" townid="10" size="43" clientid="0" beds="0" />
+	<house name="Frostania South II" houseid="117" entryx="300" entryy="299" entryz="6" rent="0" townid="10" size="107" clientid="0" beds="0" />
+	<house name="Frostania South IV" houseid="118" entryx="310" entryy="299" entryz="6" rent="0" townid="10" size="104" clientid="0" beds="0" />
+	<house name="Frostania South III" houseid="119" entryx="306" entryy="295" entryz="6" rent="0" townid="10" size="112" clientid="0" beds="2" />
+	<house name="Frostania South VI" houseid="120" entryx="320" entryy="297" entryz="6" rent="0" townid="10" size="105" clientid="0" beds="3" />
+	<house name="Frostania South V" houseid="121" entryx="322" entryy="294" entryz="6" rent="0" townid="10" size="44" clientid="0" beds="0" />
+	<house name="Frostania SW VIII" houseid="123" entryx="291" entryy="289" entryz="6" rent="0" townid="10" size="103" clientid="0" beds="0" />
+	<house name="Frostania West I" houseid="124" entryx="289" entryy="281" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
+	<house name="Frostania West II" houseid="125" entryx="289" entryy="275" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
+	<house name="Frostania West III" houseid="127" entryx="289" entryy="269" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="1" />
+	<house name="Frostanie NW I" houseid="132" entryx="290" entryy="263" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="0" />
+	<house name="Frostania NW II" houseid="133" entryx="290" entryy="257" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="0" />
+	<house name="Frostania NW III" houseid="134" entryx="296" entryy="255" entryz="6" rent="0" guildhall="true" townid="10" size="142" clientid="0" beds="18" />
+	<house name="Frostania Center I" houseid="135" entryx="291" entryy="270" entryz="6" rent="0" townid="10" size="51" clientid="0" beds="0" />
+	<house name="Frostania Center II" houseid="136" entryx="314" entryy="269" entryz="6" rent="0" townid="10" size="40" clientid="0" beds="0" />
+	<house name="Frostania North I" houseid="137" entryx="309" entryy="256" entryz="6" rent="0" townid="10" size="28" clientid="0" beds="0" />
+	<house name="Frostania North II" houseid="138" entryx="327" entryy="258" entryz="6" rent="0" townid="10" size="80" clientid="0" beds="0" />
+	<house name="Frostania North III" houseid="139" entryx="329" entryy="255" entryz="6" rent="0" townid="10" size="49" clientid="0" beds="0" />
+	<house name="Frostania NE I" houseid="140" entryx="344" entryy="261" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="0" />
+	<house name="Frostania NE II" houseid="141" entryx="352" entryy="257" entryz="6" rent="0" townid="10" size="20" clientid="0" beds="0" />
+	<house name="Frostania East I" houseid="142" entryx="345" entryy="268" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="0" />
+	<house name="Frostania East II" houseid="143" entryx="351" entryy="265" entryz="6" rent="0" townid="10" size="22" clientid="0" beds="0" />
+	<house name="Frostania East III" houseid="144" entryx="362" entryy="261" entryz="6" rent="0" townid="10" size="213" clientid="0" beds="6" />
+	<house name="Frostania NE III" houseid="145" entryx="369" entryy="257" entryz="6" rent="0" townid="10" size="251" clientid="0" beds="0" />
+	<house name="Frostania NE IV" houseid="146" entryx="372" entryy="247" entryz="6" rent="0" townid="10" size="21" clientid="0" beds="0" />
+	<house name="Frostania East IV" houseid="147" entryx="342" entryy="278" entryz="6" rent="0" townid="10" size="217" clientid="0" beds="9" />
+	<house name="Frostania SE I" houseid="148" entryx="330" entryy="285" entryz="6" rent="0" townid="10" size="14" clientid="0" beds="0" />
+	<house name="Frostania SE II" houseid="149" entryx="330" entryy="289" entryz="6" rent="0" townid="10" size="14" clientid="0" beds="0" />
+	<house name="Frostania SE III" houseid="150" entryx="330" entryy="293" entryz="6" rent="0" townid="10" size="14" clientid="0" beds="0" />
+	<house name="Frostania SE Ia" houseid="151" entryx="331" entryy="285" entryz="5" rent="0" townid="10" size="11" clientid="0" beds="1" />
+	<house name="Frostania SE IIa" houseid="152" entryx="331" entryy="289" entryz="5" rent="0" townid="10" size="11" clientid="0" beds="1" />
+	<house name="Frostania SE IIIa" houseid="153" entryx="331" entryy="293" entryz="5" rent="0" townid="10" size="11" clientid="0" beds="2" />
 </houses>

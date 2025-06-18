@@ -36,14 +36,14 @@ SignTable = {
 	-- Demon Oak
 	[2] = {
 		itemId = 2012,
-		itemPos = { x = 369, y = 287, z = 7 },
+		itemPos = { x = 409, y = 270, z = 8 },
 		text = "Choose a reward wisely!",
 	},
-	-- Premium island
+	-- Thyranox
 	[3] = {
 		itemId = 2022,
 		itemPos = { x = 430, y = 630, z = 7 },
-		text = "Temple of Premium Island!",
+		text = "Temple of Thyranox!",
 	},
 	-- Ferumbras Tower Exit
 	[4] = {

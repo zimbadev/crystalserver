@@ -4,14 +4,31 @@ Look README.md for look the reserved action/unique
 
 ]]
 QuestDoorAction = {
-	--[[ Exxample of usage
-	[Storage.Quest.U7_2.TheQueenOfTheBanshees.BansheeDoor] = {
-		itemId = 5113,
+	-- Svargrond arena door
+	[Storage.Quest.U8_0.BarbarianArena.PitDoor] = {
+		itemId = false,
 		itemPos = {
-			{ x = 32246, y = 31861, z = 14 },
-			{ x = 32246, y = 31862, z = 14 },
+			{ x = 368, y = 229, z = 7 },
+			{ x = 368, y = 230, z = 7 },
+			{ x = 368, y = 231, z = 7 },
 		},
-	},]]
+	},
+	[Storage.Quest.U8_0.BarbarianArena.GreenhornDoor] = {
+		itemId = false,
+		itemPos = { { x = 362, y = 197, z = 7 } },
+	},
+	[Storage.Quest.U8_0.BarbarianArena.ScrapperDoor] = {
+		itemId = false,
+		itemPos = { { x = 362, y = 190, z = 7 } },
+	},
+	[Storage.Quest.U8_0.BarbarianArena.WarlordDoor] = {
+		itemId = false,
+		itemPos = { { x = 362, y = 183, z = 7 } },
+	},
+	[Storage.Quest.U8_0.TheInquisitionQuest.RewardDoor] = {
+		itemId = false,
+		itemPos = { { x = 436, y = 434, z = 8 } },
+	},
 }
 
 QuestDoorUnique = {

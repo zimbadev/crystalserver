@@ -8,4 +8,5 @@ TOWNS_LIST = {
 	FOLDA = 7,
 	LIBERTY_BAY = 8,
 	ROOKGAARD = 9,
+	Frostania = 10,
 }

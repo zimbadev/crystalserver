@@ -17,8 +17,11 @@
 	<npc centerx="331" centery="455" centerz="5" radius="5">
 		<npc name="Julian" x="0" y="0" z="5" spawntime="60" direction="2" />
 	</npc>
-	<npc centerx="269" centery="316" centerz="6" radius="1">
-		<npc name="Nimral" x="0" y="0" z="6" spawntime="60" />
+	<npc centerx="328" centery="268" centerz="6" radius="1">
+		<npc name="Maria" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="478" centery="279" centerz="6" radius="1">
+		<npc name="Oldrak" x="0" y="0" z="6" spawntime="60" />
 	</npc>
 	<npc centerx="256" centery="321" centerz="6" radius="5">
 		<npc name="Jimbim" x="0" y="0" z="6" spawntime="60" direction="3" />
@@ -32,6 +35,9 @@
 	</npc>
 	<npc centerx="244" centery="348" centerz="6" radius="5">
 		<npc name="Dufi" x="0" y="0" z="6" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="225" centery="355" centerz="6" radius="1">
+		<npc name="Nimral" x="0" y="0" z="6" spawntime="60" />
 	</npc>
 	<npc centerx="397" centery="385" centerz="6" radius="5">
 		<npc name="Maria" x="0" y="0" z="6" spawntime="60" direction="1" />
@@ -128,6 +134,9 @@
 		<npc name="Orlan" x="0" y="-3" z="6" spawntime="60" direction="3" />
 		<npc name="Julian" x="0" y="1" z="6" spawntime="60" direction="3" />
 	</npc>
+	<npc centerx="365" centery="229" centerz="7" radius="1">
+		<npc name="Halvar" x="0" y="0" z="7" spawntime="60" />
+	</npc>
 	<npc centerx="256" centery="325" centerz="7" radius="5">
 		<npc name="Lara" x="0" y="0" z="7" spawntime="60" direction="3" />
 		<npc name="Junior" x="-3" y="5" z="7" spawntime="60" />
@@ -161,14 +170,8 @@
 	<npc centerx="401" centery="407" centerz="7" radius="5">
 		<npc name="Mark" x="0" y="0" z="7" spawntime="60" direction="2" />
 	</npc>
-	<npc centerx="784" centery="407" centerz="7" radius="5">
-		<npc name="George" x="0" y="0" z="7" spawntime="60" direction="2" />
-	</npc>
 	<npc centerx="466" centery="409" centerz="7" radius="5">
 		<npc name="Jimbim" x="0" y="0" z="7" spawntime="60" direction="2" />
-	</npc>
-	<npc centerx="785" centery="414" centerz="7" radius="5">
-		<npc name="Adolfo" x="-1" y="0" z="7" spawntime="60" direction="2" />
 	</npc>
 	<npc centerx="387" centery="416" centerz="7" radius="5">
 		<npc name="Roger" x="0" y="0" z="7" spawntime="60" direction="2" />
@@ -280,6 +283,9 @@
 	</npc>
 	<npc centerx="554" centery="721" centerz="7" radius="5">
 		<npc name="Lara" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="437" centery="436" centerz="8" radius="1">
+		<npc name="Henricus" x="0" y="0" z="8" spawntime="60" />
 	</npc>
 	<npc centerx="429" centery="448" centerz="8" radius="1">
 		<npc name="Alice" x="-1" y="0" z="8" spawntime="60" />
