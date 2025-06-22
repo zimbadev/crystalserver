@@ -10813,9 +10813,6 @@
 	<monster centerx="33836" centery="31860" centerz="5" radius="1">
 		<monster name="Cloak Of Terror" x="0" y="0" z="5" spawntime="60" />
 	</monster>
-	<monster centerx="32048" centery="31861" centerz="5" radius="1">
-		<monster name="Woodling" x="0" y="0" z="5" spawntime="90" />
-	</monster>
 	<monster centerx="33872" centery="31861" centerz="5" radius="1">
 		<monster name="Courage Leech" x="0" y="0" z="5" spawntime="60" />
 	</monster>
@@ -17183,12 +17180,6 @@
 	<monster centerx="32088" centery="31890" centerz="6" radius="1">
 		<monster name="Mountain Troll" x="0" y="0" z="6" spawntime="90" />
 	</monster>
-	<monster centerx="32042" centery="31895" centerz="6" radius="3">
-		<monster name="Mountain Troll" x="2" y="-3" z="6" spawntime="90" />
-	</monster>
-	<monster centerx="32049" centery="31895" centerz="6" radius="3">
-		<monster name="Deer" x="-3" y="1" z="6" spawntime="90" />
-	</monster>
 	<monster centerx="32089" centery="31897" centerz="6" radius="1">
 		<monster name="Mountain Troll" x="0" y="0" z="6" spawntime="90" />
 	</monster>
@@ -17244,9 +17235,6 @@
 	<monster centerx="32052" centery="31917" centerz="6" radius="1">
 		<monster name="Mountain Troll" x="0" y="0" z="6" spawntime="90" />
 	</monster>
-	<monster centerx="32066" centery="31917" centerz="6" radius="1">
-		<monster name="Mountain Troll" x="0" y="0" z="6" spawntime="90" />
-	</monster>
 	<monster centerx="32049" centery="31918" centerz="6" radius="1">
 		<monster name="Mountain Troll" x="0" y="0" z="6" spawntime="90" />
 	</monster>
@@ -17255,9 +17243,6 @@
 		<monster name="Lion" x="-3" y="1" z="6" spawntime="90" />
 		<monster name="Valkyrie" x="0" y="2" z="6" spawntime="90" />
 		<monster name="Witch" x="2" y="2" z="6" spawntime="90" />
-	</monster>
-	<monster centerx="32076" centery="31919" centerz="6" radius="1">
-		<monster name="Mountain Troll" x="0" y="0" z="6" spawntime="90" />
 	</monster>
 	<monster centerx="33554" centery="31923" centerz="6" radius="3">
 		<monster name="Rustheap Golem" x="-3" y="-2" z="6" spawntime="60" />

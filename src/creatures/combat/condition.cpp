@@ -223,6 +223,7 @@ std::shared_ptr<Condition> Condition::createCondition(ConditionId_t id, Conditio
 		case CONDITION_DAZZLED:
 		case CONDITION_CURSED:
 		case CONDITION_BLEEDING:
+		case CONDITION_AGONY:
 			return std::make_shared<ConditionDamage>(id, type, buff, subId);
 
 		case CONDITION_HASTE:
@@ -1945,6 +1946,10 @@ std::unordered_set<PlayerIcon> ConditionDamage::getIcons() const {
 
 		case CONDITION_POISON:
 			icons.insert(PlayerIcon::Poison);
+			break;
+
+		case CONDITION_AGONY:
+			icons.insert(PlayerIcon::Agony);
 			break;
 
 		case CONDITION_FREEZING:

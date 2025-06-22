@@ -120,3 +120,4 @@ for index, value in pairs(vortex) do
 end
 
 teleportHeart:register()
+teleportHeart:aid(14353)

@@ -25,6 +25,10 @@ QuestDoorAction = {
 		itemId = false,
 		itemPos = { { x = 362, y = 183, z = 7 } },
 	},
+	[Storage.Quest.U8_0.TheInquisitionQuest.RewardDoor] = {
+		itemId = false,
+		itemPos = { { x = 436, y = 434, z = 8 } },
+	},
 }
 
 QuestDoorUnique = {

@@ -1128,6 +1128,9 @@ void Creature::onTickCondition(ConditionType_t type, bool &bRemove) {
 		case CONDITION_BLEEDING:
 			bRemove = (field->getCombatType() != COMBAT_PHYSICALDAMAGE);
 			break;
+		case CONDITION_AGONY:
+			bRemove = (field->getCombatType() != COMBAT_AGONYDAMAGE);
+			break;
 		default:
 			break;
 	}
@@ -1375,6 +1378,7 @@ std::vector<std::shared_ptr<Condition>> Creature::getCleansableConditions() cons
 			case CONDITION_PARALYZE:
 			case CONDITION_ROOTED:
 			case CONDITION_FEARED:
+			case CONDITION_AGONY:
 				cleansableConditions.emplace_back(condition);
 				break;
 
