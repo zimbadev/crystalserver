@@ -29,6 +29,18 @@ QuestDoorAction = {
 		itemId = false,
 		itemPos = { { x = 436, y = 434, z = 8 } },
 	},
+	-- The pits of inferno door
+	[Storage.Quest.U7_8.ThePitsOfInferno.ShortcutHubDoor] = {
+		itemId = false,
+		itemPos = { {x = 537, y = 192, z = 6} },
+	},
+	[Storage.Quest.U7_8.ThePitsOfInferno.ShortcutLeverDoor] = {
+		itemId = false,
+		itemPos = {
+			{x = 570, y = 179, z = 11},
+			{x = 570, y = 180, z = 11}, 
+		},
+	},
 }
 
 QuestDoorUnique = {
