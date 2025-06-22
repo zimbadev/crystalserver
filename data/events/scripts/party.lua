@@ -47,13 +47,18 @@ end
 
 function Party:onDisband()
 	local members = self:getMembers()
-	table.insert(members, self:getLeader())
+	local leader = self:getLeader()
+	if leader then
+		table.insert(members, leader)
+	end
+
 	local memberIds = {}
 	for _, member in ipairs(members) do
-		if member:getId() ~= playerId then
+		if member and member:getId() then
 			table.insert(memberIds, member:getId())
 		end
 	end
+
 	addEvent(function()
 		for _, memberId in ipairs(memberIds) do
 			local member = Player(memberId)
