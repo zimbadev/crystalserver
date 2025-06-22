@@ -74923,75 +74923,6 @@ Granted by TibiaGoals.com" />
 	<item id="42623" name="stairs">
 		<attribute key="floorchange" value="south" />
 	</item>
-	<item id="42624" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
-		<attribute key="transformOnUse" value="42628" />
-	</item>
-	<item id="42625" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
-		<attribute key="transformOnUse" value="42628" />
-	</item>
-	<item id="42626" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
-		<attribute key="transformOnUse" value="42629" />
-	</item>
-	<item id="42627" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
-		<attribute key="transformOnUse" value="42629" />
-	</item>
-	<item id="42628" article="a" name="open door">
-		<attribute key="type" value="door" />
-		<attribute key="transformOnUse" value="42625" />
-	</item>
-	<item id="42629" article="a" name="open door">
-		<attribute key="type" value="door" />
-		<attribute key="transformOnUse" value="42627" />
-	</item>
-	<item id="42632" name="stairs">
-		<attribute key="floorchange" value="east" />
-	</item>
-	<item id="42744" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
-	</item>
-	<item id="42745" article="a" name="open door">
-		<attribute key="type" value="door" />
-	</item>
-	<item id="43297" article="a" name="agony field">
-		<attribute key="type" value="magicfield" />
-		<attribute key="decayTo" value="0" />
-		<attribute key="duration" value="248" />
-		<attribute key="field" value="agony">
-			<attribute key="ticks" value="5000" />
-			<attribute key="start" value="260" />
-			<attribute key="damage" value="100" />
-		</attribute>
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
-	</item>
-	<item id="43952" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
-		<attribute key="transformOnUse" value="43954" />
-	</item>
-	<item id="43953" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
-		<attribute key="transformOnUse" value="43955" />
-	</item>
-	<item id="43954" article="a" name="open door">
-		<attribute key="type" value="door" />
-		<attribute key="transformOnUse" value="43952" />
-	</item>
-	<item id="43955" article="a" name="open door">
-		<attribute key="type" value="door" />
-		<attribute key="transformOnUse" value="43953" />
-	</item>
 	<item id="42964" name="stairs" />
 	<item id="42965" name="stairs">
 		<attribute key="floorchange" value="north" />
@@ -75030,6 +74961,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="description" value="Souvenir from Thais Museum." />
 		<attribute key="weight" value="4200" />
 	</item>
+	<!-- 
 	<item id="43511" article="a" name="citizen doll">
 		<attribute key="description" value="Souvenir from Thais Museum." />
 		<attribute key="weight" value="2200" />
@@ -75240,6 +75172,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="duration" value="10" />
 		<attribute key="fluidSource" value="blood" />
 	</item>
+	-->
 	<item id="43729" name="werecrocodile tongue">
 		<attribute key="primarytype" value="creature products" />
 		<attribute key="showCount" value="0" />
