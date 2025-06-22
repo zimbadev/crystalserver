@@ -142,8 +142,8 @@ Storage = {
 				EnterTeleport = 41706,
 				Reward = 41707,
 				RewardRoomText = 41708,
-			}
-		}
+			},
+		},
 	},
 
 	Imbuement = 30004,

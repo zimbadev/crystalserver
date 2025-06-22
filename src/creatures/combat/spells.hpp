@@ -135,7 +135,7 @@ public:
 	void setSpellId(uint16_t id);
 
 	void postCastSpell(const std::shared_ptr<Player> &player, bool finishedCast = true, bool payCost = true) const;
-	static void postCastSpell(const std::shared_ptr<Player> &player, uint32_t manaCost, uint32_t soulCost);
+	static void postCastSpell(const std::shared_ptr<Player> &player, uint32_t manaCost, uint32_t soulCost, uint8_t harmonyCost);
 	[[nodiscard]] virtual bool isInstant() const = 0;
 	[[nodiscard]] bool isLearnable() const;
 
@@ -237,6 +237,9 @@ public:
 	void getCombatDataAugment(const std::shared_ptr<Player> &player, CombatDamage &damage) const;
 	int32_t calculateAugmentSpellCooldownReduction(const std::shared_ptr<Player> &player) const;
 
+	[[nodiscard]] bool getHarmonyCost() const;
+	void setHarmonyCost(bool h);
+
 protected:
 	void applyCooldownConditions(const std::shared_ptr<Player> &player) const;
 	bool playerSpellCheck(const std::shared_ptr<Player> &player) const;
@@ -265,8 +268,8 @@ protected:
 	bool removeOnUse = false;
 
 	bool whellOfDestinyUpgraded = false;
-	std::array<int32_t, static_cast<uint8_t>(WheelSpellBoost_t::TOTAL_COUNT)> wheelOfDestinyRegularBoost = { 0 };
-	std::array<int32_t, static_cast<uint8_t>(WheelSpellBoost_t::TOTAL_COUNT)> wheelOfDestinyUpgradedBoost = { 0 };
+	std::array<int32_t, magic_enum::enum_count<WheelSpellBoost_t>() + 1> wheelOfDestinyRegularBoost = { 0 };
+	std::array<int32_t, magic_enum::enum_count<WheelSpellBoost_t>() + 1> wheelOfDestinyUpgradedBoost = { 0 };
 
 private:
 	uint32_t mana = 0;
@@ -280,6 +283,7 @@ private:
 	bool learnable = false;
 	bool enabled = true;
 	bool premium = false;
+	bool harmony = false;
 
 	std::string name;
 	std::string m_words;

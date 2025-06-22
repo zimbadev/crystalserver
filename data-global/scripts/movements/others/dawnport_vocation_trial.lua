@@ -123,6 +123,33 @@ local vocationTrials = {
 			{ id = 3577, amount = 1, storage = Storage.Dawnport.KnightMeat, limit = 1 }, -- Meat
 		},
 	},
+	-- Monk trial
+	[25000] = {
+		tutorialId = 11,
+		effectPosition = { x = 32060, y = 31894, z = 4 },
+		storage = Storage.Dawnport.Monk,
+		message = "As a monk, you can use the following spells: Swift Jab, Tiger Clash.",
+		vocation = {
+			id = VOCATION.ID.MONK,
+			name = "monk",
+			outfit = {
+				lookType = {
+					[PLAYERSEX_FEMALE] = 1825,
+					[PLAYERSEX_MALE] = 1824,
+				},
+				lookHead = 95,
+				lookBody = 38,
+				lookLegs = 94,
+				lookFeet = 115,
+			},
+		},
+		items = {
+			{ id = 50166, amount = 1, slot = CONST_SLOT_LEFT }, -- light jo staff
+			{ id = 7876, amount = 5, storage = Storage.Dawnport.MonkHealthPotion, limit = 1 }, -- Health potion-
+			{ id = 268, amount = 5, storage = Storage.Dawnport.MonkManaPotion, limit = 1 }, -- Mana potion
+			{ id = 3577, amount = 1, storage = Storage.Dawnport.MonkMeat, limit = 1 }, -- Meat
+		},
+	},
 }
 
 -- First items, added only in first step and having no vocation
@@ -259,25 +286,25 @@ function dawnportVocationTrial.onStepIn(creature, item, position, fromPosition)
 	local trial = vocationTrials[item.actionid]
 	if trial then
 		-- Center room position
-		local centerPosition = Position(32065, 31891, 5)
-		if centerPosition:getDistance(fromPosition) < centerPosition:getDistance(position) then
-			-- Blocks the vocation trial if same vocation or after level 20
-			if player:getVocation():getId() == trial.vocation.id or player:getLevel() >= 20 then
-				return true
-			end
-			-- On step in the tile
-			tileStep(player, trial)
-			-- Change to new vocation, convert magic level and skills and set proper stats
-			player:changeVocation(trial.vocation.id)
-			-- Remove vocation trial equipment items
-			removeItems(player)
-			-- Add player item
-			addItems(player, trial.items)
-			-- Change outfit
-			setOutfit(player, trial.vocation.outfit)
-			player:getPosition():sendMagicEffect(CONST_ME_BLOCKHIT)
+		--local centerPosition = Position(32065, 31891, 5)
+		--if centerPosition:getDistance(fromPosition) < centerPosition:getDistance(position) then
+		-- Blocks the vocation trial if same vocation or after level 20
+		if player:getVocation():getId() == trial.vocation.id or player:getLevel() >= 20 then
 			return true
 		end
+		-- On step in the tile
+		tileStep(player, trial)
+		-- Change to new vocation, convert magic level and skills and set proper stats
+		player:changeVocation(trial.vocation.id)
+		-- Remove vocation trial equipment items
+		removeItems(player)
+		-- Add player item
+		addItems(player, trial.items)
+		-- Change outfit
+		setOutfit(player, trial.vocation.outfit)
+		player:getPosition():sendMagicEffect(CONST_ME_BLOCKHIT)
+		--	return true
+		--end
 	end
 	return true
 end
