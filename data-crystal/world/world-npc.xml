@@ -55,6 +55,9 @@
 	<npc centerx="466" centery="409" centerz="6" radius="5">
 		<npc name="Seller" x="0" y="0" z="6" spawntime="60" direction="2" />
 	</npc>
+	<npc centerx="380" centery="414" centerz="6" radius="1">
+		<npc name="Sandra" x="0" y="0" z="6" spawntime="60" />
+	</npc>
 	<npc centerx="387" centery="417" centerz="6" radius="5">
 		<npc name="Seller" x="0" y="-1" z="6" spawntime="60" direction="2" />
 	</npc>

@@ -95,20 +95,21 @@ Storage = {
 			Example = 9000,
 			Door = 9001,
 		},
-
-		-- DODAJEMY DEMON OAK TUTAJ
-		U8_2 = {
-			TheDemonOak = {
-				AxeBlowsBird = 10001,
-				AxeBlowsLeft = 10002,
-				AxeBlowsRight = 10003,
-				AxeBlowsFace = 10004,
-				Done = 10005,
-				Progress = 10006,
-				Squares = 10007,
+		U7_8 = { 
+			ThePitsOfInferno = {
+				ShortcutHubDoor = 41017,
+				ShortcutLeverDoor = 41018,
+				Pumin = 41019,
+				ThroneInfernatil = 41020,
+				ThroneTafariel = 41021,
+				ThroneVerminor = 41022,
+				ThroneApocalypse = 41023,
+				ThroneBazir = 41024,
+				ThroneAshfalor = 41025,
+				ThronePumin = 41026,
+				Levers = 41027
 			},
 		},
-		-- DODAJEMY BARBARIAN ARENA (U8_0)
 		U8_0 = { -- update 8.0 - Reserved Storages 41151 - 41350
 			BarbarianArena = {
 				Arena = 41151,
@@ -142,6 +143,17 @@ Storage = {
 				EnterTeleport = 41706,
 				Reward = 41707,
 				RewardRoomText = 41708,
+			},
+		},
+				U8_2 = {
+			TheDemonOak = {
+				AxeBlowsBird = 10001,
+				AxeBlowsLeft = 10002,
+				AxeBlowsRight = 10003,
+				AxeBlowsFace = 10004,
+				Done = 10005,
+				Progress = 10006,
+				Squares = 10007,
 			},
 		},
 	},
