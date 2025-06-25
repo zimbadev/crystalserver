@@ -23,7 +23,7 @@ monster.Bestiary = {
 	CharmsPoints = 50,
 	Stars = 4,
 	Occurrence = 0,
-	Locations = "Pits of Inferno, The Vats - Edron.",
+	Locations = "Pits of Inferno, The Inquisition Quest (The Vats) and Grounds of Plague.",
 }
 
 monster.health = 3650
@@ -52,7 +52,7 @@ monster.flags = {
 	convinceable = false,
 	pushable = false,
 	rewardBoss = false,
-	illusionable = true,
+	illusionable = false,
 	canPushItems = true,
 	canPushCreatures = true,
 	staticAttackChance = 80,
@@ -66,8 +66,8 @@ monster.flags = {
 }
 
 monster.light = {
-	level = 0,
-	color = 0,
+	level = 3,
+	color = 30,
 }
 
 monster.voices = {
@@ -78,23 +78,23 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ id = 3028, chance = 2439, maxCount = 2 }, -- small diamond
-	{ id = 3030, chance = 3000, maxCount = 2 }, -- small ruby
-	{ id = 3031, chance = 100000, maxCount = 100 }, -- gold coin
-	{ id = 3031, chance = 100000, maxCount = 100 }, -- gold coin
-	{ id = 3031, chance = 100000, maxCount = 72 }, -- gold coin
-	{ id = 3032, chance = 5366, maxCount = 3 }, -- small emerald
-	{ id = 3034, chance = 5710 }, -- talon
-	{ id = 3035, chance = 95000, maxCount = 6 }, -- platinum coin
-	{ id = 3037, chance = 1219 }, -- yellow gem
-	{ id = 3038, chance = 613 }, -- green gem
+	{ name = "small diamond", chance = 2439, maxCount = 2 },
+	{ name = "small ruby", chance = 3000, maxCount = 2 },
+	{ name = "gold coin", chance = 100000, maxCount = 100 },
+	{ name = "gold coin", chance = 100000, maxCount = 100 },
+	{ name = "gold coin", chance = 100000, maxCount = 72 },
+	{ name = "small emerald", chance = 5366, maxCount = 3 },
+	{ name = "talon", chance = 5710 },
+	{ name = "platinum coin", chance = 95000, maxCount = 6 },
+	{ name = "yellow gem", chance = 1219 },
+	{ name = "green gem", chance = 613 },
 	{ id = 3039, chance = 1538 }, -- red gem
-	{ id = 3041, chance = 300 }, -- blue gem
-	{ id = 5944, chance = 20000 }, -- soul orb
+	{ name = "blue gem", chance = 300 },
+	{ name = "soul orb", chance = 20000 },
 	{ id = 6299, chance = 3030 }, -- death ring
-	{ id = 6499, chance = 20320 }, -- demonic essence
-	{ id = 9054, chance = 14210 }, -- glob of acid slime
-	{ id = 9055, chance = 12000 }, -- glob of tar
+	{ name = "demonic essence", chance = 20320 },
+	{ name = "glob of acid slime", chance = 14210 },
+	{ name = "glob of tar", chance = 12000 },
 }
 
 monster.attacks = {
@@ -110,7 +110,8 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 20,
-	armor = 20,
+	armor = 60,
+	mitigation = 1.32,
 	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_HEALING, minDamage = 280, maxDamage = 350, effect = CONST_ME_MAGIC_BLUE, target = false },
 }
 

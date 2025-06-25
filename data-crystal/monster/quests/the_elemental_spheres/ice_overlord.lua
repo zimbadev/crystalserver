@@ -14,7 +14,6 @@ monster.outfit = {
 }
 
 monster.events = {
-	"ElementalOverlordDeath",
 }
 
 monster.health = 4000

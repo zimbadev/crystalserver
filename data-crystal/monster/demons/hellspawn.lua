@@ -23,7 +23,7 @@ monster.Bestiary = {
 	CharmsPoints = 25,
 	Stars = 3,
 	Occurrence = 0,
-	Locations = "Magician Quarter, Vengoth, Deeper Banuta, Formorgar Mines, Chyllfroest, Oramond Dungeon.",
+	Locations = "Magician Quarter, Vengoth, Deeper Banuta, Formorgar Minese, Chyllfroest, Oramond Dungeon, Asura Palace, Asura Vaults.",
 }
 
 monster.health = 3500
@@ -60,7 +60,7 @@ monster.flags = {
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
-	canWalkOnEnergy = true,
+	canWalkOnEnergy = false,
 	canWalkOnFire = true,
 	canWalkOnPoison = true,
 }
@@ -81,37 +81,37 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ id = 3031, chance = 60000, maxCount = 100 }, -- gold coin
-	{ id = 3031, chance = 60000, maxCount = 100 }, -- gold coin
-	{ id = 3031, chance = 60000, maxCount = 36 }, -- gold coin
-	{ id = 3282, chance = 10000 }, -- morning star
-	{ id = 3369, chance = 1886 }, -- warrior helmet
-	{ id = 3371, chance = 3030 }, -- knight legs
-	{ id = 3724, chance = 7692, maxCount = 2 }, -- red mushroom
-	{ id = 6499, chance = 9090 }, -- demonic essence
-	{ id = 7368, chance = 9090, maxCount = 2 }, -- assassin star
-	{ id = 7421, chance = 103 }, -- onyx flail
-	{ id = 7439, chance = 934 }, -- berserk potion
-	{ id = 7452, chance = 970 }, -- spiked squelcher
-	{ id = 239, chance = 40333 }, -- great health potion
-	{ id = 7643, chance = 9090 }, -- ultimate health potion
+	{ name = "gold coin", chance = 93000, maxCount = 236 },
+	{ name = "morning star", chance = 10000 },
+	{ name = "warrior helmet", chance = 1886 },
+	{ name = "knight legs", chance = 3030 },
+	{ name = "red mushroom", chance = 7692, maxCount = 2 },
+	{ name = "demonic essence", chance = 9090 },
+	{ name = "battle shield", chance = 7500 },
+	{ name = "assassin star", chance = 9090, maxCount = 2 },
+	{ name = "onyx flail", chance = 103 },
+	{ name = "berserk potion", chance = 934 },
+	{ name = "spiked squelcher", chance = 970 },
+	{ name = "great health potion", chance = 40333 },
+	{ name = "ultimate health potion", chance = 9090 },
 	{ id = 8895, chance = 3125 }, -- rusted armor
 	{ id = 8896, chance = 3125 }, -- slightly rusted armor
 	{ id = 9034, chance = 140 }, -- dracoyle statue
 	{ id = 9056, chance = 151 }, -- black skull
-	{ id = 9057, chance = 5882, maxCount = 3 }, -- small topaz
-	{ id = 10304, chance = 20000 }, -- hellspawn tail
+	{ name = "small topaz", chance = 5882, maxCount = 3 },
+	{ name = "hellspawn tail", chance = 20000 },
 }
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -352 },
 	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_FIREDAMAGE, minDamage = -150, maxDamage = -175, shootEffect = CONST_ANI_FIRE, effect = CONST_ME_FIREATTACK, target = false },
-	-- {name ="hellspawn soulfire", interval = 2000, chance = 10, range = 5, target = false}
+	{ name = "hellspawn soulfire", interval = 2000, chance = 10, range = 5, target = false },
 }
 
 monster.defenses = {
 	defense = 40,
-	armor = 40,
+	armor = 44,
+	mitigation = 1.32,
 	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_HEALING, minDamage = 120, maxDamage = 230, effect = CONST_ME_MAGIC_BLUE, target = false },
 	{ name = "speed", interval = 2000, chance = 15, speedChange = 270, effect = CONST_ME_MAGIC_RED, target = false, duration = 5000 },
 }

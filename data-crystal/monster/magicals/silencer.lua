@@ -14,7 +14,6 @@ monster.outfit = {
 }
 
 monster.events = {
-	"RoshamuulKillsDeath",
 }
 
 monster.raceId = 1014

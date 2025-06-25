@@ -34,7 +34,7 @@ TeleportUnique = {
 		itemId = 1949,
 		itemPos = { x = 560, y = 461, z = 6 },
 	},
-	[Storage.CrystalServer.Citizen.PremiumIsland] = {
+	[Storage.CrystalServer.Citizen.Thyranox] = {
 		itemId = 1949,
 		itemPos = { x = 425, y = 629, z = 7 },
 	},

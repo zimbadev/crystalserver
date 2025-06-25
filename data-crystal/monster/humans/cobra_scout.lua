@@ -126,4 +126,5 @@ monster.immunities = {
 	{ type = "bleed", condition = false },
 }
 
+
 mType:register(monster)

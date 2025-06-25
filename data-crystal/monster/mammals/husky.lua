@@ -13,7 +13,9 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {}
+monster.events = {
+
+}
 
 monster.raceId = 325
 monster.Bestiary = {
@@ -24,7 +26,7 @@ monster.Bestiary = {
 	SecondUnlock = 10,
 	CharmsPoints = 1,
 	Stars = 0,
-	Occurence = 1,
+	Occurrence = 1,
 	Locations = "Svargrond and Nibelor.",
 }
 
@@ -62,6 +64,7 @@ monster.flags = {
 	canWalkOnEnergy = false,
 	canWalkOnFire = false,
 	canWalkOnPoison = false,
+	isPreyExclusive = true,
 }
 
 monster.light = {

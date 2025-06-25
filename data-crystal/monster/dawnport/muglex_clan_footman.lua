@@ -14,7 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
-	"MorrisGoblinDeath",
+
 }
 
 monster.health = 50

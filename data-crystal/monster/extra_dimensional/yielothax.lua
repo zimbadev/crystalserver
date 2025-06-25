@@ -14,7 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
-	"YielothaxDeath",
+
 }
 
 monster.raceId = 717

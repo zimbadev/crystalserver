@@ -23,8 +23,7 @@ monster.Bestiary = {
 	CharmsPoints = 15,
 	Stars = 2,
 	Occurrence = 0,
-	Locations = "Venore Amazon Camp, Carlin Amazon Camp, Amazon Tower, east of Carlin, underneath the Fields of Glory, \z
-		west of Venore, Oasis Tomb, on the smallest of the Laguna Islands, Foreigner Quarter and Trade Quarter.",
+	Locations = "Venore Amazon Camp, Carlin Amazon Camp, Amazon Tower, east of Carlin, underneath the Fields of Glory, west of Venore, Oasis Tomb, on the smallest of the Laguna Islands, Foreigner Quarter and Trade Quarter.",
 }
 
 monster.health = 110
@@ -48,7 +47,7 @@ monster.flags = {
 	attackable = true,
 	hostile = true,
 	convinceable = true,
-	pushable = false,
+	pushable = true,
 	rewardBoss = false,
 	illusionable = true,
 	canPushItems = true,
@@ -71,22 +70,22 @@ monster.light = {
 monster.voices = {
 	interval = 5000,
 	chance = 10,
-	{ text = "Yeeee ha!", yell = false },
 	{ text = "Your head shall be mine!", yell = false },
 	{ text = "Your head will be mine!", yell = false },
+	{ text = "Yeeee ha!", yell = false },
 }
 
 monster.loot = {
-	{ id = 3267, chance = 80000 }, -- dagger
+	{ name = "dagger", chance = 80000 },
 	{ id = 3114, chance = 80000, maxCount = 2 }, -- skull
-	{ id = 3031, chance = 40000, maxCount = 20 }, -- gold coin
-	{ id = 3602, chance = 30000 }, -- brown bread
-	{ id = 3273, chance = 23000 }, -- sabre
-	{ id = 11443, chance = 10000 }, -- girlish hair decoration
-	{ id = 11444, chance = 5200 }, -- protective charm
+	{ name = "gold coin", chance = 40000, maxCount = 20 },
+	{ name = "brown bread", chance = 30000 },
+	{ name = "sabre", chance = 23000 },
+	{ name = "girlish hair decoration", chance = 10000 },
+	{ name = "protective charm", chance = 5200 },
 	{ id = 2920, chance = 1000 }, -- torch
-	{ id = 3008, chance = 260 }, -- crystal necklace
-	{ id = 3030, chance = 130 }, -- small ruby
+	{ name = "crystal necklace", chance = 260 },
+	{ name = "small ruby", chance = 130 },
 }
 
 monster.attacks = {
@@ -97,6 +96,7 @@ monster.attacks = {
 monster.defenses = {
 	defense = 10,
 	armor = 10,
+	mitigation = 0.28,
 }
 
 monster.elements = {

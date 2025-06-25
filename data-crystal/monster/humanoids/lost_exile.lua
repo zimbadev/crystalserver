@@ -14,7 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
-	"LastExileDeath",
+
 }
 
 monster.raceId = 1529
@@ -67,6 +67,7 @@ monster.flags = {
 	canWalkOnEnergy = false,
 	canWalkOnFire = false,
 	canWalkOnPoison = false,
+	isPreyExclusive = true,
 }
 
 monster.light = {

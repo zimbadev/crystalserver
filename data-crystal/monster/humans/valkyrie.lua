@@ -7,7 +7,7 @@ monster.outfit = {
 	lookType = 139,
 	lookHead = 113,
 	lookBody = 38,
-	lookLegs = 95,
+	lookLegs = 76,
 	lookFeet = 96,
 	lookAddons = 0,
 	lookMount = 0,
@@ -79,20 +79,20 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ id = 3277, chance = 55000, maxCount = 3 }, -- spear
-	{ id = 3031, chance = 32000, maxCount = 12 }, -- gold coin
-	{ id = 3577, chance = 30000 }, -- meat
-	{ id = 3358, chance = 10000 }, -- chain armor
-	{ id = 3585, chance = 7500, maxCount = 2 }, -- red apple
-	{ id = 11443, chance = 5900 }, -- girlish hair decoration
-	{ id = 3347, chance = 5155 }, -- hunting spear
-	{ id = 11444, chance = 3200 }, -- protective charm
-	{ id = 3084, chance = 1100 }, -- protection amulet
-	{ id = 3357, chance = 830 }, -- plate armor
+	{ name = "spear", chance = 55000, maxCount = 3 },
+	{ name = "gold coin", chance = 32000, maxCount = 12 },
+	{ name = "meat", chance = 30000 },
+	{ name = "chain armor", chance = 10000 },
+	{ name = "red apple", chance = 7500, maxCount = 2 },
+	{ name = "girlish hair decoration", chance = 5900 },
+	{ name = "hunting spear", chance = 5155 },
+	{ name = "protective charm", chance = 3200 },
+	{ name = "protection amulet", chance = 1100 },
+	{ name = "plate armor", chance = 830 },
 	{ id = 3114, chance = 760 }, -- skull
-	{ id = 266, chance = 500 }, -- health potion
-	{ id = 3275, chance = 430 }, -- double axe
-	{ id = 3028, chance = 130 }, -- small diamond
+	{ name = "health potion", chance = 500 },
+	{ name = "double axe", chance = 430 },
+	{ name = "small diamond", chance = 130 },
 }
 
 monster.attacks = {
@@ -103,6 +103,7 @@ monster.attacks = {
 monster.defenses = {
 	defense = 12,
 	armor = 12,
+	mitigation = 0.36,
 }
 
 monster.elements = {

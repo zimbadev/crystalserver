@@ -37,7 +37,6 @@ monster.race = "venom"
 monster.corpse = 2127
 monster.speed = 60
 monster.manaCost = 0
-monster.maxSummons = 3
 
 monster.changeTarget = {
 	interval = 4000,
@@ -66,6 +65,7 @@ monster.flags = {
 	canWalkOnEnergy = false,
 	canWalkOnFire = false,
 	canWalkOnPoison = true,
+	isPreyExclusive = true,
 }
 
 monster.light = {
@@ -74,9 +74,9 @@ monster.light = {
 }
 
 monster.summon = {
-	maxSummons = 1,
+	maxSummons = 3,
 	summons = {
-		{ name = "Slime", chance = 10, interval = 2000 },
+		{ name = "Slime", chance = 10, interval = 2000, count = 3 },
 	},
 }
 
@@ -94,7 +94,8 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 15,
-	armor = 15,
+	armor = 3,
+	mitigation = 0.25,
 }
 
 monster.elements = {

@@ -75,14 +75,14 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ id = 3031, chance = 50840, maxCount = 12 }, -- gold coin
+	{ name = "gold coin", chance = 50840, maxCount = 12 },
 	{ id = 3130, chance = 8300 }, -- twigs
-	{ id = 3272, chance = 15500 }, -- rapier
-	{ id = 3277, chance = 21500 }, -- spear
+	{ name = "rapier", chance = 15500 },
+	{ name = "spear", chance = 21500 },
 	{ id = 3412, chance = 15850 }, -- wooden shield
-	{ id = 3562, chance = 1200 }, -- coat
+	{ name = "coat", chance = 1200 },
 	{ id = 3578, chance = 18000 }, -- fish
-	{ id = 9648, chance = 2000 }, -- frosty ear of a troll
+	{ name = "frosty ear of a troll", chance = 2000 },
 }
 
 monster.attacks = {
@@ -91,20 +91,21 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 15,
-	armor = 15,
+	armor = 6,
+	mitigation = 0.23,
 }
 
 monster.elements = {
 	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = -10 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = -15 },
 	{ type = COMBAT_EARTHDAMAGE, percent = -10 },
-	{ type = COMBAT_FIREDAMAGE, percent = 50 },
+	{ type = COMBAT_FIREDAMAGE, percent = 40 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
 	{ type = COMBAT_ICEDAMAGE, percent = 0 },
 	{ type = COMBAT_HOLYDAMAGE, percent = 10 },
-	{ type = COMBAT_DEATHDAMAGE, percent = -15 },
+	{ type = COMBAT_DEATHDAMAGE, percent = -10 },
 }
 
 monster.immunities = {

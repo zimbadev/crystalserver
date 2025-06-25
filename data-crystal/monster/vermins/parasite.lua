@@ -14,7 +14,6 @@ monster.outfit = {
 }
 
 monster.events = {
-	"ParasiteDeath",
 }
 
 monster.health = 550

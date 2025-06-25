@@ -49,7 +49,7 @@ monster.flags = {
 	summonable = true,
 	attackable = true,
 	hostile = true,
-	convinceable = true,
+	convinceable = false,
 	pushable = false,
 	rewardBoss = false,
 	illusionable = true,
@@ -80,18 +80,18 @@ monster.voices = {
 
 monster.loot = {
 	{ id = 2815, chance = 2000 }, -- scroll
-	{ id = 2885, chance = 820 }, -- brown flask
+	{ name = "brown flask", chance = 820 },
 	{ id = 2914, chance = 880 }, -- lamp
-	{ id = 3031, chance = 15000, maxCount = 18 }, -- gold coin
+	{ name = "gold coin", chance = 15000, maxCount = 18 },
 	{ id = 3050, chance = 100 }, -- power ring
-	{ id = 3061, chance = 1002 }, -- life crystal
-	{ id = 3077, chance = 2240 }, -- ankh
+	{ name = "life crystal", chance = 1002 },
+	{ name = "ankh", chance = 2240 },
 	{ id = 3289, chance = 440 }, -- staff
-	{ id = 3551, chance = 710 }, -- sandals
-	{ id = 3600, chance = 20000 }, -- bread
-	{ id = 9646, chance = 4930 }, -- book of prayers
-	{ id = 11492, chance = 2950 }, -- rope belt
-	{ id = 11493, chance = 1001 }, -- safety pin
+	{ name = "sandals", chance = 710 },
+	{ name = "bread", chance = 20000 },
+	{ name = "book of prayers", chance = 4930 },
+	{ name = "rope belt", chance = 2950 },
+	{ name = "safety pin", chance = 1001 },
 }
 
 monster.attacks = {
@@ -100,13 +100,14 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 30,
-	armor = 30,
+	armor = 25,
+	mitigation = 1.37,
 	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_HEALING, minDamage = 30, maxDamage = 50, effect = CONST_ME_MAGIC_BLUE, target = false },
 	{ name = "speed", interval = 2000, chance = 15, speedChange = 300, effect = CONST_ME_MAGIC_RED, target = false, duration = 5000 },
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = -10 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = -5 },
 	{ type = COMBAT_ENERGYDAMAGE, percent = 0 },
 	{ type = COMBAT_EARTHDAMAGE, percent = 0 },
 	{ type = COMBAT_FIREDAMAGE, percent = 0 },
