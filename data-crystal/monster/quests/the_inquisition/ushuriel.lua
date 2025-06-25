@@ -14,6 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
+	"InquisitionBossDeath",
 }
 
 monster.health = 31500

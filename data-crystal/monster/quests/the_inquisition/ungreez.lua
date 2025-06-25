@@ -14,6 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
+	"UngreezDeath",
 }
 
 monster.health = 8200

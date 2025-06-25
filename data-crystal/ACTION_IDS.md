@@ -15,7 +15,7 @@
 * Venore = 9058
 * Karmia = 9059
 * Tiquanda = 9060
-* Thyranox Island = 9061
+* Thyranox = 9061
 * Folda = 9062,
 * Liberty Bay = 9063
 * Frostania = 9064
