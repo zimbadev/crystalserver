@@ -873,10 +873,6 @@ bool IOLoginDataSave::savePlayerNamesAndChangeName(const std::shared_ptr<Player>
 }
 
 bool IOLoginDataSave::savePlayerOutfits(const std::shared_ptr<Player> &player) {
-	if (!player || !player->isOutfitsModified()) {
-		return false;
-	}
-
 	if (!player) {
 		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
 		return false;
@@ -902,10 +898,6 @@ bool IOLoginDataSave::savePlayerOutfits(const std::shared_ptr<Player> &player) {
 }
 
 bool IOLoginDataSave::savePlayerMounts(const std::shared_ptr<Player> &player) {
-	if (!player || !player->isMountsModified()) {
-		return false;
-	}
-
 	if (!player) {
 		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
 		return false;
