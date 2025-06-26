@@ -36,8 +36,7 @@ monster.strategiesTarget = {
 	damage = 10,
 }
 
-monster.events = {
-}
+monster.events = {}
 
 monster.flags = {
 	summonable = false,

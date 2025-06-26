@@ -15,8 +15,7 @@ monster.speed = 0
 monster.manaCost = 100
 monster.maxSummons = 0
 
-monster.events = {
-}
+monster.events = {}
 
 monster.changeTarget = {
 	interval = 4000,

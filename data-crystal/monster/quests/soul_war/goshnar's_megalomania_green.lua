@@ -31,8 +31,7 @@ monster.changeTarget = {
 	chance = 10,
 }
 
-monster.events = {
-}
+monster.events = {}
 
 monster.strategiesTarget = {
 	nearest = 80,

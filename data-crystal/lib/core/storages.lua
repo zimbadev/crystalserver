@@ -95,7 +95,7 @@ Storage = {
 			Example = 9000,
 			Door = 9001,
 		},
-		U7_8 = { 
+		U7_8 = {
 			ThePitsOfInferno = {
 				ShortcutHubDoor = 41017,
 				ShortcutLeverDoor = 41018,
@@ -107,7 +107,7 @@ Storage = {
 				ThroneBazir = 41024,
 				ThroneAshfalor = 41025,
 				ThronePumin = 41026,
-				Levers = 41027
+				Levers = 41027,
 			},
 		},
 		U8_0 = { -- update 8.0 - Reserved Storages 41151 - 41350
@@ -145,7 +145,7 @@ Storage = {
 				RewardRoomText = 41708,
 			},
 		},
-				U8_2 = {
+		U8_2 = {
 			TheDemonOak = {
 				AxeBlowsBird = 10001,
 				AxeBlowsLeft = 10002,

@@ -42,9 +42,7 @@ monster.strategiesTarget = {
 	nearest = 100,
 }
 
-monster.events = {
-
-}
+monster.events = {}
 
 monster.flags = {
 	summonable = true,

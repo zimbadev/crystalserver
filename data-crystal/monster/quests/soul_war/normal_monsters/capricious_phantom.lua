@@ -26,8 +26,7 @@ monster.Bestiary = {
 	Locations = "Ebb and Flow.",
 }
 
-monster.events = {
-}
+monster.events = {}
 
 monster.health = 30000
 monster.maxHealth = 30000

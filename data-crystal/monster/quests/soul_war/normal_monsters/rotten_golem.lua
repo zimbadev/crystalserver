@@ -26,8 +26,7 @@ monster.Bestiary = {
 	Locations = "Rotten Wasteland.",
 }
 
-monster.events = {
-}
+monster.events = {}
 
 monster.health = 28000
 monster.maxHealth = 28000
