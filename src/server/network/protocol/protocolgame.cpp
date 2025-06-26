@@ -3633,7 +3633,6 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 	msg.add<uint32_t>(std::min<int32_t>(player->getMana(), std::numeric_limits<uint16_t>::max()));
 	msg.add<uint32_t>(std::min<int32_t>(player->getMaxMana(), std::numeric_limits<uint16_t>::max()));
 	msg.addByte(player->getSoul());
-	msg.add<uint16_t>(player->getStaminaMinutes());
 	if (g_configManager().getBoolean(STAMINA_SYSTEM)) {
 		msg.add<uint16_t>(player->getStaminaMinutes());
 	} else {
