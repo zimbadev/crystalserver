@@ -56,8 +56,8 @@
 	<house name="Venore House IX" houseid="56" entryx="414" entryy="393" entryz="6" rent="11000" townid="5" size="72" clientid="0" beds="3" />
 	<house name="Venore House X" houseid="57" entryx="371" entryy="407" entryz="6" rent="8000" townid="5" size="41" clientid="0" beds="3" />
 	<house name="Venore House XI" houseid="58" entryx="371" entryy="407" entryz="6" rent="8000" townid="5" size="48" clientid="0" beds="3" />
-	<house name="Venore House XII" houseid="59" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="25" clientid="0" beds="3" />
-	<house name="Venore House XIII" houseid="60" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="25" clientid="0" beds="3" />
+	<house name="Venore House XII" houseid="59" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="29" clientid="0" beds="3" />
+	<house name="Venore House XIII" houseid="60" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="29" clientid="0" beds="3" />
 	<house name="Venore House XIV" houseid="61" entryx="401" entryy="435" entryz="7" rent="8000" townid="5" size="26" clientid="0" beds="3" />
 	<house name="Venore House XV" houseid="62" entryx="404" entryy="435" entryz="7" rent="8000" townid="5" size="26" clientid="0" beds="3" />
 	<house name="Thyranox House I" houseid="63" entryx="447" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
