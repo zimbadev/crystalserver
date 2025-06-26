@@ -14,7 +14,6 @@ monster.outfit = {
 }
 
 monster.events = {
-	"LizardNobleDeath",
 }
 
 monster.raceId = 656
@@ -64,6 +63,7 @@ monster.flags = {
 	canWalkOnEnergy = false,
 	canWalkOnFire = true,
 	canWalkOnPoison = true,
+	isPreyExclusive = true,
 }
 
 monster.light = {

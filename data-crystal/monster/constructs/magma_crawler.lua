@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Magma Crawler")
 local monster = {}
 
 monster.description = "a magma crawler"
-monster.experience = 2700
+monster.experience = 3900
 monster.outfit = {
 	lookType = 492,
 	lookHead = 0,
@@ -35,7 +35,7 @@ monster.manaCost = 0
 
 monster.changeTarget = {
 	interval = 4000,
-	chance = 10,
+	chance = 5,
 }
 
 monster.strategiesTarget = {
@@ -84,7 +84,7 @@ monster.loot = {
 	{ name = "fire sword", chance = 1680 },
 	{ name = "black shield", chance = 1550 },
 	{ name = "iron ore", chance = 4280 },
-	{ name = "white piece of cloth", chance = 2310 },
+	{ id = 5909, chance = 2310 }, -- white piece of cloth
 	{ name = "red piece of cloth", chance = 930 },
 	{ name = "yellow piece of cloth", chance = 2980 },
 	{ name = "great mana potion", chance = 6500 },
@@ -102,7 +102,6 @@ monster.loot = {
 	{ name = "magma clump", chance = 11600 },
 	{ name = "blazing bone", chance = 11500 },
 	{ name = "blazing bone", chance = 12220 },
-	{ name = "fire bug", chance = 1220 },
 }
 
 monster.attacks = {
@@ -119,7 +118,7 @@ monster.defenses = {
 	defense = 45,
 	armor = 84,
 	mitigation = 2.51,
-	{ name = "invisible", interval = 2000, chance = 10, effect = CONST_ME_MAGIC_BLUE },
+	{ name = "invisible", interval = 2000, chance = 5, effect = CONST_ME_MAGIC_BLUE },
 }
 
 monster.elements = {
@@ -130,7 +129,7 @@ monster.elements = {
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 10 },
+	{ type = COMBAT_ICEDAMAGE, percent = 0 },
 	{ type = COMBAT_HOLYDAMAGE, percent = 0 },
 	{ type = COMBAT_DEATHDAMAGE, percent = 25 },
 }

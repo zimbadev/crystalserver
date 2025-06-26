@@ -62,19 +62,19 @@ local function addTravelKeyword(keyword, text, cost, destination)
 	travelKeyword:addChildKeyword({ "no" }, StdModule.say, { npcHandler = npcHandler, text = "You shouldn't miss the experience.", reset = true })
 end
 
-addTravelKeyword("premium island", "Should I bring you to Premium island for 200 gold?", 200, Position(435, 623, 6))
+addTravelKeyword("Thyranox island", "Should I bring you to Thyranox island for 200 gold?", 200, Position(435, 623, 6))
 addTravelKeyword("tortoise", "Should I bring you to Torrtoise for 150 gold?", 150, Position(620, 627, 7))
 addTravelKeyword("karmia", "Should I bring you to Karmia for 250 gold?", 250, Position(520, 533, 6))
 addTravelKeyword("tiquanda", "Should I bring you to Tiquanda for 150 gold?", 150, Position(567, 464, 6))
 addTravelKeyword("liberty bay", "Should I bring you to Venore for 130 gold?", 130, Position(567, 696, 6))
 addTravelKeyword("cobra bastion", "Should I bring you to Venore for 130 gold?", 130, Position(221, 608, 7))
 
-keywordHandler:addKeyword({ "sail" }, StdModule.say, { npcHandler = npcHandler, text = "Welcome on board, noble |PLAYERNAME|. I can bring you to {Premium Island}, {Karmia}, {Cobra Bastion}, {Tiquanda}, {Liberty Bay} or {Tortoise}. Where would you like to go?." })
-keywordHandler:addKeyword({ "passage" }, StdModule.say, { npcHandler = npcHandler, text = "Welcome on board, noble |PLAYERNAME|. I can bring you to {Premium Island}, {Karmia}, {Tiquanda}, {Liberty Bay} or {Tortoise}. Where would you like to go?." })
+keywordHandler:addKeyword({ "sail" }, StdModule.say, { npcHandler = npcHandler, text = "Welcome on board, noble |PLAYERNAME|. I can bring you to {Thyranox}, {Karmia}, {Cobra Bastion}, {Tiquanda}, {Liberty Bay} or {Tortoise}. Where would you like to go?." })
+keywordHandler:addKeyword({ "passage" }, StdModule.say, { npcHandler = npcHandler, text = "Welcome on board, noble |PLAYERNAME|. I can bring you to {Thyranox}, {Karmia}, {Tiquanda}, {Liberty Bay} or {Tortoise}. Where would you like to go?." })
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I am the captain of this ship." })
 keywordHandler:addKeyword({ "captain" }, StdModule.say, { npcHandler = npcHandler, text = "I am the captain of this ship." })
 
-npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|. I can travel to {Premium Island}, {Karmia}, {Cobra Bastion}, {Tiquanda}, {Liberty Bay} or {Tortoise}. Where would you like to go?.")
+npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|. I can travel to {Thyranox}, {Karmia}, {Cobra Bastion}, {Tiquanda}, {Liberty Bay} or {Tortoise}. Where would you like to go?.")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Good bye.")
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)

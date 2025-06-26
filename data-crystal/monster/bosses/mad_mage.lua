@@ -82,7 +82,7 @@ monster.loot = {
 	{ id = 3035, chance = 48000, maxCount = 5 }, -- platinum coin
 	{ id = 237, chance = 21000, maxCount = 5 }, -- strong mana potion
 	{ id = 236, chance = 17000, maxCount = 5 }, -- strong health potion
-	{ id = 3062, chance = 9000 }, -- mind stone
+	--{ id = 3062, chance = 9000 }, -- mind stone
 	{ id = 3049, chance = 6000 }, -- stealth ring
 	{ id = 7368, chance = 4000, maxCount = 4 }, -- assassin star
 	{ id = 3728, chance = 4000, maxCount = 3 }, -- dark mushroom
@@ -132,19 +132,5 @@ monster.immunities = {
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },
 }
-
-mType.onThink = function(monster, interval) end
-
-mType.onAppear = function(monster, creature)
-	if monster:getType():isRewardBoss() then
-		monster:setReward(true)
-	end
-end
-
-mType.onDisappear = function(monster, creature) end
-
-mType.onMove = function(monster, creature, fromPosition, toPosition) end
-
-mType.onSay = function(monster, creature, type, message) end
 
 mType:register(monster)

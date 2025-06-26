@@ -38,6 +38,7 @@
 #include "lua/creature/events.hpp"
 #include "map/spectators.hpp"
 #include "creatures/players/player.hpp"
+#include "utils/tools.hpp"
 
 int32_t Combat::getLevelFormula(const std::shared_ptr<Player> &player, const std::shared_ptr<Spell> &wheelSpell, const CombatDamage &damage) const {
 	if (!player) {
@@ -56,6 +57,47 @@ int32_t Combat::getLevelFormula(const std::shared_ptr<Player> &player, const std
 
 	int32_t levelFormula = player->getLevel() * 2 + (player->getMagicLevel() + player->getSpecializedMagicLevel(damage.primary.type, true)) * 3;
 	return levelFormula;
+}
+
+static void applyImproveMonkAttackSpender(const std::shared_ptr<Player> &player, CombatDamage &damage) {
+	if (!player) {
+		return;
+	}
+
+	if (damage.instantSpellName.empty()) {
+		return;
+	}
+
+	const std::string &spellName = damage.instantSpellName;
+	if (harmonySpells.find(spellName) == harmonySpells.end()) {
+		return;
+	}
+
+	const uint8_t harmonyPoints = player->getHarmony();
+	if (harmonyPoints <= 0 || harmonyPoints > 5) {
+		return;
+	}
+
+	uint8_t baseHarmonyBonusPercent = 8; // 8, 16, 32, 64, 128
+
+	if (player->getVirtue() == VIRTUE_HARMONY) {
+		baseHarmonyBonusPercent += (player->isSerene() ? 8 : 4);
+	}
+
+	const uint8_t stage = player->wheel()->getStage(WheelStage_t::ASCETIC);
+	if (stage >= 3) {
+		baseHarmonyBonusPercent += 3;
+	} else if (stage >= 2) {
+		baseHarmonyBonusPercent += 2;
+	} else if (stage >= 1) {
+		baseHarmonyBonusPercent += 1;
+	}
+
+	const int32_t totalBonusPercent = static_cast<int32_t>(baseHarmonyBonusPercent * (1 << (harmonyPoints - 1)));
+
+	const float multiplier = 1.0f + (totalBonusPercent / 100.0f);
+	damage.primary.value = static_cast<int32_t>(damage.primary.value * multiplier);
+	damage.secondary.value = static_cast<int32_t>(damage.secondary.value * multiplier);
 }
 
 CombatDamage Combat::getCombatDamage(const std::shared_ptr<Creature> &creature, const std::shared_ptr<Creature> &target) const {
@@ -115,6 +157,11 @@ CombatDamage Combat::getCombatDamage(const std::shared_ptr<Creature> &creature, 
 				}
 			}
 		}
+
+		if (attackerPlayer) {
+			applyImproveMonkAttackSpender(attackerPlayer, damage);
+		}
+
 		if (attackerPlayer && wheelSpell && wheelSpell->isInstant()) {
 			wheelSpell->getCombatDataAugment(attackerPlayer, damage);
 		}
@@ -152,6 +199,9 @@ CombatType_t Combat::ConditionToDamageType(ConditionType_t type) {
 		case CONDITION_POISON:
 			return COMBAT_EARTHDAMAGE;
 
+		case CONDITION_AGONY:
+			return COMBAT_AGONYDAMAGE;
+
 		case CONDITION_FREEZING:
 			return COMBAT_ICEDAMAGE;
 
@@ -181,6 +231,9 @@ ConditionType_t Combat::DamageToConditionType(CombatType_t type) {
 
 		case COMBAT_EARTHDAMAGE:
 			return CONDITION_POISON;
+
+		case CONDITION_AGONY:
+			return CONDITION_AGONY;
 
 		case COMBAT_ICEDAMAGE:
 			return CONDITION_FREEZING;
@@ -1104,6 +1157,9 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 	setChainCallback(g_configManager().getNumber(COMBAT_CHAIN_TARGETS), 1, true);
 
 	switch (weaponType) {
+		case WEAPON_FIST:
+			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_FIST), HUMAN_CLOSE_ATK_FIST, CONST_ME_HITAREA);
+			break;
 		case WEAPON_SWORD:
 			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_SWORD), MELEE_ATK_SWORD, CONST_ME_SLASH);
 			break;
@@ -2471,10 +2527,8 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 			// If is single target, apply the damage directly
 			if (isSingleCombat) {
 				damage = targetDamage;
-				continue;
 			}
 
-			// If is multi target, apply the damage to each target
 			targetCreature->setCombatDamage(targetDamage);
 		}
 	} else if (monster) {

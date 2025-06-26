@@ -81,19 +81,19 @@ monster.voices = {
 
 monster.loot = {
 	{ id = 3007, chance = 1500 }, -- crystal ring
-	{ id = 3017, chance = 4000 }, -- silver brooch
-	{ id = 3027, chance = 1000 }, -- black pearl
-	{ id = 3031, chance = 38000, maxCount = 80 }, -- gold coin
-	{ id = 3045, chance = 5000 }, -- strange talisman
+	{ name = "silver brooch", chance = 4000 },
+	{ name = "black pearl", chance = 1000 },
+	{ name = "gold coin", chance = 38000, maxCount = 80 },
+	{ name = "strange talisman", chance = 5000 },
 	{ id = 3046, chance = 5800 }, -- magic light wand
-	{ id = 3054, chance = 100 }, -- silver amulet
-	{ id = 3299, chance = 450 }, -- poison dagger
-	{ id = 3429, chance = 170 }, -- black shield
-	{ id = 3492, chance = 19000, maxCount = 3 }, -- worm
-	{ id = 5914, chance = 900 }, -- yellow piece of cloth
-	{ id = 9649, chance = 10000 }, -- gauze bandage
-	{ id = 10290, chance = 10 }, -- mini mummy
-	{ id = 11466, chance = 11690 }, -- flask of embalming fluid
+	{ name = "silver amulet", chance = 100 },
+	{ name = "poison dagger", chance = 450 },
+	{ name = "black shield", chance = 170 },
+	{ name = "worm", chance = 19000, maxCount = 3 },
+	{ name = "yellow piece of cloth", chance = 900 },
+	{ name = "gauze bandage", chance = 10000 },
+	{ name = "mini mummy", chance = 10 },
+	{ name = "flask of embalming fluid", chance = 11690 },
 }
 
 monster.attacks = {
@@ -104,7 +104,8 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 15,
-	armor = 15,
+	armor = 14,
+	mitigation = 0.59,
 }
 
 monster.elements = {

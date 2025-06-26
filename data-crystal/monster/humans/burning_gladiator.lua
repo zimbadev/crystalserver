@@ -14,7 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
-	"FafnarMissionsDeath",
+
 }
 
 monster.raceId = 1798

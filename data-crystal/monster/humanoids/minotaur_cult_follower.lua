@@ -14,7 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
-	"MinotaurCultTaskDeath",
+
 }
 
 monster.raceId = 1508

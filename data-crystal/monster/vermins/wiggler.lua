@@ -14,7 +14,6 @@ monster.outfit = {
 }
 
 monster.events = {
-	"WigglerDeath",
 }
 
 monster.raceId = 899

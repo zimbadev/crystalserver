@@ -14,7 +14,6 @@ monster.outfit = {
 }
 
 monster.events = {
-	"MiddleSpikeDeath",
 }
 
 monster.raceId = 869

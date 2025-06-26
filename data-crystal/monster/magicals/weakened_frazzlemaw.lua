@@ -14,7 +14,6 @@ monster.outfit = {
 }
 
 monster.events = {
-	"ThreatenedDreamsNightmareMonstersDeath",
 }
 
 monster.raceId = 1442

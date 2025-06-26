@@ -44,7 +44,6 @@ monster.flags = {
 }
 
 monster.events = {
-	"TheWelterEgg",
 }
 
 monster.light = {

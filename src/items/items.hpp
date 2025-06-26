@@ -42,6 +42,9 @@ struct Abilities {
 	// damage abilities modifiers
 	int16_t absorbPercent[COMBAT_COUNT] = { 0 };
 
+	// mantra abilities modifiers
+	int16_t mantraAbsorbValue[COMBAT_COUNT] = { 0 };
+
 	// relfect abilities modifires
 	int16_t reflectPercent[COMBAT_COUNT] = { 0 };
 
@@ -378,6 +381,9 @@ public:
 	bool spellbook = false;
 	bool isWrapKit = false;
 	bool m_canBeUsedByGuests = false;
+
+	std::string elementalBond;
+	int16_t mantra = 0;
 };
 
 class Items {

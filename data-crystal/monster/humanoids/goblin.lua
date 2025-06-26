@@ -71,26 +71,26 @@ monster.light = {
 monster.voices = {
 	interval = 5000,
 	chance = 10,
-	{ text = "Me have him!", yell = false },
 	{ text = "Zig Zag! Gobo attack!", yell = false },
-	{ text = "Help! Goblinkiller!", yell = false },
-	{ text = "Bugga! Bugga!", yell = false },
 	{ text = "Me green, me mean!", yell = false },
+	{ text = "Bugga! Bugga!", yell = false },
+	{ text = "Help! Goblinkiller!", yell = false },
+	{ text = "Me have him!", yell = false },
 }
 
 monster.loot = {
-	{ id = 1781, chance = 15290, maxCount = 3 }, -- small stone
-	{ id = 3031, chance = 50320, maxCount = 9 }, -- gold coin
+	{ name = "small stone", chance = 15290, maxCount = 3 },
+	{ name = "gold coin", chance = 50320, maxCount = 9 },
 	{ id = 3115, chance = 1130 }, -- bone
-	{ id = 3120, chance = 1000 }, -- mouldy cheese
-	{ id = 3267, chance = 1800 }, -- dagger
-	{ id = 3294, chance = 8870 }, -- short sword
-	{ id = 3337, chance = 4900 }, -- bone club
-	{ id = 3355, chance = 1940 }, -- leather helmet
-	{ id = 3361, chance = 2510 }, -- leather armor
-	{ id = 3462, chance = 9700 }, -- small axe
+	{ name = "mouldy cheese", chance = 1000 },
+	{ name = "dagger", chance = 1800 },
+	{ name = "short sword", chance = 8870 },
+	{ name = "bone club", chance = 4900 },
+	{ name = "leather helmet", chance = 1940 },
+	{ name = "leather armor", chance = 2510 },
+	{ name = "small axe", chance = 9700 },
 	{ id = 3578, chance = 12750 }, -- fish
-	{ id = 11539, chance = 910 }, -- goblin ear
+	{ name = "goblin ear", chance = 910 },
 }
 
 monster.attacks = {
@@ -100,19 +100,20 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 10,
-	armor = 10,
+	armor = 6,
+	mitigation = 0.20,
 }
 
 monster.elements = {
 	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
 	{ type = COMBAT_ENERGYDAMAGE, percent = 20 },
-	{ type = COMBAT_EARTHDAMAGE, percent = -12 },
+	{ type = COMBAT_EARTHDAMAGE, percent = -10 },
 	{ type = COMBAT_FIREDAMAGE, percent = 0 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
 	{ type = COMBAT_ICEDAMAGE, percent = 0 },
-	{ type = COMBAT_HOLYDAMAGE, percent = 1 },
+	{ type = COMBAT_HOLYDAMAGE, percent = 20 },
 	{ type = COMBAT_DEATHDAMAGE, percent = -10 },
 }
 

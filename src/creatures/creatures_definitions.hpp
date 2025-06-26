@@ -125,6 +125,7 @@ enum ConditionType_t : uint8_t {
 	CONDITION_BAKRAGORE = 34,
 	CONDITION_GOSHNARTAINT = 35,
 	CONDITION_POWERLESS = 36,
+	CONDITION_AGONY = 37,
 
 	// Need the last ever
 	CONDITION_COUNT
@@ -141,6 +142,7 @@ constexpr bool IsConditionSuppressible(ConditionType_t condition) {
 		CONDITION_DROWN,
 		CONDITION_FREEZING,
 		CONDITION_CURSED,
+		CONDITION_AGONY,
 	};
 
 	return std::ranges::any_of(suppressibleConditions, [condition](const auto &suppressibleCondition) {
@@ -758,13 +760,16 @@ enum Vocation_t : uint16_t {
 	VOCATION_ELDER_DRUID = 6,
 	VOCATION_ROYAL_PALADIN = 7,
 	VOCATION_ELITE_KNIGHT = 8,
-	VOCATION_LAST = VOCATION_ELITE_KNIGHT,
+	VOCATION_MONK = 9,
+	VOCATION_EXALTED_MONK = 10,
+	VOCATION_LAST = VOCATION_EXALTED_MONK,
 
 	// Cip tibia client ids
 	VOCATION_KNIGHT_CIP = 1,
 	VOCATION_PALADIN_CIP = 2,
 	VOCATION_SORCERER_CIP = 3,
-	VOCATION_DRUID_CIP = 4
+	VOCATION_DRUID_CIP = 4,
+	VOCATION_MONK_CIP = 5
 };
 
 enum FightMode_t : uint8_t {
@@ -1388,6 +1393,13 @@ enum class CreatureIconQuests_t {
 	Hazard,
 	BrownSkull,
 	BloodDrop,
+};
+
+enum VirtueMonk_t : uint8_t {
+	VIRTUE_NONE = 0,
+	VIRTUE_HARMONY = 1,
+	VIRTUE_JUSTICE = 2,
+	VIRTUE_SUSTAIN = 3,
 };
 
 struct CreatureIcon {

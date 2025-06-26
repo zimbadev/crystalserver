@@ -195,15 +195,14 @@ momentumChanceFormulaA = 0.05
 momentumChanceFormulaB = 1.9
 momentumChanceFormulaC = 0.05
 
-transcendanceChanceFormulaA = 0.0127
-transcendanceChanceFormulaB = 0.1070
-transcendanceChanceFormulaC = 0.0073
+transcendenceChanceFormulaA = 0.0127
+transcendenceChanceFormulaB = 0.1070
+transcendenceChanceFormulaC = 0.0073
+transcendenceAvatarDuration = 7000
 
 amplificationChanceFormulaA = 0.4
 amplificationChanceFormulaB = 1.7
 amplificationChanceFormulaC = 0.4
-
-transcendanceAvatarDuration = 7000
 
 -- Bestiary & Bosstiary system
 -- NOTE: bestiaryKillMultiplier, multiplier value of monster killed, default 1
@@ -322,7 +321,7 @@ minTownIdToBankTransferFromMain = 4
 -- NOTE: Set toggleSpecialTiles to true if you want to use the system.
 -- NOTE: freeTownId = 8 is Thais city.
 freeTownId = 8
-toggleSpecialTiles = true
+toggleSpecialTiles = false
 
 -- Cosmetics
 -- NOTE: enableSupportOutfit enable GODS and GMS to select support outfit (gamemaster, customer support or community manager)
@@ -515,6 +514,7 @@ chainSystemVipOnly = true
 chainSystemModifyMagic = false
 combatChainDelay = 50
 combatChainTargets = 5
+combatChainSkillFormulaFist = 1.0
 combatChainSkillFormulaAxe = 0.9
 combatChainSkillFormulaClub = 0.7
 combatChainSkillFormulaSword = 1.1

@@ -84,7 +84,7 @@ monster.loot = {
 	{ name = "fire sword", chance = 1680 },
 	{ name = "black shield", chance = 1550 },
 	{ name = "iron ore", chance = 4280 },
-	{ name = "white piece of cloth", chance = 2310 },
+	{ id = 5909, chance = 2310 }, -- white piece of cloth
 	{ name = "red piece of cloth", chance = 930 },
 	{ name = "yellow piece of cloth", chance = 2980 },
 	{ name = "great mana potion", chance = 6500 },

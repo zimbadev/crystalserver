@@ -4,9 +4,10 @@ local config = {
 	[Storage.CrystalServer.Citizen.Inferno] = TOWNS_LIST.INFERNO,
 	[Storage.CrystalServer.Citizen.Venore] = TOWNS_LIST.VENORE,
 	[Storage.CrystalServer.Citizen.Tiquanda] = TOWNS_LIST.TIQUANDA,
-	[Storage.CrystalServer.Citizen.PremiumIsland] = TOWNS_LIST.PREMIUM_ISLAND,
+	[Storage.CrystalServer.Citizen.Thyranox] = TOWNS_LIST.THYRANOX,
 	[Storage.CrystalServer.Citizen.Folda] = TOWNS_LIST.FOLDA,
 	[Storage.CrystalServer.Citizen.LibertyBay] = TOWNS_LIST.LIBERTY_BAY,
+	[Storage.CrystalServer.Citizen.Frostania] = TOWNS_LIST.FROSTANIA,
 }
 
 local citizen = MoveEvent()

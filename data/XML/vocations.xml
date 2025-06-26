@@ -10,7 +10,7 @@ percentmagic: returns all elements, including holy and death.
 	<vocation id="0" clientid="0" baseid="0" name="None" description="none" magicshield="0" gaincap="10" gainhp="5" gainmana="5" gainhpticks="12000" gainhpamount="1" gainmanaticks="6000" gainmanaamount="2" manamultiplier="4.0" attackspeed="2000" basespeed="110" soulmax="100" gainsoulticks="120000" fromvoc="0">
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
 		<mitigation multiplier="1.3" primaryShield="2.05" secondaryShield="1.25" />
-		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
 		<skill id="0" multiplier="1.5" />
 		<skill id="1" multiplier="2.0" />
 		<skill id="2" multiplier="2.0" />
@@ -23,7 +23,7 @@ percentmagic: returns all elements, including holy and death.
 	<vocation id="1" clientid="3" baseid="1" name="Sorcerer" description="a sorcerer" magicshield="1" gaincap="10" gainhp="5" gainmana="30" gainhpticks="12000" gainhpamount="1" gainmanaticks="3000" gainmanaamount="2" manamultiplier="1.1" attackspeed="2000" basespeed="110" soulmax="100" gainsoulticks="120000" fromvoc="1" avatarlooktype="1595">
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
 		<mitigation multiplier="1.26" primaryShield="2.0" secondaryShield="1.2" />
-		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
 		<skill id="0" multiplier="1.5" />
 		<skill id="1" multiplier="2.0" />
 		<skill id="2" multiplier="2.0" />
@@ -36,7 +36,7 @@ percentmagic: returns all elements, including holy and death.
 	<vocation id="2" clientid="4" baseid="2" name="Druid" description="a druid" magicshield="1" gaincap="10" gainhp="5" gainmana="30" gainhpticks="12000" gainhpamount="1" gainmanaticks="3000" gainmanaamount="2" manamultiplier="1.1" attackspeed="2000" basespeed="110" soulmax="100" gainsoulticks="120000" fromvoc="2" avatarlooktype="1596">
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
 		<mitigation multiplier="1.26" primaryShield="2.0" secondaryShield="1.2" />
-		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
 		<skill id="0" multiplier="1.5" />
 		<skill id="1" multiplier="1.8" />
 		<skill id="2" multiplier="1.8" />
@@ -49,7 +49,7 @@ percentmagic: returns all elements, including holy and death.
 	<vocation id="3" clientid="2" baseid="3" name="Paladin" description="a paladin" magicshield="0" gaincap="20" gainhp="10" gainmana="15" gainhpticks="8000" gainhpamount="1" gainmanaticks="4000" gainmanaamount="2" manamultiplier="1.4" attackspeed="2000" basespeed="110" soulmax="100" gainsoulticks="120000" fromvoc="3" avatarlooktype="1594">
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
 		<mitigation multiplier="1.28" primaryShield="2.08" secondaryShield="1.2" />
-		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
 		<skill id="0" multiplier="1.2" />
 		<skill id="1" multiplier="1.2" />
 		<skill id="2" multiplier="1.2" />
@@ -62,7 +62,7 @@ percentmagic: returns all elements, including holy and death.
 	<vocation id="4" clientid="1" baseid="4" name="Knight" description="a knight" magicshield="0" gaincap="25" gainhp="15" gainmana="5" gainhpticks="6000" gainhpamount="1" gainmanaticks="6000" gainmanaamount="2" manamultiplier="3.0" attackspeed="2000" basespeed="110" soulmax="100" gainsoulticks="120000" fromvoc="4" avatarlooktype="1593">
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
 		<mitigation multiplier="1.3" primaryShield="2.05" secondaryShield="1.25" />
-		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
 		<skill id="0" multiplier="1.1" />
 		<skill id="1" multiplier="1.1" />
 		<skill id="2" multiplier="1.1" />
@@ -75,7 +75,7 @@ percentmagic: returns all elements, including holy and death.
 	<vocation id="5" clientid="13" baseid="1" name="Master Sorcerer" description="a master sorcerer" magicshield="1" gaincap="10" gainhp="5" gainmana="30" gainhpticks="12000" gainhpamount="1" gainmanaticks="2000" gainmanaamount="2" manamultiplier="1.1" attackspeed="2000" basespeed="110" soulmax="200" gainsoulticks="15000" fromvoc="1" avatarlooktype="1595">
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
 		<mitigation multiplier="1.26" primaryShield="2.0" secondaryShield="1.2" />
-		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
 		<skill id="0" multiplier="1.5" />
 		<skill id="1" multiplier="2.0" />
 		<skill id="2" multiplier="2.0" />
@@ -91,7 +91,7 @@ percentmagic: returns all elements, including holy and death.
 	<vocation id="6" clientid="14" baseid="2" name="Elder Druid" description="an elder druid" magicshield="1" gaincap="10" gainhp="5" gainmana="30" gainhpticks="12000" gainhpamount="1" gainmanaticks="2000" gainmanaamount="2" manamultiplier="1.1" attackspeed="2000" basespeed="110" soulmax="200" gainsoulticks="15000" fromvoc="2" avatarlooktype="1596">
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
 		<mitigation multiplier="1.26" primaryShield="2.0" secondaryShield="1.2" />
-		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
 		<skill id="0" multiplier="1.5" />
 		<skill id="1" multiplier="1.8" />
 		<skill id="2" multiplier="1.8" />
@@ -107,7 +107,7 @@ percentmagic: returns all elements, including holy and death.
 	<vocation id="7" clientid="12" baseid="3" name="Royal Paladin" description="a royal paladin" magicshield="0" gaincap="20" gainhp="10" gainmana="15" gainhpticks="6000" gainhpamount="1" gainmanaticks="3000" gainmanaamount="2" manamultiplier="1.4" attackspeed="2000" basespeed="110" soulmax="200" gainsoulticks="15000" fromvoc="3" avatarlooktype="1594">
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
 		<mitigation multiplier="1.28" primaryShield="2.08" secondaryShield="1.2" />
-		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
 		<skill id="0" multiplier="1.2" />
 		<skill id="1" multiplier="1.2" />
 		<skill id="2" multiplier="1.2" />
@@ -123,7 +123,7 @@ percentmagic: returns all elements, including holy and death.
 	<vocation id="8" clientid="11" baseid="4" name="Elite Knight" description="an elite knight" magicshield="0" gaincap="25" gainhp="15" gainmana="5" gainhpticks="4000" gainhpamount="1" gainmanaticks="6000" gainmanaamount="2" manamultiplier="3.0" attackspeed="2000" basespeed="110" soulmax="200" gainsoulticks="15000" fromvoc="4" avatarlooktype="1593">
 		<formula meleeDamage="1.0" distDamage="1.0" wandRodDamage="1.0" defense="1.0" armor="1.0" />
 		<mitigation multiplier="1.3" primaryShield="2.05" secondaryShield="1.25" />
-		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier ="1.0"/>
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
 		<skill id="0" multiplier="1.1" />
 		<skill id="1" multiplier="1.1" />
 		<skill id="2" multiplier="1.1" />
@@ -135,5 +135,32 @@ percentmagic: returns all elements, including holy and death.
 		<gem quality="1" name="guardian gem" />
 		<gem quality="2" name="greater guardian gem" />
 		<absorb percentall="0" percentelements="0" percentmagic="0" percentenergy="0" percentfire="0" percentearth="0" percentice="0" percentholy="0" percentdeath="0" percentlifedrain="0" percentmanadrain="0" percentdrown="0" percentphysical="0" percenthealing="0" percentagony="0" percentneutral="0" />
+	</vocation>
+	<vocation id="9" clientid="5" baseid="5" name="Monk" description="an monk" magicshield="0" gaincap="25" gainhp="10" gainmana="10" gainhpticks="7000" gainhpamount="1" gainmanaticks="4000" gainmanaamount="2" manamultiplier="1.3" attackspeed="2000" basespeed="110" soulmax="200" gainsoulticks="15000" fromvoc="9" avatarlooktype="1823">
+		<formula meleeDamage="1.3" distDamage="1.0" defense="1.0" armor="1.0" />
+		<mitigation multiplier="1.3" primaryShield="2.10" secondaryShield="1.30" />
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
+		<skill id="0" multiplier="1.1" />
+		<skill id="1" multiplier="1.2" />
+		<skill id="2" multiplier="1.2" />
+		<skill id="3" multiplier="1.2" />
+		<skill id="4" multiplier="1.5" />
+		<skill id="5" multiplier="1.1" />
+		<skill id="6" multiplier="1.1" />
+	</vocation>
+	<vocation id="10" clientid="15" baseid="5" name="Exalted Monk" description="an exalted monk" magicshield="0" gaincap="25" gainhp="10" gainmana="10" gainhpticks="5000" gainhpamount="1" gainmanaticks="3000" gainmanaamount="2" manamultiplier="1.3" attackspeed="2000" basespeed="110" soulmax="200" gainsoulticks="15000" fromvoc="9" avatarlooktype="1823">
+		<formula meleeDamage="1.3" distDamage="1.0" defense="1.0" armor="1.0" />
+		<mitigation multiplier="1.3" primaryShield="2.10" secondaryShield="1.30" />
+		<pvp damageReceivedMultiplier="1.0" damageDealtMultiplier="1.0"/>
+		<skill id="0" multiplier="1.1" />
+		<skill id="1" multiplier="1.2" />
+		<skill id="2" multiplier="1.2" />
+		<skill id="3" multiplier="1.2" />
+		<skill id="4" multiplier="1.5" />
+		<skill id="5" multiplier="1.1" />
+		<skill id="6" multiplier="1.1" />
+		<gem quality="0" name="lesser spiritualist gem" />
+		<gem quality="1" name="spiritualist gem" />
+		<gem quality="2" name="greater spiritualist gem" />
 	</vocation>
 </vocations>

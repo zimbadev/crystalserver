@@ -336,14 +336,6 @@ However, Uman's and Fardos's joint efforts did not remain entirely without conse
 While Fardos and Uman were working hard on their spell, Zathroth's minions went on to lay waste to the elder gods' precious creation, and the devastation continued without pause. It seemed as though the whole world was doomed to perish. However, some of the lesser gods who were tired of just standing by while their beloved Tibia was ravaged. They decided to put up resistance against the reckless hordes. Bastesh the Mistress of the Sea created huge, mysterious creatures that were both elegant and fierce, and she populated her beloved ocean with them to make sure Zathroth's minions would never defile its pure waters. However, there was little she could do to help her cousins who lived on the dry land. Of all her creatures the only ones to survive on land were the dextrous and venomous snakes. Crunor and Nornur, too, created creatures to fight against Brog's and Zathroth's hordes: Crunor the Lord of the Trees created fierce wolves, while Nornur equipped his beloved spiders with deadly poison to make them more powerful.
 		]],
 	},
-	[26] = {
-		containerId = 2435,
-		itemId = 129,
-		position = { x = 32061, y = 31894, z = 4 },
-		text = [[
-This is written proof that Captain Plunderpurse gave away all the cursed gold to the little kiddies, bless his generous heart. No torture, extortion, cut off limbs, manipulation or embezzlement at all was involved in my testimony, I swear! And I am very thankful not to make the acquaintance of the Captain's pet sharks, lovely beasts though they are. Signed, Triomon Tangleweed, certifying notary.
-		]],
-	},
 	[27] = {
 		containerId = 2435,
 		itemId = 2826,
@@ -367,28 +359,6 @@ Quite a few pirates hoarded up treasures in the past. It is known that pirates t
 
 If anyone ever is looking for treasures, then those isles are the best place to start with.
 		]],
-	},
-	[29] = {
-		containerId = 2435,
-		itemId = 2827,
-		position = { x = 32061, y = 31894, z = 4 },
-		text = [[
-Treasures of the Southern Isles
-
-Quite a few pirates hoarded up treasures in the past. It is known that pirates tend to hide their treasures on deserted islands for some unknown reason. They just bury them on some remote place and then forget about them. This similarity to the behaviour of squirrels was never scientifically verified. However, since pirates love to dress lightly they also love the south. Therefore, it is only natural that they hide their treasures there. Some of the southern isles are so popular among pirates that there is hardly any free space left to bury new treasure.
-
-If anyone ever is looking for treasures, then those isles are the best place to start with.
-		]],
-	},
-	[30] = {
-		containerId = 2435,
-		itemId = 2829,
-		position = { x = 32061, y = 31894, z = 4 },
-		text = [[
-The Great Sea Serpents
-
-The Sea Serpent is as huge as a house and can swallow a small ship in one bite. Its scales are almost impenetrable and its teeth, which are as big as a cyclops, are coated with a corrosive poison that will dissolve human flesh on touch. In their undersea lairs they hoard treasures that would make a dragons hoard look miserable.
-]],
 	},
 	[31] = {
 		containerId = 2435,
@@ -429,20 +399,6 @@ The Great Sea Serpents
 
 The Sea Serpent is as huge as a house and can swallow a small ship in one bite. Its scales are almost impenetrable and its teeth, which are as big as a cyclops, are coated with a corrosive poison that will dissolve human flesh on touch. In their undersea lairs they hoard treasures that would make a dragons hoard look miserable.
 		]],
-	},
-	[35] = {
-		containerId = 2435,
-		itemId = 2831,
-		position = { x = 32061, y = 31894, z = 4 },
-		text = [[
-V.i Part 2: The Age of Chaos
-
-However, for all their efforts, the gods could not create creatures that were a match for the ruthless, well-organised hordes that roamed the land. The wolves' hides and the spiders chitinous exoskeletons could not resist the steel of the orcish blades, and for every troll that was brought down by poison two others came to take his place. In the end gods' children withdrew to areas that were easy to defend: The wolves fled into the depths of the forests, while the spiders hid deep in caves. There they continued their fights, defending their realms against the onslaught of the superior enemy. These little pockets of resistance were the only sanctuaries in a world that sank deeper and deeper into chaos. And the worst was yet to come, for now the dragons felt the time had come to take what was theirs by right!
-
-For centuries they had propagated and expanded in silence, largely unnoticed by all other creatures. But now that Garsharak, the very first and strongest of their race, sent them into the world they knew neither restraint nor mercy. The orcish armies were routed by the relentless flames of magical dragon fire, and soon that proud though barbaric race, who until then had not known the meaning of the word defeat, was driven into the shelter of subterranean settlements. Their allies, the mighty cyclopes, fared no better. Although they won a number of notable victories using their powerful weapons and armour, they, too, had to yield to the superior power of the dreaded dragons. They joined their former allies, the orcs, and their weak cousins, the trolls, in their subterranean exile. Their proud cities that had been built in the course of centuries were burnt down to the ground, and their renowned forges were lost forever.
-
-Thus the dragons had taken over the rule of the land, but the war was by no means over. Their bitter enemies, cyclopes and orcs, resented what they felt was an imprisonment in the bowels of the earth, and they continued the fight from their subterranean hideouts. And in fact the dragons, who had already been weakened in the course of the previous battles, suffered serious losses. But now war also erupted among the former allies, as cyclopes and orcs competed for food and space in their subterranean abodes. And even though no side was strong enough to overcome the others the war went on with undiminished force, and all of the races suffered greatly in the epic struggle. The land was scattered with bodies, and while it seemed that life itself would be wiped from the face of Tibia the losses of all races that were involved daily grew in number. It was as if the living would drown in the bodies of the slain.
-]],
 	},
 	[36] = {
 		containerId = 2459,

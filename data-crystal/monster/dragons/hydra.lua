@@ -23,12 +23,9 @@ monster.Bestiary = {
 	CharmsPoints = 25,
 	Stars = 3,
 	Occurrence = 0,
-	Locations = "Many on the northern Hydra Mountain in east Tiquanda, 3-4 on the southern Hydra Mountain, \z
-		1 at the Hydra Egg Quest in Tiquanda, 1 north-east of the Elephant Tusk Quest, \z
-		2 above the Forbidden Lands hydra cave here and many inside it, many in Deeper Banuta, \z
-		many on Talahu surface, a few in Ferumbras Citadel basement on Kharos, \z
-		2 on a hill in the Yalahar Arena and Zoo Quarter, 1 deep in the Yalahar Foreigner Quarter (Crystal Lake), \z
-		many in the Oramond Hydra/Bog Raider Cave.",
+	Locations = "Northern Hydra Mountain in east Tiquanda, southern Hydra Mountain, Hydra Egg Quest in Tiquanda \z
+	north-east of the Elephant Tusk Quest, Forbidden Lands hydra cave, Deeper Banuta, Talahu surface, \z
+	Ferumbras Citadel, Yalahar Arena and Zoo Quarter, Yalahar Foreigner Quarter (Crystal Lake), Oramond Hydra/Bog Raider Cave.",
 }
 
 monster.health = 2350
@@ -78,29 +75,27 @@ monster.light = {
 monster.voices = {
 	interval = 5000,
 	chance = 10,
-	{ text = "FCHHHHH", yell = false },
-	{ text = "HISSSS", yell = false },
+	{ text = "FCHHHHH", yell = true },
+	{ text = "HISSSS", yell = true },
 }
 
 monster.loot = {
-	{ id = 3029, chance = 5000 }, -- small sapphire
-	{ id = 3031, chance = 34000, maxCount = 100 }, -- gold coin
-	{ id = 3031, chance = 34000, maxCount = 100 }, -- gold coin
-	{ id = 3031, chance = 20000, maxCount = 46 }, -- gold coin
-	{ id = 3035, chance = 48000, maxCount = 3 }, -- platinum coin
-	{ id = 3061, chance = 570 }, -- life crystal
-	{ id = 3079, chance = 130 }, -- boots of haste
-	{ id = 3081, chance = 900 }, -- stone skin amulet
-	{ id = 3098, chance = 1190 }, -- ring of healing
-	{ id = 3369, chance = 890 }, -- warrior helmet
-	{ id = 3370, chance = 1000 }, -- knight armor
-	{ id = 3392, chance = 210 }, -- royal helmet
-	{ id = 3436, chance = 270 }, -- medusa shield
-	{ id = 3582, chance = 60000, maxCount = 4 }, -- ham
-	{ id = 4839, chance = 930 }, -- hydra egg
-	{ id = 237, chance = 380 }, -- strong mana potion
-	{ id = 8014, chance = 4780 }, -- cucumber
-	{ id = 10282, chance = 10120 }, -- hydra head
+	{ name = "gold coin", chance = 87970, maxCount = 212 },
+	{ name = "ham", chance = 59510, maxCount = 3 },
+	{ name = "platinum coin", chance = 49910, maxCount = 3 },
+	{ name = "hydra head", chance = 10820 },
+	{ name = "cucumber", chance = 6900 },
+	{ name = "small sapphire", chance = 3920 },
+	{ name = "warrior helmet", chance = 1310 },
+	{ name = "knight armor", chance = 1120 },
+	{ name = "life crystal", chance = 930 },
+	{ id = 3098, chance = 840 }, -- ring of healing
+	{ name = "hydra egg", chance = 840 },
+	{ name = "strong mana potion", chance = 840 },
+	{ name = "stone skin amulet", chance = 750 },
+	{ name = "boots of haste", chance = 190 },
+	{ name = "medusa shield", chance = 190 },
+	{ name = "royal helmet", chance = 90 },
 }
 
 monster.attacks = {
@@ -113,7 +108,8 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 35,
-	armor = 35,
+	armor = 27,
+	mitigation = 1.18,
 	{ name = "combat", interval = 2000, chance = 25, type = COMBAT_HEALING, minDamage = 260, maxDamage = 407, effect = CONST_ME_MAGIC_BLUE, target = false },
 }
 

@@ -50,7 +50,6 @@ monster.flags = {
 }
 
 monster.events = {
-	"WhiteDeerScoutsDeath",
 }
 
 monster.light = {

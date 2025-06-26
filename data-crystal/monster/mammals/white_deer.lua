@@ -14,7 +14,6 @@ monster.outfit = {
 }
 
 monster.events = {
-	"WhiteDeerDeath",
 }
 
 monster.raceId = 720
@@ -64,6 +63,7 @@ monster.flags = {
 	canWalkOnEnergy = false,
 	canWalkOnFire = false,
 	canWalkOnPoison = false,
+	isPreyExclusive = true,
 }
 
 monster.light = {
