@@ -3632,8 +3632,12 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 	msg.add<uint32_t>(std::min<int32_t>(player->getMaxHealth(), std::numeric_limits<uint16_t>::max()));
 	msg.add<uint32_t>(std::min<int32_t>(player->getMana(), std::numeric_limits<uint16_t>::max()));
 	msg.add<uint32_t>(std::min<int32_t>(player->getMaxMana(), std::numeric_limits<uint16_t>::max()));
-	msg.addByte(player->getSoul());
-	msg.add<uint16_t>(player->getStaminaMinutes());
+       msg.addByte(player->getSoul());
+       if (g_configManager().getBoolean(STAMINA_SYSTEM)) {
+               msg.add<uint16_t>(player->getStaminaMinutes());
+       } else {
+               msg.add<uint16_t>(0x9D8);
+       }
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
 	msg.add<uint16_t>(condition ? condition->getTicks() / 1000 : 0x00);
@@ -8173,9 +8177,13 @@ void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
 		msg.addByte(std::min<uint8_t>(static_cast<uint8_t>(player->getMagicLevelPercent()), 100));
 	}
 
-	msg.addByte(player->getSoul());
 
-	msg.add<uint16_t>(player->getStaminaMinutes());
+       msg.addByte(player->getSoul());
+       if (g_configManager().getBoolean(STAMINA_SYSTEM)) {
+               msg.add<uint16_t>(player->getStaminaMinutes());
+       } else {
+               msg.add<uint16_t>(0x9D8);
+       }
 
 	msg.add<uint16_t>(player->getBaseSpeed());
 
