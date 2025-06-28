@@ -2877,9 +2877,9 @@ int PlayerFunctions::luaPlayerAddMount(lua_State* L) {
 		return 1;
 	}
 
-	uint8_t mountId;
+	uint16_t mountId;
 	if (Lua::isNumber(L, 2)) {
-		mountId = Lua::getNumber<uint8_t>(L, 2);
+		mountId = Lua::getNumber<uint16_t>(L, 2);
 	} else {
 		const auto &mount = g_game().mounts->getMountByName(Lua::getString(L, 2));
 		if (!mount) {
@@ -2900,9 +2900,9 @@ int PlayerFunctions::luaPlayerRemoveMount(lua_State* L) {
 		return 1;
 	}
 
-	uint8_t mountId;
+	uint16_t mountId;
 	if (Lua::isNumber(L, 2)) {
-		mountId = Lua::getNumber<uint8_t>(L, 2);
+		mountId = Lua::getNumber<uint16_t>(L, 2);
 	} else {
 		const auto &mount = g_game().mounts->getMountByName(Lua::getString(L, 2));
 		if (!mount) {

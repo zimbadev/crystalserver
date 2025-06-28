@@ -66,12 +66,11 @@ keywordHandler:addKeyword({ "shop" }, StdModule.say, {
 npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|, welcome to the fluid and potion {shop} of Edron.")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye, |PLAYERNAME|, please come back soon.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Good bye, |PLAYERNAME|, please come back soon.")
-npcHandler:setMessage(
-	MESSAGE_SENDTRADE,
-	"Of course, just browse through my wares."
-)
+npcHandler:setMessage(MESSAGE_SENDTRADE, "Of course, just browse through my wares.")
 
-npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, function() return false end)
+npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, function()
+	return false
+end)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 npcConfig.shop = {

@@ -27,8 +27,7 @@ monster.strategiesTarget = {
 	random = 100,
 }
 
-monster.events = {
-}
+monster.events = {}
 
 monster.flags = {
 	summonable = false,

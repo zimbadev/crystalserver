@@ -19,7 +19,7 @@
 #include "creatures/creatures_definitions.hpp"
 
 struct Mount {
-	Mount(uint8_t initId, uint16_t initClientId, std::string initName, int32_t initSpeed, bool initPremium, std::string initType) :
+	Mount(uint16_t initId, uint16_t initClientId, std::string initName, int32_t initSpeed, bool initPremium, std::string initType) :
 		name(std::move(initName)), type(std::move(initType)), clientId(initClientId), id(initId), premium(initPremium),
 		speed(initSpeed) {
 		std::memset(skills, 0, sizeof(skills));
@@ -30,7 +30,7 @@ struct Mount {
 	std::string type = "";
 
 	uint16_t clientId = 0;
-	uint8_t id = 0;
+	uint16_t id = 0;
 
 	bool premium = false;
 	bool regeneration = false;
@@ -60,7 +60,7 @@ public:
 	bool reload();
 	bool loadFromXml();
 
-	std::shared_ptr<Mount> getMountByID(uint8_t id);
+	std::shared_ptr<Mount> getMountByID(uint16_t id);
 	std::shared_ptr<Mount> getMountByName(const std::string &name);
 	std::shared_ptr<Mount> getMountByClientID(uint16_t clientId);
 
