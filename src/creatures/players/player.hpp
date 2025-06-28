@@ -1775,11 +1775,11 @@ private:
 
 	std::shared_ptr<Item> getQuiverAmmoOfType(const ItemType &it) const;
 
-	std::array<double_t, COMBAT_COUNT> getFinalDamageReduction() const;
-	void calculateDamageReductionFromEquipedItems(std::array<double_t, COMBAT_COUNT> &combatReductionMap) const;
-	void calculateDamageReductionFromItem(std::array<double_t, COMBAT_COUNT> &combatReductionMap, const std::shared_ptr<Item> &item) const;
-	void updateDamageReductionFromItemImbuement(std::array<double_t, COMBAT_COUNT> &combatReductionMap, const std::shared_ptr<Item> &item, uint16_t combatTypeIndex) const;
-	void updateDamageReductionFromItemAbility(std::array<double_t, COMBAT_COUNT> &combatReductionMap, const std::shared_ptr<Item> &item, uint16_t combatTypeIndex) const;
+        std::array<double_t, COMBAT_COUNT> getFinalDamageReduction() const;
+        void calculateDamageReductionFromEquipedItems(std::array<double_t, COMBAT_COUNT> &combatReductionMap) const;
+        void calculateDamageReductionFromItem(std::array<double_t, COMBAT_COUNT> &combatReductionMap, std::array<int16_t, COMBAT_COUNT> &totalMantraAbsorbMap, const std::shared_ptr<Item> &item) const;
+        void updateDamageReductionFromItemImbuement(std::array<double_t, COMBAT_COUNT> &combatReductionMap, const std::shared_ptr<Item> &item, uint16_t combatTypeIndex) const;
+        void updateDamageReductionFromItemAbility(std::array<double_t, COMBAT_COUNT> &combatReductionMap, std::array<int16_t, COMBAT_COUNT> &totalMantraAbsorbMap, const std::shared_ptr<Item> &item, uint16_t combatTypeIndex) const;
 	double_t calculateDamageReduction(double_t currentTotal, int16_t resistance) const;
 
 	void removeEmptyRewards();

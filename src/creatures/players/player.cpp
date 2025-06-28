@@ -5593,9 +5593,9 @@ std::vector<std::shared_ptr<Item>> Player::getInventoryItemsFromId(uint16_t item
 }
 
 std::array<double_t, COMBAT_COUNT> Player::getFinalDamageReduction() const {
-	std::array<double_t, COMBAT_COUNT> combatReductionArray {};
-	combatReductionArray.fill(0);
-	calculateDamageReductionFromEquipedItems(combatReductionArray);
+        std::array<double_t, COMBAT_COUNT> combatReductionArray {};
+        combatReductionArray.fill(0);
+        calculateDamageReductionFromEquipedItems(combatReductionArray);
 	for (int combatTypeIndex = 0; combatTypeIndex < COMBAT_COUNT; combatTypeIndex++) {
 		combatReductionArray[combatTypeIndex] = std::clamp<double_t>(
 			std::floor(combatReductionArray[combatTypeIndex]),
@@ -5607,19 +5607,29 @@ std::array<double_t, COMBAT_COUNT> Player::getFinalDamageReduction() const {
 }
 
 void Player::calculateDamageReductionFromEquipedItems(std::array<double_t, COMBAT_COUNT> &combatReductionArray) const {
-	for (uint8_t slot = CONST_SLOT_FIRST; slot <= CONST_SLOT_LAST; ++slot) {
-		const auto &item = inventory[slot];
-		if (item) {
-			calculateDamageReductionFromItem(combatReductionArray, item);
-		}
-	}
+        std::array<int16_t, COMBAT_COUNT> totalMantraAbsorbMap {};
+        totalMantraAbsorbMap.fill(0);
+
+        for (uint8_t slot = CONST_SLOT_FIRST; slot <= CONST_SLOT_LAST; ++slot) {
+                const auto &item = inventory[slot];
+                if (item) {
+                        calculateDamageReductionFromItem(combatReductionArray, totalMantraAbsorbMap, item);
+                }
+        }
+
+        for (uint16_t combatTypeIndex = 0; combatTypeIndex < COMBAT_COUNT; combatTypeIndex++) {
+                const int16_t mantraAbsorbPercent = getMantraAbsorbPercent(totalMantraAbsorbMap[combatTypeIndex]);
+                if (mantraAbsorbPercent != 0) {
+                        combatReductionArray[combatTypeIndex] = calculateDamageReduction(combatReductionArray[combatTypeIndex], mantraAbsorbPercent);
+                }
+        }
 }
 
-void Player::calculateDamageReductionFromItem(std::array<double_t, COMBAT_COUNT> &combatReductionArray, const std::shared_ptr<Item> &item) const {
-	for (uint16_t combatTypeIndex = 0; combatTypeIndex < COMBAT_COUNT; combatTypeIndex++) {
-		updateDamageReductionFromItemImbuement(combatReductionArray, item, combatTypeIndex);
-		updateDamageReductionFromItemAbility(combatReductionArray, item, combatTypeIndex);
-	}
+void Player::calculateDamageReductionFromItem(std::array<double_t, COMBAT_COUNT> &combatReductionArray, std::array<int16_t, COMBAT_COUNT> &totalMantraAbsorbMap, const std::shared_ptr<Item> &item) const {
+        for (uint16_t combatTypeIndex = 0; combatTypeIndex < COMBAT_COUNT; combatTypeIndex++) {
+                updateDamageReductionFromItemImbuement(combatReductionArray, item, combatTypeIndex);
+                updateDamageReductionFromItemAbility(combatReductionArray, totalMantraAbsorbMap, item, combatTypeIndex);
+        }
 }
 
 void Player::updateDamageReductionFromItemImbuement(
@@ -5637,11 +5647,11 @@ void Player::updateDamageReductionFromItemImbuement(
 }
 
 void Player::updateDamageReductionFromItemAbility(
-	std::array<double_t, COMBAT_COUNT> &combatReductionArray, const std::shared_ptr<Item> &item, uint16_t combatTypeIndex
+        std::array<double_t, COMBAT_COUNT> &combatReductionArray, std::array<int16_t, COMBAT_COUNT> &totalMantraAbsorbMap, const std::shared_ptr<Item> &item, uint16_t combatTypeIndex
 ) const {
-	if (!item) {
-		return;
-	}
+        if (!item) {
+                return;
+        }
 
 	const ItemType &itemType = Item::items[item->getID()];
 	if (itemType.abilities) {
@@ -5650,14 +5660,11 @@ void Player::updateDamageReductionFromItemAbility(
 			combatReductionArray[combatTypeIndex] = calculateDamageReduction(combatReductionArray[combatTypeIndex], elementReduction);
 		}
 
-		const int16_t mantraElementReduction = itemType.abilities->mantraAbsorbValue[combatTypeIndex];
-		if (mantraElementReduction != 0) {
-			const int16_t mantraAbsorbPercent = getMantraAbsorbPercent(mantraElementReduction);
-			if (mantraAbsorbPercent != 0) {
-				combatReductionArray[combatTypeIndex] = calculateDamageReduction(combatReductionArray[combatTypeIndex], mantraAbsorbPercent);
-			}
-		}
-	}
+                const int16_t mantraElementReduction = itemType.abilities->mantraAbsorbValue[combatTypeIndex];
+                if (mantraElementReduction != 0) {
+                        totalMantraAbsorbMap[combatTypeIndex] += mantraElementReduction;
+                }
+        }
 }
 
 double_t Player::calculateDamageReduction(double_t currentTotal, int16_t resistance) const {
@@ -11655,27 +11662,36 @@ uint16_t Player::getMantraTotal() const {
 }
 
 int16_t Player::getMantraAbsorbPercent(int16_t mantraAbsorbValue) const {
-	const float multiplier = 1.0f;
+        const float multiplier = 1.0f;
 
-	if (m_party) {
-		for (const auto &partyMember : m_party->getMembers()) {
-			if (partyMember && partyMember->getMantraTotal() < mantraAbsorbValue) {
-				if (partyMember->wheel()->getInstant(WheelInstant_t::GUIDING_PRESENCE)) {
-					mantraAbsorbValue = partyMember->getMantraTotal();
-				}
-			}
-		}
+        if (isSerene()) {
+                mantraAbsorbValue *= 2;
+        }
 
-		if (m_party->getLeader() && m_party->getLeader()->getMantraTotal() < mantraAbsorbValue) {
-			if (m_party->getLeader()->wheel()->getInstant(WheelInstant_t::GUIDING_PRESENCE)) {
-				mantraAbsorbValue = m_party->getLeader()->getMantraTotal();
-			}
-		}
-	}
+        const int16_t mantraTotal = static_cast<int16_t>(getMantraTotal());
+        if (mantraAbsorbValue > mantraTotal) {
+                mantraAbsorbValue = mantraTotal;
+        }
 
-	if (mantraAbsorbValue <= 0) {
-		return 0;
-	}
+        if (m_party) {
+                for (const auto &partyMember : m_party->getMembers()) {
+                        if (partyMember && partyMember->getMantraTotal() < mantraAbsorbValue) {
+                                if (partyMember->wheel()->getInstant(WheelInstant_t::GUIDING_PRESENCE)) {
+                                        mantraAbsorbValue = partyMember->getMantraTotal();
+                                }
+                        }
+                }
 
-	return static_cast<int16_t>(std::floor(mantraAbsorbValue * multiplier));
+                if (m_party->getLeader() && m_party->getLeader()->getMantraTotal() < mantraAbsorbValue) {
+                        if (m_party->getLeader()->wheel()->getInstant(WheelInstant_t::GUIDING_PRESENCE)) {
+                                mantraAbsorbValue = m_party->getLeader()->getMantraTotal();
+                        }
+                }
+        }
+
+        if (mantraAbsorbValue <= 0) {
+                return 0;
+        }
+
+        return static_cast<int16_t>(std::floor(mantraAbsorbValue * multiplier));
 }
