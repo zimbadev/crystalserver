@@ -78,6 +78,7 @@ function soulPitAction.onUse(player, item, fromPosition, target, toPosition, isH
 	SoulPit.kickEvent = addEvent(function()
 		SoulPit.kickEvent = nil
 		SoulPit.encounter = nil
+		SoulPit.zone:refresh()
 		SoulPit.zone:removePlayers()
 		SoulPit.obeliskPosition:transformItem(SoulPit.obeliskActive, SoulPit.obeliskInactive)
 	end, SoulPit.timeToKick)
@@ -104,6 +105,7 @@ function soulPitAction.onUse(player, item, fromPosition, target, toPosition, isH
 			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("You have defeated the core of the %s soul and unlocked its animus mastery!", monsterName))
 		end
 
+		SoulPit.zone:refresh()
 		SoulPit.zone:removePlayers()
 	end
 
