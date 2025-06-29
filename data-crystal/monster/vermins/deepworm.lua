@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Deepworm")
 local monster = {}
 
 monster.description = "a deepworm"
-monster.experience = 2300
+monster.experience = 2520
 monster.outfit = {
 	lookType = 1033,
 	lookHead = 0,
@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-	"WarzoneWormDeath",
-}
+monster.events = {}
 
 monster.raceId = 1531
 monster.Bestiary = {

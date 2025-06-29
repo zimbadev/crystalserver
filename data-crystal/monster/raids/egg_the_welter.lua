@@ -43,9 +43,7 @@ monster.flags = {
 	canWalkOnPoison = true,
 }
 
-monster.events = {
-	"TheWelterEgg",
-}
+monster.events = {}
 
 monster.light = {
 	level = 0,

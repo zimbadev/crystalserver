@@ -16,7 +16,7 @@ monster.outfit = {
 monster.raceId = 868
 monster.Bestiary = {
 	class = "Human",
-	race = dafasdfasdfsadfasdfasd,
+	race = BESTY_RACE_HUMAN,
 	toKill = 500,
 	FirstUnlock = 25,
 	SecondUnlock = 250,
@@ -60,6 +60,7 @@ monster.flags = {
 	canWalkOnEnergy = false,
 	canWalkOnFire = false,
 	canWalkOnPoison = false,
+	isPreyExclusive = true,
 }
 
 monster.light = {

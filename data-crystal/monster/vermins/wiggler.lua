@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-	"WigglerDeath",
-}
+monster.events = {}
 
 monster.raceId = 899
 monster.Bestiary = {

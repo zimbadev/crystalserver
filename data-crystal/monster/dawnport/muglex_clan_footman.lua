@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-	"MorrisGoblinDeath",
-}
+monster.events = {}
 
 monster.health = 50
 monster.maxHealth = 50

@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-	"MinotaurCultTaskDeath",
-}
+monster.events = {}
 
 monster.raceId = 1509
 monster.Bestiary = {

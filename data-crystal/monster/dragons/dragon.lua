@@ -13,6 +13,8 @@ monster.outfit = {
 	lookMount = 0,
 }
 
+monster.events = {}
+
 monster.raceId = 34
 monster.Bestiary = {
 	class = "Dragon",
@@ -34,7 +36,7 @@ monster.Bestiary = {
 monster.health = 1000
 monster.maxHealth = 1000
 monster.race = "blood"
-monster.corpse = 4025
+monster.corpse = 5973
 monster.speed = 86
 monster.manaCost = 0
 
@@ -65,9 +67,9 @@ monster.flags = {
 	runHealth = 300,
 	healthHidden = false,
 	isBlockable = false,
-	canWalkOnEnergy = false,
+	canWalkOnEnergy = true,
 	canWalkOnFire = true,
-	canWalkOnPoison = false,
+	canWalkOnPoison = true,
 }
 
 monster.light = {
@@ -78,33 +80,32 @@ monster.light = {
 monster.voices = {
 	interval = 5000,
 	chance = 10,
-	{ text = "GROOAAARRR", yell = true },
 	{ text = "FCHHHHH", yell = true },
+	{ text = "GROOAAARRR", yell = true },
 }
 
 monster.loot = {
-	{ id = 3028, chance = 380 }, -- small diamond
-	{ id = 3031, chance = 47500, maxCount = 70 }, -- gold coin
-	{ id = 3031, chance = 37500, maxCount = 45 }, -- gold coin
-	{ id = 3061, chance = 120 }, -- life crystal
-	{ id = 3071, chance = 1005 }, -- wand of inferno
-	{ id = 3275, chance = 960 }, -- double axe
-	{ id = 3285, chance = 4000 }, -- longsword
-	{ id = 3297, chance = 420 }, -- serpent sword
-	{ id = 3301, chance = 1950 }, -- broadsword
-	{ id = 3322, chance = 560 }, -- dragon hammer
-	{ id = 3349, chance = 10000 }, -- crossbow
-	{ id = 3351, chance = 3000 }, -- steel helmet
-	{ id = 3409, chance = 15000 }, -- steel shield
-	{ id = 3416, chance = 320 }, -- dragon shield
+	{ name = "gold coin", chance = 89920, maxCount = 102 },
+	{ name = "dragon ham", chance = 66270, maxCount = 2 },
+	{ name = "steel shield", chance = 15650 },
+	{ name = "dragon's tail", chance = 9680 },
+	{ name = "crossbow", chance = 9120 },
 	{ id = 3449, chance = 8060, maxCount = 10 }, -- burst arrow
-	{ id = 3557, chance = 2000 }, -- plate legs
-	{ id = 3583, chance = 65500, maxCount = 3 }, -- dragon ham
-	{ id = 5877, chance = 1005 }, -- green dragon leather
-	{ id = 5920, chance = 1000 }, -- green dragon scale
-	{ id = 7430, chance = 110 }, -- dragonbone staff
-	{ id = 236, chance = 1000 }, -- strong health potion
-	{ id = 11457, chance = 9740 }, -- dragon's tail
+	{ name = "longsword", chance = 3830 },
+	{ name = "steel helmet", chance = 3490 },
+	{ name = "broadsword", chance = 2700 },
+	{ name = "plate legs", chance = 2029 },
+	{ name = "double axe", chance = 1580 },
+	{ name = "strong health potion", chance = 1130 },
+	{ name = "green dragon leather", chance = 1070 },
+	{ name = "green dragon scale", chance = 1010 },
+	{ name = "wand of inferno", chance = 560 },
+	{ name = "small diamond", chance = 450 },
+	{ name = "serpent sword", chance = 230 },
+	{ name = "dragon hammer", chance = 230 },
+	{ name = "dragonbone staff", chance = 170 },
+	{ name = "life crystal", chance = 170 },
+	{ name = "dragon shield", chance = 110 },
 }
 
 monster.attacks = {
@@ -115,7 +116,8 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 30,
-	armor = 30,
+	armor = 25,
+	mitigation = 0.99,
 	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_HEALING, minDamage = 40, maxDamage = 70, effect = CONST_ME_MAGIC_BLUE, target = false },
 }
 

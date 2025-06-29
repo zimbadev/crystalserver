@@ -23,8 +23,8 @@ monster.Bestiary = {
 	CharmsPoints = 25,
 	Stars = 3,
 	Occurrence = 0,
-	Locations = "Drefia Wyrm Lair (after the Medusa Shield Quest room), Darashia Wyrm Hills, Arena and Zoo Quarter, \z
-		beneath Fenrock, Deeper Razachai, Lower Spike, Vandura Wyrm Cave and Vandura Mountain in Liberty Bay.",
+	Locations = "Drefia Wyrm Lair (after the Medusa Shield Quest room), Darashia Wyrm Hills, Arena and Zoo Quarter,  \z
+	beneath Fenrock, Deeper Razachai, Lower Spike, Vandura Wyrm Cave and Vandura Mountain in Liberty Bay.",
 }
 
 monster.health = 1825
@@ -53,7 +53,7 @@ monster.flags = {
 	convinceable = false,
 	pushable = false,
 	rewardBoss = false,
-	illusionable = false,
+	illusionable = true,
 	canPushItems = true,
 	canPushCreatures = false,
 	staticAttackChance = 80,
@@ -74,42 +74,41 @@ monster.light = {
 monster.voices = {
 	interval = 5000,
 	chance = 10,
-	{ text = "GRROARR", yell = false },
-	{ text = "GRRR", yell = false },
+	{ text = "GRROARR", yell = true },
+	{ text = "GRRR", yell = true },
 }
 
 monster.loot = {
-	{ id = 3028, chance = 750, maxCount = 3 }, -- small diamond
-	{ id = 3031, chance = 30000, maxCount = 100 }, -- gold coin
-	{ id = 3031, chance = 30000, maxCount = 100 }, -- gold coin
-	{ id = 3031, chance = 30000, maxCount = 30 }, -- gold coin
-	{ id = 3349, chance = 5920 }, -- crossbow
-	{ id = 3449, chance = 7650, maxCount = 10 }, -- burst arrow
-	{ id = 3583, chance = 34800, maxCount = 3 }, -- dragon ham
-	{ id = 7430, chance = 110 }, -- dragonbone staff
-	{ id = 236, chance = 19970 }, -- strong health potion
-	{ id = 237, chance = 15310 }, -- strong mana potion
-	{ id = 816, chance = 720 }, -- lightning pendant
-	{ id = 8027, chance = 90 }, -- composite hornbow
-	{ id = 8043, chance = 1250 }, -- focus cape
-	{ id = 8045, chance = 250 }, -- hibiscus dress
-	{ id = 8092, chance = 420 }, -- wand of starstorm
-	{ id = 8093, chance = 990 }, -- wand of draconia
-	{ id = 9304, chance = 110 }, -- shockwave amulet
-	{ id = 9665, chance = 15360 }, -- wyrm scale
+	{ name = "gold coin", chance = 95730, maxCount = 192 },
+	{ name = "dragon ham", chance = 43130 },
+	{ name = "strong health potion", chance = 19910 },
+	{ name = "wyrm scale", chance = 17540 },
+	{ name = "strong mana potion", chance = 15170 },
+	{ id = 3449, chance = 5690, maxCount = 10 }, -- burst arrow
+	{ name = "crossbow", chance = 5690 },
+	{ name = "focus cape", chance = 2370 },
+	{ name = "small diamond", chance = 1420, maxCount = 3 },
+	{ name = "wand of starstorm", chance = 1420 },
+	{ name = "wand of draconia", chance = 1420 },
+	{ name = "composite hornbow", chance = 950 },
+	{ name = "dragonbone staff", chance = 470 },
+	{ name = "lightning pendant", chance = 470 },
+	{ name = "shockwave amulet", chance = 470 },
+	{ name = "hibiscus dress", chance = 470 },
 }
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -235 },
 	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_ENERGYDAMAGE, minDamage = -100, maxDamage = -220, radius = 3, effect = CONST_ME_YELLOWENERGY, target = false },
-	-- {name ="wyrm wave", interval = 2000, chance = 40, minDamage = -130, maxDamage = -200, target = false},
+	{ name = "wyrm wave", interval = 2000, chance = 40, minDamage = -130, maxDamage = -200, target = false },
 	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_ENERGYDAMAGE, minDamage = -100, maxDamage = -125, range = 7, shootEffect = CONST_ANI_ENERGY, effect = CONST_ME_ENERGYHIT, target = false },
 	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_LIFEDRAIN, minDamage = -98, maxDamage = -145, length = 4, spread = 3, effect = CONST_ME_POFF, target = false },
 }
 
 monster.defenses = {
 	defense = 35,
-	armor = 35,
+	armor = 34,
+	mitigation = 0.83,
 	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_HEALING, minDamage = 100, maxDamage = 150, effect = CONST_ME_MAGIC_BLUE, target = false },
 	{ name = "effect", interval = 2000, chance = 10, radius = 1, effect = CONST_ME_SOUND_YELLOW, target = false },
 }

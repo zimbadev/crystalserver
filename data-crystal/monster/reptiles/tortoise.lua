@@ -23,8 +23,7 @@ monster.Bestiary = {
 	CharmsPoints = 15,
 	Stars = 2,
 	Occurrence = 0,
-	Locations = "Laguna Islands, Fenrock, Port Hope and also can be found behind a wall below the \z
-		center of Liberty Bay. These cannot be reached.",
+	Locations = "Laguna Islands, Fenrock, Port Hope and also can be found behind a wall below the center of Liberty Bay. These cannot be reached.",
 }
 
 monster.health = 185
@@ -44,14 +43,14 @@ monster.strategiesTarget = {
 }
 
 monster.flags = {
-	summonable = true,
+	summonable = false,
 	attackable = true,
 	hostile = true,
 	convinceable = true,
-	pushable = true,
+	pushable = false,
 	rewardBoss = false,
-	illusionable = false,
-	canPushItems = true,
+	illusionable = true,
+	canPushItems = false,
 	canPushCreatures = false,
 	staticAttackChance = 90,
 	targetDistance = 1,
@@ -74,13 +73,13 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ id = 3031, chance = 59000, maxCount = 30 }, -- gold coin
-	{ id = 3305, chance = 730 }, -- battle hammer
-	{ id = 3410, chance = 2850 }, -- plate shield
+	{ name = "gold coin", chance = 59000, maxCount = 30 },
+	{ name = "battle hammer", chance = 730 },
+	{ name = "plate shield", chance = 2850 },
 	{ id = 3578, chance = 4600 }, -- fish
-	{ id = 5678, chance = 770, maxCount = 2 }, -- tortoise egg
+	{ name = "tortoise egg", chance = 770, maxCount = 2 },
 	{ id = 5899, chance = 1300 }, -- turtle shell
-	{ id = 6131, chance = 200 }, -- tortoise shield
+	{ name = "tortoise shield", chance = 200 },
 }
 
 monster.attacks = {
@@ -89,11 +88,12 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 30,
-	armor = 30,
+	armor = 22,
+	mitigation = 0.51,
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = 35 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = 20 },
 	{ type = COMBAT_ENERGYDAMAGE, percent = 0 },
 	{ type = COMBAT_EARTHDAMAGE, percent = 20 },
 	{ type = COMBAT_FIREDAMAGE, percent = -10 },

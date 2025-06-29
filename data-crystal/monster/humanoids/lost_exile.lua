@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-	"LastExileDeath",
-}
+monster.events = {}
 
 monster.raceId = 1529
 monster.Bestiary = {
@@ -67,6 +65,7 @@ monster.flags = {
 	canWalkOnEnergy = false,
 	canWalkOnFire = false,
 	canWalkOnPoison = false,
+	isPreyExclusive = true,
 }
 
 monster.light = {

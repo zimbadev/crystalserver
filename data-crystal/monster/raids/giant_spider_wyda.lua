@@ -52,9 +52,7 @@ monster.flags = {
 	canWalkOnPoison = false,
 }
 
-monster.events = {
-	"Wyda",
-}
+monster.events = {}
 
 monster.light = {
 	level = 0,

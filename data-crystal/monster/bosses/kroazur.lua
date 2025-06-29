@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-	"ThreatenedDreamsNightmareMonstersDeath",
-}
+monster.events = {}
 
 monster.bosstiary = {
 	bossRaceId = 1515,
@@ -82,12 +80,12 @@ monster.loot = {
 	{ name = "gemmed figurine", chance = 32030 },
 	{ name = "small enchanted emerald", chance = 11003, maxCount = 5 },
 	{ name = "small enchanted ruby", chance = 2000 },
-	{ name = "silver token", chance = 10140 },
+	{ name = "silver token", chance = 7030 },
 	{ name = "cluster of solace", chance = 19960 },
 	{ name = "red crystal fragment", chance = 9960 },
 	{ name = "small enchanted sapphire", chance = 8900 },
 	{ name = "assassin star", chance = 8540 },
-	{ name = "gold token", chance = 6580 },
+	{ name = "gold token", chance = 5470 },
 	{ name = "gold ingot", chance = 6410 },
 	{ name = "nightmare blade", chance = 3020 },
 }
@@ -126,19 +124,5 @@ monster.immunities = {
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },
 }
-
-mType.onThink = function(monster, interval) end
-
-mType.onAppear = function(monster, creature)
-	if monster:getType():isRewardBoss() then
-		monster:setReward(true)
-	end
-end
-
-mType.onDisappear = function(monster, creature) end
-
-mType.onMove = function(monster, creature, fromPosition, toPosition) end
-
-mType.onSay = function(monster, creature, type, message) end
 
 mType:register(monster)

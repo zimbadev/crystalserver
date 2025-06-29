@@ -84,7 +84,6 @@ monster.loot = {
 	{ name = "ham", chance = 20120 },
 	{ name = "worm", chance = 3000, maxCount = 3 },
 	{ name = "lump of dirt", chance = 10000 },
-	{ name = "legion helmet", chance = 1890 },
 }
 
 monster.attacks = {

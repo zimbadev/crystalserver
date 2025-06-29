@@ -72,15 +72,15 @@ monster.light = {
 monster.voices = {
 	interval = 5000,
 	chance = 10,
-	{ text = "Meeeeep!", yell = false },
 	{ text = "Meep!", yell = false },
+	{ text = "Meeeeep!", yell = false },
 }
 
 monster.loot = {
-	{ id = 3031, chance = 85000, maxCount = 2 }, -- gold coin
-	{ id = 3598, chance = 750 }, -- cookie
+	{ name = "gold coin", chance = 85000, maxCount = 2 },
+	{ name = "cookie", chance = 750 },
 	{ id = 3607, chance = 30000 }, -- cheese
-	{ id = 3492, chance = 9700, maxCount = 2 }, -- worm
+	{ name = "worm", chance = 9700, maxCount = 2 },
 }
 
 monster.attacks = {
@@ -89,7 +89,8 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 5,
-	armor = 5,
+	armor = 1,
+	mitigation = 0.10,
 }
 
 monster.elements = {

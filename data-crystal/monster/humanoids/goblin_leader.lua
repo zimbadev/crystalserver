@@ -42,6 +42,8 @@ monster.strategiesTarget = {
 	nearest = 100,
 }
 
+monster.events = {}
+
 monster.flags = {
 	summonable = true,
 	attackable = true,
@@ -60,6 +62,7 @@ monster.flags = {
 	canWalkOnEnergy = false,
 	canWalkOnFire = false,
 	canWalkOnPoison = false,
+	isPreyExclusive = true,
 }
 
 monster.light = {

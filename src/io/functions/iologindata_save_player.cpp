@@ -40,7 +40,9 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 
 	// Initialize variables
 	using ContainerBlock = std::pair<std::shared_ptr<Container>, int32_t>;
-	std::list<ContainerBlock> queue;
+	std::vector<ContainerBlock> containers;
+	containers.reserve(32);
+
 	int32_t runningId = 100;
 
 	// Loop through each item in itemList
@@ -78,7 +80,7 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 			}
 
 			// Add container to queue
-			queue.emplace_back(container, runningId);
+			containers.emplace_back(container, runningId);
 		}
 
 		// Serialize item attributes
@@ -97,8 +99,8 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 	}
 
 	// Loop through containers in queue
-	while (!queue.empty()) {
-		const ContainerBlock &cb = queue.front();
+	for (size_t i = 0; i < containers.size(); i++) {
+		const ContainerBlock &cb = containers[i];
 		const std::shared_ptr<Container> &container = cb.first;
 		if (!container) {
 			continue;
@@ -117,7 +119,7 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 			// Update sub-container attributes if necessary
 			const auto &subContainer = item->getContainer();
 			if (subContainer) {
-				queue.emplace_back(subContainer, runningId);
+				containers.emplace_back(subContainer, runningId);
 				if (subContainer->getAttribute<int64_t>(ItemAttribute_t::OPENCONTAINER) > 0) {
 					subContainer->setAttribute(ItemAttribute_t::OPENCONTAINER, 0);
 				}
@@ -149,9 +151,6 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 				return false;
 			}
 		}
-
-		// Removes the object after processing everything, avoiding memory usage after freeing
-		queue.pop_front();
 	}
 
 	// Execute query
@@ -159,6 +158,7 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 		g_logger().error("Error executing query.");
 		return false;
 	}
+
 	return true;
 }
 
@@ -208,6 +208,7 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`lookmountfeet` = " << static_cast<uint32_t>(player->defaultOutfit.lookMountFeet) << ",";
 	query << "`lookmounthead` = " << static_cast<uint32_t>(player->defaultOutfit.lookMountHead) << ",";
 	query << "`lookmountlegs` = " << static_cast<uint32_t>(player->defaultOutfit.lookMountLegs) << ",";
+	query << "`currentmount` = " << static_cast<uint32_t>(player->defaultOutfit.currentMount) << ",";
 	query << "`lookfamiliarstype` = " << player->defaultOutfit.lookFamiliarsType << ",";
 	query << "`isreward` = " << static_cast<uint16_t>(player->isDailyReward) << ",";
 	query << "`maglevel` = " << player->magLevel << ",";
@@ -868,5 +869,55 @@ bool IOLoginDataSave::savePlayerNamesAndChangeName(const std::shared_ptr<Player>
 
 	player->setName(newName);
 	g_saveManager().savePlayer(player);
+	return true;
+}
+
+bool IOLoginDataSave::savePlayerOutfits(const std::shared_ptr<Player> &player) {
+	if (!player) {
+		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
+		return false;
+	}
+
+	if (!g_database().executeQuery(fmt::format("DELETE FROM `player_outfits` WHERE `player_id` = {:d}", player->getGUID()))) {
+		return false;
+	}
+
+	DBInsert outfitQuery("INSERT INTO `player_outfits` (`player_id`, `outfit_id`, `addons`) VALUES ");
+	for (const auto &outfit : player->outfitsMap) {
+		if (!outfitQuery.addRow(fmt::format("{:d}, {:d}, {:d}", player->getGUID(), outfit.lookType, outfit.addons))) {
+			return false;
+		}
+	}
+
+	if (!outfitQuery.execute()) {
+		return false;
+	}
+
+	player->setOutfitsModified(false);
+	return true;
+}
+
+bool IOLoginDataSave::savePlayerMounts(const std::shared_ptr<Player> &player) {
+	if (!player) {
+		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
+		return false;
+	}
+
+	if (!g_database().executeQuery(fmt::format("DELETE FROM `player_mounts` WHERE `player_id` = {:d}", player->getGUID()))) {
+		return false;
+	}
+
+	DBInsert mountQuery("INSERT INTO `player_mounts` (`player_id`, `mount_id`) VALUES ");
+	for (const auto &mountId : player->mountsMap) {
+		if (!mountQuery.addRow(fmt::format("{:d}, {:d}", player->getGUID(), mountId))) {
+			return false;
+		}
+	}
+
+	if (!mountQuery.execute()) {
+		return false;
+	}
+
+	player->setMountsModified(false);
 	return true;
 }

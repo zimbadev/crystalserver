@@ -13,6 +13,8 @@ monster.outfit = {
 	lookMount = 0,
 }
 
+monster.events = {}
+
 monster.raceId = 37
 monster.Bestiary = {
 	class = "Undead",

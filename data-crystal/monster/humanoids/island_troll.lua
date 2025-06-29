@@ -60,6 +60,7 @@ monster.flags = {
 	canWalkOnEnergy = false,
 	canWalkOnFire = false,
 	canWalkOnPoison = false,
+	isPreyExclusive = true,
 }
 
 monster.light = {
@@ -79,17 +80,17 @@ monster.voices = {
 
 monster.loot = {
 	{ id = 3003, chance = 8000 }, -- rope
-	{ id = 3031, chance = 60000, maxCount = 10 }, -- gold coin
-	{ id = 3054, chance = 70 }, -- silver amulet
-	{ id = 3268, chance = 18000 }, -- hand axe
-	{ id = 3277, chance = 20000 }, -- spear
-	{ id = 3336, chance = 5000 }, -- studded club
-	{ id = 3355, chance = 10000 }, -- leather helmet
+	{ name = "gold coin", chance = 60000, maxCount = 10 },
+	{ name = "silver amulet", chance = 70 },
+	{ name = "hand axe", chance = 18000 },
+	{ name = "spear", chance = 20000 },
+	{ name = "studded club", chance = 5000 },
+	{ name = "leather helmet", chance = 10000 },
 	{ id = 3412, chance = 16000 }, -- wooden shield
-	{ id = 3552, chance = 10500 }, -- leather boots
-	{ id = 5096, chance = 5000 }, -- mango
+	{ name = "leather boots", chance = 10500 },
+	{ name = "mango", chance = 5000 },
 	{ id = 5901, chance = 30000 }, -- wood
-	{ id = 901, chance = 40 }, -- marlin
+	{ name = "marlin", chance = 40 },
 }
 
 monster.attacks = {
@@ -98,7 +99,8 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 10,
-	armor = 10,
+	armor = 6,
+	mitigation = 0.20,
 }
 
 monster.elements = {

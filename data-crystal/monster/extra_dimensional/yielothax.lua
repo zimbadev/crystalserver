@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-	"YielothaxDeath",
-}
+monster.events = {}
 
 monster.raceId = 717
 monster.Bestiary = {

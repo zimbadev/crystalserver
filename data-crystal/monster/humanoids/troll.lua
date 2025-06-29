@@ -71,25 +71,25 @@ monster.light = {
 monster.voices = {
 	interval = 5000,
 	chance = 10,
+	{ text = "Hmmm, bugs", yell = false },
+	{ text = "Hmmm, dogs", yell = false },
 	{ text = "Grrr", yell = false },
 	{ text = "Groar", yell = false },
 	{ text = "Gruntz!", yell = false },
-	{ text = "Hmmm, bugs", yell = false },
-	{ text = "Hmmm, dogs", yell = false },
 }
 
 monster.loot = {
 	{ id = 3003, chance = 7950 }, -- rope
-	{ id = 3031, chance = 65300, maxCount = 12 }, -- gold coin
-	{ id = 3054, chance = 80 }, -- silver amulet
-	{ id = 3268, chance = 18000 }, -- hand axe
-	{ id = 3277, chance = 13000 }, -- spear
-	{ id = 3336, chance = 5000 }, -- studded club
-	{ id = 3355, chance = 12000 }, -- leather helmet
+	{ name = "gold coin", chance = 65300, maxCount = 12 },
+	{ name = "silver amulet", chance = 80 },
+	{ name = "hand axe", chance = 18000 },
+	{ name = "spear", chance = 13000 },
+	{ name = "studded club", chance = 5000 },
+	{ name = "leather helmet", chance = 12000 },
 	{ id = 3412, chance = 4730 }, -- wooden shield
-	{ id = 3552, chance = 10000 }, -- leather boots
-	{ id = 3577, chance = 15000 }, -- meat
-	{ id = 9689, chance = 1000 }, -- bunch of troll hair
+	{ name = "leather boots", chance = 10000 },
+	{ name = "meat", chance = 15000 },
+	{ name = "bunch of troll hair", chance = 1000 },
 	{ id = 23986, chance = 1000 }, -- heavy old tome
 }
 
@@ -99,12 +99,13 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 10,
-	armor = 10,
+	armor = 6,
+	mitigation = 0.20,
 }
 
 monster.elements = {
 	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = 25 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = 20 },
 	{ type = COMBAT_EARTHDAMAGE, percent = -10 },
 	{ type = COMBAT_FIREDAMAGE, percent = 0 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },

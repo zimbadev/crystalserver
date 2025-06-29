@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-	"ElementalOverlordDeath",
-}
+monster.events = {}
 
 monster.bosstiary = {
 	bossRaceId = 454,

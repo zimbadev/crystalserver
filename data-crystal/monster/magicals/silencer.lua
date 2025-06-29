@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-	"RoshamuulKillsDeath",
-}
+monster.events = {}
 
 monster.raceId = 1014
 monster.Bestiary = {
