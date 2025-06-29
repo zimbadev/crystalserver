@@ -13,8 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-}
+monster.events = {}
 
 monster.bosstiary = {
 	bossRaceId = 1035,
@@ -60,9 +59,7 @@ monster.flags = {
 	canWalkOnPoison = true,
 }
 
-monster.events = {
-
-}
+monster.events = {}
 
 monster.light = {
 	level = 0,

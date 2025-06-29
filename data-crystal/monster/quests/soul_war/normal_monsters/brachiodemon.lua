@@ -26,8 +26,7 @@ monster.Bestiary = {
 	Locations = "Claustrophobic Inferno.",
 }
 
-monster.events = {
-}
+monster.events = {}
 
 monster.health = 25000
 monster.maxHealth = 25000

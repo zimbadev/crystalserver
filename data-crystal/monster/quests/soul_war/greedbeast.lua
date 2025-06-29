@@ -19,9 +19,7 @@ monster.race = "undead"
 monster.corpse = 0
 monster.speed = 200
 
-monster.events = {
-
-}
+monster.events = {}
 
 monster.changeTarget = {
 	interval = 4000,

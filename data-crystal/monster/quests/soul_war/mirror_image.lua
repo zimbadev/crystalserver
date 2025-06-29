@@ -13,9 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {
-
-}
+monster.events = {}
 
 monster.health = 35000
 monster.maxHealth = 35000
@@ -106,9 +104,7 @@ monster.immunities = {
 	{ type = "bleed", condition = false },
 }
 
-monster.events = {
-
-}
+monster.events = {}
 
 mType.onPlayerAttack = function(monster, attackerPlayer)
 	logger.info("Player {}, attacking monster {}", attackerPlayer:getName(), monster:getName())

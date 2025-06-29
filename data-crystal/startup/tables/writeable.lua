@@ -26,5 +26,4 @@ BookDocumentTable = {
 	--	},
 }
 
-SignTable = {
-}
+SignTable = {}

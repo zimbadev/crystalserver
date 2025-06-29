@@ -1290,16 +1290,7 @@ uint16_t Player::getLookCorpse() const {
 
 void Player::addStorageValue(const uint32_t key, const int32_t value, const bool isLogin /* = false*/) {
 	if (IS_IN_KEYRANGE(key, RESERVED_RANGE)) {
-		if (IS_IN_KEYRANGE(key, OUTFITS_RANGE)) {
-			outfits.emplace_back(
-				value >> 16,
-				value & 0xFF
-			);
-			return;
-		}
-		if (IS_IN_KEYRANGE(key, MOUNTS_RANGE)) {
-			// do nothing
-		} else if (IS_IN_KEYRANGE(key, FAMILIARS_RANGE)) {
+		if (IS_IN_KEYRANGE(key, FAMILIARS_RANGE)) {
 			familiars.emplace_back(
 				value >> 16
 			);
@@ -4055,7 +4046,7 @@ void Player::sendToRook() {
 
 			// Clear player outfits
 			const auto playerOutfits = Outfits::getInstance().getOutfits(getSex());
-			for (auto it = outfits.begin(); it != outfits.end();) {
+			for (auto it = outfitsMap.begin(); it != outfitsMap.end();) {
 				const auto &entry = *it;
 				const auto playerOutfit = std::find_if(playerOutfits.begin(), playerOutfits.end(), [&entry](const std::shared_ptr<Outfit> &outfit) {
 					return outfit->lookType == entry.lookType;
@@ -4067,7 +4058,7 @@ void Player::sendToRook() {
 						++it;
 					} else {
 						removeOutfitAddon(entry.lookType, 3);
-						it = outfits.erase(it);
+						it = outfitsMap.erase(it);
 					}
 				} else {
 					++it;
@@ -6586,13 +6577,31 @@ bool Player::canWearOutfit(uint16_t lookType, uint8_t addons) const {
 		return true;
 	}
 
-	for (const auto &outfitEntry : outfits) {
-		if (outfitEntry.lookType != lookType) {
-			continue;
+	for (const auto &outfitEntry : outfitsMap) {
+		if (outfitEntry.lookType == lookType) {
+			if (outfitEntry.addons == addons || outfitEntry.addons == 3 || addons == 0) {
+				return true;
+			}
+			return false; // have lookType on list and addons don't match
 		}
-		return (outfitEntry.addons & addons) == addons;
 	}
 	return false;
+}
+
+void Player::setOutfitsModified(bool modified) {
+	outfitsModified = modified;
+}
+
+bool Player::isOutfitsModified() const {
+	return outfitsModified;
+}
+
+void Player::setMountsModified(bool modified) {
+	mountsModified = modified;
+}
+
+bool Player::isMountsModified() const {
+	return mountsModified;
 }
 
 bool Player::changeMount(uint8_t mountId, bool checkList) {
@@ -6622,12 +6631,6 @@ bool Player::changeMount(uint8_t mountId, bool checkList) {
 }
 
 void Player::genReservedStorageRange() {
-	// generate outfits range
-	uint32_t outfits_key = PSTRG_OUTFITS_RANGE_START;
-	for (const auto &entry : outfits) {
-		storageMap[++outfits_key] = (entry.lookType << 16) | entry.addons;
-	}
-
 	// generate familiars range
 	uint32_t familiar_key = PSTRG_FAMILIARS_RANGE_START;
 	for (const auto &entry : familiars) {
@@ -6654,20 +6657,23 @@ void Player::setSpecialMenuAvailable(bool stashBool, bool marketMenuBool, bool d
 }
 
 void Player::addOutfit(uint16_t lookType, uint8_t addons) {
-	for (auto &outfitEntry : outfits) {
+	for (auto &outfitEntry : outfitsMap) {
 		if (outfitEntry.lookType == lookType) {
 			outfitEntry.addons |= addons;
 			return;
 		}
 	}
-	outfits.emplace_back(lookType, addons);
+
+	setOutfitsModified(true);
+	outfitsMap.emplace_back(lookType, addons);
 }
 
 bool Player::removeOutfit(uint16_t lookType) {
-	for (auto it = outfits.begin(), end = outfits.end(); it != end; ++it) {
+	for (auto it = outfitsMap.begin(), end = outfitsMap.end(); it != end; ++it) {
 		const auto &entry = *it;
 		if (entry.lookType == lookType) {
-			outfits.erase(it);
+			outfitsMap.erase(it);
+			setOutfitsModified(true);
 			return true;
 		}
 	}
@@ -6675,9 +6681,10 @@ bool Player::removeOutfit(uint16_t lookType) {
 }
 
 bool Player::removeOutfitAddon(uint16_t lookType, uint8_t addons) {
-	for (OutfitEntry &outfitEntry : outfits) {
+	for (auto &outfitEntry : outfitsMap) {
 		if (outfitEntry.lookType == lookType) {
 			outfitEntry.addons &= ~addons;
+			setOutfitsModified(true);
 			return true;
 		}
 	}
@@ -6694,7 +6701,7 @@ bool Player::getOutfitAddons(const std::shared_ptr<Outfit> &outfit, uint8_t &add
 		return false;
 	}
 
-	for (const OutfitEntry &outfitEntry : outfits) {
+	for (const auto &outfitEntry : outfitsMap) {
 		if (outfitEntry.lookType != outfit->lookType) {
 			continue;
 		}
@@ -7647,58 +7654,43 @@ void Player::sendUnjustifiedPoints() const {
 	}
 }
 
-uint8_t Player::getLastMount() const {
-	const int32_t value = getStorageValue(PSTRG_MOUNTS_CURRENTMOUNT);
-	if (value > 0) {
-		return value;
+uint16_t Player::getLastMount() const {
+	if (currentMount > 0) {
+		return currentMount;
 	}
-
-	const auto lastMount = kv()->get("last-mount");
-	if (!lastMount.has_value()) {
-		return 0;
-	}
-
-	return static_cast<uint8_t>(lastMount->get<int>());
+	return static_cast<uint8_t>(kv()->get("last-mount")->get<int>());
 }
 
-uint8_t Player::getCurrentMount() const {
-	const int32_t value = getStorageValue(PSTRG_MOUNTS_CURRENTMOUNT);
-	if (value > 0) {
-		return value;
-	}
-	return 0;
+uint16_t Player::getCurrentMount() const {
+	return currentMount;
 }
 
-void Player::setCurrentMount(uint8_t mount) {
-	addStorageValue(PSTRG_MOUNTS_CURRENTMOUNT, mount);
+void Player::setCurrentMount(uint16_t mountId) {
+	currentMount = mountId;
 }
 
 bool Player::hasAnyMount() const {
-	const auto &mounts = g_game().mounts->getMounts();
-	return std::ranges::any_of(mounts, [&](const auto &mount) {
-		return hasMount(mount);
-	});
-}
-
-uint8_t Player::getRandomMountId() const {
-	std::vector<uint8_t> playerMounts;
 	const auto mounts = g_game().mounts->getMounts();
 	for (const auto &mount : mounts) {
 		if (hasMount(mount)) {
-			playerMounts.emplace_back(mount->id);
+			return true;
+		}
+	}
+	return false;
+}
+
+uint16_t Player::getRandomMountId() const {
+	std::vector<uint16_t> playerMounts;
+	const auto mounts = g_game().mounts->getMounts();
+	for (const auto &mount : mounts) {
+		if (hasMount(mount)) {
+			playerMounts.push_back(mount->id);
 		}
 	}
 
-	if (playerMounts.empty()) {
-		return 0;
-	}
-
-	const auto randomIndex = uniform_random(0, static_cast<int32_t>(playerMounts.size() - 1));
-	if (randomIndex >= 0 && static_cast<size_t>(randomIndex) < playerMounts.size()) {
-		return playerMounts[randomIndex];
-	}
-
-	return 0;
+	auto playerMountsSize = static_cast<int32_t>(playerMounts.size() - 1);
+	auto randomIndex = uniform_random(0, std::max<int32_t>(0, playerMountsSize));
+	return playerMounts.at(randomIndex);
 }
 
 bool Player::toggleMount(bool mount) {
@@ -7784,40 +7776,33 @@ bool Player::toggleMount(bool mount) {
 	return true;
 }
 
-bool Player::tameMount(uint8_t mountId) {
+bool Player::tameMount(uint16_t mountId) {
 	if (!g_game().mounts->getMountByID(mountId)) {
 		return false;
 	}
 
-	const uint8_t tmpMountId = mountId - 1;
-	const uint32_t key = PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31);
-
-	int32_t value = getStorageValue(key);
-	if (value != -1) {
-		value |= (1 << (tmpMountId % 31));
-	} else {
-		value = (1 << (tmpMountId % 31));
+	const auto mount = g_game().mounts->getMountByID(mountId);
+	if (hasMount(mount)) {
+		return false;
 	}
 
-	addStorageValue(key, value);
+	setMountsModified(true);
+	mountsMap.emplace(mountId);
 	return true;
 }
 
-bool Player::untameMount(uint8_t mountId) {
+bool Player::untameMount(uint16_t mountId) {
 	if (!g_game().mounts->getMountByID(mountId)) {
 		return false;
 	}
 
-	const uint8_t tmpMountId = mountId - 1;
-	const uint32_t key = PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31);
-
-	int32_t value = getStorageValue(key);
-	if (value == -1) {
-		return true;
+	const auto mount = g_game().mounts->getMountByID(mountId);
+	if (!hasMount(mount)) {
+		return false;
 	}
 
-	value &= ~(1 << (tmpMountId % 31));
-	addStorageValue(key, value);
+	setMountsModified(true);
+	mountsMap.erase(mountId);
 
 	if (getCurrentMount() == mountId) {
 		if (isMounted()) {
@@ -7841,14 +7826,7 @@ bool Player::hasMount(const std::shared_ptr<Mount> &mount) const {
 		return false;
 	}
 
-	const uint8_t tmpMountId = mount->id - 1;
-
-	const int32_t value = getStorageValue(PSTRG_MOUNTS_RANGE_START + (tmpMountId / 31));
-	if (value == -1) {
-		return false;
-	}
-
-	return ((1 << (tmpMountId % 31)) & value) != 0;
+	return mountsMap.find(mount->id) != mountsMap.end();
 }
 
 void Player::dismount() {

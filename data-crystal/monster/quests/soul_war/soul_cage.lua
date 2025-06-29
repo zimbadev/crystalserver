@@ -35,8 +35,7 @@ monster.flags = {
 	isBlockable = false,
 }
 
-monster.events = {
-}
+monster.events = {}
 
 monster.light = {
 	level = 0,

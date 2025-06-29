@@ -51,6 +51,9 @@ static constexpr int32_t SWIMMING_OUTFIT = 267;
 static constexpr int32_t PSTRG_RESERVED_RANGE_START = 10000000;
 static constexpr int32_t PSTRG_RESERVED_RANGE_SIZE = 10000000;
 
+// [3000 - 3500];
+static constexpr int32_t PSTRG_FAMILIARS_RANGE_START = (PSTRG_RESERVED_RANGE_START + 3000);
+static constexpr int32_t PSTRG_FAMILIARS_RANGE_SIZE = 500;
 
 static constexpr int32_t IMMOVABLE_ACTION_ID = 100;
 

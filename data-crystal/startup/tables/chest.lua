@@ -1,5 +1,4 @@
-ChestAction = {
-}
+ChestAction = {}
 
 ChestUnique = {
 	-- Behe Quest
@@ -65,7 +64,7 @@ ChestUnique = {
 	[5064] = { useKV = true, itemId = 2472, itemPos = { x = 307, y = 346, z = 3 }, reward = { { 3567, 1 } }, questName = "Blue Robe" },
 	[5065] = { useKV = true, itemId = 2472, itemPos = { x = 309, y = 346, z = 3 }, reward = { { 3281, 1 } }, questName = "Giant Sword" },
 	[5080] = { useKV = true, itemId = 2481, itemPos = { x = 303, y = 352, z = 4 }, reward = { { 6579, 1 } }, questName = "Random Addon Doll" },
-	[5088] = { useKV = true, itemId = 2481, itemPos = {x = 494, y = 200, z = 10}, reward = { { 2836, 1 } }, questName = "Holy Tible" },
+	[5088] = { useKV = true, itemId = 2481, itemPos = { x = 494, y = 200, z = 10 }, reward = { { 2836, 1 } }, questName = "Holy Tible" },
 	-- Folda (bag quest)
 	[5081] = { useKV = true, itemId = 2481, itemPos = { x = 238, y = 266, z = 5 }, reward = { { 3031, 42 }, { 3483, 1 } }, questName = "Bag Quest" },
 	[5082] = { useKV = true, itemId = 2481, itemPos = { x = 175, y = 278, z = 5 }, reward = { { 401, 1 } }, questName = "Book" },
@@ -188,63 +187,63 @@ ChestUnique = {
 		weight = 50.00,
 		storage = Storage.Quest.U8_0.BarbarianArena.RewardWarlordWeapons,
 	},
--- Pits Of Inferno
+	-- Pits Of Inferno
 	-- Arbalest
 	[5060] = {
 		itemId = 2472,
-		itemPos = {x = 553, y = 77, z = 11},
-		reward = { { 5803, 1 }},
+		itemPos = { x = 553, y = 77, z = 11 },
+		reward = { { 5803, 1 } },
 		storage = 5060,
 	},
 	-- Avenger
 	[5061] = {
 		itemId = 2472,
-		itemPos = {x = 551, y = 77, z = 11},
-		reward = { { 6527, 1 }},
+		itemPos = { x = 551, y = 77, z = 11 },
+		reward = { { 6527, 1 } },
 		storage = 5060,
 	},
 	-- Arcane Staff
 	[5062] = {
 		itemId = 2472,
-		itemPos = {x = 549, y = 77, z = 11},
-		reward = { { 3341, 1 }},
+		itemPos = { x = 549, y = 77, z = 11 },
+		reward = { { 3341, 1 } },
 		storage = 5060,
 	},
 	-- Soft Boots
 	[5163] = {
 		itemId = 2472,
-		itemPos = {x = 557, y = 80, z = 11},
-		reward = { { 6529, 1 }},
+		itemPos = { x = 557, y = 80, z = 11 },
+		reward = { { 6529, 1 } },
 		storage = 5163,
 	},
 	-- Stuffed Dragon
 	[5064] = {
 		itemId = 2472,
-		itemPos = {x = 559, y = 80, z = 11},
-		reward = { { 5791, 1 }},
+		itemPos = { x = 559, y = 80, z = 11 },
+		reward = { { 5791, 1 } },
 		storage = 5064,
 	},
 	-- Frozen Starlight
 	[5065] = {
 		itemId = 2472,
-		itemPos = {x = 564, y = 80, z = 11},
-		reward = { { 3249, 1 }},
+		itemPos = { x = 564, y = 80, z = 11 },
+		reward = { { 3249, 1 } },
 		storage = 5065,
 	},
 	-- 100 Platinum Coin
 	[5066] = {
 		itemId = 2472,
-		itemPos = {x = 569, y = 80, z = 11},
-		reward = { { 3035, 100 }},
+		itemPos = { x = 569, y = 80, z = 11 },
+		reward = { { 3035, 100 } },
 		storage = 5066,
 	},
 	-- Backpack Of Holding and stuff
 	[5067] = {
 		itemId = 2472,
-		itemPos = {x = 571, y = 80, z = 11},
+		itemPos = { x = 571, y = 80, z = 11 },
 		container = 3253,
-		reward = { { 11603, 1 }, { 11609, 1 }, { 11607,1 }, { 11605, 1 }},
+		reward = { { 11603, 1 }, { 11609, 1 }, { 11607, 1 }, { 11605, 1 } },
 		storage = 5067,
-	-- POI END
-},
+		-- POI END
+	},
 }

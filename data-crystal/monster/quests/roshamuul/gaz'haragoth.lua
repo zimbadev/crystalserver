@@ -57,9 +57,7 @@ monster.flags = {
 	canWalkOnPoison = false,
 }
 
-monster.events = {
-
-}
+monster.events = {}
 
 monster.light = {
 	level = 0,

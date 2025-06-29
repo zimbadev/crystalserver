@@ -368,7 +368,7 @@ tasks.json
 
 ## CUSTOM
 # Files
-# config.lua
+config.lua
 client_assertions.txt
 .env
 data-global/world/world.otbm
