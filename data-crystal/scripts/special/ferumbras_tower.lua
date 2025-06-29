@@ -2,23 +2,23 @@ local actions = {
 	[30001] = {
 		action = "removeStone",
 		stonePos = Position(656, 569, 7),
-		stoneId = 1791
+		stoneId = 1791,
 	},
 	[30002] = {
 		action = "removeStone",
 		stonePos = Position(655, 569, 7),
-		stoneId = 1791
+		stoneId = 1791,
 	},
 	[30003] = {
 		action = "removeStone",
 		stonePos = Position(633, 549, 7),
-		stoneId = 1791
+		stoneId = 1791,
 	},
 	[30004] = {
 		action = "createStairs",
-		stairsPos = Position(643, 542, 8), 
-		stairsId = 1947
-	}
+		stairsPos = Position(643, 542, 8),
+		stairsId = 1947,
+	},
 }
 
 local lever = Action()
@@ -42,7 +42,6 @@ function lever.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 				player:sendCancelMessage("The stone is already gone.")
 			end
 		end
-
 	elseif cfg.action == "createStairs" then
 		local tile = Tile(cfg.stairsPos)
 		if tile and not tile:getItemById(cfg.stairsId) then
