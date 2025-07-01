@@ -1,0 +1,12 @@
+Commit f88e2e0
+jprzimba
+jprzimba
+authored
+14 hours ago
+·
+·
+Verified
+fix:warning with id 2910 already have action registered and cannot be use transformTo tag (#232)
+Ths PR fixes [warning] [Actions::internalUseItem] item with id 2910 already have action registered and cannot be use transformTo tag message
+
+Its already registered in items.xml with transformTo
