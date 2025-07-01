@@ -28,7 +28,7 @@ ChestUnique = {
 	[5036] = { useKV = true, itemId = 2480, itemPos = { x = 345, y = 569, z = 10 }, reward = { { 3371, 1 } }, questName = "Knight Legs" },
 	[5037] = { useKV = true, itemId = 2480, itemPos = { x = 307, y = 458, z = 8 }, reward = { { 3035, 100 } }, questName = "100 Platinum Coins" },
 	[5038] = { useKV = true, itemId = 2480, itemPos = { x = 309, y = 458, z = 8 }, reward = { { 3098, 1 } }, questName = "Ring of Healing" },
-	[5039] = { useKV = true, itemId = 2481, itemPos = { x = 246, y = 464, z = 9 }, reward = { { 2339, 1 } }, questName = "Piece of Ancient Helmet" },
+	[5039] = { useKV = true, itemId = 2481, itemPos = {x = 247, y = 481, z = 9}, reward = { { 2339, 1 } }, questName = "Piece of Ancient Helmet" },
 	[5040] = { useKV = true, itemId = 2481, itemPos = { x = 300, y = 281, z = 12 }, reward = { { 2337, 1 } }, questName = "Piece of Ancient Helmet" },
 	[5041] = { useKV = true, itemId = 2481, itemPos = { x = 246, y = 413, z = 12 }, reward = { { 2336, 1 } }, questName = "Piece of Ancient Helmet" },
 	[5073] = { useKV = true, itemId = 2481, itemPos = { x = 436, y = 581, z = 11 }, reward = { { 2340, 1 } }, questName = "Piece of Ancient Helmet" },

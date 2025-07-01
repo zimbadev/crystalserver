@@ -396,3 +396,5 @@ database_backup
 
 # CLION
 cmake-build-*
+config.lua.dist
+
