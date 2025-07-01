@@ -3626,19 +3626,31 @@
 		<monster name="Ghoul" x="-13" y="58" z="8" spawntime="40" />
 		<monster name="Ghoul" x="-5" y="58" z="8" spawntime="40" />
 		<monster name="Ghoul" x="-25" y="68" z="8" spawntime="40" />
+		<monster name="Rotworm" x="-74" y="70" z="8" spawntime="90" />
 		<monster name="Ghoul" x="-18" y="71" z="8" spawntime="40" />
 		<monster name="Ghoul" x="-8" y="71" z="8" spawntime="40" />
+		<monster name="Corym Vanguard" x="-67" y="73" z="8" spawntime="60" />
 		<monster name="Ghoul" x="-28" y="78" z="8" spawntime="40" />
 		<monster name="Ghoul" x="-13" y="78" z="8" spawntime="40" />
 		<monster name="Ghoul" x="-4" y="78" z="8" spawntime="40" />
+		<monster name="Rotworm" x="-96" y="82" z="8" spawntime="90" />
+		<monster name="Corym Vanguard" x="-44" y="83" z="8" spawntime="60" />
 		<monster name="Ghoul" x="5" y="83" z="8" spawntime="40" />
 		<monster name="Fire Devil" x="6" y="84" z="8" spawntime="40" />
+		<monster name="Corym Vanguard" x="-76" y="85" z="8" spawntime="60" />
+		<monster name="Corym Vanguard" x="-86" y="86" z="8" spawntime="60" />
+		<monster name="Corym Vanguard" x="-66" y="86" z="8" spawntime="60" />
 		<monster name="Ghoul" x="-26" y="86" z="8" spawntime="40" />
+		<monster name="Corym Vanguard" x="-53" y="87" z="8" spawntime="60" />
 		<monster name="Ghoul" x="-15" y="88" z="8" spawntime="40" />
 		<monster name="Ghoul" x="-20" y="90" z="8" spawntime="40" />
+		<monster name="Corym Vanguard" x="-100" y="91" z="8" spawntime="60" />
 		<monster name="Ghoul" x="-9" y="94" z="8" spawntime="40" />
 		<monster name="Ghoul" x="0" y="94" z="8" spawntime="40" />
+		<monster name="Corym Vanguard" x="-77" y="97" z="8" spawntime="60" />
 		<monster name="Ghoul" x="-4" y="98" z="8" spawntime="40" />
+		<monster name="Corym Vanguard" x="-93" y="99" z="8" spawntime="60" />
+		<monster name="Corym Skirmisher" x="-86" y="99" z="8" spawntime="60" />
 		<monster name="Fire Devil" x="-5" y="99" z="8" spawntime="40" />
 	</monster>
 	<monster centerx="719" centery="294" centerz="8" radius="1">
@@ -3948,10 +3960,13 @@
 	<monster centerx="351" centery="394" centerz="8" radius="1">
 		<monster name="Rotworm" x="0" y="0" z="8" spawntime="60" />
 	</monster>
+	<monster centerx="432" centery="398" centerz="8" radius="1">
+		<monster name="Corym Vanguard" x="0" y="0" z="8" spawntime="60" />
+	</monster>
 	<monster centerx="386" centery="401" centerz="8" radius="5">
+		<monster name="Ghoul" x="-1" y="-4" z="8" spawntime="60" />
 		<monster name="Swamp Troll" x="-4" y="-1" z="8" spawntime="60" />
 		<monster name="Troll" x="3" y="1" z="8" spawntime="60" />
-		<monster name="Ghoul" x="-1" y="4" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="483" centery="402" centerz="8" radius="5">
 		<monster name="Dwarf" x="-2" y="-1" z="8" spawntime="40" />
@@ -3960,12 +3975,30 @@
 	<monster centerx="339" centery="404" centerz="8" radius="2">
 		<monster name="Quara Constrictor" x="-1" y="-1" z="8" spawntime="60" />
 	</monster>
+	<monster centerx="428" centery="404" centerz="8" radius="1">
+		<monster name="Corym Skirmisher" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="427" centery="408" centerz="8" radius="1">
+		<monster name="Corym Vanguard" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="406" centery="409" centerz="8" radius="1">
+		<monster name="Corym Vanguard" x="0" y="0" z="8" spawntime="60" />
+	</monster>
 	<monster centerx="346" centery="410" centerz="8" radius="2">
 		<monster name="Quara Constrictor" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="409" centery="410" centerz="8" radius="1">
+		<monster name="Corym Skirmisher" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="472" centery="410" centerz="8" radius="5">
 		<monster name="Dwarf" x="-4" y="-3" z="8" spawntime="40" />
 		<monster name="Dwarf" x="5" y="0" z="8" spawntime="40" />
+	</monster>
+	<monster centerx="414" centery="411" centerz="8" radius="1">
+		<monster name="Corym Charlatan" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="406" centery="414" centerz="8" radius="1">
+		<monster name="Corym Charlatan" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="349" centery="416" centerz="8" radius="2">
 		<monster name="Quara Constrictor" x="0" y="0" z="8" spawntime="60" />
@@ -3982,6 +4015,9 @@
 	</monster>
 	<monster centerx="628" centery="420" centerz="8" radius="5">
 		<monster name="Hydra" x="-1" y="1" z="8" spawntime="40" />
+	</monster>
+	<monster centerx="407" centery="421" centerz="8" radius="1">
+		<monster name="Corym Skirmisher" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="474" centery="421" centerz="8" radius="5">
 		<monster name="Dwarf" x="-1" y="0" z="8" spawntime="60" />
@@ -7749,11 +7785,108 @@
 		<monster name="Fire Elemental" x="0" y="8" z="11" spawntime="40" />
 		<monster name="Warlock" x="2" y="8" z="11" spawntime="40" />
 	</monster>
+	<monster centerx="429" centery="461" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="0" y="3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="465" centery="461" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="-1" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="478" centery="461" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="0" y="3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="492" centery="475" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="-1" y="2" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="485" centery="482" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="2" y="3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="492" centery="482" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="-2" y="-1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="415" centery="489" centerz="11" radius="3">
+		<monster name="Tarantula" x="0" y="1" z="11" spawntime="60" />
+		<monster name="Bat" x="1" y="1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="443" centery="489" centerz="11" radius="3">
+		<monster name="Tarantula" x="-3" y="2" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="450" centery="489" centerz="11" radius="3">
+		<monster name="Bat" x="2" y="0" z="11" spawntime="60" />
+		<monster name="Tarantula" x="3" y="3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="464" centery="489" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="1" y="3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="485" centery="489" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="2" y="-2" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="415" centery="496" centerz="11" radius="3">
+		<monster name="Bat" x="3" y="-3" z="11" spawntime="60" />
+		<monster name="Tarantula" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="422" centery="496" centerz="11" radius="3">
+		<monster name="Tarantula" x="-3" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="443" centery="496" centerz="11" radius="3">
+		<monster name="Bat" x="0" y="-3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="408" centery="503" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="3" y="3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="415" centery="503" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="3" y="-2" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="429" centery="503" centerz="11" radius="3">
+		<monster name="Rat" x="3" y="3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="485" centery="503" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="-1" y="-2" z="11" spawntime="60" />
+	</monster>
 	<monster centerx="258" centery="504" centerz="11" radius="5">
 		<monster name="Gargoyle" x="-3" y="-1" z="11" spawntime="60" />
 		<monster name="Crypt Shambler" x="1" y="-1" z="11" spawntime="60" />
 		<monster name="Gargoyle" x="-3" y="1" z="11" spawntime="60" />
 		<monster name="Crypt Shambler" x="1" y="1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="436" centery="510" centerz="11" radius="3">
+		<monster name="Tarantula" x="3" y="-2" z="11" spawntime="60" />
+		<monster name="Rat" x="1" y="-1" z="11" spawntime="60" />
+		<monster name="Tarantula" x="2" y="-1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="443" centery="510" centerz="11" radius="3">
+		<monster name="Tarantula" x="-3" y="-1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="415" centery="517" centerz="11" radius="3">
+		<monster name="Tarantula" x="1" y="2" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="422" centery="517" centerz="11" radius="3">
+		<monster name="Rat" x="3" y="-2" z="11" spawntime="60" />
+		<monster name="Rat" x="2" y="-1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="471" centery="517" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="0" y="-2" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="485" centery="524" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="2" y="-3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="492" centery="524" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="-3" y="-1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="415" centery="531" centerz="11" radius="3">
+		<monster name="Tarantula" x="0" y="2" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="471" centery="531" centerz="11" radius="3">
+		<monster name="Tarantula" x="1" y="3" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="422" centery="538" centerz="11" radius="3">
+		<monster name="Tarantula" x="3" y="-2" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="464" centery="538" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="1" y="1" z="11" spawntime="60" />
+		<monster name="Stonerefiner" x="3" y="1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="492" centery="538" centerz="11" radius="3">
+		<monster name="Stonerefiner" x="-2" y="-2" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="446" centery="581" centerz="11" radius="5">
 		<monster name="Dipthrah" x="-2" y="-2" z="11" spawntime="60" />
@@ -8164,6 +8297,87 @@
 		<monster name="Rahemos" x="-2" y="2" z="12" spawntime="60" />
 		<monster name="Mahrdis" x="1" y="2" z="12" spawntime="60" />
 	</monster>
+	<monster centerx="450" centery="426" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="3" y="2" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="3" y="3" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="450" centery="433" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="2" y="-3" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="478" centery="440" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="3" y="0" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="2" y="1" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="2" y="3" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="485" centery="440" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-3" y="-3" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="-3" y="2" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="450" centery="454" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-2" y="-2" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="2" y="-1" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="-2" y="1" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="1" y="2" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="457" centery="454" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-1" y="-1" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="-3" y="1" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="1" y="1" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="450" centery="461" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="3" y="-3" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="2" y="-2" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="471" centery="461" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-1" y="-2" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="450" centery="468" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-1" y="2" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="464" centery="468" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="1" y="3" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="485" centery="468" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="0" y="3" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="492" centery="468" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-3" y="1" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="457" centery="475" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-2" y="-1" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="464" centery="475" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="1" y="-3" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="3" y="-3" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="471" centery="475" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="0" y="-3" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="478" centery="475" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-2" y="1" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="485" centery="475" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-1" y="-3" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="450" centery="489" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-3" y="-1" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="1" y="0" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="457" centery="489" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="1" y="1" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="464" centery="489" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-1" y="2" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="471" centery="489" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="3" y="1" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="478" centery="489" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="3" y="3" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="492" centery="489" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="-1" y="3" z="12" spawntime="60" />
+	</monster>
 	<monster centerx="251" centery="499" centerz="12" radius="5">
 		<monster name="Rahemos" x="-1" y="-2" z="12" spawntime="60" />
 		<monster name="Banshee" x="3" y="-2" z="12" spawntime="60" />
@@ -8172,6 +8386,16 @@
 		<monster name="Thalas" x="1" y="1" z="12" spawntime="60" />
 		<monster name="Rahemos" x="-1" y="2" z="12" spawntime="60" />
 		<monster name="Banshee" x="3" y="2" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="450" centery="503" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="2" y="2" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="457" centery="503" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="2" y="1" z="12" spawntime="60" />
+	</monster>
+	<monster centerx="471" centery="503" centerz="12" radius="3">
+		<monster name="Stonerefiner" x="3" y="2" z="12" spawntime="60" />
+		<monster name="Stonerefiner" x="1" y="3" z="12" spawntime="60" />
 	</monster>
 	<monster centerx="525" centery="705" centerz="12" radius="5">
 		<monster name="Fire Elemental" x="0" y="-2" z="12" spawntime="40" />
