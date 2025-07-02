@@ -6191,17 +6191,6 @@
 	<monster centerx="261" centery="453" centerz="9" radius="5">
 		<monster name="Necromancer" x="0" y="0" z="9" spawntime="40" />
 	</monster>
-	<monster centerx="253" centery="464" centerz="9" radius="5">
-		<monster name="Dipthrah" x="0" y="-2" z="9" spawntime="60" />
-		<monster name="Omruc" x="3" y="-1" z="9" spawntime="60" />
-		<monster name="Demon" x="-1" y="0" z="9" spawntime="60" />
-		<monster name="Morguthis" x="3" y="0" z="9" spawntime="60" />
-		<monster name="Ashmunrah" x="0" y="1" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="259" centery="464" centerz="9" radius="5">
-		<monster name="Banshee" x="0" y="-2" z="9" spawntime="60" />
-		<monster name="Banshee" x="0" y="2" z="9" spawntime="60" />
-	</monster>
 	<monster centerx="301" centery="472" centerz="9" radius="8">
 		<monster name="Ghoul" x="-2" y="-6" z="9" spawntime="60" />
 		<monster name="Ghoul" x="2" y="-6" z="9" spawntime="60" />
@@ -7896,15 +7885,6 @@
 	<monster centerx="492" centery="538" centerz="11" radius="3">
 		<monster name="Stonerefiner" x="-2" y="-2" z="11" spawntime="60" />
 	</monster>
-	<monster centerx="446" centery="581" centerz="11" radius="5">
-		<monster name="Dipthrah" x="-2" y="-2" z="11" spawntime="60" />
-		<monster name="Omruc" x="1" y="-1" z="11" spawntime="60" />
-		<monster name="Banshee" x="4" y="-1" z="11" spawntime="60" />
-		<monster name="Demon" x="-5" y="0" z="11" spawntime="60" />
-		<monster name="Omruc" x="1" y="1" z="11" spawntime="60" />
-		<monster name="Banshee" x="4" y="1" z="11" spawntime="60" />
-		<monster name="Dipthrah" x="-2" y="2" z="11" spawntime="60" />
-	</monster>
 	<monster centerx="416" centery="586" centerz="11" radius="5">
 		<monster name="Necromancer" x="-1" y="-2" z="11" spawntime="60" />
 		<monster name="Necromancer" x="1" y="-2" z="11" spawntime="60" />
@@ -8006,15 +7986,6 @@
 		<monster name="Necromancer" x="3" y="2" z="11" spawntime="60" />
 		<monster name="Necromancer" x="-2" y="4" z="11" spawntime="60" />
 		<monster name="Necromancer" x="1" y="4" z="11" spawntime="60" />
-	</monster>
-	<monster centerx="480" centery="664" centerz="11" radius="5">
-		<monster name="Dipthrah" x="-3" y="-2" z="11" spawntime="60" />
-		<monster name="Omruc" x="1" y="-1" z="11" spawntime="60" />
-		<monster name="Banshee" x="4" y="-1" z="11" spawntime="60" />
-		<monster name="Demon" x="-5" y="0" z="11" spawntime="60" />
-		<monster name="Morguthis" x="1" y="1" z="11" spawntime="60" />
-		<monster name="Banshee" x="4" y="1" z="11" spawntime="60" />
-		<monster name="Dipthrah" x="-3" y="2" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="554" centery="713" centerz="11" radius="5">
 		<monster name="Fire Elemental" x="2" y="-2" z="11" spawntime="40" />
@@ -8278,15 +8249,6 @@
 	<monster centerx="629" centery="218" centerz="12" radius="2">
 		<monster name="Plaguesmith" x="-1" y="0" z="12" spawntime="90" />
 	</monster>
-	<monster centerx="309" centery="281" centerz="12" radius="5">
-		<monster name="Rahemos" x="0" y="-2" z="12" spawntime="60" />
-		<monster name="Thalas" x="-2" y="-1" z="12" spawntime="60" />
-		<monster name="Banshee" x="3" y="-1" z="12" spawntime="60" />
-		<monster name="Demon" x="-4" y="0" z="12" spawntime="60" />
-		<monster name="Thalas" x="1" y="0" z="12" spawntime="60" />
-		<monster name="Rahemos" x="-1" y="1" z="12" spawntime="60" />
-		<monster name="Banshee" x="3" y="1" z="12" spawntime="60" />
-	</monster>
 	<monster centerx="576" centery="309" centerz="12" radius="16">
 		<monster name="Fire Elemental" x="-3" y="-7" z="12" spawntime="60" />
 		<monster name="Fire Elemental" x="-8" y="-6" z="12" spawntime="60" />
@@ -8295,15 +8257,6 @@
 		<monster name="Dragon" x="8" y="0" z="12" spawntime="60" />
 		<monster name="Dragon" x="-10" y="2" z="12" spawntime="60" />
 		<monster name="Fire Elemental" x="-8" y="2" z="12" spawntime="60" />
-	</monster>
-	<monster centerx="255" centery="413" centerz="12" radius="5">
-		<monster name="Vashresamun" x="2" y="-2" z="12" spawntime="60" />
-		<monster name="Rahemos" x="-1" y="-1" z="12" spawntime="60" />
-		<monster name="Banshee" x="3" y="-1" z="12" spawntime="60" />
-		<monster name="Demon" x="-3" y="0" z="12" spawntime="60" />
-		<monster name="Banshee" x="3" y="1" z="12" spawntime="60" />
-		<monster name="Rahemos" x="-2" y="2" z="12" spawntime="60" />
-		<monster name="Mahrdis" x="1" y="2" z="12" spawntime="60" />
 	</monster>
 	<monster centerx="450" centery="426" centerz="12" radius="3">
 		<monster name="Stonerefiner" x="3" y="2" z="12" spawntime="60" />
@@ -8385,15 +8338,6 @@
 	</monster>
 	<monster centerx="492" centery="489" centerz="12" radius="3">
 		<monster name="Stonerefiner" x="-1" y="3" z="12" spawntime="60" />
-	</monster>
-	<monster centerx="251" centery="499" centerz="12" radius="5">
-		<monster name="Rahemos" x="-1" y="-2" z="12" spawntime="60" />
-		<monster name="Banshee" x="3" y="-2" z="12" spawntime="60" />
-		<monster name="Thalas" x="1" y="-1" z="12" spawntime="60" />
-		<monster name="Demon" x="-3" y="0" z="12" spawntime="60" />
-		<monster name="Thalas" x="1" y="1" z="12" spawntime="60" />
-		<monster name="Rahemos" x="-1" y="2" z="12" spawntime="60" />
-		<monster name="Banshee" x="3" y="2" z="12" spawntime="60" />
 	</monster>
 	<monster centerx="450" centery="503" centerz="12" radius="3">
 		<monster name="Stonerefiner" x="2" y="2" z="12" spawntime="60" />
