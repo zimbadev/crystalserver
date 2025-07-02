@@ -398,3 +398,5 @@ database_backup
 cmake-build-*
 config.lua.dist
 
+src/core.hpp
+src/core.hpp

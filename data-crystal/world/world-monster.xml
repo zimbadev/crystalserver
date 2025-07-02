@@ -2058,6 +2058,9 @@
 		<monster name="Frost Dragon" x="-1" y="1" z="7" spawntime="60" />
 		<monster name="War Wolf" x="0" y="4" z="7" spawntime="60" />
 	</monster>
+	<monster centerx="292" centery="265" centerz="7" radius="1">
+		<monster name="Frost Dragon Hatchling" x="0" y="0" z="7" spawntime="60" />
+	</monster>
 	<monster centerx="486" centery="268" centerz="7" radius="2">
 		<monster name="Ghoul" x="1" y="1" z="7" spawntime="90" />
 	</monster>
@@ -2085,6 +2088,9 @@
 	<monster centerx="204" centery="275" centerz="7" radius="5">
 		<monster name="War Wolf" x="5" y="-1" z="7" spawntime="60" />
 	</monster>
+	<monster centerx="287" centery="275" centerz="7" radius="1">
+		<monster name="Frost Dragon Hatchling" x="0" y="0" z="7" spawntime="60" />
+	</monster>
 	<monster centerx="428" centery="276" centerz="7" radius="3">
 		<monster name="Poison Spider" x="-2" y="-3" z="7" spawntime="60" />
 		<monster name="Poison Spider" x="3" y="-1" z="7" spawntime="90" />
@@ -2105,6 +2111,9 @@
 		<monster name="Cyclops" x="1" y="-2" z="7" spawntime="90" />
 		<monster name="Cyclops" x="-2" y="2" z="7" spawntime="90" />
 		<monster name="Cyclops" x="-1" y="2" z="7" spawntime="90" />
+	</monster>
+	<monster centerx="299" centery="283" centerz="7" radius="1">
+		<monster name="Frost Dragon Hatchling" x="0" y="0" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="484" centery="283" centerz="7" radius="2">
 		<monster name="Ghoul" x="2" y="-2" z="7" spawntime="90" />
@@ -5997,23 +6006,13 @@
 		<monster name="Demon Skeleton" x="4" y="0" z="9" spawntime="40" />
 		<monster name="Priestess" x="1" y="5" z="9" spawntime="40" />
 	</monster>
-	<monster centerx="379" centery="371" centerz="9" radius="1">
-		<monster name="Swamp Troll" x="0" y="1" z="9" spawntime="60" />
-	</monster>
 	<monster centerx="331" centery="375" centerz="9" radius="5">
 		<monster name="Skeleton" x="-1" y="-3" z="9" spawntime="60" />
 		<monster name="Skeleton" x="0" y="4" z="9" spawntime="60" />
 	</monster>
-	<monster centerx="371" centery="380" centerz="9" radius="1">
-		<monster name="Troll" x="0" y="0" z="9" spawntime="60" />
-	</monster>
 	<monster centerx="345" centery="381" centerz="9" radius="5">
 		<monster name="Skeleton" x="4" y="0" z="9" spawntime="60" />
 		<monster name="Skeleton" x="-1" y="2" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="388" centery="384" centerz="9" radius="3">
-		<monster name="Rotworm" x="0" y="-3" z="9" spawntime="60" />
-		<monster name="Rotworm" x="-1" y="2" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="516" centery="386" centerz="9" radius="20">
 		<monster name="Demon Skeleton" x="-4" y="-17" z="9" spawntime="40" />
@@ -6034,12 +6033,6 @@
 	<monster centerx="332" centery="393" centerz="9" radius="5">
 		<monster name="Skeleton" x="0" y="-3" z="9" spawntime="60" />
 		<monster name="Skeleton" x="0" y="3" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="364" centery="393" centerz="9" radius="1">
-		<monster name="Troll" x="0" y="0" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="378" centery="393" centerz="9" radius="1">
-		<monster name="Troll" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="251" centery="403" centerz="9" radius="5">
 		<monster name="Necromancer" x="0" y="-1" z="9" spawntime="60" />
