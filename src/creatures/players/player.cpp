@@ -5598,18 +5598,28 @@ std::array<double_t, COMBAT_COUNT> Player::getFinalDamageReduction() const {
 }
 
 void Player::calculateDamageReductionFromEquipedItems(std::array<double_t, COMBAT_COUNT> &combatReductionArray) const {
+	std::array<int16_t, COMBAT_COUNT> totalMantraAbsorbMap {};
+	totalMantraAbsorbMap.fill(0);
+
 	for (uint8_t slot = CONST_SLOT_FIRST; slot <= CONST_SLOT_LAST; ++slot) {
 		const auto &item = inventory[slot];
 		if (item) {
-			calculateDamageReductionFromItem(combatReductionArray, item);
+			calculateDamageReductionFromItem(combatReductionArray, totalMantraAbsorbMap, item);
+		}
+	}
+
+	for (uint16_t combatTypeIndex = 0; combatTypeIndex < COMBAT_COUNT; combatTypeIndex++) {
+		const int16_t mantraAbsorbPercent = getMantraAbsorbPercent(totalMantraAbsorbMap[combatTypeIndex]);
+		if (mantraAbsorbPercent != 0) {
+			combatReductionArray[combatTypeIndex] = calculateDamageReduction(combatReductionArray[combatTypeIndex], mantraAbsorbPercent);
 		}
 	}
 }
 
-void Player::calculateDamageReductionFromItem(std::array<double_t, COMBAT_COUNT> &combatReductionArray, const std::shared_ptr<Item> &item) const {
+void Player::calculateDamageReductionFromItem(std::array<double_t, COMBAT_COUNT> &combatReductionArray, std::array<int16_t, COMBAT_COUNT> &totalMantraAbsorbMap, const std::shared_ptr<Item> &item) const {
 	for (uint16_t combatTypeIndex = 0; combatTypeIndex < COMBAT_COUNT; combatTypeIndex++) {
 		updateDamageReductionFromItemImbuement(combatReductionArray, item, combatTypeIndex);
-		updateDamageReductionFromItemAbility(combatReductionArray, item, combatTypeIndex);
+		updateDamageReductionFromItemAbility(combatReductionArray, totalMantraAbsorbMap, item, combatTypeIndex);
 	}
 }
 
@@ -5628,7 +5638,7 @@ void Player::updateDamageReductionFromItemImbuement(
 }
 
 void Player::updateDamageReductionFromItemAbility(
-	std::array<double_t, COMBAT_COUNT> &combatReductionArray, const std::shared_ptr<Item> &item, uint16_t combatTypeIndex
+	std::array<double_t, COMBAT_COUNT> &combatReductionArray, std::array<int16_t, COMBAT_COUNT> &totalMantraAbsorbMap, const std::shared_ptr<Item> &item, uint16_t combatTypeIndex
 ) const {
 	if (!item) {
 		return;
@@ -5643,10 +5653,7 @@ void Player::updateDamageReductionFromItemAbility(
 
 		const int16_t mantraElementReduction = itemType.abilities->mantraAbsorbValue[combatTypeIndex];
 		if (mantraElementReduction != 0) {
-			const int16_t mantraAbsorbPercent = getMantraAbsorbPercent(mantraElementReduction);
-			if (mantraAbsorbPercent != 0) {
-				combatReductionArray[combatTypeIndex] = calculateDamageReduction(combatReductionArray[combatTypeIndex], mantraAbsorbPercent);
-			}
+			totalMantraAbsorbMap[combatTypeIndex] += mantraElementReduction;
 		}
 	}
 }
@@ -11635,6 +11642,15 @@ uint16_t Player::getMantraTotal() const {
 
 int16_t Player::getMantraAbsorbPercent(int16_t mantraAbsorbValue) const {
 	const float multiplier = 1.0f;
+
+	if (isSerene()) {
+		mantraAbsorbValue *= 2;
+	}
+
+	const int16_t mantraTotal = static_cast<int16_t>(getMantraTotal());
+	if (mantraAbsorbValue > mantraTotal) {
+		mantraAbsorbValue = mantraTotal;
+	}
 
 	if (m_party) {
 		for (const auto &partyMember : m_party->getMembers()) {
