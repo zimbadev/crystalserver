@@ -1,0 +1,126 @@
+[33ma121385[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mbackup-before-reset[m[33m)[m Update storages.lua
+[33ma647862[m up
+[33m9232fa8[m Merge pull request #19 from xamerarpg/codex/corregir-error-de-índice-nulo-en-lever.lua
+[33mb20ff69[m[33m ([m[1;31morigin/codex/corregir-error-de-índice-nulo-en-lever.lua[m[33m)[m fix missing storage constants
+[33ma42d3d8[m Merge pull request #18 from xamerarpg/codex/corregir-error-en-quests.lua
+[33me2edd9e[m[33m ([m[1;31morigin/codex/corregir-error-en-quests.lua[m[33m)[m Fix quest storage table
+[33m91c795d[m Merge pull request #17 from xamerarpg/updates
+[33mf4fd804[m[33m ([m[1;31morigin/updates[m[33m)[m Merge pull request #16 from xamerarpg/codex/apply-xml-and-lua-diffs-for-mounts-and-outfits
+[33m988352c[m Merge pull request #15 from xamerarpg/codex/apply-shop-items-diff-to-npc-scripts
+[33m4183a70[m Merge pull request #14 from xamerarpg/codex/apply-diff-to-magma-bubble-fight-and-death-handling
+[33m80aee7e[m[33m ([m[1;31morigin/codex/apply-diff-to-magma-bubble-fight-and-death-handling[m[33m)[m Merge branch 'updates' into codex/apply-diff-to-magma-bubble-fight-and-death-handling
+[33ma0c3369[m Merge pull request #13 from xamerarpg/codex/apply-diff-to-monsters-and-scripts
+[33m5752063[m[33m ([m[1;31morigin/codex/apply-diff-to-monsters-and-scripts[m[33m)[m Merge branch 'updates' into codex/apply-diff-to-monsters-and-scripts
+[33ma1311b1[m Merge pull request #12 from xamerarpg/codex/aplica-diff-en-archivo-dawnport_vocation_trial.lua
+[33m210694e[m Merge pull request #11 from xamerarpg/codex/aplica-cambios-del-diff-en-archivos-lua
+[33m4669f88[m Merge pull request #10 from xamerarpg/codex/revisar-y-aplicar-cambios-en-npc-script
+[33meaf0a65[m[33m ([m[1;31morigin/codex/apply-xml-and-lua-diffs-for-mounts-and-outfits[m[33m)[m Add new mounts and outfits
+[33m894b1eb[m[33m ([m[1;31morigin/codex/apply-shop-items-diff-to-npc-scripts[m[33m)[m Add new loot items
+[33m5bcf9c1[m Fix magma bubble encounter timings and damage
+[33m0fc3be6[m Apply quest and monster updates
+[33med7e09d[m[33m ([m[1;31morigin/codex/aplica-diff-en-archivo-dawnport_vocation_trial.lua[m[33m)[m Add missing light jo staff removal
+[33mf33a988[m[33m ([m[1;31morigin/codex/aplica-cambios-del-diff-en-archivos-lua[m[33m)[m Fix teleport and monster race
+[33m5ae31f0[m[33m ([m[1;31morigin/codex/revisar-y-aplicar-cambios-en-npc-script[m[33m)[m Fix Enpa-Deia Pema pilgrimage dialogue
+[33m0232d5b[m Merge pull request #1 from xamerarpg/codex/modificar-cálculo-de-reducción-elemental-para-serene
+[33m9d55c75[m Merge pull request #9 from xamerarpg/codex/implementar-the-way-of-the-monk-questline
+[33m0fb98ba[m[33m ([m[1;31morigin/codex/implementar-the-way-of-the-monk-questline[m[33m)[m fix shrine quest progress
+[33m4316363[m Create COMMITS.txt
+[33m35480c4[m up world
+[33m18dcd6f[m up
+[33mf9f597f[m world
+[33m44dd80b[m up
+[33me210715[m feat: outfits and mounts saving to database - update mountId types and remove unused storage constants (from zimbadev/crystalserver#179)
+[33me673e52[m Merge pull request #2 from xamerarpg/codex/aplicar-mejora-del-commit-1c17cee
+[33m4971025[m[33m ([m[1;31morigin/codex/aplicar-mejora-del-commit-1c17cee[m[33m)[m fix: ensure stamina displays 42 hours when disabled
+[33m1a59bef[m[33m ([m[1;31morigin/codex/modificar-cálculo-de-reducción-elemental-para-serene[m[33m)[m Fix mantra absorb accumulation
+[33m3375dbc[m Update compile.sh
+[33m1b1ba92[m Create compile.sh
+[33md47713b[m Update config.lua
+[33m15c030b[m up
+[33madf547e[m feat: add ferumbras tower lever actions and functionality (#223)
+[33me3d2e9d[m feat: data-crystal Update to 15.00 (#221)
+[33m4d0f949[m feat: game protocol 15.00 (#171)
+[33m0ac9e19[m fix: quest issues (#197)
+[33mba9f5e4[m fix: party disband (#193)
+[33me00110d[m Update quest_reward_common.lua
+[33md5d5542[m fix: general fixes (#196)
+[33mb53f271[m Add new monsters for the Inquisition quest line and adjust NPC shop items (#216)
+[33md33ee7d[m Merge pull request #215 from whitecrixu/main
+[33m80ed35e[m fix: update references from Premium Island to Thyranox in ACTION_IDS and related scripts
+[33m4ac80cf[m feat: CONDITION_AGONY (#174)
+[33m3b1712a[m feat: update crystal map - add new quest scripts for Demon Helmet and Demon Oak quests (#213)
+[33m34647f1[m fix: global stow (#205)
+[33m9998dcd[m fix: critical damage in single target (#204)
+[33m4f0eb22[m fix: duplicated warnings (#190)
+[33mceebb5c[m fix: update start.sh and update crystal server map (#188)
+[33mebd689b[m fix: crash while moving player in diagonal to a teleport (#181)
+[33me5c2b01[m fix: outfits and mounts attributes (#187)
+[33m93a37e1[m fix: fluids descriptions (#186)
+[33m5f82a74[m fix: guild_wars update inteval (#185)
+[33me2ea09c[m fix: ferumbras quest (#178)
+[33m6ed85c7[m fix: duplicated console errors in data-crystal (#177)
+[33m74d6fa2[m fix: delete customs
+[33m0c8673c[m fix: add migration to fix sql database player_charms
+[33ma890f3a[m fix: player deletion
+[33meca5191[m fix: silver and gold token loot (#161)
+[33m82f9a84[m Revert "fix: server startup loop on "Running with x threads" (#141)"
+[33m7af57b3[m feat: add universal installation script for CrystalServer (multi-distro, user-friendly) (#175)
+[33meecb812[m fix: root area spell (#173)
+[33m9766759[m fix: mind stone
+[33m263225c[m fix: mindstone custom fix (#159)
+[33me221f66[m fix: monsters bestiary duplicates (#158)
+[33mffe69e8[m fix: some monsters (#157)
+[33me48f79a[m fix: spectral stone mission (#154)
+[33m92cae6f[m fix: coral comb quest (#148)
+[33m8287fdb[m fix: add support for IPv4, IPv6 (#170)
+[33mee50b23[m fix: duplicated
+[33maa1db48[m Merge remote-tracking branch 'origin/tibia1412'
+[33maee2ab0[m Squashed commit of the following:
+[33m3a5e67f[m fix: doors console error (#169)
+[33m5591463[m fix: stash bugs
+[33mb4b580d[m fix: ebb and flow (#167)
+[33m480b326[m fix: taintLevel nill value
+[33mc4fed50[m fix: dreamer's challenge quest (#147)
+[33m043864e[m heartofdestruction-tile-fix (#155)
+[33m37934b0[m feat: set storage debug command (#151)
+[33mc46ecc4[m fix: djinn quest (#160)
+[33m4ce1df4[m fix: heart of destruction bosses (#156)
+[33m131a638[m heart-of-destruction-quest-final-lever-fix (#163)
+[33m9a2a305[m fix: suggar daddy cake attack (#162)
+[33m6aa5e99[m fix: destroy obejcts (#149)
+[33m8fa73d6[m fix: add missing items
+[33mfe4bec2[m fix: immuneTime
+[33m930e67b[m fix: monsters not drop loot a nil value
+[33mc20e408[m fix: getDodgeChance
+[33med9a46d[m * protocol update and add missing things
+[33m8bfc99e[m * rename supply stash to stash
+[33m2270b3c[m Lua code format - (Stylua)
+[33m938cbf1[m * no rest for the wicked quest
+[33m295c809[m fix: what a foolish quest storage (#152)
+[33m9f32b66[m fix: the unwelcome bosstiary (#150)
+[33m0f1316a[m fix: delete duplicate (#153)
+[33mbf0630c[m Code format - (Clang-format)
+[33meee6775[m * cyclopedia update
+[33m9d0da52[m * fix console erros and update map
+[33mce59ecf[m * add agony and fix loot message
+[33m82bfa4b[m Merge branch 'tibia1412' of https://github.com/zimbadev/crystalserver into tibia1412
+[33mc4eb0f0[m fix: life and mana leech
+[33m3f37299[m Code format - (Clang-format)
+[33meff0aa8[m fix: charm savage
+[33m39ba814[m Update monster.cpp
+[33m325e960[m Merge branch 'main' into tibia1412
+[33mfdd29bb[m * stash update
+[33m21dd263[m * update files
+[33mae18a0e[m * add missing table to schema.sql
+[33md8af36d[m * amplification
+[33m528689c[m Code format - (Clang-format)
+[33md13ded2[m * apply extensions
+[33mbedadac[m Code format - (Clang-format)
+[33ma8d9759[m Merge branch 'tibia1412' of https://github.com/zimbadev/crystalserver into tibia1412
+[33ma831998[m * stats
+[33m6e122fb[m Lua code format - (Stylua)
+[33m1caaa4a[m * charms and bestiary
+[33m567bce3[m fix: quest track
+[33maaa6473[m fix: quests and mechanics (#142)
+[33m35b6003[m sam-fix-what-a-foolish-quest (#146)
+[33mf3d428a[m fix: kick p
