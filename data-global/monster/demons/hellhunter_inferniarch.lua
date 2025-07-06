@@ -98,8 +98,8 @@ monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 0, minDamage = 250, maxDamage = -400 },
 	{ name = "extended white chain", interval = 2000, chance = 15, minDamage = -275, maxDamage = -438, range = 4 },
 	{ name = "combat", interval = 3000, chance = 20, type = COMBAT_DEATHDAMAGE, minDamage = -340, maxDamage = -470, range = 4, effect = CONST_ME_MORTAREA, target = true },
-	{ name = "combat", interval = 2000, chance = 25, type = COMBAT_ENERGYDAMAGE, minDamage = -350, maxDamage = -430, range = 4,  radius = 4, shootEffect = CONST_ANI_DIAMONDARROW, effect = CONST_ME_ENERGYAREA, target = true },
-	{ name = "combat", interval = 2000, chance = 100, type = COMBAT_DEATHDAMAGE, minDamage = -240, maxDamage = -370, range = 4,  radius = 4, shootEffect = CONST_ANI_SNIPERARROW, effect = CONST_ME_BLACK_BLOOD, target = true },
+	{ name = "combat", interval = 2000, chance = 25, type = COMBAT_ENERGYDAMAGE, minDamage = -350, maxDamage = -430, range = 4, radius = 4, shootEffect = CONST_ANI_DIAMONDARROW, effect = CONST_ME_ENERGYAREA, target = true },
+	{ name = "combat", interval = 2000, chance = 100, type = COMBAT_DEATHDAMAGE, minDamage = -240, maxDamage = -370, range = 4, radius = 4, shootEffect = CONST_ANI_SNIPERARROW, effect = CONST_ME_BLACK_BLOOD, target = true },
 }
 
 monster.defenses = {
