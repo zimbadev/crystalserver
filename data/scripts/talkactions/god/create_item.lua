@@ -69,16 +69,20 @@ function createItem.onSay(player, words, param)
 	end
 
 	local result
-	local tier = tonumber(split[3])
+	local thirdParam = tonumber(split[3])
+	local canHaveTier = itemType:getClassification() > 0
 
-	if tier then
-		result = player:addItem(itemType:getId(), count, true, 0, CONST_SLOT_WHEREEVER, tier)
-	else
-		if itemType:getCharges() > 0 then
-			result = player:addItem(itemType:getId(), charges)
-		else
-			result = player:addItem(itemType:getId(), count)
+	if canHaveTier and thirdParam then
+		result = player:addItem(itemType:getId(), count, true, 0, CONST_SLOT_WHEREEVER, thirdParam)
+	elseif itemType:getCharges() > 0 and thirdParam then
+		result = player:addItem(itemType:getId(), 1)
+		if result then
+			result:setAttribute(ITEM_ATTRIBUTE_CHARGES, thirdParam)
 		end
+	elseif itemType:getCharges() > 0 then
+		result = player:addItem(itemType:getId(), charges)
+	else
+		result = player:addItem(itemType:getId(), count)
 	end
 
 	if result then
