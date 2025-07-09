@@ -120,7 +120,7 @@ end
 
 -- Increase Stamina when Attacking Trainer
 staminaBonus = {
-	target = "Training Machine",
+	target = "Target Dummy",
 	period = configManager.getNumber(configKeys.STAMINA_TRAINER_DELAY) * 60 * 1000, -- time on miliseconds trainers
 	bonus = configManager.getNumber(configKeys.STAMINA_TRAINER_GAIN), -- gain stamina trainers
 	eventsTrainer = {}, -- stamina in trainers

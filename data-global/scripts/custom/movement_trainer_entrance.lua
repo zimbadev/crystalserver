@@ -67,8 +67,21 @@ function trainerEntrance.onStepIn(creature, item, position, fromPosition)
 	end
 
 	calculatingRoom(creature.uid, config.firstRoomPosition, 0, 0)
-	Game.createMonster("Training Machine", creature:getPosition(), true, false)
-	Game.createMonster("Training Machine", creature:getPosition(), true, false)
+	player_position = creature:getPosition()
+	
+	local positions = {
+        Position(player_position.x + 1, player_position.y - 1, player_position.z),
+        Position(player_position.x - 1, player_position.y - 1, player_position.z)
+    }
+	
+
+	    for _, pos in ipairs(positions) do
+        local tile = Tile(pos)
+        local topCreature = tile and tile:getTopCreature()
+        if not (topCreature and topCreature:getName() == "Target Dummy") then
+            Game.createMonster("Target Dummy", pos, true, false)
+        end
+    end
 	return true
 end
 
