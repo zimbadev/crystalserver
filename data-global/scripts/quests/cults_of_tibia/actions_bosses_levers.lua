@@ -487,7 +487,7 @@ function cultsOfTibiaLevers.onUse(player, item, fromPosition, itemEx, toPosition
 		if player:getPosition() == Position(33074, 31884, 15) and item:getId() == 8912 then
 			local teleport = 0
 			local playersInArea = {}
-			local frompos = Position(33023, 31904, 14)
+			local frompos = Position(33023, 31904, 15)
 			local topos = Position(33052, 31932, 15)
 
 			if player:getPosition() == Position(33074, 31884, 15) then

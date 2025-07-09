@@ -423,7 +423,7 @@ std::vector<VIPGroupEntry> IOLoginData::getVIPGroupEntries(uint32_t accountId, u
 }
 
 void IOLoginData::addVIPGroupEntry(uint8_t groupId, uint32_t accountId, const std::string &groupName, bool customizable) {
-	std::string query = fmt::format("INSERT INTO `account_vipgroups` (`id`, `account_id`, `name`, `customizable`) VALUES ({}, {}, {}, {})", groupId, accountId, g_database().escapeString(groupName), customizable);
+	std::string query = fmt::format("INSERT INTO `account_vipgroups` (`account_id`, `name`, `customizable`) VALUES ({}, {}, {})", accountId, g_database().escapeString(groupName), customizable);
 	if (!g_database().executeQuery(query)) {
 		g_logger().error("Failed to add VIP Group entry for account {} and group {}. QUERY: {}", accountId, groupId, query.c_str());
 	}

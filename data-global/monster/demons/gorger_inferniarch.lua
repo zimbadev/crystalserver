@@ -91,7 +91,7 @@ monster.loot = {
 	{ id = 3053, chance = 5000, maxCount = 1 }, -- Time ring
 	{ id = 3040, chance = 5000, maxCount = 1 }, -- gold nugget
 	{ id = 3093, chance = 5000, maxCount = 1 }, -- club ring
-	--{ name = "gorger inferniarch soul core", chance = 100 },
+	{ name = "gorger inferniarch soul core", chance = 100 },
 }
 
 monster.attacks = {

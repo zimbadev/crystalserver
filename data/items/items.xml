@@ -14042,6 +14042,7 @@
 	<item fromid="4809" toid="4814" name="shallow water">
 		<attribute key="primarytype" value="natural tiles" />
 		<attribute key="fluidsource" value="water" />
+		<attribute key="type" value="trashholder" />
 		<attribute key="effect" value="bluebubble" />
 	</item>
 	<item fromid="4815" toid="4816" article="a" name="mountain">
@@ -30778,6 +30779,8 @@
 	<item id="12722" name="bucket of bog water">
 		<attribute key="description" value="It seems the water wants to go back to the bog it came from. Soon it will all be trickled away" />
 		<attribute key="weight" value="3000" />
+		<attribute key="duration" value="3600" />
+		<attribute key="decayTo" value="12819" />
 	</item>
 	<item id="12723" name="RESERVED SPRITE" />
 	<item id="12724" name="heavy stone">

@@ -100,7 +100,7 @@ monster.loot = {
 	{ id = 3100, chance = 5000, maxCount = 1 }, -- Ring of Healing
 	{ name = "Mummified Demon Finger", chance = 500, maxCount = 1 },
 	{ name = "Gold Ring", chance = 500, maxCount = 1 },
-	--{ name = "brinebrute inferniarch soul core", chance = 100, maxCount = 1 },
+	{ name = "brinebrute inferniarch soul core", chance = 100, maxCount = 1 },
 }
 
 monster.attacks = {

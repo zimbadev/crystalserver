@@ -19,7 +19,7 @@ function promotion.onSay(player, words, param)
 		player:sendCancelMessage("Sorry, you need level " .. config.requiredLevel .. " to be promoted.")
 		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 	elseif not player:removeMoneyBank(config.cost) then
-		player:sendCancelMessage(string.format("You need at least %d gold coins to have a promotion.", config.price))
+		player:sendCancelMessage(string.format("You need at least %d gold coins to have a promotion.", config.cost ))
 		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 	else
 		player:sendTextMessage(MESSAGE_LOOK, "You received a promotion!")
