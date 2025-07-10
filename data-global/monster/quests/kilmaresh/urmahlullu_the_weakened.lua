@@ -112,6 +112,7 @@ monster.loot = {
 	{ id = 30403, chance = 160 }, -- enchanted theurgic amulet
 	{ name = "sun medal", chance = 160 },
 	{ name = "sunray emblem", chance = 160 },
+	{ id = 50150, chance = 560 }, -- ring of orange plasma
 }
 
 monster.attacks = {

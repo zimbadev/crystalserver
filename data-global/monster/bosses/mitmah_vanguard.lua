@@ -104,6 +104,7 @@ monster.loot = {
 	{ name = "stoic iks sandals", chance = 500 },
 	{ name = "stoic iks headpiece", chance = 500 },
 	{ name = "stoic iks culet", chance = 500 },
+	{ name = "iks footwraps", chance = 500 },
 }
 
 monster.attacks = {

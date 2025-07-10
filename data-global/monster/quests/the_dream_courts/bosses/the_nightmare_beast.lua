@@ -90,6 +90,7 @@ monster.loot = {
 	{ name = "chaos mace", chance = 10380 },
 	{ name = "crystal coin", chance = 22580, maxCount = 3 },
 	{ name = "dark whispers", chance = 3230 },
+	{ name = "dark vision bandana", chance = 2830 },
 	{ name = "dragon figurine", chance = 7550 },
 	{ name = "energy bar", chance = 91510 },
 	{ name = "giant emerald", chance = 1890 },

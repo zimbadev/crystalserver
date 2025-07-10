@@ -81,6 +81,7 @@ monster.loot = {
 	{ id = 9057, chance = 5810, maxCount = 2 }, -- small topaz
 	{ id = 3030, chance = 4520, maxCount = 2 }, -- small ruby
 	{ id = 7412, chance = 900 }, -- butcher's axe
+	{ id = 50176, chance = 1590 }, -- depth claws
 	{ id = 3381, chance = 770 }, -- crown armor
 	{ id = 21176, chance = 1420 }, -- execowtioner axe
 	{ id = 3318, chance = 770 }, -- knight axe

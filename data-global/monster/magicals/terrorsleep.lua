@@ -98,6 +98,7 @@ monster.loot = {
 	{ id = 20029, chance = 1130 }, -- broken dream
 	{ name = "trapped bad dream monster", chance = 13000 },
 	{ name = "bowl of terror sweat", chance = 18000 },
+	{ id = 50152, chance = 560 }, -- collar of orange plasma
 }
 
 monster.attacks = {

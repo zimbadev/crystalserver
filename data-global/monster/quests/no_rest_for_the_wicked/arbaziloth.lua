@@ -132,6 +132,7 @@ monster.loot = {
 	{ id = 49532, chance = 400, maxCount = 1 }, -- hellstalker visor
 	{ id = 49533, chance = 400, maxCount = 1 }, -- dreadfire headpiece
 	{ id = 49534, chance = 400, maxCount = 1 }, -- demonfang mask
+	{ id = 50189, chance = 800, maxCount = 1 }, -- demon mengu
 }
 
 monster.attacks = {

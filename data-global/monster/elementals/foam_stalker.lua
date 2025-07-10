@@ -88,6 +88,7 @@ monster.loot = {
 	{ name = "mercenary sword", chance = 4167 },
 	{ name = "knight legs", chance = 3649 },
 	{ name = "violet gem", chance = 3389 },
+	{ id = 50152, chance = 560 }, -- collar of orange plasma
 }
 
 monster.attacks = {

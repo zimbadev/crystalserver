@@ -93,6 +93,7 @@ monster.loot = {
 	{ name = "lion wand", chance = 35 },
 	{ name = "lion amulet", chance = 35 },
 	{ name = "lion rod", chance = 35 },
+	{ name = "lion claws", chance = 35 },
 }
 
 monster.attacks = {
