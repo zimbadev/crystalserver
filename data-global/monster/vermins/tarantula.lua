@@ -85,6 +85,7 @@ monster.loot = {
 	{ name = "plate shield", chance = 2000 },
 	{ name = "spider fangs", chance = 4820 },
 	{ name = "tarantula egg", chance = 10000 },
+	{ name = "monk robe", chance = 390 },
 }
 
 monster.attacks = {

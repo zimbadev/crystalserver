@@ -211,6 +211,7 @@ local function removeItems(player)
 		3267, -- Dagger
 		3412, -- Wooden shield
 		35562, -- Quiver
+		50166, -- Light jo staff
 	}
 	for i = 1, #equipmentItemIds do
 		local equipmentItemAmount = player:getItemCount(equipmentItemIds[i])

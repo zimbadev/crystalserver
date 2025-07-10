@@ -6659,6 +6659,7 @@ void Player::setSpecialMenuAvailable(bool stashBool, bool marketMenuBool, bool d
 void Player::addOutfit(uint16_t lookType, uint8_t addons) {
 	for (auto &outfitEntry : outfitsMap) {
 		if (outfitEntry.lookType == lookType) {
+			setOutfitsModified(true);
 			outfitEntry.addons |= addons;
 			return;
 		}

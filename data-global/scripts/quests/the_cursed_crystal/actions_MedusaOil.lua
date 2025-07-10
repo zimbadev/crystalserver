@@ -63,6 +63,14 @@ function theCursedMedusa.onUse(player, item, fromPosition, target, toPosition, i
 	end
 
 	player:sendTextMessage(MESSAGE_FAILURE, "Sorry, not possible.")
+
+	if item.itemid == 11466 and target.itemid == 2873 then
+    	target:transform(12819)
+    	item:remove(1)
+    	toPosition:sendMagicEffect(CONST_ME_MAGIC_BLUE)
+    	return true
+	end
+
 end
 
 theCursedMedusa:id(9106, 11466, 21504, 21505, 21507)

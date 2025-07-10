@@ -90,6 +90,8 @@ monster.loot = {
 	{ name = "alicorn quiver", chance = 250 },
 	{ name = "arcanomancer regalia", chance = 250 },
 	{ name = "arcanomancer folio", chance = 250 },
+	{ name = "ethereal coned hat", chance = 250 },
+	{ id = 50147, chance = 250 },
 	{ id = 39183, chance = 250 }, -- name = "charged arcanomancer sigil"
 	{ id = 39186, chance = 250 }, -- name = "charged arboreal ring"
 	{ id = 39180, chance = 250 }, -- name = "charged alicorn ring"

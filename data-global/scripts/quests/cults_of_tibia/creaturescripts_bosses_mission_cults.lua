@@ -5,7 +5,7 @@ local bosses = {
 	["the unarmored voidborn"] = { storage = Storage.Quest.U11_40.CultsOfTibia.Orcs.Mission, value = 2 },
 	["the false god"] = { storage = Storage.Quest.U11_40.CultsOfTibia.Minotaurs.Mission, value = 4 },
 	["the sandking"] = { storage = Storage.Quest.U11_40.CultsOfTibia.Life.Mission, value = 8, global = "sandking", g_value = 5 },
-	["the corruptor of souls"] = { createNew = "The Source Of Corruption", pos = Position(33039, 31922, 15), removeMonster = "zarcorix of yalahar", area1 = Position(33073, 31885, 15), area2 = Position(33075, 31887, 15) },
+	["the corruptor of souls"] = { createNew = "The Source Of Corruption", pos = Position(33039, 31922, 15), removeMonster = "zarcorix of yalahar", area1 = Position(33029, 31913, 15), area2 = Position(33051, 31929, 15) },
 	["the source of corruption"] = { storage = Storage.Quest.U11_40.CultsOfTibia.FinalBoss.Mission, value = 2 },
 }
 

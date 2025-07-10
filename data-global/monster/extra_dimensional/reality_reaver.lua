@@ -99,6 +99,8 @@ monster.loot = {
 	{ id = 23529, chance = 370 }, -- ring of blue plasma
 	{ id = 23544, chance = 300 }, -- collar of red plasma
 	{ id = 23531, chance = 220 }, -- ring of green plasma
+	{ id = 50150, chance = 560 }, -- ring of orange plasma
+	{ id = 50152, chance = 560 }, -- collar of orange plasma
 }
 
 monster.attacks = {

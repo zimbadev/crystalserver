@@ -107,6 +107,8 @@ monster.loot = {
 	{ id = 35522, chance = 890 }, -- jungle wand
 	{ id = 35519, chance = 890 }, -- makeshift boots
 	{ id = 35520, chance = 890 }, -- make-do boots
+	{ id = 50270, chance = 890 }, -- bambus jo
+	{ id = 50186, chance = 890 }, -- jungle survivor legs
 }
 
 monster.attacks = {

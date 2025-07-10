@@ -45,21 +45,21 @@
 	<house name="Tiquanda House III" houseid="45" entryx="551" entryy="465" entryz="6" rent="15000" townid="3" size="52" clientid="0" beds="3" />
 	<house name="Tiquanda House IV" houseid="46" entryx="549" entryy="455" entryz="6" rent="15000" townid="3" size="51" clientid="0" beds="3" />
 	<house name="Tiquanda House V" houseid="47" entryx="539" entryy="456" entryz="6" rent="15000" townid="3" size="51" clientid="0" beds="3" />
-	<house name="Venore House I" houseid="48" entryx="404" entryy="406" entryz="6" rent="20000" townid="5" size="148" clientid="0" beds="3" />
-	<house name="Venore House II" houseid="49" entryx="412" entryy="406" entryz="6" rent="20000" townid="5" size="137" clientid="0" beds="3" />
-	<house name="Venore House III" houseid="50" entryx="407" entryy="409" entryz="6" rent="11000" townid="5" size="90" clientid="0" beds="3" />
-	<house name="Venore House IV" houseid="51" entryx="395" entryy="405" entryz="6" rent="11000" townid="5" size="88" clientid="0" beds="3" />
-	<house name="Venore House V" houseid="52" entryx="386" entryy="398" entryz="6" rent="11000" townid="5" size="73" clientid="0" beds="3" />
-	<house name="Venore House VI" houseid="53" entryx="413" entryy="422" entryz="6" rent="11000" townid="5" size="87" clientid="0" beds="3" />
-	<house name="Venore House VII" houseid="54" entryx="415" entryy="414" entryz="6" rent="11000" townid="5" size="87" clientid="0" beds="3" />
-	<house name="Venore House VIII" houseid="55" entryx="421" entryy="402" entryz="6" rent="11000" townid="5" size="109" clientid="0" beds="3" />
-	<house name="Venore House IX" houseid="56" entryx="414" entryy="393" entryz="6" rent="11000" townid="5" size="88" clientid="0" beds="3" />
-	<house name="Venore House X" houseid="57" entryx="371" entryy="407" entryz="6" rent="8000" townid="5" size="41" clientid="0" beds="3" />
-	<house name="Venore House XI" houseid="58" entryx="371" entryy="407" entryz="6" rent="8000" townid="5" size="48" clientid="0" beds="3" />
-	<house name="Venore House XII" houseid="59" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="40" clientid="0" beds="3" />
-	<house name="Venore House XIII" houseid="60" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="33" clientid="0" beds="3" />
-	<house name="Venore House XIV" houseid="61" entryx="401" entryy="435" entryz="7" rent="8000" townid="5" size="37" clientid="0" beds="3" />
-	<house name="Venore House XV" houseid="62" entryx="404" entryy="435" entryz="7" rent="8000" townid="5" size="37" clientid="0" beds="3" />
+	<house name="Venore House I" houseid="48" entryx="404" entryy="406" entryz="6" rent="20000" townid="5" size="200" clientid="0" beds="3" />
+	<house name="Venore House II" houseid="49" entryx="412" entryy="406" entryz="6" rent="20000" townid="5" size="189" clientid="0" beds="3" />
+	<house name="Venore House III" houseid="50" entryx="407" entryy="409" entryz="6" rent="11000" townid="5" size="98" clientid="0" beds="3" />
+	<house name="Venore House IV" houseid="51" entryx="395" entryy="405" entryz="6" rent="11000" townid="5" size="94" clientid="0" beds="3" />
+	<house name="Venore House V" houseid="52" entryx="386" entryy="398" entryz="6" rent="11000" townid="5" size="80" clientid="0" beds="3" />
+	<house name="Venore House VI" houseid="53" entryx="413" entryy="422" entryz="6" rent="11000" townid="5" size="93" clientid="0" beds="3" />
+	<house name="Venore House VII" houseid="54" entryx="415" entryy="414" entryz="6" rent="11000" townid="5" size="93" clientid="0" beds="3" />
+	<house name="Venore House VIII" houseid="55" entryx="421" entryy="402" entryz="6" rent="11000" townid="5" size="115" clientid="0" beds="3" />
+	<house name="Venore House IX" houseid="56" entryx="414" entryy="393" entryz="6" rent="11000" townid="5" size="96" clientid="0" beds="3" />
+	<house name="Venore House X" houseid="57" entryx="371" entryy="407" entryz="6" rent="8000" townid="5" size="76" clientid="0" beds="3" />
+	<house name="Venore House XI" houseid="58" entryx="371" entryy="407" entryz="6" rent="8000" townid="5" size="83" clientid="0" beds="3" />
+	<house name="Venore House XII" houseid="59" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="48" clientid="0" beds="3" />
+	<house name="Venore House XIII" houseid="60" entryx="371" entryy="407" entryz="7" rent="8000" townid="5" size="48" clientid="0" beds="3" />
+	<house name="Venore House XIV" houseid="61" entryx="401" entryy="435" entryz="7" rent="8000" townid="5" size="40" clientid="0" beds="3" />
+	<house name="Venore House XV" houseid="62" entryx="404" entryy="435" entryz="7" rent="8000" townid="5" size="40" clientid="0" beds="3" />
 	<house name="Thyranox House I" houseid="63" entryx="447" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
 	<house name="Thyranox House II" houseid="64" entryx="461" entryy="633" entryz="7" rent="10500" townid="6" size="40" clientid="0" beds="3" />
 	<house name="Thyranox House III" houseid="65" entryx="459" entryy="645" entryz="7" rent="20000" townid="6" size="81" clientid="0" beds="3" />
@@ -76,8 +76,8 @@
 	<house name="Thyranox House XIV" houseid="76" entryx="421" entryy="658" entryz="6" rent="7500" townid="6" size="31" clientid="0" beds="3" />
 	<house name="Thyranox House XV" houseid="77" entryx="421" entryy="651" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
 	<house name="Thyranox House XVI" houseid="78" entryx="421" entryy="643" entryz="6" rent="7500" townid="6" size="36" clientid="0" beds="3" />
-	<house name="Venore House XVI" houseid="79" entryx="404" entryy="406" entryz="7" rent="10000" townid="5" size="80" clientid="0" beds="3" />
-	<house name="Venore House XVII" houseid="80" entryx="413" entryy="406" entryz="7" rent="10000" townid="5" size="81" clientid="0" beds="3" />
+	<house name="Venore House XVI" houseid="79" entryx="404" entryy="406" entryz="7" rent="10000" townid="5" size="92" clientid="0" beds="3" />
+	<house name="Venore House XVII" houseid="80" entryx="413" entryy="406" entryz="7" rent="10000" townid="5" size="91" clientid="0" beds="3" />
 	<house name="Folda House I" houseid="81" entryx="255" entryy="310" entryz="7" rent="10000" townid="7" size="30" clientid="0" beds="3" />
 	<house name="Folda House II" houseid="82" entryx="255" entryy="310" entryz="6" rent="10000" townid="7" size="32" clientid="0" beds="3" />
 	<house name="Folda House III" houseid="83" entryx="232" entryy="317" entryz="7" rent="10000" townid="7" size="32" clientid="0" beds="3" />

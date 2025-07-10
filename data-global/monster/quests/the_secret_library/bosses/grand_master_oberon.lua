@@ -85,6 +85,7 @@ monster.loot = {
 	{ name = "falcon shield", chance = 200, maxCount = 1 },
 	{ name = "falcon greaves", chance = 200, maxCount = 1 },
 	{ name = "falcon plate", chance = 200, maxCount = 1 },
+	{ name = "falcon sai", chance = 200, maxCount = 1 },
 }
 
 monster.attacks = {

@@ -107,6 +107,7 @@ monster.loot = {
 	{ id = 11692, chance = 300, unique = true }, -- snake god's sceptre
 	{ id = 3035, chance = 90000, maxCount = 6 }, -- platinum coin
 	{ id = 3030, chance = 3000, maxCount = 5 }, -- small ruby
+	{ name = "zaoan monk robe", chance = 500 },
 }
 
 monster.attacks = {
