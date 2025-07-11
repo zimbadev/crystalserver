@@ -6663,5 +6663,145 @@ if not Quests then
 				},
 			},
 		},
+		[50] = {
+			name = "The Way of the Monk",
+			startStorageId = Storage.Quest.U15_00.TheWayOfTheMonk.Questlog,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "The Invitation",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.Questline,
+					missionId = 10501,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Ambassador Manop has invited you to learn about the Merudri. Find and honour the sacred shrines in Dawnport and then ask about the 'seeker'.",
+						[2] = "You have chosen the path of monk. Talk to Enpa-Deia Pema to begin your 'pilgrimage'.",
+					},
+				},
+				[2] = {
+					name = "Dawnport Shrines",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.Questline,
+					missionId = 10502,
+					startValue = 2,
+					endValue = 3,
+					states = {
+						[2] = "Before your true pilgrimage begins, you must prove yourself by honouring the four sacred shrines in Dawnport.",
+						[3] = "You have honored all four Dawnport sacred shrines. Ask Ambassador Manop about the 'seeker'.",
+					},
+				},
+				[3] = {
+					name = "The Three-Fold Path",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.Questline,
+					missionId = 10503,
+					startValue = 3,
+					endValue = 4,
+					states = {
+						[3] = "You have learned about the Three-Fold path of the warrior monks. Follow the way of the Merudri, train hard and honour the legacy of the Merudri. Start by looking for their hidden shrine across all Tibia.",
+						[4] = "You have completed the Three-Fold Path. Return to Enpa-Deia Pema at Blue Valley for your reward.",
+					},
+				},
+				[4] = {
+					name = "Shrine of Guidance",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Guidance,
+					missionId = 10504,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Guidance and received boots of enlightenment.",
+					},
+				},
+				[5] = {
+					name = "Shrine of Tranquility",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Tranquility,
+					missionId = 10505,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Tranquility and received fists of enlightenment.",
+					},
+				},
+				[6] = {
+					name = "Shrine of Respect",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Respect,
+					missionId = 10506,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Respect and learned the spell 'Mystic Repulse'.",
+					},
+				},
+				[7] = {
+					name = "Shrine of Legacy",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Legacy,
+					missionId = 10507,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Legacy and received legs of enlightenment.",
+					},
+				},
+				[8] = {
+					name = "Shrine of Empathy",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Empathy,
+					missionId = 10508,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Empathy and received nunchaku of enlightenment.",
+					},
+				},
+				[9] = {
+					name = "Shrine of Harmony",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Harmony,
+					missionId = 10509,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Harmony and received a coned hat of enlightenment.",
+					},
+				},
+				[10] = {
+					name = "Shrine of Power",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Power,
+					missionId = 10510,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Power and received a sai of enlightenment.",
+					},
+				},
+				[11] = {
+					name = "Shrine of Knowledge",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Knowledge,
+					missionId = 10511,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Knowledge and learned the spell 'Forceful Uppercut'.",
+					},
+				},
+				[12] = {
+					name = "Shrine of Serenity",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Serenity,
+					missionId = 10512,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Serenity and received a robe of enlightenment.",
+					},
+				},
+				[13] = {
+					name = "Shrine of Eternity",
+					storageId = Storage.Quest.U15_00.TheWayOfTheMonk.MainShrines.Eternity,
+					missionId = 10513,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You have honored the Shrine of Eternity and learned the spell 'Focus Harmony'.",
+					},
+				},
+			},
+		},
 	}
 end
