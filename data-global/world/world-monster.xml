@@ -76827,6 +76827,7 @@
 		<monster name="Bony Sea Devil" x="3" y="3" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="34041" centery="31012" centerz="9" radius="1">
+		<monster name="Infernal Phantom" x="0" y="-1" z="9" spawntime="60" />
 		<monster name="Brachiodemon" x="1" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32007" centery="31013" centerz="9" radius="3">
@@ -76843,6 +76844,10 @@
 	</monster>
 	<monster centerx="34029" centery="31015" centerz="9" radius="1">
 		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34038" centery="31015" centerz="9" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32770" centery="31016" centerz="9" radius="1">
 		<monster name="Grim Reaper" x="0" y="0" z="9" spawntime="90" />
@@ -76855,7 +76860,12 @@
 		<monster name="Frost Troll" x="-1" y="3" z="9" spawntime="90" />
 	</monster>
 	<monster centerx="33982" centery="31017" centerz="9" radius="2">
+		<monster name="Infernal Demon" x="-1" y="-1" z="9" spawntime="60" />
 		<monster name="Infernal Phantom" x="1" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="33997" centery="31017" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="2" y="-2" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="-1" y="2" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32795" centery="31018" centerz="9" radius="1">
 		<monster name="Grim Reaper" x="0" y="0" z="9" spawntime="90" />
@@ -76972,6 +76982,9 @@
 	</monster>
 	<monster centerx="34038" centery="31026" centerz="9" radius="2">
 		<monster name="Infernal Phantom" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="1" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="1" y="2" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="31979" centery="31027" centerz="9" radius="3">
 		<monster name="Ghastly Dragon" x="-1" y="-3" z="9" spawntime="90" />
@@ -77013,6 +77026,11 @@
 	<monster centerx="33891" centery="31027" centerz="9" radius="1">
 		<monster name="Bony Sea Devil" x="0" y="0" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="33988" centery="31027" centerz="9" radius="2">
+		<monster name="Infernal Demon" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="-1" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="1" y="1" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="33994" centery="31027" centerz="9" radius="1">
 		<monster name="Infernal Phantom" x="0" y="1" z="9" spawntime="60" />
 	</monster>
@@ -77032,6 +77050,7 @@
 	</monster>
 	<monster centerx="34015" centery="31028" centerz="9" radius="1">
 		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="-1" y="1" z="9" spawntime="60" />
 		<monster name="Infernal Phantom" x="0" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32081" centery="31029" centerz="9" radius="3">
@@ -77053,8 +77072,9 @@
 	<monster centerx="33541" centery="31029" centerz="9" radius="1">
 		<monster name="Memory Of A Book" x="0" y="0" z="9" spawntime="60" />
 	</monster>
-	<monster centerx="33980" centery="31029" centerz="9" radius="1">
-		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+	<monster centerx="34003" centery="31029" centerz="9" radius="2">
+		<monster name="Infernal Demon" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="-1" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32042" centery="31030" centerz="9" radius="3">
 		<monster name="Ice Golem" x="3" y="-1" z="9" spawntime="90" />
@@ -77101,6 +77121,11 @@
 		<monster name="Capricious Phantom" x="2" y="2" z="9" spawntime="60" />
 		<monster name="Bony Sea Devil" x="-3" y="3" z="9" spawntime="60" />
 		<monster name="Turbulent Elemental" x="0" y="4" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="33980" centery="31030" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="2" y="-2" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="-1" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="31927" centery="31031" centerz="9" radius="3">
 		<monster name="Sea Serpent" x="-1" y="-3" z="9" spawntime="90" />
@@ -77188,6 +77213,10 @@
 	<monster centerx="33537" centery="31038" centerz="9" radius="1">
 		<monster name="Memory Of A Faun" x="0" y="0" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="34025" centery="31038" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="-2" y="-2" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="-1" y="1" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="33489" centery="31039" centerz="9" radius="1">
 		<monster name="Memory Of A Shaper" x="0" y="0" z="9" spawntime="60" />
 	</monster>
@@ -77205,7 +77234,11 @@
 	<monster centerx="34036" centery="31039" centerz="9" radius="6">
 		<monster name="Infernal Phantom" x="5" y="-5" z="9" spawntime="60" />
 		<monster name="Infernal Phantom" x="-5" y="-2" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="-1" y="-2" z="9" spawntime="60" />
 		<monster name="Infernal Phantom" x="3" y="1" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="-2" y="2" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="1" y="3" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="-1" y="6" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32446" centery="31040" centerz="9" radius="1">
 		<monster name="Chakoya Toolshaper" x="1" y="-1" z="9" spawntime="90" />
@@ -77218,7 +77251,8 @@
 		<monster name="Turbulent Elemental" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="33998" centery="31040" centerz="9" radius="2">
-		<monster name="Infernal Phantom" x="0" y="1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="-1" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="31979" centery="31041" centerz="9" radius="3">
 		<monster name="Behemoth" x="1" y="-2" z="9" spawntime="90" />
@@ -77249,9 +77283,12 @@
 		<monster name="Old Beholder" x="0" y="-2" z="9" spawntime="60" />
 		<monster name="Old Beholder" x="-3" y="3" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="34002" centery="31042" centerz="9" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="34013" centery="31042" centerz="9" radius="2">
-		<monster name="Infernal Phantom" x="1" y="-1" z="9" spawntime="60" />
-		<monster name="Infernal Phantom" x="-1" y="2" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="0" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="2" y="2" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32146" centery="31043" centerz="9" radius="4">
 		<monster name="Novice Of The Cult" x="2" y="-3" z="9" spawntime="90" />
@@ -77279,7 +77316,9 @@
 		<monster name="Memory Of A Faun" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="33983" centery="31045" centerz="9" radius="2">
-		<monster name="Infernal Phantom" x="1" y="1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="2" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32760" centery="31046" centerz="9" radius="5">
 		<monster name="Grim Reaper" x="3" y="-4" z="9" spawntime="90" />
@@ -77307,6 +77346,7 @@
 	<monster centerx="33949" centery="31047" centerz="9" radius="1">
 		<monster name="Bony Sea Devil" x="0" y="0" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="34037" centery="31047" centerz="9" radius="2" />
 	<monster centerx="32007" centery="31048" centerz="9" radius="3">
 		<monster name="Hellspawn" x="0" y="-3" z="9" spawntime="90" />
 		<monster name="Hellspawn" x="3" y="1" z="9" spawntime="90" />
@@ -77348,6 +77388,12 @@
 		<monster name="Capricious Phantom" x="1" y="3" z="9" spawntime="60" />
 		<monster name="Turbulent Elemental" x="-1" y="5" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="34029" centery="31048" centerz="9" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34032" centery="31048" centerz="9" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="33526" centery="31049" centerz="9" radius="1">
 		<monster name="Memory Of A Faun" x="0" y="0" z="9" spawntime="60" />
 	</monster>
@@ -77369,8 +77415,13 @@
 		<monster name="Turbulent Elemental" x="-2" y="2" z="9" spawntime="60" />
 		<monster name="Capricious Phantom" x="0" y="3" z="9" spawntime="60" />
 	</monster>
-	<monster centerx="34000" centery="31049" centerz="9" radius="2">
-		<monster name="Infernal Phantom" x="0" y="-2" z="9" spawntime="60" />
+	<monster centerx="33994" centery="31049" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="-2" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="2" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="33999" centery="31049" centerz="9" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32357" centery="31050" centerz="9" radius="1">
 		<monster name="Crystal Spider" x="0" y="0" z="9" spawntime="90" />
@@ -77387,9 +77438,6 @@
 	</monster>
 	<monster centerx="33923" centery="31050" centerz="9" radius="1">
 		<monster name="Bony Sea Devil" x="0" y="0" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="34040" centery="31050" centerz="9" radius="1">
-		<monster name="Brachiodemon" x="1" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32376" centery="31051" centerz="9" radius="5">
 		<monster name="Crystal Spider" x="-5" y="-3" z="9" spawntime="90" />
@@ -77546,8 +77594,19 @@
 		<monster name="Capricious Phantom" x="3" y="1" z="9" spawntime="60" />
 		<monster name="Turbulent Elemental" x="-1" y="2" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="33997" centery="31060" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="2" y="-2" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="1" y="0" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="32451" centery="31061" centerz="9" radius="1">
 		<monster name="Chakoya Toolshaper" x="0" y="-1" z="9" spawntime="90" />
+	</monster>
+	<monster centerx="34010" centery="31061" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="0" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34025" centery="31061" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="1" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32007" centery="31062" centerz="9" radius="3">
 		<monster name="Hellspawn" x="-1" y="2" z="9" spawntime="90" />
@@ -77572,6 +77631,10 @@
 	</monster>
 	<monster centerx="33861" centery="31062" centerz="9" radius="3">
 		<monster name="Percht" x="1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34038" centery="31062" centerz="9" radius="2">
+		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="-1" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32033" centery="31063" centerz="9" radius="3">
 		<monster name="Novice Of The Cult" x="1" y="-2" z="9" spawntime="90" />
@@ -77624,6 +77687,15 @@
 	<monster centerx="32801" centery="31066" centerz="9" radius="1">
 		<monster name="Grim Reaper" x="0" y="0" z="9" spawntime="90" />
 	</monster>
+	<monster centerx="33989" centery="31066" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="2" y="-2" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="-2" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34018" centery="31066" centerz="9" radius="2">
+		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="2" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="32114" centery="31067" centerz="9" radius="4">
 		<monster name="Novice Of The Cult" x="-1" y="-3" z="9" spawntime="90" />
 		<monster name="Novice Of The Cult" x="1" y="1" z="9" spawntime="90" />
@@ -77645,6 +77717,11 @@
 		<monster name="Turbulent Elemental" x="0" y="3" z="9" spawntime="60" />
 		<monster name="Bony Sea Devil" x="-3" y="4" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="34003" centery="31067" centerz="9" radius="2">
+		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="-2" y="2" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="2" y="2" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="31970" centery="31068" centerz="9" radius="3">
 		<monster name="Sea Serpent" x="0" y="0" z="9" spawntime="90" />
 	</monster>
@@ -77656,6 +77733,11 @@
 	</monster>
 	<monster centerx="33545" centery="31068" centerz="9" radius="1">
 		<monster name="Memory Of A Faun" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34032" centery="31068" centerz="9" radius="2">
+		<monster name="Infernal Demon" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="-1" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32000" centery="31069" centerz="9" radius="3">
 		<monster name="Hellhound" x="-3" y="1" z="9" spawntime="90" />
@@ -77743,12 +77825,29 @@
 		<monster name="Schiach" x="2" y="-1" z="9" spawntime="60" />
 		<monster name="Schiach" x="0" y="0" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="34040" centery="31072" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="32335" centery="31073" centerz="9" radius="1">
 		<monster name="Crystal Spider" x="0" y="0" z="9" spawntime="90" />
 	</monster>
 	<monster centerx="32386" centery="31073" centerz="9" radius="5">
 		<monster name="Crystal Spider" x="-1" y="2" z="9" spawntime="90" />
 		<monster name="Crystal Spider" x="3" y="3" z="9" spawntime="90" />
+	</monster>
+	<monster centerx="33996" centery="31073" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="-1" y="2" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34010" centery="31073" centerz="9" radius="2">
+		<monster name="Infernal Demon" x="2" y="-2" z="9" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="2" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34024" centery="31073" centerz="9" radius="2">
+		<monster name="Brachiodemon" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="2" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32508" centery="31074" centerz="9" radius="2">
 		<monster name="Chakoya Tribewarden" x="-1" y="-2" z="9" spawntime="90" />
@@ -77945,9 +78044,11 @@
 	</monster>
 	<monster centerx="34001" centery="31084" centerz="9" radius="1">
 		<monster name="Infernal Demon" x="0" y="1" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="1" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="34025" centery="31084" centerz="9" radius="2">
 		<monster name="Infernal Phantom" x="-1" y="0" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="0" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32802" centery="31085" centerz="9" radius="3">
 		<monster name="Acolyte Of The Cult" x="-1" y="1" z="9" spawntime="90" />
@@ -77963,6 +78064,9 @@
 	</monster>
 	<monster centerx="33295" centery="31085" centerz="9" radius="1">
 		<monster name="Ghastly Dragon" x="0" y="0" z="9" spawntime="90" />
+	</monster>
+	<monster centerx="34012" centery="31085" centerz="9" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32468" centery="31086" centerz="9" radius="2">
 		<monster name="Chakoya Toolshaper" x="-1" y="-1" z="9" spawntime="90" />
@@ -77981,6 +78085,9 @@
 		<monster name="Capricious Phantom" x="-3" y="1" z="9" spawntime="60" />
 		<monster name="Capricious Phantom" x="2" y="2" z="9" spawntime="60" />
 		<monster name="Turbulent Elemental" x="0" y="4" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34033" centery="31086" centerz="9" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32416" centery="31087" centerz="9" radius="2">
 		<monster name="Polar Bear" x="2" y="0" z="9" spawntime="90" />
@@ -78011,6 +78118,9 @@
 	</monster>
 	<monster centerx="33890" centery="31087" centerz="9" radius="1">
 		<monster name="Capricious Phantom" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="33993" centery="31087" centerz="9" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32091" centery="31088" centerz="9" radius="4">
 		<monster name="Novice Of The Cult" x="-2" y="-4" z="9" spawntime="90" />
@@ -78061,10 +78171,18 @@
 		<monster name="Schiach" x="-1" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="33992" centery="31090" centerz="9" radius="2">
+		<monster name="Infernal Demon" x="1" y="0" z="9" spawntime="60" />
 		<monster name="Infernal Phantom" x="1" y="1" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="0" y="2" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34012" centery="31090" centerz="9" radius="2">
+		<monster name="Infernal Demon" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="34036" centery="31090" centerz="9" radius="2">
 		<monster name="Brachiodemon" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="-1" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32146" centery="31091" centerz="9" radius="3">
 		<monster name="Gargoyle" x="2" y="-1" z="9" spawntime="90" />
@@ -78110,6 +78228,9 @@
 		<monster name="Turbulent Elemental" x="-4" y="1" z="9" spawntime="60" />
 		<monster name="Capricious Phantom" x="2" y="2" z="9" spawntime="60" />
 		<monster name="Bony Sea Devil" x="-1" y="3" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="34016" centery="31092" centerz="9" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32441" centery="31093" centerz="9" radius="1">
 		<monster name="Chakoya Tribewarden" x="-1" y="0" z="9" spawntime="90" />
@@ -78169,10 +78290,12 @@
 	</monster>
 	<monster centerx="34000" centery="31096" centerz="9" radius="1">
 		<monster name="Infernal Phantom" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Infernal Demon" x="0" y="0" z="9" spawntime="60" />
 		<monster name="Brachiodemon" x="-1" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="34026" centery="31096" centerz="9" radius="2">
 		<monster name="Infernal Demon" x="-1" y="-2" z="9" spawntime="60" />
+		<monster name="Brachiodemon" x="0" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="32014" centery="31097" centerz="9" radius="3">
 		<monster name="Hellhound" x="1" y="1" z="9" spawntime="90" />
@@ -103598,6 +103721,12 @@
 		<monster name="Acolyte Of The Cult" x="-4" y="1" z="10" spawntime="90" />
 		<monster name="Acolyte Of The Cult" x="3" y="2" z="10" spawntime="90" />
 	</monster>
+	<monster centerx="33979" centery="31036" centerz="10" radius="2">
+		<monster name="Infernal Demon" x="2" y="-2" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="-1" y="-1" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="2" y="0" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="1" y="2" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="32024" centery="31037" centerz="10" radius="3">
 		<monster name="Acolyte Of The Cult" x="-1" y="-2" z="10" spawntime="90" />
 		<monster name="Acolyte Of The Cult" x="2" y="1" z="10" spawntime="90" />
@@ -103644,6 +103773,9 @@
 	</monster>
 	<monster centerx="32427" centery="31041" centerz="10" radius="1">
 		<monster name="Chakoya Tribewarden" x="0" y="1" z="10" spawntime="90" />
+	</monster>
+	<monster centerx="34020" centery="31041" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="31906" centery="31042" centerz="10" radius="4">
 		<monster name="Sea Serpent" x="-1" y="-3" z="10" spawntime="90" />
@@ -103716,6 +103848,10 @@
 	<monster centerx="32480" centery="31045" centerz="10" radius="1">
 		<monster name="Chakoya Windcaller" x="0" y="0" z="10" spawntime="90" />
 	</monster>
+	<monster centerx="34022" centery="31045" centerz="10" radius="2">
+		<monster name="Brachiodemon" x="-1" y="-1" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="1" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="32194" centery="31046" centerz="10" radius="1">
 		<monster name="Acolyte Of The Cult" x="0" y="0" z="10" spawntime="60" />
 	</monster>
@@ -103724,6 +103860,9 @@
 	</monster>
 	<monster centerx="32439" centery="31046" centerz="10" radius="1">
 		<monster name="Chakoya Toolshaper" x="0" y="0" z="10" spawntime="90" />
+	</monster>
+	<monster centerx="34012" centery="31046" centerz="10" radius="2">
+		<monster name="Brachiodemon" x="-1" y="1" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="33513" centery="31047" centerz="10" radius="1">
 		<monster name="Memory Of A Fungus" x="0" y="0" z="10" spawntime="60" />
@@ -103734,11 +103873,17 @@
 	<monster centerx="33561" centery="31047" centerz="10" radius="1">
 		<monster name="Memory Of A Fungus" x="0" y="0" z="10" spawntime="60" />
 	</monster>
+	<monster centerx="33999" centery="31047" centerz="10" radius="2">
+		<monster name="Brachiodemon" x="0" y="-1" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="32414" centery="31048" centerz="10" radius="1">
 		<monster name="Chakoya Tribewarden" x="0" y="-1" z="10" spawntime="90" />
 	</monster>
 	<monster centerx="33464" centery="31048" centerz="10" radius="1">
 		<monster name="Memory Of A Golem" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="33991" centery="31048" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32426" centery="31049" centerz="10" radius="1">
 		<monster name="Chakoya Windcaller" x="0" y="-1" z="10" spawntime="90" />
@@ -103761,6 +103906,14 @@
 	</monster>
 	<monster centerx="33540" centery="31050" centerz="10" radius="1">
 		<monster name="Memory Of A Fungus" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="33990" centery="31050" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="34037" centery="31050" centerz="10" radius="2">
+		<monster name="Brachiodemon" x="2" y="-2" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="0" y="2" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="2" y="2" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32067" centery="31051" centerz="10" radius="3">
 		<monster name="Ice Golem" x="1" y="0" z="10" spawntime="90" />
@@ -103798,6 +103951,9 @@
 	<monster centerx="33533" centery="31052" centerz="10" radius="1">
 		<monster name="Memory Of A Fungus" x="0" y="0" z="10" spawntime="60" />
 	</monster>
+	<monster centerx="33979" centery="31052" centerz="10" radius="2">
+		<monster name="Brachiodemon" x="0" y="-1" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="32227" centery="31053" centerz="10" radius="1">
 		<monster name="Acolyte Of The Cult" x="0" y="0" z="10" spawntime="60" />
 	</monster>
@@ -103809,6 +103965,13 @@
 	</monster>
 	<monster centerx="32882" centery="31053" centerz="10" radius="1">
 		<monster name="Demon" x="0" y="0" z="10" spawntime="90" />
+	</monster>
+	<monster centerx="34006" centery="31053" centerz="10" radius="2">
+		<monster name="Brachiodemon" x="-1" y="-1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="34016" centery="31053" centerz="10" radius="2">
+		<monster name="Brachiodemon" x="-1" y="-1" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="1" y="2" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32193" centery="31054" centerz="10" radius="1">
 		<monster name="Ice Golem" x="0" y="0" z="10" spawntime="60" />
@@ -103840,6 +104003,10 @@
 	<monster centerx="32424" centery="31055" centerz="10" radius="1">
 		<monster name="Chakoya Toolshaper" x="0" y="0" z="10" spawntime="90" />
 	</monster>
+	<monster centerx="34029" centery="31055" centerz="10" radius="2">
+		<monster name="Brachiodemon" x="0" y="-1" z="10" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="32433" centery="31056" centerz="10" radius="1">
 		<monster name="Chakoya Toolshaper" x="0" y="0" z="10" spawntime="90" />
 	</monster>
@@ -103863,6 +104030,9 @@
 	</monster>
 	<monster centerx="33514" centery="31057" centerz="10" radius="1">
 		<monster name="Memory Of A Fungus" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="33992" centery="31057" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32413" centery="31058" centerz="10" radius="1">
 		<monster name="Chakoya Toolshaper" x="0" y="0" z="10" spawntime="90" />
@@ -103891,8 +104061,22 @@
 	<monster centerx="32859" centery="31060" centerz="10" radius="1">
 		<monster name="Demon" x="0" y="0" z="10" spawntime="90" />
 	</monster>
+	<monster centerx="33999" centery="31060" centerz="10" radius="2">
+		<monster name="Infernal Demon" x="-1" y="-2" z="10" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="-1" y="1" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="32506" centery="31061" centerz="10" radius="1">
 		<monster name="Chakoya Toolshaper" x="0" y="0" z="10" spawntime="90" />
+	</monster>
+	<monster centerx="34024" centery="31061" centerz="10" radius="2">
+		<monster name="Infernal Phantom" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="-1" y="1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="34036" centery="31061" centerz="10" radius="2">
+		<monster name="Infernal Demon" x="0" y="-1" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="1" y="-1" z="10" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32048" centery="31062" centerz="10" radius="3">
 		<monster name="Ice Golem" x="-1" y="-2" z="10" spawntime="90" />
@@ -104087,6 +104271,7 @@
 		<monster name="Draken Spellweaver" x="0" y="0" z="10" spawntime="90" />
 	</monster>
 	<monster centerx="34043" centery="31075" centerz="10" radius="1">
+		<monster name="Infernal Demon" x="1" y="-1" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32066" centery="31076" centerz="10" radius="4">
@@ -104279,34 +104464,45 @@
 	<monster centerx="34009" centery="31087" centerz="10" radius="30">
 		<monster name="Infernal Phantom" x="-30" y="-30" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="-30" y="-19" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="-29" y="-19" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="-26" y="-13" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="-9" y="-12" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="15" y="-12" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="-13" y="-11" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="12" y="-11" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="18" y="-11" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="-16" y="-10" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="15" y="-10" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="26" y="-10" z="10" spawntime="60" />
-		<monster name="Brachiodemon" x="-10" y="-8" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="-26" y="-7" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="4" y="-7" z="10" spawntime="60" />
-		<monster name="Brachiodemon" x="-24" y="-6" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="-25" y="-5" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="-6" y="-5" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="0" y="-5" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="11" y="-3" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="15" y="-3" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="8" y="-2" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="29" y="-2" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="11" y="0" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="28" y="0" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="14" y="1" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="-23" y="3" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="3" y="4" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="-22" y="5" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="-5" y="5" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="-27" y="6" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="-4" y="6" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="18" y="7" z="10" spawntime="60" />
-		<monster name="Brachiodemon" x="-25" y="9" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="-23" y="9" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="-3" y="10" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="10" y="11" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="28" y="12" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="2" y="13" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="28" y="13" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="18" y="14" z="10" spawntime="60" />
 		<monster name="Infernal Phantom" x="18" y="15" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="6" y="16" z="10" spawntime="60" />
-		<monster name="Brachiodemon" x="-30" y="17" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="-29" y="17" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="-14" y="17" z="10" spawntime="60" />
 		<monster name="Brachiodemon" x="-4" y="17" z="10" spawntime="60" />
 	</monster>
@@ -104621,6 +104817,9 @@
 	<monster centerx="33407" centery="31102" centerz="10" radius="1">
 		<monster name="Draken Spellweaver" x="0" y="0" z="10" spawntime="60" />
 	</monster>
+	<monster centerx="33978" centery="31102" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="32050" centery="31103" centerz="10" radius="3">
 		<monster name="Acolyte Of The Cult" x="0" y="-2" z="10" spawntime="90" />
 		<monster name="Acolyte Of The Cult" x="-1" y="1" z="10" spawntime="90" />
@@ -104658,6 +104857,7 @@
 	<monster centerx="33247" centery="31104" centerz="10" radius="1">
 		<monster name="Lancer Beetle" x="0" y="0" z="10" spawntime="90" />
 	</monster>
+	<monster centerx="33980" centery="31104" centerz="10" radius="1" />
 	<monster centerx="32491" centery="31105" centerz="10" radius="1">
 		<monster name="Chakoya Toolshaper" x="-1" y="1" z="10" spawntime="90" />
 	</monster>
@@ -104672,6 +104872,9 @@
 	</monster>
 	<monster centerx="33410" centery="31105" centerz="10" radius="1">
 		<monster name="Lizard High Guard" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="33977" centery="31105" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32328" centery="31106" centerz="10" radius="1">
 		<monster name="Adept Of The Cult" x="0" y="0" z="10" spawntime="60" />
@@ -125913,35 +126116,55 @@
 		<monster name="Infernal Demon" x="-7" y="-18" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="16" y="-18" z="11" spawntime="60" />
 		<monster name="Infernal Demon" x="-23" y="-16" z="11" spawntime="60" />
-		<monster name="Infernal Phantom" x="14" y="-16" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-21" y="-16" z="11" spawntime="60" />
+		<monster name="Infernal Demon" x="10" y="-16" z="11" spawntime="60" />
 		<monster name="Infernal Demon" x="24" y="-16" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="-6" y="-15" z="11" spawntime="60" />
+		<monster name="Infernal Phantom" x="22" y="-15" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="23" y="-15" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="8" y="-14" z="11" spawntime="60" />
-		<monster name="Infernal Demon" x="2" y="-13" z="11" spawntime="60" />
-		<monster name="Brachiodemon" x="-23" y="-12" z="11" spawntime="60" />
+		<monster name="Infernal Phantom" x="10" y="-14" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="-3" y="-11" z="11" spawntime="60" />
-		<monster name="Infernal Demon" x="13" y="-11" z="11" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="-11" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="-27" y="-9" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="24" y="-8" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-24" y="-7" z="11" spawntime="60" />
+		<monster name="Infernal Demon" x="-22" y="-7" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="15" y="-7" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="24" y="-7" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="11" y="-5" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="13" y="-5" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="19" y="-5" z="11" spawntime="60" />
-		<monster name="Infernal Demon" x="-13" y="-4" z="11" spawntime="60" />
+		<monster name="Infernal Demon" x="22" y="-5" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="0" y="-4" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="-9" y="-3" z="11" spawntime="60" />
 		<monster name="Infernal Demon" x="-25" y="4" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-20" y="4" z="11" spawntime="60" />
 		<monster name="Infernal Demon" x="23" y="4" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="10" y="5" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-26" y="6" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="-7" y="6" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="3" y="6" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="-15" y="7" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-15" y="8" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="26" y="8" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="14" y="9" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-26" y="12" z="11" spawntime="60" />
+		<monster name="Infernal Demon" x="-5" y="14" z="11" spawntime="60" />
+		<monster name="Infernal Demon" x="-22" y="15" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="-17" y="15" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-5" y="15" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="-22" y="16" z="11" spawntime="60" />
+		<monster name="Infernal Demon" x="25" y="16" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="15" y="17" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-24" y="18" z="11" spawntime="60" />
+		<monster name="Infernal Demon" x="17" y="18" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-27" y="19" z="11" spawntime="60" />
 		<monster name="Infernal Demon" x="-26" y="21" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="-19" y="23" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-7" y="23" z="11" spawntime="60" />
 		<monster name="Infernal Demon" x="17" y="23" z="11" spawntime="60" />
+		<monster name="Infernal Demon" x="-2" y="24" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="12" y="24" z="11" spawntime="60" />
 		<monster name="Infernal Phantom" x="23" y="24" z="11" spawntime="60" />
 		<monster name="Brachiodemon" x="20" y="28" z="11" spawntime="60" />
@@ -126319,6 +126542,9 @@
 	<monster centerx="33932" centery="31047" centerz="11" radius="1">
 		<monster name="Mould Phantom" x="0" y="0" z="11" spawntime="60" />
 	</monster>
+	<monster centerx="34028" centery="31047" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
 	<monster centerx="32186" centery="31048" centerz="11" radius="1">
 		<monster name="Acolyte Of The Cult" x="0" y="0" z="11" spawntime="60" />
 	</monster>
@@ -126346,11 +126572,24 @@
 	<monster centerx="33945" centery="31049" centerz="11" radius="1">
 		<monster name="Mould Phantom" x="0" y="0" z="11" spawntime="60" />
 	</monster>
+	<monster centerx="34037" centery="31049" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
 	<monster centerx="32152" centery="31050" centerz="11" radius="1">
 		<monster name="Acolyte Of The Cult" x="0" y="0" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="32221" centery="31050" centerz="11" radius="1">
 		<monster name="Acolyte Of The Cult" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34006" centery="31050" centerz="11" radius="2">
+		<monster name="Brachiodemon" x="-1" y="-1" z="11" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34020" centery="31050" centerz="11" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34025" centery="31050" centerz="11" radius="2">
+		<monster name="Brachiodemon" x="0" y="-1" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="33482" centery="31051" centerz="11" radius="1">
 		<monster name="Memory Of A Mammoth" x="0" y="0" z="11" spawntime="60" />
@@ -126358,8 +126597,21 @@
 	<monster centerx="33514" centery="31051" centerz="11" radius="1">
 		<monster name="Memory Of A Mammoth" x="0" y="0" z="11" spawntime="60" />
 	</monster>
+	<monster centerx="33999" centery="31051" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34033" centery="31051" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
 	<monster centerx="33939" centery="31053" centerz="11" radius="1">
 		<monster name="Branchy Crawler" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="33993" centery="31053" centerz="11" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34037" centery="31053" centerz="11" radius="2">
+		<monster name="Brachiodemon" x="1" y="-2" z="11" spawntime="60" />
+		<monster name="Infernal Phantom" x="0" y="0" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="33504" centery="31055" centerz="11" radius="1">
 		<monster name="Memory Of A Mammoth" x="0" y="0" z="11" spawntime="60" />
@@ -126375,6 +126627,9 @@
 	</monster>
 	<monster centerx="33482" centery="31056" centerz="11" radius="1">
 		<monster name="Memory Of A Mammoth" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="33993" centery="31056" centerz="11" radius="2">
+		<monster name="Brachiodemon" x="2" y="-1" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="32045" centery="31057" centerz="11" radius="3">
 		<monster name="Nightmare" x="0" y="-3" z="11" spawntime="90" />
@@ -126401,6 +126656,9 @@
 	<monster centerx="33973" centery="31058" centerz="11" radius="1">
 		<monster name="Rotten Golem" x="0" y="0" z="11" spawntime="60" />
 	</monster>
+	<monster centerx="34015" centery="31058" centerz="11" radius="2">
+		<monster name="Brachiodemon" x="-1" y="0" z="11" spawntime="60" />
+	</monster>
 	<monster centerx="32099" centery="31059" centerz="11" radius="4">
 		<monster name="Adept Of The Cult" x="0" y="-3" z="11" spawntime="90" />
 		<monster name="Adept Of The Cult" x="2" y="0" z="11" spawntime="90" />
@@ -126418,8 +126676,14 @@
 	<monster centerx="33955" centery="31059" centerz="11" radius="1">
 		<monster name="Rotten Golem" x="0" y="0" z="11" spawntime="60" />
 	</monster>
+	<monster centerx="33989" centery="31059" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
 	<monster centerx="33505" centery="31060" centerz="11" radius="1">
 		<monster name="Memory Of A Mammoth" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34004" centery="31060" centerz="11" radius="2">
+		<monster name="Brachiodemon" x="0" y="-1" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="33943" centery="31061" centerz="11" radius="1">
 		<monster name="Rotten Golem" x="0" y="0" z="11" spawntime="60" />
@@ -126427,8 +126691,21 @@
 	<monster centerx="33962" centery="31062" centerz="11" radius="1">
 		<monster name="Branchy Crawler" x="0" y="0" z="11" spawntime="60" />
 	</monster>
+	<monster centerx="33989" centery="31062" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34026" centery="31062" centerz="11" radius="2">
+		<monster name="Infernal Phantom" x="0" y="0" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="1" y="1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34041" centery="31062" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
 	<monster centerx="33935" centery="31063" centerz="11" radius="1">
 		<monster name="Rotten Golem" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34007" centery="31063" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="33514" centery="31064" centerz="11" radius="1">
 		<monster name="Memory Of A Mammoth" x="0" y="0" z="11" spawntime="60" />
@@ -126451,6 +126728,12 @@
 	<monster centerx="33925" centery="31065" centerz="11" radius="1">
 		<monster name="Rotten Golem" x="0" y="0" z="11" spawntime="60" />
 	</monster>
+	<monster centerx="34038" centery="31065" centerz="11" radius="2">
+		<monster name="Brachiodemon" x="0" y="1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34042" centery="31065" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
 	<monster centerx="32222" centery="31066" centerz="11" radius="1">
 		<monster name="Destroyer" x="0" y="0" z="11" spawntime="60" />
 	</monster>
@@ -126463,11 +126746,23 @@
 	<monster centerx="33926" centery="31067" centerz="11" radius="1">
 		<monster name="Branchy Crawler" x="0" y="0" z="11" spawntime="60" />
 	</monster>
+	<monster centerx="33994" centery="31067" centerz="11" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34015" centery="31067" centerz="11" radius="2">
+		<monster name="Brachiodemon" x="1" y="1" z="11" spawntime="60" />
+	</monster>
 	<monster centerx="33538" centery="31068" centerz="11" radius="1">
 		<monster name="Memory Of A Yalahari" x="0" y="0" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="33934" centery="31068" centerz="11" radius="1">
 		<monster name="Branchy Crawler" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="33999" centery="31068" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34033" centery="31068" centerz="11" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="32792" centery="31069" centerz="11" radius="2">
 		<monster name="Adept Of The Cult" x="0" y="1" z="11" spawntime="90" />
@@ -126483,6 +126778,13 @@
 	</monster>
 	<monster centerx="33965" centery="31070" centerz="11" radius="1">
 		<monster name="Rotten Golem" x="0" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34003" centery="31070" centerz="11" radius="2">
+		<monster name="Brachiodemon" x="-2" y="-1" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="34030" centery="31070" centerz="11" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="11" spawntime="60" />
+		<monster name="Brachiodemon" x="-1" y="1" z="11" spawntime="60" />
 	</monster>
 	<monster centerx="33934" centery="31071" centerz="11" radius="1">
 		<monster name="Rotten Golem" x="0" y="0" z="11" spawntime="60" />
