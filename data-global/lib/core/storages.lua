@@ -2868,6 +2868,31 @@ Storage = {
 				},
 			},
 		},
+		U15_00 = {
+			TheWayOfTheMonk = {
+				Questline = 290100,
+				Questlog = 290101,
+				ShrineCounter = 290500,
+				Shrines = {
+					FirstShrine = 290126,
+					SecondShrine = 290226,
+					ThirdShrine = 290326,
+					FourthShrine = 290426,
+				},
+				MainShrines = {
+					Guidance = 290127,
+					Tranquility = 290128,
+					Respect = 290129,
+					Legacy = 290130,
+					Empathy = 290131,
+					Harmony = 290132,
+					Power = 290133,
+					Knowledge = 290134,
+					Serenity = 290135,
+					Eternity = 290136,
+				},
+			},
+		},
 	},
 
 	-- Reserved storage from 63951 - 63999
