@@ -126,6 +126,10 @@ public:
 		setAttribute(ItemAttribute_t::DURATION, std::max<int32_t>(0, time));
 	}
 
+	void setDurationTimestamp(int64_t timestamp) {
+		setAttribute(ItemAttribute_t::DURATION_TIMESTAMP, timestamp);
+	}
+
 	void setDecaying(ItemDecayState_t decayState) {
 		setAttribute(ItemAttribute_t::DECAYSTATE, static_cast<int64_t>(decayState));
 		if (decayState == DECAYING_FALSE) {
