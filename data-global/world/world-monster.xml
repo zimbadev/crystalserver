@@ -77346,7 +77346,6 @@
 	<monster centerx="33949" centery="31047" centerz="9" radius="1">
 		<monster name="Bony Sea Devil" x="0" y="0" z="9" spawntime="60" />
 	</monster>
-	<monster centerx="34037" centery="31047" centerz="9" radius="2" />
 	<monster centerx="32007" centery="31048" centerz="9" radius="3">
 		<monster name="Hellspawn" x="0" y="-3" z="9" spawntime="90" />
 		<monster name="Hellspawn" x="3" y="1" z="9" spawntime="90" />
@@ -104857,7 +104856,9 @@
 	<monster centerx="33247" centery="31104" centerz="10" radius="1">
 		<monster name="Lancer Beetle" x="0" y="0" z="10" spawntime="90" />
 	</monster>
-	<monster centerx="33980" centery="31104" centerz="10" radius="1" />
+	<monster centerx="33976" centery="31104" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="32491" centery="31105" centerz="10" radius="1">
 		<monster name="Chakoya Toolshaper" x="-1" y="1" z="10" spawntime="90" />
 	</monster>
@@ -104872,9 +104873,6 @@
 	</monster>
 	<monster centerx="33410" centery="31105" centerz="10" radius="1">
 		<monster name="Lizard High Guard" x="0" y="0" z="10" spawntime="60" />
-	</monster>
-	<monster centerx="33977" centery="31105" centerz="10" radius="1">
-		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32328" centery="31106" centerz="10" radius="1">
 		<monster name="Adept Of The Cult" x="0" y="0" z="10" spawntime="60" />
