@@ -63,7 +63,7 @@ function movements_isle_stepIn.onStepIn(creature, item, position, fromPosition)
 	if position == turtle.fromPosition then
 		if getPlayerItemCount(creature, 3578) >= 1 then
 			Game.setStorageValue(turtle.storageTimer, os.time() + 10 * 60)
-			player:removeItem(3578, 1) 
+			player:removeItem(3578, 1)
 			player:say("You feed the turtle, now you may pass.", TALKTYPE_MONSTER_SAY)
 			player:getPosition():sendMagicEffect(CONST_ME_HEARTS)
 			player:teleportTo(turtle.toPosition)
@@ -94,7 +94,6 @@ function movements_isle_stepIn.onStepIn(creature, item, position, fromPosition)
 						p:teleportTo(raxias.exit)
 					end
 				end, 10 * 60 * 1000, player:getId()) -- 10 minutes
-
 			else
 				player:sendCancelMessage("You are still exhausted from your last battle.")
 				player:teleportTo(fromPosition, true)

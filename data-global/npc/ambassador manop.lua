@@ -34,8 +34,8 @@ local npcHandler = NpcHandler:new(keywordHandler)
 local MONK_QUEST = "the_way_of_the_monk_quest"
 
 local function hasAllShrines(player)
-        local kv = player:questKV(MONK_QUEST):scoped("shrines")
-        return kv:get("firstShrine") and kv:get("secondShrine") and kv:get("thirdShrine") and kv:get("fourthShrine")
+	local kv = player:questKV(MONK_QUEST):scoped("shrines")
+	return kv:get("firstShrine") and kv:get("secondShrine") and kv:get("thirdShrine") and kv:get("fourthShrine")
 end
 
 local function creatureSayCallback(npc, creature, msgType, msg)
@@ -54,11 +54,11 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 	end
 
 	if msg == "hi" or msg == "hello" then
-                local kv = player:questKV(MONK_QUEST)
-                if (kv:get("questline") or 0) < 1 then
-                        npcHandler:say("I welcome you, traveller of fate's unsearchable roads. On behalf of the {Merudri}, let this be an invitation from a humble guide along the way of enlightenment.", npc, creature)
-                        npcHandler:setTopic(playerId, 1)
-                elseif hasAllShrines(player) then
+		local kv = player:questKV(MONK_QUEST)
+		if (kv:get("questline") or 0) < 1 then
+			npcHandler:say("I welcome you, traveller of fate's unsearchable roads. On behalf of the {Merudri}, let this be an invitation from a humble guide along the way of enlightenment.", npc, creature)
+			npcHandler:setTopic(playerId, 1)
+		elseif hasAllShrines(player) then
 			npcHandler:say("Congratulations, fortunate {seeker}. You are one step closer to becoming a true warrior {monk} and ready to leave this island. Let me hold you on your path.", npc, creature)
 			npcHandler:setTopic(playerId, 3)
 		else
@@ -76,10 +76,10 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 
 	if msg == "yes" and npcHandler:getTopic(playerId) == 2 then
 		npcHandler:say("I am glad you take your acquaintance, {seeker}. You must have a lot of questions for which I would gladly prove answers. If you are interested in joining us as a true warrior {monk}, just ask.", npc, creature)
-                kv:set("questline", 1)
-                kv:set("questlog", 1)
-                player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questline, 1)
-                player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questlog, 1)
+		kv:set("questline", 1)
+		kv:set("questlog", 1)
+		player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questline, 1)
+		player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questlog, 1)
 		npcHandler:setTopic(playerId, 0)
 		return true
 	end
@@ -106,10 +106,10 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 		player:addItem(50257, 1)
 		player:addItem(50195, 1)
 		player:addItem(50171, 1)
-                kv:set("questline", 2)
-                kv:set("questlog", 2)
-                player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questline, 2)
-                player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questlog, 2)
+		kv:set("questline", 2)
+		kv:set("questlog", 2)
+		player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questline, 2)
+		player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questlog, 2)
 		npcHandler:say("You are now a pilgrim on the Three-Fold Path. Welcome to the Blue Valley, Seeker.", npc, creature)
 		npcHandler:setTopic(playerId, 0)
 		return true

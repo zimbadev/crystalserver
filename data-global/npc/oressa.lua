@@ -127,14 +127,14 @@ local topicTable = {
 	[6] = VOCATION.ID.PALADIN,
 	[7] = VOCATION.ID.DRUID,
 	[8] = VOCATION.ID.SORCERER,
-	}
+}
 
 local vocationRoomPositions = {
 	[5] = { x = 32068, y = 31884, z = 6 },
 	[6] = { x = 32059, y = 31884, z = 6 },
 	[7] = { x = 32073, y = 31884, z = 6 },
 	[8] = { x = 32054, y = 31884, z = 6 },
-	}
+}
 
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
@@ -214,9 +214,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		npcHandler:setTopic(playerId, 3)
 		-- knight or monk
 	elseif MsgContains(message, "close") and npcHandler:getTopic(playerId) == 2 then
-		npcHandler:say({
-			
-		}, npc, creature, 10)
+		npcHandler:say({}, npc, creature, 10)
 		npcHandler:setTopic(playerId, 10)
 		-- Paladin
 	elseif MsgContains(message, "bow") or MsgContains(message, "spear") and npcHandler:getTopic(playerId) == 3 then
@@ -331,8 +329,6 @@ local function creatureSayCallback(npc, creature, type, message)
 	elseif MsgContains(message, "monk") and npcHandler:getTopic(playerId) == 0 then
 		npcHandler:say("If you are interested in becoming a monk, please speak to Ambassador Manop.", npc, creature)
 		npcHandler:setTopic(playerId, 0)
-
-	
 	elseif npcHandler:getTopic(playerId) >= 5 and npcHandler:getTopic(playerId) <= 9 then
 		if MsgContains(message, "yes") then
 			for index, value in pairs(topicTable) do
