@@ -396,3 +396,7 @@ database_backup
 
 # CLION
 cmake-build-*
+config.lua.dist
+
+src/core.hpp
+src/core.hpp

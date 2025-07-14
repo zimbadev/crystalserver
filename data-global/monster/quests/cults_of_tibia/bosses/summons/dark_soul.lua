@@ -4,7 +4,7 @@ local monster = {}
 monster.description = "a dark soul"
 monster.experience = 0
 monster.outfit = {
-	lookType = 714,
+	lookType = 712,
 	lookHead = 0,
 	lookBody = 0,
 	lookLegs = 0,
@@ -16,7 +16,7 @@ monster.outfit = {
 monster.health = 5000
 monster.maxHealth = 5000
 monster.race = "undead"
-monster.corpse = 23729
+monster.corpse = 25774
 monster.speed = 81
 monster.manaCost = 0
 

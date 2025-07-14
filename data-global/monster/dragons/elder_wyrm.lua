@@ -98,6 +98,7 @@ monster.loot = {
 	{ name = "shadow sceptre", chance = 170 },
 	{ name = "lightning boots", chance = 150 },
 	{ name = "shockwave amulet", chance = 120 },
+	{ name = "legs of wisdom", chance = 700 },
 }
 
 monster.attacks = {

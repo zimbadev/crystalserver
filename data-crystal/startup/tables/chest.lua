@@ -28,14 +28,17 @@ ChestUnique = {
 	[5036] = { useKV = true, itemId = 2480, itemPos = { x = 345, y = 569, z = 10 }, reward = { { 3371, 1 } }, questName = "Knight Legs" },
 	[5037] = { useKV = true, itemId = 2480, itemPos = { x = 307, y = 458, z = 8 }, reward = { { 3035, 100 } }, questName = "100 Platinum Coins" },
 	[5038] = { useKV = true, itemId = 2480, itemPos = { x = 309, y = 458, z = 8 }, reward = { { 3098, 1 } }, questName = "Ring of Healing" },
-	[5039] = { useKV = true, itemId = 2481, itemPos = { x = 246, y = 464, z = 9 }, reward = { { 2339, 1 } }, questName = "Piece of Ancient Helmet" },
-	[5040] = { useKV = true, itemId = 2481, itemPos = { x = 300, y = 281, z = 12 }, reward = { { 2337, 1 } }, questName = "Piece of Ancient Helmet" },
-	[5041] = { useKV = true, itemId = 2481, itemPos = { x = 246, y = 413, z = 12 }, reward = { { 2336, 1 } }, questName = "Piece of Ancient Helmet" },
-	[5073] = { useKV = true, itemId = 2481, itemPos = { x = 436, y = 581, z = 11 }, reward = { { 2340, 1 } }, questName = "Piece of Ancient Helmet" },
-	[5074] = { useKV = true, itemId = 2481, itemPos = { x = 470, y = 664, z = 11 }, reward = { { 2341, 1 } }, questName = "Piece of Ancient Helmet" },
-	[5042] = { useKV = true, itemId = 2481, itemPos = { x = 242, y = 499, z = 12 }, reward = { { 2335, 1 } }, questName = "Piece of Ancient Helmet" },
 	[5043] = { useKV = true, itemId = 2472, itemPos = { x = 254, y = 439, z = 9 }, reward = { { 3394, 1 } }, questName = "Amazon Armor" },
 	[5044] = { useKV = true, itemId = 2472, itemPos = { x = 255, y = 439, z = 9 }, reward = { { 3395, 1 } }, questName = "Amazon Helmet" },
+	-- Ancient Helmet
+	[5039] = { useKV = true, itemId = 1992, itemPos = {x = 279, y = 483, z = 9}, reward = { { 3228, 1 } }, questName = "Helmet Adornment" }, --Omruc
+	[5041] = { useKV = true, itemId = 1992, itemPos = {x = 251, y = 507, z = 9}, reward = { { 3227, 1 } }, questName = "Piece of Ancient Helmet" }, --Rehemos
+	[5042] = { useKV = true, itemId = 1992, itemPos = {x = 270, y = 503, z = 9}, reward = { { 3226, 1 } }, questName = "Damaged Helmet" }, --Dipthrah
+	[5073] = { useKV = true, itemId = 2481, itemPos = {x = 269, y = 528, z = 9}, reward = { { 3225, 1 } }, questName = "Left Horn" }, --Vashresamun
+	[5040] = { useKV = true, itemId = 1994, itemPos = {x = 209, y = 498, z = 9}, reward = { { 3223, 1 } }, questName = "Gem Holder" }, --Thalas
+	[5074] = { useKV = true, itemId = 1992, itemPos = {x = 229, y = 528, z = 9}, reward = { { 3224, 1 } }, questName = "Right Horn" }, --Morguthis
+
+	-- END
 	-- Lost City
 	[5015] = { useKV = true, itemId = 2472, itemPos = { x = 568, y = 410, z = 11 }, reward = { { 3370, 1 } }, questName = "Knight Armor" },
 	[5016] = { useKV = true, itemId = 2472, itemPos = { x = 569, y = 410, z = 11 }, reward = { { 3280, 1 } }, questName = "Fire Sword" },

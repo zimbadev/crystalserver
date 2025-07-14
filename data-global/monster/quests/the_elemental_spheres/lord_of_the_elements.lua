@@ -91,6 +91,7 @@ monster.loot = {
 	{ name = "platinum coin", chance = 50000, maxCount = 9 },
 	{ name = "earthborn titan armor", chance = 2063 },
 	{ name = "gold ingot", chance = 25000 },
+	{ name = "jade conical hat", chance = 800 },
 }
 
 monster.attacks = {

@@ -98,6 +98,7 @@ monster.loot = {
 	{ name = "crystalline spikes", chance = 14540 },
 	{ name = "drill bolt", chance = 7692, maxCount = 5 },
 	{ name = "envenomed arrow", chance = 10230, maxCount = 10 },
+	{ name = "jade conical hat", chance = 1000 },
 }
 
 monster.attacks = {

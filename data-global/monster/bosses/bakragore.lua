@@ -95,8 +95,8 @@ monster.loot = {
 	{ id = 3039, chance = 10570, maxCount = 3 }, -- red gem
 	{ name = "violet gem", chance = 10970, maxCount = 8 },
 	{ name = "yellow gem", chance = 10970, maxCount = 9 },
-	-- { name = "figurine of bakragore", chance = 10970 },
-	-- { name = "bakragore's amalgamation", chance = 570 },
+	{ name = "figurine of bakragore", chance = 10970 },
+	{ name = "bakragore's amalgamation", chance = 570 },
 	{ name = "spiritual horseshoe", chance = 470 },
 	{ id = 43895, chance = 360 }, -- Bag you covet
 }

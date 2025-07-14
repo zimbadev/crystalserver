@@ -101,8 +101,9 @@ monster.loot = {
 	{ name = "fabulous legs", chance = 150 },
 	{ name = "phantasmal axe", chance = 150 },
 	{ name = "ghost backpack", chance = 150 },
-	{ id = 32621, chance = 400 }, -- Ring of souls
 	{ name = "soulful legs", chance = 150 },
+	{ id = 32621, chance = 400 }, -- ring of souls
+	{ id = 50185, chance = 730 }, -- jade legs
 }
 
 monster.attacks = {

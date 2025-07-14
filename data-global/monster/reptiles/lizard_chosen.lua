@@ -93,6 +93,7 @@ monster.loot = {
 	{ name = "corrupted flag", chance = 3350 },
 	{ name = "cursed shoulder spikes", chance = 5800 },
 	{ name = "scale of corruption", chance = 2870 },
+	{ id = 50152, chance = 560 }, -- collar of orange plasma
 }
 
 monster.attacks = {

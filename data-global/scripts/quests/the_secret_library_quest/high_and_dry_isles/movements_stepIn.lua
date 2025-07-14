@@ -59,37 +59,51 @@ function movements_isle_stepIn.onStepIn(creature, item, position, fromPosition)
 
 	local player = Player(creature:getId())
 
+	-- Turtle tile interaction
 	if position == turtle.fromPosition then
-		if Game.getStorageValue(turtle.storageTimer) > os.time() then
+		if getPlayerItemCount(creature, 3578) >= 1 then
+			Game.setStorageValue(turtle.storageTimer, os.time() + 10 * 60)
+			player:removeItem(3578, 1) 
+			player:say("You feed the turtle, now you may pass.", TALKTYPE_MONSTER_SAY)
+			player:getPosition():sendMagicEffect(CONST_ME_HEARTS)
 			player:teleportTo(turtle.toPosition)
+		elseif Game.getStorageValue(turtle.storageTimer) > os.time() then
+			player:teleportTo(turtle.toPosition)
+			player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
 		else
 			player:say("The turtle is hungry... You must feed it.", TALKTYPE_MONSTER_SAY)
 			player:teleportTo(fromPosition, true)
+			player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		end
-		player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
+
+	-- Svargrond simple teleport
 	elseif position == svargrond.fromPosition then
 		player:teleportTo(svargrond.toPosition)
 		player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
+
+	-- Raxias boss room logic
 	elseif position == raxias.position then
 		if resetRoom(raxias.bossPos) then
 			if player:getStorageValue(raxias.storage) < os.time() then
 				startBattle(player:getId(), raxias.toPosition, raxias.bossName, raxias.bossPos)
 				player:setStorageValue(raxias.storage, os.time() + 20 * 60 * 60)
+
 				addEvent(function(cid)
 					local p = Player(cid)
-					if p then
-						if p:getPosition():isInRange(raxias.fromPos, raxias.toPos) then
-							p:teleportTo(raxias.exit)
-						end
+					if p and p:getPosition():isInRange(raxias.fromPos, raxias.toPos) then
+						p:teleportTo(raxias.exit)
 					end
-				end, 10 * 1000 * 60, player:getId())
+				end, 10 * 60 * 1000, player:getId()) -- 10 minutes
+
 			else
 				player:sendCancelMessage("You are still exhausted from your last battle.")
 				player:teleportTo(fromPosition, true)
+				player:getPosition():sendMagicEffect(CONST_ME_POFF)
 			end
 		else
 			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You must wait. Someone is challenging " .. raxias.bossName .. " now.")
 			player:teleportTo(fromPosition, true)
+			player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		end
 	end
 

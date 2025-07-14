@@ -1,11 +1,13 @@
+local MONK_QUEST = "the_way_of_the_monk_quest"
+
 local shrineConfig = {
-        counterStorage = 290500,
+        counterKey = "shrineCounter",
 }
 local shrines = {
-        [7101] = { storage = 290126, messageIndex = 1 },
-        [7102] = { storage = 290226, messageIndex = 2 },
-        [7103] = { storage = 290326, messageIndex = 3 },
-        [7104] = { storage = 290426, messageIndex = 4 },
+        [7101] = { key = "firstShrine", messageIndex = 1 },
+        [7102] = { key = "secondShrine", messageIndex = 2 },
+        [7103] = { key = "thirdShrine", messageIndex = 3 },
+        [7104] = { key = "fourthShrine", messageIndex = 4 },
 }
 local shrineAction = Action()
 function shrineAction.onUse(player, item, fromPosition, target, toPosition, isHotkey)
@@ -14,14 +16,16 @@ function shrineAction.onUse(player, item, fromPosition, target, toPosition, isHo
                 player:sendCancelMessage("Sorry, not possible.")
                 return true
         end
-        if player:getStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questline) < 1 then
+        local kv = player:questKV(MONK_QUEST)
+        if (kv:get("questline") or 0) < 1 then
                 player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Ambassador Manop at the Adventurer's Outpost may be able to tell you more about this mysterious shrine.")
                 return true
         end
-        if player:getStorageValue(shrine.storage) ~= 1 then
-                player:setStorageValue(shrine.storage, 1)
-                local currentCount = math.max(0, player:getStorageValue(shrineConfig.counterStorage))
-                player:setStorageValue(shrineConfig.counterStorage, currentCount + 1)
+        if not kv:scoped("shrines"):get(shrine.key) then
+                kv:scoped("shrines"):set(shrine.key, true)
+                player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Shrines[shrine.key:gsub("^%l", string.upper)], 1)
+                local currentCount = math.max(0, (kv:get(shrineConfig.counterKey) or 0))
+                kv:set(shrineConfig.counterKey, currentCount + 1)
                 player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You honor the ways of the Merudri at the shrine of Darkness.")
                 toPosition:sendMagicEffect(CONST_ME_FIREATTACK)
                 item:transform(50244)
