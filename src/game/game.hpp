@@ -181,6 +181,8 @@ public:
 
 	std::vector<std::shared_ptr<Player>> getPlayersByAccount(const std::shared_ptr<Account> &acc, bool allowOffline = false);
 
+	std::vector<std::shared_ptr<Player>> getPlayersByIP(const uint32_t &ip, const uint32_t &mask = 0xFFFFFFFF);
+
 	bool internalPlaceCreature(const std::shared_ptr<Creature> &creature, const Position &pos, bool extendedPos = false, bool forced = false, bool creatureCheck = false);
 
 	bool placeCreature(const std::shared_ptr<Creature> &creature, const Position &pos, bool extendedPos = false, bool force = false);

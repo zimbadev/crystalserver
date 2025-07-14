@@ -91,6 +91,8 @@ replaceKickOnLogin = true
 maxPacketsPerSecond = 25
 maxPlayersOnlinePerAccount = 1
 maxPlayersOutsidePZPerAccount = 1
+toggleMaxConnectionsByIP = false
+maxIPConnections = 3
 
 -- Packet Compression
 -- Minimize network bandwith and reduce ping

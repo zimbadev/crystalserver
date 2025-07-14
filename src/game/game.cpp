@@ -1153,6 +1153,17 @@ std::vector<std::shared_ptr<Player>> Game::getPlayersByAccount(const std::shared
 	return ret;
 }
 
+std::vector<std::shared_ptr<Player>> Game::getPlayersByIP(const uint32_t &ip, const uint32_t &mask) {
+	std::vector<std::shared_ptr<Player>> playersList;
+	for (const auto& [playerId, player] : players) {
+		if (!player->isRemoved() && ((player->getIP() & mask) == (ip & mask))) {
+			playersList.push_back(player);
+		}
+	}
+
+	return playersList;
+}
+
 bool Game::internalPlaceCreature(const std::shared_ptr<Creature> &creature, const Position &pos, bool extendedPos /*=false*/, bool forced /*= false*/, bool creatureCheck /*= false*/) {
 	if (creature->getParent() != nullptr) {
 		return false;
