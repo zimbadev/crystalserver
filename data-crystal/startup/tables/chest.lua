@@ -31,12 +31,12 @@ ChestUnique = {
 	[5043] = { useKV = true, itemId = 2472, itemPos = { x = 254, y = 439, z = 9 }, reward = { { 3394, 1 } }, questName = "Amazon Armor" },
 	[5044] = { useKV = true, itemId = 2472, itemPos = { x = 255, y = 439, z = 9 }, reward = { { 3395, 1 } }, questName = "Amazon Helmet" },
 	-- Ancient Helmet
-	[5039] = { useKV = true, itemId = 1992, itemPos = {x = 279, y = 483, z = 9}, reward = { { 3228, 1 } }, questName = "Helmet Adornment" }, --Omruc
-	[5041] = { useKV = true, itemId = 1992, itemPos = {x = 251, y = 507, z = 9}, reward = { { 3227, 1 } }, questName = "Piece of Ancient Helmet" }, --Rehemos
-	[5042] = { useKV = true, itemId = 1992, itemPos = {x = 270, y = 503, z = 9}, reward = { { 3226, 1 } }, questName = "Damaged Helmet" }, --Dipthrah
-	[5073] = { useKV = true, itemId = 2481, itemPos = {x = 269, y = 528, z = 9}, reward = { { 3225, 1 } }, questName = "Left Horn" }, --Vashresamun
-	[5040] = { useKV = true, itemId = 1994, itemPos = {x = 209, y = 498, z = 9}, reward = { { 3223, 1 } }, questName = "Gem Holder" }, --Thalas
-	[5074] = { useKV = true, itemId = 1992, itemPos = {x = 229, y = 528, z = 9}, reward = { { 3224, 1 } }, questName = "Right Horn" }, --Morguthis
+	[5039] = { useKV = true, itemId = 1992, itemPos = { x = 279, y = 483, z = 9 }, reward = { { 3228, 1 } }, questName = "Helmet Adornment" }, --Omruc
+	[5041] = { useKV = true, itemId = 1992, itemPos = { x = 251, y = 507, z = 9 }, reward = { { 3227, 1 } }, questName = "Piece of Ancient Helmet" }, --Rehemos
+	[5042] = { useKV = true, itemId = 1992, itemPos = { x = 270, y = 503, z = 9 }, reward = { { 3226, 1 } }, questName = "Damaged Helmet" }, --Dipthrah
+	[5073] = { useKV = true, itemId = 2481, itemPos = { x = 269, y = 528, z = 9 }, reward = { { 3225, 1 } }, questName = "Left Horn" }, --Vashresamun
+	[5040] = { useKV = true, itemId = 1994, itemPos = { x = 209, y = 498, z = 9 }, reward = { { 3223, 1 } }, questName = "Gem Holder" }, --Thalas
+	[5074] = { useKV = true, itemId = 1992, itemPos = { x = 229, y = 528, z = 9 }, reward = { { 3224, 1 } }, questName = "Right Horn" }, --Morguthis
 
 	-- END
 	-- Lost City

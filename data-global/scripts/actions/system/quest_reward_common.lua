@@ -100,39 +100,39 @@ local function playerAddItem(params, item)
 end
 
 local function playerAddContainerItem(params, item)
-    local player = params.player
-    local reward = params.containerReward
-    local attribute = AttributeTable[item.uid]
-    local achievement = achievementTable[item.uid]
-    for i = 1, #params.items do
-        local rewardEntry = params.items[i]
-        local itemid = rewardEntry[1]
-        local count = rewardEntry[2]
-        local addedItem = reward:addItem(itemid, count)     
-        if addedItem and ItemType(itemid):isKey() and params.action then
-            addedItem:setActionId(params.action)
-        end
-        if attribute and addedItem then
-            addedItem:setAttribute(ITEM_ATTRIBUTE_TEXT, attribute.text)
-        end
-    end
+	local player = params.player
+	local reward = params.containerReward
+	local attribute = AttributeTable[item.uid]
+	local achievement = achievementTable[item.uid]
+	for i = 1, #params.items do
+		local rewardEntry = params.items[i]
+		local itemid = rewardEntry[1]
+		local count = rewardEntry[2]
+		local addedItem = reward:addItem(itemid, count)
+		if addedItem and ItemType(itemid):isKey() and params.action then
+			addedItem:setActionId(params.action)
+		end
+		if attribute and addedItem then
+			addedItem:setAttribute(ITEM_ATTRIBUTE_TEXT, attribute.text)
+		end
+	end
 
-    player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have found a " .. getItemName(params.itemBagName) .. ".")
-    if achievement then
-        player:addAchievement(achievement)
-    end
-    if params.useKV then
-        player:questKV(params.questName):set("completed", true)
-        if params.timer then
-            player:questKV(params.questName):set("params.questName", os.time() + params.time * 3600)
-        end
-    else
-        player:setStorageValue(params.storage, 1)
-        if params.timer then
-            player:setStorageValue(params.timer, os.time() + params.time * 3600)
-        end
-    end
-    return true
+	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have found a " .. getItemName(params.itemBagName) .. ".")
+	if achievement then
+		player:addAchievement(achievement)
+	end
+	if params.useKV then
+		player:questKV(params.questName):set("completed", true)
+		if params.timer then
+			player:questKV(params.questName):set("params.questName", os.time() + params.time * 3600)
+		end
+	else
+		player:setStorageValue(params.storage, 1)
+		if params.timer then
+			player:setStorageValue(params.timer, os.time() + params.time * 3600)
+		end
+	end
+	return true
 end
 
 local questReward = Action()

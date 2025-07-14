@@ -2494,7 +2494,7 @@ void Monster::dropLoot(const std::shared_ptr<Container> &corpse, const std::shar
 			// Filter out items with chance <= 0
 			std::vector<const Items::BagItemInfo*> validBagItems;
 			for (const auto &bagItem : allBagItems) {
-				if (bagItem->chance > 0 && (asLowerCaseString(mType->info.bestiaryClass) == asLowerCaseString(bagItem->monsterClass) || mType->info.raceid == bagItem->monsterRaceId)) {
+				if (bagItem->chance > 0 && (bagItem->monsterRaceId == 0 || bagItem->monsterRaceId == mType->info.raceid) && (bagItem->monsterClass.empty() || asLowerCaseString(mType->info.bestiaryClass) == asLowerCaseString(bagItem->monsterClass))) {
 					validBagItems.push_back(bagItem);
 				}
 			}
@@ -2502,10 +2502,9 @@ void Monster::dropLoot(const std::shared_ptr<Container> &corpse, const std::shar
 			if (!validBagItems.empty()) {
 				// Iterate through valid items and drop them based on probability
 				for (const auto &bagItem : validBagItems) {
-					uint64_t minChance = bagItem->minRange;
-					uint64_t maxChance = bagItem->maxRange;
+					double randomChance = normal_random(0, 100);
 
-					if (uniform_random(minChance, maxChance) <= bagItem->chance) {
+					if (randomChance <= bagItem->chance) {
 						auto chosenBagId = bagItem->id;
 						auto minAmount = bagItem->minAmount;
 						auto maxAmount = bagItem->maxAmount;

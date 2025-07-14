@@ -320,10 +320,10 @@ bool Items::loadFromXml() {
 		uint16_t itemId = pugi::cast<uint16_t>(bagItemidAttr.value());
 		std::string itemName = bagNameAttr.as_string();
 
-		uint32_t chance = 0;
+		double chance = 0;
 		auto chanceAttr = nodeBags.attribute("chance");
 		if (chanceAttr) {
-			chance = pugi::cast<uint32_t>(chanceAttr.value());
+			chance = pugi::cast<double>(chanceAttr.value());
 		}
 
 		uint32_t minAmount = 1;
@@ -344,18 +344,6 @@ bool Items::loadFromXml() {
 			}
 		}
 
-		uint64_t minRange = 0;
-		auto minRangeAttr = nodeBags.attribute("minRange");
-		if (minRangeAttr) {
-			minRange = pugi::cast<uint64_t>(minRangeAttr.value());
-		}
-
-		uint64_t maxRange = 0;
-		auto maxRangeAttr = nodeBags.attribute("maxRange");
-		if (maxRangeAttr) {
-			maxRange = pugi::cast<uint64_t>(maxRangeAttr.value());
-		}
-
 		std::string monsterClass = "";
 		auto monsterClassAttr = nodeBags.attribute("class");
 		if (monsterClassAttr) {
@@ -368,7 +356,7 @@ bool Items::loadFromXml() {
 			monsterRaceId = pugi::cast<uint32_t>(monsterRaceIdAttr.value());
 		}
 
-		setItemBag(itemId, itemName, chance, minAmount, maxAmount, minRange, maxRange, monsterClass, monsterRaceId);
+		setItemBag(itemId, itemName, chance, minAmount, maxAmount, monsterClass, monsterRaceId);
 	}
 
 	return true;
@@ -484,15 +472,13 @@ bool Items::hasItemType(size_t hasId) const {
 	return false;
 }
 
-void Items::setItemBag(uint16_t itemId, const std::string &itemName, uint32_t chance, uint32_t minAmount, uint32_t maxAmount, uint64_t minRange, uint64_t maxRange, const std::string &monsterClass, uint32_t monsterRaceId) {
+void Items::setItemBag(uint16_t itemId, const std::string &itemName, double chance, uint32_t minAmount, uint32_t maxAmount, const std::string &monsterClass, uint32_t monsterRaceId) {
 	BagItemInfo itemInfo;
 	itemInfo.name = itemName;
 	itemInfo.id = itemId;
 	itemInfo.chance = chance;
 	itemInfo.minAmount = minAmount;
 	itemInfo.maxAmount = maxAmount;
-	itemInfo.minRange = minRange;
-	itemInfo.maxRange = maxRange;
 	itemInfo.monsterClass = monsterClass;
 	itemInfo.monsterRaceId = monsterRaceId;
 	bagItems[itemId] = itemInfo;

@@ -517,6 +517,10 @@ public:
 	void addDistanceEffect(const Position &fromPos, const Position &toPos, uint16_t effect);
 	static void addDistanceEffect(const CreatureVector &spectators, const Position &fromPos, const Position &toPos, uint16_t effect);
 
+	void startDecay(const std::shared_ptr<Item> &item);
+	void stopDecay(const std::shared_ptr<Item> &item);
+	void internalDecayItem(const std::shared_ptr<Item> &item);
+
 	int32_t getLightHour() const {
 		return lightHour;
 	}
