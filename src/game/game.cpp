@@ -1155,7 +1155,7 @@ std::vector<std::shared_ptr<Player>> Game::getPlayersByAccount(const std::shared
 
 std::vector<std::shared_ptr<Player>> Game::getPlayersByIP(const uint32_t &ip, const uint32_t &mask) {
 	std::vector<std::shared_ptr<Player>> playersList;
-	for (const auto& [playerId, player] : players) {
+	for (const auto &[playerId, player] : players) {
 		if (!player->isRemoved() && ((player->getIP() & mask) == (ip & mask))) {
 			playersList.push_back(player);
 		}
