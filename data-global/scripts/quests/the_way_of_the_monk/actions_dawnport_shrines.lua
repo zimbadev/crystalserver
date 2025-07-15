@@ -4,13 +4,13 @@ local ShrineStorage = Storage.Quest.U15_00.TheWayOfTheMonk.Shrines
 local shrineConfig = {
 	counterKey = "shrineCounter", -- kv counter
 	expReward = 50,
-	transformedItemId = 50244
+	transformedItemId = 50244,
 }
 
 local shrines = {
 	[7101] = { key = "firstShrine", storage = ShrineStorage.FirstShrine },
 	[7102] = { key = "secondShrine", storage = ShrineStorage.SecondShrine },
-	[7103] = { key = "thirdShrine",  storage = ShrineStorage.ThirdShrine },
+	[7103] = { key = "thirdShrine", storage = ShrineStorage.ThirdShrine },
 	[7104] = { key = "fourthShrine", storage = ShrineStorage.FourthShrine },
 }
 
