@@ -371,9 +371,10 @@ Game::Game() {
 		Title(88, OTHERS, "Doomsday Nemesis", "Awarded for great help in the battle against Gaz'haragoth.", true),
 		Title(89, OTHERS, "Hero of Bounac", "You prevailed during the battle of Bounac and broke the siege that held Bounac's people in its firm grasp.", true), // Derrotar o boss Drume.
 		Title(90, OTHERS, "King of Demon", "Defeat Morshabaal 5 times.", 0, true, "Queen of Demon"),
-		Title(91, OTHERS, "Planegazer", "Followed the trail of the Planestrider to the end.", true), // Derrotar o boss Planestrider
-		Title(92, OTHERS, "Time Traveller", "Anywhere in time or space.", true), // Derrotar o boss Lord Retro
+		Title(91, OTHERS, "Planegazer", "Followed the trail of the Planestrider to the end.", true),
+		Title(92, OTHERS, "Time Traveller", "Anywhere in time or space.", true),
 		Title(93, OTHERS, "Truly Boss", "Reach 15,000 boss points.", true),
+		Title(94, OTHERS, "Pensive Wanderer", "You have honoured the Merudri by visiting all of their shrines and completing the ancient Three-Fold Path.", true),
 	};
 
 	m_highscoreCategoriesNames = {
