@@ -83882,7 +83882,6 @@ Granted by TibiaGoals.com" />
 	<item id="50242" article="an" name="ancient shrine">
 		<attribute key="description" value="An ancient shrine of the Merudri with lit candles" />
 		<attribute key="primarytype" value="shrines and altars" />
-		<attribute key="transformOnUse" value="50244" />
 	</item>
 	<item id="50243" article="an" name="ancient shrine" />
 	<item id="50244" article="an" name="ancient shrine">

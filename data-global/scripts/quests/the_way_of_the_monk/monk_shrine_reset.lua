@@ -1,17 +1,12 @@
 local shrineReset = MoveEvent()
 
 function shrineReset.onRemoveItem(item, position)
-	local aid = item.actionid
-	addEvent(function(pos, aid)
-		local tile = Tile(pos)
-		if not tile then
-			return
-		end
-		local shrine = tile:getItemById(50242)
-		if shrine then
-			shrine:setActionId(aid)
-		end
-	end, 1, Position(position), aid)
+	local aid = item:getActionId()
+	local itemPosition = item:getPosition()
+	if itemPosition:getDistance(position) > 0 then
+		item:transform(item.itemid - 2)
+		item:setActionId(aid)
+	end
 	return true
 end
 
