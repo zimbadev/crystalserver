@@ -1,6 +1,4 @@
 local MONK_QUEST = "the_way_of_the_monk_quest"
-
--- Debe estar sincronizado con storage.lua
 local ShrineStorage = Storage.Quest.U15_00.TheWayOfTheMonk.Shrines
 
 local shrineConfig = {
@@ -17,7 +15,6 @@ local shrines = {
 }
 
 local shrineAction = Action()
-
 function shrineAction.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	local shrine = shrines[item.actionid]
 	if not shrine then
@@ -26,29 +23,20 @@ function shrineAction.onUse(player, item, fromPosition, target, toPosition, isHo
 	end
 
 	local kv = player:questKV(MONK_QUEST)
-
-	-- Mostrar mensaje inicial de ayuda solo una vez
 	if (kv:get("questline") or 0) < 1 and not kv:get("gotIntroHint") then
 		kv:set("gotIntroHint", true)
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE,
-			"Ambassador Manop at the Adventurer's Outpost may be able to tell you more about this mysterious shrine.")
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Ambassador Manop at the Adventurer's Outpost may be able to tell you more about this mysterious shrine.")
 	end
 
-	-- Revisar si ya fue usado este santuario
 	if not kv:scoped("shrines"):get(shrine.key) then
-		-- Marcar en questKV
 		kv:scoped("shrines"):set(shrine.key, true)
-		-- Marcar en storage normal
 		player:setStorageValue(shrine.storage, 1)
 
-		-- Aumentar contador total
 		local currentCount = math.max(0, (kv:get(shrineConfig.counterKey) or 0))
 		kv:set(shrineConfig.counterKey, currentCount + 1)
 
-		-- Recompensa y efecto
 		player:addExperience(shrineConfig.expReward, true)
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE,
-			"You honor the ways of the Merudri at this shrine. You gained " .. shrineConfig.expReward .. " experience points.")
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You honor the ways of the Merudri at this shrine. You gained " .. shrineConfig.expReward .. " experience points.")
 		toPosition:sendMagicEffect(CONST_ME_FIREATTACK)
 		item:transform(shrineConfig.transformedItemId)
 	else
