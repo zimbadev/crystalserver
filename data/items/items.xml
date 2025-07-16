@@ -83087,7 +83087,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="showattributes" value="1" />
 		<attribute key="showduration" value="1" />
 		<attribute key="duration" value="10800" />
-		<attribute key="decayTo" value="39188" />
+		<attribute key="decayTo" value="50149" />
 		<attribute key="script" value="moveevent">
 			<attribute key="level" value="400" />
 			<attribute key="slot" value="ring" />
