@@ -518,11 +518,11 @@ int ItemFunctions::luaItemSetAttribute(lua_State* L) {
 	if (item->isAttributeInteger(attribute)) {
 		switch (attribute) {
 			case ItemAttribute_t::DECAYSTATE: {
-				if (const auto decayState = Lua::getNumber<ItemDecayState_t>(L, 3);
-				    decayState == DECAYING_FALSE || decayState == DECAYING_STOPPING) {
-					g_decay().stopDecay(item);
+				ItemDecayState_t decayState = Lua::getNumber<ItemDecayState_t>(L, 3);
+				if (decayState == DECAYING_FALSE || decayState == DECAYING_STOPPING) {
+					g_game().stopDecay(item);
 				} else {
-					g_decay().startDecay(item);
+					g_game().startDecay(item);
 				}
 				Lua::pushBoolean(L, true);
 				return 1;
@@ -530,7 +530,7 @@ int ItemFunctions::luaItemSetAttribute(lua_State* L) {
 			case ItemAttribute_t::DURATION: {
 				item->setDecaying(DECAYING_PENDING);
 				item->setDuration(Lua::getNumber<int32_t>(L, 3));
-				g_decay().startDecay(item);
+				g_game().startDecay(item);
 				Lua::pushBoolean(L, true);
 				return 1;
 			}

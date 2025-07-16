@@ -75367,6 +75367,12 @@ Granted by TibiaGoals.com" />
 		<attribute key="duration" value="10" />
 		<attribute key="fluidSource" value="blood" />
 	</item>
+	<item id="43810" article="a" name="large seashell"/>
+	<item id="43811" article="a" name="large seashell">
+		<attribute key="description" value="It is empty." />
+		<attribute key="decayTo" value="43810" />
+		<attribute key="duration" value="300" />
+	</item>
 	<item id="43813" article="a" name="dead bloated man-maggot">
 		<attribute key="decayTo" value="0" />
 		<attribute key="duration" value="60" />
@@ -83876,7 +83882,6 @@ Granted by TibiaGoals.com" />
 	<item id="50242" article="an" name="ancient shrine">
 		<attribute key="description" value="An ancient shrine of the Merudri with lit candles" />
 		<attribute key="primarytype" value="shrines and altars" />
-		<attribute key="transformOnUse" value="50244" />
 	</item>
 	<item id="50243" article="an" name="ancient shrine" />
 	<item id="50244" article="an" name="ancient shrine">

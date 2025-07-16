@@ -28,8 +28,8 @@ public:
 
 	static Decay &getInstance();
 
-	void startDecay(const std::shared_ptr<Item> &item);
-	void stopDecay(const std::shared_ptr<Item> &item);
+	void startDecay(const std::shared_ptr<Item> &item, int32_t duration);
+	void stopDecay(const std::shared_ptr<Item> &item, int64_t timestamp);
 
 private:
 	void checkDecay();

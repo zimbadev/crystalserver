@@ -3416,11 +3416,11 @@ LightInfo Item::getLightInfo() const {
 }
 
 void Item::startDecaying() {
-	g_decay().startDecay(static_self_cast<Item>());
+	g_game().startDecay(static_self_cast<Item>());
 }
 
 void Item::stopDecaying() {
-	g_decay().stopDecay(static_self_cast<Item>());
+	g_game().stopDecay(static_self_cast<Item>());
 }
 
 std::shared_ptr<Item> Item::transform(uint16_t itemId, uint16_t itemCount /*= -1*/) {

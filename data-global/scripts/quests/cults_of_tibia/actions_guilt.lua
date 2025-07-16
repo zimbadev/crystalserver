@@ -6,11 +6,11 @@ function guilt.onUse(player, item, fromPosition, target, toPosition)
 	end
 	local fromPos = Position(33023, 31904, 15)
 	local toPos = Position(33052, 31932, 15)
-	
+
 	if not player:getPosition():isInRange(fromPos, toPos) then
 		return true
 	end
-	
+
 	if not target or not target:isMonster() then
 		return true
 	end
@@ -23,7 +23,7 @@ function guilt.onUse(player, item, fromPosition, target, toPosition)
 		target:addHealth(-17000)
 		target:remove()
 		toPosition:sendMagicEffect(CONST_ME_POFF)
-		
+
 		local newMonster = Game.createMonster("The Corruptor of Souls", toPosition)
 		if newMonster then
 			newMonster:registerEvent("CheckTile")
@@ -42,7 +42,6 @@ function guilt.onUse(player, item, fromPosition, target, toPosition)
 		item:remove(1)
 		toPosition:sendMagicEffect(CONST_ME_POFF)
 		return true
-
 	elseif targetName == "the corruptor of souls" then
 		Game.setStorageValue(storageKey, os.time() + 30)
 		item:remove(1)

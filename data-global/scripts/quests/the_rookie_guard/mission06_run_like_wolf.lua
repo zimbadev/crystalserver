@@ -173,21 +173,15 @@ local poacherCorpse = Action()
 
 function poacherCorpse.onUse(player, item, frompos, itemEx, topos)
 	local missionState = player:getStorageValue(Storage.Quest.U9_1.TheRookieGuard.Mission06)
-	-- Skip if not was started
-	if missionState == -1 then
-		return true
-	end
-	if missionState == 2 then
-		local corpseState = player:getStorageValue(Storage.Quest.U9_1.TheRookieGuard.PoacherCorpse)
-		if corpseState == -1 then
-			local reward = Game.createItem(12672, 1)
-			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have found " .. reward:getArticle() .. " " .. reward:getName() .. ".")
-			player:setStorageValue(Storage.Quest.U9_1.TheRookieGuard.PoacherCorpse, 1)
-			player:setStorageValue(Storage.Quest.U9_1.TheRookieGuard.Mission06, 3)
-			player:addItemEx(reward, true, CONST_SLOT_WHEREEVER)
-		else
-			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The " .. item:getName() .. " is empty.")
-		end
+	local corpseState = player:getStorageValue(Storage.Quest.U9_1.TheRookieGuard.PoacherCorpse)
+	if corpseState == -1 then
+		local reward = Game.createItem(12672, 1)
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have found " .. reward:getArticle() .. " " .. reward:getName() .. ".")
+		player:setStorageValue(Storage.Quest.U9_1.TheRookieGuard.PoacherCorpse, 1)
+		player:setStorageValue(Storage.Quest.U9_1.TheRookieGuard.Mission06, 3)
+		player:addItemEx(reward, true, CONST_SLOT_WHEREEVER)
+	else
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The " .. item:getName() .. " is empty.")
 	end
 	return true
 end
