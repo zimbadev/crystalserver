@@ -1,5 +1,5 @@
+---
 name: Lua-format
-
 on:
   pull_request:
     paths:
@@ -19,13 +19,12 @@ jobs:
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
-
       - name: Actions checkout
         if: ${{ github.ref != 'refs/heads/main' }}
         uses: actions/checkout@v3
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
-          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: JohnnyMorganz/stylua-action@v3
