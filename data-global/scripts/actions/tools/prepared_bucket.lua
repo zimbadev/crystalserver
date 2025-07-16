@@ -27,8 +27,8 @@ local config = {
 		Position(33104, 32160, 7),
 		Position(33095, 32158, 7),
 	},
-    storageKey = 147251,
-    neededCountForAchievement = 500,
+	storageKey = 147251,
+	neededCountForAchievement = 500,
 }
 
 function thornfireCrystal.onUse(player, item, fromPosition, target, toPosition, isHotkey)
@@ -41,13 +41,13 @@ function thornfireCrystal.onUse(player, item, fromPosition, target, toPosition, 
 	item:transform(12819, 0)
 	toPosition:sendMagicEffect(config.effect)
 
-    local currentCount = player:getStorageValue(config.storageKey)
-    if currentCount == -1 then
-        currentCount = 1
-    else
-        currentCount = currentCount + 1
-    end
-    player:setStorageValue(config.storageKey, currentCount)
+	local currentCount = player:getStorageValue(config.storageKey)
+	if currentCount == -1 then
+		currentCount = 1
+	else
+		currentCount = currentCount + 1
+	end
+	player:setStorageValue(config.storageKey, currentCount)
 
 	if randomChance <= config.chanceToSummon then
 		player:say(config.message, TALKTYPE_MONSTER_SAY)
