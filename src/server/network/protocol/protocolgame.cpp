@@ -218,7 +218,7 @@ namespace {
 			}
 		}
 
-		for (uint16_t i = COMBAT_PHYSICALDAMAGE; i <= COMBAT_AGONYDAMAGE; ++i) {
+		for (uint16_t i = COMBAT_FIRST; i <= COMBAT_LAST; ++i) {
 			int16_t vocationAbsorbPercent = player->getVocation()->getAbsorbPercent(indexToCombatType(i));
 			if (vocationAbsorbPercent == 0) {
 				continue;
@@ -8601,7 +8601,7 @@ void ProtocolGame::sendUpdateImpactTracker(CombatType_t type, int32_t amount) {
 	}
 
 	auto clientElement = getCipbiaElement(type);
-	if (clientElement == CIPBIA_ELEMENTAL_UNDEFINED) {
+	if (clientElement < CIPBIA_ELEMENTAL_FIRST || clientElement > CIPBIA_ELEMENTAL_LAST) {
 		return;
 	}
 
@@ -8624,7 +8624,7 @@ void ProtocolGame::sendUpdateInputAnalyzer(CombatType_t type, int32_t amount, co
 	}
 
 	auto clientElement = getCipbiaElement(type);
-	if (clientElement == CIPBIA_ELEMENTAL_UNDEFINED) {
+	if (clientElement < CIPBIA_ELEMENTAL_FIRST || clientElement > CIPBIA_ELEMENTAL_LAST) {
 		return;
 	}
 
