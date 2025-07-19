@@ -120,7 +120,6 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "getSoulCoreItems", GameFunctions::luaGameGetSoulCoreItems);
 	Lua::registerMethod(L, "Game", "getMonstersByRace", GameFunctions::luaGameGetMonstersByRace);
 	Lua::registerMethod(L, "Game", "getMonstersByBestiaryStars", GameFunctions::luaGameGetMonstersByBestiaryStars);
-
 	Lua::registerMethod(L, "Game", "getTitleByName", GameFunctions::luaGameGetTitleByName);
 }
 
