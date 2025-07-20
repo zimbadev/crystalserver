@@ -44,6 +44,9 @@
 	<monster centerx="236" centery="660" centerz="1" radius="3">
 		<monster name="Cobra Assassin" x="-3" y="0" z="1" spawntime="60" />
 	</monster>
+	<monster centerx="1176" centery="1292" centerz="1" radius="3">
+		<monster name="Gryphon" x="-2" y="0" z="1" spawntime="60" />
+	</monster>
 	<monster centerx="812" centery="502" centerz="2" radius="2">
 		<monster name="Cyclops Drone" x="2" y="0" z="2" spawntime="90" />
 	</monster>
@@ -127,6 +130,12 @@
 	</monster>
 	<monster centerx="229" centery="667" centerz="2" radius="3">
 		<monster name="Cobra Assassin" x="1" y="-2" z="2" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1285" centerz="2" radius="3">
+		<monster name="Gryphon" x="3" y="3" z="2" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1285" centerz="2" radius="3">
+		<monster name="Gryphon" x="-2" y="3" z="2" spawntime="60" />
 	</monster>
 	<monster centerx="3281" centery="4230" centerz="2" radius="30">
 		<monster name="Hellhound" x="7" y="-10" z="2" spawntime="60" />
@@ -245,6 +254,12 @@
 	</monster>
 	<monster centerx="222" centery="667" centerz="3" radius="3">
 		<monster name="Cobra Vizier" x="-2" y="2" z="3" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1278" centerz="3" radius="3">
+		<monster name="Gryphon" x="-3" y="3" z="3" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1285" centerz="3" radius="3">
+		<monster name="Gryphon" x="-1" y="-1" z="3" spawntime="60" />
 	</monster>
 	<monster centerx="3173" centery="4130" centerz="3" radius="30">
 		<monster name="Giant Spider" x="-16" y="-20" z="3" spawntime="60" />
@@ -501,6 +516,21 @@
 		<monster name="Dragon" x="-1" y="-6" z="4" spawntime="60" />
 		<monster name="Dragon" x="2" y="-3" z="4" spawntime="60" />
 		<monster name="Dragon Lord" x="0" y="5" z="4" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1215" centerz="4" radius="3">
+		<monster name="Gryphon" x="-3" y="2" z="4" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1222" centerz="4" radius="3">
+		<monster name="Gryphon" x="0" y="-2" z="4" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1229" centerz="4" radius="3">
+		<monster name="Gryphon" x="3" y="-3" z="4" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1264" centerz="4" radius="3">
+		<monster name="Gryphon" x="1" y="3" z="4" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1271" centerz="4" radius="3">
+		<monster name="Gryphon" x="3" y="2" z="4" spawntime="60" />
 	</monster>
 	<monster centerx="3168" centery="4134" centerz="4" radius="30">
 		<monster name="Giant Spider" x="6" y="-13" z="4" spawntime="60" />
@@ -879,6 +909,84 @@
 		<monster name="Pirate Buccaneer" x="0" y="3" z="5" spawntime="60" />
 		<monster name="Pirate Cutthroat" x="-2" y="7" z="5" spawntime="60" />
 		<monster name="Pirate Ghost" x="3" y="9" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1295" centery="1075" centerz="5" radius="3">
+		<monster name="Butterfly" x="1" y="1" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1096" centerz="5" radius="3">
+		<monster name="Seagull" x="-3" y="1" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1208" centerz="5" radius="3">
+		<monster name="Black Sphinx Acolyte" x="0" y="2" z="5" spawntime="60" />
+		<monster name="Burning Gladiator" x="3" y="2" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1208" centerz="5" radius="3">
+		<monster name="Black Sphinx Acolyte" x="0" y="1" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1208" centerz="5" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-1" y="2" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1215" centerz="5" radius="3">
+		<monster name="Black Sphinx Acolyte" x="1" y="-2" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1215" centerz="5" radius="3">
+		<monster name="Burning Gladiator" x="-3" y="0" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1215" centerz="5" radius="3">
+		<monster name="Burning Gladiator" x="-1" y="-3" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1215" centerz="5" radius="3">
+		<monster name="Black Sphinx Acolyte" x="-1" y="-2" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1215" centerz="5" radius="3">
+		<monster name="Black Sphinx Acolyte" x="3" y="-3" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1215" centerz="5" radius="3">
+		<monster name="Burning Gladiator" x="-1" y="2" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1222" centerz="5" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="0" y="-1" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1222" centerz="5" radius="3">
+		<monster name="Bat" x="3" y="2" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1222" centerz="5" radius="3">
+		<monster name="Black Sphinx Acolyte" x="3" y="2" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1229" centerz="5" radius="3">
+		<monster name="Burning Gladiator" x="2" y="-3" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1229" centerz="5" radius="3">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1229" centerz="5" radius="3">
+		<monster name="Burning Gladiator" x="-3" y="3" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1229" centerz="5" radius="3">
+		<monster name="Burning Gladiator" x="-1" y="-2" z="5" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="0" y="3" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1229" centerz="5" radius="3">
+		<monster name="Gryphon" x="-3" y="2" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1236" centerz="5" radius="3">
+		<monster name="Black Sphinx Acolyte" x="-2" y="-1" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1257" centerz="5" radius="3">
+		<monster name="Crypt Warden" x="-2" y="-1" z="5" spawntime="60" />
+		<monster name="Lamassu" x="2" y="2" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1264" centerz="5" radius="3">
+		<monster name="Crypt Warden" x="-2" y="-1" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1264" centerz="5" radius="3">
+		<monster name="Crypt Warden" x="-2" y="-1" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1271" centerz="5" radius="3">
+		<monster name="Lamassu" x="-1" y="-1" z="5" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1278" centerz="5" radius="3">
+		<monster name="Lamassu" x="-1" y="-2" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="3134" centery="4025" centerz="5" radius="5">
 		<monster name="Juggernaut" x="-2" y="3" z="5" spawntime="60" />
@@ -1652,6 +1760,164 @@
 		<monster name="Pirate Ghost" x="6" y="7" z="6" spawntime="60" />
 		<monster name="Pirate Ghost" x="-10" y="9" z="6" spawntime="60" />
 		<monster name="Pirate Skeleton" x="13" y="10" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1302" centery="1082" centerz="6" radius="3">
+		<monster name="Butterfly" x="1" y="-3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1187" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="-2" y="1" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1194" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-1" y="-2" z="6" spawntime="60" />
+		<monster name="Burning Gladiator" x="2" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1194" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="1" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1201" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-3" y="2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1201" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="3" y="1" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1201" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="1" y="-3" z="6" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="-1" y="0" z="6" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="3" y="0" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1201" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="-1" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1201" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="-3" y="-2" z="6" spawntime="60" />
+		<monster name="Burning Gladiator" x="-3" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1201" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="-1" y="-2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1208" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="3" y="2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1208" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="1" y="-2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1208" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="-2" y="-2" z="6" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="1" y="0" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1208" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-3" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1215" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-2" y="-3" z="6" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="2" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1215" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="-2" y="0" z="6" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="-3" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1222" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-3" y="1" z="6" spawntime="60" />
+		<monster name="Burning Gladiator" x="2" y="2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1222" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="2" y="0" z="6" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="2" y="1" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1229" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="-2" y="-3" z="6" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="-3" y="0" z="6" spawntime="60" />
+		<monster name="Burning Gladiator" x="-1" y="2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1229" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-3" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1229" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="-1" y="0" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1236" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="1" y="1" z="6" spawntime="60" />
+		<monster name="Burning Gladiator" x="-3" y="3" z="6" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="0" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1236" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="3" y="0" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1243" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="3" y="0" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1243" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="2" y="-3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1250" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="0" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1250" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="1" y="-2" z="6" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="3" y="-1" z="6" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="-3" y="0" z="6" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="-1" y="1" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1250" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="-2" y="-3" z="6" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="0" y="-1" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1257" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="3" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1257" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="-1" y="-3" z="6" spawntime="60" />
+		<monster name="Burning Gladiator" x="2" y="0" z="6" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="0" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1257" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="1" y="-2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1264" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="3" y="-2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1264" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="2" y="-3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1264" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="3" y="-2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1264" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-3" y="2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1264" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="-3" y="0" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1271" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="2" y="-3" z="6" spawntime="60" />
+		<monster name="Burning Gladiator" x="3" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1271" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="0" y="1" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1278" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="1" y="-3" z="6" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="1" y="-2" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1278" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="0" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1285" centerz="6" radius="3">
+		<monster name="Burning Gladiator" x="1" y="1" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1292" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="2" y="-3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1299" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="1" y="2" z="6" spawntime="60" />
+		<monster name="Burning Gladiator" x="-3" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1299" centerz="6" radius="3">
+		<monster name="Black Sphinx Acolyte" x="0" y="-1" z="6" spawntime="60" />
+		<monster name="Burning Gladiator" x="0" y="3" z="6" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1306" centerz="6" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-3" y="1" z="6" spawntime="60" />
 	</monster>
 	<monster centerx="3131" centery="4085" centerz="6" radius="5">
 		<monster name="Massive Fire Elemental" x="-4" y="2" z="6" spawntime="60" />
@@ -3103,6 +3369,931 @@
 	</monster>
 	<monster centerx="663" centery="859" centerz="7" radius="3">
 		<monster name="Bug" x="-3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1061" centerz="7" radius="3">
+		<monster name="Crab" x="0" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1061" centerz="7" radius="3">
+		<monster name="Seagull" x="3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1061" centerz="7" radius="3" />
+	<monster centerx="1197" centery="1061" centerz="7" radius="3">
+		<monster name="Lamassu" x="-3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1295" centery="1061" centerz="7" radius="3">
+		<monster name="Flamingo" x="2" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1152" centery="1067" centerz="7" radius="1">
+		<monster name="Feral Sphinx" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1068" centerz="7" radius="3">
+		<monster name="Scorpion" x="3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1068" centerz="7" radius="3">
+		<monster name="Sphinx" x="0" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1068" centerz="7" radius="3">
+		<monster name="Sphinx" x="-2" y="-1" z="7" spawntime="60" />
+		<monster name="Lamassu" x="2" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1129" centery="1070" centerz="7" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1106" centery="1075" centerz="7" radius="3">
+		<monster name="Cobra" x="-2" y="1" z="7" spawntime="60" />
+		<monster name="Manticore" x="-1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1120" centery="1075" centerz="7" radius="3">
+		<monster name="Crab" x="-1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1075" centerz="7" radius="3">
+		<monster name="Cobra" x="-1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1075" centerz="7" radius="3">
+		<monster name="Sphinx" x="0" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1075" centerz="7" radius="3">
+		<monster name="Crab" x="2" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1075" centerz="7" radius="3">
+		<monster name="Lamassu" x="0" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1075" centerz="7" radius="3">
+		<monster name="Lamassu" x="1" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1075" centerz="7" radius="3">
+		<monster name="Sphinx" x="-1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1075" centerz="7" radius="3">
+		<monster name="Seagull" x="-1" y="-2" z="7" spawntime="60" />
+		<monster name="Crab" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1082" centerz="7" radius="3">
+		<monster name="Flamingo" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1082" centerz="7" radius="3">
+		<monster name="Sphinx" x="0" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1082" centerz="7" radius="3">
+		<monster name="Lamassu" x="-1" y="-2" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="0" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1309" centery="1082" centerz="7" radius="3">
+		<monster name="Crab" x="2" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1108" centery="1083" centerz="7" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1084" centerz="7" radius="1">
+		<monster name="Feral Sphinx" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1106" centery="1089" centerz="7" radius="3">
+		<monster name="Sheep" x="1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1113" centery="1089" centerz="7" radius="3">
+		<monster name="Scorpion" x="-3" y="-2" z="7" spawntime="60" />
+		<monster name="Flamingo" x="-1" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1089" centerz="7" radius="3">
+		<monster name="Flamingo" x="1" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1089" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1089" centerz="7" radius="3">
+		<monster name="Lamassu" x="3" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1089" centerz="7" radius="3">
+		<monster name="Lamassu" x="1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1089" centerz="7" radius="3">
+		<monster name="Sphinx" x="-1" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1085" centery="1096" centerz="7" radius="3">
+		<monster name="Crab" x="1" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1092" centery="1096" centerz="7" radius="3">
+		<monster name="Sheep" x="1" y="-3" z="7" spawntime="60" />
+		<monster name="Sheep" x="-1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1106" centery="1096" centerz="7" radius="3">
+		<monster name="Sheep" x="-2" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1096" centerz="7" radius="3">
+		<monster name="Flamingo" x="-1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1096" centerz="7" radius="3">
+		<monster name="Cobra" x="2" y="-2" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="-3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1096" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1157" centery="1097" centerz="7" radius="1">
+		<monster name="Feral Sphinx" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1078" centery="1103" centerz="7" radius="3">
+		<monster name="Scorpion" x="1" y="-3" z="7" spawntime="60" />
+		<monster name="Manticore" x="-3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1092" centery="1103" centerz="7" radius="3">
+		<monster name="Flamingo" x="1" y="-1" z="7" spawntime="60" />
+		<monster name="Lamassu" x="1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1099" centery="1103" centerz="7" radius="3">
+		<monster name="Flamingo" x="2" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1113" centery="1103" centerz="7" radius="3">
+		<monster name="Sheep" x="3" y="-3" z="7" spawntime="60" />
+		<monster name="Flamingo" x="0" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1103" centerz="7" radius="3">
+		<monster name="Crocodile" x="3" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1103" centerz="7" radius="3">
+		<monster name="Flamingo" x="0" y="-2" z="7" spawntime="60" />
+		<monster name="Flamingo" x="0" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1103" centerz="7" radius="3">
+		<monster name="Sandcrawler" x="-2" y="1" z="7" spawntime="60" />
+		<monster name="Lamassu" x="-2" y="3" z="7" spawntime="60" />
+		<monster name="Sphinx" x="1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1103" centerz="7" radius="3">
+		<monster name="Biting Book" x="1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1071" centery="1110" centerz="7" radius="3">
+		<monster name="Cobra" x="-3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1084" centery="1110" centerz="7" radius="3">
+		<monster name="Manticore" x="2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1127" centery="1110" centerz="7" radius="3">
+		<monster name="Flamingo" x="0" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1110" centerz="7" radius="3">
+		<monster name="Flamingo" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1110" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="0" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1110" centerz="7" radius="3">
+		<monster name="Crocodile" x="0" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1110" centerz="7" radius="3">
+		<monster name="Dromedary" x="2" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1110" centerz="7" radius="3">
+		<monster name="Butterfly" x="-2" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1101" centery="1113" centerz="7" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1092" centery="1117" centerz="7" radius="3">
+		<monster name="Crab" x="1" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1117" centerz="7" radius="3">
+		<monster name="Crocodile" x="2" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1065" centery="1119" centerz="7" radius="1">
+		<monster name="Manticore" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1064" centery="1124" centerz="7" radius="3">
+		<monster name="Crab" x="1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1124" centerz="7" radius="3">
+		<monster name="Scorpion" x="-2" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1064" centery="1131" centerz="7" radius="3">
+		<monster name="Manticore" x="0" y="2" z="7" spawntime="60" />
+		<monster name="Scorpion" x="2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1071" centery="1131" centerz="7" radius="3">
+		<monster name="Seagull" x="-2" y="0" z="7" spawntime="60" />
+		<monster name="Crab" x="-3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1092" centery="1131" centerz="7" radius="3">
+		<monster name="Seagull" x="2" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1113" centery="1131" centerz="7" radius="3">
+		<monster name="Crab" x="1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1127" centery="1131" centerz="7" radius="3">
+		<monster name="Manticore" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1131" centerz="7" radius="3">
+		<monster name="Manticore" x="1" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1131" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="0" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1131" centerz="7" radius="3">
+		<monster name="Crab" x="-3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1177" centery="1136" centerz="7" radius="1">
+		<monster name="Feral Sphinx" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1127" centery="1138" centerz="7" radius="3">
+		<monster name="Seagull" x="-3" y="-2" z="7" spawntime="60" />
+		<monster name="Seagull" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1138" centerz="7" radius="3">
+		<monster name="Manticore" x="0" y="-3" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1253" centery="1138" centerz="7" radius="3">
+		<monster name="Butterfly" x="0" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1127" centery="1145" centerz="7" radius="3">
+		<monster name="Lamassu" x="1" y="-3" z="7" spawntime="60" />
+		<monster name="Manticore" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1145" centerz="7" radius="3">
+		<monster name="Lamassu" x="-3" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1145" centerz="7" radius="3">
+		<monster name="Manticore" x="3" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1145" centerz="7" radius="3">
+		<monster name="Lamassu" x="-3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1145" centerz="7" radius="3">
+		<monster name="Crocodile" x="0" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1302" centery="1145" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="2" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1127" centery="1152" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="2" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1152" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="2" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1152" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="3" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1274" centery="1152" centerz="7" radius="3">
+		<monster name="Manticore" x="0" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1281" centery="1152" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-2" y="-1" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="-1" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1302" centery="1152" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1159" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-3" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1159" centerz="7" radius="3">
+		<monster name="Manticore" x="-3" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1159" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="2" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1127" centery="1166" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="1" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1166" centerz="7" radius="3">
+		<monster name="Clomp" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1166" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1166" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="0" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1166" centerz="7" radius="3">
+		<monster name="Lamassu" x="-1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1166" centerz="7" radius="3">
+		<monster name="Seagull" x="3" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1166" centerz="7" radius="3">
+		<monster name="Seagull" x="0" y="1" z="7" spawntime="60" />
+		<monster name="Crocodile" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1166" centerz="7" radius="3">
+		<monster name="Crocodile" x="1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1113" centery="1173" centerz="7" radius="3">
+		<monster name="Clomp" x="2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1173" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1173" centerz="7" radius="3">
+		<monster name="Seagull" x="-2" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1274" centery="1173" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="0" y="-2" z="7" spawntime="60" />
+		<monster name="Manticore" x="1" y="-2" z="7" spawntime="60" />
+		<monster name="Manticore" x="1" y="0" z="7" spawntime="60" />
+		<monster name="Manticore" x="2" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1281" centery="1173" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="0" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1113" centery="1180" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="-1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1120" centery="1180" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="-3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1127" centery="1180" centerz="7" radius="3">
+		<monster name="Clomp" x="0" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1180" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="-1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1180" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="2" y="-2" z="7" spawntime="60" />
+		<monster name="Young Goanna" x="2" y="2" z="7" spawntime="60" />
+		<monster name="Ogre Ruffian" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1180" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-3" y="-3" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-3" y="3" z="7" spawntime="60" />
+		<monster name="Manticore" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1180" centerz="7" radius="3">
+		<monster name="Clomp" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1180" centerz="7" radius="3">
+		<monster name="Young Goanna" x="1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1180" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1180" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="3" y="0" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="-2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1180" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-3" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1106" centery="1187" centerz="7" radius="3">
+		<monster name="Clomp" x="2" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1187" centerz="7" radius="3">
+		<monster name="Young Goanna" x="3" y="-2" z="7" spawntime="60" />
+		<monster name="Young Goanna" x="1" y="2" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1187" centerz="7" radius="3">
+		<monster name="Clomp" x="-1" y="-3" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-3" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1187" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-3" y="-3" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="-3" y="-2" z="7" spawntime="60" />
+		<monster name="Manticore" x="0" y="-1" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1187" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-2" y="-1" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1187" centerz="7" radius="3">
+		<monster name="Manticore" x="-1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1187" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1187" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-2" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1187" centerz="7" radius="3">
+		<monster name="Young Goanna" x="3" y="-2" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="3" y="1" z="7" spawntime="60" />
+		<monster name="Young Goanna" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1187" centerz="7" radius="3">
+		<monster name="Manticore" x="-1" y="-2" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="-2" y="0" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1194" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="0" y="-3" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="3" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1194" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-3" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1194" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="0" y="-3" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="-2" y="-2" z="7" spawntime="60" />
+		<monster name="Young Goanna" x="1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1194" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-2" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1194" centerz="7" radius="3">
+		<monster name="Manticore" x="1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1194" centerz="7" radius="3">
+		<monster name="Manticore" x="3" y="-3" z="7" spawntime="60" />
+		<monster name="Manticore" x="-3" y="0" z="7" spawntime="60" />
+		<monster name="Young Goanna" x="-1" y="1" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-2" y="3" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="0" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1201" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="-2" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1201" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="-3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1201" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="-3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1201" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="-1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1201" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="-3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1201" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="0" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1201" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="2" y="-2" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1201" centerz="7" radius="3">
+		<monster name="Manticore" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1208" centerz="7" radius="3">
+		<monster name="Clomp" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1208" centerz="7" radius="3">
+		<monster name="Young Goanna" x="0" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1208" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="2" y="-3" z="7" spawntime="60" />
+		<monster name="Ogre Ruffian" x="3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1208" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1208" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="-2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1208" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1208" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="3" y="0" z="7" spawntime="60" />
+		<monster name="Young Goanna" x="2" y="1" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1208" centerz="7" radius="3">
+		<monster name="Manticore" x="-3" y="-3" z="7" spawntime="60" />
+		<monster name="Manticore" x="-2" y="-2" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-2" y="0" z="7" spawntime="60" />
+		<monster name="Feral Sphinx" x="-1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1215" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1215" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1215" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="-1" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1215" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="-1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1215" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="-1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1215" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1215" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="-3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1215" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="0" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1215" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="3" y="-2" z="7" spawntime="60" />
+		<monster name="Manticore" x="-1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1215" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1120" centery="1222" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="2" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1222" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1222" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="3" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1222" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="0" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1222" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="0" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1222" centerz="7" radius="3">
+		<monster name="Manticore" x="0" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1222" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1274" centery="1222" centerz="7" radius="3">
+		<monster name="Manticore" x="-2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1120" centery="1229" centerz="7" radius="3">
+		<monster name="Crab" x="1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1229" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="1" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1229" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="-3" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1229" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1229" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="3" y="-3" z="7" spawntime="60" />
+		<monster name="Ogre Ruffian" x="2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1229" centerz="7" radius="3">
+		<monster name="Young Goanna" x="0" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1229" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="1" y="-1" z="7" spawntime="60" />
+		<monster name="Manticore" x="2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1229" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1236" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1236" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="0" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1236" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="-3" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1236" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1236" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1236" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1236" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1236" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-2" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1274" centery="1236" centerz="7" radius="3">
+		<monster name="Young Goanna" x="2" y="-3" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1243" centerz="7" radius="3">
+		<monster name="Crab" x="-3" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1243" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="-1" y="-2" z="7" spawntime="60" />
+		<monster name="Ogre Rowdy" x="3" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1243" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="0" y="-3" z="7" spawntime="60" />
+		<monster name="Ogre Sage" x="-1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1243" centerz="7" radius="3">
+		<monster name="Young Goanna" x="3" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1243" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="3" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1243" centerz="7" radius="3">
+		<monster name="Manticore" x="2" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1243" centerz="7" radius="3">
+		<monster name="Manticore" x="1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1243" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1243" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-3" y="-2" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1288" centery="1243" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-3" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1295" centery="1243" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1302" centery="1243" centerz="7" radius="3">
+		<monster name="Manticore" x="-3" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1120" centery="1250" centerz="7" radius="3">
+		<monster name="Sphinx" x="-2" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1250" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="-2" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1250" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="0" y="-1" z="7" spawntime="60" />
+		<monster name="Ogre Ruffian" x="-1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1250" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="0" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1250" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="-1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1250" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="-2" y="-2" z="7" spawntime="60" />
+		<monster name="Ogre Ruffian" x="0" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1250" centerz="7" radius="3">
+		<monster name="Young Goanna" x="3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1250" centerz="7" radius="3">
+		<monster name="Young Goanna" x="3" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1250" centerz="7" radius="3">
+		<monster name="Manticore" x="1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1250" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="2" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1250" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1250" centerz="7" radius="3">
+		<monster name="Young Goanna" x="2" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1250" centerz="7" radius="3">
+		<monster name="Manticore" x="-2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1302" centery="1250" centerz="7" radius="3">
+		<monster name="Young Goanna" x="0" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1309" centery="1250" centerz="7" radius="3">
+		<monster name="Young Goanna" x="1" y="1" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1120" centery="1257" centerz="7" radius="3">
+		<monster name="Lamassu" x="3" y="-1" z="7" spawntime="60" />
+		<monster name="Lamassu" x="-3" y="1" z="7" spawntime="60" />
+		<monster name="Sphinx" x="2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1257" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="3" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1257" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="0" y="-3" z="7" spawntime="60" />
+		<monster name="Ogre Ruffian" x="3" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1257" centerz="7" radius="1">
+		<monster name="Adult Goanna" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1257" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-3" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1257" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1257" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1205" centery="1258" centerz="7" radius="1">
+		<monster name="Manticore" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1208" centery="1258" centerz="7" radius="1">
+		<monster name="Young Goanna" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1261" centerz="7" radius="1">
+		<monster name="Feral Sphinx" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1120" centery="1264" centerz="7" radius="3">
+		<monster name="Crab" x="-1" y="-2" z="7" spawntime="60" />
+		<monster name="Crab" x="3" y="-2" z="7" spawntime="60" />
+		<monster name="Sphinx" x="-1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1264" centerz="7" radius="3">
+		<monster name="Ogre Ruffian" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1264" centerz="7" radius="3">
+		<monster name="Ogre Sage" x="0" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1219" centery="1264" centerz="7" radius="1">
+		<monster name="Adult Goanna" x="0" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1264" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="0" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1264" centerz="7" radius="3">
+		<monster name="Manticore" x="3" y="-1" z="7" spawntime="60" />
+		<monster name="Young Goanna" x="1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1274" centery="1264" centerz="7" radius="3">
+		<monster name="Manticore" x="2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1281" centery="1264" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1288" centery="1264" centerz="7" radius="3">
+		<monster name="Young Goanna" x="2" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1295" centery="1264" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-1" y="-3" z="7" spawntime="60" />
+		<monster name="Manticore" x="3" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1271" centerz="7" radius="3">
+		<monster name="Lamassu" x="3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1271" centerz="7" radius="3">
+		<monster name="Sphinx" x="-3" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1271" centerz="7" radius="3">
+		<monster name="Lamassu" x="1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1271" centerz="7" radius="3">
+		<monster name="Ogre Rowdy" x="-2" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1271" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1278" centerz="7" radius="3">
+		<monster name="Lamassu" x="1" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1278" centerz="7" radius="3">
+		<monster name="Sphinx" x="-3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1278" centerz="7" radius="3">
+		<monster name="Lamassu" x="-3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1278" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1278" centerz="7" radius="3">
+		<monster name="Young Goanna" x="3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1278" centerz="7" radius="3">
+		<monster name="Manticore" x="2" y="-1" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1278" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1278" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1285" centerz="7" radius="3">
+		<monster name="Sphinx" x="0" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1285" centerz="7" radius="3">
+		<monster name="Lamassu" x="-2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1285" centerz="7" radius="3">
+		<monster name="Manticore" x="0" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1285" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="3" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1285" centerz="7" radius="3">
+		<monster name="Young Goanna" x="0" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1292" centerz="7" radius="3">
+		<monster name="Lamassu" x="1" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1292" centerz="7" radius="3">
+		<monster name="Lamassu" x="-3" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1292" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-1" y="2" z="7" spawntime="60" />
+		<monster name="Young Goanna" x="1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1292" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1292" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1127" centery="1299" centerz="7" radius="3">
+		<monster name="Sphinx" x="-3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1299" centerz="7" radius="3">
+		<monster name="Sphinx" x="-2" y="-3" z="7" spawntime="60" />
+		<monster name="Sphinx" x="1" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1299" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="-1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1299" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1299" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="3" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1299" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1299" centerz="7" radius="3">
+		<monster name="Manticore" x="0" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1120" centery="1306" centerz="7" radius="3">
+		<monster name="Lamassu" x="0" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1306" centerz="7" radius="3">
+		<monster name="Manticore" x="1" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1306" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="3" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1306" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-2" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1127" centery="1313" centerz="7" radius="3">
+		<monster name="Manticore" x="3" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1313" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1313" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-2" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1134" centery="1320" centerz="7" radius="3">
+		<monster name="Young Goanna" x="1" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1141" centery="1320" centerz="7" radius="3">
+		<monster name="Manticore" x="0" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1148" centery="1320" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-2" y="1" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="-3" y="3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1320" centerz="7" radius="3">
+		<monster name="Manticore" x="-1" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1320" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="3" y="0" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1320" centerz="7" radius="3">
+		<monster name="Manticore" x="-3" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1327" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-1" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1327" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="3" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1155" centery="1334" centerz="7" radius="3">
+		<monster name="Young Goanna" x="0" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1334" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1334" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1334" centerz="7" radius="3">
+		<monster name="Young Goanna" x="2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1334" centerz="7" radius="3">
+		<monster name="Manticore" x="-1" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1162" centery="1341" centerz="7" radius="3">
+		<monster name="Adult Goanna" x="-2" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1341" centerz="7" radius="3">
+		<monster name="Manticore" x="-3" y="-1" z="7" spawntime="60" />
+		<monster name="Adult Goanna" x="1" y="2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1169" centery="1348" centerz="7" radius="3">
+		<monster name="Manticore" x="2" y="1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1355" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-1" y="-2" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1183" centery="1355" centerz="7" radius="3">
+		<monster name="Young Goanna" x="2" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1355" centerz="7" radius="3">
+		<monster name="Feral Sphinx" x="1" y="-1" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1362" centerz="7" radius="3">
+		<monster name="Young Goanna" x="-3" y="-3" z="7" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1362" centerz="7" radius="3">
+		<monster name="Manticore" x="-3" y="-3" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="530" centery="180" centerz="8" radius="2">
 		<monster name="Skeleton" x="0" y="-2" z="8" spawntime="90" />
@@ -5206,6 +6397,558 @@
 	<monster centerx="675" centery="875" centerz="8" radius="3">
 		<monster name="Gazer Spectre" x="0" y="1" z="8" spawntime="60" />
 	</monster>
+	<monster centerx="1259" centery="985" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="2" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1294" centery="985" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="-3" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1308" centery="985" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="2" y="2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1315" centery="985" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="-1" y="2" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-2" y="3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="2" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1245" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="3" y="-2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1252" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="-2" y="-3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1259" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="3" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="2" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="3" y="0" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="3" y="1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="2" y="2" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="3" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1266" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="-3" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-3" y="-2" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-3" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-3" y="0" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-3" y="2" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-3" y="3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="0" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1273" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="0" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="3" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1287" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="2" y="-2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1294" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="0" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-2" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="0" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-3" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1301" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="3" y="2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1308" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="-3" y="3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-1" y="3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="2" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1315" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="-3" y="2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1322" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="2" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-1" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1329" centery="992" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="-3" y="2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1259" centery="999" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="2" y="-3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1266" centery="999" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="-2" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="0" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-2" y="-2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1273" centery="999" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="3" y="-3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1287" centery="999" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="3" y="-3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1294" centery="999" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="0" y="-2" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-2" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-1" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-2" y="1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-1" y="1" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1308" centery="999" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="0" y="1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="0" y="2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1315" centery="999" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="0" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-1" y="-1" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1322" centery="999" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="2" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1294" centery="1006" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="1" y="1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="1" y="2" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="1" y="3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="2" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1322" centery="1006" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="-2" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-1" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="0" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="2" y="-2" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="1" y="1" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1329" centery="1006" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="-3" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-3" y="0" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-3" y="1" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1287" centery="1013" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="-3" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-2" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-2" y="0" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-3" y="1" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-3" y="3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="1" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1294" centery="1013" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="1" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="2" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="2" y="-2" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="2" y="1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="1" y="2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1301" centery="1013" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="-1" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="1" y="0" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="3" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1308" centery="1013" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="3" y="-2" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="0" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="1" y="0" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="2" y="0" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="3" y="1" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1315" centery="1013" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="-3" y="-2" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="-3" y="0" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="-1" y="2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1322" centery="1013" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="3" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Cutthroat" x="1" y="-1" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1329" centery="1013" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="-2" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1280" centery="1020" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="3" y="-3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1294" centery="1020" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="2" y="-3" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="1" y="-2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1301" centery="1020" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="-2" y="-1" z="8" spawntime="60" />
+		<monster name="Pirat Bombardier" x="1" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1322" centery="1020" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="3" y="-2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1329" centery="1020" centerz="8" radius="3">
+		<monster name="Pirat Cutthroat" x="-3" y="-1" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1322" centery="1027" centerz="8" radius="3">
+		<monster name="Pirat Bombardier" x="2" y="-2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1202" centery="1044" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="1" y="-1" z="8" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1045" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1189" centery="1045" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1045" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1175" centery="1048" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1048" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1212" centery="1048" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1215" centery="1048" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1175" centery="1050" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1190" centery="1050" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1215" centery="1050" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1287" centery="1050" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="-1" z="8" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1289" centery="1050" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1304" centery="1050" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1294" centery="1051" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1306" centery="1053" centerz="8" radius="1">
+		<monster name="Lamassu" x="-1" y="-1" z="8" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1195" centery="1056" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1207" centery="1056" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1297" centery="1056" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1192" centery="1057" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1198" centery="1057" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1174" centery="1058" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1206" centery="1058" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1176" centery="1060" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1297" centery="1061" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1295" centery="1065" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1299" centery="1065" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1272" centery="1066" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1280" centery="1067" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1068" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1292" centery="1068" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1069" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1194" centery="1071" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1071" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1071" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1281" centery="1071" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="-1" y="-1" z="8" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1179" centery="1072" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1181" centery="1072" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="-1" z="8" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1275" centery="1072" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1248" centery="1073" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1074" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1268" centery="1075" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1248" centery="1076" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1213" centery="1078" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1216" centery="1079" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1278" centery="1079" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1290" centery="1079" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1209" centery="1080" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1214" centery="1080" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1231" centery="1080" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1233" centery="1080" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1245" centery="1080" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1248" centery="1080" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1256" centery="1080" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1265" centery="1080" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1268" centery="1080" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1270" centery="1080" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1294" centery="1080" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1253" centery="1081" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1285" centery="1081" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1231" centery="1082" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1231" centery="1085" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1296" centery="1086" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1297" centery="1088" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1296" centery="1090" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1091" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1233" centery="1091" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1297" centery="1092" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1233" centery="1093" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1217" centery="1096" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1274" centery="1096" centerz="8" radius="3">
+		<monster name="Skeleton Elite Warrior" x="3" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1288" centery="1096" centerz="8" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="-3" y="2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1208" centery="1097" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1296" centery="1097" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1214" centery="1098" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1258" centery="1098" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1270" centery="1098" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1206" centery="1099" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1245" centery="1099" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1248" centery="1099" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1295" centery="1100" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1217" centery="1103" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1295" centery="1104" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1218" centery="1105" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1247" centery="1105" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1239" centery="1111" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1296" centery="1111" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1243" centery="1112" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1248" centery="1112" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1296" centery="1113" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1212" centery="1115" centerz="8" radius="1">
+		<monster name="Burning Gladiator" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1296" centery="1116" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="1" y="-1" z="8" spawntime="60" />
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1209" centery="1117" centerz="8" radius="1">
+		<monster name="Burning Gladiator" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1207" centery="1118" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1242" centery="1120" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1213" centery="1121" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1270" centery="1121" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1277" centery="1122" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1210" centery="1123" centerz="8" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1206" centery="1124" centerz="8" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1219" centery="1124" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1124" centerz="8" radius="3">
+		<monster name="Priestess Of The Wild Sun" x="3" y="2" z="8" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="1" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1253" centery="1124" centerz="8" radius="3">
+		<monster name="Skeleton Elite Warrior" x="1" y="3" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1260" centery="1124" centerz="8" radius="3">
+		<monster name="Lamassu" x="0" y="2" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1280" centery="1124" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1295" centery="1124" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Lamassu" x="1" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1217" centery="1125" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1205" centery="1126" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1208" centery="1126" centerz="8" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1267" centery="1127" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1280" centery="1128" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1272" centery="1129" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1278" centery="1129" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1297" centery="1129" centerz="8" radius="1">
+		<monster name="Skeleton Elite Warrior" x="-1" y="-1" z="8" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1278" centery="1131" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1296" centery="1131" centerz="8" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1298" centery="1131" centerz="8" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1206" centery="1248" centerz="8" radius="1">
+		<monster name="Young Goanna" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1202" centery="1252" centerz="8" radius="1">
+		<monster name="Young Goanna" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1206" centery="1252" centerz="8" radius="1">
+		<monster name="Adult Goanna" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1203" centery="1258" centerz="8" radius="1">
+		<monster name="Young Goanna" x="0" y="0" z="8" spawntime="60" />
+	</monster>
+	<monster centerx="1206" centery="1258" centerz="8" radius="1">
+		<monster name="Adult Goanna" x="0" y="0" z="8" spawntime="60" />
+	</monster>
 	<monster centerx="3072" centery="4068" centerz="8" radius="5">
 		<monster name="Hellfire Fighter" x="1" y="-1" z="8" spawntime="60" />
 		<monster name="Hellfire Fighter" x="-3" y="2" z="8" spawntime="60" />
@@ -6845,6 +8588,379 @@
 		<monster name="Warlock" x="-23" y="7" z="9" spawntime="60" />
 		<monster name="Elf Arcanist" x="6" y="9" z="9" spawntime="60" />
 		<monster name="Warlock" x="-8" y="11" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1212" centery="1022" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1024" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1208" centery="1026" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1198" centery="1030" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1219" centery="1034" centerz="9" radius="1">
+		<monster name="Sphinx" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1215" centery="1035" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1238" centery="1035" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Sphinx" x="1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1195" centery="1038" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1201" centery="1038" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1039" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1040" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1214" centery="1040" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Sphinx" x="0" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1241" centery="1042" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Sphinx" x="1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1208" centery="1043" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1210" centery="1043" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1193" centery="1045" centerz="9" radius="1">
+		<monster name="Lamassu" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1195" centery="1046" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1196" centery="1048" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1216" centery="1048" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1220" centery="1048" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Sphinx" x="1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1198" centery="1051" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1243" centery="1052" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Sphinx" x="-1" y="1" z="9" spawntime="60" />
+		<monster name="Sphinx" x="1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1053" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1229" centery="1054" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Sphinx" x="-1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1054" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1198" centery="1057" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1209" centery="1057" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1220" centery="1057" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1222" centery="1057" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1060" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1062" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1244" centery="1062" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1241" centery="1064" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1248" centery="1064" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1065" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1253" centery="1065" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1069" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1203" centery="1069" centerz="9" radius="1">
+		<monster name="Sphinx" x="-1" y="0" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1243" centery="1069" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1224" centery="1070" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1071" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1220" centery="1074" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1226" centery="1076" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Sphinx" x="-1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1230" centery="1076" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1198" centery="1077" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1202" centery="1077" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1210" centery="1077" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1214" centery="1077" centerz="9" radius="1">
+		<monster name="Sphinx" x="-1" y="0" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1235" centery="1078" centerz="9" radius="1">
+		<monster name="Sphinx" x="-1" y="0" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1244" centery="1078" centerz="9" radius="1">
+		<monster name="Lamassu" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1078" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1079" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1209" centery="1079" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1253" centery="1079" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1253" centery="1081" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1204" centery="1082" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1203" centery="1084" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1253" centery="1084" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1198" centery="1090" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1243" centery="1090" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Sphinx" x="-1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1196" centery="1091" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1207" centery="1091" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Sphinx" x="0" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1228" centery="1093" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1254" centery="1093" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1224" centery="1094" centerz="9" radius="1">
+		<monster name="Sphinx" x="-1" y="-1" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1252" centery="1094" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1198" centery="1097" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1200" centery="1097" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1208" centery="1097" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1224" centery="1097" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1243" centery="1097" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1241" centery="1098" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1246" centery="1098" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1209" centery="1099" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1253" centery="1099" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1226" centery="1100" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1104" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1205" centery="1105" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1230" centery="1105" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1248" centery="1105" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1197" centery="1106" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1203" centery="1106" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1226" centery="1106" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1235" centery="1106" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1238" centery="1106" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1252" centery="1106" centerz="9" radius="1">
+		<monster name="Sphinx" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1224" centery="1107" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1241" centery="1107" centerz="9" radius="1">
+		<monster name="Sphinx" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1227" centery="1108" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1211" centery="1110" centerz="9" radius="3">
+		<monster name="Sphinx" x="1" y="-3" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="3" y="-3" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1114" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="1" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1116" centerz="9" radius="1">
+		<monster name="Burning Gladiator" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1206" centery="1119" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1119" centerz="9" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="-1" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="1" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1235" centery="1119" centerz="9" radius="1">
+		<monster name="Burning Gladiator" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1245" centery="1119" centerz="9" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1209" centery="1120" centerz="9" radius="1">
+		<monster name="Burning Gladiator" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1215" centery="1120" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1247" centery="1120" centerz="9" radius="1">
+		<monster name="Burning Gladiator" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1199" centery="1121" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1207" centery="1121" centerz="9" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1243" centery="1121" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1245" centery="1121" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1219" centery="1127" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1127" centerz="9" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1128" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Priestess Of The Wild Sun" x="1" y="0" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="1" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1232" centery="1129" centerz="9" radius="1">
+		<monster name="Burning Gladiator" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1131" centerz="9" radius="1">
+		<monster name="Burning Gladiator" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1134" centerz="9" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="1" y="-1" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Black Sphinx Acolyte" x="1" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1140" centerz="9" radius="1">
+		<monster name="Burning Gladiator" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1226" centery="1142" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1222" centery="1144" centerz="9" radius="1">
+		<monster name="Priestess Of The Wild Sun" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1225" centery="1145" centerz="9" radius="1">
+		<monster name="Lamassu" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="1228" centery="1145" centerz="9" radius="1">
+		<monster name="Black Sphinx Acolyte" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="598" centery="122" centerz="10" radius="4">
 		<monster name="Magicthrower" x="-2" y="-2" z="10" spawntime="90" />
