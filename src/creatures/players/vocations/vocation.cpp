@@ -212,7 +212,7 @@ bool Vocations::loadFromXml() {
 				pugi::xml_attribute percentAllAttr = childNode.attribute("percentall");
 				if (percentAllAttr) {
 					intValue = pugi::cast<int>(percentAllAttr.value());
-					for (uint32_t i = COMBAT_PHYSICALDAMAGE; i <= COMBAT_AGONYDAMAGE; ++i) {
+					for (uint32_t i = COMBAT_FIRST; i <= COMBAT_LAST; ++i) {
 						CombatType_t combatType = indexToCombatType(i);
 						if (combatType != COMBAT_UNDEFINEDDAMAGE) {
 							voc->increaseAbsorbPercent(combatType, intValue);

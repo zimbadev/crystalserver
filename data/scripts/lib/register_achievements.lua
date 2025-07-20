@@ -558,7 +558,7 @@ ACHIEVEMENTS = {
 	[557] = { name = "Fiend Slayer", grade = 1, points = 2, description = "No living fiends were hurt to achieve this outfit." },
 	[558] = { name = "Tear the Toxic Veil", grade = 3, points = 7, description = "On the shoulders of demons, you tore through veils of venomous corruption. Demonic essences made you an unstoppable force but take care to also foster your human side." },
 	[559] = { name = "Hope of the Merudri", grade = 2, points = 7, description = "You managed to create, improve and transform your katar into a master state and have proven yourself worthy in a nightmarish world." },
-	[560] = { name = "Umbral Redeemer", grade = 2, points = 6, description = "You managed to create, improve and transform your katar into a master state and have proven yourself worthy in a nightmarish world." },	
+	[560] = { name = "Umbral Redeemer", grade = 2, points = 6, description = "You managed to create, improve and transform your katar into a master state and have proven yourself worthy in a nightmarish world." },
 	[561] = { name = "Hell Rider", grade = 1, points = 0, description = "Pray it never finds its way back to its original stable with you still riding." },
 	[562] = { name = "Alpha Rider", grade = 1, points = 0, description = "You never can tell, who's boss here." },
 }

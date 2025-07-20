@@ -1,5 +1,7 @@
 local createItem = TalkAction("/i")
 
+local ITEMS_LIMIT = 14400 -- lasting exercise weapon
+
 function createItem.onSay(player, words, param)
 	-- create log
 	logCommand(player, words, param)
@@ -23,6 +25,11 @@ function createItem.onSay(player, words, param)
 	local count = tonumber(split[2] or 1)
 	if not count then
 		count = 1
+	end
+
+	if count > ITEMS_LIMIT then
+		player:sendCancelMessage(string.format("You can only create up to %d items at once.", ITEMS_LIMIT))
+		return true
 	end
 
 	if itemType:isStackable() then

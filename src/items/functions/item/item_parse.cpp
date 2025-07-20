@@ -535,7 +535,7 @@ void ItemParse::parseAbsorbPercent(const std::string &stringValue, pugi::xml_att
 	if (stringValue == "absorbpercentall") {
 		const auto value = pugi::cast<int16_t>(valueAttribute.value());
 		Abilities &abilities = itemType.getAbilities();
-		for (uint32_t i = COMBAT_PHYSICALDAMAGE; i <= COMBAT_AGONYDAMAGE; ++i) {
+		for (uint32_t i = COMBAT_FIRST; i <= COMBAT_LAST; ++i) {
 			CombatType_t combatType = indexToCombatType(i);
 			if (combatType != COMBAT_UNDEFINEDDAMAGE) {
 				abilities.absorbPercent[combatTypeToIndex(combatType)] += value;
