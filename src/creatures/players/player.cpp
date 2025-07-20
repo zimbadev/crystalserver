@@ -8858,35 +8858,275 @@ bool Player::isGuildMate(const std::shared_ptr<Player> &player) const {
 	return guild == player->guild;
 }
 
-bool Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
-	const ItemType &itemType = Item::items[itemId];
-	if (itemType.stackable) {
-		while (itemCount > 0) {
-			const auto addValue = itemCount > 100 ? 100 : itemCount;
-			itemCount -= addValue;
-			const auto &newItem = Item::CreateItem(itemId, addValue);
+ReturnValue Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
+	const auto &itemType = Item::items[itemId];
+	if (!itemType.id) {
+		return RETURNVALUE_NOTPOSSIBLE;
+	}
 
-			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
-				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
+	double availableCapacity = getFreeCapacity();
+	double itemWeight = itemType.weight;
+
+	auto maxRetrievableByWeight = static_cast<uint32_t>(availableCapacity / itemWeight);
+	uint32_t retrievableCount = std::min(maxRetrievableByWeight, itemCount);
+
+	if (retrievableCount == 0) {
+		sendMessageDialog("Not enough capacity. You could not retrieve any items.");
+		return RETURNVALUE_NOTENOUGHROOM;
+	}
+
+	const auto &thisPtr = static_self_cast<Player>();
+	std::vector<std::shared_ptr<Container>> containersCache;
+	size_t cacheIndex = 0;
+	bool fallbackConsumed = false;
+	uint32_t freeStackSpace = 0;
+	std::vector<std::shared_ptr<Item>> stackableItemsCache;
+	const auto &mainBackpack = getBackpack();
+	auto objectCategory = g_game().getObjectCategory(itemType);
+	const auto &obtainContainer = g_game().findManagedContainer(thisPtr, fallbackConsumed, objectCategory, false);
+	if (obtainContainer) {
+		if (obtainContainer->capacity() > obtainContainer->size()) {
+			containersCache.emplace_back(obtainContainer);
+		}
+
+		for (const auto &item : obtainContainer->getItems(true)) {
+			const auto &subContainer = item->getContainer();
+			if (subContainer && subContainer->capacity() > subContainer->size()) {
+				containersCache.emplace_back(subContainer);
+			}
+
+			if (item && item->getID() == itemId && item->isStackable()) {
+				uint32_t availableSpace = item->getStackSize() - item->getItemCount();
+				if (availableSpace > 0) {
+					stackableItemsCache.emplace_back(item);
+					freeStackSpace += availableSpace;
+				}
 			}
 		}
 	} else {
-		while (itemCount > 0) {
-			--itemCount;
-			const auto &newItem = Item::CreateItem(itemId);
+		containersCache = getAllContainers();
+	}
 
-			if (!g_game().tryRetrieveStashItems(static_self_cast<Player>(), newItem)) {
-				g_game().internalPlayerAddItem(static_self_cast<Player>(), newItem, true);
+	uint32_t maxBySlots = 0;
+	if (itemType.stackable) {
+		uint32_t freeSlots = getFreeBackpackSlots();
+		maxBySlots = freeStackSpace + (freeSlots * itemType.stackSize);
+	} else {
+		maxBySlots = getFreeBackpackSlots();
+	}
+
+	uint32_t finalRetrievable = std::min({ maxBySlots, retrievableCount });
+
+	// Check if there is enough space to add the items
+	bool canAddItems = false;
+	if (itemType.stackable) {
+		// For stackable items, check space in existing stacks and free slots
+		uint32_t totalSpace = freeStackSpace;
+		for (const auto &container : containersCache) {
+			uint32_t freeContainerSlots = container->capacity() - container->size();
+			totalSpace += freeContainerSlots * itemType.stackSize;
+		}
+		canAddItems = totalSpace >= finalRetrievable;
+	} else {
+		// For non-stackable items, check free slots
+		uint32_t totalFreeSlots = 0;
+		for (const auto &container : containersCache) {
+			totalFreeSlots += container->capacity() - container->size();
+		}
+		canAddItems = totalFreeSlots >= finalRetrievable;
+	}
+
+	if (!canAddItems) {
+		sendMessageDialog("Not enough space. You could not retrieve any items.");
+		return RETURNVALUE_NOTENOUGHROOM;
+	}
+
+	// Remove the item from the stash if have enough space
+	if (!withdrawItem(itemId, finalRetrievable)) {
+		g_logger().warn("Failed to remove itemId: {} from stash, to player: {}, requested: {}", itemId, getName(), finalRetrievable);
+		return RETURNVALUE_NOTPOSSIBLE;
+	}
+
+	uint32_t addedItemCount = 0;
+	uint32_t remainingToRetrieve = finalRetrievable;
+
+	if (itemType.stackable) {
+		while (remainingToRetrieve > 0 && availableCapacity >= itemWeight) {
+			uint32_t addValue = std::min<uint32_t>(itemType.stackSize, remainingToRetrieve);
+			remainingToRetrieve -= addValue;
+
+			bool itemAdded = false;
+
+			for (auto it = stackableItemsCache.begin(); it != stackableItemsCache.end();) {
+				auto &stackableItem = *it;
+				if (addValue == 0) {
+					break;
+				}
+
+				uint32_t spaceInStack = stackableItem->getStackSize() - stackableItem->getItemCount();
+				uint32_t stackableCount = std::min(spaceInStack, addValue);
+
+				if (stackableCount > 0) {
+					stackableItem->getParent()->updateThing(
+						stackableItem, stackableItem->getID(),
+						stackableItem->getItemCount() + stackableCount
+					);
+					addValue -= stackableCount;
+					addedItemCount += stackableCount;
+					itemAdded = true;
+					availableCapacity -= stackableCount * itemWeight;
+
+					if (stackableItem->getItemCount() >= stackableItem->getStackSize()) {
+						it = stackableItemsCache.erase(it);
+						continue;
+					}
+				}
+				++it;
+			}
+
+			while (addValue > 0 && cacheIndex < containersCache.size()) {
+				const auto &targetContainer = containersCache[cacheIndex];
+				if (!targetContainer) {
+					++cacheIndex;
+					continue;
+				}
+
+				if (targetContainer->capacity() > targetContainer->size()) {
+					uint32_t toCreate = std::min<uint32_t>(addValue, itemType.stackSize);
+					if (availableCapacity < toCreate * itemWeight) {
+						break;
+					}
+
+					const auto &newItem = Item::createItemBatch(itemId, toCreate);
+					if (!newItem) {
+						g_logger().warn("[addItemFromStash] Failed to create new stackable itemId: {} for player {}", itemId, getName());
+						break;
+					}
+
+					targetContainer->addThing(newItem);
+					onSendContainer(targetContainer);
+					addedItemCount += toCreate;
+					availableCapacity -= toCreate * itemWeight;
+					addValue -= toCreate;
+					itemAdded = true;
+				}
+
+				if (targetContainer->capacity() <= targetContainer->size()) {
+					++cacheIndex;
+				}
+			}
+
+			if (!itemAdded && addValue > 0) {
+				g_logger().warn("No more space available for itemId: {}, remaining: {}", itemId, addValue);
+				break;
 			}
 		}
 	}
 
-	// This check is necessary because we need to block it when we retrieve an item from depot search.
+	if (!itemType.stackable) {
+		while (finalRetrievable > 0 && cacheIndex < containersCache.size()) {
+			auto &targetContainer = containersCache[cacheIndex];
+			if (!targetContainer) {
+				++cacheIndex;
+				continue;
+			}
+
+			if (targetContainer->capacity() > targetContainer->size()) {
+				const auto &newItem = Item::createItemBatch(itemId, 1);
+				if (!newItem) {
+					g_logger().warn("[addItemFromStash] Failed to create new itemId: {} for player {}", itemId, getName());
+					break;
+				}
+
+				targetContainer->addThing(newItem);
+				onSendContainer(targetContainer);
+				addedItemCount += 1;
+				finalRetrievable -= 1;
+			}
+
+			if (targetContainer->capacity() <= targetContainer->size()) {
+				++cacheIndex;
+			}
+		}
+	}
+
+	std::string itemName = itemType.name + (addedItemCount > 1 ? "s" : "");
+	sendTextMessage(MESSAGE_STATUS, fmt::format("Retrieved {}x {}.", addedItemCount, itemName));
+
 	if (!isDepotSearchOpenOnItem(itemId)) {
 		sendOpenStash();
 	}
 
-	return true;
+	if (addedItemCount > 0) {
+		updateState();
+	}
+
+	availableCapacity = getFreeCapacity();
+	bool limitedByCapacity = (addedItemCount < itemCount) && (availableCapacity < itemWeight);
+	bool limitedBySlots = (addedItemCount < retrievableCount) && !limitedByCapacity;
+
+	if (limitedByCapacity) {
+		sendMessageDialog("Not enough capacity. You could not retrieve all items.");
+	} else if (limitedBySlots) {
+		sendMessageDialog("Not enough space. You could not retrieve all items.");
+	}
+
+	return addedItemCount > 0 ? RETURNVALUE_NOERROR : RETURNVALUE_NOTENOUGHROOM;
+}
+
+std::vector<std::shared_ptr<Container>> Player::getAllContainers(bool onlyFromMainBackpack) const {
+	std::vector<std::shared_ptr<Container>> containersCache;
+
+	// Add main backpack to the cache
+	if (onlyFromMainBackpack) {
+		const auto &mainBp = getBackpack();
+		if (mainBp) {
+			containersCache.emplace_back(mainBp);
+		}
+	}
+
+	// Gather all containers from player inventory
+	for (uint32_t slot = CONST_SLOT_FIRST; slot <= CONST_SLOT_AMMO; ++slot) {
+		// Skip slots check if onlyFromMainBackpack is true
+		if (onlyFromMainBackpack) {
+			break;
+		}
+
+		const auto &slotItem = getInventoryItem(static_cast<Slots_t>(slot));
+		if (!slotItem) {
+			continue;
+		}
+
+		if (auto container = slotItem->getContainer()) {
+			containersCache.emplace_back(container);
+		}
+	}
+
+	// Add all nested containers to the cache
+	for (size_t i = 0; i < containersCache.size(); i++) {
+		const auto &container = containersCache[i];
+		if (!container) {
+			continue;
+		}
+
+		for (const auto &item : container->getItemList()) {
+			if (auto subContainer = item->getContainer()) {
+				containersCache.emplace_back(subContainer);
+			}
+		}
+	}
+
+	return containersCache;
+}
+
+std::shared_ptr<Container> Player::getBackpack() const {
+	const auto &item = getInventoryItem(CONST_SLOT_BACKPACK);
+	if (!item) {
+		return nullptr;
+	}
+
+	const auto &container = item->getContainer();
+	return container;
 }
 
 ReturnValue Player::removeItem(const std::shared_ptr<Item> &item, uint32_t count /*= 0*/) {
@@ -8921,75 +9161,110 @@ ReturnValue Player::removeItem(const std::shared_ptr<Item> &item, uint32_t count
 	return RETURNVALUE_NOERROR;
 }
 
-void sendStowItems(const std::shared_ptr<Item> &item, const std::shared_ptr<Item> &stowItem, StashContainerList &itemDict) {
-	const ItemType &it = Item::items[item->getID()];
-	if (it.isContainer()) {
-		return;
-	}
+uint32_t sendStowItems(const std::shared_ptr<Item> &item, const std::shared_ptr<Item> &stowItem, StashContainerList &itemDict, uint32_t totalItemsToStow, uint32_t maxItemsToStow) {
+	uint32_t itemsAdded = 0;
 
 	if (stowItem->getID() == item->getID()) {
-		itemDict.emplace_back(stowItem, stowItem->getItemCount());
+		uint32_t stowableToAdd = std::min<uint32_t>(stowItem->getItemAmount(), maxItemsToStow - totalItemsToStow);
+		itemDict.emplace_back(stowItem, stowableToAdd);
+		itemsAdded += stowableToAdd;
 	}
 
 	if (const auto &container = stowItem->getContainer()) {
-		std::ranges::copy_if(container->getStowableItems(), std::back_inserter(itemDict), [&item](const auto &stowable_it) {
-			return stowable_it.first->getID() == item->getID();
-		});
+		for (const auto &[stowableItem, stowableCount] : container->getStowableItems()) {
+			if (totalItemsToStow + itemsAdded >= maxItemsToStow) {
+				break;
+			}
+
+			if (stowableItem->getID() != item->getID()) {
+				continue;
+			}
+
+			uint32_t stowableToAdd = std::min(stowableCount, maxItemsToStow - (totalItemsToStow + itemsAdded));
+			itemDict.emplace_back(stowableItem, stowableToAdd);
+			itemsAdded += stowableToAdd;
+		}
 	}
+
+	return itemsAdded;
 }
 
 void Player::stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool allItems) {
-	if (!item || !item->isItemStorable()) {
+	if (!item || (!item->isItemStorable() && item->getID() != ITEM_GOLD_POUCH)) {
 		sendCancelMessage("This item cannot be stowed here.");
 		return;
 	}
 
+	if (!item->isItemStorable() && item->getID() != ITEM_GOLD_POUCH) {
+		if (!item->getParent()) {
+			sendCancelMessage("This item cannot be stowed here.");
+			return;
+		}
+		if (!item->getParent()->getItem()) {
+			sendCancelMessage("This item cannot be stowed here.");
+			return;
+		}
+		if (item->getParent()->getItem()->getID() != ITEM_GOLD_POUCH) {
+			sendCancelMessage("This item cannot be stowed here.");
+			return;
+		}
+	}
+
 	StashContainerList itemDict;
+	uint32_t totalItemsToStow = 0;
+	uint32_t maxItemsToStow = g_configManager().getNumber(STASH_MANAGE_AMOUNT);
+
 	if (allItems) {
+		if (item->getContainer()) {
+			sendCancelMessage("You cannot stow containers.");
+			return;
+		}
+
 		if (!item->isInsideDepot(true)) {
-			// Stow "all items" from player backpack
-			if (const auto &backpack = getInventoryItem(CONST_SLOT_BACKPACK)) {
-				sendStowItems(item, backpack, itemDict);
+			// Stow items from player backpack
+			if (const auto &backpack = getBackpack()) {
+				totalItemsToStow += sendStowItems(item, backpack, itemDict, totalItemsToStow, maxItemsToStow);
 			}
 
-			// Stow "all items" from loot pouch
-			const auto &itemParent = item->getParent();
-			const auto &lootPouch = itemParent->getItem();
-			if (itemParent && lootPouch && lootPouch->getID() == ITEM_GOLD_POUCH) {
-				sendStowItems(item, lootPouch, itemDict);
+			// Stow items from loot pouch
+			if (const auto &itemParent = item->getParent()) {
+				if (const auto &lootPouch = itemParent->getItem(); lootPouch && lootPouch->getID() == ITEM_GOLD_POUCH) {
+					totalItemsToStow += sendStowItems(item, lootPouch, itemDict, totalItemsToStow, maxItemsToStow);
+				}
 			}
 		}
 
-		// Stow locker items
+		// Stow items from depot locker
 		const auto &depotLocker = getDepotLocker(getLastDepotId());
 		const auto &[itemVector, itemMap] = requestLockerItems(depotLocker);
 		for (const auto &lockerItem : itemVector) {
-			if (lockerItem == nullptr) {
+			if (lockerItem && item->isInsideDepot(true)) {
+				totalItemsToStow += sendStowItems(item, lockerItem, itemDict, totalItemsToStow, maxItemsToStow);
+			}
+		}
+	} else if (const auto &container = item->getContainer()) {
+		for (const auto &[stowableItem, stowableCount] : container->getStowableItems()) {
+			if (totalItemsToStow >= maxItemsToStow) {
 				break;
 			}
 
-			if (item->isInsideDepot(true)) {
-				sendStowItems(item, lockerItem, itemDict);
-			}
-		}
-	} else if (item->getContainer()) {
-		itemDict = item->getContainer()->getStowableItems();
-		for (const std::shared_ptr<Item> &containerItem : item->getContainer()->getItems(true)) {
-			uint32_t depotChest = g_configManager().getNumber(DEPOTCHEST);
-			bool validDepot = depotChest > 0 && depotChest < 21;
-			if (g_configManager().getBoolean(STASH_MOVING) && containerItem && !containerItem->isStackable() && validDepot) {
-				g_game().internalMoveItem(containerItem->getParent(), getDepotChest(depotChest, true), INDEX_WHEREEVER, containerItem, containerItem->getItemCount(), nullptr);
-				movedItems++;
-				moved = true;
-			}
+			uint32_t stowableToAdd = std::min(stowableCount, maxItemsToStow - totalItemsToStow);
+			itemDict.emplace_back(stowableItem, stowableToAdd);
+			totalItemsToStow += stowableToAdd;
 		}
 	} else {
-		itemDict.emplace_back(item, count);
+		uint32_t stowableToAdd = std::min(count, maxItemsToStow - totalItemsToStow);
+		itemDict.emplace_back(item, stowableToAdd);
+		totalItemsToStow += stowableToAdd;
 	}
 
 	if (itemDict.empty()) {
-		sendCancelMessage("There is no stowable items on this container.");
+		sendCancelMessage("There are no stowable items in this container.");
 		return;
+	}
+
+	if (totalItemsToStow >= maxItemsToStow) {
+		sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("You have reached the maximum stow limit of {} items. Try to stow again.", maxItemsToStow));
 	}
 
 	stashContainer(itemDict);

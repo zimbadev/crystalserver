@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Evil Prospector")
 local monster = {}
 
 monster.description = "an evil prospector"
-monster.experience = 9000
+monster.experience = 9800
 monster.outfit = {
 	lookType = 1268,
 	lookHead = 0,
@@ -102,11 +102,11 @@ monster.elements = {
 	{ type = COMBAT_PHYSICALDAMAGE, percent = 65 },
 	{ type = COMBAT_ENERGYDAMAGE, percent = 30 },
 	{ type = COMBAT_EARTHDAMAGE, percent = 0 },
-	{ type = COMBAT_FIREDAMAGE, percent = 0 },
+	{ type = COMBAT_FIREDAMAGE, percent = -5 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 0 },
+	{ type = COMBAT_ICEDAMAGE, percent = -5 },
 	{ type = COMBAT_HOLYDAMAGE, percent = 35 },
 	{ type = COMBAT_DEATHDAMAGE, percent = -10 },
 }

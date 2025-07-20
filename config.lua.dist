@@ -282,8 +282,6 @@ tibiadromeConcoctionTickType = "online" -- "online" | "experience"
 onlyPremiumAccount = false
 
 -- Customs
--- NOTE: stashMoving = true, stow an container inside your stash
--- NOTE: depotChest, the non-stackable items will be moved to the selected depot chest(I - XVIII).
 -- NOTE: autoBank = true, the dropped coins from monsters will be automatically deposited to your bank account.
 -- NOTE: toggleGoldPouchAllowAnything will allow players to move items or gold to gold pouch
 -- NOTE: toggleGoldPouchQuickLootOnly will ONLY allow quickloot to move items to gold pouch
@@ -297,8 +295,6 @@ onlyPremiumAccount = false
 -- NOTE: startStreakLevel will make a reward streak level for new players who never logged in
 -- NOTE: if showLootsInBestiary is true, will cause all loots to be shown in the bestiary even if the player has not reached the required number of kills
 -- NOTE: minTownIdToBankTransferFromMain blocks towns less than defined from receiving money transfers
-stashMoving = false
-depotChest = 4
 autoLoot = false
 autoBank = false
 toggleGoldPouchAllowAnything = false
@@ -315,6 +311,12 @@ enablePlayerPutItemInAmmoSlot = false
 startStreakLevel = 0
 showLootsInBestiary = false
 minTownIdToBankTransferFromMain = 4
+
+-- Stash
+-- NOTE: stashMoving = true, stow an container inside your stash
+-- NOTE: stashManageAmount = max items add/remove from stash at once
+stashMoving = false
+stashManageAmount = 100000
 
 -- Special tiles and Free Town
 -- NOTE: Special tiles and free town ID are independent.
