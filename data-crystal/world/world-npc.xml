@@ -1,18 +1,5 @@
 <?xml version="1.0"?>
 <npcs>
-	<npc centerx="1295" centery="1117" centerz="0" radius="3">
-		<npc name="Tanyt" x="3" y="-3" z="0" spawntime="60" />
-	</npc>
-	<npc centerx="1218" centery="1089" centerz="3" radius="3">
-		<npc name="Ambassador Of Rathleton" x="-2" y="1" z="3" spawntime="60" />
-	</npc>
-	<npc centerx="1211" centery="1096" centerz="3" radius="3">
-		<npc name="The Empress" x="2" y="2" z="3" spawntime="60" />
-	</npc>
-	<npc centerx="1211" centery="1089" centerz="4" radius="3">
-		<npc name="Tamed Lion" x="2" y="1" z="4" spawntime="60" />
-		<npc name="Guard Inurta" x="1" y="3" z="4" spawntime="60" />
-	</npc>
 	<npc centerx="388" centery="419" centerz="5" radius="5">
 		<npc name="Julian" x="0" y="-5" z="5" spawntime="60" direction="2" />
 		<npc name="Orlan" x="0" y="0" z="5" spawntime="60" direction="2" />
@@ -29,15 +16,6 @@
 	</npc>
 	<npc centerx="331" centery="455" centerz="5" radius="5">
 		<npc name="Julian" x="0" y="0" z="5" spawntime="60" direction="2" />
-	</npc>
-	<npc centerx="1260" centery="1075" centerz="5" radius="3">
-		<npc name="Iptar-Sin" x="0" y="3" z="5" spawntime="60" />
-	</npc>
-	<npc centerx="1211" centery="1089" centerz="5" radius="3">
-		<npc name="The Librarian" x="3" y="-1" z="5" spawntime="60" />
-	</npc>
-	<npc centerx="1253" centery="1096" centerz="5" radius="3">
-		<npc name="Moe" x="-2" y="-2" z="5" spawntime="60" />
 	</npc>
 	<npc centerx="328" centery="268" centerz="6" radius="1">
 		<npc name="Maria" x="0" y="0" z="6" spawntime="60" />
@@ -158,9 +136,6 @@
 	<npc centerx="544" centery="721" centerz="6" radius="5">
 		<npc name="Orlan" x="0" y="-3" z="6" spawntime="60" direction="3" />
 		<npc name="Julian" x="0" y="1" z="6" spawntime="60" direction="3" />
-	</npc>
-	<npc centerx="1246" centery="1061" centerz="6" radius="3">
-		<npc name="Captain Harava" x="-3" y="2" z="6" spawntime="60" />
 	</npc>
 	<npc centerx="365" centery="229" centerz="7" radius="1">
 		<npc name="Halvar" x="0" y="0" z="7" spawntime="60" />
@@ -311,42 +286,6 @@
 	</npc>
 	<npc centerx="554" centery="721" centerz="7" radius="5">
 		<npc name="Lara" x="0" y="0" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1281" centery="1061" centerz="7" radius="3">
-		<npc name="Alyxo" x="0" y="3" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1232" centery="1075" centerz="7" radius="3">
-		<npc name="Guide Meruka" x="0" y="-2" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1260" centery="1089" centerz="7" radius="3">
-		<npc name="Guard Saros" x="-1" y="1" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1211" centery="1096" centerz="7" radius="3">
-		<npc name="Guard Senet" x="-3" y="-2" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1246" centery="1096" centerz="7" radius="3">
-		<npc name="Ramina" x="-1" y="-1" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1260" centery="1103" centerz="7" radius="3">
-		<npc name="Khanna" x="-2" y="3" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1288" centery="1103" centerz="7" radius="3">
-		<npc name="Atur" x="1" y="3" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1267" centery="1110" centerz="7" radius="3">
-		<npc name="Yonan" x="-3" y="3" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1246" centery="1117" centerz="7" radius="3">
-		<npc name="Inkaef" x="1" y="2" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1253" centery="1117" centerz="7" radius="3">
-		<npc name="Faloriel" x="0" y="-3" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1260" centery="1117" centerz="7" radius="3">
-		<npc name="Eliyas" x="-2" y="2" z="7" spawntime="60" />
-	</npc>
-	<npc centerx="1211" centery="1124" centerz="7" radius="3">
-		<npc name="Ninev" x="1" y="3" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="437" centery="436" centerz="8" radius="1">
 		<npc name="Henricus" x="0" y="0" z="8" spawntime="60" />

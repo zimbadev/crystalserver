@@ -143,7 +143,4 @@
 	<house name="Frostania SE Ia" houseid="151" entryx="331" entryy="285" entryz="5" rent="0" townid="10" size="11" clientid="0" beds="1" />
 	<house name="Frostania SE IIa" houseid="152" entryx="331" entryy="289" entryz="5" rent="0" townid="10" size="11" clientid="0" beds="1" />
 	<house name="Frostania SE IIIa" houseid="153" entryx="331" entryy="293" entryz="5" rent="0" townid="10" size="11" clientid="0" beds="2" />
-	<house name="" houseid="2599" entryx="0" entryy="0" entryz="0" rent="0" townid="0" size="201" clientid="0" beds="0" />
-	<house name="" houseid="2600" entryx="0" entryy="0" entryz="0" rent="0" townid="0" size="116" clientid="0" beds="0" />
-	<house name="" houseid="2601" entryx="0" entryy="0" entryz="0" rent="0" townid="0" size="118" clientid="0" beds="0" />
 </houses>
