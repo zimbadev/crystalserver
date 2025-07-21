@@ -6079,11 +6079,6 @@
 		<monster name="Skeleton" x="0" y="-3" z="9" spawntime="60" />
 		<monster name="Skeleton" x="0" y="3" z="9" spawntime="60" />
 	</monster>
-	<monster centerx="251" centery="403" centerz="9" radius="5">
-		<monster name="Necromancer" x="0" y="-1" z="9" spawntime="60" />
-		<monster name="Necromancer" x="-2" y="0" z="9" spawntime="60" />
-		<monster name="Necromancer" x="2" y="0" z="9" spawntime="60" />
-	</monster>
 	<monster centerx="365" centery="407" centerz="9" radius="5">
 		<monster name="Skeleton" x="3" y="-2" z="9" spawntime="60" />
 		<monster name="Skeleton" x="-2" y="4" z="9" spawntime="60" />
@@ -6114,20 +6109,10 @@
 		<monster name="Ghoul" x="2" y="6" z="9" spawntime="60" />
 		<monster name="Ghoul" x="0" y="8" z="9" spawntime="60" />
 	</monster>
-	<monster centerx="241" centery="412" centerz="9" radius="5">
-		<monster name="Necromancer" x="1" y="0" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="261" centery="412" centerz="9" radius="5">
-		<monster name="Necromancer" x="-1" y="0" z="9" spawntime="60" />
-	</monster>
 	<monster centerx="332" centery="413" centerz="9" radius="5">
 		<monster name="Skeleton" x="-1" y="-3" z="9" spawntime="60" />
 		<monster name="Skeleton" x="2" y="-1" z="9" spawntime="60" />
 		<monster name="Skeleton" x="-4" y="1" z="9" spawntime="60" />
-	</monster>
-	<monster centerx="251" centery="419" centerz="9" radius="5">
-		<monster name="Necromancer" x="-3" y="-2" z="9" spawntime="60" />
-		<monster name="Necromancer" x="3" y="-2" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="470" centery="423" centerz="9" radius="30">
 		<monster name="Dwarf Guard" x="-1" y="-26" z="9" spawntime="60" />
