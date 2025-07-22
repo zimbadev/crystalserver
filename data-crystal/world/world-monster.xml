@@ -6079,6 +6079,15 @@
 		<monster name="Skeleton" x="0" y="-3" z="9" spawntime="60" />
 		<monster name="Skeleton" x="0" y="3" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="253" centery="398" centerz="9" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="250" centery="400" centerz="9" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="236" centery="405" centerz="9" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="365" centery="407" centerz="9" radius="5">
 		<monster name="Skeleton" x="3" y="-2" z="9" spawntime="60" />
 		<monster name="Skeleton" x="-2" y="4" z="9" spawntime="60" />
@@ -6109,10 +6118,28 @@
 		<monster name="Ghoul" x="2" y="6" z="9" spawntime="60" />
 		<monster name="Ghoul" x="0" y="8" z="9" spawntime="60" />
 	</monster>
+	<monster centerx="239" centery="409" centerz="9" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="263" centery="409" centerz="9" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="252" centery="412" centerz="9" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="9" spawntime="60" />
+	</monster>
 	<monster centerx="332" centery="413" centerz="9" radius="5">
 		<monster name="Skeleton" x="-1" y="-3" z="9" spawntime="60" />
 		<monster name="Skeleton" x="2" y="-1" z="9" spawntime="60" />
 		<monster name="Skeleton" x="-4" y="1" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="243" centery="420" centerz="9" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="259" centery="420" centerz="9" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="9" spawntime="60" />
+	</monster>
+	<monster centerx="237" centery="423" centerz="9" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="470" centery="423" centerz="9" radius="30">
 		<monster name="Dwarf Guard" x="-1" y="-26" z="9" spawntime="60" />
@@ -7142,6 +7169,12 @@
 		<monster name="Gargoyle" x="1" y="5" z="10" spawntime="60" />
 		<monster name="Crypt Shambler" x="3" y="5" z="10" spawntime="60" />
 	</monster>
+	<monster centerx="170" centery="375" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="212" centery="377" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="284" centery="377" centerz="10" radius="5">
 		<monster name="Gargoyle" x="-4" y="-3" z="10" spawntime="60" />
 		<monster name="Gargoyle" x="4" y="-3" z="10" spawntime="60" />
@@ -7151,6 +7184,27 @@
 		<monster name="Crypt Shambler" x="-1" y="3" z="10" spawntime="60" />
 		<monster name="Crypt Shambler" x="1" y="3" z="10" spawntime="60" />
 		<monster name="Crypt Shambler" x="0" y="5" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="154" centery="379" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="159" centery="379" centerz="10" radius="1">
+		<monster name="Gravedigger" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="161" centery="379" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="170" centery="379" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="205" centery="379" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="143" centery="380" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="157" centery="380" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="545" centery="380" centerz="10" radius="25">
 		<monster name="Monk" x="-13" y="-14" z="10" spawntime="40" />
@@ -7177,6 +7231,12 @@
 		<monster name="Orc Berserker" x="22" y="21" z="10" spawntime="40" />
 		<monster name="Orc Leader" x="16" y="23" z="10" spawntime="40" />
 	</monster>
+	<monster centerx="181" centery="381" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="190" centery="383" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="249" centery="383" centerz="10" radius="5">
 		<monster name="Crypt Shambler" x="0" y="-5" z="10" spawntime="60" />
 		<monster name="Crypt Shambler" x="4" y="-3" z="10" spawntime="60" />
@@ -7198,6 +7258,49 @@
 		<monster name="Gargoyle" x="1" y="3" z="10" spawntime="60" />
 		<monster name="Crypt Shambler" x="0" y="5" z="10" spawntime="60" />
 	</monster>
+	<monster centerx="186" centery="385" centerz="10" radius="1">
+		<monster name="Gravedigger" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="138" centery="386" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="167" centery="386" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="181" centery="386" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="168" centery="388" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="165" centery="392" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="208" centery="393" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="209" centery="395" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="147" centery="397" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="151" centery="397" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="174" centery="397" centerz="10" radius="1">
+		<monster name="Gravedigger" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="154" centery="398" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="165" centery="398" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Necromancer" x="0" y="1" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="180" centery="398" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="298" centery="398" centerz="10" radius="5">
 		<monster name="Gargoyle" x="0" y="-4" z="10" spawntime="60" />
 		<monster name="Gargoyle" x="-3" y="-2" z="10" spawntime="60" />
@@ -7208,8 +7311,26 @@
 		<monster name="Crypt Shambler" x="-2" y="3" z="10" spawntime="60" />
 		<monster name="Crypt Shambler" x="2" y="3" z="10" spawntime="60" />
 	</monster>
+	<monster centerx="168" centery="399" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="165" centery="402" centerz="10" radius="1">
+		<monster name="Gravedigger" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="502" centery="402" centerz="10" radius="5">
 		<monster name="Hero" x="-2" y="1" z="10" spawntime="40" />
+	</monster>
+	<monster centerx="168" centery="403" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="143" centery="405" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="165" centery="405" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="201" centery="405" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="251" centery="405" centerz="10" radius="5">
 		<monster name="Necromancer" x="0" y="-2" z="10" spawntime="60" />
@@ -7239,9 +7360,27 @@
 		<monster name="Orc Shaman" x="2" y="16" z="10" spawntime="40" />
 		<monster name="Orc Shaman" x="5" y="16" z="10" spawntime="40" />
 	</monster>
+	<monster centerx="167" centery="408" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="201" centery="408" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="200" centery="410" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="136" centery="411" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="186" centery="412" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="483" centery="412" centerz="10" radius="5">
 		<monster name="Hero" x="1" y="-3" z="10" spawntime="40" />
 		<monster name="Hero" x="1" y="2" z="10" spawntime="40" />
+	</monster>
+	<monster centerx="201" centery="413" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="284" centery="413" centerz="10" radius="5">
 		<monster name="Crypt Shambler" x="-1" y="-2" z="10" spawntime="60" />
@@ -7263,21 +7402,68 @@
 	<monster centerx="497" centery="413" centerz="10" radius="5">
 		<monster name="Hero" x="-1" y="0" z="10" spawntime="40" />
 	</monster>
+	<monster centerx="167" centery="414" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="240" centery="414" centerz="10" radius="5">
 		<monster name="Necromancer" x="-1" y="0" z="10" spawntime="60" />
+		<monster name="A Carved Stone Tile" x="3" y="0" z="10" spawntime="60" />
+		<monster name="A Carved Stone Tile" x="-4" y="3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="142" centery="416" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="204" centery="417" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="167" centery="418" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="165" centery="419" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="255" centery="419" centerz="10" radius="5">
+		<monster name="A Carved Stone Tile" x="-5" y="-5" z="10" spawntime="60" />
 		<monster name="Necromancer" x="3" y="-1" z="10" spawntime="60" />
 		<monster name="Necromancer" x="-3" y="1" z="10" spawntime="60" />
 	</monster>
+	<monster centerx="157" centery="421" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="216" centery="422" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="232" centery="422" centerz="10" radius="5">
 		<monster name="Necromancer" x="1" y="1" z="10" spawntime="60" />
+		<monster name="Demon Skeleton" x="-1" y="3" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="155" centery="423" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="492" centery="423" centerz="10" radius="5">
 		<monster name="Hero" x="-1" y="0" z="10" spawntime="40" />
 	</monster>
 	<monster centerx="500" centery="423" centerz="10" radius="5">
 		<monster name="Hero" x="2" y="0" z="10" spawntime="40" />
+	</monster>
+	<monster centerx="219" centery="425" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="223" centery="425" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="225" centery="425" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="215" centery="426" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="155" centery="427" centerz="10" radius="1">
+		<monster name="Gravedigger" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Gravedigger" x="0" y="1" z="10" spawntime="-1125127424" />
+	</monster>
+	<monster centerx="169" centery="427" centerz="10" radius="1">
+		<monster name="Gravedigger" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="298" centery="427" centerz="10" radius="5">
 		<monster name="Crypt Shambler" x="0" y="-5" z="10" spawntime="60" />
@@ -7288,6 +7474,57 @@
 		<monster name="Gargoyle" x="-1" y="4" z="10" spawntime="60" />
 		<monster name="Gargoyle" x="1" y="4" z="10" spawntime="60" />
 		<monster name="Crypt Shambler" x="0" y="5" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="175" centery="428" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Necromancer" x="0" y="1" z="10" spawntime="-1125127424" />
+	</monster>
+	<monster centerx="169" centery="429" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="215" centery="429" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="175" centery="430" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="201" centery="430" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="207" centery="430" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="214" centery="432" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="193" centery="435" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="166" centery="437" centerz="10" radius="1">
+		<monster name="Gravedigger" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Necromancer" x="1" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="178" centery="437" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="191" centery="437" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Necromancer" x="0" y="1" z="10" spawntime="-1125127424" />
+	</monster>
+	<monster centerx="164" centery="438" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="181" centery="439" centerz="10" radius="1">
+		<monster name="Necromancer" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="192" centery="439" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="155" centery="442" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="184" centery="443" centerz="10" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="249" centery="443" centerz="10" radius="5">
 		<monster name="Gargoyle" x="-2" y="-4" z="10" spawntime="60" />
@@ -7308,6 +7545,9 @@
 		<monster name="Gargoyle" x="3" y="3" z="10" spawntime="60" />
 		<monster name="Crypt Shambler" x="-3" y="4" z="10" spawntime="60" />
 		<monster name="Gargoyle" x="0" y="5" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="184" centery="445" centerz="10" radius="1">
+		<monster name="Demon Skeleton" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="284" centery="448" centerz="10" radius="5">
 		<monster name="Crypt Shambler" x="0" y="-5" z="10" spawntime="60" />
@@ -7741,6 +7981,44 @@
 		<monster name="Fire Elemental" x="0" y="-2" z="11" spawntime="60" />
 		<monster name="Fire Elemental" x="-4" y="0" z="11" spawntime="60" />
 		<monster name="Fire Elemental" x="3" y="0" z="11" spawntime="60" />
+	</monster>
+	<monster centerx="168" centery="354" centerz="11" radius="2">
+		<monster name="Wyrm" x="-1" y="1" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="171" centery="360" centerz="11" radius="2">
+		<monster name="Wyrm" x="1" y="-1" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="183" centery="366" centerz="11" radius="2">
+		<monster name="Wyrm" x="-1" y="1" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="156" centery="369" centerz="11" radius="2">
+		<monster name="Wyrm" x="0" y="1" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="171" centery="382" centerz="11" radius="2">
+		<monster name="Wyrm" x="0" y="-1" z="11" spawntime="90" />
+		<monster name="Wyrm" x="2" y="2" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="177" centery="382" centerz="11" radius="2">
+		<monster name="Wyrm" x="0" y="-1" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="188" centery="385" centerz="11" radius="1">
+		<monster name="Wyrm" x="0" y="-1" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="194" centery="387" centerz="11" radius="1">
+		<monster name="Wyrm" x="1" y="1" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="167" centery="396" centerz="11" radius="2">
+		<monster name="Wyrm" x="1" y="-1" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="191" centery="397" centerz="11" radius="2">
+		<monster name="Wyrm" x="-1" y="0" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="185" centery="401" centerz="11" radius="2">
+		<monster name="Wyrm" x="0" y="-1" z="11" spawntime="90" />
+	</monster>
+	<monster centerx="166" centery="402" centerz="11" radius="2">
+		<monster name="Wyrm" x="-2" y="-2" z="11" spawntime="90" />
+		<monster name="Wyrm" x="2" y="0" z="11" spawntime="90" />
 	</monster>
 	<monster centerx="277" centery="413" centerz="11" radius="5">
 		<monster name="Gargoyle" x="-4" y="-1" z="11" spawntime="60" />
@@ -8281,6 +8559,73 @@
 		<monster name="Dragon" x="-10" y="2" z="12" spawntime="60" />
 		<monster name="Fire Elemental" x="-8" y="2" z="12" spawntime="60" />
 	</monster>
+	<monster centerx="164" centery="352" centerz="12" radius="3">
+		<monster name="Wyrm" x="-3" y="3" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="160" centery="357" centerz="12" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="12" spawntime="-1125127424" />
+	</monster>
+	<monster centerx="178" centery="360" centerz="12" radius="2">
+		<monster name="Wyrm" x="0" y="1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="186" centery="360" centerz="12" radius="2">
+		<monster name="Wyrm" x="1" y="0" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="155" centery="361" centerz="12" radius="2">
+		<monster name="Wyrm" x="0" y="-2" z="12" spawntime="90" />
+		<monster name="Wyrm" x="-2" y="2" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="190" centery="368" centerz="12" radius="2">
+		<monster name="Wyrm" x="1" y="-1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="146" centery="370" centerz="12" radius="2">
+		<monster name="Wyrm" x="1" y="-2" z="12" spawntime="90" />
+		<monster name="Wyrm" x="-2" y="1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="166" centery="371" centerz="12" radius="3">
+		<monster name="Wyrm" x="1" y="-1" z="12" spawntime="90" />
+		<monster name="Wyrm" x="-2" y="1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="195" centery="371" centerz="12" radius="2">
+		<monster name="Wyrm" x="0" y="-1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="150" centery="375" centerz="12" radius="2">
+		<monster name="Wyrm" x="1" y="1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="188" centery="377" centerz="12" radius="2">
+		<monster name="Wyrm" x="0" y="1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="192" centery="377" centerz="12" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="12" spawntime="-1125127424" />
+	</monster>
+	<monster centerx="166" centery="386" centerz="12" radius="2">
+		<monster name="Wyrm" x="1" y="0" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="181" centery="386" centerz="12" radius="1">
+		<monster name="Wyrm" x="-1" y="0" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="172" centery="391" centerz="12" radius="2">
+		<monster name="Wyrm" x="1" y="1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="158" centery="394" centerz="12" radius="2">
+		<monster name="Wyrm" x="1" y="0" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="181" centery="394" centerz="12" radius="3">
+		<monster name="Wyrm" x="0" y="-3" z="12" spawntime="90" />
+		<monster name="Wyrm" x="2" y="1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="152" centery="397" centerz="12" radius="2">
+		<monster name="Wyrm" x="0" y="-1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="194" centery="402" centerz="12" radius="1">
+		<monster name="Wyrm" x="0" y="1" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="175" centery="403" centerz="12" radius="2">
+		<monster name="Wyrm" x="1" y="0" z="12" spawntime="90" />
+	</monster>
+	<monster centerx="189" centery="409" centerz="12" radius="1">
+		<monster name="Wyrm" x="1" y="-1" z="12" spawntime="90" />
+	</monster>
 	<monster centerx="450" centery="426" centerz="12" radius="3">
 		<monster name="Stonerefiner" x="3" y="2" z="12" spawntime="60" />
 		<monster name="Stonerefiner" x="3" y="3" z="12" spawntime="60" />
@@ -8554,6 +8899,199 @@
 	</monster>
 	<monster centerx="572" centery="327" centerz="13" radius="5">
 		<monster name="Fire Elemental" x="0" y="-1" z="13" spawntime="60" />
+	</monster>
+	<monster centerx="143" centery="338" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="2" y="0" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="136" centery="345" centerz="13" radius="3">
+		<monster name="Wyrm" x="3" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="171" centery="345" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="144" centery="349" centerz="13" radius="3">
+		<monster name="A Carved Stone Tile" x="0" y="-3" z="13" spawntime="-1125127424" />
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="A Carved Stone Tile" x="2" y="-2" z="13" spawntime="-1125127424" />
+		<monster name="Wyrm" x="3" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="164" centery="352" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="1" y="-1" z="13" spawntime="90" />
+		<monster name="Wyrm" x="-2" y="0" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="171" centery="352" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="-2" y="0" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="0" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="185" centery="352" centerz="13" radius="3">
+		<monster name="Wyrm" x="-2" y="-3" z="13" spawntime="90" />
+		<monster name="Wyrm" x="1" y="-3" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="1" z="13" spawntime="90" />
+		<monster name="Wyrm" x="-2" y="2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="156" centery="354" centerz="13" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="13" spawntime="-1125127424" />
+	</monster>
+	<monster centerx="129" centery="359" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-3" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="136" centery="359" centerz="13" radius="3">
+		<monster name="Wyrm" x="0" y="2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="-3" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="150" centery="359" centerz="13" radius="3">
+		<monster name="Wyrm" x="-1" y="-1" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="3" y="1" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="157" centery="359" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="1" y="-2" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="3" y="-2" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="2" y="0" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="1" y="1" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="164" centery="359" centerz="13" radius="3">
+		<monster name="Wyrm" x="-3" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="178" centery="359" centerz="13" radius="3">
+		<monster name="Wyrm" x="2" y="-1" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="2" y="2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="143" centery="360" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="170" centery="362" centerz="13" radius="1">
+		<monster name="A Carved Stone Tile" x="0" y="0" z="13" spawntime="-1125127424" />
+	</monster>
+	<monster centerx="136" centery="366" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="-1" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="185" centery="366" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="2" y="0" z="13" spawntime="90" />
+		<monster name="Wyrm" x="0" y="2" z="13" spawntime="90" />
+		<monster name="A Carved Stone Tile" x="-3" y="3" z="13" spawntime="-1125127424" />
+	</monster>
+	<monster centerx="192" centery="366" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="1" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="1" y="0" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="183" centery="370" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="A Carved Stone Tile" x="1" y="1" z="13" spawntime="-1125127424" />
+	</monster>
+	<monster centerx="136" centery="373" centerz="13" radius="3">
+		<monster name="Wyrm" x="-3" y="-1" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="164" centery="373" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="1" y="1" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="150" centery="374" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="-1" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="174" centery="375" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="138" centery="379" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="147" centery="379" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="2" y="1" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="-3" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="164" centery="380" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="-1" y="0" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="0" y="2" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="3" y="2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="172" centery="380" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="1" y="1" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="157" centery="382" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="133" centery="384" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="1" y="1" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="174" centery="386" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="2" y="2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="150" centery="387" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="2" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="157" centery="387" centerz="13" radius="3">
+		<monster name="Wyrm" x="-2" y="-1" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="196" centery="387" centerz="13" radius="3">
+		<monster name="Grim Reaper" x="0" y="-1" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="168" centery="392" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="0" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="136" centery="394" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="2" y="-1" z="13" spawntime="90" />
+		<monster name="Wyrm" x="3" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="143" centery="394" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-1" y="-3" z="13" spawntime="90" />
+		<monster name="Wyrm" x="-1" y="1" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="150" centery="394" centerz="13" radius="3">
+		<monster name="Wyrm" x="3" y="-3" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="3" y="2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="157" centery="394" centerz="13" radius="3">
+		<monster name="Wyrm" x="3" y="1" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="1" y="2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="3" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="136" centery="401" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-3" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="164" centery="401" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="178" centery="401" centerz="13" radius="3">
+		<monster name="Wyrm" x="2" y="3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="152" centery="402" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="-2" z="13" spawntime="90" />
+		<monster name="Wyrm" x="2" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="143" centery="408" centerz="13" radius="3">
+		<monster name="Wyrm" x="2" y="-3" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="0" y="-2" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="-1" y="2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="157" centery="408" centerz="13" radius="3">
+		<monster name="Wyrm" x="1" y="-3" z="13" spawntime="90" />
+		<monster name="Elder Wyrm" x="1" y="-1" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="164" centery="408" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="3" y="-3" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="178" centery="408" centerz="13" radius="3">
+		<monster name="Wyrm" x="1" y="-2" z="13" spawntime="90" />
+	</monster>
+	<monster centerx="157" centery="415" centerz="13" radius="3">
+		<monster name="Elder Wyrm" x="-2" y="0" z="13" spawntime="90" />
 	</monster>
 	<monster centerx="660" centery="112" centerz="14" radius="4">
 		<monster name="Demon" x="-4" y="-1" z="14" spawntime="90" />
