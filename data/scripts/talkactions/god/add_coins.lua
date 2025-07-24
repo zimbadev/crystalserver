@@ -42,7 +42,7 @@ function addCoins.onSay(player, words, param)
 	end
 
 	local coinType = (coinTypeValue == 1) and "coins_transferable" or "coins"
-	if not amount or amount <= 0 then
+	if not amount or amount <= 0 or amount > 9999 then
 		player:sendCancelMessage("Invalid amount. The amount must be a positive number.")
 		return true
 	end
