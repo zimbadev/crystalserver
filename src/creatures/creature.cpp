@@ -1443,8 +1443,8 @@ uint16_t Creature::getStepDuration(Direction dir) {
 	}
 
 	if (walk.needRecache()) {
-		walk.duration = static_cast<uint16_t>(std::round(walk.calculatedStepSpeed / SERVER_BEAT) * SERVER_BEAT);
-		walk.duration = std::max<uint16_t>(50, walk.duration);
+		auto duration = std::floor(1000 * walk.groundSpeed / walk.calculatedStepSpeed);
+		walk.duration = static_cast<uint16_t>(std::ceil(duration / SERVER_BEAT) * SERVER_BEAT);
 	}
 
 	auto duration = walk.duration;
@@ -1580,7 +1580,7 @@ void Creature::setParent(std::weak_ptr<Cylinder> cylinder) {
 	}
 
 	if (walk.groundSpeed != oldGroundSpeed) {
-		updateCalculatedStepSpeed();
+		walk.recache();
 	}
 }
 
