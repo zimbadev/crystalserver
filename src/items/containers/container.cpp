@@ -770,8 +770,16 @@ void Container::updateThing(const std::shared_ptr<Thing> &thing, uint16_t itemId
 }
 
 void Container::replaceThing(uint32_t index, const std::shared_ptr<Thing> &thing) {
+	if (!thing) {
+		return;
+	}
+
 	const auto &item = thing->getItem();
 	if (!item) {
+		return /*RETURNVALUE_NOTPOSSIBLE*/;
+	}
+
+	if (index >= itemlist.size()) {
 		return /*RETURNVALUE_NOTPOSSIBLE*/;
 	}
 

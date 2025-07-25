@@ -55,7 +55,7 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 
 	if msg == "hi" or msg == "hello" then
 		local kv = player:questKV(MONK_QUEST)
-		if (kv:get("questline") or 0) < 1 then
+		if (kv:get("questline") or 0) < 1 and not hasAllShrines(player) then
 			npcHandler:say("I welcome you, traveller of fate's unsearchable roads. On behalf of the {Merudri}, let this be an invitation from a humble guide along the way of enlightenment.", npc, creature)
 			npcHandler:setTopic(playerId, 1)
 		elseif hasAllShrines(player) then

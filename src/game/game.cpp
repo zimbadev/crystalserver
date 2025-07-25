@@ -53,6 +53,7 @@
 #include "items/containers/inbox/inbox.hpp"
 #include "items/containers/rewards/reward.hpp"
 #include "items/containers/rewards/rewardchest.hpp"
+#include "items/decay/decay.hpp"
 #include "items/items.hpp"
 #include "items/items_classification.hpp"
 #include "items/trashholder.hpp"
@@ -370,9 +371,10 @@ Game::Game() {
 		Title(88, OTHERS, "Doomsday Nemesis", "Awarded for great help in the battle against Gaz'haragoth.", true),
 		Title(89, OTHERS, "Hero of Bounac", "You prevailed during the battle of Bounac and broke the siege that held Bounac's people in its firm grasp.", true), // Derrotar o boss Drume.
 		Title(90, OTHERS, "King of Demon", "Defeat Morshabaal 5 times.", 0, true, "Queen of Demon"),
-		Title(91, OTHERS, "Planegazer", "Followed the trail of the Planestrider to the end.", true), // Derrotar o boss Planestrider
-		Title(92, OTHERS, "Time Traveller", "Anywhere in time or space.", true), // Derrotar o boss Lord Retro
+		Title(91, OTHERS, "Planegazer", "Followed the trail of the Planestrider to the end.", true),
+		Title(92, OTHERS, "Time Traveller", "Anywhere in time or space.", true),
 		Title(93, OTHERS, "Truly Boss", "Reach 15,000 boss points.", true),
+		Title(94, OTHERS, "Pensive Wanderer", "You have honoured the Merudri by visiting all of their shrines and completing the ancient Three-Fold Path.", true),
 	};
 
 	m_highscoreCategoriesNames = {
@@ -3210,6 +3212,16 @@ ReturnValue Game::internalCollectManagedItems(const std::shared_ptr<Player> &pla
 		}
 	}
 
+	if (!player->quickLootListItemIds.empty()) {
+		uint16_t itemId = item->getID();
+		bool isInList = std::ranges::find(player->quickLootListItemIds, itemId) != player->quickLootListItemIds.end();
+		if (player->quickLootFilter == QuickLootFilter_t::QUICKLOOTFILTER_ACCEPTEDLOOT && !isInList) {
+			return RETURNVALUE_NOTPOSSIBLE;
+		} else if (player->quickLootFilter == QuickLootFilter_t::QUICKLOOTFILTER_SKIPPEDLOOT && isInList) {
+			return RETURNVALUE_NOTPOSSIBLE;
+		}
+	}
+
 	bool fallbackConsumed = false;
 	std::shared_ptr<Container> lootContainer = findManagedContainer(player, fallbackConsumed, category, isLootContainer);
 	if (!lootContainer) {
@@ -4852,56 +4864,23 @@ void Game::playerStashWithdraw(uint32_t playerId, uint16_t itemId, uint32_t coun
 		return;
 	}
 
-	uint16_t freeSlots = player->getFreeBackpackSlots();
-	auto stashContainer = player->getManagedContainer(getObjectCategory(it), false);
-	if (stashContainer && !(player->quickLootFallbackToMainContainer)) {
-		freeSlots = stashContainer->getFreeSlots();
-	}
-
-	if (freeSlots == 0) {
-		player->sendCancelMessage(RETURNVALUE_NOTENOUGHROOM);
-		return;
-	}
-
 	if (player->getFreeCapacity() < 100) {
 		player->sendCancelMessage(RETURNVALUE_NOTENOUGHCAPACITY);
 		return;
 	}
 
-	int32_t NDSlots = ((freeSlots) - (count < it.stackSize ? 1 : (count / it.stackSize)));
-	uint32_t SlotsWith = count;
-	uint32_t noSlotsWith = 0;
-
-	if (NDSlots <= 0) {
-		SlotsWith = (freeSlots * it.stackSize);
-		noSlotsWith = (count - SlotsWith);
+	auto maxWithdrawLimit = static_cast<uint32_t>(g_configManager().getNumber(STASH_MANAGE_AMOUNT));
+	if (count > maxWithdrawLimit) {
+		std::stringstream limitMessage;
+		limitMessage << "You can only withdraw up to " << maxWithdrawLimit << " items at a time from the stash.";
+		player->sendTextMessage(MESSAGE_EVENT_ADVANCE, limitMessage.str());
+		count = maxWithdrawLimit;
 	}
 
-	uint32_t capWith = count;
-	uint32_t noCapWith = 0;
-	if (player->getFreeCapacity() < (count * it.weight)) {
-		capWith = (player->getFreeCapacity() / it.weight);
-		noCapWith = (count - capWith);
-	}
-
-	std::stringstream ss;
-	uint32_t WithdrawCount = (SlotsWith > capWith ? capWith : SlotsWith);
-	uint32_t NoWithdrawCount = (noSlotsWith < noCapWith ? noCapWith : noSlotsWith);
-	const char* NoWithdrawMsg = (noSlotsWith < noCapWith ? "capacity" : "slots");
-
-	if (WithdrawCount != count) {
-		ss << "Retrieved " << WithdrawCount << "x " << it.name << ".\n";
-		ss << NoWithdrawCount << "x are impossible to retrieve due to insufficient inventory " << NoWithdrawMsg << ".";
-	} else {
-		ss << "Retrieved " << WithdrawCount << "x " << it.name << '.';
-	}
-
-	player->sendTextMessage(MESSAGE_STATUS, ss.str());
-
-	if (player->withdrawItem(itemId, WithdrawCount)) {
-		player->addItemFromStash(it.id, WithdrawCount);
-	} else {
-		player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
+	auto ret = player->addItemFromStash(itemId, count);
+	if (ret != RETURNVALUE_NOERROR) {
+		g_logger().warn("[{}] failed to retrieve item: {}, to player: {}, from the stash", __FUNCTION__, itemId, player->getName());
+		player->sendCancelMessage(ret);
 	}
 
 	// Refresh depot search window if necessary
@@ -7857,13 +7836,6 @@ void Game::buildMessageAsAttacker(
 
 	if (damage.extension) {
 		ss << " " << damage.exString;
-	}
-
-	if (damage.critical) {
-		const auto &targetMonster = target->getMonster();
-		if (targetMonster && attackerPlayer && targetMonster->checkCanApplyCharm(attackerPlayer, CHARM_LOW)) {
-			ss << " (low blow charm)";
-		}
 	}
 
 	if (damage.fatal) {
@@ -11552,4 +11524,54 @@ bool Game::isPlayerNoBoxed(const std::shared_ptr<Player> &player) {
 	}
 
 	return true;
+}
+
+void Game::startDecay(const std::shared_ptr<Item> &item) {
+	if (!item) {
+		return;
+	}
+
+	ItemDecayState_t decayState = item->getDecaying();
+	if (decayState == DECAYING_STOPPING || (!item->canDecay() && decayState == DECAYING_TRUE)) {
+		stopDecay(item);
+		return;
+	}
+
+	if (!item->canDecay() || decayState == DECAYING_TRUE) {
+		return;
+	}
+
+	int32_t duration = item->getAttribute<int64_t>(ItemAttribute_t::DURATION);
+	if (duration > 0) {
+		g_decay().startDecay(item, duration);
+	} else {
+		internalDecayItem(item);
+	}
+}
+
+void Game::stopDecay(const std::shared_ptr<Item> &item) {
+	if (item->hasAttribute(ItemAttribute_t::DECAYSTATE)) {
+		if (item->hasAttribute(ItemAttribute_t::DURATION_TIMESTAMP)) {
+			g_decay().stopDecay(item, item->getAttribute<int64_t>(ItemAttribute_t::DURATION_TIMESTAMP));
+			item->removeAttribute(ItemAttribute_t::DURATION_TIMESTAMP);
+		} else {
+			item->removeAttribute(ItemAttribute_t::DECAYSTATE);
+		}
+	}
+}
+
+void Game::internalDecayItem(const std::shared_ptr<Item> &item) {
+	if (!item || !item->canDecay()) {
+		return;
+	}
+
+	const ItemType &it = Item::items[item->getID()];
+	if (it.decayTo != 0) {
+		transformItem(item, it.decayTo);
+	} else {
+		ReturnValue ret = internalRemoveItem(item);
+		if (ret != RETURNVALUE_NOERROR) {
+			g_logger().warn("[Game::internalDecayItem] Failed to remove item during decay, item id: {}, error code: {}", item->getID(), static_cast<uint32_t>(ret));
+		}
+	}
 }

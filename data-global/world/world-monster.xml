@@ -103562,6 +103562,15 @@
 	<monster centerx="33468" centery="31019" centerz="10" radius="1">
 		<monster name="Memory Of A Golem" x="0" y="0" z="10" spawntime="60" />
 	</monster>
+	<monster centerx="33996" centery="31019" centerz="10" radius="2">
+		<monster name="Infernal Phantom" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Infernal Phantom" x="-1" y="1" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="0" y="2" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="34031" centery="31019" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Infernal Phantom" x="1" y="1" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="32114" centery="31020" centerz="10" radius="3">
 		<monster name="Acolyte Of The Cult" x="-1" y="1" z="10" spawntime="90" />
 		<monster name="Acolyte Of The Cult" x="2" y="2" z="10" spawntime="90" />
@@ -103571,6 +103580,10 @@
 	</monster>
 	<monster centerx="33563" centery="31020" centerz="10" radius="1">
 		<monster name="Memory Of An Insectoid" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="34032" centery="31020" centerz="10" radius="2">
+		<monster name="Infernal Demon" x="1" y="-2" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="1" y="2" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="31899" centery="31021" centerz="10" radius="5">
 		<monster name="Sea Serpent" x="3" y="-5" z="10" spawntime="90" />
@@ -103587,9 +103600,6 @@
 	<monster centerx="33545" centery="31021" centerz="10" radius="1">
 		<monster name="Memory Of An Insectoid" x="0" y="0" z="10" spawntime="60" />
 	</monster>
-	<monster centerx="34034" centery="31021" centerz="10" radius="1">
-		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
-	</monster>
 	<monster centerx="31979" centery="31022" centerz="10" radius="3">
 		<monster name="Ice Golem" x="1" y="0" z="10" spawntime="90" />
 	</monster>
@@ -103597,11 +103607,18 @@
 		<monster name="Chakoya Tribewarden" x="-1" y="-1" z="10" spawntime="90" />
 		<monster name="Chakoya Toolshaper" x="1" y="1" z="10" spawntime="90" />
 	</monster>
+	<monster centerx="33997" centery="31022" centerz="10" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="10" spawntime="60" />
+	</monster>
 	<monster centerx="33512" centery="31023" centerz="10" radius="1">
 		<monster name="Memory Of A Frazzlemaw" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="33568" centery="31023" centerz="10" radius="1">
 		<monster name="Memory Of An Insectoid" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="34011" centery="31023" centerz="10" radius="2">
+		<monster name="Brachiodemon" x="1" y="-1" z="10" spawntime="60" />
+		<monster name="Infernal Demon" x="1" y="2" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32458" centery="31024" centerz="10" radius="1">
 		<monster name="Chakoya Tribewarden" x="1" y="1" z="10" spawntime="90" />
@@ -103611,6 +103628,13 @@
 	</monster>
 	<monster centerx="33580" centery="31024" centerz="10" radius="1">
 		<monster name="Memory Of An Insectoid" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="33997" centery="31024" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="34036" centery="31024" centerz="10" radius="1">
+		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
+		<monster name="Brachiodemon" x="1" y="1" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32206" centery="31025" centerz="10" radius="1">
 		<monster name="Acolyte Of The Cult" x="0" y="0" z="10" spawntime="60" />
@@ -103627,6 +103651,9 @@
 	</monster>
 	<monster centerx="34007" centery="31025" centerz="10" radius="1">
 		<monster name="Brachiodemon" x="0" y="0" z="10" spawntime="60" />
+	</monster>
+	<monster centerx="34032" centery="31025" centerz="10" radius="1">
+		<monster name="Infernal Demon" x="0" y="0" z="10" spawntime="60" />
 	</monster>
 	<monster centerx="32444" centery="31026" centerz="10" radius="1">
 		<monster name="Chakoya Tribewarden" x="-1" y="0" z="10" spawntime="90" />

@@ -811,6 +811,9 @@ enum CombatType_t : uint8_t {
 
 	COMBAT_COUNT = 14,
 
+	COMBAT_FIRST = COMBAT_PHYSICALDAMAGE,
+	COMBAT_LAST = COMBAT_NEUTRALDAMAGE,
+
 	// Server read only
 	COMBAT_NONE = 255
 };

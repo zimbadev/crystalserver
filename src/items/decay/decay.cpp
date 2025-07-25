@@ -26,126 +26,90 @@ Decay &Decay::getInstance() {
 	return inject<Decay>();
 }
 
-void Decay::startDecay(const std::shared_ptr<Item> &item) {
-	if (!item) {
+void Decay::startDecay(const std::shared_ptr<Item> &item, int32_t duration) {
+	if (!item || duration <= 0) {
 		return;
 	}
 
-	const auto decayState = item->getDecaying();
-	if (decayState == DECAYING_STOPPING || (!item->canDecay() && decayState == DECAYING_TRUE)) {
-		stopDecay(item);
-		return;
+	if (item->hasAttribute(ItemAttribute_t::DURATION_TIMESTAMP)) {
+		stopDecay(item, item->getAttribute<int64_t>(ItemAttribute_t::DURATION_TIMESTAMP));
 	}
 
-	if (!item->canDecay() || decayState == DECAYING_TRUE) {
-		return;
-	}
-
-	g_logger().trace("Try decay item {}", item->getName());
-
-	const auto duration = item->getAttribute<int64_t>(ItemAttribute_t::DURATION);
-	if (duration <= 0 && item->hasAttribute(ItemAttribute_t::DURATION)) {
-		internalDecayItem(item);
-		return;
-	}
-
-	if (duration > 0) {
-		if (item->hasAttribute(ItemAttribute_t::DURATION_TIMESTAMP)) {
-			stopDecay(item);
-		}
-
-		const int64_t timestamp = OTSYS_TIME() + duration;
-		if (decayMap.empty()) {
+	int64_t timestamp = OTSYS_TIME() + static_cast<int64_t>(duration);
+	if (decayMap.empty()) {
+		eventId = g_dispatcher().scheduleEvent(
+			std::max<int32_t>(SCHEDULER_MINTICKS, duration), [this] { checkDecay(); }, "Decay::checkDecay"
+		);
+	} else {
+		if (timestamp < decayMap.begin()->first) {
 			eventId = g_dispatcher().scheduleEvent(
 				std::max<int32_t>(SCHEDULER_MINTICKS, duration), [this] { checkDecay(); }, "Decay::checkDecay"
 			);
-		} else {
-			if (timestamp < decayMap.begin()->first) {
-				g_dispatcher().stopEvent(eventId);
-				eventId = g_dispatcher().scheduleEvent(
-					std::max<int32_t>(SCHEDULER_MINTICKS, duration), [this] { checkDecay(); }, "Decay::checkDecay"
-				);
-			}
 		}
-
-		item->setDecaying(DECAYING_TRUE);
-		item->setAttribute(ItemAttribute_t::DURATION_TIMESTAMP, timestamp);
-		decayMap[timestamp].push_back(item);
 	}
+
+	// item->incrementReferenceCounter();
+	item->setDecaying(DECAYING_TRUE);
+	item->setDurationTimestamp(timestamp);
+	decayMap[timestamp].push_back(item);
 }
 
-void Decay::stopDecay(const std::shared_ptr<Item> &item) {
-	if (!item) {
+void Decay::stopDecay(const std::shared_ptr<Item> &item, int64_t timestamp) {
+	if (!item || timestamp <= 0) {
 		return;
 	}
-	if (item->hasAttribute(ItemAttribute_t::DECAYSTATE)) {
-		const auto timestamp = item->getAttribute<int64_t>(ItemAttribute_t::DURATION_TIMESTAMP);
-		if (item->hasAttribute(ItemAttribute_t::DURATION_TIMESTAMP)) {
-			const auto it = decayMap.find(timestamp);
-			if (it != decayMap.end()) {
-				auto &decayItems = it->second;
 
-				size_t i = 0;
-				const size_t end = decayItems.size();
-				auto decayItem = decayItems[i];
-				if (end == 1) {
-					if (item == decayItem) {
-						if (item->hasAttribute(ItemAttribute_t::DURATION)) {
-							// Incase we removed duration attribute don't assign new duration
-							item->setDuration(item->getDuration());
-						}
-						item->removeAttribute(ItemAttribute_t::DECAYSTATE);
+	auto it = decayMap.find(timestamp);
+	if (it != decayMap.end()) {
+		std::vector<std::shared_ptr<Item>> &decayItems = it->second;
 
-						decayMap.erase(it);
-					}
-					return;
+		size_t i = 0, end = decayItems.size();
+		if (end == 1) {
+			if (item == decayItems[i]) {
+				if (item->hasAttribute(ItemAttribute_t::DURATION)) {
+					// Incase we removed duration attribute don't assign new duration
+					item->setDuration(item->getDuration());
 				}
-				while (i < end) {
-					decayItem = decayItems[i];
-					if (item == decayItem) {
-						if (item->hasAttribute(ItemAttribute_t::DURATION)) {
-							// Incase we removed duration attribute don't assign new duration
-							item->setDuration(item->getDuration());
-						}
-						item->removeAttribute(ItemAttribute_t::DECAYSTATE);
-
-						decayItems[i] = decayItems.back();
-						decayItems.pop_back();
-						return;
-					}
-					++i;
-				}
+				item->removeAttribute(ItemAttribute_t::DECAYSTATE);
+				decayMap.erase(it);
 			}
-			item->removeAttribute(ItemAttribute_t::DURATION_TIMESTAMP);
-		} else {
-			item->removeAttribute(ItemAttribute_t::DECAYSTATE);
+			return;
+		}
+		while (i < end) {
+			if (item == decayItems[i]) {
+				if (item->hasAttribute(ItemAttribute_t::DURATION)) {
+					// Incase we removed duration attribute don't assign new duration
+					item->setDuration(item->getDuration());
+				}
+				item->removeAttribute(ItemAttribute_t::DECAYSTATE);
+				decayItems[i] = decayItems.back();
+				decayItems.pop_back();
+				return;
+			}
+			++i;
 		}
 	}
 }
 
 void Decay::checkDecay() {
-	const int64_t timestamp = OTSYS_TIME();
+	int64_t timestamp = OTSYS_TIME();
 
 	std::vector<std::shared_ptr<Item>> tempItems;
 	tempItems.reserve(32); // Small preallocation
 
-	auto it = decayMap.begin();
-	const auto end = decayMap.end();
+	auto it = decayMap.begin(), end = decayMap.end();
 	while (it != end) {
 		if (it->first > timestamp) {
 			break;
 		}
 
 		// Iterating here is unsafe so let's copy our items into temporary vector
-		auto &decayItems = it->second;
-		tempItems.reserve(tempItems.size() + decayItems.size());
-		for (auto &decayItem : decayItems) {
-			tempItems.emplace_back(decayItem);
-		}
+		std::vector<std::shared_ptr<Item>> &decayItems = it->second;
+		tempItems.insert(tempItems.end(), decayItems.begin(), decayItems.end());
 		it = decayMap.erase(it);
 	}
 
-	for (const auto &item : tempItems) {
+	for (const auto item : tempItems) {
 		if (!item->canDecay()) {
 			item->setDuration(item->getDuration());
 			item->setDecaying(DECAYING_FALSE);

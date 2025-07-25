@@ -548,6 +548,19 @@ ACHIEVEMENTS = {
 	[547] = { name = "Museum Goer", grade = 1, points = 2, description = "You unveiled the secret plot of the Mitmah who stole away an entire civilisation for their own entertainment. Let the death of their outpost vanguard be an eternal lesson to them." },
 	[548] = { name = "Mystic Predator", grade = 1, points = 3, description = "Proving your true worth to a mystic creature like the jaguar, king of the hunt, granted you not only respect but also its heart." },
 	[549] = { name = "The Rule of Raccool", grade = 1, points = 2, description = "You almost feel as cool as a raccoon. Now, where's the trash?" },
+	[550] = { name = "A Friend in Need", grade = 1, points = 2, secret = true, description = "You freed the captive forest fury from the Corym Black Market. A friend in need is a friend indeed!" },
+	[551] = { name = "Holzkopf", grade = 1, points = 1, secret = true, description = "Things you do... for science." },
+	[552] = { name = "I Wanna Fly Away", grade = 1, points = 3, description = ".. on a pegasus, to a land of honey and milk. With this beautiful flying steed you certainly can." },
+	[553] = { name = "The Rootwalker", grade = 1, points = 2, description = "Traversing the innards of Podzilla was a conquest in and by itself, thanks to Two Lips you are now one with the plant biosphere as you stride its many intertwined trails." },
+	[554] = { name = "Soul Crusher", grade = 1, points = 2, description = "The Soulpit resonates as the spirit of your final foe shatters under your might." },
+	[555] = { name = "Inner Peace", grade = 1, points = 3, description = "TThe transcendence to a higher state of mind and existence in order to achieve inner peace has been amplified by various means throghout Medudri history. Among them a manifold of potions with varying potence - it seems some of them actually work..." },
+	[556] = { name = "Fiend Rider", grade = 1, points = 3, description = "Riding such an ancient beast is certainly a good and harmless idea." },
+	[557] = { name = "Fiend Slayer", grade = 1, points = 2, description = "No living fiends were hurt to achieve this outfit." },
+	[558] = { name = "Tear the Toxic Veil", grade = 3, points = 7, description = "On the shoulders of demons, you tore through veils of venomous corruption. Demonic essences made you an unstoppable force but take care to also foster your human side." },
+	[559] = { name = "Hope of the Merudri", grade = 2, points = 7, description = "You managed to create, improve and transform your katar into a master state and have proven yourself worthy in a nightmarish world." },
+	[560] = { name = "Umbral Redeemer", grade = 2, points = 6, description = "You managed to create, improve and transform your katar into a master state and have proven yourself worthy in a nightmarish world." },
+	[561] = { name = "Hell Rider", grade = 1, points = 0, description = "Pray it never finds its way back to its original stable with you still riding." },
+	[562] = { name = "Alpha Rider", grade = 1, points = 0, description = "You never can tell, who's boss here." },
 }
 
 --[[

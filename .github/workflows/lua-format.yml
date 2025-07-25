@@ -45,3 +45,4 @@ jobs:
       - name: Echo info if not pushed
         if: github.repository != github.event.pull_request.head.repo.full_name
         run: echo "Branch pochodzi z forka — nie wykonano push. Sprawdź log formatera w tym workflow."
+  

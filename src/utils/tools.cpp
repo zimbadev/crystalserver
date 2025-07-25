@@ -31,6 +31,7 @@
 #include <boost/locale.hpp>
 #include <unordered_set>
 #include <string_view>
+#include <ctime>
 
 void printXMLError(const std::string &where, const std::string &fileName, const pugi::xml_parse_result &result) {
 	g_logger().error("[{}] Failed to load {}: {}", where, fileName, result.description());
@@ -455,31 +456,32 @@ std::string convertIPToString(uint32_t ip) {
 	return std::string(buffer.data());
 }
 
-std::string formatDate(time_t time) {
-	try {
-		return fmt::format("{:%d/%m/%Y %H:%M:%S}", fmt::localtime(time));
-	} catch (const std::out_of_range &exception) {
-		g_logger().error("Failed to format date with error code {}", exception.what());
+namespace {
+	std::string formatTimeString(time_t time, const char* format) {
+		std::tm tm_buf {};
+#if defined(_WIN32) || defined(_WIN64)
+		localtime_s(&tm_buf, &time);
+#else
+		localtime_r(&time, &tm_buf);
+#endif
+		char buffer[32];
+		if (std::strftime(buffer, sizeof(buffer), format, &tm_buf) != 0) {
+			return buffer;
+		}
+		return {};
 	}
-	return {};
+} // namespace
+
+std::string formatDate(time_t time) {
+	return formatTimeString(time, "%d/%m/%Y %H:%M:%S");
 }
 
 std::string formatDateShort(time_t time) {
-	try {
-		return fmt::format("{:%Y-%m-%d %X}", fmt::localtime(time));
-	} catch (const std::out_of_range &exception) {
-		g_logger().error("Failed to format date short with error code {}", exception.what());
-	}
-	return {};
+	return formatTimeString(time, "%Y-%m-%d %X");
 }
 
 std::string formatTime(time_t time) {
-	try {
-		return fmt::format("{:%H:%M:%S}", fmt::localtime(time));
-	} catch (const std::out_of_range &exception) {
-		g_logger().error("Failed to format time with error code {}", exception.what());
-	}
-	return {};
+	return formatTimeString(time, "%H:%M:%S");
 }
 
 std::string formatEnumName(std::string_view name) {
@@ -2019,7 +2021,7 @@ Cipbia_Elementals_t getCipbiaElement(CombatType_t combatType) {
 		case COMBAT_NEUTRALDAMAGE:
 			return CIPBIA_ELEMENTAL_AGONY;
 		default:
-			return CIPBIA_ELEMENTAL_UNDEFINED;
+			return CIPBIA_ELEMENTAL_PHYSICAL;
 	}
 }
 

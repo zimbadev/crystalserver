@@ -2960,7 +2960,7 @@
 		<npc name="Gnomadness" x="0" y="0" z="14" spawntime="60" />
 	</npc>
 	<npc centerx="33062" centery="31153" centerz="15" radius="1">
-		<npc name="Awarness Of The Emperor" x="0" y="0" z="15" spawntime="60" />
+		<npc name="Awareness Of The Emperor" x="0" y="0" z="15" spawntime="60" />
 	</npc>
 	<npc centerx="32760" centery="31376" centerz="15" radius="1">
 		<npc name="Rehon" x="0" y="0" z="15" spawntime="60" />
