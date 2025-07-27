@@ -23,8 +23,7 @@ monster.Bestiary = {
 	CharmsPoints = 25,
 	Stars = 3,
 	Occurrence = 0,
-	Locations = "Calassa, Frozen Trench, Sunken Quarter, Alchemist Quarter (unreachable), \z
-		The Inquisition Quest, Seacrest Grounds.",
+	Locations = "Calassa, Frozen Trench, Sunken Quarter, Alchemist Quarter (unreachable), The Inquisition Quest, Seacrest Grounds.",
 }
 
 monster.health = 2200
