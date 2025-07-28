@@ -76,7 +76,7 @@ monster.loot = {
 	{ id = 3052, chance = 25000 }, -- life ring
 	{ name = "rusted armor", chance = 8330 },
 	{ name = "fish fin", chance = 8330 },
-	{name = "small emerald", chance = 11500},
+	{ name = "small emerald", chance = 11500 },
 }
 
 monster.attacks = {
