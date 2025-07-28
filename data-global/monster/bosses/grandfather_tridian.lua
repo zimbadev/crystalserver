@@ -86,11 +86,11 @@ monster.loot = {
 	{name = "protection amulet", chance = 16670},
 	{name = "small sapphire", chance = 16670},
 	{name = "wand of inferno", chance = 16670},
-	{name = "jeweled backpack", chance = 8330},
+	{ id = 5801, chance = 8330 }, -- jewelled backpack
 	{name = "pirate voodoo doll", chance = 8330},
 	{name = "strong mana potion", chance = 8330},
 	{name = "brown mushroom", chance = 8330},
-	{name = "voodoo doll", chance = 8330},
+	{ id = 3002, chance = 8330 }, -- voodoo doll
 	{name = "amber staff", chance = 8330},
 	{ id = 6087, chance = 3000 }, -- music sheet (first verse)
 	{ id = 6088, chance = 3000 }, -- music sheet (second verse)

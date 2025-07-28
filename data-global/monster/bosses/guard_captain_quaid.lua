@@ -76,7 +76,7 @@ monster.loot = {
 	{name = "small sapphire", chance = 100000},
 	{ name = "platinum coin", chance = 100000, maxCount = 20 },
 	{ name = "yellow gem", chance = 31000 },
-	{ name = "red gem", chance = 31000 },
+	{ id = 3039, chance = 31000 }, -- red gem
 	{ name = "gold ingot", chance = 48000 },
 	{ id = 281, chance = 28000 }, -- giant shimmering pearl (green)
 	{ name = "cobra crest", chance = 11000 },

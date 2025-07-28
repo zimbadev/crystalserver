@@ -71,8 +71,8 @@ monster.loot = {
 	{ name = "small sapphire", chance = 100000 },
 	{ name = "platinum coin", chance = 100000, maxCount = 23 },
 	{ name = "cobra crest", chance = 8510 },
-	{ name = "club ring", chance = 4260 },
-	{ name = "ring of red plasma", chance = 4260 },
+	{ id = 3093, chance = 4260 }, -- club ring
+	{ id = 23533, chance = 4260 }, -- ring of red plasma
 	{ name = "fire axe", chance = 10530 },
 	{ name = "cobra axe", chance = 2130 },
 }
