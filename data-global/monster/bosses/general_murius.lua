@@ -81,18 +81,22 @@ monster.voices = {
 monster.loot = {
 	{ name = "minotaur horn", chance = 100000, maxCount = 2 },
 	{ name = "minotaur leather", chance = 100000 },
-	{ name = "gold coin", chance = 92310, maxCount = 97 },
-	{ name = "platinum coin", chance = 92310, maxCount = 3 },
-	{ name = "brass armor", chance = 76920 },
-	{ name = "double axe", chance = 76920 },
-	{ name = "piercing bolt", chance = 38460, maxCount = 11 },
-	{ name = "meat", chance = 30770 },
-	{ name = "battle shield", chance = 23080 },
-	{ name = "chain legs", chance = 23080 },
-	{ id = 7401, chance = 23080 }, -- minotaur trophy
-	{ name = "power bolt", chance = 23080, maxCount = 7 },
-	{ name = "fishing rod", chance = 7690 },
-	{ name = "strong health potion", chance = 7690 },
+	{ name = "gold coin", chance = 97060, maxCount = 97 },
+	{ name = "platinum coin", chance = 97060, maxCount = 3 },
+	{ name = "brass armor", chance = 70590 },
+	{ name = "double axe", chance = 85290 },
+	{ name = "piercing bolt", chance = 35290, maxCount = 11 },
+	{ name = "meat", chance = 20590 },
+	{ name = "battle shield", chance = 29410 },
+	{ name = "chain legs", chance = 11760 },
+	{ id = 7401, chance = 20590 }, -- minotaur trophy
+	{ name = "power bolt", chance = 8820, maxCount = 7 },
+	{ name = "fishing rod", chance = 2940 },
+	{ name = "strong health potion", chance = 2940 },
+	{name = "steel shield", chance = 7000},
+	{name = "chain armor", chance = 6000},
+	{name = "scale armor", chance = 8000},
+	{name = "wand of cosmic energy", chance = 5500},
 }
 
 monster.attacks = {

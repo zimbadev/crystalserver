@@ -211,8 +211,10 @@ private:
 
 class Item : virtual public Thing, public ItemProperties, public SharedObject {
 public:
+	// Create a new item batch, it can use custom charges/count and wrappable
+	static std::shared_ptr<Item> createItemBatch(uint16_t itemId, uint32_t count, bool wrappable = false);
 	// Factory member to create item of right type based on type
-	static std::shared_ptr<Item> CreateItem(uint16_t type, uint16_t count = 0, Position* itemPosition = nullptr);
+	static std::shared_ptr<Item> CreateItem(uint16_t type, uint16_t count = 0, Position* itemPosition = nullptr, bool createWrappableItem = false, bool customCharges = false);
 	static std::shared_ptr<Container> CreateItemAsContainer(uint16_t type, uint16_t size);
 	static std::shared_ptr<Item> CreateItem(uint16_t itemId, Position &itemPosition);
 	static Items items;
@@ -469,7 +471,9 @@ public:
 		return items[id].stackable;
 	}
 	bool isStowable() const {
-		return hasMarketAttributes() && !getTier() && items[id].wareId > 0 && items[id].wareId == id;
+		const auto &itemType = items[id];
+		auto wareId = itemType.wareId;
+		return hasMarketAttributes() && !getTier() && wareId > 0 && !itemType.isContainer() && wareId == itemType.id;
 	}
 	bool isAlwaysOnTop() const {
 		return items[id].alwaysOnTopOrder != 0;
@@ -599,7 +603,7 @@ public:
 
 	void setDefaultSubtype();
 	uint16_t getSubType() const;
-	bool isItemStorable() const;
+	bool isItemStorable();
 	void setSubType(uint16_t n);
 	void addUniqueId(uint16_t uniqueId);
 

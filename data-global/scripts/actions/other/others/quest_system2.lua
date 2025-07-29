@@ -361,6 +361,17 @@ local questSystem2 = Action()
 function questSystem2.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	local useItem = config[item.uid]
 	if not useItem then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "This item is not properly configured. Missing UID entry.")
+		return true
+	end
+
+	if not useItem.storage then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Missing storage key value. Please contact a gamemaster.")
+		return true
+	end
+
+	local useItem = config[item.uid]
+	if not useItem then
 		return true
 	end
 

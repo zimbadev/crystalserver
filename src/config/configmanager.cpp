@@ -181,6 +181,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, UNLOCK_ALL_FAMILIARS, "unlockAllFamiliars", false);
 	loadBoolConfig(L, LEAVE_PARTY_ON_DEATH, "leavePartyOnDeath", false);
 	loadBoolConfig(L, TOGGLE_SPECIAL_TILES, "toggleSpecialTiles", false);
+	loadBoolConfig(L, TOGGLE_MAX_CONNECTIONS_BY_IP, "toggleMaxConnectionsByIP", false);
 
 	loadFloatConfig(L, BESTIARY_RATE_CHARM_SHOP_PRICE, "bestiaryRateCharmShopPrice", 1.0);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_AXE, "combatChainSkillFormulaAxe", 0.9);
@@ -253,7 +254,6 @@ bool ConfigManager::load() {
 	loadIntConfig(L, DEFAULT_RESPAWN_TIME, "defaultRespawnTime", 60);
 	loadIntConfig(L, DEFAULT_DESPAWNRADIUS, "deSpawnRadius", 50);
 	loadIntConfig(L, DEFAULT_DESPAWNRANGE, "deSpawnRange", 2);
-	loadIntConfig(L, DEPOTCHEST, "depotChest", 4);
 	loadIntConfig(L, DISCORD_WEBHOOK_DELAY_MS, "discordWebhookDelayMs", Webhook::DEFAULT_DELAY_MS);
 	loadIntConfig(L, EX_ACTIONS_DELAY_INTERVAL, "timeBetweenExActions", 1000);
 	loadIntConfig(L, EXP_FROM_PLAYERS_LEVEL_RANGE, "expFromPlayersLevelRange", 75);
@@ -402,6 +402,8 @@ bool ConfigManager::load() {
 	loadIntConfig(L, MARKET_ACTIONS_DELAY_INTERVAL, "marketActionsDelay", 1000);
 	loadIntConfig(L, IMBUEMENT_ACTIONS_DELAY_INTERVAL, "imbueActionsDelay", 1000);
 	loadIntConfig(L, EXPERIENCE_SHARE_ACTIVITY, "experienceShareActivity", 2 * 60 * 1000);
+	loadIntConfig(L, MAX_IP_CONNECTIONS, "maxIPConnections", 4);
+	loadIntConfig(L, STASH_MANAGE_AMOUNT, "stashManageAmount", 100000);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");

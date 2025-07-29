@@ -80,22 +80,21 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "gold coin", chance = 60000, maxCount = 100 },
-	{ name = "gold coin", chance = 60000, maxCount = 80 },
-	{ name = "deepling filet", chance = 15285 },
-	{ name = "deeptags", chance = 14975 },
-	{ name = "deepling ridge", chance = 11111 },
-	{ name = "great mana potion", chance = 10210 },
-	{ name = "deepling warts", chance = 10040 },
-	{ name = "great health potion", chance = 10030 },
-	{ name = "vortex bolt", chance = 3431, maxCount = 5 },
-	{ name = "small emerald", chance = 3104 },
-	{ id = 3052, chance = 3001 }, -- life ring
-	{ name = "heavy trident", chance = 999 },
-	{ name = "fish fin", chance = 870 },
+	{ name = "gold coin", chance = 100000, maxCount = 180 },
+	{ name = "deepling filet", chance = 15180 },
+	{ name = "deeptags", chance = 14890 },
+	{ name = "deepling ridge", chance = 11120 },
+	{ name = "great mana potion", chance = 10180 },
+	{ name = "great health potion", chance = 10020 },
+	{ name = "deepling warts", chance = 9970 },
+	{ name = "vortex bolt", chance = 3460, maxCount = 5 },
+	{ name = "small emerald", chance = 3080 },
+	{ id = 3052, chance = 3030 }, -- life ring
+	{ name = "heavy trident", chance = 1000 },
+	{ name = "fish fin", chance = 880 },
 	{ name = "warrior's shield", chance = 610 },
-	{ name = "eye of a deepling", chance = 610 },
-	{ name = "warrior's axe", chance = 510 },
+	{ name = "eye of a deepling", chance = 590 },
+	{ name = "warrior's axe", chance = 520 },
 }
 
 monster.attacks = {

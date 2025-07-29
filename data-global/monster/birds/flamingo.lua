@@ -74,7 +74,7 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "downy feather", chance = 1180 },
+	{ name = "downy feather", chance = 1040 },
 }
 
 monster.defenses = {

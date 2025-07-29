@@ -181,6 +181,8 @@ public:
 
 	std::vector<std::shared_ptr<Player>> getPlayersByAccount(const std::shared_ptr<Account> &acc, bool allowOffline = false);
 
+	std::vector<std::shared_ptr<Player>> getPlayersByIP(const uint32_t &ip, const uint32_t &mask = 0xFFFFFFFF);
+
 	bool internalPlaceCreature(const std::shared_ptr<Creature> &creature, const Position &pos, bool extendedPos = false, bool forced = false, bool creatureCheck = false);
 
 	bool placeCreature(const std::shared_ptr<Creature> &creature, const Position &pos, bool extendedPos = false, bool force = false);
@@ -714,6 +716,20 @@ public:
 	 */
 	bool tryRetrieveStashItems(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item);
 
+	/**
+	 * @brief Finds the managed container for loot or obtain based on the given parameters.
+	 *
+	 * @param player Pointer to the player object.
+	 * @param fallbackConsumed Reference to a boolean flag indicating whether a fallback has been consumed.
+	 * @param category The category of the object.
+	 *
+	 * @note If it's enabled in config.lua to use the gold pouch to store any item, then the system will check whether the player has a loot pouch.
+	 * @note If the player does have one, the loot pouch will be used instead of the managed containers.
+	 *
+	 * @return Pointer to the managed container or nullptr if not found.
+	 */
+	std::shared_ptr<Container> findManagedContainer(const std::shared_ptr<Player> &player, bool &fallbackConsumed, ObjectCategory_t category, bool isLootContainer);
+
 	ReturnValue beforeCreatureZoneChange(const std::shared_ptr<Creature> &creature, const std::unordered_set<std::shared_ptr<Zone>> &fromZones, const std::unordered_set<std::shared_ptr<Zone>> &toZones, bool force = false) const;
 	void afterCreatureZoneChange(const std::shared_ptr<Creature> &creature, const std::unordered_set<std::shared_ptr<Zone>> &fromZones, const std::unordered_set<std::shared_ptr<Zone>> &toZones) const;
 
@@ -773,20 +789,6 @@ private:
 	bool playerSpeakTo(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &receiver, const std::string &text);
 	void playerSpeakToNpc(const std::shared_ptr<Player> &player, const std::string &text);
 	std::shared_ptr<Task> createPlayerTask(uint32_t delay, std::function<void(void)> f, const std::string &context) const;
-
-	/**
-	 * @brief Finds the managed container for loot or obtain based on the given parameters.
-	 *
-	 * @param player Pointer to the player object.
-	 * @param fallbackConsumed Reference to a boolean flag indicating whether a fallback has been consumed.
-	 * @param category The category of the object.
-	 *
-	 * @note If it's enabled in config.lua to use the gold pouch to store any item, then the system will check whether the player has a loot pouch.
-	 * @note If the player does have one, the loot pouch will be used instead of the managed containers.
-	 *
-	 * @return Pointer to the managed container or nullptr if not found.
-	 */
-	std::shared_ptr<Container> findManagedContainer(const std::shared_ptr<Player> &player, bool &fallbackConsumed, ObjectCategory_t category, bool isLootContainer);
 
 	/**
 	 * @brief Finds the next available sub-container within a container.

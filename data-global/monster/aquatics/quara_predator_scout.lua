@@ -77,16 +77,15 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "gold coin", chance = 50000, maxCount = 60 },
-	{ name = "gold coin", chance = 48000, maxCount = 72 },
-	{ name = "quara bone", chance = 10150 },
-	{ name = "scale armor", chance = 8960 },
-	{ name = "double axe", chance = 5770 },
-	{ name = "shrimp", chance = 5050, maxCount = 5 },
-	{ name = "small diamond", chance = 5020, maxCount = 2 },
-	{ name = "two handed sword", chance = 3010 },
-	{ name = "fish fin", chance = 1080 },
-	{ name = "northwind rod", chance = 960 },
+	{ name = "gold coin", chance = 98960, maxCount = 129 },
+	{ name = "quara bone", chance = 10120 },
+	{ name = "scale armor", chance = 8990 },
+	{ name = "double axe", chance = 5790 },
+	{ name = "shrimp", chance = 5070, maxCount = 5 },
+	{ name = "small diamond", chance = 5010, maxCount = 2 },
+	{ name = "two handed sword", chance = 2980 },
+	{ name = "fish fin", chance = 1060 },
+	{ name = "northwind rod", chance = 950 },
 }
 
 monster.attacks = {

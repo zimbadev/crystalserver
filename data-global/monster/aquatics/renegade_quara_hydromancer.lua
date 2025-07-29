@@ -77,24 +77,24 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "platinum coin", chance = 78000, maxCount = 4 },
-	{ name = "quara eye", chance = 20160 },
-	{ name = "mind stone", chance = 10710 },
-	{ name = "shrimp", chance = 7140, maxCount = 4 },
-	{ name = "small topaz", chance = 6800, maxCount = 2 },
-	{ name = "small emerald", chance = 6450, maxCount = 2 },
-	{ name = "great mana potion", chance = 5880, maxCount = 2 },
-	{ name = "spirit cloak", chance = 5650 },
-	{ name = "great health potion", chance = 4950, maxCount = 2 },
-	{ name = "yellow piece of cloth", chance = 3230 },
-	{ name = "green crystal shard", chance = 3000 },
-	{ name = "green piece of cloth", chance = 2880 },
-	{ id = 3052, chance = 2190 }, -- life ring
-	{ name = "fish fin", chance = 1380 },
-	{ id = 281, chance = 1150 }, -- giant shimmering pearl (green)
-	{ name = "wand of cosmic energy", chance = 1150 },
-	{ name = "green gem", chance = 460 },
-	{ name = "knight armor", chance = 460 },
+	{ name = "platinum coin", chance = 80380, maxCount = 4 },
+	{ name = "quara eye", chance = 18430 },
+	{ name = "mind stone", chance = 10390 },
+	{ name = "shrimp", chance = 7380 },
+	{ name = "small topaz", chance = 6450, maxCount = 2 },
+	{ name = "small emerald", chance = 7050, maxCount = 2 },
+	{ name = "great mana potion", chance = 5490, maxCount = 2 },
+	{ name = "spirit cloak", chance = 5000 },
+	{ name = "great health potion", chance = 5060, maxCount = 2 },
+	{ name = "yellow piece of cloth", chance = 2580 },
+	{ name = "green crystal shard", chance = 2980 },
+	{ name = "green piece of cloth", chance = 2910 },
+	{ id = 3052, chance = 1850 }, -- life ring
+	{ name = "fish fin", chance = 1420 },
+	{ id = 281, chance = 1320 }, -- giant shimmering pearl (green)
+	{ name = "wand of cosmic energy", chance = 930 },
+	{ name = "green gem", chance = 430 },
+	{ name = "knight armor", chance = 760 },
 }
 
 monster.attacks = {

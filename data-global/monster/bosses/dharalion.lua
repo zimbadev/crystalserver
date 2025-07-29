@@ -82,19 +82,22 @@ monster.voices = {
 monster.loot = {
 	{ name = "gold coin", chance = 100000, maxCount = 100 },
 	{ name = "holy orchid", chance = 100000 },
-	{ name = "elvish talisman", chance = 88000 },
-	{ name = "elven astral observer", chance = 82000 },
-	{ name = "yellow gem", chance = 41790 },
-	{ name = "blank rune", chance = 25370, maxCount = 1 },
-	{ name = "melon", chance = 22390 },
-	{ name = "bread", chance = 16420 },
-	{ name = "elven amulet", chance = 14930 },
-	{ name = "great mana potion", chance = 13430 },
-	{ name = "life crystal", chance = 13430 },
-	{ name = "sling herb", chance = 8960 },
-	{ id = 3257, chance = 7460 }, -- cornucopia
-	{ name = "green tunic", chance = 4480 },
-	{ name = "royal spear", chance = 1490, maxCount = 2 },
+	{ name = "elvish talisman", chance = 90100 },
+	{ name = "elven astral observer", chance = 86140 },
+	{ name = "yellow gem", chance = 36630 },
+	{ name = "blank rune", chance = 19800 },
+	{ name = "melon", chance = 24750 },
+	{ name = "bread", chance = 13860 },
+	{ name = "elven amulet", chance = 16830 },
+	{ name = "great mana potion", chance = 15840 },
+	{ name = "life crystal", chance = 12870 },
+	{ name = "sling herb", chance = 10890  },
+	{ id = 3257, chance = 7920 }, -- cornucopia
+	{ name = "green tunic", chance = 5940 },
+	{ name = "royal spear", chance = 990 },
+	{ name = "bowl", chance = 1000 },
+	{ name = "candlestick", chance = 1000 },
+	{ name = "golden goblet", chance = 1000 },
 }
 
 monster.attacks = {

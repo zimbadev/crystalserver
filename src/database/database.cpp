@@ -21,6 +21,7 @@
 #include "lib/di/container.hpp"
 #include "lib/metrics/metrics.hpp"
 #include "utils/tools.hpp"
+#include <ctime>
 
 Database::~Database() {
 	if (handle != nullptr) {
@@ -76,8 +77,18 @@ void Database::createDatabaseBackup(bool compress) const {
 	// Get current time for formatting
 	auto now = std::chrono::system_clock::now();
 	std::time_t now_c = std::chrono::system_clock::to_time_t(now);
-	std::string formattedDate = fmt::format("{:%Y-%m-%d}", fmt::localtime(now_c));
-	std::string formattedTime = fmt::format("{:%H-%M-%S}", fmt::localtime(now_c));
+	std::tm tm_buf {};
+#if defined(_WIN32) || defined(_WIN64)
+	localtime_s(&tm_buf, &now_c);
+#else
+	localtime_r(&now_c, &tm_buf);
+#endif
+	char date_buf[16];
+	std::strftime(date_buf, sizeof(date_buf), "%Y-%m-%d", &tm_buf);
+	char time_buf[16];
+	std::strftime(time_buf, sizeof(time_buf), "%H-%M-%S", &tm_buf);
+	std::string formattedDate = date_buf;
+	std::string formattedTime = time_buf;
 	// Create a backup directory based on the current date
 	std::string backupDir = fmt::format("database_backup/{}/", formattedDate);
 	std::filesystem::create_directories(backupDir);

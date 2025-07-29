@@ -593,6 +593,19 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 			return;
 		}
 
+		bool maxClientsByIP = g_configManager().getBoolean(TOGGLE_MAX_CONNECTIONS_BY_IP);
+		if (maxClientsByIP && !player->hasFlag(PlayerFlags_t::CanAlwaysLogin)) {
+			uint32_t ip = player->getIP();
+			std::vector<std::shared_ptr<Player>> playersByIP = g_game().getPlayersByIP(ip);
+			uint32_t maxConnections = static_cast<uint32_t>(g_configManager().getNumber(MAX_IP_CONNECTIONS));
+			if ((playersByIP.size() + 1) > maxConnections) {
+				std::stringstream maxConnectMsg;
+				maxConnectMsg << "You have been disconnected. The maximum number of connections allowed per IP is " << maxConnections << ".";
+				disconnectClient(maxConnectMsg.str().c_str());
+				return;
+			}
+		}
+
 		if (g_configManager().getBoolean(ONLY_PREMIUM_ACCOUNT) && !player->isPremium() && (player->getGroup()->id < GROUP_TYPE_GAMEMASTER || player->getAccountType() < ACCOUNT_TYPE_GAMEMASTER)) {
 			g_game().removePlayerUniqueLogin(player);
 			disconnectClient("Your premium time for this account is out.\n\nTo play please buy additional premium time from our website");

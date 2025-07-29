@@ -80,10 +80,18 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "gold coin", chance = 100000, maxCount = 80 },
-	{ name = "jewelled backpack", chance = 100000 },
-	{ name = "strong mana potion", chance = 5000 },
-	{ name = "brown mushroom", chance = 5000, maxCount = 3 },
+	{name = "piggy bank", chance = 100000},
+	{ name = "gold coin", chance = 58330, maxCount = 80 },
+	{name = "skull staff", chance = 25000},
+	{name = "protection amulet", chance = 16670},
+	{name = "small sapphire", chance = 16670},
+	{name = "wand of inferno", chance = 16670},
+	{name = "jeweled backpack", chance = 8330},
+	{name = "pirate voodoo doll", chance = 8330},
+	{name = "strong mana potion", chance = 8330},
+	{name = "brown mushroom", chance = 8330},
+	{name = "voodoo doll", chance = 8330},
+	{name = "amber staff", chance = 8330},
 	{ id = 6087, chance = 3000 }, -- music sheet (first verse)
 	{ id = 6088, chance = 3000 }, -- music sheet (second verse)
 	{ id = 6089, chance = 3000 }, -- music sheet (third verse)

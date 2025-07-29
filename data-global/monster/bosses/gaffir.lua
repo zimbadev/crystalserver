@@ -81,29 +81,20 @@ monster.voices = {
 
 monster.loot = {
 	{ name = "platinum coin", chance = 100000, maxCount = 17 },
-	{ name = "small amethyst", chance = 33500, maxCount = 2 },
-	{ name = "small ruby", chance = 33500, maxCount = 2 },
-	{ name = "small sapphire", chance = 33500 },
-	{ name = "small topaz", chance = 33500 },
-	{ name = "small diamond", chance = 33500 },
-	{ name = "great spirit potion", chance = 26400 },
-	{ name = "terra rod", chance = 24000, maxCount = 3 },
+	{ name = "small amethyst", chance = 27630 },
+	{ name = "small ruby", chance = 13760 },
+	{ name = "small sapphire", chance = 10530 },
+	{ name = "small topaz", chance = 11840 },
+	{ name = "small diamond", chance = 27630 },
+	{ name = "terra rod", chance = 24000 },
 	{ name = "springsprout rod", chance = 21000 },
-	{ name = "blue crystal shard", chance = 21000 },
-	{ name = "blue gem", chance = 21000 },
-	{ name = "cobra crest", chance = 12560 },
-	{ name = "violet crystal shard", chance = 14800 },
-	{ id = 281, chance = 14520 }, -- giant shimmering pearl (green)
-	{ name = "gold ingot", chance = 14500 },
+	{ name = "great spirit potion", chance = 26400 },
 	{ name = "spellbook of warding", chance = 6500 },
 	{ id = 3098, chance = 5400 }, -- ring of healing
-	{ name = "terra hood", chance = 1600 },
 	{ name = "amulet of loss", chance = 3400 },
-	{ name = "wand of everblazing", chance = 2900 },
+	{ name = "cobra crest", chance = 900 },
 	{ name = "cobra wand", chance = 100 },
-	{ name = "cobra axe", chance = 100 },
 	{ name = "cobra rod", chance = 100 },
-	{ name = "cobra crest", chance = 100 },
 }
 
 monster.attacks = {
