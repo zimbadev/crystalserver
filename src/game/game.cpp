@@ -6804,7 +6804,7 @@ bool Game::combatBlockHit(CombatDamage &damage, const std::shared_ptr<Creature> 
 		InternalGame::sendBlockEffect(primaryBlockType, damage.primary.type, target->getPosition(), attacker);
 		// Damage reflection primary
 		if (!damage.extension && attacker) {
-			const auto &attackerMonster = attacker->getMonster();
+			std::shared_ptr<Monster> attackerMonster = attacker->getMonster();
 			if (attackerMonster && targetPlayer && damage.primary.type != COMBAT_HEALING) {
 				// Charm rune (target as player)
 				const auto &mType = attackerMonster->getMonsterType();
