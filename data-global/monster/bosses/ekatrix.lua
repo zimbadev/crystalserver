@@ -77,7 +77,7 @@ monster.loot = {
 	{ name = "cookie", chance = 25760, maxCount = 10 },
 	{ name = "star herb", chance = 18180 },
 	{ name = "bag of apple slices", chance = 7580 },
-	{name = "garlic necklace", chance = 3030},
+	{ name = "garlic necklace", chance = 3030 },
 	{ name = "necrotic rod", chance = 1520 },
 }
 

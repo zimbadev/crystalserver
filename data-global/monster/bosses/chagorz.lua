@@ -80,7 +80,7 @@ monster.voices = {
 monster.loot = {
 	{ name = "crystal coin", chance = 100000, maxCount = 100 },
 	{ name = "supreme health potion", chance = 61111, maxCount = 164 },
-	{ id = 3039, chance = 44444, maxCount = 1 }, -- red gem	
+	{ id = 3039, chance = 44444, maxCount = 1 }, -- red gem
 	{ name = "ultimate mana potion", chance = 44444, maxCount = 98 },
 	{ name = "green gem", chance = 38889, maxCount = 1 },
 	{ name = "ultimate spirit potion", chance = 38889, maxCount = 127 },
@@ -89,15 +89,15 @@ monster.loot = {
 	{ name = "violet gem", chance = 27778, maxCount = 1 },
 	{ name = "giant sapphire", chance = 22222, maxCount = 1 },
 	{ name = "berserk potion", chance = 16667, maxCount = 40 },
-	{ name = "bullseye potion", chance = 16667, maxCount = 31 },	
-	{ name = "giant topaz", chance = 16667, maxCount = 1 },	
-	{ name = "blue gem", chance = 11111, maxCount = 1 },	
+	{ name = "bullseye potion", chance = 16667, maxCount = 31 },
+	{ name = "giant topaz", chance = 16667, maxCount = 1 },
+	{ name = "blue gem", chance = 11111, maxCount = 1 },
 	{ name = "white gem", chance = 11111, maxCount = 3 },
 	{ name = "darklight figurine", chance = 5560, maxCount = 1 },
 	{ name = "gold ingot", chance = 5560, maxCount = 1 },
 	{ name = "raw watermelon tourmaline", chance = 1050, maxCount = 1 },
 	{ name = "the essence of chagorz", chance = 1050, maxCount = 1 },
-	{ name = "unicorn figurine", chance = 500 },	
+	{ name = "unicorn figurine", chance = 500 },
 }
 
 monster.attacks = {

@@ -91,13 +91,13 @@ monster.loot = {
 	{ name = "elven amulet", chance = 16830 },
 	{ name = "great mana potion", chance = 15840 },
 	{ name = "life crystal", chance = 12870 },
-	{ name = "sling herb", chance = 10890  },
+	{ name = "sling herb", chance = 10890 },
 	{ id = 3257, chance = 7920 }, -- cornucopia
 	{ name = "green tunic", chance = 5940 },
 	{ name = "royal spear", chance = 990 },
-	{ name = "bowl", chance = 1000 },
+	{ id = 2902, chance = 1000 }, -- bowl
 	{ name = "candlestick", chance = 1000 },
-	{ name = "golden goblet", chance = 1000 },
+	{ id = 5805, chance = 1000 }, -- golden goblet
 }
 
 monster.attacks = {

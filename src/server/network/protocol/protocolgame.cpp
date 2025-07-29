@@ -556,34 +556,29 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 	g_logger().debug("Player logging in in version '{}' and oldProtocol '{}'", getVersion(), oldProtocol);
 
 	// dispatcher thread
-	std::shared_ptr<Player> foundPlayer = g_game().getPlayerUniqueLogin(name);
+	std::shared_ptr<Player> foundPlayer = g_game().getPlayerByName(name);
 	if (!foundPlayer) {
 		player = std::make_shared<Player>(getThis());
 		player->setName(name);
-		g_game().addPlayerUniqueLogin(player);
 
 		player->setID();
 
 		if (!IOLoginDataLoad::preLoadPlayer(player, name)) {
-			g_game().removePlayerUniqueLogin(player);
 			disconnectClient("Your character could not be loaded.");
 			return;
 		}
 
 		if (IOBan::isPlayerNamelocked(player->getGUID())) {
-			g_game().removePlayerUniqueLogin(player);
 			disconnectClient("Your character has been namelocked.");
 			return;
 		}
 
 		if (g_game().getGameState() == GAME_STATE_CLOSING && !player->hasFlag(PlayerFlags_t::CanAlwaysLogin)) {
-			g_game().removePlayerUniqueLogin(player);
 			disconnectClient("The game is just going down.\nPlease try again later.");
 			return;
 		}
 
 		if (g_game().getGameState() == GAME_STATE_CLOSED && !player->hasFlag(PlayerFlags_t::CanAlwaysLogin)) {
-			g_game().removePlayerUniqueLogin(player);
 			auto maintainMessage = g_configManager().getString(MAINTAIN_MODE_MESSAGE);
 			if (!maintainMessage.empty()) {
 				disconnectClient(maintainMessage);
@@ -607,7 +602,6 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 		}
 
 		if (g_configManager().getBoolean(ONLY_PREMIUM_ACCOUNT) && !player->isPremium() && (player->getGroup()->id < GROUP_TYPE_GAMEMASTER || player->getAccountType() < ACCOUNT_TYPE_GAMEMASTER)) {
-			g_game().removePlayerUniqueLogin(player);
 			disconnectClient("Your premium time for this account is out.\n\nTo play please buy additional premium time from our website");
 			return;
 		}
@@ -615,7 +609,6 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 		auto onlineCount = g_game().getPlayersByAccount(player->getAccount()).size();
 		auto maxOnline = g_configManager().getNumber(MAX_PLAYERS_PER_ACCOUNT);
 		if (player->getAccountType() < ACCOUNT_TYPE_GAMEMASTER && onlineCount >= maxOnline) {
-			g_game().removePlayerUniqueLogin(player);
 			disconnectClient(fmt::format("You may only login with {} character{}\nof your account at the same time.", maxOnline, maxOnline > 1 ? "s" : ""));
 			return;
 		}
@@ -635,7 +628,7 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 					ss << "Your account has been permanently banned by " << banInfo.bannedBy << ".\n\nReason specified:\n"
 					   << banInfo.reason;
 				}
-				g_game().removePlayerUniqueLogin(player);
+
 				disconnectClient(ss.str());
 				return;
 			}
@@ -656,12 +649,10 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 			output->addByte(retryTime);
 			send(output);
 			disconnect();
-			g_game().removePlayerUniqueLogin(player);
 			return;
 		}
 
 		if (!IOLoginData::loadPlayerById(player, player->getGUID(), false)) {
-			g_game().removePlayerUniqueLogin(player);
 			disconnectClient("Your character could not be loaded.");
 			g_logger().warn("Player {} could not be loaded", player->getName());
 			return;
@@ -681,14 +672,12 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 				}
 			}
 			if (countOutsizePZ >= maxOutsizePZ) {
-				g_game().removePlayerUniqueLogin(player);
 				disconnectClient(fmt::format("You can only have {} character{} from your account outside of a protection zone.", maxOutsizePZ == 1 ? "one" : std::to_string(maxOutsizePZ), maxOutsizePZ > 1 ? "s" : ""));
 				return;
 			}
 		}
 
 		if (!g_game().placeCreature(player, player->getLoginPosition()) && !g_game().placeCreature(player, player->getTemplePosition(), false, true)) {
-			g_game().removePlayerUniqueLogin(player);
 			disconnectClient("Temple position is wrong. Please, contact the administrator.");
 			g_logger().warn("Player {} temple position is wrong", player->getName());
 			return;
@@ -724,7 +713,7 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 void ProtocolGame::connect(const std::string &playerName, OperatingSystem_t operatingSystem) {
 	eventConnect = 0;
 
-	std::shared_ptr<Player> foundPlayer = g_game().getPlayerUniqueLogin(playerName);
+	std::shared_ptr<Player> foundPlayer = g_game().getPlayerByName(playerName);
 	if (!foundPlayer) {
 		disconnectClient("You are already logged in.");
 		return;
@@ -737,7 +726,6 @@ void ProtocolGame::connect(const std::string &playerName, OperatingSystem_t oper
 	}
 
 	player = foundPlayer;
-	g_game().addPlayerUniqueLogin(player);
 
 	g_chat().removeUserFromAllChannels(player);
 	player->clearModalWindows();
@@ -870,14 +858,20 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage &msg) {
 
 	std::string characterName = msg.getString();
 
-	std::shared_ptr<Player> foundPlayer = g_game().getPlayerUniqueLogin(characterName);
+	const auto &onlinePlayer = g_game().getPlayerByName(characterName);
+	const auto &foundPlayer = !onlinePlayer ? g_game().getDeadPlayer(characterName) : onlinePlayer;
 	if (foundPlayer && foundPlayer->client) {
-		if (foundPlayer->getProtocolVersion() != getVersion() && foundPlayer->isOldProtocol() != oldProtocol) {
-			disconnectClient(fmt::format("You are already logged in using protocol '{}'. Please log out from the other session to connect here.", foundPlayer->getProtocolVersion()));
+		if (foundPlayer->isDead()) {
+			disconnectClient("You are already logged in.");
 			return;
 		}
 
-		foundPlayer->client->disconnectClient("You are already connected through another client. Please use only one client at a time!");
+		auto message = fmt::format("You are already connected through another client. Please use only one client at a time!");
+		if (foundPlayer->getProtocolVersion() != getVersion() && foundPlayer->isOldProtocol() != oldProtocol) {
+			message = fmt::format("You are already logged in using protocol '{}'. Please log out from the other session to connect here.", foundPlayer->getProtocolVersion());
+		}
+
+		foundPlayer->client->disconnectClient(message);
 	}
 
 	auto timeStamp = msg.get<uint32_t>();
@@ -1027,9 +1021,6 @@ void ProtocolGame::parsePacket(NetworkMessage &msg) {
 void ProtocolGame::parsePacketDead(uint8_t recvbyte) {
 	if (recvbyte == 0x14) {
 		// Remove player from game if click "ok" using otc
-		if (player && isOTC) {
-			g_game().removePlayerUniqueLogin(player->getName());
-		}
 		disconnect();
 		return;
 	}
