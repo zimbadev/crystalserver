@@ -625,7 +625,17 @@ void Creature::onDeath() {
 		);
 	}
 
+	if (getPlayer()) {
+		if (const auto &tile = getTile()) {
+			for (const auto &zone : tile->getZones()) {
+				zone->creatureRemoved(getPlayer());
+				g_callbacks().executeCallback(EventCallback_t::zoneAfterCreatureLeave, &EventCallback::zoneAfterCreatureLeave, zone, getPlayer());
+			}
+		}
+	}
+
 	bool droppedCorpse = dropCorpse(lastHitCreature, mostDamageCreature, lastHitUnjustified, mostDamageUnjustified);
+	
 	death(lastHitCreature);
 
 	if (droppedCorpse && !getPlayer()) {
