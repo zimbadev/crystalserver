@@ -130,6 +130,7 @@ npcConfig.shop = {
 	{ itemName = "sai of enlightenment", clientId = 50272, buy = 100000, sell = 100 },
 	{ itemName = "harmony amulet", clientId = 50195, buy = 1000 },
 	{ itemName = "jo staff", clientId = 50171, buy = 500 },
+	{ itemName = "plain monk robe", clientId = 50257, buy = 450 },
 }
 
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
