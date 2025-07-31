@@ -218,13 +218,14 @@ bool Protocol::XTEA_decrypt(NetworkMessage &msg) const {
 
 	XTEA_transform(buffer, messageLength, false);
 
-	uint8_t paddingSize = msg.getByte();
-	uint16_t innerLength = messageLength - paddingSize;
-	if (innerLength + paddingSize > msgLength) {
+	const uint8_t padding = msg.getByte();
+	const uint16_t innerLength = msg.getLength() - 7 - padding;
+
+	if (std::cmp_greater(innerLength, msgLength - 1)) {
 		return false;
 	}
 
-	msg.setLength(messageLength - paddingSize);
+	msg.setLength(innerLength);
 	return true;
 }
 

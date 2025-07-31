@@ -950,7 +950,7 @@ void ProtocolGame::sendLoginChallenge() {
 	static std::uniform_int_distribution<uint16_t> randNumber(0x00, 0xFF);
 
 	// Skip checksum
-	output->skipBytes(sizeof(uint32_t));
+	output->add<uint32_t>(0x00);
 
 	// Packet length & type
 	output->addByte(0x01);
@@ -962,11 +962,6 @@ void ProtocolGame::sendLoginChallenge() {
 	challengeRandom = randNumber(generator);
 	output->addByte(challengeRandom);
 	output->addByte(0x71);
-
-	// Go back and write checksum
-	output->skipBytes(-12);
-	// To support 11.10-, not have problems with 11.11+
-	output->add<uint32_t>(adlerChecksum(output->getOutputBuffer() + sizeof(uint32_t), 8));
 
 	send(output);
 }
@@ -1710,7 +1705,7 @@ void ProtocolGame::parseOpenPrivateChannel(NetworkMessage &msg) {
 
 void ProtocolGame::parseAutoWalk(NetworkMessage &msg) {
 	uint8_t numdirs = msg.getByte();
-	if (numdirs == 0 || (msg.getBufferPosition() + numdirs) != (msg.getLength() + 6)) {
+	if (numdirs == 0 || (msg.getBufferPosition() + numdirs) != (msg.getLength() + 7)) {
 		return;
 	}
 

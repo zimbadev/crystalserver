@@ -217,7 +217,7 @@ void Connection::parseHeader(const std::error_code &error) {
 	}
 
 	uint16_t size = m_msg.getLengthHeader();
-	if (std::static_pointer_cast<ProtocolGame>(protocol)) {
+	if (std::dynamic_pointer_cast<ProtocolGame>(protocol)) {
 		size = (size * 8) + 4;
 	}
 
@@ -271,6 +271,10 @@ void Connection::parsePacket(const std::error_code &error) {
 			if (recvChecksum != checksum) {
 				// it might not have been the checksum, step back
 				m_msg.skipBytes(-CHECKSUM_LENGTH);
+			}
+
+			if (std::dynamic_pointer_cast<ProtocolGame>(protocol)) {
+				m_msg.skipBytes(1); // Padding
 			}
 
 			// Game protocol has already been created at this point
