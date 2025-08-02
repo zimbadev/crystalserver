@@ -1032,6 +1032,8 @@ void ProtocolGame::parsePacketDead(uint8_t recvbyte) {
 			return;
 		}
 
+		IOLoginData::updateOnlineStatus(player->getGUID(), true);
+		
 		for (const auto &[key, user] : g_game().getPlayers()) {
 			user->vip()->notifyStatusChange(player, VipStatus_t::ONLINE, false);
 		}
