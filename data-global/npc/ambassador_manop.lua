@@ -68,6 +68,59 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 		return true
 	end
 
+	if msg == "job" then
+		npcHandler:say({
+			"I am a {Merudri} ambassador. Sent from the heart of the {Blue Valley} I am stationed here to {guide} seekers on our path and {pilgrimage}.",
+			"I have introduced myself as a guide: take my advice or choose a different path, you have every choice and every choice is yours.",
+		}, npc, creature)
+		return true
+	end
+
+	if msg == "merudri" then
+		npcHandler:say("We are Merudri, warrior monks. Honing serenity, preserving our legacy, defending the {Blue Valley} and beyond.", npc, creature)
+		return true
+	end
+
+	if msg == "blue valley" then
+		npcHandler:say("The Blue Valley is our ancestral home and heart of the {Merudri} culture, or what is left of it. Our ancestors from the Valley have long been separated from the true home of the {Merudri}.", npc, creature)
+		return true
+	end
+
+	if msg == "guide" then
+		npcHandler:say("I am here to communicate the ways and customs of the {Merudri} on our path to serenity. Please let me know if you are interested in our {pilgrimage}.", npc, creature)
+		return true
+	end
+
+	if msg == "monk" then
+		npcHandler:say("Look for one of our shrines around the outpost and return to me after you have honoured the Merudri.", npc, creature)
+		return true
+	end
+
+	if msg == "serenity" then
+		npcHandler:say("Harmony, enlightenment and power are the keys and control is the door to true serenity.", npc, creature)
+		return true
+	end
+
+	if msg == "dawnport" then
+		npcHandler:say("This place has been the starting point for many generations of heroes. Try to focus on learning the basics here and return to me once you found our {shrines} and are experienced enough to take on the {pilgrimage}.", npc, creature)
+		return true
+	end
+
+	if msg == "shrine" then
+		npcHandler:say("The shrines you can find here are part of the Three-Fold Path. They are the first stage of this {pilgrimage} that every {monk} must undertake.", npc, creature)
+		return true
+	end
+
+	if msg == "enpa" then
+		npcHandler:say("Our Enpa is guiding us, a keeper of our legacy and spirituality. You will meet Enpa Rudra once you take on the pilgrimage.", npc, creature)
+		return true
+	end
+
+	if msg == "pilgrimage" then
+		npcHandler:say("The pilgrimage is the sacred Three-Fold Path every {monk} must go. Are you familiar with the {Merudri} ways of the {monks}?", npc, creature)
+		return true
+	end
+
 	if msg == "invitation" and npcHandler:getTopic(playerId) == 1 then
 		npcHandler:say("Your path has led you to an ambassador of the Merudri. I am Manop and will do my best to explain you our {purpose}, legacy and role in it. Shall I continue?", npc, creature)
 		npcHandler:setTopic(playerId, 2)

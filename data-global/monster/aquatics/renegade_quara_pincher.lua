@@ -77,25 +77,25 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "platinum coin", chance = 80000, maxCount = 5 },
-	{ name = "quara pincers", chance = 18800, maxCount = 1 },
-	{ name = "great mana potion", chance = 9720, maxCount = 2 },
-	{ name = "great health potion", chance = 9010, maxCount = 2 },
-	{ name = "small ruby", chance = 9010, maxCount = 2 },
-	{ name = "small diamond", chance = 7060, maxCount = 2 },
-	{ name = "mind stone", chance = 6140 },
-	{ id = 3039, chance = 5120 }, -- red gem
-	{ name = "shrimp", chance = 4810, maxCount = 5 },
-	{ name = "vortex bolt", chance = 3790, maxCount = 5 },
-	{ id = 281, chance = 1430 }, -- giant shimmering pearl (green)
-	{ name = "warrior helmet", chance = 1430 },
-	{ name = "fish fin", chance = 920 },
-	{ name = "crown armor", chance = 611 },
-	{ id = 3053, chance = 410 }, -- time ring
-	{ name = "talon", chance = 310 },
+	{ name = "platinum coin", chance = 80620, maxCount = 5 },
+	{ name = "quara pincers", chance = 18640, maxCount = 1 },
+	{ name = "great mana potion", chance = 10380, maxCount = 2 },
+	{ name = "great health potion", chance = 9340, maxCount = 2 },
+	{ name = "small ruby", chance = 7920, maxCount = 2 },
+	{ name = "small diamond", chance = 7620, maxCount = 2 },
+	{ name = "mind stone", chance = 6610 },
+	{ id = 3039, chance = 4950 }, -- red gem
+	{ name = "shrimp", chance = 5190 },
+	{ name = "vortex bolt", chance = 3840, maxCount = 5 },
+	{ id = 281, chance = 1720 }, -- giant shimmering pearl (green)
+	{ name = "warrior helmet", chance = 1520 },
+	{ name = "fish fin", chance = 1480 },
+	{ name = "crown armor", chance = 400 },
+	{ id = 3053, chance = 540 }, -- time ring
+	{ name = "talon", chance = 300 },
 	{ name = "glacier robe", chance = 200 },
 	{ name = "giant shrimp", chance = 100 },
-	{ name = "twiceslicer", chance = 100 },
+	{ name = "twiceslicer", chance = 30 },
 }
 
 monster.attacks = {

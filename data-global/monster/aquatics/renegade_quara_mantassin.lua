@@ -77,18 +77,18 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "mantassin tail", chance = 14490 },
-	{ name = "mind stone", chance = 10370 },
-	{ name = "shrimp", chance = 3950, maxCount = 3 },
-	{ name = "small sapphire", chance = 3540, maxCount = 3 },
-	{ id = 3049, chance = 3290 }, -- stealth ring
-	{ name = "ice rapier", chance = 2060 },
-	{ name = "blue crystal shard", chance = 1890 },
-	{ name = "strange helmet", chance = 1320 },
-	{ name = "two handed sword", chance = 820 },
-	{ name = "fish fin", chance = 740 },
-	{ name = "blue robe", chance = 660 },
-	{ id = 3051, chance = 580 }, -- energy ring
+	{ name = "mantassin tail", chance = 12780 },
+	{ name = "mind stone", chance = 10270 },
+	{ name = "shrimp", chance = 4470, maxCount = 4 },
+	{ name = "small sapphire", chance = 3430, maxCount = 2 },
+	{ id = 3049, chance = 2860 }, -- stealth ring
+	{ name = "ice rapier", chance = 3130 },
+	{ name = "blue crystal shard", chance = 1420 },
+	{ name = "strange helmet", chance = 1550 },
+	{ name = "two handed sword", chance = 1040 },
+	{ name = "fish fin", chance = 680 },
+	{ name = "blue robe", chance = 710 },
+	{ id = 3051, chance = 820 }, -- energy ring
 }
 
 monster.attacks = {

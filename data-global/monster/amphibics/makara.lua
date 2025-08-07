@@ -75,18 +75,18 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "platinum coin", chance = 100000, maxCount = 18 },
-	{ name = "makara tongue", chance = 10160 },
-	{ name = "makara fin", chance = 7420, maxCount = 2 },
-	{ name = "meat", chance = 7030, maxCount = 2 },
-	{ name = "cyan crystal fragment", chance = 4300 },
-	{ name = "yellow gem", chance = 4100 },
-	{ name = "rainbow quartz", chance = 3320, maxCount = 2 },
-	{ name = "small diamond", chance = 2340, maxCount = 3 },
-	{ name = "blue gem", chance = 2150 },
-	{ name = "green crystal shard", chance = 1950 },
-	{ name = "green crystal fragment", chance = 1170 },
-	{ name = "sea horse figurine", chance = 200 },
+	{ name = "platinum coin", chance = 100000, maxCount = 13 },
+	{ name = "meat", chance = 10590 },
+	{ name = "makara tongue", chance = 10590 },
+	{ name = "makara fin", chance = 9140 },
+	{ name = "yellow gem", chance = 3630 },
+	{ name = "green crystal fragment", chance = 3430 },
+	{ name = "rainbow quartz", chance = 2700, maxCount = 2 },
+	{ name = "green crystal shard", chance = 2490 },
+	{ name = "cyan crystal fragment", chance = 2390 },
+	{ name = "blue gem", chance = 1970 },
+	{ name = "small diamond", chance = 1350, maxCount = 3 },
+	{ name = "sea horse figurine", chance = 520 },
 }
 
 monster.attacks = {

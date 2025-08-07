@@ -6557,11 +6557,18 @@ bool Player::changeOutfit(Outfit_t outfit, bool checkList) {
 	requestedOutfit = false;
 	if (outfitAttributes) {
 		auto oldId = Outfits::getInstance().getOutfitId(getSex(), defaultOutfit.lookType);
-		outfitAttributes = !Outfits::getInstance().removeAttributes(getID(), oldId, getSex());
+		if (defaultOutfit.lookAddons == 3) {
+			outfitAttributes = !Outfits::getInstance().removeAttributes(getID(), oldId, getSex());
+		}
 	}
 
 	defaultOutfit = outfit;
-	outfitAttributes = Outfits::getInstance().addAttributes(getID(), outfitId, getSex(), defaultOutfit.lookAddons);
+	if (outfit.lookAddons == 3) {
+		outfitAttributes = Outfits::getInstance().addAttributes(getID(), outfitId, getSex(), defaultOutfit.lookAddons);
+	} else {
+		outfitAttributes = false;
+	}
+
 	return true;
 }
 
@@ -9910,6 +9917,20 @@ bool Player::saySpell(SpeakClasses type, const std::string &text, bool isGhostMo
 	return true;
 }
 
+void Player::setDead(bool isDead) {
+	m_isDead = isDead;
+	const auto &thisPlayer = static_self_cast<Player>();
+	if (isDead) {
+		g_game().addDeadPlayer(thisPlayer);
+	} else {
+		g_game().removeDeadPlayer(getName());
+	}
+}
+
+bool Player::isDead() const {
+	return m_isDead;
+}
+
 void Player::triggerMomentum() {
 	const auto &item = getInventoryItem(CONST_SLOT_HEAD);
 	if (!item) {
@@ -10923,7 +10944,11 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 
 		const auto &outfit = Outfits::getInstance().getOutfitByLookType(getPlayer(), defaultOutfit.lookType);
 		if (outfit) {
-			outfitAttributes = Outfits::getInstance().addAttributes(getID(), defaultOutfit.lookType, getSex(), defaultOutfit.lookAddons);
+			if (defaultOutfit.lookAddons == 3) {
+				outfitAttributes = Outfits::getInstance().addAttributes(getID(), defaultOutfit.lookType, getSex(), defaultOutfit.lookAddons);
+			} else {
+				outfitAttributes = false;
+			}
 		}
 
 		if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) && getCurrentMount() != 0) {
@@ -11017,7 +11042,6 @@ void Player::onRemoveCreature(const std::shared_ptr<Creature> &creature, bool is
 				guild->removeMember(player);
 			}
 
-			g_game().removePlayerUniqueLogin(player);
 			loginPosition = getPosition();
 			lastLogout = time(nullptr);
 			g_logger().info("{} has logged out", getName());

@@ -78,13 +78,13 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "gold coin", chance = 87620, maxCount = 100 },
-	{ name = "quara tentacle", chance = 14620 },
-	{ name = "longsword", chance = 6910 },
-	{ name = "shrimp", chance = 5140, maxCount = 3 },
-	{ name = "brass armor", chance = 4810 },
-	{ name = "small amethyst", chance = 3060 },
-	{ name = "fish fin", chance = 490 },
+	{ name = "gold coin", chance = 99950, maxCount = 49 },
+	{ name = "quara tentacle", chance = 15110 },
+	{ name = "shrimp", chance = 10030, maxCount = 3 },
+	{ name = "longsword", chance = 8120 },
+	{ name = "brass armor", chance = 5060 },
+	{ name = "small amethyst", chance = 3990 },
+	{ name = "fish fin", chance = 510 },
 }
 
 monster.attacks = {

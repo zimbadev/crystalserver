@@ -76,28 +76,27 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "gold coin", chance = 23000, maxCount = 80 },
-	{ name = "gold coin", chance = 23000, maxCount = 56 },
-	{ name = "spear", chance = 30800, maxCount = 3 },
-	{ name = "brown bread", chance = 21600, maxCount = 2 },
-	{ id = 3003, chance = 16020 }, -- rope
-	{ name = "brass legs", chance = 12200 },
-	{ name = "halberd", chance = 11850 },
-	{ name = "plate armor", chance = 10370 },
-	{ name = "steel helmet", chance = 11220 },
-	{ name = "two handed sword", chance = 8470 },
-	{ name = "battle hammer", chance = 6910 },
+	{ name = "gold coin", chance = 48680, maxCount = 136 },
+	{ name = "spear", chance = 29510, maxCount = 3 },
+	{ name = "brown bread", chance = 20330, maxCount = 2 },
+	{ id = 3003, chance = 14370 }, -- rope
+	{ name = "brass legs", chance = 13050 },
+	{ name = "halberd", chance = 12580 },
+	{ name = "plate armor", chance = 10930 },
+	{ name = "steel helmet", chance = 10400 },
+	{ name = "two handed sword", chance = 9570 },
+	{ name = "battle hammer", chance = 6950 },
 	{ name = "warrior helmet", chance = 4710 },
-	{ name = "knight axe", chance = 2630 },
-	{ name = "dark helmet", chance = 2430 },
-	{ name = "dark armor", chance = 2020 },
-	{ name = "knight legs", chance = 1050 },
+	{ name = "knight axe", chance = 2650 },
+	{ name = "dark helmet", chance = 2400 },
+	{ name = "dark armor", chance = 2010 },
+	{ name = "knight legs", chance = 1030 },
 	{ name = "knight armor", chance = 750 },
-	{ name = "ruby necklace", chance = 750 },
-	{ name = "lightning legs", chance = 580 },
-	{ name = "boots of haste", chance = 400 },
-	{ name = "dragon lance", chance = 290 },
-	{ name = "piggy bank", chance = 120 },
+	{ name = "ruby necklace", chance = 730 },
+	{ name = "lightning legs", chance = 590 },
+	{ name = "boots of haste", chance = 390 },
+	{ name = "dragon lance", chance = 310 },
+	{ name = "piggy bank", chance = 110 },
 }
 
 monster.attacks = {
