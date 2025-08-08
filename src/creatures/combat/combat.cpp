@@ -2530,8 +2530,8 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 			// loop.
 			if (isSingleCombat) {
 				damage = targetDamage;
-				} else {
-			targetCreature->setCombatDamage(targetDamage);
+			} else {
+				targetCreature->setCombatDamage(targetDamage);
 			}
 		}
 	} else if (monster) {
