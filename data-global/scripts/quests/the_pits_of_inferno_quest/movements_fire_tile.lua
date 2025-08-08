@@ -23,6 +23,12 @@ local fires = {
 	[2061] = { vocationId = VOCATION.BASE_ID.KNIGHT, damage = 2400 },
 	[2062] = { vocationId = VOCATION.BASE_ID.KNIGHT, damage = 3600 },
 	[2063] = { vocationId = VOCATION.BASE_ID.KNIGHT, damage = 7200 },
+	[2064] = { vocationId = VOCATION.BASE_ID.MONK, damage = 300 },
+	[2065] = { vocationId = VOCATION.BASE_ID.MONK, damage = 600 },
+	[2066] = { vocationId = VOCATION.BASE_ID.MONK, damage = 1200 },
+	[2067] = { vocationId = VOCATION.BASE_ID.MONK, damage = 2400 },
+	[2068] = { vocationId = VOCATION.BASE_ID.MONK, damage = 3600 },
+	[2069] = { vocationId = VOCATION.BASE_ID.MONK, damage = 7200 },
 }
 
 local fireTile = MoveEvent()
