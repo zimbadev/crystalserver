@@ -77280,7 +77280,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="weight" value="30" />
 	</item>
 	<item id="47367" article="a" name="large obelisk">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="47368" article="an" name="amber slayer">
 		<attribute key="primarytype" value="sword weapons" />
@@ -77582,7 +77582,7 @@ Granted by TibiaGoals.com" />
 		</attribute>
 	</item>
 	<item id="47379" article="a" name="large obelisk">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="47381" article="an" name="orc warlord soul core">
 		<attribute key="primarytype" value="soul cores" />
@@ -81397,6 +81397,10 @@ Granted by TibiaGoals.com" />
 	<item id="49407" article="a" name="sacrificial altar">
 		<attribute key="primarytype" value="shrines and altars" />
 	</item>
+	<item id="49161" article="a" name="trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
+	</item>
 	<item id="49520" article="a" name="inferniarch bow">
 		<attribute key="primarytype" value="distance weapons" />
 		<attribute key="weaponType" value="distance" />
@@ -81898,6 +81902,82 @@ Granted by TibiaGoals.com" />
 	</item>
 	<item id="49849" article="a" name="statue of a warrior monk depicting the dragon">
 		<attribute key="primarytype" value="statues" />
+	</item>
+	<item id="49656" article="a" name="ramp"/>
+	<item id="49657" name="stone stairs">
+		<attribute key="primarytype" value="stairs"/>
+		<attribute key="floorchange" value="north"/>
+	</item>
+	<item id="49658" article="a" name="ramp"/>
+	<item id="49659" name="stone stairs">
+		<attribute key="primarytype" value="stairs"/>
+		<attribute key="floorchange" value="west"/>
+	</item>
+	<item id="49660" article="a" name="ramp"/>
+	<item id="49661" name="stone stairs">
+		<attribute key="primarytype" value="stairs"/>
+		<attribute key="floorchange" value="east"/>
+	</item>
+	<item id="49662" article="a" name="ramp"/>
+	<item id="49663" name="stone stairs">
+		<attribute key="primarytype" value="stairs"/>
+		<attribute key="floorchange" value="south"/>
+	</item>
+	<item id="49678" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="49679" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="49680" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="49681" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="49682" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="49683" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="49684" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="49685" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="49686" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="49687" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="49688" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="49689" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
 	</item>
 	<item id="49858" article="a" name="rending inferniarch bow">
 		<attribute key="primarytype" value="distance weapons" />
@@ -82675,6 +82755,10 @@ Granted by TibiaGoals.com" />
 		<attribute key="primarytype" value="creature products" />
 		<attribute key="weight" value="60" />
 	</item>
+	<item id="49906" article="a" name="trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
+	</item>
 	<item id="49908" article="a" name="mummified demon finger">
 		<attribute key="primarytype" value="creature products" />
 		<attribute key="weight" value="60" />
@@ -82969,9 +83053,29 @@ Granted by TibiaGoals.com" />
 		<attribute key="primarytype" value="dropdowns" />
 		<attribute key="floorchange" value="down" />
 	</item>
+	<item id="50069" article="a" name="trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
+	</item>
+	<item id="50071" article="a" name="trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
+	</item>
+	<item id="50072" article="a" name="trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
+	</item>
 	<item fromid="50082" toid="50085" name="stairs">
 		<attribute key="primarytype" value="dropdowns" />
 		<attribute key="floorchange" value="down" />
+	</item>
+	<item id="50083" article="a" name="trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
+	</item>
+	<item id="50084" article="a" name="trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
 	</item>
 	<item id="50096" article="a" name="ticket forge">
 		<attribute key="duration" value="20" />
@@ -83017,11 +83121,60 @@ Granted by TibiaGoals.com" />
 		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core." />
 		<attribute key="weight" value="100" />
 	</item>
-	<item id="50122" article="a" name="stair" />
-	<item id="50123" article="a" name="stair" />
+	<item id="50121" article="a" name="water trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
+	</item>
+	<item id="50122" article="a" name="ladder">
+		<attribute key="type" value="ladder"/>
+	</item>
+	<item id="50123" article="a" name="ladder">
+		<attribute key="type" value="ladder"/>
+	</item>
 	<item id="50124" article="a" name="arbaziloth santa">
 		<attribute key="primarytype" value="dolls and bears" />
 		<attribute key="weight" value="100" />
+	</item>
+	<item id="50138" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="50281" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="50282" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="50283" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="50284" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="50285" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="50286" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="50287" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="50288" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
 	</item>
 	<item id="50131" article="a" name="huge ancient stone sphere" />
 	<item id="50132" article="a" name="small ancient stone sphere" />
