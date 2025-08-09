@@ -3,7 +3,7 @@ local config = {
 		[44048] = { key = "spiritual-horseshoe", count = 4 },
 	},
 
-	mountId = 218,
+	mountId = 217,
 }
 
 local usablespiritofpurityItems = Action()
