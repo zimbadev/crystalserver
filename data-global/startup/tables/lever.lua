@@ -380,6 +380,10 @@ LeverUnique = {
 		itemPos = { x = 32873, y = 32263, z = 14 },
 	},
 	-- The Pits of Inferno Quest
+	[48887] = {
+		itemId = 2772,
+		itemPos = { x = 32813, y = 32329, z = 10 },
+	},
 	[2025] = {
 		itemId = 2772,
 		itemPos = { x = 32820, y = 32321, z = 10 },

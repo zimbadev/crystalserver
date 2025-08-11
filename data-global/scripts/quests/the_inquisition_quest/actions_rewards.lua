@@ -8,6 +8,7 @@ local rewards = {
 	[1306] = 8100,
 	[1307] = 8102,
 	[1308] = 8026,
+	[1308] = 50261,
 }
 
 local inquisitionRewards = Action()

@@ -2481,8 +2481,8 @@
 	<npc centerx="32256" centery="31101" centerz="10" radius="1">
 		<npc name="A Restless Soul" x="0" y="0" z="10" spawntime="60" />
 	</npc>
-	<npc centerx="33239" centery="31224" centerz="10" radius="1">
-		<npc name="A Sleeping Dragon" x="0" y="0" z="10" spawntime="60" />
+	<npc centerx="33243" centery="31213" centerz="10" radius="1">
+		<npc name="A Sleeping Dragon" x="-1" y="0" z="10" spawntime="60" />
 	</npc>
 	<npc centerx="33621" centery="31419" centerz="10" radius="2">
 		<npc name="Flickering Soul" x="0" y="0" z="10" spawntime="60" />

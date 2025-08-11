@@ -2524,12 +2524,15 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 				targetDamage.secondary.value += static_cast<int32_t>(std::round(targetDamage.secondary.value * 0.6));
 			}
 
-			// If is single target, apply the damage directly
+			// If this combat affects only one target, apply the
+			// computed damage directly. Otherwise store the
+			// per-target damage to be used later by the combat
+			// loop.
 			if (isSingleCombat) {
 				damage = targetDamage;
+			} else {
+				targetCreature->setCombatDamage(targetDamage);
 			}
-
-			targetCreature->setCombatDamage(targetDamage);
 		}
 	} else if (monster) {
 		baseChance = monster->getCriticalChance() * 100;
