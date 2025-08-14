@@ -11,7 +11,7 @@ local positions = {
 	{ x = 33092, y = 31122, z = 12 },
 	-- SleepingDragon
 	{ x = 33111, y = 31123, z = 12 },
-	{ x = 33240, y = 31249, z = 10 },
+	{ x = 33243, y = 31238, z = 10 },
 	-- awarnessEmperor
 	{ x = 33360, y = 31395, z = 9 },
 	{ x = 33072, y = 31150, z = 15 },
@@ -20,13 +20,13 @@ local positions = {
 	{ x = 33359, y = 31395, z = 9 },
 	{ x = 33136, y = 31249, z = 6 },
 	-- innerSanctum
-	{ x = 33236, y = 31220, z = 10 },
-	{ x = 33237, y = 31220, z = 10 },
-	{ x = 33238, y = 31220, z = 10 },
-	{ x = 33239, y = 31220, z = 10 },
-	{ x = 33240, y = 31220, z = 10 },
-	{ x = 33241, y = 31220, z = 10 },
-	{ x = 33242, y = 31220, z = 10 },
+	{ x = 33239, y = 31209, z = 10 },
+	{ x = 33240, y = 31209, z = 10 },
+	{ x = 33241, y = 31209, z = 10 },
+	{ x = 33242, y = 31209, z = 10 },
+	{ x = 33243, y = 31209, z = 10 },
+	{ x = 33244, y = 31209, z = 10 },
+	{ x = 33245, y = 31209, z = 10 },
 	{ x = 33028, y = 31084, z = 13 },
 }
 
@@ -34,7 +34,7 @@ local config = {
 	{ Access = Storage.Quest.U8_6.WrathOfTheEmperor.TeleportAccess.Rebel, teleportPos = Position(33136, 31248, 6), destinationA = Position(33211, 31065, 9), destinationB = Position(33138, 31248, 6) },
 	{ Access = Storage.Quest.U8_6.WrathOfTheEmperor.TeleportAccess.Zlak, teleportPos = Position(33216, 31067, 9), destinationA = Position(33078, 31219, 8), destinationB = Position(33216, 31069, 9) },
 	{ Access = Storage.Quest.U8_6.WrathOfTheEmperor.TeleportAccess.Zizzle, teleportPos = Position(33084, 31213, 8), destinationA = Position(33094, 31122, 12), destinationB = Position(33083, 31214, 8), itemPos = Position(33086, 31214, 8) },
-	{ Access = Storage.Quest.U8_6.WrathOfTheEmperor.TeleportAccess.SleepingDragon, teleportPos = Position(33111, 31123, 12), destinationA = Position(33240, 31247, 10), destinationB = Position(33109, 31122, 12), destinationC = Position(33028, 31086, 13) },
+	{ Access = Storage.Quest.U8_6.WrathOfTheEmperor.TeleportAccess.SleepingDragon, teleportPos = Position(33111, 31123, 12), destinationA = Position(33243, 31236, 10), destinationB = Position(33109, 31122, 12), destinationC = Position(33028, 31086, 13) },
 	{ Access = Storage.Quest.U8_6.WrathOfTheEmperor.TeleportAccess.AwarnessEmperor, teleportPos = Position(33072, 31150, 15), destinationA = Position(33361, 31397, 9), destinationB = Position(33071, 31152, 15) },
 	{ Access = Storage.Quest.U8_6.WrathOfTheEmperor.TeleportAccess.BossRoom, teleportPos = Position(33136, 31249, 6), destinationA = Position(33360, 31397, 9), destinationB = Position(33138, 31249, 6) },
 	{ Access = Storage.Quest.U8_6.WrathOfTheEmperor.TeleportAccess.InnerSanctum, teleportPos = Position(33028, 31084, 13), destinationA = Position(33109, 31122, 12), destinationB = Position(33028, 31086, 13) },
