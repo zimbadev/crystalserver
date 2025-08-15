@@ -88,7 +88,7 @@ local function executeChain(player, min, max, effectData)
 				end
 			end
 
-			local damageMultiplier = 1.03 ^ jump
+			local damageMultiplier = 0.5 ^ jump
 			local adjustedMin = math.floor(min * damageMultiplier + 0.5)
 			local adjustedMax = math.floor(max * damageMultiplier + 0.5)
 			doTargetCombatHealth(player, newCreature, effectData.combat, adjustedMin, adjustedMax, effectData.effect)
@@ -110,7 +110,7 @@ local config = {
 }
 
 local function onGetFormulaValues(player, weaponDamage)
-	local basePower = 99
+	local basePower = 70
 
 	--[[
 	local helmetItem = player:getSlotItem(CONST_SLOT_HEAD)
@@ -135,7 +135,7 @@ end
 local spell = Spell("instant")
 
 function spell.onCastSpell(creature, var)
-	local maxTargets = 4
+	local maxTargets = 5
 	maxTargets = maxTargets + creature:getWheelSpellAdditionalTarget("Chained Penance") or 0
 
 	local legsItem = creature:getSlotItem(CONST_SLOT_LEGS)

@@ -341,7 +341,7 @@ void IOWheel::initializeMonkSpells() {
 
 	m_wheelBonusData.spells.monk[3].name = "Flurry of Blows";
 	m_wheelBonusData.spells.monk[3].grade[1].leech.life = 5;
-	m_wheelBonusData.spells.monk[3].grade[2].increase.damage = 12;
+	m_wheelBonusData.spells.monk[3].grade[2].increase.damage = 15;
 
 	m_wheelBonusData.spells.monk[4].name = "Sweeping Takedown";
 	m_wheelBonusData.spells.monk[4].grade[1].leech.mana = 3;
