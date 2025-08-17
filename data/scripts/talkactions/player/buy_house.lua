@@ -56,8 +56,8 @@ function buyHouse.onSay(player, words, param)
 	end
 
 	local maxHousesLimit = configManager.getNumber(configKeys.MAX_HOUSES_LIMIT)
-	local playerHouses = player:getAllHouses()
-	if #playerHouses > maxHousesLimit then
+	local playerHouses = Game:getHouseCountByAccount(player:getAccountId())
+	if playerHouses >= maxHousesLimit then
 		player:sendCancelMessage("You cannot buy more houses. The maximum number of houses you can own is " .. maxHousesLimit .. ".")
 		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return true
