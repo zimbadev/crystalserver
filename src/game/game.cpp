@@ -10844,6 +10844,7 @@ void Game::transferHouseItemsToDepot() {
 			if (house->tryTransferOwnership(offlinePlayer, true)) {
 				transferSuccess++;
 				house->setNewOwnerGuid(-1, true);
+				house->setState(CyclopediaHouseState::Available);
 			}
 		}
 	}

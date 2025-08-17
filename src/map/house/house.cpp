@@ -933,6 +933,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 		if (!player) {
 			// Player doesn't exist, reset house owner
 			house->tryTransferOwnership(nullptr, true);
+			house->setState(CyclopediaHouseState::Available);
 			continue;
 		}
 
@@ -947,6 +948,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 			} else if (!vipKeep && !activityKeep) {
 				g_logger().info("Player {} has not logged in for {} days, so the house will be reset.", player->getName(), daysToReset);
 				house->setOwner(0, true, player);
+				house->setState(CyclopediaHouseState::Available);
 				g_saveManager().savePlayer(player);
 				continue;
 			}
@@ -1016,6 +1018,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 				house->setPayRentWarnings(house->getPayRentWarnings() + 1);
 			} else {
 				house->setOwner(0, true, player);
+				house->setState(CyclopediaHouseState::Available);
 			}
 		}
 
