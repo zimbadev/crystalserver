@@ -3658,6 +3658,14 @@ BlockType_t Player::blockHit(const std::shared_ptr<Creature> &attacker, const Co
 					totalAbsorbPercent += absorbPercent;
 				}
 
+				const int16_t mantraAbsorbValue = it.abilities->mantraAbsorbValue[combatTypeToIndex(combatType)];
+				if (mantraAbsorbValue != 0) {
+					const int16_t mantraAbsorbPercent = getMantraAbsorbPercent(mantraAbsorbValue);
+					if (mantraAbsorbPercent != 0) {
+						totalAbsorbPercent += mantraAbsorbPercent;
+					}
+				}
+
 				if (field) {
 					const int16_t &fieldAbsorbPercent = it.abilities->fieldAbsorbPercent[combatTypeToIndex(combatType)];
 					if (fieldAbsorbPercent != 0) {
