@@ -11969,7 +11969,7 @@ void Player::setVirtue(const VirtueMonk_t virtueEnum) {
 
 uint16_t Player::getMantraTotal() const {
 	int32_t mantra = 0;
-	static constexpr Slots_t mantraSlots[] = { CONST_SLOT_HEAD, CONST_SLOT_NECKLACE, CONST_SLOT_ARMOR, CONST_SLOT_LEGS, CONST_SLOT_RING };
+	static constexpr Slots_t mantraSlots[] = { CONST_SLOT_HEAD, CONST_SLOT_NECKLACE, CONST_SLOT_ARMOR, CONST_SLOT_LEGS, CONST_SLOT_RING, CONST_SLOT_FEET };
 	for (const Slots_t &slot : mantraSlots) {
 		const auto &inventoryItem = inventory[slot];
 		if (inventoryItem) {
