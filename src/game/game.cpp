@@ -11268,6 +11268,13 @@ void Game::playerCyclopediaHouseTransfer(uint32_t playerId, uint32_t houseId, ui
 		return;
 	}
 
+	const auto accountHouseCount = g_game().map.houses.getHouseCountByAccount(newOwner->getAccountId());
+	const auto maxHousesLimit = g_configManager().getNumber(MAX_HOUSES_LIMIT);
+	if (accountHouseCount >= maxHousesLimit) {
+		owner->sendFYIBox(fmt::format("The new owner, {}, has reached the maximum number of houses they can own or bid on. The limit is {}.", newOwnerName, maxHousesLimit));
+		return;
+	}
+
 	auto ret = owner->canTransferHouse(houseId, newOwner->getGUID());
 	if (ret != TransferErrorMessage::Success) {
 		owner->sendHouseAuctionMessage(houseId, HouseAuctionType::Transfer, enumToValue(ret));
