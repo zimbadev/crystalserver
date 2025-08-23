@@ -1881,7 +1881,7 @@ void Creature::sendAsyncTasks() {
 	setAsyncTaskFlag(AsyncTaskRunning, true);
 	g_dispatcher().asyncEvent([self = std::weak_ptr<Creature>(getCreature())] {
 		if (const auto &creature = self.lock()) {
-			if (!creature->isRemoved()) {
+			if (!creature->isRemoved() && creature->isAlive()) {
 				for (const auto &task : creature->asyncTasks) {
 					task();
 				}

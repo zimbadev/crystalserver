@@ -735,6 +735,10 @@ void Combat::CombatHealthFunc(const std::shared_ptr<Creature> &caster, const std
 		}
 	}
 
+	if (!target || !target->isAlive()) {
+		return;
+	}
+
 	if (g_game().combatChangeHealth(caster, target, damage)) {
 		CombatConditionFunc(caster, target, params, &damage);
 		CombatDispelFunc(caster, target, params, nullptr);
