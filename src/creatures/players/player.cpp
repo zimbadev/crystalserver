@@ -5033,6 +5033,7 @@ uint32_t Player::getItemTypeCount(uint16_t itemId, int32_t subType /*= -1*/) con
 }
 
 void Player::stashContainer(const StashContainerList &itemDict) {
+	const auto &self = static_self_cast<Player>();
 	StashItemList stashItemDict; // ItemID - Count
 	for (const auto &[item, itemCount] : itemDict) {
 		if (!item) {
@@ -5042,7 +5043,7 @@ void Player::stashContainer(const StashContainerList &itemDict) {
 		stashItemDict[item->getID()] = itemCount;
 	}
 
-	for (const auto &[itemId, itemCount] : stashItems) {
+	for (const auto &[itemId, itemCount] : getStashItems()) {
 		if (!stashItemDict[itemId]) {
 			stashItemDict[itemId] = itemCount;
 		} else {
@@ -5050,28 +5051,80 @@ void Player::stashContainer(const StashContainerList &itemDict) {
 		}
 	}
 
-	uint32_t totalStowed = 0;
-	std::ostringstream retString;
 	uint16_t refreshDepotSearchOnItem = 0;
-	for (const auto &[item, itemCount] : itemDict) {
+
+	auto processItem = [&](const std::shared_ptr<Item> &item, uint16_t itemCount) {
 		if (!item) {
-			continue;
+			return false;
 		}
+
+		if (!item->isItemStorable()) {
+			return false;
+		}
+
+		for (int i = CONST_SLOT_FIRST; i <= CONST_SLOT_LAST; ++i) {
+			const auto &inventoryItem = inventory[i];
+			if (!inventoryItem) {
+				continue;
+			}
+
+			if (inventoryItem == item) {
+				g_moveEvents().onPlayerDeEquip(self, item, static_cast<Slots_t>(i));
+			}
+		}
+
 		const uint16_t iteratorCID = item->getID();
-		if (g_game().internalRemoveItem(item, itemCount) == RETURNVALUE_NOERROR) {
+		bool success = false;
+
+		if (const auto &player = item->getHoldingPlayer()) {
+			if (player == self) {
+				success = (removeItem(item, itemCount) == RETURNVALUE_NOERROR);
+			}
+		} else {
+			if (const auto &parent = item->getParent()) {
+				const auto &parentItem = parent->getItem();
+				if (parentItem && parentItem->getID() == ITEM_BROWSEFIELD) {
+					const auto &parentTile = parent->getTile();
+					if (parentTile) {
+						parentTile->removeThing(item, itemCount);
+					}
+				} else {
+					parent->removeThing(item, itemCount);
+				}
+				success = true;
+			}
+		}
+
+		if (success) {
 			addItemOnStash(iteratorCID, itemCount);
-			totalStowed += itemCount;
 			if (isDepotSearchOpenOnItem(iteratorCID)) {
 				refreshDepotSearchOnItem = iteratorCID;
 			}
 		}
+		return success;
+	};
+
+	uint32_t totalStowed = 0;
+	for (const auto &[item, itemCount] : itemDict) {
+		if (!item) {
+			continue;
+		}
+		if (processItem(item, itemCount)) {
+			totalStowed += itemCount;
+		}
 	}
+
+	updateState();
 
 	if (totalStowed == 0) {
 		sendCancelMessage("Sorry, not possible.");
 		return;
 	}
 
+	sendStats();
+	sendInventoryIds();
+
+	std::ostringstream retString;
 	retString << "Stowed " << totalStowed << " object" << (totalStowed > 1 ? "s." : ".");
 	if (moved) {
 		retString << " Moved " << movedItems << " object" << (movedItems > 1 ? "s." : ".");
