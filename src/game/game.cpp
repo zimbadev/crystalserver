@@ -405,7 +405,8 @@ Game::Game() {
 		HighscoreCategory("Distance Fighting", static_cast<uint8_t>(HighscoreCategories_t::DISTANCE_FIGHTING)),
 		HighscoreCategory("Shielding", static_cast<uint8_t>(HighscoreCategories_t::SHIELDING)),
 		HighscoreCategory("Fishing", static_cast<uint8_t>(HighscoreCategories_t::FISHING)),
-		HighscoreCategory("Magic Level", static_cast<uint8_t>(HighscoreCategories_t::MAGIC_LEVEL))
+		HighscoreCategory("Magic Level", static_cast<uint8_t>(HighscoreCategories_t::MAGIC_LEVEL)),
+		HighscoreCategory("Loyalty Points", static_cast<uint8_t>(HighscoreCategories_t::LOYALTY_POINTS))
 	};
 
 	m_summaryCategories = {
@@ -8970,6 +8971,8 @@ std::string Game::getSkillNameById(uint8_t &skill) {
 			return "maglevel";
 		case HighscoreCategories_t::BOSS_POINTS:
 			return "boss_points";
+		case HighscoreCategories_t::LOYALTY_POINTS:
+			return "loyalty_points";
 		default:
 			skill = static_cast<uint8_t>(HighscoreCategories_t::EXPERIENCE);
 			return "experience";
@@ -8994,21 +8997,6 @@ void Game::playerReportBug(uint32_t playerId, const std::string &message, const 
 
 	g_events().eventPlayerOnReportBug(player, message, position, category);
 	g_callbacks().executeCallback(EventCallback_t::playerOnReportBug, &EventCallback::playerOnReportBug, player, message, position, category);
-}
-
-void Game::playerDebugAssert(uint32_t playerId, const std::string &assertLine, const std::string &date, const std::string &description, const std::string &comment) {
-	const auto &player = getPlayerByID(playerId);
-	if (!player) {
-		return;
-	}
-
-	// TODO: move debug assertions to database
-	FILE* file = fopen("client_assertions.txt", "a");
-	if (file) {
-		fprintf(file, "----- %s - %s (%s) -----\n", formatDate(time(nullptr)).c_str(), player->getName().c_str(), convertIPToString(player->getIP()).c_str());
-		fprintf(file, "%s\n%s\n%s\n%s\n", assertLine.c_str(), date.c_str(), description.c_str(), comment.c_str());
-		fclose(file);
-	}
 }
 
 void Game::playerPreyAction(uint32_t playerId, uint8_t slot, uint8_t action, uint8_t option, int8_t index, uint16_t raceId) {
