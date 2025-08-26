@@ -5,9 +5,41 @@ local config = {
 	boss = {
 		name = "Sir Nictros",
 		createFunction = function()
-			local nictros = Game.createMonster("Sir Nictros", nictrosPosition, true, true):registerEvent("SirNictrosThink")
-			local baeloc = Game.createMonster("Sir Baeloc", baelocPosition, true, true):registerEvent("SirBaelocThink")
-			return nictros and baeloc
+			local nictros = Game.createMonster("Sir Nictros", nictrosPosition, true, true)
+			if not nictros then
+				return false
+			end
+			nictros:registerEvent("SirNictrosThink")
+
+			local baeloc = Game.createMonster("Sir Baeloc", baelocPosition, true, true)
+			if not baeloc then
+				return false
+			end
+			baeloc:registerEvent("SirBaelocThink")
+
+			-- Add dialogues and events
+			if baeloc and nictros then
+				baeloc:say("Ah look my Brother! Challengers! After all this time finally a chance to prove our skills!")
+
+				addEvent(function()
+					if nictros then
+						nictros:say(
+							"Indeed! It has been a while! As the elder one I request the right of the first battle!")
+					end
+				end, 6 * 1000)
+
+				addEvent(function()
+					if baeloc then
+						baeloc:say("Oh, man! You always get the fun!")
+						if nictros then
+							nictros:teleportTo(Position(33426, 31437, 13))
+							nictros:setMoveLocked(false)
+						end
+					end
+				end, 12 * 1000)
+			end
+
+			return true
 		end,
 	},
 	requiredLevel = 250,
