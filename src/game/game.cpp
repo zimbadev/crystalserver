@@ -6177,7 +6177,7 @@ void Game::playerToggleMount(uint32_t playerId, bool mount) {
 	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
-void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted, /* = false */ uint8_t isMountRandomized /* = 0*/) {
+void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted /* = false */, bool randomizeMount /* = false*/) {
 	if (!g_configManager().getBoolean(ALLOW_CHANGEOUTFIT)) {
 		return;
 	}
@@ -6193,12 +6193,12 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted
 
 	if (player->isWearingSupportOutfit() || !isMounted) {
 		outfit.lookMount = 0;
-		isMountRandomized = 0;
+		randomizeMount = false;
 	}
 
-	player->setRandomMount(isMountRandomized);
+	player->setRandomMount(randomizeMount);
 
-	if (isMountRandomized && outfit.lookMount != 0 && player->hasAnyMount()) {
+	if (randomizeMount && outfit.lookMount != 0 && player->hasAnyMount()) {
 		auto randomMount = mounts->getMountByID(player->getRandomMountId());
 		outfit.lookMount = randomMount->clientId;
 	}
@@ -6229,7 +6229,7 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted
 
 		auto deltaSpeedChange = mount->speed;
 		if (player->isMounted()) {
-			const auto prevMount = mounts->getMountByID(player->getLastMount());
+			const auto prevMount = mounts->getMountByID(player->getCurrentMount());
 			if (prevMount) {
 				deltaSpeedChange -= prevMount->speed;
 			}

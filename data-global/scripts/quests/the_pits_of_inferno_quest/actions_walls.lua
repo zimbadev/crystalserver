@@ -3,6 +3,7 @@ local pos = {
 	[2026] = { x = 32833, y = 32333, z = 11 },
 	[2027] = { x = 32835, y = 32333, z = 11 },
 	[2028] = { x = 32837, y = 32333, z = 11 },
+	[48887] = { x = 32839, y = 32333, z = 11 },
 }
 
 local function doRemoveFirewalls(fwPos)

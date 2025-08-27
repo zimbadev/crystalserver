@@ -2564,6 +2564,13 @@ ChestUnique = {
 		weight = 45.00,
 		storage = Storage.Quest.U8_6.WrathOfTheEmperor.ChestItems,
 	},
+	[7825] = {
+		itemId = 2473,
+		itemPos = { x = 33079, y = 31173, z = 8 },
+		reward = { { 50263, 1 } },
+		weight = 29.00,
+		storage = Storage.Quest.U8_6.WrathOfTheEmperor.ChestItems,
+	},
 	-- Rookgaard
 	-- 05 Brown Mushrooms
 	[6301] = {

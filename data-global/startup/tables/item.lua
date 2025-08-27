@@ -2546,19 +2546,19 @@ ItemUnique = {
 	},
 	[3193] = {
 		itemId = 11427,
-		itemPos = { x = 33048, y = 31085, z = 15 },
+		itemPos = { x = 33049, y = 31089, z = 15 },
 	},
 	[3194] = {
 		itemId = 11427,
-		itemPos = { x = 33094, y = 31087, z = 15 },
+		itemPos = { x = 33095, y = 31091, z = 15 },
 	},
 	[3195] = {
 		itemId = 11427,
-		itemPos = { x = 33095, y = 31110, z = 15 },
+		itemPos = { x = 33096, y = 31114, z = 15 },
 	},
 	[3196] = {
 		itemId = 11427,
-		itemPos = { x = 33048, y = 31111, z = 15 },
+		itemPos = { x = 33049, y = 31115, z = 15 },
 	},
 	[3200] = {
 		itemId = 11431,
@@ -3229,6 +3229,10 @@ ItemUnique = {
 	[57246] = {
 		itemId = 2472,
 		itemPos = { x = 34105, y = 32346, z = 14 },
+	},
+	[57247] = {
+		itemId = 2472,
+		itemPos = { x = 34107, y = 32346, z = 14 },
 	},
 	-- Wooden Mouthpiece
 	[58001] = {

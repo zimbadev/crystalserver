@@ -208,7 +208,7 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`lookmountfeet` = " << static_cast<uint32_t>(player->defaultOutfit.lookMountFeet) << ",";
 	query << "`lookmounthead` = " << static_cast<uint32_t>(player->defaultOutfit.lookMountHead) << ",";
 	query << "`lookmountlegs` = " << static_cast<uint32_t>(player->defaultOutfit.lookMountLegs) << ",";
-	query << "`currentmount` = " << static_cast<uint32_t>(player->defaultOutfit.currentMount) << ",";
+	query << "`currentmount` = " << static_cast<uint32_t>(player->currentMount) << ",";
 	query << "`lookfamiliarstype` = " << player->defaultOutfit.lookFamiliarsType << ",";
 	query << "`isreward` = " << static_cast<uint16_t>(player->isDailyReward) << ",";
 	query << "`maglevel` = " << player->magLevel << ",";

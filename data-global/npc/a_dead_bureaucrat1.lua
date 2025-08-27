@@ -120,6 +120,21 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:say("INCREDIBLE, you did it!! Have fun at Pumin's Domain!", npc, creature)
 		end
 	end
+
+	if MsgContains(message, "bribe") and player:getStorageValue(Storage.Quest.U7_9.ThePitsOfInferno.ThronePumin) < 9 then
+		npcHandler:say("Shhh! Lower your voice! So do you want permission to enter huh? How about 10000 gold?", npc, creature)
+		npcHandler:setTopic(playerId, 6)
+	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 6 then
+		if player:getMoney() >= 10000 then
+			player:removeMoney(10000)
+			player:setStorageValue(Storage.Quest.U7_9.ThePitsOfInferno.ThronePumin, 9)
+			npcHandler:say("Have fun at Pumin's Domain!", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		else
+			npcHandler:say("You don't have enough gold.", npc, creature)
+		end
+	end
+
 	return true
 end
 

@@ -27,6 +27,8 @@
 #include "game/zones/zone.hpp"
 #include "lib/metrics/metrics.hpp"
 #include "lua/creature/creatureevent.hpp"
+#include "lua/callbacks/event_callback.hpp"
+#include "lua/callbacks/events_callbacks.hpp"
 #include "map/spectators.hpp"
 #include "creatures/players/player.hpp"
 #include "server/network/protocol/protocolgame.hpp"
@@ -625,7 +627,17 @@ void Creature::onDeath() {
 		);
 	}
 
+	if (getPlayer()) {
+		if (const auto &tile = getTile()) {
+			for (const auto &zone : tile->getZones()) {
+				zone->creatureRemoved(getPlayer());
+				g_callbacks().executeCallback(EventCallback_t::zoneAfterCreatureLeave, &EventCallback::zoneAfterCreatureLeave, zone, getPlayer());
+			}
+		}
+	}
+
 	bool droppedCorpse = dropCorpse(lastHitCreature, mostDamageCreature, lastHitUnjustified, mostDamageUnjustified);
+
 	death(lastHitCreature);
 
 	if (droppedCorpse && !getPlayer()) {

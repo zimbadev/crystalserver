@@ -3802,7 +3802,7 @@
 		<attribute key="primarytype" value="windows" />
 	</item>
 	<item id="1748" article="a" name="mast">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="1749" toid="1750" article="a" name="sail" />
 	<item fromid="1751" toid="1754" article="a" name="rudder of the boat" />
@@ -3828,7 +3828,7 @@
 		<attribute key="primarytype" value="tools (objects)" />
 	</item>
 	<item fromid="1769" toid="1770" article="a" name="mast">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="1771" article="a" name="drawbridge">
 		<attribute key="primarytype" value="artificial tiles" />
@@ -4480,10 +4480,10 @@
 	<item id="2150" name="RESERVED SPRITE" />
 	<item id="2151" name="RESERVED SPRITE" />
 	<item id="2152" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="2153" article="a" name="marble pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="2154" toid="2161" article="a" name="wooden railing">
 		<attribute key="primarytype" value="walls" />
@@ -4524,13 +4524,13 @@
 		<attribute key="primarytype" value="artificial tiles" />
 	</item>
 	<item id="2188" article="a" name="sandstone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="2189" article="a" name="sandstone statue">
 		<attribute key="primarytype" value="statues" />
 	</item>
 	<item id="2190" article="an" name="oriental pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="2191" article="a" name="ramp" />
 	<item id="2192" article="a" name="ramp">
@@ -4549,7 +4549,7 @@
 		<attribute key="floorchange" value="west" />
 	</item>
 	<item id="2199" article="an" name="obelisk">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="2200" article="a" name="broken obelisk">
 		<attribute key="primarytype" value="refuse" />
@@ -4576,11 +4576,11 @@
 	</item>
 	<item fromid="2253" toid="2254" article="a" name="rope bridge" />
 	<item fromid="2255" toid="2258" article="a" name="short pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="2259" toid="2262" article="a" name="rope bridge" />
 	<item id="2263" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="2264" article="a" name="broken stone pillar">
 		<attribute key="primarytype" value="refuse" />
@@ -4589,7 +4589,7 @@
 		<attribute key="primarytype" value="walls" />
 	</item>
 	<item id="2289" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="2290" article="a" name="broken stone pillar">
 		<attribute key="primarytype" value="refuse" />
@@ -4605,11 +4605,11 @@
 		<attribute key="primarytype" value="walls" />
 	</item>
 	<item id="2299" article="a" name="small totem pole">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="2300" article="a" name="large totem pole" />
 	<item id="2301" article="a" name="totem pole">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="2302" toid="2314" article="a" name="big table">
 		<attribute key="primarytype" value="furniture" />
@@ -6976,7 +6976,6 @@
 		</attribute>
 	</item>
 	<item id="3057" article="an" name="amulet of loss">
-		<attribute key="preventloss" value="1" />
 		<attribute key="weight" value="420" />
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="necklace" />
@@ -14257,7 +14256,7 @@
 	</item>
 	<item fromid="4920" toid="4939" article="a" name="ship railing" />
 	<item fromid="4940" toid="4952" article="a" name="mast">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="4953" toid="4960" article="a" name="sail" />
 	<item fromid="4961" toid="4964" article="a" name="steering wheel">
@@ -14276,7 +14275,7 @@
 		<attribute key="primarytype" value="utilities" />
 	</item>
 	<item fromid="4974" toid="4975" article="a" name="mast">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="4976" article="an" name="anchor">
 		<attribute key="primarytype" value="utilities" />
@@ -14360,10 +14359,10 @@
 		<attribute key="weight" value="2200" />
 	</item>
 	<item id="5025" article="an" name="iron pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="5026" article="an" name="iron construction">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="5027" article="a" name="thread of screw" />
 	<item fromid="5028" toid="5030" article="a" name="screw">
@@ -14809,7 +14808,7 @@
 		<attribute key="primarytype" value="walls" />
 	</item>
 	<item id="5307" article="a" name="white stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="5308" toid="5313" article="a" name="white stone railing">
 		<attribute key="primarytype" value="walls" />
@@ -14818,7 +14817,7 @@
 		<attribute key="primarytype" value="walls" />
 	</item>
 	<item fromid="5320" toid="5330" article="a" name="wooden column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="5331" toid="5388" article="a" name="sign">
 		<attribute key="primarytype" value="signs" />
@@ -15037,7 +15036,7 @@
 		<attribute key="maletransformto" value="5496" />
 	</item>
 	<item id="5503" article="a" name="wooden column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="5504" toid="5511" article="a" name="pulley">
 		<attribute key="primarytype" value="machines (objects)" />
@@ -18393,7 +18392,7 @@
 		<attribute key="primarytype" value="constructions" />
 	</item>
 	<item fromid="6886" toid="6888" article="a" name="strut">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="6889" toid="6890" name="tusks" />
 	<item id="6891" article="a" name="closed door" editorsuffix="(it is locked)">
@@ -18496,10 +18495,10 @@
 		<attribute key="primarytype" value="remains" />
 	</item>
 	<item id="6972" article="a" name="bone totem">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="6973" article="a" name="mammoth totem">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="6974" toid="6977" article="a" name="mammoth skull">
 		<attribute key="primarytype" value="remains" />
@@ -18637,10 +18636,10 @@
 		<attribute key="type" value="door" />
 	</item>
 	<item id="7058" article="a" name="skull pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="7059" article="a" name="glowing skull pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="7060" toid="7061" name="ice" />
 	<item fromid="7062" toid="7074" name="rock">
@@ -20811,7 +20810,7 @@
 	<item fromid="7696" toid="7703" article="a" name="gem" />
 	<item fromid="7704" toid="7707" article="a" name="buttress" />
 	<item fromid="7708" toid="7710" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="7711" article="a" name="closed door" editorsuffix="(it is locked)">
 		<attribute key="type" value="door" />
@@ -21027,10 +21026,10 @@
 		<attribute key="primarytype" value="flags" />
 	</item>
 	<item id="7795" article="an" name="orcish totem pole">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="7796" article="an" name="orcish pole">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="7797" toid="7798" article="a" name="dwarven statue" />
 	<item fromid="7799" toid="7802" article="a" name="bone">
@@ -23022,7 +23021,7 @@
 		<attribute key="primarytype" value="walls" />
 	</item>
 	<item id="8388" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="8389" name="broken stone pillar">
 		<attribute key="primarytype" value="refuse" />
@@ -23075,7 +23074,7 @@
 		<attribute key="primarytype" value="walls" />
 	</item>
 	<item fromid="8477" toid="8488" article="a" name="small tower">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="8489" toid="8498" article="a" name="stone wall">
 		<attribute key="primarytype" value="walls" />
@@ -23104,7 +23103,7 @@
 		<attribute key="primarytype" value="illumination" />
 	</item>
 	<item id="8525" article="a" name="blood basin">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="8526" article="a" name="family banner">
 		<attribute key="primarytype" value="flags" />
@@ -23255,7 +23254,7 @@
 		<attribute key="containersize" value="10" />
 	</item>
 	<item id="8739" article="a" name="wooden pole">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="8740" toid="8741" article="a" name="wall mirror">
 		<attribute key="primarytype" value="wall hangings" />
@@ -23520,7 +23519,7 @@
 		</attribute>
 	</item>
 	<item id="8865" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="8866" article="a" name="dead unknown">
 		<attribute key="fluidsource" value="blood" />
@@ -23550,7 +23549,7 @@
 		<attribute key="weight" value="120000" />
 	</item>
 	<item fromid="8870" toid="8877" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="8878" toid="8885" name="earth" />
 	<item id="8886" article="an" name="iron floor">
@@ -24411,42 +24410,42 @@
 	</item>
 	<item id="9132" article="a" name="frost cannon" />
 	<item id="9133" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 		<attribute key="duration" value="10" />
 		<attribute key="decayTo" value="9137" />
 	</item>
 	<item id="9134" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 		<attribute key="duration" value="10" />
 		<attribute key="decayTo" value="9138" />
 	</item>
 	<item id="9135" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 		<attribute key="duration" value="10" />
 		<attribute key="decayTo" value="9139" />
 	</item>
 	<item id="9136" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 		<attribute key="duration" value="10" />
 		<attribute key="decayTo" value="9140" />
 	</item>
 	<item id="9137" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 		<attribute key="duration" value="10" />
 		<attribute key="decayTo" value="9133" />
 	</item>
 	<item id="9138" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 		<attribute key="duration" value="10" />
 		<attribute key="decayTo" value="9134" />
 	</item>
 	<item id="9139" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 		<attribute key="duration" value="10" />
 		<attribute key="decayTo" value="9135" />
 	</item>
 	<item id="9140" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 		<attribute key="duration" value="10" />
 		<attribute key="decayTo" value="9136" />
 	</item>
@@ -24960,7 +24959,7 @@
 		<attribute key="primarytype" value="walls" />
 	</item>
 	<item fromid="9280" toid="9285" article="a" name="limestone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="9286" toid="9289" article="a" name="limestone wall">
 		<attribute key="primarytype" value="walls" />
@@ -27738,11 +27737,11 @@
 		<attribute key="primarytype" value="natural tiles" />
 	</item>
 	<item fromid="10837" toid="10839" article="a" name="skull pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="10840" article="a" name="dimensional portal" />
 	<item id="10841" article="a" name="skull pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="10842" article="a" name="dimensional portal" />
 	<item id="10846" article="a" name="stone wall">
@@ -27777,7 +27776,7 @@
 	<item fromid="10967" toid="10968" article="a" name="decorative shield" />
 	<item fromid="10975" toid="10976" article="a" name="statue" />
 	<item id="10977" article="a" name="sapphire stand">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="10978" toid="10979" article="a" name="chair" />
 	<item id="10980" article="a" name="blood crask" />
@@ -29296,7 +29295,7 @@
 		<attribute key="primarytype" value="walls" />
 	</item>
 	<item fromid="11861" toid="11869" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="11870" toid="11882" article="a" name="stone wall">
 		<attribute key="primarytype" value="walls" />
@@ -30084,7 +30083,7 @@
 		<attribute key="primarytype" value="shrines and altars" />
 	</item>
 	<item id="12476" article="a" name="scorpion pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="12477" article="a" name="small golden taboret">
 		<attribute key="primarytype" value="furniture" />
@@ -31205,7 +31204,7 @@
 		<attribute key="primarytype" value="walls" />
 	</item>
 	<item fromid="13122" toid="13124" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="13125" toid="13134" article="an" name="archway">
 		<attribute key="primarytype" value="constructions" />
@@ -31241,7 +31240,7 @@
 		<attribute key="primarytype" value="constructions" />
 	</item>
 	<item fromid="13149" toid="13154" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="13155" article="a" name="large fossil volute" />
 	<item id="13156" article="a" name="small fossil volute" />
@@ -33390,7 +33389,7 @@
 		<attribute key="primarytype" value="artificial tiles" />
 	</item>
 	<item id="15611" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="15612" toid="15615" name="wooden floor">
 		<attribute key="primarytype" value="artificial tiles" />
@@ -35116,10 +35115,10 @@
 		<attribute key="primarytype" value="portals" />
 	</item>
 	<item fromid="17183" toid="17188" name="stone pillars">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="17189" toid="17194" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="17195" toid="17200" article="a" name="stone wall">
 		<attribute key="primarytype" value="walls" />
@@ -35163,7 +35162,7 @@
 		<attribute key="floorchange" value="west" />
 	</item>
 	<item id="17231" article="a" name="wooden scaffolding">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="17232" toid="17234" article="a" name="small wooden fence">
 		<attribute key="primarytype" value="walls" />
@@ -35196,10 +35195,10 @@
 	</item>
 	<item fromid="17330" toid="17335" article="an" name="ornament" />
 	<item fromid="17336" toid="17338" article="a" name="pencil tower">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="17339" article="a" name="copper roof">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="17340" article="a" name="socket" />
 	<item fromid="17341" toid="17344" article="a" name="golden statue">
@@ -36063,7 +36062,7 @@
 		<attribute key="primarytype" value="constructions" />
 	</item>
 	<item fromid="17834" toid="17835" article="a" name="copper roof">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="17836" toid="17845" name="unknown item" />
 	<item id="17846" article="a" name="leather harness">
@@ -39339,7 +39338,7 @@
 		<attribute key="description" value="This board will notify you of currently active mini world changes all over Tibia." />
 	</item>
 	<item id="19246" article="a" name="crystal column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="19247" article="a" name="glowing ice cube" />
 	<item id="19248" name="RESERVED SPRITE" />
@@ -47205,14 +47204,14 @@ hands of its owner. Granted by TibiaRoyal.com" />
 		<attribute key="primarytype" value="refuse" />
 	</item>
 	<item fromid="23991" toid="23992" article="a" name="obelisk">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="23993" toid="23996" article="a" name="column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="23997" toid="24000" article="a" name="broken column" />
 	<item fromid="24001" toid="24012" article="a" name="column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="24013" toid="24014" article="a" name="monument">
 		<attribute key="primarytype" value="statues" />
@@ -48670,13 +48669,13 @@ hands of its owner. Granted by TibiaRoyal.com" />
 	</item>
 	<item id="25643" article="a" name="small stones" />
 	<item fromid="25644" toid="25647" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="25648" toid="25649" article="a" name="cult object">
 		<attribute key="primarytype" value="quest objects" />
 	</item>
 	<item fromid="25650" toid="25653" article="a" name="stone pillar">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="25654" toid="25659" article="a" name="cult symbol">
 		<attribute key="primarytype" value="wall hangings" />
@@ -57543,7 +57542,7 @@ hands of its owner. Granted by TibiaRoyal.com" />
 	<item fromid="30623" toid="30624" article="a" name="reed" />
 	<item id="30625" article="a" name="granite pillar" />
 	<item fromid="30626" toid="30635" article="a" name="obelisk">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="30636" toid="30645" article="a" name="door casing" />
 	<item id="30646" article="a" name="granite pillar" />
@@ -57712,21 +57711,21 @@ hands of its owner. Granted by TibiaRoyal.com" />
 	</item>
 	<item fromid="30992" toid="31037" article="a" name="wall" />
 	<item fromid="31038" toid="31050" article="a" name="wooden scaffolding">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="31051" article="a" name="wooden planks">
 		<attribute key="primarytype" value="tools (objects)" />
 	</item>
 	<item id="31052" article="a" name="wooden scaffolding">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="31053" toid="31055" article="a" name="large canvas" />
 	<item id="31056" article="a" name="wooden scaffolding">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="31057" toid="31059" article="a" name="large canvas" />
 	<item fromid="31060" toid="31063" article="a" name="wooden scaffolding">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="31064" toid="31072" article="a" name="wooden planks">
 		<attribute key="primarytype" value="tools (objects)" />
@@ -57762,7 +57761,7 @@ hands of its owner. Granted by TibiaRoyal.com" />
 		<attribute key="type" value="ladder" />
 	</item>
 	<item fromid="31131" toid="31133" article="a" name="obelisk">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item fromid="31134" toid="31138" name="RESERVED SPRITE" />
 	<item id="31139" article="a" name="sandstone" />
@@ -67060,7 +67059,7 @@ former students at the Noodles Academy. Awarded by TibiaLabs.com" />
 		<attribute key="primarytype" value="artificial tiles" />
 	</item>
 	<item fromid="36012" toid="36018" name="column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="36019" article="a" name="white lion doll">
 		<attribute key="primarytype" value="dolls and bears" />
@@ -67139,7 +67138,7 @@ former students at the Noodles Academy. Awarded by TibiaLabs.com" />
 		<attribute key="primarytype" value="artificial tiles" />
 	</item>
 	<item fromid="36541" toid="36542" article="a" name="column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="36543" article="a" name="chisel">
 		<attribute key="primarytype" value="tools" />
@@ -71023,20 +71022,20 @@ Granted by TibiaGoals.com" />
 		<attribute key="primarytype" value="traps" />
 	</item>
 	<item fromid="37999" toid="38000" article="a" name="column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="38001" article="a" name="ruined column" />
 	<item fromid="38002" toid="38003" article="a" name="column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="38004" article="a" name="ruined column" />
 	<item fromid="38005" toid="38007" article="a" name="spire" />
 	<item fromid="38008" toid="38009" article="a" name="column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="38010" article="a" name="ruined column" />
 	<item fromid="38011" toid="38012" article="a" name="column">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="38013" article="a" name="ruined column" />
 	<item fromid="38014" toid="38016" article="a" name="spire" />
@@ -77280,7 +77279,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="weight" value="30" />
 	</item>
 	<item id="47367" article="a" name="large obelisk">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="47368" article="an" name="amber slayer">
 		<attribute key="primarytype" value="sword weapons" />
@@ -77582,7 +77581,7 @@ Granted by TibiaGoals.com" />
 		</attribute>
 	</item>
 	<item id="47379" article="a" name="large obelisk">
-		<attribute key="primarytype" value="pillars" />
+		<attribute key="primarytype" value="pillars"/>
 	</item>
 	<item id="47381" article="an" name="orc warlord soul core">
 		<attribute key="primarytype" value="soul cores" />
@@ -81397,6 +81396,10 @@ Granted by TibiaGoals.com" />
 	<item id="49407" article="a" name="sacrificial altar">
 		<attribute key="primarytype" value="shrines and altars" />
 	</item>
+	<item id="49161" article="a" name="trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
+	</item>
 	<item id="49520" article="a" name="inferniarch bow">
 		<attribute key="primarytype" value="distance weapons" />
 		<attribute key="weaponType" value="distance" />
@@ -81762,47 +81765,57 @@ Granted by TibiaGoals.com" />
 		<attribute key="primarytype" value="stairs" />
 		<attribute key="floorchange" value="south" />
 	</item>
-	<item id="49678" article="a" name="closed door" editorsuffix="(it is locked)">
-		<attribute key="type" value="door" />
-		<attribute key="description" value="It is locked" />
-		<attribute key="blockProjectile" value="1" />
+	<item id="49678" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
 	</item>
-	<item id="49679" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
+	<item id="49679" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
 	</item>
-	<item id="49680" article="a" name="closed door" editorsuffix="(it is locked)">
-		<attribute key="type" value="door" />
-		<attribute key="description" value="It is locked" />
-		<attribute key="blockProjectile" value="1" />
+	<item id="49680" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
 	</item>
 	<item id="49681" article="a" name="closed door">
 		<attribute key="type" value="door" />
 		<attribute key="blockProjectile" value="1" />
 	</item>
-	<item fromid="49682" toid="49683" article="an" name="open door">
-		<attribute key="type" value="door" />
+	<item id="49682" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
 	</item>
-	<item id="49684" article="a" name="closed door" editorsuffix="(it is locked)">
-		<attribute key="type" value="door" />
-		<attribute key="description" value="It is locked" />
-		<attribute key="blockProjectile" value="1" />
+	<item id="49683" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
 	</item>
-	<item id="49685" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
+	<item id="49684" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
 	</item>
-	<item id="49686" article="a" name="closed door" editorsuffix="(it is locked)">
-		<attribute key="type" value="door" />
-		<attribute key="description" value="It is locked" />
-		<attribute key="blockProjectile" value="1" />
+	<item id="49685" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
 	</item>
-	<item id="49687" article="a" name="closed door">
-		<attribute key="type" value="door" />
-		<attribute key="blockProjectile" value="1" />
+	<item id="49686" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
 	</item>
-	<item fromid="49688" toid="49689" article="an" name="open door">
-		<attribute key="type" value="door" />
+	<item id="49687" article="a" name="closed gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+		<attribute key="blockProjectile" value="1"/>
+	</item>
+	<item id="49688" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
+	</item>
+	<item id="49689" article="an" name="open gate">
+		<attribute key="primarytype" value="doors"/>
+		<attribute key="type" value="door"/>
 	</item>
 	<item fromid="49698" toid="49725" article="a" name="stone wall">
 		<attribute key="primarytype" value="walls" />
@@ -83017,8 +83030,16 @@ Granted by TibiaGoals.com" />
 		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core." />
 		<attribute key="weight" value="100" />
 	</item>
-	<item id="50122" article="a" name="stair" />
-	<item id="50123" article="a" name="stair" />
+	<item id="50121" article="a" name="water trapdoor">
+		<attribute key="primarytype" value="dropdowns"/>
+		<attribute key="floorchange" value="down"/>
+	</item>
+	<item id="50122" article="a" name="ladder">
+		<attribute key="type" value="ladder"/>
+	</item>
+	<item id="50123" article="a" name="ladder">
+		<attribute key="type" value="ladder"/>
+	</item>
 	<item id="50124" article="a" name="arbaziloth santa">
 		<attribute key="primarytype" value="dolls and bears" />
 		<attribute key="weight" value="100" />

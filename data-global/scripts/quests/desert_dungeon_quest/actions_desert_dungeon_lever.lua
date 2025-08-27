@@ -27,6 +27,13 @@ local config = {
 		sacrificeId = 3264,
 		vocationId = VOCATION.BASE_ID.KNIGHT,
 	},
+	{
+		fromPosition = Position(32673, 32089, 8),
+		toPosition = Position(32674, 32071, 8),
+		sacrificePosition = Position(32673, 32088, 8),
+		sacrificeId = 50181,
+		vocationId = VOCATION.BASE_ID.MONK,
+	},
 }
 
 local othersDesert = Action()
