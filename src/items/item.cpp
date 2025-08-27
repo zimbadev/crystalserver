@@ -3563,7 +3563,7 @@ bool Item::isCleanable() const {
 		return false;
 	}
 
-	if (!isPickupable() && !g_configManager().getBoolean(CLEAN_CORPSES)) {
+	if (!isPickupable() && !g_configManager().getBoolean(CLEAN_CORPSES_AND_FIELDS)) {
 		return false;
 	}
 
