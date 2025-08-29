@@ -92,7 +92,6 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, BOOSTED_BOSS_SLOT, "boostedBossSlot", true);
 	loadBoolConfig(L, CLASSIC_ATTACK_SPEED, "classicAttackSpeed", false);
 	loadBoolConfig(L, CLEAN_PROTECTION_ZONES, "cleanProtectionZones", false);
-	loadBoolConfig(L, CLEAN_CORPSES_AND_FIELDS, "cleanCorpsesAndFields", false);
 	loadBoolConfig(L, CONVERT_UNSAFE_SCRIPTS, "convertUnsafeScripts", true);
 	loadBoolConfig(L, DISABLE_MONSTER_ARMOR, "disableMonsterArmor", false);
 	loadBoolConfig(L, DISCORD_SEND_FOOTER, "discordSendFooter", true);
