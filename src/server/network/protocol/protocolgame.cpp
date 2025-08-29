@@ -1788,8 +1788,8 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg) {
 				newOutfit.lookFamiliarsType = msg.get<uint16_t>();
 				g_logger().debug("Bool isMounted: {}", isMounted);
 
-				uint8_t isMountRandomized = msg.getByte();
-				g_game().playerChangeOutfit(player->getID(), newOutfit, isMounted, isMountRandomized);
+				bool randomizeMount = msg.getByte() == 0x01;
+				g_game().playerChangeOutfit(player->getID(), newOutfit, isMounted, randomizeMount);
 			} else {
 				g_game().playerChangeOutfit(player->getID(), newOutfit, false, 0);
 			}
@@ -7456,7 +7456,7 @@ void ProtocolGame::sendOutfitWindow() {
 	bool mounted = false;
 
 	if (!isSupportOutfit) {
-		const auto currentMount = g_game().mounts->getMountByID(player->getLastMount());
+		const auto currentMount = g_game().mounts->getMountByID(player->getCurrentMount());
 		if (currentMount) {
 			mounted = (currentOutfit.lookMount == currentMount->clientId);
 			currentOutfit.lookMount = currentMount->clientId;

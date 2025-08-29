@@ -649,9 +649,7 @@ public:
 		decayDisabled = value;
 	}
 
-	bool isCleanable() const {
-		return !loadedFromMap && canRemove() && isPickupable() && !hasAttribute(ItemAttribute_t::UNIQUEID) && !hasAttribute(ItemAttribute_t::ACTIONID);
-	}
+	bool isCleanable() const;
 
 	bool hasMarketAttributes() const;
 
