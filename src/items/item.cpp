@@ -3553,23 +3553,3 @@ int32_t ItemProperties::getDuration() const {
 		return getAttribute<int32_t>(ItemAttribute_t::DURATION);
 	}
 }
-
-bool Item::isCleanable() const {
-	if (isLoadedFromMap()) {
-		return false;
-	}
-
-	if (hasAttribute(ItemAttribute_t::UNIQUEID) || hasAttribute(ItemAttribute_t::ACTIONID)) {
-		return false;
-	}
-
-	if (!isPickupable() && !g_configManager().getBoolean(CLEAN_CORPSES_AND_FIELDS)) {
-		return false;
-	}
-
-	if (!canRemove()) {
-		return false;
-	}
-
-	return true;
-}

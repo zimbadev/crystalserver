@@ -228,6 +228,7 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`prey_wildcard` = " << player->getPreyCards() << ",";
 	query << "`task_points` = " << player->getTaskHuntingPoints() << ",";
 	query << "`boss_points` = " << player->getBossPoints() << ",";
+	query << "`loyalty_points` = " << player->getLoyaltyPoints() << ",";
 	query << "`forge_dusts` = " << player->getForgeDusts() << ",";
 	query << "`forge_dust_level` = " << player->getForgeDustLevel() << ",";
 	query << "`randomize_mount` = " << static_cast<uint16_t>(player->isRandomMounted()) << ",";

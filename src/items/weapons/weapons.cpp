@@ -556,7 +556,7 @@ bool WeaponMelee::useWeapon(const std::shared_ptr<Player> &player, const std::sh
 			if (firstTile) {
 				if (const CreatureVector* tileCreatures = firstTile->getCreatures()) {
 					for (const auto &tileCreature : *tileCreatures) {
-						if (tileCreature->getMonster() || (tileCreature->getPlayer() && !player->hasSecureMode())) {
+						if (tileCreature && tileCreature->isAlive() && (tileCreature->getMonster() || (tileCreature->getPlayer() && !player->hasSecureMode()))) {
 							internalUseWeapon(player, item, tileCreature, damageModifier, cleavePercent);
 						}
 					}
@@ -565,7 +565,7 @@ bool WeaponMelee::useWeapon(const std::shared_ptr<Player> &player, const std::sh
 			if (secondTile) {
 				if (const CreatureVector* tileCreatures = secondTile->getCreatures()) {
 					for (const auto &tileCreature : *tileCreatures) {
-						if (tileCreature->getMonster() || (tileCreature->getPlayer() && !player->hasSecureMode())) {
+						if (tileCreature && tileCreature->isAlive() && (tileCreature->getMonster() || (tileCreature->getPlayer() && !player->hasSecureMode()))) {
 							internalUseWeapon(player, item, tileCreature, damageModifier, cleavePercent);
 						}
 					}
