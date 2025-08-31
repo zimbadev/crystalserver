@@ -1,7 +1,29 @@
 local config = {
 	boss = {
 		name = "The Unwelcome",
-		position = Position(33708, 31539, 14),
+		createFunction = function()
+			local pos1 = Position(33705, 31539, 14)
+			local pos2 = Position(33708, 31539, 14)
+
+			-- Spawn The Unwelcome immediately
+			local theUnwelcome = Game.createMonster("The Unwelcome", pos2)
+
+			local id = os.time()
+			theUnwelcome:beginSharedLife(id)
+			theUnwelcome:registerEvent("SharedLife")
+			pos2:sendMagicEffect(CONST_ME_TELEPORT)
+
+			-- Delay Brother Worm spawn by 20 seconds (20000 ms)
+			addEvent(function()
+				local brotherWorm = Game.createMonster("Brother Worm", pos1)
+
+				local id = os.time()
+				brotherWorm:beginSharedLife(id)
+				brotherWorm:registerEvent("SharedLife")
+				pos1:sendMagicEffect(CONST_ME_TELEPORT)
+			end, 20000)
+			return true
+		end
 	},
 	requiredLevel = 250,
 	playerPositions = {
@@ -18,19 +40,6 @@ local config = {
 	exit = Position(33611, 31528, 10),
 }
 
-local function spawnBosses(leverPosition)
-	Game.createMonster("Brother Worm", Position(33708, 31531, 14))
-	Position(33708, 31531, 14):sendMagicEffect(CONST_ME_TELEPORT)
-end
-
 local lever = BossLever(config)
-local originalOnUse = lever.onUse
-function lever:onUse(creature, item, position, fromPosition)
-	local ret = originalOnUse(self, creature, item, position, fromPosition)
-	if ret then
-		addEvent(spawnBosses, 100, position)
-	end
-	return ret
-end
-lever:position({ x = 33735, y = 31537, z = 14 })
+lever:position(Position(33735, 31537, 14))
 lever:register()
