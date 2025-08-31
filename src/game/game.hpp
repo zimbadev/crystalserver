@@ -757,7 +757,7 @@ private:
 	std::shared_ptr<Container> getCorpseFromItem(const std::shared_ptr<Item> &item, const Position &pos);
 	bool isCorpseLootable(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse);
 	bool isDirectLoot(const Position &pos, const std::shared_ptr<Container> &corpse);
-	void handleDirectLoot(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item,const std::shared_ptr<Container> &corpse);
+	void handleDirectLoot(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, const std::shared_ptr<Container> &corpse);
 	void handleCorpseLoot(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &pos, bool lootAll);
 	void sendLootMessageWithCooldown(const std::shared_ptr<Player> &player, const std::string &message);
 
