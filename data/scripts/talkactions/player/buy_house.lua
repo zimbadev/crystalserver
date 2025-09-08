@@ -45,7 +45,8 @@ function buyHouse.onSay(player, words, param)
 		return true
 	end
 
-	if configManager.getBoolean(configKeys.TOGGLE_GUILDHALL_NEED_GUILD) then
+	local toggleGuildhall = configManager.getBoolean(configKeys.TOGGLE_GUILDHALL_NEED_GUILD)
+	if toggleGuildhall then
 		if house:isGuildhall() then
 			if player:getGuildLevel() ~= GUILDLEVEL_LEADER then
 				player:sendCancelMessage("Only the leader of a guild can buy a guild hall.")
