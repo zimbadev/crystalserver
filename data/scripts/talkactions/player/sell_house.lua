@@ -18,6 +18,31 @@ function sellHouse.onSay(player, words, param)
 		return true
 	end
 
+	if not tradePartner:isPremium() then
+		player:sendCancelMessage("The new owner need a premium account.")
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
+		return true
+	end
+
+	local toggleGuildhall = configManager.getBoolean(configKeys.TOGGLE_GUILDHALL_NEED_GUILD)
+	if toggleGuildhall then
+		if house:isGuildhall() then
+			if tradePartner:getGuildLevel() ~= GUILDLEVEL_LEADER then
+				player:sendCancelMessage("Only the leader of a guild can receive a guild hall.")
+				player:getPosition():sendMagicEffect(CONST_ME_POFF)
+				return true
+			end
+		end
+	end
+
+	local maxHousesLimit = configManager.getNumber(configKeys.MAX_HOUSES_LIMIT)
+	local playerHouses = Game:getHouseCountByAccount(tradePartner:getAccountId())
+	if playerHouses >= maxHousesLimit then
+		player:sendCancelMessage("The new owner has reached house limit: " .. maxHousesLimit .. ".")
+		player:getPosition():sendMagicEffect(CONST_ME_POFF)
+		return true
+	end
+
 	local returnValue = house:startTrade(player, tradePartner)
 	if returnValue ~= RETURNVALUE_NOERROR then
 		player:sendCancelMessage(returnValue)

@@ -9997,6 +9997,10 @@ void Player::triggerTranscendence() {
 		return;
 	}
 
+	if (!item->getTier()) {
+		return;
+	}
+
 	double_t chance = item->getTranscendenceChance();
 	const auto &playerBoots = getInventoryItem(CONST_SLOT_FEET);
 	if (playerBoots && playerBoots->getTier()) {
@@ -10035,7 +10039,6 @@ void Player::triggerTranscendence() {
 		g_dispatcher().scheduleEvent(task);
 
 		wheel()->sendGiftOfLifeCooldown();
-		g_game().reloadCreature(getPlayer());
 	}
 }
 

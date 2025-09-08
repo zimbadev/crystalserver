@@ -163,9 +163,17 @@ void House::setOwner(uint32_t guid, bool updateDatabase /* = true*/, const std::
 void House::updateDoorDescription() const {
 	std::ostringstream ss;
 	if (owner != 0) {
-		ss << "It belongs to house '" << houseName << "'. " << ownerName << " owns this house.";
+		if (isGuildhall()) {
+			ss << "It belongs to guildhall '" << houseName << "'. " << ownerName << " owns this guildhall.";
+		} else {
+			ss << "It belongs to house '" << houseName << "'. " << ownerName << " owns this house.";
+		}
 	} else {
-		ss << "It belongs to house '" << houseName << "'. Nobody owns this house.";
+		if (isGuildhall()) {
+			ss << "It belongs to guildhall '" << houseName << "'. Nobody owns this guildhall.";
+		} else {
+			ss << "It belongs to house '" << houseName << "'. Nobody owns this house.";
+		}
 	}
 
 	if (!g_configManager().getBoolean(CYCLOPEDIA_HOUSE_AUCTION)) {
@@ -925,6 +933,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 		if (!player) {
 			// Player doesn't exist, reset house owner
 			house->tryTransferOwnership(nullptr, true);
+			house->setState(CyclopediaHouseState::Available);
 			continue;
 		}
 
@@ -939,6 +948,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 			} else if (!vipKeep && !activityKeep) {
 				g_logger().info("Player {} has not logged in for {} days, so the house will be reset.", player->getName(), daysToReset);
 				house->setOwner(0, true, player);
+				house->setState(CyclopediaHouseState::Available);
 				g_saveManager().savePlayer(player);
 				continue;
 			}
@@ -1008,6 +1018,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 				house->setPayRentWarnings(house->getPayRentWarnings() + 1);
 			} else {
 				house->setOwner(0, true, player);
+				house->setState(CyclopediaHouseState::Available);
 			}
 		}
 

@@ -121,6 +121,8 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "getMonstersByRace", GameFunctions::luaGameGetMonstersByRace);
 	Lua::registerMethod(L, "Game", "getMonstersByBestiaryStars", GameFunctions::luaGameGetMonstersByBestiaryStars);
 	Lua::registerMethod(L, "Game", "getTitleByName", GameFunctions::luaGameGetTitleByName);
+
+	Lua::registerMethod(L, "Game", "getHouseCountByAccount", GameFunctions::luaHouseGetHouseCountByAccount);
 }
 
 // Game
@@ -1121,5 +1123,25 @@ int GameFunctions::luaGameGetTitleByName(lua_State* L) {
 
 	Lua::pushString(L, title.m_description);
 	lua_setfield(L, -2, "description");
+	return 1;
+}
+
+int GameFunctions::luaHouseGetHouseCountByAccount(lua_State* L) {
+	// Game:getHouseCountByAccount(accountId)
+	const auto &houses = g_game().map.houses.getHouses();
+	if (houses.empty()) {
+		Lua::reportErrorFunc("Houses not found");
+		lua_pushnil(L);
+		return 1;
+	}
+
+	uint32_t accountId = Lua::getNumber<uint32_t>(L, 2);
+	uint16_t count = 0;
+	for (const auto &[id, house] : houses) {
+		if (house->getOwnerAccountId() == accountId) {
+			++count;
+		}
+	}
+	lua_pushnumber(L, count);
 	return 1;
 }
