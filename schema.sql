@@ -296,14 +296,14 @@ INSERT INTO `boosted_creature` (`boostname`, `date`, `raceid`) VALUES ('default'
 
 -- Table structure `player_oldnames`
 CREATE TABLE IF NOT EXISTS `player_oldnames` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`player_id` int(11) NOT NULL,
-	`former_name` varchar(255) NOT NULL DEFAULT '',
-	`name` varchar(255) NOT NULL,
-	`old_name` varchar(255) NOT NULL,
-	`date` int(11) NOT NULL,
-	PRIMARY KEY (`id`),
-	INDEX `player_id_index` (`player_id`)
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `player_id` int(11) NOT NULL,
+    `former_name` varchar(255) NOT NULL DEFAULT '',
+    `name` varchar(255) NOT NULL,
+    `old_name` varchar(255) NOT NULL,
+    `date` int(11) NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `player_id_index` (`player_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Tabble Structure `daily_reward_history`
@@ -587,14 +587,14 @@ CREATE TABLE IF NOT EXISTS `player_charms` (
 
 -- Table structure `player_statements`
 CREATE TABLE IF NOT EXISTS `player_statements` (
-	`id` INT NOT NULL AUTO_INCREMENT,
-	`player_id` INT NOT NULL,
-	`receiver` TEXT NOT NULL,
-	`channel_id` INT NOT NULL DEFAULT 0,
-	`text` VARCHAR (255) NOT NULL,
-	`date` BIGINT NOT NULL DEFAULT 0,
-	PRIMARY KEY (`id`), KEY (`player_id`), KEY (`channel_id`),
-	FOREIGN KEY (`player_id`) REFERENCES `players`(`id`) ON DELETE CASCADE
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `player_id` INT NOT NULL,
+    `receiver` TEXT NOT NULL,
+    `channel_id` INT NOT NULL DEFAULT 0,
+    `text` VARCHAR (255) NOT NULL,
+    `date` BIGINT NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`), KEY (`player_id`), KEY (`channel_id`),
+    FOREIGN KEY (`player_id`) REFERENCES `players`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `player_deaths`
@@ -682,14 +682,14 @@ CREATE TABLE IF NOT EXISTS `player_items` (
 
 -- Table structure `player_wheeldata`
 CREATE TABLE IF NOT EXISTS `player_wheeldata` (
-	`player_id` int(11) NOT NULL,
-	`slot` blob NOT NULL,
-	INDEX `player_id` (`player_id`),
-	CONSTRAINT `player_wheeldata_players_fk`
-		FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
-		ON DELETE CASCADE,
+    `player_id` int(11) NOT NULL,
+    `slot` blob NOT NULL,
+    INDEX `player_id` (`player_id`),
+    CONSTRAINT `player_wheeldata_players_fk`
+        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE,
   CONSTRAINT `player_wheeldata_pk`
-      PRIMARY KEY (`player_id`)
+        PRIMARY KEY (`player_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `player_kills`
@@ -822,18 +822,18 @@ CREATE TABLE IF NOT EXISTS `player_outfits` (
     `player_id` int(11) NOT NULL DEFAULT '0',
     `outfit_id` smallint(4) UNSIGNED NOT NULL DEFAULT '0',
     `addons` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
-	CONSTRAINT `player_outfits_pk` PRIMARY KEY (`player_id`, `outfit_id`),
-	CONSTRAINT `player_outfits_players_fk`
+    CONSTRAINT `player_outfits_pk` PRIMARY KEY (`player_id`, `outfit_id`),
+    CONSTRAINT `player_outfits_players_fk`
         FOREIGN KEY (`player_id`) REFERENCES `players`(`id`)
-		ON DELETE CASCADE
+        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8;
 
 -- Table structure `player_mounts`
 CREATE TABLE IF NOT EXISTS `player_mounts` (
     `player_id` int(11) NOT NULL DEFAULT '0',
     `mount_id` smallint(4) UNSIGNED NOT NULL DEFAULT '0',
-	CONSTRAINT `player_mounts_pk` PRIMARY KEY (`player_id`, `mount_id`),
-	CONSTRAINT `player_mounts_players_fk`
+    CONSTRAINT `player_mounts_pk` PRIMARY KEY (`player_id`, `mount_id`),
+    CONSTRAINT `player_mounts_players_fk`
         FOREIGN KEY (`player_id`) REFERENCES `players`(`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8;
@@ -908,5 +908,5 @@ INSERT INTO `players`
 (3, 'Druid Sample', 1, 1, 8, 2, 185, 185, 4200, 113, 115, 95, 39, 144, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
 (4, 'Paladin Sample', 1, 1, 8, 3, 185, 185, 4200, 113, 115, 95, 39, 129, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
 (5, 'Knight Sample', 1, 1, 8, 4, 185, 185, 4200, 113, 115, 95, 39, 131, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
-(6, 'Monk Sample', 1, 1, 8, 9, 185, 185, 4200, 113, 115, 95, 39, 1824, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
+(6, 'Monk Sample', 1, 1, 8, 5, 185, 185, 4200, 113, 115, 95, 39, 1824, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
 (7, 'GOD', 6, 1, 2, 0, 155, 155, 100, 113, 115, 95, 39, 75, 0, 60, 60, 0, 8, '', 410, 1, 10, 0, 10, 0, 10, 0, 10, 0);
