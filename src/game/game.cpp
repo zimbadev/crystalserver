@@ -1015,6 +1015,23 @@ std::shared_ptr<Player> Game::getPlayerByID(uint32_t id, bool allowOffline /* = 
 	return tmpPlayer;
 }
 
+std::shared_ptr<Player> Game::getMarketPlayerByGUID(uint32_t &guid) {
+	// Prefer online player, then deadPlayers cache, then offline load
+	if (const auto &online = getPlayerByGUID(guid, false); online) {
+		return online;
+	}
+
+	for (const auto &it : m_deadPlayers) {
+		if (auto deadPlayer = it.second.lock()) {
+			if (guid == deadPlayer->getGUID()) {
+				return deadPlayer;
+			}
+		}
+	}
+
+	return getPlayerByGUID(guid, true);
+}
+
 std::shared_ptr<Creature> Game::getCreatureByName(const std::string &s) {
 	if (s.empty()) {
 		return nullptr;
@@ -9471,7 +9488,7 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 			return;
 		}
 
-		const std::shared_ptr<Player> &buyerPlayer = getPlayerByGUID(offer.playerId, true);
+		const std::shared_ptr<Player> &buyerPlayer = getMarketPlayerByGUID(offer.playerId);
 		if (!buyerPlayer) {
 			offerStatus << "Failed to load buyer player " << player->getName();
 			return;
@@ -9577,7 +9594,7 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 			g_saveManager().savePlayer(buyerPlayer);
 		}
 	} else if (offer.type == MARKETACTION_SELL) {
-		std::shared_ptr<Player> sellerPlayer = getPlayerByGUID(offer.playerId, true);
+		std::shared_ptr<Player> sellerPlayer = getMarketPlayerByGUID(offer.playerId);
 		if (!sellerPlayer) {
 			offerStatus << "Failed to load seller player";
 			return;
