@@ -23,8 +23,7 @@ local config = {
 
 				addEvent(function()
 					if nictros then
-						nictros:say(
-							"Indeed! It has been a while! As the elder one I request the right of the first battle!")
+						nictros:say("Indeed! It has been a while! As the elder one I request the right of the first battle!")
 					end
 				end, 6 * 1000)
 

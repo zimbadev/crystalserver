@@ -23,7 +23,7 @@ local config = {
 				pos1:sendMagicEffect(CONST_ME_TELEPORT)
 			end, 20000)
 			return true
-		end
+		end,
 	},
 	requiredLevel = 250,
 	playerPositions = {
