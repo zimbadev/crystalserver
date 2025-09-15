@@ -153,7 +153,7 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 			return true
 		end
 		player:setTown(Town(32))
-		player:setVocation(9)
+		player:setVocation(5)
 		player:teleportTo(Position(33614, 31494, 7))
 		player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
 		player:addItem(50257, 1)
