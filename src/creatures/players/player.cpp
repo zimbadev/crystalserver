@@ -10787,10 +10787,6 @@ void Player::openPlayerContainers() {
 		}
 	}
 
-	std::ranges::sort(openContainersList, [](const std::pair<uint8_t, std::shared_ptr<Container>> &left, const std::pair<uint8_t, std::shared_ptr<Container>> &right) {
-		return left.first < right.first;
-	});
-
 	// send saved containers
 	for (const auto &[containerId, container] : openContainersList) {
 		addContainer(containerId - 1, container);
@@ -10801,7 +10797,7 @@ void Player::openPlayerContainers() {
 	if (getOperatingSystem() < CLIENTOS_OTCLIENT_LINUX) {
 		for (uint32_t i = 0; i < getOpenedContainersLimit(); ++i) {
 			// check index out of range (no container saved at this position)
-			if (i + 1 >= openContainersList.size()) {
+			if (i + 1 > openContainersList.size()) {
 				client->sendEmptyContainer(i);
 				client->sendCloseContainer(i);
 				continue;
