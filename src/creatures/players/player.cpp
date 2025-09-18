@@ -10800,17 +10800,17 @@ void Player::openPlayerContainers() {
 	// fix missing containers for qt client
 	if (getOperatingSystem() < CLIENTOS_OTCLIENT_LINUX) {
 		for (uint32_t i = 0; i < getOpenedContainersLimit(); ++i) {
+			// check index out of range (no container saved at this position)
+			if (i + 1 >= openContainersList.size()) {
+				client->sendEmptyContainer(i);
+				client->sendCloseContainer(i);
+				continue;
+			}
+
 			// check if the container pointer is null
 			if (!openContainersList[i + 1].second) {
 				client->sendEmptyContainer(i);
 				client->sendCloseContainer(i);
-			}
-
-			// check index out of range (no container saved at this position)
-			if (i + 1 > openContainersList.size()) {
-				client->sendEmptyContainer(i);
-				client->sendCloseContainer(i);
-				continue;
 			}
 		}
 	}
