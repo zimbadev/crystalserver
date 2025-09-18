@@ -5783,6 +5783,10 @@ void Game::playerLootAllCorpses(const std::shared_ptr<Player> &player, const Pos
 		}
 
 		const TileItemVector* itemVector = tile->getItemList();
+		if (!itemVector) {
+			continue;
+		}
+
 		for (auto &tileItem : *itemVector) {
 			if (!tileItem) {
 				continue;
