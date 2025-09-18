@@ -10747,8 +10747,20 @@ void Player::registerForgeHistoryDescription(ForgeHistory history) {
 }
 
 // Quickloot
+uint8_t Player::getOpenedContainersLimit() const {
+	if (!client) {
+		return 32;
+	}
+
+	return getOperatingSystem() < CLIENTOS_OTCLIENT_LINUX ? 32 : 254;
+}
 
 void Player::openPlayerContainers() {
+	// skip if client lost connection
+	if (!client) {
+		return;
+	}
+
 	std::vector<std::pair<uint8_t, std::shared_ptr<Container>>> openContainersList;
 
 	for (int32_t i = CONST_SLOT_FIRST; i <= CONST_SLOT_LAST; i++) {
@@ -10779,9 +10791,28 @@ void Player::openPlayerContainers() {
 		return left.first < right.first;
 	});
 
+	// send saved containers
 	for (const auto &[containerId, container] : openContainersList) {
 		addContainer(containerId - 1, container);
 		onSendContainer(container);
+	}
+
+	// fix missing containers for qt client
+	if (getOperatingSystem() < CLIENTOS_OTCLIENT_LINUX) {
+		for (uint32_t i = 0; i < getOpenedContainersLimit(); ++i) {
+			// check if the container pointer is null
+			if (!openContainersList[i + 1].second) {
+				client->sendEmptyContainer(i);
+				client->sendCloseContainer(i);
+			}
+
+			// check index out of range (no container saved at this position)
+			if (i + 1 > openContainersList.size()) {
+				client->sendEmptyContainer(i);
+				client->sendCloseContainer(i);
+				continue;
+			}
+		}
 	}
 }
 

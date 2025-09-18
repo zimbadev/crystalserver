@@ -568,11 +568,9 @@ void IOLoginDataLoad::loadPlayerInventoryItems(const std::shared_ptr<Player> &pl
 		return;
 	}
 
-	bool oldProtocol = g_configManager().getBoolean(OLD_PROTOCOL) && player->getProtocolVersion() < 1200;
 	auto query = fmt::format("SELECT pid, sid, itemtype, count, attributes FROM player_items WHERE player_id = {} ORDER BY sid DESC", player->getGUID());
 
 	ItemsMap inventoryItems;
-	std::vector<std::pair<uint8_t, std::shared_ptr<Container>>> openContainersList;
 	std::vector<std::shared_ptr<Item>> itemsToStartDecaying;
 
 	try {
@@ -606,12 +604,6 @@ void IOLoginDataLoad::loadPlayerInventoryItems(const std::shared_ptr<Player> &pl
 
 				const std::shared_ptr<Container> &itemContainer = item->getContainer();
 				if (itemContainer) {
-					if (!oldProtocol) {
-						auto cid = item->getAttribute<int64_t>(ItemAttribute_t::OPENCONTAINER);
-						if (cid > 0) {
-							openContainersList.emplace_back(cid, itemContainer);
-						}
-					}
 					for (const bool isLootContainer : { true, false }) {
 						const auto checkAttribute = isLootContainer ? ItemAttribute_t::QUICKLOOTCONTAINER : ItemAttribute_t::OBTAINCONTAINER;
 						if (item->hasAttribute(checkAttribute)) {
@@ -632,18 +624,6 @@ void IOLoginDataLoad::loadPlayerInventoryItems(const std::shared_ptr<Player> &pl
 		for (const auto &item : itemsToStartDecaying) {
 			item->startDecaying();
 		}
-
-		if (!oldProtocol) {
-			std::ranges::sort(openContainersList.begin(), openContainersList.end(), [](const std::pair<uint8_t, std::shared_ptr<Container>> &left, const std::pair<uint8_t, std::shared_ptr<Container>> &right) {
-				return left.first < right.first;
-			});
-
-			for (auto &it : openContainersList) {
-				player->addContainer(it.first - 1, it.second);
-				player->onSendContainer(it.second);
-			}
-		}
-
 	} catch (const std::exception &e) {
 		g_logger().error("[IOLoginDataLoad::loadPlayerInventoryItems] - Exception during inventory loading: {}", e.what());
 	}
