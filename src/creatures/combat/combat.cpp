@@ -2534,24 +2534,24 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 		double multiplier = 1.0 + static_cast<double>(baseBonus) / 10000;
 		baseChance += static_cast<uint16_t>(damage.criticalChance);
 
-	bool isCritical = (baseChance != 0 && uniform_random(1, 10000) <= baseChance);
-		
-	for (const auto &targetCreature : targets) {
-    CombatDamage targetDamage = damage;
+		bool isCritical = (baseChance != 0 && uniform_random(1, 10000) <= baseChance);
+			
+		for (const auto &targetCreature : targets) {
+			CombatDamage targetDamage = damage;
 			if (isCritical) {
-        targetDamage.critical = true;
-        targetDamage.primary.value *= multiplier;
-    		targetDamage.secondary.value *= multiplier;
-    	}
-		
+				targetDamage.critical = true;
+				targetDamage.primary.value *= multiplier;
+				targetDamage.secondary.value *= multiplier;
+			}
+			
 			targetDamage.primary.value *= monster->getAttackMultiplier();
-    	targetDamage.secondary.value *= monster->getAttackMultiplier();
+			targetDamage.secondary.value *= monster->getAttackMultiplier();
 			targetCreature->setCombatDamage(targetDamage);
-    }
-		
+		}
+			
 		if (targets.size() == 1) {
-            damage = targets.front()->getCombatDamage();
-    }
+			damage = targets.front()->getCombatDamage();
+		}
 	}
 }
 
