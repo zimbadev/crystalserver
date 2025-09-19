@@ -1910,25 +1910,23 @@ void ProtocolGame::parseQuickLoot(NetworkMessage &msg) {
 		return;
 	}
 
-	uint8_t lootType = msg.getByte();
-	if (lootType == 2) {
-		const Position clickedPos = msg.getPosition();
-		auto itemId = 0;
-		uint8_t stackpos = 0;
-		bool lootAllCorpses = true;
-		bool autoLoot = false;
-		g_logger().debug("[{}] lootType {}, clickedPos {}, itemId {}, stackPos {}", __FUNCTION__, lootType, clickedPos.toString(), itemId, stackpos);
-		const auto playerPos = player->getPosition();
-		g_game().playerQuickLoot(player->getID(), playerPos, itemId, stackpos, nullptr, lootAllCorpses, autoLoot);
+	uint8_t variant = msg.getByte();
+	const Position pos = msg.getPosition();
+	auto itemId = 0;
+	uint8_t stackpos = 0;
+	bool lootAllCorpses = true;
+	bool autoLoot = true;
+
+	if (variant == 2) {
+		// Loot player nearby (13.40)
 	} else {
-		const Position clickedPos = msg.getPosition();
-		auto itemId = msg.get<uint16_t>();
-		uint8_t stackpos = msg.getByte();
-		bool lootAllCorpses = lootType == 1;
-		bool autoLoot = false;
-		g_logger().debug("[{}] lootType {}, clickedPos {}, itemId {}, stackPos {}", __FUNCTION__, lootType, clickedPos.toString(), itemId, stackpos);
-		g_game().playerQuickLoot(player->getID(), clickedPos, itemId, stackpos, nullptr, lootAllCorpses, autoLoot);
+		itemId = msg.get<uint16_t>();
+		stackpos = msg.getByte();
+		lootAllCorpses = variant == 1;
+		autoLoot = false;
 	}
+	g_logger().debug("[{}] variant {}, pos {}, itemId {}, stackPos {}", __FUNCTION__, variant, pos.toString(), itemId, stackpos);
+	g_game().playerQuickLoot(player->getID(), pos, itemId, stackpos, nullptr, lootAllCorpses, autoLoot);
 }
 
 void ProtocolGame::parseLootContainer(NetworkMessage &msg) {

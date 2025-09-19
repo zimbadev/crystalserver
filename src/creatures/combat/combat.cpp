@@ -2490,7 +2490,6 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 			}
 		}
 
-		bool isSingleCombat = targets.size() == 1;
 		for (const auto &targetCreature : targets) {
 			CombatDamage targetDamage = damage;
 			int32_t finalBonus = baseBonus;
@@ -2527,17 +2526,11 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 				targetDamage.primary.value += static_cast<int32_t>(std::round(targetDamage.primary.value * 0.6));
 				targetDamage.secondary.value += static_cast<int32_t>(std::round(targetDamage.secondary.value * 0.6));
 			}
-
-			// If this combat affects only one target, apply the
-			// computed damage directly. Otherwise store the
-			// per-target damage to be used later by the combat
-			// loop.
-			if (isSingleCombat) {
-				damage = targetDamage;
-			} else {
 				targetCreature->setCombatDamage(targetDamage);
-			}
 		}
+		if (targets.size() == 1) {
+       	damage = targets.front()->getCombatDamage();
+    }
 	} else if (monster) {
 		baseChance = monster->getCriticalChance() * 100;
 		baseBonus = monster->getCriticalDamage() * 100;
@@ -2545,14 +2538,24 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 		double multiplier = 1.0 + static_cast<double>(baseBonus) / 10000;
 		baseChance += static_cast<uint16_t>(damage.criticalChance);
 
-		if (baseChance != 0 && uniform_random(1, 10000) <= baseChance) {
-			damage.critical = true;
-			damage.primary.value *= multiplier;
-			damage.secondary.value *= multiplier;
+		bool isCritical = (baseChance != 0 && uniform_random(1, 10000) <= baseChance);
+			
+		for (const auto &targetCreature : targets) {
+			CombatDamage targetDamage = damage;
+			if (isCritical) {
+				targetDamage.critical = true;
+				targetDamage.primary.value *= multiplier;
+				targetDamage.secondary.value *= multiplier;
+			}
+			
+			targetDamage.primary.value *= monster->getAttackMultiplier();
+			targetDamage.secondary.value *= monster->getAttackMultiplier();
+			targetCreature->setCombatDamage(targetDamage);
 		}
-
-		damage.primary.value *= monster->getAttackMultiplier();
-		damage.secondary.value *= monster->getAttackMultiplier();
+			
+		if (targets.size() == 1) {
+			damage = targets.front()->getCombatDamage();
+		}
 	}
 }
 
