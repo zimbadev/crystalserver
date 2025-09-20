@@ -1,8 +1,6 @@
 Features = {
 	AutoLoot = "autoloot",
 	ChainSystem = "chainSystem",
-	EmoteSpells = "emoteSpells",
-	SpellNameInsteadOfWords = "spellNameInsteadOfWords",
 	MutePlayer = "mutePlayer",
 }
 
