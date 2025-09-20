@@ -2526,11 +2526,11 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 				targetDamage.primary.value += static_cast<int32_t>(std::round(targetDamage.primary.value * 0.6));
 				targetDamage.secondary.value += static_cast<int32_t>(std::round(targetDamage.secondary.value * 0.6));
 			}
-				targetCreature->setCombatDamage(targetDamage);
+			targetCreature->setCombatDamage(targetDamage);
 		}
 		if (targets.size() == 1) {
-       	damage = targets.front()->getCombatDamage();
-    }
+			damage = targets.front()->getCombatDamage();
+		}
 	} else if (monster) {
 		baseChance = monster->getCriticalChance() * 100;
 		baseBonus = monster->getCriticalDamage() * 100;
@@ -2539,7 +2539,7 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 		baseChance += static_cast<uint16_t>(damage.criticalChance);
 
 		bool isCritical = (baseChance != 0 && uniform_random(1, 10000) <= baseChance);
-			
+
 		for (const auto &targetCreature : targets) {
 			CombatDamage targetDamage = damage;
 			if (isCritical) {
@@ -2547,12 +2547,12 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 				targetDamage.primary.value *= multiplier;
 				targetDamage.secondary.value *= multiplier;
 			}
-			
+
 			targetDamage.primary.value *= monster->getAttackMultiplier();
 			targetDamage.secondary.value *= monster->getAttackMultiplier();
 			targetCreature->setCombatDamage(targetDamage);
 		}
-			
+
 		if (targets.size() == 1) {
 			damage = targets.front()->getCombatDamage();
 		}
