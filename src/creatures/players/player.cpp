@@ -5556,44 +5556,6 @@ bool Player::checkChainSystem() const {
 	return false;
 }
 
-bool Player::checkEmoteSpells() const {
-	if (!g_configManager().getBoolean(EMOTE_SPELLS)) {
-		kv()->scoped("features")->set("emoteSpells", false);
-		return false;
-	}
-
-	auto featureKV = kv()->scoped("features")->get("emoteSpells");
-	if (featureKV.has_value()) {
-		auto value = featureKV->get<bool>();
-		if (value) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	return false;
-}
-
-bool Player::checkSpellNameInsteadOfWords() const {
-	if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
-		kv()->scoped("features")->set("spellNameInsteadOfWords", false);
-		return false;
-	}
-
-	auto featureKV = kv()->scoped("features")->get("spellNameInsteadOfWords");
-	if (featureKV.has_value()) {
-		auto value = featureKV->get<bool>();
-		if (value) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	return false;
-}
-
 bool Player::checkMute() const {
 	auto featureKV = kv()->scoped("features")->get("mutePlayer");
 	if (featureKV.has_value()) {
@@ -6691,7 +6653,7 @@ bool Player::changeMount(uint8_t mountId, bool checkList) {
 	}
 
 	if (mountAttributes) {
-		const auto &currentMount = g_game().mounts->getMountByID(getLastMount());
+		const auto &currentMount = g_game().mounts->getMountByID(getCurrentMount());
 		if (!currentMount) {
 			return false;
 		}
@@ -7731,13 +7693,6 @@ void Player::sendUnjustifiedPoints() const {
 	}
 }
 
-uint16_t Player::getLastMount() const {
-	if (currentMount > 0) {
-		return currentMount;
-	}
-	return static_cast<uint8_t>(kv()->get("last-mount")->get<int>());
-}
-
 uint16_t Player::getCurrentMount() const {
 	return currentMount;
 }
@@ -7796,7 +7751,7 @@ bool Player::toggleMount(bool mount) {
 			return false;
 		}
 
-		uint8_t currentMountId = getLastMount();
+		uint8_t currentMountId = getCurrentMount();
 		if (currentMountId == 0) {
 			sendOutfitWindow();
 			return false;
@@ -7813,7 +7768,6 @@ bool Player::toggleMount(bool mount) {
 
 		if (!hasMount(currentMount)) {
 			setCurrentMount(0);
-			kv()->set("last-mount", 0);
 			sendOutfitWindow();
 			return false;
 		}
@@ -7830,7 +7784,6 @@ bool Player::toggleMount(bool mount) {
 
 		defaultOutfit.lookMount = currentMount->clientId;
 		setCurrentMount(currentMount->id);
-		kv()->set("last-mount", currentMount->id);
 
 		if (currentMount->speed != 0) {
 			g_game().changeSpeed(static_self_cast<Player>(), currentMount->speed);
@@ -7888,7 +7841,6 @@ bool Player::untameMount(uint16_t mountId) {
 		}
 
 		setCurrentMount(0);
-		kv()->set("last-mount", 0);
 	}
 
 	return true;
@@ -9950,7 +9902,7 @@ bool Player::saySpell(SpeakClasses type, const std::string &text, bool isGhostMo
 	for (const auto &spectator : spectators) {
 		if (const auto &tmpPlayer = spectator->getPlayer()) {
 			if (!isGhostMode || tmpPlayer->canSeeCreature(static_self_cast<Player>())) {
-				if (checkEmoteSpells()) {
+				if (g_configManager().getBoolean(EMOTE_SPELLS)) {
 					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_MONSTER_SAY, text, pos);
 				} else {
 					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_SPELL_USE, text, pos);
@@ -10060,6 +10012,10 @@ void Player::triggerTranscendence() {
 		return;
 	}
 
+	if (!item->getTier()) {
+		return;
+	}
+
 	double_t chance = item->getTranscendenceChance();
 	const auto &playerBoots = getInventoryItem(CONST_SLOT_FEET);
 	if (playerBoots && playerBoots->getTier()) {
@@ -10098,7 +10054,6 @@ void Player::triggerTranscendence() {
 		g_dispatcher().scheduleEvent(task);
 
 		wheel()->sendGiftOfLifeCooldown();
-		g_game().reloadCreature(getPlayer());
 	}
 }
 
@@ -11008,7 +10963,7 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 		if (g_configManager().getBoolean(ALWAYS_MOUNT_LOGIN) && getCurrentMount() != 0) {
 			toggleMount(true);
 
-			uint8_t currentMountId = getLastMount();
+			uint8_t currentMountId = getCurrentMount();
 			if (currentMountId == 0) {
 				return;
 			}
@@ -11659,12 +11614,12 @@ uint16_t Player::getDodgeChance() const {
 	return finalChance;
 }
 
-uint8_t Player::isRandomMounted() const {
+bool Player::isRandomMounted() const {
 	return randomMount;
 }
 
-void Player::setRandomMount(uint8_t isMountRandomized) {
-	randomMount = isMountRandomized;
+void Player::setRandomMount(bool randomizeMount) {
+	randomMount = randomizeMount;
 }
 
 void Player::sendFYIBox(const std::string &message) const {

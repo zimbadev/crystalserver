@@ -103,4 +103,6 @@ private:
 	static int luaGameGetMonstersByBestiaryStars(lua_State* L);
 
 	static int luaGameGetTitleByName(lua_State* L);
+
+	static int luaHouseGetHouseCountByAccount(lua_State* L);
 };

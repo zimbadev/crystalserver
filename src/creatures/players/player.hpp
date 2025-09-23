@@ -202,7 +202,6 @@ public:
 		return CREATURETYPE_PLAYER;
 	}
 
-	uint16_t getLastMount() const;
 	uint16_t getCurrentMount() const;
 	void setCurrentMount(uint16_t mountId);
 	bool isMounted() const {
@@ -223,8 +222,8 @@ public:
 
 	uint16_t getDodgeChance() const;
 
-	uint8_t isRandomMounted() const;
-	void setRandomMount(uint8_t isMountRandomized);
+	bool isRandomMounted() const;
+	void setRandomMount(bool randomizeMount);
 
 	void sendFYIBox(const std::string &message) const;
 
@@ -1286,8 +1285,6 @@ public:
 
 	bool checkAutoLoot(bool isBoss) const;
 	bool checkChainSystem() const;
-	bool checkEmoteSpells() const;
-	bool checkSpellNameInsteadOfWords() const;
 	bool checkMute() const;
 
 	QuickLootFilter_t getQuickLootFilter() const;
@@ -1624,7 +1621,8 @@ private:
 	uint32_t coinBalance = 0;
 	uint32_t coinTransferableBalance = 0;
 	uint16_t xpBoostTime = 0;
-	uint8_t randomMount = 0;
+
+	bool randomMount = false;
 
 	uint16_t lastStatsTrainingTime = 0;
 	uint16_t staminaMinutes = 2520;

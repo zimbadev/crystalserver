@@ -37,6 +37,7 @@ void HouseFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "House", "getExitPosition", HouseFunctions::luaHouseGetExitPosition);
 	Lua::registerMethod(L, "House", "getRent", HouseFunctions::luaHouseGetRent);
 	Lua::registerMethod(L, "House", "getPrice", HouseFunctions::luaHouseGetPrice);
+	Lua::registerMethod(L, "House", "isGuildhall", HouseFunctions::luaHouseIsGuildhall);
 
 	Lua::registerMethod(L, "House", "getOwnerGuid", HouseFunctions::luaHouseGetOwnerGuid);
 	Lua::registerMethod(L, "House", "setHouseOwner", HouseFunctions::luaHouseSetHouseOwner);
@@ -567,5 +568,18 @@ int HouseFunctions::luaHouseIsInvited(lua_State* L) {
 	}
 
 	Lua::pushBoolean(L, house->isInvited(player));
+	return 1;
+}
+
+int HouseFunctions::luaHouseIsGuildhall(lua_State* L) {
+	// house:isGuildhall()
+	const auto &house = Lua::getUserdataShared<House>(L, 1);
+	if (!house) {
+		Lua::reportErrorFunc("House not found");
+		lua_pushnil(L);
+		return 1;
+	}
+
+	Lua::pushBoolean(L, house->isGuildhall());
 	return 1;
 }

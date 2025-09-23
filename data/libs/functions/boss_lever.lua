@@ -241,6 +241,7 @@ function BossLever:onUse(player)
 			monster:registerEvent("BossLeverOnDeath")
 		end
 		lever:teleportPlayers()
+		lever:setCooldownAllPlayers(self.name, os.time() + self.timeToFightAgain)
 		if self.encounter then
 			local encounter = Encounter(self.encounter)
 			encounter:reset()

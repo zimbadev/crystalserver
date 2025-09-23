@@ -171,6 +171,8 @@ public:
 
 	std::shared_ptr<Player> getPlayerByID(uint32_t id, bool allowOffline = false);
 
+	std::shared_ptr<Player> getMarketPlayerByGUID(uint32_t &guid);
+
 	std::shared_ptr<Player> getPlayerByName(const std::string &s, bool allowOffline = false, bool isNewName = false);
 
 	std::shared_ptr<Player> getPlayerByGUID(const uint32_t &guid, bool allowOffline = false);
@@ -266,7 +268,6 @@ public:
 	void sendGuildMotd(uint32_t playerId);
 	void kickPlayer(uint32_t playerId, bool displayEffect);
 	void playerReportBug(uint32_t playerId, const std::string &message, const Position &position, uint8_t category);
-	void playerDebugAssert(uint32_t playerId, const std::string &assertLine, const std::string &date, const std::string &description, const std::string &comment);
 	void playerPreyAction(uint32_t playerId, uint8_t slot, uint8_t action, uint8_t option, int8_t index, uint16_t raceId);
 	void playerTaskHuntingAction(uint32_t playerId, uint8_t slot, uint8_t action, bool upgrade, uint16_t raceId);
 	void playerNpcGreet(uint32_t playerId, uint32_t npcId);
@@ -312,6 +313,7 @@ public:
 	static std::string getSkillNameById(uint8_t &skill);
 
 	// House Auction
+	int32_t getHighestBidCountByPlayerName(const std::string &playerName);
 	void playerCyclopediaHousesByTown(uint32_t playerId, const std::string &townName);
 	void playerCyclopediaHouseBid(uint32_t playerId, uint32_t houseId, uint64_t bidValue);
 	void playerCyclopediaHouseMoveOut(uint32_t playerId, uint32_t houseId, uint32_t timestamp);
@@ -409,7 +411,7 @@ public:
 	void playerShowQuestLog(uint32_t playerId);
 	void playerShowQuestLine(uint32_t playerId, uint16_t questId);
 	void playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, const std::string &receiver, const std::string &text);
-	void playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted = false, uint8_t isMountRandomized = 0);
+	void playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted = false, bool randomizeMount = false);
 	void playerInviteToParty(uint32_t playerId, uint32_t invitedId);
 	void playerJoinParty(uint32_t playerId, uint32_t leaderId);
 	void playerRevokePartyInvitation(uint32_t playerId, uint32_t invitedId);

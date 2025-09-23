@@ -70,6 +70,7 @@ blackSkulledDeathMana = 0
 fieldOwnershipDuration = 5 * 1000
 loginProtectionPeriod = 10 * 1000
 
+-- Clean system
 cleanProtectionZones = false
 
 -- Connection Config
@@ -412,6 +413,7 @@ houseLoseAfterInactivity = 30 -- days; 0 = never
 onlyInvitedCanMoveHouseItems = true
 togglehouseTransferOnRestart = true
 bedsOnlyPremium = true
+maxHousesLimit = 3
 
 -- Item Usage
 timeBetweenActions = 200
