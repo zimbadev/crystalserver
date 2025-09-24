@@ -99,7 +99,7 @@ TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player,
 	}
 
 	if (instantSpell->playerCastInstant(player, param)) {
-		if (!player->checkSpellNameInsteadOfWords()) {
+		if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
 			words = instantSpell->getWords();
 		} else {
 			words = instantSpell->getName();

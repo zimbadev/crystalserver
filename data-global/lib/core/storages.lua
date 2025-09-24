@@ -81,8 +81,6 @@ Storage = {
 	EdronRopeQuest = 30004,
 	OrcKingGreeting = 30006,
 	MarkwinGreeting = 30007,
-	-- EmoteSpells Storage cannot be changed, it is set in source code
-	EmoteSpells = 30008,
 	WagonTicket = 30009,
 	FirstMageWeapon = 30011,
 	KawillBlessing = 30014,

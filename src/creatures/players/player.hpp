@@ -314,6 +314,8 @@ public:
 
 	bool hasSecureMode() const;
 
+	uint8_t getOpenedContainersLimit() const;
+
 	void setParty(std::shared_ptr<Party> newParty);
 	std::shared_ptr<Party> getParty() const;
 
@@ -1285,8 +1287,6 @@ public:
 
 	bool checkAutoLoot(bool isBoss) const;
 	bool checkChainSystem() const;
-	bool checkEmoteSpells() const;
-	bool checkSpellNameInsteadOfWords() const;
 	bool checkMute() const;
 
 	QuickLootFilter_t getQuickLootFilter() const;

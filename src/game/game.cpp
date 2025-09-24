@@ -5572,46 +5572,28 @@ void Game::playerLookInBattleList(uint32_t playerId, uint32_t creatureId) {
 }
 
 void Game::playerQuickLoot(uint32_t playerId, const Position &pos, uint16_t itemId, uint8_t stackPos, const std::shared_ptr<Item> &defaultItem, bool lootAllCorpses, bool autoLoot) {
-	const auto &player = getPlayerByID(playerId);
+	auto player = getPlayerByID(playerId);
 	if (!player) {
 		return;
 	}
 
-	if (!autoLoot && !player->canDoAction()) {
-		const uint32_t delay = player->getNextActionTime();
-		const auto &task = createPlayerTask(
-			delay,
-			[this, playerId = player->getID(), pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot] {
-				playerQuickLoot(playerId, pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot);
-			},
-			__FUNCTION__
-		);
-		player->setNextActionTask(task);
+	// Premium restriction
+	if (!player->isPremium()) {
+		player->sendCancelMessage(RETURNVALUE_YOUNEEDPREMIUMACCOUNT);
 		return;
 	}
 
-	if (!autoLoot && pos.x != 0xffff) {
-		if (!Position::areInRange<1, 1, 0>(pos, player->getPosition())) {
-			// need to walk to the corpse first before looting it
-			std::vector<Direction> listDir;
-			if (player->getPathTo(pos, listDir, 0, 1, true, true)) {
-				g_dispatcher().addEvent([this, playerId = player->getID(), listDir] { playerAutoWalk(playerId, listDir); }, __FUNCTION__);
-				const auto &task = createPlayerTask(
-					300,
-					[this, playerId = player->getID(), pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot] {
-						playerQuickLoot(playerId, pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot);
-					},
-					__FUNCTION__
-				);
-				player->setNextWalkActionTask(task);
-			} else {
-				player->sendCancelMessage(RETURNVALUE_THEREISNOWAY);
-			}
+	// Handle action delay if not auto-loot
+	if (!autoLoot && !player->canDoAction()) {
+		schedulePlayerQuickLoot(player, pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot);
+		return;
+	}
 
-			return;
+	// If corpse is on map and player is out of range, walk first
+	if (!autoLoot && pos.x != 0xFFFF && !isPlayerInLootRange(player, pos)) {
+		if (!walkPlayerToCorpse(player, pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot)) {
+			player->sendCancelMessage(RETURNVALUE_THEREISNOWAY);
 		}
-	} else if (!player->isPremium()) {
-		player->sendCancelMessage("You must be premium.");
 		return;
 	}
 
@@ -5620,26 +5602,81 @@ void Game::playerQuickLoot(uint32_t playerId, const Position &pos, uint16_t item
 		player->setNextActionTask(nullptr);
 	}
 
-	std::shared_ptr<Item> item = nullptr;
-	if (!defaultItem) {
-		const std::shared_ptr<Thing> &thing = internalGetThing(player, pos, stackPos, itemId, STACKPOS_FIND_THING);
-		if (!thing) {
-			player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
-			return;
-		}
-
-		item = thing->getItem();
-	} else {
-		item = defaultItem;
+	if (lootAllCorpses) {
+		playerLootAllCorpses(player, pos, true);
+		return;
 	}
 
+	auto item = getItemToLoot(player, pos, stackPos, itemId, defaultItem);
 	if (!item || !item->getParent()) {
 		player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
 		return;
 	}
 
-	std::shared_ptr<Container> corpse = nullptr;
-	if (pos.x == 0xffff) {
+	auto corpse = getCorpseFromItem(item, pos);
+	if (!isCorpseLootable(player, corpse)) {
+		player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
+		return;
+	}
+
+	// Loot handling
+	if (isDirectLoot(pos, corpse)) {
+		handleDirectLoot(player, item, corpse);
+	} else {
+		handleCorpseLoot(player, corpse, pos, lootAllCorpses);
+	}
+}
+
+void Game::schedulePlayerQuickLoot(const std::shared_ptr<Player> &player, const Position &pos, uint16_t itemId, uint8_t stackPos, const std::shared_ptr<Item> &defaultItem, bool lootAllCorpses, bool autoLoot) {
+	uint32_t delay = player->getNextActionTime();
+	auto task = createPlayerTask(
+		delay,
+		[this, id = player->getID(), pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot] {
+			playerQuickLoot(id, pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot);
+		},
+		__FUNCTION__
+	);
+	player->setNextActionTask(task);
+}
+
+bool Game::isPlayerInLootRange(const std::shared_ptr<Player> &player, const Position &pos) {
+	return Position::areInRange<1, 1, 0>(pos, player->getPosition());
+}
+
+bool Game::walkPlayerToCorpse(const std::shared_ptr<Player> &player, const Position &pos, uint16_t itemId, uint8_t stackPos, const std::shared_ptr<Item> &defaultItem, bool lootAllCorpses, bool autoLoot) {
+	std::vector<Direction> path;
+	if (!player->getPathTo(pos, path, 0, 1, true, true)) {
+		return false;
+	}
+
+	g_dispatcher().addEvent(
+		[this, id = player->getID(), path] { playerAutoWalk(id, path); },
+		__FUNCTION__
+	);
+
+	auto task = createPlayerTask(
+		300,
+		[this, id = player->getID(), pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot] {
+			playerQuickLoot(id, pos, itemId, stackPos, defaultItem, lootAllCorpses, autoLoot);
+		},
+		__FUNCTION__
+	);
+	player->setNextWalkActionTask(task);
+	return true;
+}
+
+std::shared_ptr<Item> Game::getItemToLoot(const std::shared_ptr<Player> &player, const Position &pos, uint8_t stackPos, uint16_t itemId, const std::shared_ptr<Item> &defaultItem) {
+	if (defaultItem) {
+		return defaultItem;
+	}
+
+	auto thing = internalGetThing(player, pos, stackPos, itemId, STACKPOS_FIND_THING);
+	return thing ? thing->getItem() : nullptr;
+}
+
+std::shared_ptr<Container> Game::getCorpseFromItem(const std::shared_ptr<Item> &item, const Position &pos) {
+	std::shared_ptr<Container> corpse;
+	if (pos.x == 0xFFFF) {
 		corpse = item->getParent()->getContainer();
 		if (corpse && corpse->getID() == ITEM_BROWSEFIELD) {
 			corpse = item->getContainer();
@@ -5648,82 +5685,108 @@ void Game::playerQuickLoot(uint32_t playerId, const Position &pos, uint16_t item
 	} else {
 		corpse = item->getContainer();
 	}
+	return corpse;
+}
 
-	if (!corpse || corpse->hasAttribute(ItemAttribute_t::UNIQUEID) || corpse->hasAttribute(ItemAttribute_t::ACTIONID)) {
-		player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
-		return;
+bool Game::isCorpseLootable(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse) {
+	if (!corpse) {
+		return false;
+	}
+	if (corpse->hasAttribute(ItemAttribute_t::UNIQUEID) || corpse->hasAttribute(ItemAttribute_t::ACTIONID)) {
+		return false;
 	}
 
 	if (!corpse->isRewardCorpse()) {
-		uint32_t corpseOwner = corpse->getCorpseOwner();
-		if (corpseOwner != 0 && !player->canOpenCorpse(corpseOwner)) {
-			player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
-			return;
+		uint32_t owner = corpse->getCorpseOwner();
+		if (owner != 0 && !player->canOpenCorpse(owner)) {
+			return false;
 		}
 	}
+	return true;
+}
 
-	if (pos.x == 0xffff && !browseField && !corpse->isRewardCorpse()) {
-		uint32_t worth = item->getWorth();
-		ObjectCategory_t category = getObjectCategory(item);
-		ReturnValue ret = internalCollectManagedItems(player, item, category);
+bool Game::isDirectLoot(const Position &pos, const std::shared_ptr<Container> &corpse) {
+	return pos.x == 0xFFFF && !corpse->isRewardCorpse();
+}
 
-		std::stringstream ss;
-		if (ret == RETURNVALUE_NOTENOUGHCAPACITY) {
-			ss << "Attention! The loot you are trying to pick up is too heavy for you to carry.";
-		} else if (ret == RETURNVALUE_CONTAINERNOTENOUGHROOM) {
-			ss << "Attention! The container for " << getObjectCategoryName(category) << " is full.";
-		} else {
-			if (ret == RETURNVALUE_NOERROR) {
-				player->sendLootStats(item, item->getItemCount());
-				ss << "You looted ";
-			} else {
-				ss << "You could not loot ";
-			}
+void Game::handleDirectLoot(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, const std::shared_ptr<Container> &corpse) {
+	uint32_t worth = item->getWorth();
+	auto category = getObjectCategory(item);
+	auto result = internalCollectManagedItems(player, item, category);
 
-			if (worth != 0) {
-				ss << worth << " gold.";
-			} else {
-				ss << "1 item.";
-			}
-
-			player->sendTextMessage(MESSAGE_LOOT, ss.str());
-			return;
-		}
-
-		if (player->lastQuickLootNotification + 15000 < OTSYS_TIME()) {
-			player->sendTextMessage(MESSAGE_GAME_HIGHLIGHT, ss.str());
-		} else {
-			player->sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
-		}
-
-		player->lastQuickLootNotification = OTSYS_TIME();
+	std::stringstream msg;
+	if (result == RETURNVALUE_NOERROR) {
+		player->sendLootStats(item, item->getItemCount());
+		msg << "You looted " << (worth ? std::to_string(worth) + " gold." : "1 item.");
+	} else if (result == RETURNVALUE_NOTENOUGHCAPACITY) {
+		msg << "Attention! The loot you are trying to pick up is too heavy.";
+	} else if (result == RETURNVALUE_CONTAINERNOTENOUGHROOM) {
+		msg << "Attention! The container for " << getObjectCategoryName(category) << " is full.";
 	} else {
-		if (corpse->isRewardCorpse()) {
-			auto rewardId = corpse->getAttribute<time_t>(ItemAttribute_t::DATE);
-			auto reward = player->getReward(rewardId, false);
-			if (reward) {
-				playerQuickLootCorpse(player, reward->getContainer(), corpse->getPosition());
-			}
-		} else {
-			if (!lootAllCorpses) {
-				playerQuickLootCorpse(player, corpse, corpse->getPosition());
-			} else {
-				playerLootAllCorpses(player, pos, lootAllCorpses);
-			}
+		msg << "You could not loot " << (worth ? std::to_string(worth) + " gold." : "1 item.");
+	}
+
+	sendLootMessageWithCooldown(player, msg.str());
+}
+
+void Game::handleCorpseLoot(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &pos, bool lootAll) {
+	if (corpse->isRewardCorpse()) {
+		auto rewardId = corpse->getAttribute<time_t>(ItemAttribute_t::DATE);
+		auto reward = player->getReward(rewardId, false);
+		if (reward) {
+			playerQuickLootCorpse(player, reward->getContainer(), corpse->getPosition());
 		}
+	} else if (!lootAll) {
+		playerQuickLootCorpse(player, corpse, corpse->getPosition());
+	} else {
+		playerLootAllCorpses(player, pos, lootAll);
 	}
 }
 
-void Game::playerLootAllCorpses(const std::shared_ptr<Player> &player, const Position &pos, bool lootAllCorpses) {
-	if (lootAllCorpses) {
-		std::shared_ptr<Tile> tile = g_game().map.getTile(pos.x, pos.y, pos.z);
+void Game::sendLootMessageWithCooldown(const std::shared_ptr<Player> &player, const std::string &message) {
+	uint64_t now = OTSYS_TIME();
+	if (player->lastQuickLootNotification + 15000 < now) {
+		player->sendTextMessage(MESSAGE_GAME_HIGHLIGHT, message);
+	} else {
+		player->sendTextMessage(MESSAGE_EVENT_ADVANCE, message);
+	}
+	player->lastQuickLootNotification = now;
+}
+
+static std::vector<Position> getSquareRadiusPositions(const Position &center, int radius) {
+	std::vector<Position> positions;
+	for (int dx = -radius; dx <= radius; ++dx) {
+		for (int dy = -radius; dy <= radius; ++dy) {
+			Position p(center.x + dx, center.y + dy, center.z);
+			positions.push_back(p);
+		}
+	}
+	return positions;
+}
+
+void Game::playerLootAllCorpses(const std::shared_ptr<Player> &player, const Position &pos, bool alsoLootNearbyTiles) {
+	std::vector<Position> positionsToCheck;
+
+	if (alsoLootNearbyTiles) {
+		// Loot from a 3x3 area (radius = 1)
+		positionsToCheck = getSquareRadiusPositions(pos, 1);
+	} else {
+		positionsToCheck.push_back(pos);
+	}
+
+	uint16_t corpses = 0;
+
+	for (const Position &checkPos : positionsToCheck) {
+		std::shared_ptr<Tile> tile = g_game().map.getTile(checkPos.x, checkPos.y, checkPos.z);
 		if (!tile) {
-			player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
-			return;
+			continue;
 		}
 
 		const TileItemVector* itemVector = tile->getItemList();
-		uint16_t corpses = 0;
+		if (!itemVector) {
+			continue;
+		}
+
 		for (auto &tileItem : *itemVector) {
 			if (!tileItem) {
 				continue;
@@ -5749,15 +5812,18 @@ void Game::playerLootAllCorpses(const std::shared_ptr<Player> &player, const Pos
 			}
 		}
 
-		if (corpses > 0) {
-			if (corpses > 1) {
-				std::stringstream string;
-				string << "You looted " << corpses << " corpses.";
-				player->sendTextMessage(MESSAGE_LOOT, string.str());
-			}
-
-			return;
+		if (corpses >= 30) {
+			break;
 		}
+	}
+
+	if (corpses > 0) {
+		if (corpses > 1) {
+			std::stringstream string;
+			string << "You looted " << corpses << " corpses.";
+			player->sendTextMessage(MESSAGE_LOOT, string.str());
+		}
+		return;
 	}
 
 	browseField = false;
