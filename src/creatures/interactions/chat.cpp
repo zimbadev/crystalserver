@@ -110,8 +110,8 @@ uint32_t ChatChannel::channelAutoUniqueId = 0;
 ChatChannel::ChatChannel(uint16_t channelId, std::string channelName) :
 	name(std::move(channelName)),
 	id(channelId) {
-		this->uniqueId = ++channelAutoUniqueId;
-	}
+	this->uniqueId = ++channelAutoUniqueId;
+}
 
 bool ChatChannel::addUser(const std::shared_ptr<Player> &player) {
 	if (users.contains(player->getID())) {
@@ -582,7 +582,7 @@ void Chat::removeUserFromAllChannels(const std::shared_ptr<Player> &player) {
 	}
 }
 
-void Chat::storeUserChannels(const std::shared_ptr<Player>& player, std::vector<uint32_t>& channelList) {
+void Chat::storeUserChannels(const std::shared_ptr<Player> &player, std::vector<uint32_t> &channelList) {
 	if (!player) {
 		return;
 	}
@@ -609,7 +609,7 @@ void Chat::storeUserChannels(const std::shared_ptr<Player>& player, std::vector<
 	}
 }
 
-void Chat::restoreUserChannels(const std::shared_ptr<Player>& player, std::vector<uint32_t>& channelList) {
+void Chat::restoreUserChannels(const std::shared_ptr<Player> &player, std::vector<uint32_t> &channelList) {
 	if (!player) {
 		return;
 	}
