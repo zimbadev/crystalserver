@@ -270,6 +270,9 @@ public:
 
 	bool isGuildMate(const std::shared_ptr<Player> &player) const;
 
+	void saveChannelIds();
+	void restoreChannelIds();
+
 	[[nodiscard]] const std::string &getGuildNick() const;
 	void setGuildNick(std::string nick);
 
@@ -883,7 +886,6 @@ public:
 	// close container and its child containers
 	void autoCloseContainers(const std::shared_ptr<Container> &container);
 
-	// inventory
 	// inventory
 	void onUpdateInventoryItem(const std::shared_ptr<Item> &oldItem, const std::shared_ptr<Item> &newItem);
 	void onRemoveInventoryItem(const std::shared_ptr<Item> &item);

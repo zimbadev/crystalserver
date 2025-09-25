@@ -686,6 +686,9 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 		player->lastIP = player->getIP();
 		player->lastLoad = OTSYS_TIME();
 		player->lastLoginSaved = std::max<time_t>(time(nullptr), player->lastLoginSaved + 1);
+
+		// restore player channels
+		player->restoreChannelIds();
 		acceptPackets = true;
 	} else {
 		if (eventConnect != 0 || !g_configManager().getBoolean(REPLACE_KICK_ON_LOGIN)) {
@@ -765,6 +768,9 @@ void ProtocolGame::logout(bool displayEffect, bool forced) {
 	if (removePlayer && !g_creatureEvents().playerLogout(player)) {
 		return;
 	}
+
+	// save player channels on logout
+	player->saveChannelIds();
 
 	displayEffect = displayEffect && !player->isRemoved() && player->getHealth() > 0 && !player->isInGhostMode();
 	if (displayEffect) {

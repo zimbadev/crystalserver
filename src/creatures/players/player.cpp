@@ -6818,9 +6818,6 @@ size_t Player::getMaxDepotItems() const {
 
 // tile
 // send methods
-// tile
-// send methods
-
 void Player::sendAddTileItem(const std::shared_ptr<Tile> &itemTile, const Position &pos, const std::shared_ptr<Item> &item) {
 	if (client) {
 		int32_t stackpos = itemTile->getStackposOfItem(static_self_cast<Player>(), item);
@@ -11216,7 +11213,6 @@ void Player::autoCloseContainers(const std::shared_ptr<Container> &container) {
 }
 
 // inventory
-// inventory
 
 void Player::onUpdateInventoryItem(const std::shared_ptr<Item> &oldItem, const std::shared_ptr<Item> &newItem) {
 	if (oldItem != newItem) {
@@ -11983,4 +11979,17 @@ int16_t Player::getMantraAbsorbPercent(int16_t mantraAbsorbValue) const {
 	}
 
 	return static_cast<int16_t>(std::floor(mantraAbsorbValue * multiplier));
+}
+
+void Player::saveChannelIds() {
+	if (client) {
+		g_chat().storeUserChannels(static_self_cast<Player>(), client->savedChannels);
+	}
+}
+
+void Player::restoreChannelIds() {
+	if (client) {
+		g_chat().restoreUserChannels(static_self_cast<Player>(), client->savedChannels);
+		client->savedChannels.clear();
+	}
 }
