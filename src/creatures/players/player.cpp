@@ -8715,7 +8715,6 @@ void Player::sendContainer(uint8_t cid, const std::shared_ptr<Container> &contai
 }
 
 // inventory
-
 void Player::sendDepotItems(const ItemsTierCountList &itemMap, uint16_t count) const {
 	if (client) {
 		client->sendDepotItems(itemMap, count);
@@ -11979,17 +11978,4 @@ int16_t Player::getMantraAbsorbPercent(int16_t mantraAbsorbValue) const {
 	}
 
 	return static_cast<int16_t>(std::floor(mantraAbsorbValue * multiplier));
-}
-
-void Player::saveChannelIds() {
-	if (client) {
-		g_chat().storeUserChannels(static_self_cast<Player>(), client->savedChannels);
-	}
-}
-
-void Player::restoreChannelIds() {
-	if (client) {
-		g_chat().restoreUserChannels(static_self_cast<Player>(), client->savedChannels);
-		client->savedChannels.clear();
-	}
 }

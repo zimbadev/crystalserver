@@ -544,7 +544,6 @@ private:
 	std::shared_ptr<Player> player = nullptr;
 
 	std::list<uint32_t> creatureOrder;
-	std::vector<uint32_t> savedChannels;
 
 	uint32_t eventConnect = 0;
 	uint32_t challengeTimestamp = 0;

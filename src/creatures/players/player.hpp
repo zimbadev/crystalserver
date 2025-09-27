@@ -270,9 +270,6 @@ public:
 
 	bool isGuildMate(const std::shared_ptr<Player> &player) const;
 
-	void saveChannelIds();
-	void restoreChannelIds();
-
 	[[nodiscard]] const std::string &getGuildNick() const;
 	void setGuildNick(std::string nick);
 

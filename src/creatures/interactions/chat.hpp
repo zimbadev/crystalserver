@@ -43,7 +43,6 @@ public:
 
 	const std::string &getName() const;
 	uint16_t getId() const;
-	uint32_t getUniqueId() const;
 	const UsersMap &getUsers() const;
 	virtual const InvitedMap* getInvitedUsers() const;
 
@@ -56,8 +55,6 @@ public:
 	bool executeOnLeaveEvent(const std::shared_ptr<Player> &player) const;
 	bool executeOnSpeakEvent(const std::shared_ptr<Player> &player, SpeakClasses &type, const std::string &message) const;
 
-	static uint32_t channelAutoUniqueId;
-
 protected:
 	UsersMap users;
 
@@ -69,7 +66,6 @@ protected:
 	int32_t onSpeakEvent = -1;
 
 	uint16_t id {};
-	uint32_t uniqueId {};
 	bool publicChannel = false;
 
 	friend class Chat;
@@ -118,8 +114,6 @@ public:
 	std::shared_ptr<ChatChannel> addUserToChannel(const std::shared_ptr<Player> &player, uint16_t channelId);
 	bool removeUserFromChannel(const std::shared_ptr<Player> &player, uint16_t channelId);
 	void removeUserFromAllChannels(const std::shared_ptr<Player> &player);
-	void storeUserChannels(const std::shared_ptr<Player> &player, std::vector<uint32_t> &channelList);
-	void restoreUserChannels(const std::shared_ptr<Player> &player, std::vector<uint32_t> &channelList);
 
 	bool talkToChannel(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &text, uint16_t channelId);
 

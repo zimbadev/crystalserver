@@ -105,13 +105,9 @@ const InvitedMap* PrivateChatChannel::getInvitedUsers() const {
 	return &invites;
 }
 
-uint32_t ChatChannel::channelAutoUniqueId = 0;
-
 ChatChannel::ChatChannel(uint16_t channelId, std::string channelName) :
 	name(std::move(channelName)),
-	id(channelId) {
-	this->uniqueId = ++channelAutoUniqueId;
-}
+	id(channelId) { }
 
 bool ChatChannel::addUser(const std::shared_ptr<Player> &player) {
 	if (users.contains(player->getID())) {
@@ -188,10 +184,6 @@ const std::string &ChatChannel::getName() const {
 
 uint16_t ChatChannel::getId() const {
 	return id;
-}
-
-uint32_t ChatChannel::getUniqueId() const {
-	return uniqueId;
 }
 
 const UsersMap &ChatChannel::getUsers() const {
@@ -578,60 +570,6 @@ void Chat::removeUserFromAllChannels(const std::shared_ptr<Player> &player) {
 			it = privateChannels.erase(it);
 		} else {
 			++it;
-		}
-	}
-}
-
-void Chat::storeUserChannels(const std::shared_ptr<Player> &player, std::vector<uint32_t> &channelList) {
-	if (!player) {
-		return;
-	}
-
-	// normal channels
-	for (const auto &[channelId, channel] : normalChannels) {
-		if (channel->hasUser(player)) {
-			channelList.push_back(channel->getUniqueId());
-		}
-	}
-
-	// private channels
-	for (const auto &[channelId, channel] : privateChannels) {
-		if (channel->hasUser(player)) {
-			channelList.push_back(channel->getUniqueId());
-		}
-	}
-
-	// guild channels
-	for (const auto &[channelId, channel] : guildChannels) {
-		if (channel->hasUser(player)) {
-			channelList.push_back(channel->getUniqueId());
-		}
-	}
-}
-
-void Chat::restoreUserChannels(const std::shared_ptr<Player> &player, std::vector<uint32_t> &channelList) {
-	if (!player) {
-		return;
-	}
-
-	// normal channels
-	for (const auto &[channelId, channel] : normalChannels) {
-		if (std::find(channelList.begin(), channelList.end(), channel->getUniqueId()) != channelList.end()) {
-			channel->addUser(player);
-		}
-	}
-
-	// private channels
-	for (const auto &[channelId, channel] : privateChannels) {
-		if (std::find(channelList.begin(), channelList.end(), channel->getUniqueId()) != channelList.end()) {
-			channel->addUser(player);
-		}
-	}
-
-	// guild channels
-	for (const auto &[channelId, channel] : guildChannels) {
-		if (std::find(channelList.begin(), channelList.end(), channel->getUniqueId()) != channelList.end()) {
-			channel->addUser(player);
 		}
 	}
 }
