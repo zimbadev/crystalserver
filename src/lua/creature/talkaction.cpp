@@ -71,7 +71,7 @@ bool TalkActions::checkWord(const std::shared_ptr<Player> &player, SpeakClasses 
 			}
 		}
 	}
-	
+
 	if (!talkActionPtr || (talkActionPtr->getChannel() != -1 && talkActionPtr->getChannel() != channelId)) {
 		return false;
 	}

@@ -84,7 +84,8 @@ private:
 	std::string m_description;
 	std::string separator = "\"";
 	uint8_t m_groupType = 0;
-	int32_t m_channel = -1;;
+	int32_t m_channel = -1;
+	;
 };
 
 class TalkActions {

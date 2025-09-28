@@ -134,7 +134,7 @@ bool ChatChannel::addUser(const std::shared_ptr<Player> &player) {
 		std::string motd = IOGuild::getMotd(guildId);
 		if (!motd.empty()) {
 			g_dispatcher().scheduleEvent(
-				150, [playerId = player->getID(), guildId]() {  g_game().sendGuildMotd(playerId, guildId); }, "Game::sendGuildMotd"
+				150, [playerId = player->getID(), guildId]() { g_game().sendGuildMotd(playerId, guildId); }, "Game::sendGuildMotd"
 			);
 		}
 	}
