@@ -230,6 +230,7 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "sendPrivateMessage", PlayerFunctions::luaPlayerSendPrivateMessage);
 	Lua::registerMethod(L, "Player", "channelSay", PlayerFunctions::luaPlayerChannelSay);
 	Lua::registerMethod(L, "Player", "openChannel", PlayerFunctions::luaPlayerOpenChannel);
+	Lua::registerMethod(L, "Player", "closeChannel", PlayerFunctions::luaPlayerCloseChannel);
 
 	Lua::registerMethod(L, "Player", "getSlotItem", PlayerFunctions::luaPlayerGetSlotItem);
 
@@ -2732,6 +2733,19 @@ int PlayerFunctions::luaPlayerOpenChannel(lua_State* L) {
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (player) {
 		g_game().playerOpenChannel(player->getID(), channelId);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerCloseChannel(lua_State* L) {
+	// player:closeChannel(channelId)
+	const uint16_t channelId = Lua::getNumber<uint16_t>(L, 2);
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		g_game().playerCloseChannel(player->getID(), channelId);
 		Lua::pushBoolean(L, true);
 	} else {
 		lua_pushnil(L);

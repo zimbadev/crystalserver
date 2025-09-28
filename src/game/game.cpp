@@ -6376,7 +6376,7 @@ void Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 
 	player->resetIdleTime();
 
-	if (playerSaySpell(player, type, text)) {
+	if (playerSaySpell(player, type, text, channelId)) {
 		return;
 	}
 
@@ -6445,13 +6445,13 @@ void Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 	}
 }
 
-bool Game::playerSaySpell(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &text) {
+bool Game::playerSaySpell(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &text, uint16_t channelId) {
 	if (player->walkExhausted()) {
 		return true;
 	}
 
 	std::string words = text;
-	TalkActionResult_t result = g_talkActions().checkPlayerCanSayTalkAction(player, type, words);
+	TalkActionResult_t result = g_talkActions().checkPlayerCanSayTalkAction(player, type, words, type == TALKTYPE_SAY ? (unsigned)CHANNEL_DEFAULT : channelId);
 	if (result == TALKACTION_BREAK) {
 		return true;
 	}
@@ -8787,7 +8787,17 @@ void Game::playerEnableSharedPartyExperience(uint32_t playerId, bool sharedExpAc
 	party->setSharedExperience(player, sharedExpActive);
 }
 
-void Game::sendGuildMotd(uint32_t playerId) {
+void Game::setGuildMotd(uint32_t guildId, const std::string &newMotd) {
+	if (guildId == 0) {
+		return;
+	}
+
+	if (!IOGuild::setMotd(guildId, newMotd)) {
+		return;
+	}
+}
+
+void Game::sendGuildMotd(uint32_t playerId, uint32_t guildId) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
@@ -8795,7 +8805,12 @@ void Game::sendGuildMotd(uint32_t playerId) {
 
 	const auto guild = player->getGuild();
 	if (guild) {
-		player->sendChannelMessage("Message of the Day", guild->getMotd(), TALKTYPE_CHANNEL_R1, CHANNEL_GUILD);
+		const std::string &motd = IOGuild::getMotd(guildId);
+		if (!motd.empty()) {
+			TextMessage message(MESSAGE_GUILD, "Message of the Day: " + motd);
+			message.channelId = CHANNEL_GUILD;
+			player->sendTextMessage(message);
+		}
 	}
 }
 
