@@ -26,10 +26,10 @@ function talkaction.onSay(player, words, param)
 	end
 
 	-- Parse parameters manually to handle guild names with spaces
-	local command, enemyName, duration = param:match("^(%w+),%s*([^,]+),?%s*(%d*)$")
+	local command, enemyName, kills = param:match("^(%w+),%s*([^,]+),?%s*(%d*),?%s*(%d*)$")
 	if not command or not enemyName then
 		player:sendChannelMessage("", "Warmode commands:", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
-		player:sendChannelMessage("", "!war invite, guildname, duration(hours): Invite guild to start a war. Duration is optional, default value = 24 hours.", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
+		player:sendChannelMessage("", "!war invite, guildname, frags: Invite guild to start a war. Frags are optional; default values = 100 frags.", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 		player:sendChannelMessage("", "!war accept, guildname: Accept the invitation to start a war.", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 		player:sendChannelMessage("", "!war reject, guildname: Reject the invitation to start a war.", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 		player:sendChannelMessage("", "!war end, guildname: Ends the war if time is over. Aggressor can end the war before this time.", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
@@ -60,7 +60,7 @@ function talkaction.onSay(player, words, param)
 		handlePendingWar(player, guildId, enemy, enemyGuildName, command)
 		return true
 	elseif command == "invite" then
-		handleWarInvite(player, guildId, enemy, enemyGuildName, duration)
+		handleWarInvite(player, guildId, enemy, enemyGuildName, kills)
 		return true
 	elseif isInArray({ "end", "finish" }, command) then
 		handleWarEnd(player, guildId, enemy, enemyGuildName, command)
@@ -100,7 +100,7 @@ function handlePendingWar(player, guildId, enemy, enemyName, command)
 	broadcastMessage(getPlayerGuildName(player) .. " has " .. msg, MESSAGE_ADMINISTRATOR)
 end
 
-function handleWarInvite(player, guildId, enemy, enemyName, duration)
+function handleWarInvite(player, guildId, enemy, enemyName, kills)
 	local str = ""
 	local tmp = db.storeQuery("SELECT `guild1`, `status` FROM `guild_wars` WHERE `guild1` IN (" .. guildId .. "," .. enemy .. ") AND `guild2` IN (" .. enemy .. "," .. guildId .. ") AND `status` IN (0, 1)")
 	if tmp then
@@ -121,12 +121,22 @@ function handleWarInvite(player, guildId, enemy, enemyName, duration)
 		return true
 	end
 
-	local warHours = tonumber(duration) or 24
+	local defaultFrags = configManager.getNumber(configKeys.GUILD_WARS_DEFAULT_FRAGS)
+	local minimumFrags = configManager.getNumber(configKeys.GUILD_WARS_MINIMUM_FRAGS)
+
+	local frags = tonumber(kills)
+	if frags ~= nil then
+		frags = math.max(minimumFrags, math.min(1000, frags))
+	else
+		frags = defaultFrags
+	end
+
+	local warHours = 24
 	local beginning, ending = os.time(), warHours
 	ending = ending ~= 0 and (beginning + (ending * 3600)) or 0
 
-	db.query("INSERT INTO `guild_wars` (`guild1`, `guild2`, `name1`, `name2`, `started`, `ended`) VALUES (" .. guildId .. ", " .. enemy .. ", " .. db.escapeString(getPlayerGuildName(player)) .. ", " .. db.escapeString(enemyName) .. ", " .. beginning .. ", " .. ending .. ");")
-	broadcastMessage(getPlayerGuildName(player) .. " has invited " .. enemyName .. " for war that will last " .. warHours .. " hours.", MESSAGE_ADMINISTRATOR)
+	db.query("INSERT INTO `guild_wars` (`guild1`, `guild2`, `name1`, `name2`, `started`, `ended`, `frags_limit`) VALUES (" .. guildId .. ", " .. enemy .. ", " .. db.escapeString(getPlayerGuildName(player)) .. ", " .. db.escapeString(enemyName) .. ", " .. beginning .. ", " .. ending .. ", " .. frags .. ")")
+	broadcastMessage(getPlayerGuildName(player) .. " has invited " .. enemyName .. " for war with a frags limit of " .. frags .. ".", MESSAGE_ADMINISTRATOR)
 end
 
 function handleWarEnd(player, guildId, enemy, enemyName, command)
@@ -163,6 +173,8 @@ function handleWarEnd(player, guildId, enemy, enemyName, command)
 	player:sendChannelMessage("", "Currently there's no active war with " .. enemyName .. ".", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 end
 
-talkaction:separator(" ")
-talkaction:groupType("normal")
-talkaction:register()
+if configManager.getBoolean(configKeys.TTOGGLE_GUILD_WARS) then
+	talkaction:separator(" ")
+	talkaction:groupType("normal")
+	talkaction:register()
+end
