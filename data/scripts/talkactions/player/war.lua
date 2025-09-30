@@ -173,7 +173,7 @@ function handleWarEnd(player, guildId, enemy, enemyName, command)
 	player:sendChannelMessage("", "Currently there's no active war with " .. enemyName .. ".", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 end
 
-if configManager.getBoolean(configKeys.TTOGGLE_GUILD_WARS) then
+if configManager.getBoolean(configKeys.TOGGLE_GUILD_WARS) then
 	talkaction:separator(" ")
 	talkaction:groupType("normal")
 	talkaction:register()

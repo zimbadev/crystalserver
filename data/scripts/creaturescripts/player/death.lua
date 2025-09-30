@@ -88,7 +88,7 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 
 	if byPlayer == 1 then
 		killer:takeScreenshot(SCREENSHOT_TYPE_PLAYERKILL)
-		local toggleGuildWars = configManager.getBoolean(configKeys.TTOGGLE_GUILD_WARS)
+		local toggleGuildWars = configManager.getBoolean(configKeys.TOGGLE_GUILD_WARS)
 		if toggleGuildWars then
 			local targetGuild = player:getGuild()
 			local targetGuildId = targetGuild and targetGuild:getId() or 0
