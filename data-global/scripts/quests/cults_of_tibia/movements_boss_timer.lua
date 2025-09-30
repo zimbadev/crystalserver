@@ -86,8 +86,7 @@ function bossTimer.onStepIn(creature, item, position, fromPosition)
 
 				if timeLeft > 0 then
 					local timeString = formatTimeLeft(timeLeft)
-					player:sendCancelMessage("You need to wait " ..
-						timeString .. " before facing " .. config.boss .. " again.")
+					player:sendCancelMessage("You need to wait " .. timeString .. " before facing " .. config.boss .. " again.")
 				else
 					player:sendCancelMessage("You cannot face this boss yet.")
 				end

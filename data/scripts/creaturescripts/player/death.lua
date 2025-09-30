@@ -134,14 +134,7 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 
 							if guild1_kills >= frags_limit or guild2_kills >= frags_limit then
 								db.query("UPDATE `guild_wars` SET `status` = 4, `ended` = " .. os.time() .. " WHERE `status` = 1 AND `id` = " .. warId)
-								Game.broadcastMessage(string.format(
-									"%s has just won the war against %s with a score of %d:%d (frags limit: %d).",
-									killerGuild:getName(),
-									targetGuild:getName(),
-									guild1_kills,
-									guild2_kills,
-									frags_limit
-								))
+								Game.broadcastMessage(string.format("%s has just won the war against %s with a score of %d:%d (frags limit: %d).", killerGuild:getName(), targetGuild:getName(), guild1_kills, guild2_kills, frags_limit))
 							end
 						end
 					end
