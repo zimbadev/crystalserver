@@ -884,7 +884,6 @@ public:
 	void autoCloseContainers(const std::shared_ptr<Container> &container);
 
 	// inventory
-	// inventory
 	void onUpdateInventoryItem(const std::shared_ptr<Item> &oldItem, const std::shared_ptr<Item> &newItem);
 	void onRemoveInventoryItem(const std::shared_ptr<Item> &item);
 

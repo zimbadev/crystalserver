@@ -6823,9 +6823,6 @@ size_t Player::getMaxDepotItems() const {
 
 // tile
 // send methods
-// tile
-// send methods
-
 void Player::sendAddTileItem(const std::shared_ptr<Tile> &itemTile, const Position &pos, const std::shared_ptr<Item> &item) {
 	if (client) {
 		int32_t stackpos = itemTile->getStackposOfItem(static_self_cast<Player>(), item);
@@ -8723,7 +8720,6 @@ void Player::sendContainer(uint8_t cid, const std::shared_ptr<Container> &contai
 }
 
 // inventory
-
 void Player::sendDepotItems(const ItemsTierCountList &itemMap, uint16_t count) const {
 	if (client) {
 		client->sendDepotItems(itemMap, count);
@@ -11220,7 +11216,6 @@ void Player::autoCloseContainers(const std::shared_ptr<Container> &container) {
 	}
 }
 
-// inventory
 // inventory
 
 void Player::onUpdateInventoryItem(const std::shared_ptr<Item> &oldItem, const std::shared_ptr<Item> &newItem) {
