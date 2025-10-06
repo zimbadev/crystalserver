@@ -15,5 +15,5 @@
 	<bag itemid="6570" name="Blue Surprise Bag" chance="10" />
 	<bag itemid="3079" name="Boots of Haste" chance="15" class="Dragon" />
 	<bag itemid="6578" name="Party Hat" chance="100" raceId="1938" /> <!-- Infernal Demon -->
-	<bag itemid="3043" name="Crystal Coin" chance="100" maxAmount="100" />
+
 </bags>
