@@ -52,12 +52,30 @@ function callback.monsterOnDropLoot(monster, corpse)
 	end
 
 	local existingSuffix = corpse:getAttribute(ITEM_ATTRIBUTE_LOOTMESSAGE_SUFFIX) or ""
+	local isPlayerVIP = player:isVip()
 
-	if configManager.getBoolean(configKeys.PARTY_SHARE_LOOT_BOOSTS) and rolls > 1 then
-		msgSuffix = string.len(existingSuffix) > 0 and string.format(", active wealth duplex %s extra rolls", rolls) or string.format("active wealth duplex %s extra rolls", rolls)
-	else
-		msgSuffix = string.len(existingSuffix) > 0 and ", active wealth duplex" or "active wealth duplex"
+	local baseMessage = "active wealth duplex"
+
+	if isPlayerVIP then
+		baseMessage = baseMessage .. ", " -- " + "
 	end
+
+	local rollText = configManager.getBoolean(configKeys.PARTY_SHARE_LOOT_BOOSTS) and rolls > 1
+					and string.format(" %d extra rolls", rolls)
+					or ""
+
+	local punctuation = rollText == "" and "." or ""
+
+	local extraPart = rollText .. punctuation
+
+	local fullMessage = baseMessage
+	if #extraPart > 1 then 
+		fullMessage = fullMessage .. " " .. extraPart
+	end
+
+	msgSuffix = #existingSuffix > 0
+				and ", " .. fullMessage
+				or fullMessage
 
 	local lootTable = {}
 	for _ = 1, rolls do
