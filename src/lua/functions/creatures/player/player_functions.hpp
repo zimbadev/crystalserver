@@ -230,6 +230,10 @@ class PlayerFunctions {
 	static int luaPlayerSetFamiliarLooktype(lua_State* L);
 	static int luaPlayerGetFamiliarLooktype(lua_State* L);
 
+	// Emblem/relations updates
+	static int luaPlayerSendCreatureEmblem(lua_State* L);
+	static int luaPlayerReloadGuildWarList(lua_State* L);
+
 	static int luaPlayerGetPremiumDays(lua_State* L);
 	static int luaPlayerAddPremiumDays(lua_State* L);
 	static int luaPlayerRemovePremiumDays(lua_State* L);

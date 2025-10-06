@@ -252,6 +252,10 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "setFamiliarLooktype", PlayerFunctions::luaPlayerSetFamiliarLooktype);
 	Lua::registerMethod(L, "Player", "getFamiliarLooktype", PlayerFunctions::luaPlayerGetFamiliarLooktype);
 
+	// Emblem/relations updates
+	Lua::registerMethod(L, "Player", "sendCreatureEmblem", PlayerFunctions::luaPlayerSendCreatureEmblem);
+	Lua::registerMethod(L, "Player", "reloadGuildWarList", PlayerFunctions::luaPlayerReloadGuildWarList);
+
 	Lua::registerMethod(L, "Player", "getPremiumDays", PlayerFunctions::luaPlayerGetPremiumDays);
 	Lua::registerMethod(L, "Player", "addPremiumDays", PlayerFunctions::luaPlayerAddPremiumDays);
 	Lua::registerMethod(L, "Player", "removePremiumDays", PlayerFunctions::luaPlayerRemovePremiumDays);
@@ -446,6 +450,35 @@ void PlayerFunctions::init(lua_State* L) {
 	MountFunctions::init(L);
 	PartyFunctions::init(L);
 	VocationFunctions::init(L);
+}
+
+int PlayerFunctions::luaPlayerSendCreatureEmblem(lua_State* L) {
+	// player:sendCreatureEmblem(creature)
+	const auto &player = Lua::getPlayer(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+	const auto &creature = Lua::getCreature(L, 2);
+	if (!creature) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_CREATURE_NOT_FOUND));
+		return 1;
+	}
+	player->sendCreatureEmblem(creature);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerReloadGuildWarList(lua_State* L) {
+	// player:reloadGuildWarList()
+	const auto &player = Lua::getPlayer(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+	player->reloadGuildWarList();
+	Lua::pushBoolean(L, true);
+	return 1;
 }
 
 int PlayerFunctions::luaPlayerSendInventory(lua_State* L) {

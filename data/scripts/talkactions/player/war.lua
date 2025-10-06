@@ -1,5 +1,44 @@
 local talkaction = TalkAction("!war")
 
+local function updateWarEmblems(guildId, enemyId)
+	local guild = Guild(guildId)
+	local enemyGuild = Guild(enemyId)
+	if not guild or not enemyGuild then
+		return
+	end
+	local gMembers = guild:getMembersOnline()
+	local eMembers = enemyGuild:getMembersOnline()
+	-- cross-guild updates (enemy vs enemy)
+	for _, gp in ipairs(gMembers) do
+		for _, ep in ipairs(eMembers) do
+			gp:sendCreatureEmblem(ep)
+			ep:sendCreatureEmblem(gp)
+		end
+	end
+
+	-- same-guild updates (ally state inside each guild)
+	for i = 1, #gMembers do
+		for j = 1, #gMembers do
+			local a = gMembers[i]
+			local b = gMembers[j]
+			if a ~= b then
+				a:sendCreatureEmblem(b)
+				b:sendCreatureEmblem(a)
+			end
+		end
+	end
+	for i = 1, #eMembers do
+		for j = 1, #eMembers do
+			local a = eMembers[i]
+			local b = eMembers[j]
+			if a ~= b then
+				a:sendCreatureEmblem(b)
+				b:sendCreatureEmblem(a)
+			end
+		end
+	end
+end
+
 function talkaction.onSay(player, words, param)
 	local cooldown = 2 -- seconds, prevent db overload
 	local lastWarCommandTime = player:kv():get("talkaction.war") or 0
@@ -58,12 +97,27 @@ function talkaction.onSay(player, words, param)
 	-- Handle war actions
 	if isInArray({ "accept", "reject", "cancel" }, command) then
 		handlePendingWar(player, guildId, enemy, enemyGuildName, command)
+		-- reload wars to reflect DB changes before pushing emblems
+		for _, p in ipairs(Guild(guildId):getMembersOnline()) do
+			p:reloadGuildWarList()
+		end
+		for _, p in ipairs(Guild(enemy):getMembersOnline()) do
+			p:reloadGuildWarList()
+		end
+		updateWarEmblems(guildId, enemy)
 		return true
 	elseif command == "invite" then
 		handleWarInvite(player, guildId, enemy, enemyGuildName, kills)
 		return true
 	elseif isInArray({ "end", "finish" }, command) then
 		handleWarEnd(player, guildId, enemy, enemyGuildName, command)
+		for _, p in ipairs(Guild(guildId):getMembersOnline()) do
+			p:reloadGuildWarList()
+		end
+		for _, p in ipairs(Guild(enemy):getMembersOnline()) do
+			p:reloadGuildWarList()
+		end
+		updateWarEmblems(guildId, enemy)
 		return true
 	end
 

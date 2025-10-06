@@ -287,6 +287,9 @@ public:
 		return guildWarVector;
 	}
 
+	// Reload active wars from database into guildWarVector
+	void reloadGuildWarList();
+
 	const std::unordered_set<std::shared_ptr<MonsterType>> &getCyclopediaMonsterTrackerSet(bool isBoss) const;
 
 	void addMonsterToCyclopediaTrackerList(const std::shared_ptr<MonsterType> &mtype, bool isBoss, bool reloadClient = false);
