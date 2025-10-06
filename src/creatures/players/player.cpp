@@ -7156,11 +7156,11 @@ bool Player::isInWarList(uint32_t guildId) const {
 }
 
 void Player::reloadGuildWarList() {
-    guildWarVector.clear();
-    if (!guild) {
-        return;
-    }
-    IOGuild::getWarList(guild->getId(), guildWarVector);
+	guildWarVector.clear();
+	if (!guild) {
+		return;
+	}
+	IOGuild::getWarList(guild->getId(), guildWarVector);
 }
 
 uint32_t Player::getMagicLevel() const {
