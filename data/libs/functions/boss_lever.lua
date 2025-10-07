@@ -317,3 +317,28 @@ function BossLever:register()
 	end
 	return true
 end
+
+---@return {name: string, exit: Position|nil}[]
+function BossLever:getAll()
+	local bossTeleports = {
+    	{ name = "Jaul", pos = Position(33579, 31298, 11) },
+    	{ name = "Scarlett Etzel", pos = Position(33386, 32627, 7) },
+    	{ name = "Grand Master Oberon", pos = Position(33365, 31341, 9) },
+    	{ name = "Drume", pos = Position(32423, 32448, 7) },
+    	{ name = "the count of the core", pos = Position(33324, 32111, 15) },
+    	{ name = "the duke of the depths", pos = Position(33275, 32318, 15) },
+    	{ name = "the baron from below", pos = Position(33462, 32267, 15) },
+    	{ name = "The Brainstealer", pos = Position(32536, 31122, 15) },
+    	-- Dodaj tutaj swoje bossowe lokacje
+    }
+	for name, boss in pairs(BossLever) do
+		-- Pomijamy metody i inne nieinstancje
+		if type(boss) == "table" and boss.exit then
+			table.insert(bossTeleports, {
+				name = boss.name,
+				pos = boss.exit
+			})
+		end
+	end
+	return bossTeleports
+end

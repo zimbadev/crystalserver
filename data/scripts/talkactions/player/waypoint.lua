@@ -36,21 +36,7 @@ local cityTeleports = {
 	{ name = "Blue Valley", pos = Position(33614, 31494, 7) },
 }
 
--- Lista teleportów: Bossy (przykładowe wpisy) -- DODAJ/WYMIEN NA SWOJE
-local bossTeleports = {
-	{ name = "Jaul", pos = Position(33579, 31298, 11) },
-	{ name = "Scarlett Etzel", pos = Position(33386, 32627, 7) },
-	{ name = "Grand Master Oberon", pos = Position(33365, 31341, 9) },
-	{ name = "Suggary Daddy", pos = Position(33336, 32223, 9) },
-	{ name = "Drume", pos = Position(32423, 32448, 7) },
-	{ name = "Timira", pos = Position(33805, 32700, 3) },
-	{ name = "the count of the core", pos = Position(33324, 32111, 15) },
-	{ name = "the duke of the depths", pos = Position(33275, 32318, 15) },
-	{ name = "the baron from below", pos = Position(33462, 32267, 15) },
-	{ name = "Magma Bubble", pos = Position(33659, 32897, 14) },
-	{ name = "The Brainstealer", pos = Position(32536, 31122, 15) },
-	-- Dodaj tutaj swoje bossowe lokacje
-}
+
 
 -- Funkcja pomocnicza: otwiera modal z listą teleportów (teleports = tabela z {name,pos})
 local function openTeleportList(player, teleports, title)
@@ -109,7 +95,9 @@ function waypoint.onSay(player, words, param)
 	-- Wybór: Bossy
 	window:addChoice("Boss", function(player, button)
 		if button.name ~= "Select" then return true end
-		return openTeleportList(player, bossTeleports, "Teleporta - Bossy")
+		local bosses = BossLever:getAll()
+
+		return openTeleportList(player, bosses, "Teleporta - Bossy")
 	end)
 
 	window:addButton("Select")
