@@ -1,6 +1,12 @@
 local doorId = {}
 local keyLockedDoor = {}
 local keyUnlockedDoor = {}
+
+local woodenKeyActionIds = {
+    909,
+    9500
+}
+
 for index, value in ipairs(KeyDoorTable) do
 	if not table.contains(doorId, value.closedDoor) then
 		table.insert(doorId, value.closedDoor)
@@ -55,11 +61,11 @@ function keyDoor.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	-- Key use on door (locked key door)
 	if target.actionid > 0 then
 		for index, value in ipairs(KeyDoorTable) do
-			if item.actionid ~= target.actionid and value.lockedDoor == target.itemid then
+			if item.actionid ~= target.actionid and (item.itemid ~= 2968 or not table.contains(woodenKeyActionIds, target.actionid)) and value.lockedDoor == target.itemid then
 				player:sendCancelMessage("The key does not match.")
 				return true
 			end
-			if item.actionid == target.actionid then
+			if item.actionid == target.actionid or item.itemid == 2968 then
 				if value.lockedDoor == target.itemid then
 					target:transform(value.openDoor)
 					item:getPosition():sendSingleSoundEffect(SOUND_EFFECT_TYPE_ACTION_OPEN_DOOR)
