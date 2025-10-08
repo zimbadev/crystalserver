@@ -2928,6 +2928,16 @@ Storage = {
 		OnlineCoinsGain = 150002,
 		OnlineTokensGain = 150003,
 	},
+	KosOts = {
+        TaskSystem = {
+            QuestLogEntry = 160000,
+            QuestLinePoints = 160001,
+            POINTSSTORAGE = 160002,
+            CURRENT_TASK = 160003,
+            CURRENT_TASK_STAGE = 160004,
+            CURRENT_TASK_PROGRESS = 160005,
+        },
+    },
 }
 
 GlobalStorage = {

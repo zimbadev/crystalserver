@@ -1,3 +1,6 @@
+-- KosOTS
+dofile(CORE_DIRECTORY .. "/libs/kosots/task.lua")
+
 -- Load core functions
 dofile(CORE_DIRECTORY .. "/libs/functions/load.lua")
 
