@@ -19,12 +19,12 @@ set(VCPKG_BUILD_TYPE "release")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # *****************************************************************************
-# Project crystalserver
+# Project kosots
 # *****************************************************************************
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    project(crystalserver-debug LANGUAGES CXX)
+    project(kosots-debug LANGUAGES CXX)
 else()
-    project(crystalserver LANGUAGES CXX)
+    project(kosots LANGUAGES CXX)
 endif()
 
 # *****************************************************************************
