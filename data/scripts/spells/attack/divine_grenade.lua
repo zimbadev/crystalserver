@@ -4,8 +4,8 @@ combatGrenade:setArea(createCombatArea(AREA_CIRCLE2X2))
 combatGrenade:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYDAMAGE)
 
 function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 4)
-	local max = (level / 5) + (maglevel * 6)
+	local min = (level / 5) + (maglevel * 5.5)
+	local max = (level / 5) + (maglevel * 7.5)
 
 	local grade = player:upgradeSpellsWOD("Divine Grenade")
 
