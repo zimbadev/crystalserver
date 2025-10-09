@@ -7,15 +7,16 @@ function serverInfo.onSay(player, words, param)
 	if useStages then
 		local configRateSkill = configManager.getNumber(configKeys.RATE_SKILL)
 		local skills = {
-			{ name = "Sword Skill Stages", skill = SKILL_SWORD },
-			{ name = "Club Skill Stages", skill = SKILL_CLUB },
-			{ name = "Axe Skill Stages", skill = SKILL_AXE },
+			{ name = "Sword Skill Stages",    skill = SKILL_SWORD },
+			{ name = "Club Skill Stages",     skill = SKILL_CLUB },
+			{ name = "Axe Skill Stages",      skill = SKILL_AXE },
 			{ name = "Distance Skill Stages", skill = SKILL_DISTANCE },
-			{ name = "Shield Skill Stages", skill = SKILL_SHIELD },
-			{ name = "Fist Skill Stages", skill = SKILL_FIST }
+			{ name = "Shield Skill Stages",   skill = SKILL_SHIELD },
+			{ name = "Fist Skill Stages",     skill = SKILL_FIST }
 		}
 
-		text = text .. "\nExp Stages rate: " .. getRateFromTable(experienceStages, player:getLevel(), expstagesrate) .. "x"
+		text = text ..
+		"\nExp Stages rate: " .. getRateFromTable(experienceStages, player:getLevel(), expstagesrate) .. "x"
 
 		for _, skillData in ipairs(skills) do
 			text = text .. "\n" .. skillData.name .. " rate: "
@@ -23,7 +24,8 @@ function serverInfo.onSay(player, words, param)
 		end
 
 		text = text .. "\nMagic Stages rate: "
-			.. getRateFromTable(magicLevelStages, player:getBaseMagicLevel(), configManager.getNumber(configKeys.RATE_MAGIC)) .. "x"
+			.. getRateFromTable(magicLevelStages, player:getBaseMagicLevel(),
+				configManager.getNumber(configKeys.RATE_MAGIC)) .. "x"
 	else
 		text = text .. "\nExp rate: " .. configManager.getNumber(configKeys.RATE_EXPERIENCE) .. "x"
 			.. "\nSkill rate: " .. configManager.getNumber(configKeys.RATE_SKILL) .. "x"
@@ -44,7 +46,8 @@ function serverInfo.onSay(player, words, param)
 		.. "\nMax Monster XP: " .. configManager.getFloat(configKeys.ANIMUS_MASTERY_MAX_MONSTER_XP_MULTIPLIER) .. "x"
 		.. "\nMonster XP: " .. configManager.getFloat(configKeys.ANIMUS_MASTERY_MONSTER_XP_MULTIPLIER) .. "x"
 		.. "\nMonsters XP: " .. configManager.getFloat(configKeys.ANIMUS_MASTERY_MONSTERS_XP_MULTIPLIER) .. "x"
-		.. "\nMonsters to Increase: " .. configManager.getNumber(configKeys.ANIMUS_MASTERY_MONSTERS_TO_INCREASE_XP_MULTIPLIER)
+		.. "\nMonsters to Increase: " ..
+		configManager.getNumber(configKeys.ANIMUS_MASTERY_MONSTERS_TO_INCREASE_XP_MULTIPLIER)
 
 	local staminaTrainer = configManager.getBoolean(configKeys.STAMINA_TRAINER)
 	local staminaPz = configManager.getBoolean(configKeys.STAMINA_PZ)
