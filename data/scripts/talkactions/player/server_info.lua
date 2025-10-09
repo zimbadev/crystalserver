@@ -46,7 +46,6 @@ function serverInfo.onSay(player, words, param)
 		.. "\nMonsters XP: " .. configManager.getFloat(configKeys.ANIMUS_MASTERY_MONSTERS_XP_MULTIPLIER) .. "x"
 		.. "\nMonsters to Increase: " .. configManager.getNumber(configKeys.ANIMUS_MASTERY_MONSTERS_TO_INCREASE_XP_MULTIPLIER)
 
-	-- Stamina info
 	local staminaTrainer = configManager.getBoolean(configKeys.STAMINA_TRAINER)
 	local staminaPz = configManager.getBoolean(configKeys.STAMINA_PZ)
 
