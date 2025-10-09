@@ -16,7 +16,7 @@ function serverInfo.onSay(player, words, param)
 		}
 
 		text = text ..
-		"\nExp Stages rate: " .. getRateFromTable(experienceStages, player:getLevel(), expstagesrate) .. "x"
+			"\nExp Stages rate: " .. getRateFromTable(experienceStages, player:getLevel(), expstagesrate) .. "x"
 
 		for _, skillData in ipairs(skills) do
 			text = text .. "\n" .. skillData.name .. " rate: "
@@ -32,12 +32,10 @@ function serverInfo.onSay(player, words, param)
 			.. "\nMagic rate: " .. configManager.getNumber(configKeys.RATE_MAGIC) .. "x"
 	end
 
-	-- Informações comuns
 	text = text .. "\nLoot rate: " .. configManager.getNumber(configKeys.RATE_LOOT) .. "x"
 		.. "\nSpawns rate: " .. configManager.getNumber(configKeys.RATE_SPAWN) .. "x"
 		.. "\nBestiary rate: " .. configManager.getNumber(configKeys.BESTIARY_KILL_MULTIPLIER) .. "x"
 
-	-- Informações adicionais
 	local loseHouseText = configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) > 0
 		and configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) .. " days" or "never"
 
