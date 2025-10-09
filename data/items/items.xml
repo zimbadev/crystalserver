@@ -62852,9 +62852,8 @@ hands of its owner. Granted by TibiaRoyal.com" />
 		<attribute key="description" value="A psychedelic marble. An engraving reads: IX" />
 		<attribute key="weight" value="10" />
 	</item>
-	<item id="33313" name="the supreme cube">
+	<item id="33313" name="KosOTS Cube">
 		<attribute key="primarytype" value="quest items" />
-		<attribute key="description" value="It's black and it's supreme... and it's currently occupied" />
 		<attribute key="weight" value="1000" />
 	</item>
 	<item id="33317" article="a" name="sulphur puddle">
@@ -84915,5 +84914,26 @@ Granted by TibiaGoals.com" />
 			<attribute key="slot" value="armor" />
 			<attribute key="vocation" value="Monk;true, Exalted Monk" />
 		</attribute>
+	</item>
+	<item id="51315" article="a" name="Banor doll">
+		<attribute key="description" value="Souvenir from Thais Museum" />
+	</item>
+    <item id="51316" article="a" name="bard doll">
+        <attribute key="description" value="Souvenir from Thais Museum" />
+	</item>
+    <item id="51317" article="a" name="Aylie">
+        <attribute key="description" value="Souvenir from Thais Museum" />
+	</item>
+    <item id="51318" article="a" name="Aurora's Collection">
+        <attribute key="description" value="Souvenir from Thais Museum" />
+	</item>
+	<item id="65000" name="KosCoin">
+        <attribute key="primarytype" value="valuables" />
+		<attribute key="description" value="Get KosCoin by killing bossess and doing tasks" />
+		<attribute key="weight" value="0" />
+	</item>
+    <item id="65001" article="a" name="KosOTS Bag">
+		<attribute key="primarytype" value="valuables" />
+		<attribute key="weight" value="20" />
 	</item>
 </items>
