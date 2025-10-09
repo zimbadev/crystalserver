@@ -6,6 +6,7 @@ local configs = {
 
 	[Concoction.Ids.StaminaExtension] = {
 		amount = 60, -- minutes
+        cooldownOverride = 0,
 		callback = function(player, config)
 			player:setStamina(player:getStamina() + config.amount)
 			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have been granted " .. config.amount .. " minutes of stamina.")
