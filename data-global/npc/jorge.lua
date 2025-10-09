@@ -95,6 +95,10 @@ local items = {
 	[35] = { name = "Shield of Endless Search", id = 37060 },
 	[36] = { name = "The Mexcalibur", id = 19154 },
 	[37] = { name = "Tibiora's Box", id = 43510 },
+	[37] = { name = "Banor doll", id = 51315 },
+	[37] = { name = "bard doll", id = 51316 },
+	[37] = { name = "Aylie", id = 51317 },
+	[37] = { name = "Aurora's Collection", id = 51318 },
 }
 
 local function creatureSayCallback(npc, creature, type, message)

@@ -1,5 +1,4 @@
-local waypoint = TalkAction("/waypoint")
-
+local kosOTSCube = Action()
 -- Lista teleportów: Miasta
 local cityTeleports = {
 	{ name = "Dawnport Tutorial", pos = Position(32069, 31901, 6) },
@@ -76,39 +75,41 @@ local function openTeleportList(player, teleports, title)
 	window:sendToPlayer(player)
 	return true
 end
+function kosOTSCube.onUse(player, item, fromPosition, target, toPosition, isHotkey)
+    local inPz = player:getTile():hasFlag(TILESTATE_PROTECTIONZONE)
+	local inFight = player:isPzLocked() or player:getCondition(CONDITION_INFIGHT, CONDITIONID_DEFAULT)
+    if inPz or not inFight then
+        local window = ModalWindow({
+            title = "Typ teleportu",
+            message = "Wybierz kategorię teleportów:",
+        })
 
--- Główna komenda: najpierw wybór typu (Miasto/Boss), potem lista właściwa
-function waypoint.onSay(player, words, param)
-	logCommand(player, words, param)
+        -- Wybór: Miasta
+        window:addChoice("Miasto", function(player, button)
+            if button.name ~= "Select" then return true end
+            return openTeleportList(player, cityTeleports, "Teleporta - Miasta")
+        end)
 
-	local window = ModalWindow({
-		title = "Typ teleportu",
-		message = "Wybierz kategorię teleportów:",
-	})
+        -- Wybór: Bossy
+        window:addChoice("Boss", function(player, button)
+            if button.name ~= "Select" then return true end
+            local bosses = BossLever:getAll()
 
-	-- Wybór: Miasta
-	window:addChoice("Miasto", function(player, button)
-		if button.name ~= "Select" then return true end
-		return openTeleportList(player, cityTeleports, "Teleporta - Miasta")
-	end)
+            return openTeleportList(player, bosses, "Teleporta - Bossy")
+        end)
 
-	-- Wybór: Bossy
-	window:addChoice("Boss", function(player, button)
-		if button.name ~= "Select" then return true end
-		local bosses = BossLever:getAll()
+        window:addButton("Select")
+        window:addButton("Close")
+        window:setDefaultEnterButton(0)
+        window:setDefaultEscapeButton(1)
+        window:sendToPlayer(player)
 
-		return openTeleportList(player, bosses, "Teleporta - Bossy")
-	end)
-
-	window:addButton("Select")
-	window:addButton("Close")
-	window:setDefaultEnterButton(0)
-	window:setDefaultEscapeButton(1)
-	window:sendToPlayer(player)
-
-	return true
+        return true
+	else
+		player:sendCancelMessage("You can't use this when you're in a fight.")
+		fromPosition:sendMagicEffect(CONST_ME_POFF)
+	end
 end
 
-waypoint:separator(" ")
-waypoint:groupType("normal")
-waypoint:register()
+kosOTSCube:id(33313)
+kosOTSCube:register()

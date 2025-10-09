@@ -6645,6 +6645,14 @@ GameStore.Categories = {
 				description = "<i>Changes automatically either a stack of 100 gold pieces into 1 platinum coin, or a stack of 100 platinum coins into 1 crystal coin!</i>\n\n{character}\n{storeinbox}\n{useicon} use it to activate or deactivate the automatic conversion\n{info} converts all stacks of 100 gold or platinum in the inventory whenever it is activated\n{info} deactivated upon purchase\n{info} usable for 500 conversions a piece",
 				type = GameStore.OfferTypes.OFFER_TYPE_CHARGES,
 			},
+   			{
+   				icons = { "The_Supreme_Cube.png" },
+   				name = "KosOTS Cube",
+   				price = 150,
+   				itemtype = 33313,
+   				description = "<i>Allow player to teleport to cites and bossess!</i>\n\n{character}\n{storeinbox}\n{useicon} use it to activate or deactivate the automatic conversion\n{info} converts all stacks of 100 gold or platinum in the inventory whenever it is activated\n{info} deactivated upon purchase\n{info} usable for 500 conversions a piece",
+   				type = GameStore.OfferTypes.OFFER_TYPE_CHARGES,
+   			},
 			{
 				icons = { "Prey_Bonus_Reroll.png" },
 				name = "Prey Wildcard",
