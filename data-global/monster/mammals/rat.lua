@@ -15,6 +15,7 @@ monster.outfit = {
 
 monster.events = {
 	"RationalRequestRatDeath",
+    "TaskSystem"
 }
 
 monster.raceId = 21
