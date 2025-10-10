@@ -147,7 +147,9 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 	end
 
 	local vocation = player:getVocation()
-	_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, vocation:getBaseAttackSpeed() / configManager.getFloat(configKeys.RATE_EXERCISE_TRAINING_SPEED), playerId, tilePosition, weaponId, dummyId)
+	_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent,
+		vocation:getBaseAttackSpeed() / configManager.getFloat(configKeys.RATE_EXERCISE_TRAINING_SPEED), playerId,
+		tilePosition, weaponId, dummyId)
 	return true
 end
 
@@ -206,13 +208,15 @@ function exerciseTraining.onUse(player, item, fromPosition, target, toPosition, 
 		end
 
 		if player:hasExhaustion("training-exhaustion") then
-			player:sendTextMessage(MESSAGE_FAILURE, "This exercise dummy can only be used after a " .. exhaustionTime .. " seconds cooldown.")
+			player:sendTextMessage(MESSAGE_FAILURE,
+				"This exercise dummy can only be used after a " .. exhaustionTime .. " seconds cooldown.")
 			return true
 		end
 
 		_G.OnExerciseTraining[playerId] = {}
 		if not _G.OnExerciseTraining[playerId].event then
-			_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, 0, playerId, targetPos, item.itemid, targetId)
+			_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, 0, playerId, targetPos, item.itemid,
+				targetId)
 			_G.OnExerciseTraining[playerId].dummyPos = targetPos
 			player:setTraining(true)
 			player:setExhaustion("training-exhaustion", exhaustionTime)
