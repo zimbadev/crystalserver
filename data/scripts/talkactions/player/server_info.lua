@@ -7,44 +7,23 @@ function serverInfo.onSay(player, words, param)
 	if useStages then
 		local configRateSkill = configManager.getNumber(configKeys.RATE_SKILL)
 		local skills = {
-			{ name = "Sword Skill Stages",    skill = SKILL_SWORD },
-			{ name = "Club Skill Stages",     skill = SKILL_CLUB },
-			{ name = "Axe Skill Stages",      skill = SKILL_AXE },
+			{ name = "Sword Skill Stages", skill = SKILL_SWORD },
+			{ name = "Club Skill Stages", skill = SKILL_CLUB },
+			{ name = "Axe Skill Stages", skill = SKILL_AXE },
 			{ name = "Distance Skill Stages", skill = SKILL_DISTANCE },
-			{ name = "Shield Skill Stages",   skill = SKILL_SHIELD },
-			{ name = "Fist Skill Stages",     skill = SKILL_FIST },
+			{ name = "Shield Skill Stages", skill = SKILL_SHIELD },
+			{ name = "Fist Skill Stages", skill = SKILL_FIST },
 		}
 
-		text = text
-			.. "\nExp Stages rate: "
-			.. getRateFromTable(experienceStages, player:getLevel(), expstagesrate)
-			.. "x"
+		text = text .. "\nExp Stages rate: " .. getRateFromTable(experienceStages, player:getLevel(), expstagesrate) .. "x"
 
 		for _, skillData in ipairs(skills) do
-			text = text
-				.. "\n"
-				.. skillData.name
-				.. " rate: "
-				.. getRateFromTable(skillsStages, player:getSkillLevel(skillData.skill), configRateSkill)
-				.. "x"
+			text = text .. "\n" .. skillData.name .. " rate: " .. getRateFromTable(skillsStages, player:getSkillLevel(skillData.skill), configRateSkill) .. "x"
 		end
 
-		text = text
-			.. "\nMagic Stages rate: "
-			.. getRateFromTable(magicLevelStages, player:getBaseMagicLevel(),
-				configManager.getNumber(configKeys.RATE_MAGIC))
-			.. "x"
+		text = text .. "\nMagic Stages rate: " .. getRateFromTable(magicLevelStages, player:getBaseMagicLevel(), configManager.getNumber(configKeys.RATE_MAGIC)) .. "x"
 	else
-		text = text
-			.. "\nExp rate: "
-			.. configManager.getNumber(configKeys.RATE_EXPERIENCE)
-			.. "x"
-			.. "\nSkill rate: "
-			.. configManager.getNumber(configKeys.RATE_SKILL)
-			.. "x"
-			.. "\nMagic rate: "
-			.. configManager.getNumber(configKeys.RATE_MAGIC)
-			.. "x"
+		text = text .. "\nExp rate: " .. configManager.getNumber(configKeys.RATE_EXPERIENCE) .. "x" .. "\nSkill rate: " .. configManager.getNumber(configKeys.RATE_SKILL) .. "x" .. "\nMagic rate: " .. configManager.getNumber(configKeys.RATE_MAGIC) .. "x"
 	end
 
 	text = text
@@ -96,44 +75,17 @@ function serverInfo.onSay(player, words, param)
 		text = text .. "\n\nStamina: \n"
 
 		if staminaTrainer then
-			text = text
-				.. "\nTrainer enabled: Yes"
-				.. "\nTrainer Delay: "
-				.. configManager.getNumber(configKeys.STAMINA_TRAINER_DELAY)
-				.. " min"
-				.. "\nTrainer Gain: "
-				.. configManager.getNumber(configKeys.STAMINA_TRAINER_GAIN)
-				.. " per min"
+			text = text .. "\nTrainer enabled: Yes" .. "\nTrainer Delay: " .. configManager.getNumber(configKeys.STAMINA_TRAINER_DELAY) .. " min" .. "\nTrainer Gain: " .. configManager.getNumber(configKeys.STAMINA_TRAINER_GAIN) .. " per min"
 		end
 
 		if staminaPz then
-			text = text
-				.. "\nPZ enabled: Yes"
-				.. "\nOrange Delay: "
-				.. configManager.getNumber(configKeys.STAMINA_ORANGE_DELAY)
-				.. " min"
-				.. "\nGreen Delay: "
-				.. configManager.getNumber(configKeys.STAMINA_GREEN_DELAY)
-				.. " min"
-				.. "\nPZ Gain: "
-				.. configManager.getNumber(configKeys.STAMINA_PZ_GAIN)
-				.. " per min"
+			text = text .. "\nPZ enabled: Yes" .. "\nOrange Delay: " .. configManager.getNumber(configKeys.STAMINA_ORANGE_DELAY) .. " min" .. "\nGreen Delay: " .. configManager.getNumber(configKeys.STAMINA_GREEN_DELAY) .. " min" .. "\nPZ Gain: " .. configManager.getNumber(configKeys.STAMINA_PZ_GAIN) .. " per min"
 		end
 	end
 
-	local loseHouseText = configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) > 0
-		and configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) .. " days"
-		or "never"
+	local loseHouseText = configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) > 0 and configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) .. " days" or "never"
 
-	text = text
-		.. "\n\nHouse Info: \n"
-		.. "\nLevel to buy: "
-		.. configManager.getNumber(configKeys.HOUSE_BUY_LEVEL)
-		.. "\nLose after inactivity: "
-		.. loseHouseText
-		.. "\nRent rate: "
-		.. configManager.getFloat(configKeys.HOUSE_RENT_RATE)
-		.. "x"
+	text = text .. "\n\nHouse Info: \n" .. "\nLevel to buy: " .. configManager.getNumber(configKeys.HOUSE_BUY_LEVEL) .. "\nLose after inactivity: " .. loseHouseText .. "\nRent rate: " .. configManager.getFloat(configKeys.HOUSE_RENT_RATE) .. "x"
 
 	text = text
 		.. "\n\nVIP System: \n"
