@@ -1,17 +1,17 @@
 local config = {
+    id = 1,
     name = "Beginner",
     tier = "beginner",
     monsters = {"Rat"},
-    amount = 100,
+    amount = 1,
     rewards = {
         xp = 100000,
-        money = 0,
+        money = 100,
         items = {
-            { id = 2160, count = 5 }
+            { id = 65000, count = 1 }
         },
     },
     requirements = { minLevel = 10 },
-    repeatable = true,
 }
 
 local taskBeginer = KosOTSTask(config)

@@ -6804,7 +6804,7 @@ if not Quests then
 			},
 		},
 		[51] = {
-            name = "KosOTS HunterSquad",
+            name = "KosOTS Hunter Squad",
             			startStorageId = Storage.KosOts.TaskSystem.QuestLogEntry,
             			startStorageValue = 1,
             			missions = {
@@ -6814,10 +6814,8 @@ if not Quests then
                                 missionId = 2000,
                               	startValue = 0,
                               	endValue = 1,
-                              	description = function(player)
-                              		return string.format("You joined the 'KosOTS HunterSquad'. Ask Billy The Tasker for some hunting tasks. You already gained %d points.", (math.max(player:getStorageValue(Storage.KosOts.TaskSystem.POINTSSTORAGE), 0)))
-                              	end,
-            				}
+                              	description = "You have joined to KosOTS Hunter Squad",
+            				},
             			},
         },
 	}

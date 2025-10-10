@@ -207,7 +207,7 @@ GameStore.DefaultDescriptions = {
 }
 
 GameStore.ItemLimit = {
-	PREY_WILDCARD = 50,
+	PREY_WILDCARD = 100,
 	INSTANT_REWARD_ACCESS = 90,
 	EXPBOOST = 6,
 	HIRELING = 10,

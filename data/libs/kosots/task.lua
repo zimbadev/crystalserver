@@ -1,6 +1,7 @@
 ---@class KosOTSTask
 ---@field private name string
 KosOTSTask = {}
+KosOTSTaskIds = {}
 
 --[[
 local config = {
@@ -32,6 +33,10 @@ setmetatable(KosOTSTask, {
 		end
 		return setmetatable({
 			name = config.name:lower(),
+			amount = tonumber(config.amount),
+			id = tonumber(config.id),
+			monsters = config.monsters,
+            rewards = config.rewards
 
 		}, { __index = KosOTSTask })
 	end,
@@ -46,11 +51,11 @@ function KosOTSTask:register()
 	end
 	if #missingParams > 0 then
 		local name = self.name or "unknown"
-		logger.error("KosOTSTask:register() - boss with name {} missing parameters: {}", name, table.concat(missingParams, ", "))
 		return false
 	end
 
-	KosOTSTask[self.name] = self
+	KosOTSTask[self.id] = self
+    KosOTSTaskIds[self.name:lower()] = self.id
 	return true
 end
 
@@ -64,9 +69,26 @@ function KosOTSTask:getTaskByStage()
 	for name, task in pairs(KosOTSTask) do
 		-- Pomijamy metody i inne nieinstancje
 		if type(task) == "table" then
-            logger.error("KosOTSTask:getTaskByStage() - boss with name {}", task)
+            logger.error("KosOTSTask:getTaskByStage() - boss with name {}", task.name)
 			table.insert(stageTasks, task)
 		end
 	end
 	return stageTasks
 end
+
+function KosOTSTask:getTaskByName(taskName)
+    local taskId = KosOTSTaskIds[taskName:lower()]
+    if taskId ~= nil then
+        return KosOTSTask[taskId]
+    end
+    return nil
+end
+
+function KosOTSTask:taskContainsMonster(creatureName)
+    return table.contains(self.monsters, creatureName)
+end
+
+
+
+
+

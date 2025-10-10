@@ -551,6 +551,13 @@ function Player:onGainExperience(target, exp, rawExp)
 		end
 	end
 
+
+    local currentBoostEnd = player:getStorageValue(693690)
+    if currentBoostEnd > os.time() then
+        return exp * 1.1 --- 50%
+    end
+
+
 	-- Final Adjustments: Low Level Bonus and Base Rate
 	local lowLevelBonusExp = self:getFinalLowLevelBonus()
 	local baseRateExp = self:getFinalBaseRateExperience()
@@ -647,3 +654,47 @@ function Player:onChangeZone(zone)
 end
 
 function Player:onInventoryUpdate(item, slot, equip) end
+
+function Player:setPlayerTask(task,amount)
+    self:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK, task.id)
+    self:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_STAGE, amount)
+    self:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_PROGRESS, 0)
+end
+
+function Player:getCurrentTaskProgress(task,amount)
+    return self:getStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_PROGRESS) or 0
+end
+
+function Player:getActiveTask(task,amount)
+    local taskId = self:getStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK)
+    if taskId then
+        return KosOTSTask[taskId]
+    end
+    return nil
+end
+
+function Player:isTaskCompleted(task,stage)
+    local progress =  self:getStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_PROGRESS)
+    return progress >= stage * task.amount
+end
+
+
+function Player:completeTask(task,stage)
+    local amountXp = task.rewards.xp * stage
+    local amountMoney = task.rewards.money * stage
+
+    self:addExperience(amountXp)
+    self:addMoney(task.rewards.money * stage)
+    for i = 1, #task.rewards.items do
+        local reward = task.rewards.items[i]
+        self:addItem(reward.id, reward.count*stage)
+    end
+    self:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK, 0)
+    self:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_STAGE, 0)
+    self:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_PROGRESS, 0)
+
+    self:sendTextMessage(MESSAGE_LOOK, string.format("Congratulations, you received a %d experience and %d gold.", amountXp, amountMoney))
+
+end
+
+

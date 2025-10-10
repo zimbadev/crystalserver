@@ -13,8 +13,8 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.health = 20000
-monster.maxHealth = 20000
+monster.health = 45000
+monster.maxHealth = 45000
 monster.race = "undead"
 monster.corpse = 0
 monster.speed = 154
@@ -43,7 +43,7 @@ monster.flags = {
 	canPushItems = false,
 	canPushCreatures = true,
 	staticAttackChance = 90,
-	targetDistance = 1,
+	targetDistance = 0,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
@@ -76,20 +76,20 @@ monster.defenses = {
 	defense = 55,
 	armor = 55,
 	--	mitigation = ???,
-	{ name = "combat", interval = 2000, chance = 75, type = COMBAT_HEALING, minDamage = 600, maxDamage = 600, effect = CONST_ME_MAGIC_GREEN, target = false },
+	{ name = "combat", interval = 2000, chance = 75, type = COMBAT_HEALING, minDamage = 1000, maxDamage = 1700, effect = CONST_ME_MAGIC_GREEN, target = false },
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = 0 },
-	{ type = COMBAT_EARTHDAMAGE, percent = 0 },
-	{ type = COMBAT_FIREDAMAGE, percent = 0 },
-	{ type = COMBAT_LIFEDRAIN, percent = 0 },
-	{ type = COMBAT_MANADRAIN, percent = 0 },
-	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 0 },
-	{ type = COMBAT_HOLYDAMAGE, percent = 0 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 0 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = 25 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = 25 },
+	{ type = COMBAT_EARTHDAMAGE, percent = 25 },
+	{ type = COMBAT_FIREDAMAGE, percent = 25 },
+	{ type = COMBAT_LIFEDRAIN, percent = 25 },
+	{ type = COMBAT_MANADRAIN, percent = 25 },
+	{ type = COMBAT_DROWNDAMAGE, percent = 25 },
+	{ type = COMBAT_ICEDAMAGE, percent = 25 },
+	{ type = COMBAT_HOLYDAMAGE, percent = 25 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 25 },
 }
 
 monster.immunities = {
