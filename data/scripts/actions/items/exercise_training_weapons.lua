@@ -134,7 +134,9 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 					end
 				end
 			end
-			if found then break end
+			if found then
+				break
+			end
 		end
 
 		if found then
