@@ -15,21 +15,15 @@ function serverInfo.onSay(player, words, param)
 			{ name = "Fist Skill Stages", skill = SKILL_FIST },
 		}
 
-		text = text ..
-		"\nExp Stages rate: " .. getRateFromTable(experienceStages, player:getLevel(), expstagesrate) .. "x"
+		text = text .. "\nExp Stages rate: " .. getRateFromTable(experienceStages, player:getLevel(), expstagesrate) .. "x"
 
 		for _, skillData in ipairs(skills) do
-			text = text .. "\n" .. skillData.name .. " rate: "
-				.. getRateFromTable(skillsStages, player:getSkillLevel(skillData.skill), configRateSkill) .. "x"
+			text = text .. "\n" .. skillData.name .. " rate: " .. getRateFromTable(skillsStages, player:getSkillLevel(skillData.skill), configRateSkill) .. "x"
 		end
 
-		text = text .. "\nMagic Stages rate: "
-			.. getRateFromTable(magicLevelStages, player:getBaseMagicLevel(),
-				configManager.getNumber(configKeys.RATE_MAGIC)) .. "x"
+		text = text .. "\nMagic Stages rate: " .. getRateFromTable(magicLevelStages, player:getBaseMagicLevel(), configManager.getNumber(configKeys.RATE_MAGIC)) .. "x"
 	else
-		text = text .. "\nExp rate: " .. configManager.getNumber(configKeys.RATE_EXPERIENCE) .. "x"
-			.. "\nSkill rate: " .. configManager.getNumber(configKeys.RATE_SKILL) .. "x"
-			.. "\nMagic rate: " .. configManager.getNumber(configKeys.RATE_MAGIC) .. "x"
+		text = text .. "\nExp rate: " .. configManager.getNumber(configKeys.RATE_EXPERIENCE) .. "x" .. "\nSkill rate: " .. configManager.getNumber(configKeys.RATE_SKILL) .. "x" .. "\nMagic rate: " .. configManager.getNumber(configKeys.RATE_MAGIC) .. "x"
 	end
 
 	text = text
@@ -81,34 +75,52 @@ function serverInfo.onSay(player, words, param)
 		text = text .. "\n\nStamina: \n"
 
 		if staminaTrainer then
-			text = text .. "\nTrainer enabled: Yes"
-				.. "\nTrainer Delay: " .. configManager.getNumber(configKeys.STAMINA_TRAINER_DELAY) .. " min"
-				.. "\nTrainer Gain: " .. configManager.getNumber(configKeys.STAMINA_TRAINER_GAIN) .. " per min"
+			text = text .. "\nTrainer enabled: Yes" .. "\nTrainer Delay: " .. configManager.getNumber(configKeys.STAMINA_TRAINER_DELAY) .. " min" .. "\nTrainer Gain: " .. configManager.getNumber(configKeys.STAMINA_TRAINER_GAIN) .. " per min"
 		end
 
 		if staminaPz then
-			text = text .. "\nPZ enabled: Yes"
-				.. "\nOrange Delay: " .. configManager.getNumber(configKeys.STAMINA_ORANGE_DELAY) .. " min"
-				.. "\nGreen Delay: " .. configManager.getNumber(configKeys.STAMINA_GREEN_DELAY) .. " min"
-				.. "\nPZ Gain: " .. configManager.getNumber(configKeys.STAMINA_PZ_GAIN) .. " per min"
+			text = text .. "\nPZ enabled: Yes" .. "\nOrange Delay: " .. configManager.getNumber(configKeys.STAMINA_ORANGE_DELAY) .. " min" .. "\nGreen Delay: " .. configManager.getNumber(configKeys.STAMINA_GREEN_DELAY) .. " min" .. "\nPZ Gain: " .. configManager.getNumber(configKeys.STAMINA_PZ_GAIN) .. " per min"
 		end
 	end
 
-	local loseHouseText = configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) > 0
-		and configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) .. " days" or "never"
+	local loseHouseText = configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) > 0 and configManager.getNumber(configKeys.HOUSE_LOSE_AFTER_INACTIVITY) .. " days" or "never"
 
-	text = text .. "\n\nMore Server Info: \n"
-		.. "\nLevel to buy house: " .. configManager.getNumber(configKeys.HOUSE_BUY_LEVEL)
-		.. "\nLose house after inactivity: " .. loseHouseText
-		.. "\nProtection level: " .. configManager.getNumber(configKeys.PROTECTION_LEVEL)
-		.. "\nWorldType: " .. configManager.getString(configKeys.WORLD_TYPE)
-		.. "\nKills/day to red skull: " .. configManager.getNumber(configKeys.DAY_KILLS_TO_RED)
-		.. "\nKills/week to red skull: " .. configManager.getNumber(configKeys.WEEK_KILLS_TO_RED)
-		.. "\nKills/month to red skull: " .. configManager.getNumber(configKeys.MONTH_KILLS_TO_RED)
-		.. "\nServer Save: " .. configManager.getString(configKeys.GLOBAL_SERVER_SAVE_TIME)
+	text = text
+		.. "\n\nHouse Info: \n"
+		.. "\nLevel to buy: "
+		.. configManager.getNumber(configKeys.HOUSE_BUY_LEVEL)
+		.. "\nLose after inactivity: "
+		.. loseHouseText
+		.. "\nRent rate: "
+		.. configManager.getFloat(configKeys.HOUSE_RENT_RATE)
+		.. "x"
+		.. "\nMax per player: "
+		.. configManager.getNumber(configKeys.MAX_HOUSES_LIMIT)
+		.. "\nPrice per SQM: "
+		.. configManager.getNumber(configKeys.HOUSE_PRICE_PER_SQM)
+		.. " gp"
+		.. "\nDays to close bid: "
+		.. configManager.getNumber(configKeys.DAYS_TO_CLOSE_BID)
+
+	text = text
+		.. "\n\nOther Info: \n"
+		.. "\nProtection level: "
+		.. configManager.getNumber(configKeys.PROTECTION_LEVEL)
+		.. "\nWorld Type: "
+		.. configManager.getString(configKeys.WORLD_TYPE)
+		.. "\nKills/day red skull: "
+		.. configManager.getNumber(configKeys.DAY_KILLS_TO_RED)
+		.. "\nKills/week red skull: "
+		.. configManager.getNumber(configKeys.WEEK_KILLS_TO_RED)
+		.. "\nKills/month red skull: "
+		.. configManager.getNumber(configKeys.MONTH_KILLS_TO_RED)
+		.. "\nMax on Dummy: "
+		.. configManager.getNumber(configKeys.MAX_ALLOWED_ON_A_DUMMY)
+		.. "\nServer Save: "
+		.. configManager.getString(configKeys.GLOBAL_SERVER_SAVE_TIME)
 
 	player:showTextDialog(34266, text)
-	return false
+	return true
 end
 
 serverInfo:separator(" ")
