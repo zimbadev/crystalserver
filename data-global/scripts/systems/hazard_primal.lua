@@ -37,14 +37,10 @@ function primalPod.onStepIn(creature, item, position, fromPosition)
 	if timer then
 		local timeMs = os.time() * 1000
 		timer = timeMs - timer
-		if
-			timer >= configManager.getNumber(configKeys.HAZARD_PODS_TIME_TO_DAMAGE)
-			and timer < configManager.getNumber(configKeys.HAZARD_PODS_TIME_TO_SPAWN)
-		then
+		if timer >= configManager.getNumber(configKeys.HAZARD_PODS_TIME_TO_DAMAGE) and timer < configManager.getNumber(configKeys.HAZARD_PODS_TIME_TO_SPAWN) then
 			player:sendCancelMessage("You stepped too late on the primal pod and it explodes.")
 			player:getPosition():sendMagicEffect(CONST_ME_ENERGYHIT)
-			local damage =
-				math.ceil((player:getMaxHealth() * configManager.getNumber(configKeys.HAZARD_PODS_DAMAGE)) / 100)
+			local damage = math.ceil((player:getMaxHealth() * configManager.getNumber(configKeys.HAZARD_PODS_DAMAGE)) / 100)
 			local points = player:getHazardSystemPoints()
 			if points ~= 0 then
 				damage = math.ceil((damage * (100 + points)) / 100)
@@ -88,13 +84,7 @@ end
 local spawnEvent = ZoneEvent(hazardZone)
 function spawnEvent.onSpawn(monster, position)
 	monster:registerEvent("PrimalHazardDeath")
-	if
-		not (
-			string.find(monster:getName(), "Primal Menace")
-			or string.find(monster:getName(), "Fungosaurus")
-			or string.find(monster:getName(), "Primal Pack Beast")
-		)
-	then
+	if not (string.find(monster:getName(), "Primal Menace") or string.find(monster:getName(), "Fungosaurus") or string.find(monster:getName(), "Primal Pack Beast")) then
 		monster:registerEvent("PrimalPlunderDeath")
 		monster:hazard(true)
 		monster:hazardCrit(true)
@@ -137,12 +127,7 @@ function deathEvent.onDeath(creature)
 	chanceTo = math.random(1, 100000)
 	if chanceTo <= (points * configManager.getNumber(configKeys.HAZARD_SPAWN_PLUNDER_MULTIPLIER)) then
 		local closestFreePosition = player:getClosestFreePosition(monster:getPosition(), 4, true)
-		local monster = Game.createMonster(
-			"Plunder Patriarch",
-			closestFreePosition.x == 0 and monster:getPosition() or closestFreePosition,
-			false,
-			true
-		)
+		local monster = Game.createMonster("Plunder Patriarch", closestFreePosition.x == 0 and monster:getPosition() or closestFreePosition, false, true)
 		if monster then
 			monster:say("The Plunder Patriarch rises from the ashes.")
 		end
