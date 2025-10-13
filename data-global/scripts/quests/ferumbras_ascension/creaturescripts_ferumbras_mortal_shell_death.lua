@@ -4,8 +4,7 @@ local config = AscendingFerumbrasConfig
 
 _G.ferumbrasMortalShellSpawning = _G.ferumbrasMortalShellSpawning or false
 
-function ferumbrasMortalShell.onDeath(creature, corpse, lasthitkiller, mostdamagekiller, lasthitunjustified,
-																			mostdamageunjustified)
+function ferumbrasMortalShell.onDeath(creature, corpse, lasthitkiller, mostdamagekiller, lasthitunjustified, mostdamageunjustified)
 	if creature:getName():lower() ~= "destabilized ferumbras" then
 		return true
 	end
@@ -23,8 +22,7 @@ function ferumbrasMortalShell.onDeath(creature, corpse, lasthitkiller, mostdamag
 	end
 
 	monster:say("AAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHH!", TALKTYPE_MONSTER_SAY)
-	lasthitkiller:say("FINALY YOU FORCED FERUMBRAS BACK INTO A MORTAL FORM - HE IS NOT AMUSED!", TALKTYPE_MONSTER_SAY, nil,
-		nil, config.bossPos)
+	lasthitkiller:say("FINALY YOU FORCED FERUMBRAS BACK INTO A MORTAL FORM - HE IS NOT AMUSED!", TALKTYPE_MONSTER_SAY, nil, nil, config.bossPos)
 
 	addEvent(function()
 		_G.ferumbrasMortalShellSpawning = false
