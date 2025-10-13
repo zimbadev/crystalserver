@@ -265,7 +265,8 @@ public:
 	void sendSingleSoundEffect(const Position &pos, SoundEffect_t soundId, const std::shared_ptr<Creature> &actor = nullptr);
 	void sendDoubleSoundEffect(const Position &pos, SoundEffect_t mainSoundEffect, SoundEffect_t secondarySoundEffect, const std::shared_ptr<Creature> &actor = nullptr);
 
-	void sendGuildMotd(uint32_t playerId);
+	void setGuildMotd(uint32_t guildId, const std::string &newMotd);
+	void sendGuildMotd(uint32_t playerId, uint32_t guildId);
 	void kickPlayer(uint32_t playerId, bool displayEffect);
 	void playerReportBug(uint32_t playerId, const std::string &message, const Position &position, uint8_t category);
 	void playerPreyAction(uint32_t playerId, uint8_t slot, uint8_t action, uint8_t option, int8_t index, uint16_t raceId);
@@ -764,7 +765,7 @@ private:
 	std::unordered_set<uint32_t> fiendishMonsters;
 	std::unordered_set<uint32_t> influencedMonsters;
 
-	bool playerSaySpell(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &text);
+	bool playerSaySpell(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &text, uint16_t channelId);
 	void playerWhisper(const std::shared_ptr<Player> &player, const std::string &text);
 	bool playerYell(const std::shared_ptr<Player> &player, const std::string &text);
 	bool playerSpeakTo(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &receiver, const std::string &text);

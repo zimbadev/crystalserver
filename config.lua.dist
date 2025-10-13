@@ -70,6 +70,13 @@ blackSkulledDeathMana = 0
 fieldOwnershipDuration = 5 * 1000
 loginProtectionPeriod = 10 * 1000
 
+-- Guild Wars
+-- guildWarsDefaultFrags: Default frags for guild war invitations if not specified.
+-- guildWarsMinimunFrags: Minimum frags required to initiate a guild war.
+toggleGuildWars = false
+guildWarsDefaultFrags = 100
+guildWarsMinimunFrags = 10
+
 -- Clean system
 cleanProtectionZones = false
 

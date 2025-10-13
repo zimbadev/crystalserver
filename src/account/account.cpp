@@ -213,7 +213,12 @@ void Account::setPremiumDays(const int32_t &days) {
 }
 
 [[nodiscard]] uint32_t Account::getPremiumRemainingDays() const {
-	return m_account->premiumLastDay > getTimeNow() ? static_cast<uint32_t>((m_account->premiumLastDay - getTimeNow()) / 86400) : 0;
+	uint32_t remainingDays = static_cast<uint32_t>((m_account->premiumLastDay - getTimeNow()) / 86400);
+	if (remainingDays == 0 && m_account->premiumLastDay > getTimeNow()) {
+		return 1;
+	}
+
+	return m_account->premiumLastDay > getTimeNow() ? remainingDays : 0;
 }
 
 [[nodiscard]] uint32_t Account::getPremiumDaysPurchased() const {
