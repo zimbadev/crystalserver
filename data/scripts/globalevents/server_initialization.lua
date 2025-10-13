@@ -3,7 +3,13 @@ local function cleanupDatabase()
 	db.query("TRUNCATE TABLE `players_online`")
 
 	local currentTime = os.time()
-	db.asyncQuery("DELETE FROM `guild_wars` WHERE `status` IN (0, 2, 3) OR (`status` = 0 AND (`started` + 72 * 60 * 60) <= " .. currentTime .. ")")
+	-- delete canceled and rejected guilds
+	db.asyncQuery("DELETE FROM `guild_wars` WHERE `status` = 2")
+	db.asyncQuery("DELETE FROM `guild_wars` WHERE `status` = 3")
+
+	-- Delete guilds that are pending for 3 days
+	db.asyncQuery("DELETE FROM `guild_wars` WHERE `status` = 0 AND (`started` + 72 * 60 * 60) <= " .. currentTime)
+
 	db.asyncQuery("DELETE FROM `players` WHERE `deletion` != 0 AND `deletion` < " .. currentTime)
 	db.asyncQuery("DELETE FROM `ip_bans` WHERE `expires_at` != 0 AND `expires_at` <= " .. currentTime)
 	db.asyncQuery("DELETE FROM `market_history` WHERE `inserted` <= " .. (currentTime - configManager.getNumber(configKeys.MARKET_OFFER_DURATION)))

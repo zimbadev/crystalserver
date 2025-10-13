@@ -183,6 +183,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_SPECIAL_TILES, "toggleSpecialTiles", false);
 	loadBoolConfig(L, TOGGLE_GUILDHALL_NEED_GUILD, "toggleGuildHallNeedGuild", true);
 	loadBoolConfig(L, TOGGLE_MAX_CONNECTIONS_BY_IP, "toggleMaxConnectionsByIP", false);
+	loadBoolConfig(L, TOGGLE_GUILD_WARS, "toggleGuildWars", false);
 
 	loadFloatConfig(L, BESTIARY_RATE_CHARM_SHOP_PRICE, "bestiaryRateCharmShopPrice", 1.0);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_AXE, "combatChainSkillFormulaAxe", 0.9);
@@ -406,6 +407,8 @@ bool ConfigManager::load() {
 	loadIntConfig(L, MAX_HOUSES_LIMIT, "maxHousesLimit", 3);
 	loadIntConfig(L, MAX_IP_CONNECTIONS, "maxIPConnections", 4);
 	loadIntConfig(L, STASH_MANAGE_AMOUNT, "stashManageAmount", 100000);
+	loadIntConfig(L, GUILD_WARS_MINIMUM_FRAGS, "guildWarsMinimunFrags", 10);
+	loadIntConfig(L, GUILD_WARS_DEFAULT_FRAGS, "guildWarsDefaultFrags", 100);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");

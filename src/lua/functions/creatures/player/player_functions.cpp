@@ -230,6 +230,7 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "sendPrivateMessage", PlayerFunctions::luaPlayerSendPrivateMessage);
 	Lua::registerMethod(L, "Player", "channelSay", PlayerFunctions::luaPlayerChannelSay);
 	Lua::registerMethod(L, "Player", "openChannel", PlayerFunctions::luaPlayerOpenChannel);
+	Lua::registerMethod(L, "Player", "closeChannel", PlayerFunctions::luaPlayerCloseChannel);
 
 	Lua::registerMethod(L, "Player", "getSlotItem", PlayerFunctions::luaPlayerGetSlotItem);
 
@@ -251,6 +252,10 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "hasFamiliar", PlayerFunctions::luaPlayerHasFamiliar);
 	Lua::registerMethod(L, "Player", "setFamiliarLooktype", PlayerFunctions::luaPlayerSetFamiliarLooktype);
 	Lua::registerMethod(L, "Player", "getFamiliarLooktype", PlayerFunctions::luaPlayerGetFamiliarLooktype);
+
+	// Emblem/relations updates
+	Lua::registerMethod(L, "Player", "sendCreatureEmblem", PlayerFunctions::luaPlayerSendCreatureEmblem);
+	Lua::registerMethod(L, "Player", "reloadGuildWarList", PlayerFunctions::luaPlayerReloadGuildWarList);
 
 	Lua::registerMethod(L, "Player", "getPremiumDays", PlayerFunctions::luaPlayerGetPremiumDays);
 	Lua::registerMethod(L, "Player", "addPremiumDays", PlayerFunctions::luaPlayerAddPremiumDays);
@@ -446,6 +451,35 @@ void PlayerFunctions::init(lua_State* L) {
 	MountFunctions::init(L);
 	PartyFunctions::init(L);
 	VocationFunctions::init(L);
+}
+
+int PlayerFunctions::luaPlayerSendCreatureEmblem(lua_State* L) {
+	// player:sendCreatureEmblem(creature)
+	const auto &player = Lua::getPlayer(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+	const auto &creature = Lua::getCreature(L, 2);
+	if (!creature) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_CREATURE_NOT_FOUND));
+		return 1;
+	}
+	player->sendCreatureEmblem(creature);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerReloadGuildWarList(lua_State* L) {
+	// player:reloadGuildWarList()
+	const auto &player = Lua::getPlayer(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+	player->reloadGuildWarList();
+	Lua::pushBoolean(L, true);
+	return 1;
 }
 
 int PlayerFunctions::luaPlayerSendInventory(lua_State* L) {
@@ -2732,6 +2766,19 @@ int PlayerFunctions::luaPlayerOpenChannel(lua_State* L) {
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (player) {
 		g_game().playerOpenChannel(player->getID(), channelId);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerCloseChannel(lua_State* L) {
+	// player:closeChannel(channelId)
+	const uint16_t channelId = Lua::getNumber<uint16_t>(L, 2);
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		g_game().playerCloseChannel(player->getID(), channelId);
 		Lua::pushBoolean(L, true);
 	} else {
 		lua_pushnil(L);

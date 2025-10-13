@@ -55,6 +55,7 @@
 #include "grouping/familiars.hpp"
 #include "grouping/guild.hpp"
 #include "io/iobestiary.hpp"
+#include "io/ioguild.hpp"
 #include "io/iologindata.hpp"
 #include "io/ioprey.hpp"
 #include "items/bed.hpp"
@@ -7152,6 +7153,14 @@ bool Player::isInWar(const std::shared_ptr<Player> &player) const {
 
 bool Player::isInWarList(uint32_t guildId) const {
 	return std::ranges::find(guildWarVector, guildId) != guildWarVector.end();
+}
+
+void Player::reloadGuildWarList() {
+	guildWarVector.clear();
+	if (!guild) {
+		return;
+	}
+	IOGuild::getWarList(guild->getId(), guildWarVector);
 }
 
 uint32_t Player::getMagicLevel() const {

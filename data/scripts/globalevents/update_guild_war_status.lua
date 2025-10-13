@@ -6,5 +6,5 @@ function updateGuildWarStatus.onThink(interval)
 	return true
 end
 
-updateGuildWarStatus:interval(3600000) -- 1 hour
+updateGuildWarStatus:interval(60 * 1000) -- check every minute
 updateGuildWarStatus:register()

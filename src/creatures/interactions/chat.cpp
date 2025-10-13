@@ -21,6 +21,7 @@
 #include "creatures/players/player.hpp"
 #include "game/game.hpp"
 #include "game/scheduling/dispatcher.hpp"
+#include "io/ioguild.hpp"
 #include "lib/di/container.hpp"
 #include "utils/pugicast.hpp"
 
@@ -121,9 +122,19 @@ bool ChatChannel::addUser(const std::shared_ptr<Player> &player) {
 	// TODO: Move to script when guild channels can be scripted
 	if (id == CHANNEL_GUILD) {
 		const auto &guild = player->getGuild();
-		if (guild && !guild->getMotd().empty()) {
+		if (!guild) {
+			return false;
+		}
+
+		uint32_t guildId = guild->getId();
+		if (!guildId) {
+			return false;
+		}
+
+		std::string motd = IOGuild::getMotd(guildId);
+		if (!motd.empty()) {
 			g_dispatcher().scheduleEvent(
-				150, [playerId = player->getID()] { g_game().sendGuildMotd(playerId); }, "Game::sendGuildMotd"
+				150, [playerId = player->getID(), guildId]() { g_game().sendGuildMotd(playerId, guildId); }, "Game::sendGuildMotd"
 			);
 		}
 	}

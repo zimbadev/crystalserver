@@ -26,4 +26,7 @@ public:
 	static void saveGuild(const std::shared_ptr<Guild> &guild);
 	static uint32_t getGuildIdByName(const std::string &name);
 	static void getWarList(uint32_t guildId, GuildWarVector &guildWarVector);
+
+	static bool setMotd(uint32_t guildId, std::string newMotd);
+	static std::string getMotd(uint32_t guildId);
 };

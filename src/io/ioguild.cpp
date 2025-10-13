@@ -83,3 +83,21 @@ void IOGuild::getWarList(uint32_t guildId, GuildWarVector &guildWarVector) {
 		}
 	} while (result->next());
 }
+
+bool IOGuild::setMotd(uint32_t guildId, std::string newMotd) {
+	Database &db = Database::getInstance();
+	std::ostringstream query;
+	query << "UPDATE `guilds` SET `motd` = " << db.escapeString(newMotd) << " WHERE `id` = " << guildId;
+	return db.executeQuery(query.str());
+}
+
+std::string IOGuild::getMotd(uint32_t guildId) {
+	std::ostringstream query;
+	query << "SELECT `motd` FROM `guilds` WHERE `id` = " << guildId;
+	DBResult_ptr result = Database::getInstance().storeQuery(query.str());
+	if (!result) {
+		return "";
+	}
+
+	return result->getString("motd");
+}

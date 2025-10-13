@@ -39,7 +39,7 @@ bool TalkActions::registerLuaEvent(const TalkAction_ptr &talkAction) {
 	return inserted;
 }
 
-bool TalkActions::checkWord(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &words, std::string_view word, const TalkAction_ptr &talkActionPtr) const {
+bool TalkActions::checkWord(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &words, std::string_view word, const TalkAction_ptr &talkActionPtr, uint16_t channelId) const {
 	const auto spacePos = std::ranges::find_if(words.begin(), words.end(), ::isspace);
 	const std::string firstWord = words.substr(0, spacePos - words.begin());
 
@@ -72,20 +72,24 @@ bool TalkActions::checkWord(const std::shared_ptr<Player> &player, SpeakClasses 
 		}
 	}
 
-	return talkActionPtr->executeSay(player, words, param, type);
+	if (!talkActionPtr || (talkActionPtr->getChannel() != -1 && talkActionPtr->getChannel() != channelId)) {
+		return false;
+	}
+
+	return talkActionPtr->executeSay(player, words, param, type, channelId);
 }
 
-TalkActionResult_t TalkActions::checkPlayerCanSayTalkAction(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &words) const {
+TalkActionResult_t TalkActions::checkPlayerCanSayTalkAction(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &words, uint16_t channelId) const {
 	for (const auto &[talkactionWords, talkActionPtr] : talkActions) {
 		if (talkactionWords.find(',') != std::string::npos) {
 			auto wordsList = split(talkactionWords);
 			for (const auto &word : wordsList) {
-				if (checkWord(player, type, words, word, talkActionPtr)) {
+				if (checkWord(player, type, words, word, talkActionPtr, channelId)) {
 					return TALKACTION_BREAK;
 				}
 			}
 		} else {
-			if (checkWord(player, type, words, talkactionWords, talkActionPtr)) {
+			if (checkWord(player, type, words, talkactionWords, talkActionPtr, channelId)) {
 				return TALKACTION_BREAK;
 			}
 		}
@@ -120,8 +124,8 @@ bool TalkAction::isLoadedScriptId() const {
 	return m_scriptId != 0;
 }
 
-bool TalkAction::executeSay(const std::shared_ptr<Player> &player, const std::string &words, const std::string &param, SpeakClasses type) const {
-	// onSay(player, words, param, type)
+bool TalkAction::executeSay(const std::shared_ptr<Player> &player, const std::string &words, const std::string &param, SpeakClasses type, uint16_t channel) const {
+	// onSay(player, words, param, type, channel)
 	if (!LuaScriptInterface::reserveScriptEnv()) {
 		g_logger().error("[TalkAction::executeSay - Player {} words {}] "
 		                 "Call stack overflow. Too many lua script calls being nested. Script name {}",
@@ -142,8 +146,9 @@ bool TalkAction::executeSay(const std::shared_ptr<Player> &player, const std::st
 	LuaScriptInterface::pushString(L, words);
 	LuaScriptInterface::pushString(L, param);
 	LuaScriptInterface::pushNumber(L, static_cast<lua_Number>(type));
+	LuaScriptInterface::pushNumber(L, static_cast<lua_Number>(channel));
 
-	return getScriptInterface()->callFunction(4);
+	return getScriptInterface()->callFunction(5);
 }
 
 void TalkAction::setGroupType(uint8_t newGroupType) {

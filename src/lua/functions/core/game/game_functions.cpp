@@ -123,6 +123,8 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "getTitleByName", GameFunctions::luaGameGetTitleByName);
 
 	Lua::registerMethod(L, "Game", "getHouseCountByAccount", GameFunctions::luaHouseGetHouseCountByAccount);
+
+	Lua::registerMethod(L, "Game", "setGuildMotd", GameFunctions::luaGameSetGuildMotd);
 }
 
 // Game
@@ -1143,5 +1145,15 @@ int GameFunctions::luaHouseGetHouseCountByAccount(lua_State* L) {
 		}
 	}
 	lua_pushnumber(L, count);
+	return 1;
+}
+
+int GameFunctions::luaGameSetGuildMotd(lua_State* L) {
+	// Game:setGuildMotd(guildId, newMotd)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string newMotd = Lua::getString(L, 2);
+
+	g_game().setGuildMotd(guildId, newMotd);
+	Lua::pushBoolean(L, true);
 	return 1;
 }
