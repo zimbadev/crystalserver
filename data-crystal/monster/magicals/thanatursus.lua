@@ -14,7 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
-	"TaskSystem",
+
 }
 
 monster.raceId = 1728

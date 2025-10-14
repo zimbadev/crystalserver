@@ -561,9 +561,8 @@ SharedExpStatus_t Party::getMemberSharedExperienceStatus(const std::shared_ptr<P
 		return SHAREDEXP_LEVELDIFFTOOLARGE;
 	}
 	// poprawic bugowanie shareda przy przechodzeniu przez tp
-	if (!Position::areInRange<30, 30, 1>(leader->getPosition(), player->getPosition())) {
-		g_logger().error("{} - gracz poza pozycja ", __FUNCTION__, player->getName());
-		// return SHAREDEXP_TOOFARAWAY;
+	if (!Position::areInRange<45, 45, 1>(leader->getPosition(), player->getPosition())) {
+		return SHAREDEXP_TOOFARAWAY;
 	}
 
 	if (!player->hasFlag(PlayerFlags_t::NotGainInFight)) {

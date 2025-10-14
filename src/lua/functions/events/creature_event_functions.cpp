@@ -78,6 +78,12 @@ int CreatureEventFunctions::luaCreatureEventType(lua_State* L) {
 			creatureEvent->setEventType(CREATURE_EVENT_MANACHANGE);
 		} else if (tmpStr == "extendedopcode") {
 			creatureEvent->setEventType(CREATURE_EVENT_EXTENDED_OPCODE);
+		} else if (tmpStr == "kostaskprogress") {
+			creatureEvent->setEventType(CREATURE_EVENT_KOSTASK_PROGRESS);
+		} else if (tmpStr == "kostaskcomplete") {
+			creatureEvent->setEventType(CREATURE_EVENT_KOSTASK_COMPLETE);
+		} else if (tmpStr == "kostaskcompleted") {
+			creatureEvent->setEventType(CREATURE_EVENT_KOSTASK_COMPLETED);
 		} else {
 			g_logger().error("[CreatureEventFunctions::luaCreatureEventType] - "
 			                 "Invalid type for creature event: {}",

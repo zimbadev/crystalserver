@@ -393,6 +393,7 @@ Game::Game() {
 		{ static_cast<uint8_t>(MAGIC_LEVEL), "Magic Level" },
 		{ static_cast<uint8_t>(SHIELDING), "Shielding" },
 		{ static_cast<uint8_t>(SWORD_FIGHTING), "Sword Fighting" },
+		{ static_cast<uint8_t>(KOS_TASK), "Task Points" },
 	};
 
 	m_highscoreCategories = {
@@ -407,6 +408,7 @@ Game::Game() {
 		HighscoreCategory("Fishing", static_cast<uint8_t>(HighscoreCategories_t::FISHING)),
 		HighscoreCategory("Magic Level", static_cast<uint8_t>(HighscoreCategories_t::MAGIC_LEVEL)),
 		HighscoreCategory("Loyalty Points", static_cast<uint8_t>(HighscoreCategories_t::LOYALTY_POINTS))
+
 	};
 
 	m_summaryCategories = {
@@ -534,6 +536,14 @@ void Game::loadBoostedCreature() {
 }
 
 void Game::start(ServiceManager* manager) {
+
+	// Add KosTaskSystem to highscores
+	if (g_configManager().getBoolean(KOS_TASK_SYSTEM)) {
+		g_logger().info("KosTaskSystem - Enabling HighScore");
+		m_highscoreCategories.push_back(HighscoreCategory("Task Points", static_cast<uint8_t>(HighscoreCategories_t::KOS_TASK)));
+	}
+
+
 	// Game client protocols
 	manager->add<ProtocolGame>(static_cast<uint16_t>(g_configManager().getNumber(GAME_PORT)));
 	manager->add<ProtocolLogin>(static_cast<uint16_t>(g_configManager().getNumber(LOGIN_PORT)));
@@ -9070,6 +9080,8 @@ std::string Game::getSkillNameById(uint8_t &skill) {
 			return "boss_points";
 		case HighscoreCategories_t::LOYALTY_POINTS:
 			return "loyalty_points";
+		case HighscoreCategories_t::KOS_TASK:
+			return "kos_task_points";
 		default:
 			skill = static_cast<uint8_t>(HighscoreCategories_t::EXPERIENCE);
 			return "experience";

@@ -61,3 +61,16 @@ end
 
 magicGoldConverter:id(28525, 28526)
 magicGoldConverter:register()
+
+local magicGoldConverterOnLogin = CreatureEvent("MagicGoldConverterOnLogin")
+function magicGoldConverterOnLogin.onLogin(player)
+    local startedConverter = player:getItemById(28526, true)
+    if startedConverter then
+        startConverter(player:getId(), 28526)
+        player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Player FreeQuest in progress..")
+    end
+
+	return true
+end
+
+magicGoldConverterOnLogin:register()

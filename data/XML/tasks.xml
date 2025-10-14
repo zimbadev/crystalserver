@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tasks>
+    <task id="1" tier="1" name="Start" amount="60" xp="20000" money="20000">
+        <monsters>
+            <monster>Rat</monster>
+            <monster>Rotworm</monster>
+        </monsters>
+        <rewards>
+
+        </rewards>
+    </task>
+    <task id="2" tier="1" name="Beginner" amount="100" xp="100000" money="50000">
+        <monsters>
+            <monster>Amazon</monster>
+            <monster>Valkyrie</monster>
+            <monster>Minotaur</monster>
+            <monster>Minotaur Guard</monster>
+            <monster>Minotaur Mage</monster>
+            <monster>Cyclops</monster>
+            <monster>Cyclops Drone</monster>
+            <monster>Cyclops Smith</monster>
+            <monster>Stonerefiner</monster>
+        </monsters>
+        <rewards>
+
+        </rewards>
+    </task>
+    <task id="2" tier="1" name="Dragons" amount="175" xp="800000" money="70000">
+        <monsters>
+            <monster>Dragon</monster>
+            <monster>Dragon Lord</monster>
+            <monster>Frost Dragon</monster>
+            <monster>Frost Dragon Hatchling</monster>
+            <monster>Wyrm</monster>
+            <monster>Elder Wyrm</monster>
+
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="3" tier="1" name="Cults" amount="225" xp="1500000" money="80000">
+        <monsters>
+            <monster>Cult Believer</monster>
+            <monster>Cult Enforcer</monster>
+            <monster>Cult Scholar</monster>
+            <monster>Vile Grandmaster</monster>
+            <monster>Vicious Squire</monster>
+            <monster>Hero</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="4" tier="1" name="Hive" amount="200" xp="1500000" money="80000">
+        <monsters>
+            <monster>Waspoid</monster>
+            <monster>Crawler</monster>
+            <monster>Insectoid Worker</monster>
+            <monster>Spitter</monster>
+            <monster>Swarmer</monster>
+            <monster>Spidris</monster>
+            <monster>Kollos</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="5" tier="1" name="Feyrist" amount="400" xp="1500000" money="100000">
+        <monsters>
+            <monster>Swan Maiden</monster>
+            <monster>Pooka</monster>
+            <monster>Insectoid Worker</monster>
+            <monster>Pixie</monster>
+            <monster>Nymph</monster>
+            <monster>Faun</monster>
+            <monster>Boogy</monster>
+            <monster>Dark Faun</monster>
+            <monster>Twisted Pooka</monster>
+            <monster>Enfeebled Silencer</monster>
+            <monster>Weakened Frazzlemaw</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="6" tier="1" name="Krailos" amount="300" xp="1500000" money="100000">
+        <monsters>
+            <monster>Undead Gladiator</monster>
+            <monster>Nightmare Scion</monster>
+            <monster>Nightmare</monster>
+            <monster>Clomp</monster>
+            <monster>Ogre Shaman</monster>
+            <monster>Ogre Brute</monster>
+            <monster>Ogre Savage</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="7" tier="1" name="Orclops" amount="500" xp="2000000" money="100000">
+        <monsters>
+            <monster>Orclops Doomhauler</monster>
+            <monster>Orclops Ravager</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="8" tier="1" name="Caverna Examina" amount="550" xp="2000000" money="80000">
+        <monsters>
+            <monster>Putrid Mummy</monster>
+            <monster>Giant Spider</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="9" tier="1" name="Oramond Minotaurs" amount="700" xp="2500000" money="100000">
+        <monsters>
+            <monster>Mooh'Tah Warrior</monster>
+            <monster>Minotaur Hunter</monster>
+            <monster>Worm Priestess</monster>
+            <monster>Moohtant</monster>
+            <monster>Minotaur Amazon</monster>
+            <monster>Execowtioner</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="10" tier="1" name="Exotic Cave" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="11" tier="1" name="Razachai" amount="450" xp="2500000" money="100000">
+        <monster>
+            <monster>Lizard Zaogun</monster>
+            <monster>Lizard Chosen</monster>
+            <monster>Lizard Noble</monster>
+            <monster>Lizard Magistratus</monster>
+            <monster>Lizard Legionnaire</monster>
+            <monster>Lizard Dragon Priest</monster>
+            <monster>Lizard High Guard</monster>
+            <monster>Killer Caiman</monster>
+            <monster>Brimstone Bug</monster>
+            <monster>Souleater</monster>
+        </monster>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="11" tier="1" name="Misguided Camp" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Misguided Thief</monster>
+            <monster>Misguided Bully</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="12" tier="1" name="Deeplings" amount="450" xp="2500000" money="100000">
+        <monsters>
+            <monster>Deepling Spellsinger</monster>
+            <monster>Deepling Warrior</monster>
+            <monster>Deepling Master Librarian</monster>
+            <monster>Deepling Guard</monster>
+            <monster>Deepling Elite</monster>
+            <monster>Deepling Tyrant</monster>
+            <monster>Shark</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="13" tier="1" name="Bounac" amount="450" xp="2500000" money="100000">
+        <monsters>
+            <monster>Lion Knight</monster>
+            <monster>Lion Archer</monster>
+            <monster>Lion Warlock</monster>
+            <monster>Usurper Knight</monster>
+            <monster>Usurper Archer</monster>
+            <monster>Usurper Warlock</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="14" tier="1" name="The Lost" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Lost Thrower</monster>
+            <monster>Lost Husher</monster>
+            <monster>Lost Basher</monster>
+            <monster>Vulcongra</monster>
+            <monster>War Golem</monster>
+            <monster>Lost Berserker</monster>
+            <monster>Enslaved Dwarf</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="15" tier="1" name="Oskayaat" amount="575" xp="2500000" money="100000">
+        <monsters>
+            <monster>Weretiger</monster>
+            <monster>White Weretiger</monster>
+            <monster>Werecrocodile</monster>
+            <monster>Feral Werecrocodile</monster>
+            <monster>Werepanther</monster>
+            <monster>Cunning Werepanther</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="1"/>
+        </rewards>
+    </task>
+    <task id="16" tier="1" name="Astral Shapers" amount="600" xp="3000000" money="100000">
+        <monsters>
+            <monster>Broken Shaper</monster>
+            <monster>Twisted Shaper</monster>
+            <monster>Shaper Matriarch</monster>
+            <monster>Stone Rhino</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="1"/>
+        </rewards>
+    </task>
+    <task id="17" tier="1" name="Hyaena Lairs" amount="550" xp="3000000" money="100000">
+        <monsters>
+            <monster>Werehyaena</monster>
+            <monster>Werehyaena Shaman</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="1"/>
+        </rewards>
+    </task>
+    <task id="18" tier="1" name="Glooth Factory" amount="600" xp="3500000" money="100000">
+        <monsters>
+            <monster>Glooth Bandit</monster>
+            <monster>Glooth Brigand</monster>
+            <monster>Devourer</monster>
+            <monster>Metal Gargoyle</monster>
+            <monster>Glooth Golem</monster>
+            <monster>Rustheap Golem</monster>
+            <monster>Blood Beast</monster>
+            <monster>Glooth Anemone</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="1"/>
+        </rewards>
+    </task>
+    <task id="19" tier="1" name="Barkless Cults" amount="550" xp="3500000" money="100000">
+        <monsters>
+            <monster>Barkless Devotee</monster>
+            <monster>Barkless Fanatic</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="1"/>
+        </rewards>
+    </task>
+    <task id="20" tier="2" name="Asuras" amount="1500" xp="9000000" money="300000">
+        <monsters>
+            <monster>Dawnfire Asura</monster>
+            <monster>Midnight Asura</monster>
+            <monster>Frost Flower Asura</monster>
+            <monster>Hellspawn</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="3"/>
+        </rewards>
+    </task>
+    <task id="21" tier="2" name="Roshamuul" amount="1500" xp="9000000" money="300000">
+        <monsters>
+            <monster>Frazzlemaw</monster>
+            <monster>Guzzlemaw</monster>
+            <monster>Silencer</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="4"/>
+        </rewards>
+    </task>
+    <task id="21" tier="2" name="Banuta" amount="750" xp="4500000" money="150000">
+        <monsters>
+            <monster>Hydra</monster>
+            <monster>Medusa</monster>
+            <monster>Serpent Spawn</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="2"/>
+        </rewards>
+    </task>
+    <task id="22" tier="1" name="Grimvale" amount="650" xp="2300000" money="200000">
+        <monsters>
+            <monster>Werebear</monster>
+            <monster>Wereboar</monster>
+            <monster>Werebadger</monster>
+            <monster>Werewolf</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="1"/>
+        </rewards>
+    </task>
+    <task id="23" tier="2" name="Otherworld" amount="800" xp="5000000" money="200000">
+        <monsters>
+            <monster>Sparkion</monster>
+            <monster>Breach Brood</monster>
+            <monster>Reality Reaver</monster>
+            <monster>Dread Intruder</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="2"/>
+        </rewards>
+    </task>
+    <task id="24" tier="2" name="Drakens" amount="750" xp="5500000" money="200000">
+        <monsters>
+            <monster>Draken Warmaster</monster>
+            <monster>Draken Spellweaver</monster>
+            <monster>Draken Abomination</monster>
+            <monster>Draken Elite</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="2"/>
+        </rewards>
+    </task>
+    <task id="25" tier="2" name="Carnivors" amount="900" xp="6000000" money="200000">
+        <monsters>
+            <monster>Lumbering Carnivor</monster>
+            <monster>Spiky Carnivor</monster>
+            <monster>Menacing Carnivor</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="2"/>
+        </rewards>
+    </task>
+    <task id="26" tier="2" name="Pirats" amount="950" xp="6000000" money="200000">
+        <monsters>
+            <monster>Pirat Bombardier</monster>
+            <monster>Pirat Cutthroat</monster>
+            <monster>Pirat Mate</monster>
+            <monster>Pirat Scoundrel</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="2"/>
+        </rewards>
+    </task>
+    <task id="27" tier="2" name="Werelion" amount="850" xp="5500000" money="200000">
+        <monsters>
+            <monster>Werelioness</monster>
+            <monster>Werelion</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="2"/>
+        </rewards>
+    </task>
+    <task id="28" tier="2" name="Issavi" amount="750" xp="7500000" money="250000">
+        <monsters>
+            <monster>Lamassu</monster>
+            <monster>Crypt Warden</monster>
+            <monster>Sphinx</monster>
+            <monster>Feral Sphinx</monster>
+            <monster>Adult Goanna</monster>
+            <monster>Young Goanna</monster>
+            <monster>Manticore</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="3"/>
+        </rewards>
+    </task>
+    <task id="29" tier="2" name="Forest of Life" amount="900" xp="7000000" money="250000">
+        <monsters>
+            <monster>Dark Carnisylvan</monster>
+            <monster>Poisonous Carnisylvan</monster>
+            <monster>Hulking Carnisylvan</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="4"/>
+        </rewards>
+    </task>
+    <task id="30" tier="2" name="Kilmaresh" amount="850" xp="8000000" money="250000">
+        <monsters>
+            <monster>Burning Gladiator</monster>
+            <monster>Priestess of the Wild Sun</monster>
+            <monster>Black Sphinx Acolyte</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="4"/>
+        </rewards>
+    </task>
+    <task id="31" tier="2" name="Deathlings" amount="1100" xp="9000000" money="250000">
+        <monsters>
+            <monster>Deathling Scout</monster>
+            <monster>Deathling Spellsinger</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="4"/>
+        </rewards>
+    </task>
+    <task id="32" tier="2" name="Falcons" amount="850" xp="8500000" money="250000">
+        <monsters>
+            <monster>Falcon Knight</monster>
+            <monster>Falcon Paladin</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="5"/>
+        </rewards>
+    </task>
+    <task id="33" tier="2" name="Cobras" amount="850" xp="8500000" money="250000">
+        <monsters>
+            <monster>Cobra Assassin</monster>
+            <monster>Cobra Scout</monster>
+            <monster>Cobra Vizier</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="5"/>
+        </rewards>
+    </task>
+    <task id="34" tier="2" name="Nightmare Isles" amount="750" xp="6500000" money="250000">
+        <monsters>
+            <monster>Retching Horror</monster>
+            <monster>Choking Fear</monster>
+            <monster>Silencer</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="4"/>
+        </rewards>
+    </task>
+    <task id="35" tier="2" name="Mitmah" amount="900" xp="7500000" money="200000">
+        <monsters>
+            <monster>Iks Yapunac</monster>
+            <monster>Mitmah Seer</monster>
+            <monster>Mitmah Scout</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="4"/>
+        </rewards>
+    </task>
+    <task id="36" tier="3" name="Flimsy" amount="2500" xp="19000000" money="600000">
+        <monsters>
+            <monster>Flimsy Lost Soul</monster>
+            <monster>Mean Lost Soul</monster>
+            <monster>Freakish Lost Soul</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="7"/>
+        </rewards>
+    </task>
+    <task id="37" tier="2" name="Spectres" amount="700" xp="5500000" money="200000">
+        <monsters>
+            <monster>Gazer Spectre</monster>
+            <monster>Ripper Spectre</monster>
+            <monster>Burster Spectre</monster>
+            <monster>Arachnophobica</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+            <item id="65000" amount="2"/>
+        </rewards>
+    </task>
+    <task id="38" tier="1" name="Ruins Of Salt Caves" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="39" tier="1" name="Ingol" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="40" tier="1" name="Elves" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="41" tier="1" name="Prisons and Catas" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="42" tier="1" name="Warzone 7-9" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="43" tier="1" name="Deep Desert" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="44" tier="1" name="Marapur" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="45" tier="1" name="Feru Seals" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="46" tier="1" name="Mota" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="47" tier="1" name="True Asuras" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="48" tier="1" name="Nimmersatt" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="49" tier="1" name="Bulltaur" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="50" tier="1" name="Library" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="51" tier="1" name="Podzilla" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="52" tier="1" name="Azzilon" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="53" tier="1" name="Gnomprona" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="54" tier="1" name="Soul War" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+    <task id="55" tier="1" name="Rotten Blood" amount="500" xp="2500000" money="100000">
+        <monsters>
+            <monster>Exotic Cave Spider</monster>
+            <monster>Exotic Bat</monster>
+        </monsters>
+        <rewards>
+            <item id="36827" amount="1"/>
+        </rewards>
+    </task>
+
+</tasks>

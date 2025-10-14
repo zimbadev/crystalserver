@@ -14,15 +14,16 @@ local config = {
     },
     amount = 1200,
     rewards = {
-        xp = 11500000000,
+        xp = 8500000,
         money = 300000,
         items = {
-            { id = 65000, count = 1 }
+            { id = 65000, count = 3 },
+            { id = 65001, count = 1 }
         },
     },
     requirements = { minLevel = 10 },
 }
 
-local taskBeginer = KosOTSTask(config)
+local taskElves = KosOTSTask(config)
 
-taskBeginer:register()
+taskElves:register()

@@ -157,7 +157,7 @@ class MonsterType {
 		bool isForgeCreature = true;
 		bool isPreyable = true;
 		bool isPreyExclusive = false;
-
+		bool isTaskMonster = false;
 		MonstersEvent_t eventType = MONSTERS_EVENT_NONE;
 	};
 

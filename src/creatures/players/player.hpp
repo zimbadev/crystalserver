@@ -25,6 +25,7 @@
 #include "game/movement/position.hpp"
 #include "creatures/creatures_definitions.hpp"
 #include "creatures/players/animus_mastery/animus_mastery.hpp"
+#include "kosots/kostasks.h"
 
 class AnimusMastery;
 class House;
@@ -746,6 +747,7 @@ public:
 	void onAttackedCreatureDrainHealth(const std::shared_ptr<Creature> &target, int32_t points) override;
 	void onTargetCreatureGainHealth(const std::shared_ptr<Creature> &target, int32_t points) override;
 	bool onKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit) override;
+	void addKosTaskKills(const std::shared_ptr<MonsterType> &mType);
 	bool onKilledMonster(const std::shared_ptr<Monster> &target) override;
 	void onGainExperience(uint64_t gainExp, const std::shared_ptr<Creature> &target) override;
 	void onGainSharedExperience(uint64_t gainExp, const std::shared_ptr<Creature> &target);
@@ -1413,6 +1415,29 @@ public:
 	uint16_t getMantraTotal() const;
 
 	std::unordered_map<uint16_t, uint8_t> spellActivedAimMap;
+
+	std::shared_ptr<KosTask> kosTask = nullptr;
+	uint32_t kosTaskPoints = 0;
+	uint16_t kosTaskStage = 0;
+	uint32_t kosTaskKills = 0;
+	void setKosTask(const std::shared_ptr<KosTask> &task);
+	std::shared_ptr<KosTask> getKosTask();
+	void setKosTaskStage(uint16_t stage);
+	uint16_t getKosTaskStage() const;
+	void setKosTaskKills(uint32_t kills);
+	uint32_t getKosTaskKills();
+	void setKosTaskPoints(uint32_t points);
+	uint32_t getKosTaskPoints();
+	bool isKosTaskCompleted() {
+		return kosTask != nullptr && kosTaskKills >= kosTask->getRequiredKillsByStage(kosTaskStage);
+	}
+	void cancelKosTask() {
+		kosTask = nullptr;
+		kosTaskKills = 0;
+		kosTaskPoints = 0;
+	}
+	bool completeKosTask();
+
 
 private:
 	friend class PlayerLock;

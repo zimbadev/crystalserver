@@ -1041,3 +1041,19 @@ void IOLoginDataLoad::loadPlayerUpdateSystem(const std::shared_ptr<Player> &play
 	player->updateInventoryWeight();
 	player->updateItemsLight(true);
 }
+void IOLoginDataLoad::loadPlayerKosTaskSystem(const std::shared_ptr<Player> &player, const DBResult_ptr &result) {
+	uint16_t kosTaskId = result->getNumber<uint16_t>("kos_task_id");
+	if (kosTaskId) {
+		std::shared_ptr<KosTask> task = KosTasks::getInstance().getTaskById(kosTaskId);
+		if (task) {
+			player->setKosTask(task);
+		}else {
+			g_logger().error("KosTaskSystem - Can't load  {} task id : {}", player->getName(),kosTaskId);
+		}
+	}
+
+	player->setKosTaskPoints(result->getNumber<uint32_t>("kos_task_points"));
+	player->setKosTaskStage(result->getNumber<uint16_t>("kos_task_stage"));
+	player->setKosTaskKills(result->getNumber<uint32_t>("kos_task_kills"));
+	g_logger().debug("KosTaskSystem - Loaded {} task data. Points : {} Task_id : {}, Stage : {}, Kills: {}", player->getName(),player->getKosTaskPoints(), kosTaskId, player->getKosTaskStage(), player->getKosTaskKills());
+}

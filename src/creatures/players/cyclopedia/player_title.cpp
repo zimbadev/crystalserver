@@ -229,6 +229,15 @@ bool PlayerTitle::checkHighscore(uint8_t skill) const {
 		case HighscoreCategories_t::GOSHNAR:
 			// todo check if player is the most killer of Goshnar and his aspects.
 			return false;
+		case HighscoreCategories_t::KOS_TASK:
+
+			query = fmt::format(
+				"SELECT `id` FROM `players` "
+				"WHERE `group_id` < {} "
+				"ORDER BY `kos_task_points` DESC LIMIT 1",
+				static_cast<int>(GROUP_TYPE_GAMEMASTER)
+			);
+			break;
 		default:
 			std::string skillName = g_game().getSkillNameById(skill);
 			query = fmt::format(

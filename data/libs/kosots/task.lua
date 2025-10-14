@@ -2,6 +2,8 @@
 ---@field private name string
 KosOTSTask = {}
 KosOTSTaskIds = {}
+KosOTSTaskMonsters = {}
+local taskId = 1
 
 --[[
 local config = {
@@ -34,7 +36,7 @@ setmetatable(KosOTSTask, {
 		return setmetatable({
 			name = config.name:lower(),
 			amount = tonumber(config.amount),
-			id = tonumber(config.id),
+            id = tonumber(config.id),
 			monsters = config.monsters,
             rewards = config.rewards
 
@@ -56,6 +58,13 @@ function KosOTSTask:register()
 
 	KosOTSTask[self.id] = self
     KosOTSTaskIds[self.name:lower()] = self.id
+    for id,monster in pairs(self.monsters) do
+        if not table.contains(KosOTSTaskMonsters, monster) then
+            table.insert(KosOTSTaskMonsters, monster)
+        end
+    end
+
+
 	return true
 end
 

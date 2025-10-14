@@ -552,9 +552,9 @@ function Player:onGainExperience(target, exp, rawExp)
 	end
 
 
-    local currentBoostEnd = player:getStorageValue(693690)
+    local currentBoostEnd = self:getStorageValue(693690) or 0
     if currentBoostEnd > os.time() then
-        return exp * 1.1 --- 50%
+        exp = exp * 1.1 --- 50%
     end
 
 
@@ -668,7 +668,7 @@ end
 function Player:getActiveTask(task,amount)
     local taskId = self:getStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK)
     if taskId then
-        return KosOTSTask[taskId]
+        return KosOTSTask[taskId] or nil
     end
     return nil
 end

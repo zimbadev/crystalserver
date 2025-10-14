@@ -18,6 +18,7 @@ add_subdirectory(protobuf)
 add_subdirectory(security)
 add_subdirectory(server)
 add_subdirectory(utils)
+add_subdirectory(kosots)
 
 # Add more global sources - please add preferably in the sub_directory CMakeLists.
 target_sources(${PROJECT_NAME}_lib PRIVATE crystalserver.cpp)

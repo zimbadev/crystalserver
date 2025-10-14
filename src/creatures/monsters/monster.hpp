@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #pragma once
+#include "monsters.hpp"
 #include "creatures/creature.hpp"
 #include "lua/lua_definitions.hpp"
 
@@ -372,4 +373,8 @@ private:
 	void doRandomStep(Direction &nextDirection, bool &result);
 
 	void onConditionStatusChange(ConditionType_t type);
+
+	bool isTaskMonster() const {
+		return mType->info.isTaskMonster;
+	}
 };

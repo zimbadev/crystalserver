@@ -18,6 +18,7 @@
 #include "lua/functions/core/game/game_functions.hpp"
 
 #include "core.hpp"
+#include "config/configmanager.hpp"
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/npcs/npc.hpp"
@@ -152,6 +153,12 @@ int GameFunctions::luaGameCreateMonsterType(lua_State* L) {
 		names.insert(uniqueName);
 
 		monsterType->name = name;
+		if (g_configManager().getBoolean(KOS_TASK_SYSTEM) && KosTasks::isTaskMonster(name)) {
+			monsterType->info.isTaskMonster = true;
+			g_logger().debug("[Game.KosTak] - Set {} as a TaskCreature", name);
+		}
+
+
 		if (!alternateName.empty()) {
 			names.insert(alternateName);
 			monsterType->name = alternateName;

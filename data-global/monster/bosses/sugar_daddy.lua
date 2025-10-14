@@ -101,6 +101,8 @@ monster.attacks = {
 	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_EARTHDAMAGE, minDamage = -1050, maxDamage = -1110, radius = 12, effect = CONST_ME_HEARTS, target = false },
 	{ name = "root area", interval = 20000, chance = 100, target = false },
 	{ name = "sugar daddy cake", interval = 10000, chance = 50, target = true },
+	{ name = "gold coin", chance = 80110, maxCount = 2 },
+    { name = "root area", interval = 20000, chance = 100, target = false },
 }
 
 monster.defenses = {

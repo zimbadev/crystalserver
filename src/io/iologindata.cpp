@@ -188,6 +188,12 @@ bool IOLoginData::loadPlayer(const std::shared_ptr<Player> &player, const DBResu
 		IOLoginDataLoad::loadPlayerInitializeSystem(player);
 		IOLoginDataLoad::loadPlayerUpdateSystem(player);
 
+		// Load KosTaskSystem data
+		if (g_configManager().getBoolean(KOS_TASK_SYSTEM)) {
+			IOLoginDataLoad::loadPlayerKosTaskSystem(player, result);
+		}
+
+
 		return true;
 	} catch (const std::system_error &error) {
 		g_logger().warn("[{}] Error while load player: {}", __FUNCTION__, error.what());
@@ -297,6 +303,7 @@ bool IOLoginData::savePlayerGuard(const std::shared_ptr<Player> &player) {
 			throw DatabaseException("[IOLoginDataSave::savePlayerMounts] - Failed to save player mounts: " + player->getName());
 		}
 	}
+
 
 	return true;
 }

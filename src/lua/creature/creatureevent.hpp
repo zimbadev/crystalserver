@@ -17,7 +17,10 @@
 
 #pragma once
 
+#include "kosots/kostasks.h"
 #include "lua/lua_definitions.hpp"
+
+#include <complex.h>
 
 class CreatureEvent;
 class LuaScriptInterface;
@@ -69,6 +72,10 @@ public:
 	void executeManaChange(const std::shared_ptr<Creature> &creature, const std::shared_ptr<Creature> &attacker, CombatDamage &damage) const;
 	void executeExtendedOpcode(const std::shared_ptr<Player> &player, uint8_t opcode, const std::string &buffer) const;
 
+	bool executeOnKosTaskProgress(const std::shared_ptr<Player> &player) const;
+	bool executeOnKosTaskComplete(const std::shared_ptr<Player> &player) const;
+	bool executeOnKosTaskCompleted(const std::shared_ptr<Player> &player, std::shared_ptr<KosTask> task, uint64_t exp, uint64_t money, std::vector<std::shared_ptr<Item>> rewards, uint16_t taskPointsAmount) const;
+
 	std::string getScriptTypeName() const;
 	LuaScriptInterface* getScriptInterface() const;
 	bool loadScriptId();
@@ -98,6 +105,9 @@ public:
 	bool playerLogin(const std::shared_ptr<Player> &player) const;
 	bool playerLogout(const std::shared_ptr<Player> &player) const;
 	bool playerAdvance(const std::shared_ptr<Player> &player, skills_t, uint32_t, uint32_t) const;
+	bool playerKosTaskProgress(const std::shared_ptr<Player> &player) const;
+	bool playerKosTaskComplete(const std::shared_ptr<Player> &player) const;
+	bool playerKosTaskCompleted(const std::shared_ptr<Player> &player, std::shared_ptr<KosTask> task, uint64_t exp, uint64_t money, std::vector<std::shared_ptr<Item>> rewards, uint16_t taskPointsAmount) const;
 
 	std::shared_ptr<CreatureEvent> getEventByName(const std::string &name, bool forceLoaded = true);
 

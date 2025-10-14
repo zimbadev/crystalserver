@@ -1,27 +1,49 @@
-local taskDeath = CreatureEvent("TaskSystem")
+local taskSystemProgress = CreatureEvent("taskSystemProgress")
 
-function taskDeath.onDeath(creature, corpse, killer, mostDamageKiller, lastHitUnjustified, mostDamageUnjustified)
-    if killer:isPlayer() then
-        local task = killer:getActiveTask()
-        if task ~= nil and task:taskContainsMonster(creature:getName()) then
-            local taskStep = killer:getStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_STAGE)
-            local progres = killer:getCurrentTaskProgress()
-            local needMonsters = task.amount * taskStep
-
-            if progres < needMonsters then
-                progres = progres+1
-                if progres < needMonsters then
-                    killer:sendTextMessage(MESSAGE_LOOK, "Task progress: " .. progres .. "/" .. needMonsters)
-                else
-                    killer:sendTextMessage(MESSAGE_LOOK, "You have completed a " .. task.name .. " task")
-                end
-                killer:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_PROGRESS,progres)
-            end
+function taskSystemProgress.onKosTaskProgress(player)
+    local task = player:getKosTask()
+    local taskPoints = player:getKosTaskPoints()
+    local taskStage = player:getKosTaskStage()
+    local taskKills = player:getKosTaskKills()
+    local taskName = task:getName()
+    local requiredKills  = task:getRequiredKillsByStage(taskStage);
 
 
-
-        end
-    end
+    player:sendTextMessage(MESSAGE_LOOK, "You killed " .. taskKills .. "/" .. requiredKills .. " of " .. taskName .. " task")
 end
 
-taskDeath:register()
+taskSystemProgress:register()
+
+local taskSystemComplete = CreatureEvent("taskSystemComplete")
+
+function taskSystemComplete.onKosTaskComplete(player)
+    local task = player:getKosTask()
+    local taskPoints = player:getKosTaskPoints()
+    local taskStage = player:getKosTaskStage()
+    local taskKills = player:getKosTaskKills()
+    local taskName = task:getName()
+    local requiredKills  = task:getRequiredKills(taskStage);
+
+
+    player:sendTextMessage(MESSAGE_LOOK, "You have completed the " .. taskName .. " task. You can go back to Billy the tasker to get reward")
+end
+
+taskSystemComplete:register()
+
+local taskSystemCompleted = CreatureEvent("taskSystemCompleted")
+
+function taskSystemCompleted.onKosTaskCompleted(player,task,xpAmount,moneyAmount,taskPointsAmount,rewards)
+    local taskName = task:getName()
+
+    local text = "You have completed the " .. taskName .. " task. You received: \n\n"
+    text = text .. "XP : " .. xpAmount .. "\n"
+    text = text .. "Money : " .. moneyAmount .. "\n"
+    for i, reward in ipairs(rewards) do
+        text = text .. reward.name .. " x " .. reward.amount .. "  \n"
+    end
+    text = text .. "Task Points : " .. taskPointsAmount .. "\n"
+
+    player:sendTextMessage(MESSAGE_LOOK, text)
+end
+
+taskSystemCompleted:register()

@@ -13,7 +13,7 @@ monster.outfit = {
 	lookMount = 0,
 }
 monster.events = {
-	"TaskSystem",
+
 }
 monster.raceId = 1729
 monster.Bestiary = {

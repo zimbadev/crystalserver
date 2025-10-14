@@ -428,6 +428,11 @@ bool ConfigManager::load() {
 	loadStringConfig(L, WORLD_TYPE, "worldType", "pvp");
 	loadStringConfig(L, LOGLEVEL, "logLevel", "info");
 
+	//KosOTS
+	loadBoolConfig(L, KOS_TASK_SYSTEM, "kosTaskSystem", false);
+	loadIntConfig(L, KOS_TASK_SYSTEM_KILL_MULTIPLIER, "kosTaskSystemKillMultiplier", 1);
+	loadIntConfig(L, KOS_TASK_SYSTEM_POINTS_MULTIPLIER, "kosTaskSystemPointsMultiplier", 1);
+
 	loaded = true;
 	lua_close(L);
 	return true;

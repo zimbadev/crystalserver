@@ -2,7 +2,7 @@ local internalNpcName = "Billy the tasker"
 local npcType = Game.createNpcType(internalNpcName)
 local npcConfig = {}
 local choose = {}
-local chooseAmount = {}
+local choseStage = {}
 npcConfig.name = internalNpcName
 npcConfig.description = internalNpcName
 
@@ -12,7 +12,7 @@ npcConfig.walkInterval = 2000
 npcConfig.walkRadius = 2
 
 npcConfig.outfit = {
-	lookType = 144,
+	lookType = 1282,
 	lookHead = 116,
 	lookBody = 78,
 	lookLegs = 94,
@@ -26,21 +26,41 @@ npcConfig.flags = {
 
 npcConfig.currency = 65000
 npcConfig.shop = {
-	{ itemName = "Rotworm Stew", clientId = 9079, buy = 20 },
-	{ itemName = "Hydra tongue salad", clientId = 9080, buy = 20 },
-	{ itemName = "Roasted Dragon Wings", clientId = 9081, buy = 20 },
-	{ itemName = "Tropical Fried Terrorbird", clientId = 9082, buy = 20 },
-	{ itemName = "Banana Chocolate Shake", clientId = 9083, buy = 20 },
-	{ itemName = "Veggie Casserole", clientId = 9084, buy = 20 },
-	{ itemName = "Filled Jalapeno Peppers", clientId = 9085, buy = 20 },
-	{ itemName = "Blessed Steak", clientId = 9086, buy = 20 },
-	{ itemName = "Northern Fishburger", clientId = 9088, buy = 20 },
-	{ itemName = "Carrot Cake", clientId = 9087, buy = 20 },
-	{ itemName = "Coconut Shrimp Bake", clientId = 11584, buy = 20 },
-	{ itemName = "Pot of Blackjack", clientId = 11586, buy = 20 },
-	{ itemName = "Demonic Candy Ball", clientId = 11587, buy = 20 },
-	{ itemName = "Sweet Mangonaise Elixir", clientId = 11588, buy = 20 },
-	{ itemName = "Zaoan Sauce", clientId = 50334, buy = 20 },
+    { itemName = "Rotworm Stew", clientId = 9079, buy = 10 },
+	{ itemName = "Hydra tongue salad", clientId = 9080, buy = 10 },
+	{ itemName = "Roasted Dragon Wings", clientId = 9081, buy = 10 },
+	{ itemName = "Tropical Fried Terrorbird", clientId = 9082, buy = 10 },
+	{ itemName = "Banana Chocolate Shake", clientId = 9083, buy = 10 },
+	{ itemName = "Veggie Casserole", clientId = 9084, buy = 10 },
+	{ itemName = "Filled Jalapeno Peppers", clientId = 9085, buy = 10 },
+	{ itemName = "Blessed Steak", clientId = 9086, buy = 10 },
+	{ itemName = "Northern Fishburger", clientId = 9088, buy = 10 },
+	{ itemName = "Carrot Cake", clientId = 9087, buy = 10 },
+	{ itemName = "Coconut Shrimp Bake", clientId = 11584, buy = 10 },
+	{ itemName = "Pot of Blackjack", clientId = 11586, buy = 10 },
+	{ itemName = "Demonic Candy Ball", clientId = 11587, buy = 10 },
+	{ itemName = "Sweet Mangonaise Elixir", clientId = 11588, buy = 10 },
+	{ itemName = "Zaoan Sauce", clientId = 50334, buy = 10 },
+    { clientId = 36723, itemName = "kooldown-aid", buy = 5 },
+    { clientId = 36724, itemName = "strike enhancement", buy = 5 },
+    { clientId = 36725, itemName = "stamina extension", buy = 5 },
+    { clientId = 36726, itemName = "charm upgrade", buy = 5 },
+    { clientId = 36727, itemName = "wealth duplex", buy = 5 },
+    { clientId = 36728, itemName = "bestiary betterment", buy = 5 },
+    { clientId = 36729, itemName = "fire resilience", buy = 5 },
+    { clientId = 36730, itemName = "ice resilience", buy = 5 },
+    { clientId = 36731, itemName = "earth resilience", buy = 5 },
+    { clientId = 36732, itemName = "energy resilience", buy = 5 },
+    { clientId = 36733, itemName = "holy resilience", buy = 5 },
+    { clientId = 36734, itemName = "death resilience", buy = 5 },
+    { clientId = 36735, itemName = "physical resilience", buy = 5 },
+    { clientId = 36736, itemName = "fire amplification", buy = 5 },
+    { clientId = 36737, itemName = "ice amplification", buy = 5 },
+    { clientId = 36738, itemName = "earth amplification", buy = 5 },
+    { clientId = 36739, itemName = "energy amplification", buy = 5 },
+    { clientId = 36740, itemName = "holy amplification", buy = 5 },
+    { clientId = 36741, itemName = "death amplification", buy = 5 },
+    { clientId = 36742, itemName = "physical amplification", buy = 5 },
 
 }
 local messageStartTask = {
@@ -91,11 +111,7 @@ local function greetCallback(npc, creature)
 	local player = Player(creature)
 	local playerId = player:getId()
 
-	if player:getStorageValue(Storage.KosOts.TaskSystem.QuestLogEntry) ~= 0 then
-		npcHandler:setMessage(MESSAGE_GREET, "Hi there, do you want to to {join} the 'Paw and Fur - Hunting Elite'?")
-	else
-		npcHandler:setMessage(MESSAGE_GREET, "Welcome to the 'Paw and Fur - Hunting Elite' |PLAYERNAME|. Did you want get some {task} or {report}, {cancel}")
-	end
+    npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|! You can start a {task} with me. If you want to {report} or {cancel} , just ask me!")
 
 	return true
 end
@@ -103,6 +119,7 @@ end
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
 	local playerId = player:getId()
+
 
 	if not npcHandler:checkInteraction(npc, creature) then
 		return false
@@ -112,110 +129,109 @@ local function creatureSayCallback(npc, creature, type, message)
 		return string.upper(a) .. b
 	end)
 
-	if (MsgContains("join", message) or MsgContains("yes", message)) and npcHandler:getTopic(playerId) == 0 and player:getStorageValue(Storage.KosOts.TaskSystem.QuestLogEntry) ~= 0 then
-		player:setStorageValue(JOIN_STOR, 1)
-		player:setStorageValue(Storage.KosOts.TaskSystem.QuestLogEntry, 0)
-		player:setStorageValue(Storage.KosOts.TaskSystem.QuestLinePoints, 0)
-		player:setStorageValue(Storage.KosOts.TaskSystem.POINTSSTORAGE, 0)
-		npcHandler:say("Great! A warm welcome to our newest member: |PLAYERNAME|! Ask me for a {task} if you want to go on a hunt.", npc, creature)
-	elseif table.contains({ "tasks", "task", "mission" }, message:lower()) then
-		if player:getStorageValue(Storage.KosOts.TaskSystem.QuestLogEntry) ~= 0 then
-			return npcHandler:say("You'll have to {join}, to get any {tasks}.", npc, creature)
-		end
 
-        if player:getActiveTask() then
-            return npcHandler:say("You have still active task. You can {report} or {cancel}", npc, creature)
+    if table.contains({ "tasks", "task", "mission" }, message:lower()) then
+        local task = player:getKosTask()
+        if task then
+            return npcHandler:say("You can only take one task at a one time.", npc, creature)
         end
 
+        local tasks = player:getAvailableKosTasks()
+        local msg = "Here are the available tasks: "
 
-        local msg = "You can pickup following tasks: "
-        local tasks = KosOTSTask:getTaskByStage()
         for i = 1, #tasks do
             local task = tasks[i]
-            msg = msg .. "{" .. task.name .. "}"
+            msg = msg .. task:getRequiredKills() .. "x {" .. task:getName() .. "}"
             if i < #tasks then
                 msg = msg .. ", "
             end
         end
-
-
         npcHandler:say(msg, npc, creature)
-    elseif message:lower() == "cancel" then
-        local task = player:getActiveTask()
-
-        if task == nil then
-            return npcHandler:say("You dont have a active {task}.", npc, creature)
-        end
-
-        player:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK, 0)
-        player:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_STAGE, 0)
-        player:setStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_PROGRESS, 0)
-        return npcHandler:say("You have canceled the task", npc, creature)
-    elseif message:lower() == "report" then
-        local task = player:getActiveTask()
-
-        if task == nil then
-            return npcHandler:say("You dont have a active {task}.", npc, creature)
-        end
-        local stage = player:getStorageValue(Storage.KosOts.TaskSystem.CURRENT_TASK_STAGE)
-        if player:isTaskCompleted(task,stage) then
-            player:completeTask(task,stage)
-        else
-            return npcHandler:say("You haven't killed all the monsters yet.", npc, creature)
-        end
-
-    elseif message ~= "" and npcHandler:getTopic(playerId) == 0 then
-        local msg = ""
-        local task = KosOTSTask:getTaskByName(message)
-        if task ~= nil then
-            choose[playerId] = task
-            npcHandler:setTopic(playerId, 1)
-            msg = "You want to kill " .. choose[playerId].amount .. " " .. choose[playerId].name .. " monsters right ? How many task u want to pick up ? (1-10)"
-        else
-            local tasks = KosOTSTask:getTaskByStage()
-            for i = 1, #tasks do
-                local task = tasks[i]
-                msg = msg .. "{" .. task.name .. "}"
-                if i < #tasks then
-                    msg = msg .. ", "
-                end
-            end
-        end
-
-        npcHandler:say(msg, npc, creature)
+        npcHandler:setTopic(playerId, 1)
     elseif message ~= "" and npcHandler:getTopic(playerId) == 1 then
-        local taskAmount  = tonumber(message)
-        local msg = ""
-        if taskAmount == nil or taskAmount < 1 or taskAmount > 10 then
-            msg = "You want to kill " .. choose[playerId].amount .. " " .. choose[playerId].name .. " monsters right ? How many task u want to pick up ? (1-10)"
-        else
-            local task = choose[playerId]
-            chooseAmount[playerId] = taskAmount
+        local task = player:canPickupTask(message:lower())
+        local msg
+        if task then
+            msg = "You want to kill " .. task:getRequiredKills() .. " " .. task:getName() .. 's ? How many stages you want ? (1-10)'
+            choose[playerId] = task
             npcHandler:setTopic(playerId, 2)
-            msg = "Are you sure you want to kill " .. (taskAmount*task.amount) .. " " .. task.name .. "s ?"
+        else
+            msg = "Invalid {task}"
         end
         npcHandler:say(msg, npc, creature)
-    elseif table.contains({ "yes", "no" }, message:lower()) and npcHandler:getTopic(playerId) == 2 then
-        if message:lower() == "no" then
-            local tasks = KosOTSTask:getTaskByStage()
-            local msg = ""
-            for i = 1, #tasks do
-                local task = tasks[i]
-                msg = msg .. "{" .. task.name .. "}"
-                if i < #tasks then
-                    msg = msg .. ", "
+    elseif message ~= "" and npcHandler:getTopic(playerId) == 2 then
+        local taskStage  = tonumber(message)
+        local task = choose[playerId]
+        local msg = ""
+        if taskStage == nil or taskStage < 1 or taskStage > 10 then
+            msg = "You want to kill " .. task:getRequiredKills() .. " " .. task:getName() .. 's ? How many stages you want ? (1-10)'
+        else
+            choseStage[playerId] = taskStage
+            msg = "Are you sure you want to kill " .. task:getRequiredKillsByStage(taskStage) .. " " .. task:getName() .. "s ? {yes}/{no}"
+            npcHandler:setTopic(playerId, 3)
+        end
+        npcHandler:say(msg, npc, creature)
+    elseif message:lower() == "yes" and npcHandler:getTopic(playerId) == 3 then
+        local task = choose[playerId]
+        local taskStage = choseStage[playerId]
+
+        if player:setTask(task, taskStage) then
+            local taskMonsters = task:getMonsters()
+            local monstersList = ""
+
+            for i = 1, #taskMonsters do
+                local taskMonster = taskMonsters[i]
+                monstersList = monstersList .. "{" .. taskMonster .. "}"
+                if i < #taskMonster then
+                    monstersList = monstersList .. ", "
                 end
             end
 
-            npcHandler:setTopic(playerId, 0)
-            npcHandler:say(msg, npc, creature)
+
+            npcHandler:say("Task with " .. task:getName() .. " has been activated. List of monsters included in the task: " .. monstersList ..". Go and kill " .. task:getRequiredKills(taskStage) .. " of them.", npc, creature)
         else
-            local task = choose[playerId]
-            local amount = chooseAmount[playerId]
-            player:setPlayerTask(task,amount)
-            npcHandler:say("Go and kill " .. (chooseAmount[playerId] * task.amount) .. " " .. task.name .. "s", npc, creature)
+            npcHandler:say("Something went wrong. Type {task}", npc, creature)
         end
-	end
+        npcHandler:setTopic(playerId, 0)
+    elseif message:lower() == "no" and npcHandler:getTopic(playerId) == 3 then
+        local tasks = player:getAvailableKosTasks()
+        local msg = "Which task do you want : "
+
+
+        local msg = "You can pickup following tasks: "
+
+        for i = 1, #tasks do
+            local task = tasks[i]
+            msg = msg .. "{" .. task:getName() .. "}"
+            if i < #tasks then
+                msg = msg .. ", "
+            end
+        end
+        npcHandler:say(msg, npc, creature)
+        npcHandler:setTopic(playerId, 1)
+    elseif message:lower() == 'report' then
+        local task = player:getKosTask()
+        if not task then
+            return npcHandler:say("You currently dont have any active {task}.", npc, creature)
+        end
+
+        if player:completeKosTask() then
+            return npcHandler:say("You have completed a " .. task:getName() .. " {task}.", npc, creature)
+        end
+
+
+    elseif message:lower() == 'cancel' then
+        local task = player:getKosTask()
+        if not task then
+            return npcHandler:say("You currently dont have any active {task}.", npc, creature)
+        end
+
+        if player:cancelKosTask() then
+            return npcHandler:say("You have successfully cancel {task}.", npc, creature)
+        end
+
+    end
+
 end
 
 npcHandler:setMessage(MESSAGE_FAREWELL, "Happy hunting, dear no-life!")

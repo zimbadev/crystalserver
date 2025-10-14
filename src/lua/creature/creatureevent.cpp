@@ -107,6 +107,44 @@ bool CreatureEvents::playerAdvance(
 	}
 	return true;
 }
+bool CreatureEvents::playerKosTaskProgress(const std::shared_ptr<Player> &player) const {
+	// fire global event if is registered
+	for (const auto &it : creatureEvents) {
+
+		if (it.second->getEventType() == CREATURE_EVENT_KOSTASK_PROGRESS) {
+
+			if (!it.second->executeOnKosTaskProgress(player)) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+bool CreatureEvents::playerKosTaskComplete(const std::shared_ptr<Player> &player) const {
+	// fire global event if is registered
+	for (const auto &it : creatureEvents) {
+
+		if (it.second->getEventType() == CREATURE_EVENT_KOSTASK_COMPLETE) {
+			if (!it.second->executeOnKosTaskComplete(player)) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+bool CreatureEvents::playerKosTaskCompleted(const std::shared_ptr<Player> &player, const std::shared_ptr<KosTask> task, uint64_t exp, uint64_t money,std::vector<std::shared_ptr<Item>> rewards, uint16_t taskPointsAmount) const {
+	// fire global event if is registered
+	for (const auto &it : creatureEvents) {
+		if (it.second->getEventType() == CREATURE_EVENT_KOSTASK_COMPLETED) {
+			if (!it.second->executeOnKosTaskCompleted(player, task, exp, money, rewards, taskPointsAmount)) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
 
 /*
  =======================
@@ -187,6 +225,12 @@ std::string CreatureEvent::getScriptTypeName() const {
 
 		case CREATURE_EVENT_EXTENDED_OPCODE:
 			return "onExtendedOpcode";
+		case CREATURE_EVENT_KOSTASK_PROGRESS:
+			return "onKosTaskProgress";
+		case CREATURE_EVENT_KOSTASK_COMPLETE:
+			return "onKosTaskComplete";
+		case CREATURE_EVENT_KOSTASK_COMPLETED:
+			return "onKosTaskCompleted";
 
 		case CREATURE_EVENT_NONE:
 		default:
@@ -549,4 +593,80 @@ void CreatureEvent::executeExtendedOpcode(const std::shared_ptr<Player> &player,
 	LuaScriptInterface::pushString(L, buffer);
 
 	getScriptInterface()->callVoidFunction(3);
+}
+bool CreatureEvent::executeOnKosTaskProgress(const std::shared_ptr<Player> &player) const {
+	// onKosTaskProgress(player)
+	if (!LuaScriptInterface::reserveScriptEnv()) {
+		g_logger().error("[CreatureEvent::executeOnKosTaskProgress - Player {} event {}]"
+		                 "Call stack overflow. Too many lua script calls being nested.",
+		                 player->getName(), getName());
+		return false;
+	}
+
+	ScriptEnvironment* env = LuaScriptInterface::getScriptEnv();
+	env->setScriptId(getScriptId(), getScriptInterface());
+
+	lua_State* L = getScriptInterface()->getLuaState();
+
+	getScriptInterface()->pushFunction(getScriptId());
+	LuaScriptInterface::pushUserdata(L, player);
+	LuaScriptInterface::setMetatable(L, -1, "Player");
+	return getScriptInterface()->callFunction(1);
+}
+bool CreatureEvent::executeOnKosTaskComplete(const std::shared_ptr<Player> &player) const {
+	// onKosTaskComplete(player)
+	if (!LuaScriptInterface::reserveScriptEnv()) {
+		g_logger().error("[CreatureEvent::executeOnKosTaskComplete - Player {} event {}]"
+		                 "Call stack overflow. Too many lua script calls being nested.",
+		                 player->getName(), getName());
+		return false;
+	}
+
+	ScriptEnvironment* env = LuaScriptInterface::getScriptEnv();
+	env->setScriptId(getScriptId(), getScriptInterface());
+
+	lua_State* L = getScriptInterface()->getLuaState();
+
+	getScriptInterface()->pushFunction(getScriptId());
+	LuaScriptInterface::pushUserdata(L, player);
+	LuaScriptInterface::setMetatable(L, -1, "Player");
+	return getScriptInterface()->callFunction(1);
+}
+bool CreatureEvent::executeOnKosTaskCompleted(const std::shared_ptr<Player> &player, const std::shared_ptr<KosTask> task, uint64_t exp, uint64_t money,std::vector<std::shared_ptr<Item>> rewards, uint16_t taskPointsAmount) const {
+	// onKosTaskCompleted(player)
+	if (!LuaScriptInterface::reserveScriptEnv()) {
+		g_logger().error("[CreatureEvent::executeOnKosTaskCompleted - Player {} event {}]"
+		                 "Call stack overflow. Too many lua script calls being nested.",
+		                 player->getName(), getName());
+		return false;
+	}
+
+	ScriptEnvironment* env = LuaScriptInterface::getScriptEnv();
+	env->setScriptId(getScriptId(), getScriptInterface());
+
+	lua_State* L = getScriptInterface()->getLuaState();
+
+	getScriptInterface()->pushFunction(getScriptId());
+	LuaScriptInterface::pushUserdata<Player>(L, player);
+	LuaScriptInterface::setCreatureMetatable(L, -1, player);
+	LuaScriptInterface::pushUserdata<KosTask>(L, task);
+	LuaScriptInterface::setMetatable(L, -1, "KosTask");
+	LuaScriptInterface::pushNumber(L, exp);
+	LuaScriptInterface::pushNumber(L, money);
+	LuaScriptInterface::pushNumber(L, taskPointsAmount);
+
+	lua_createtable(L, rewards.size(), 0);
+
+	int index = 0;
+	for (const auto& reward : rewards) {
+
+		lua_createtable(L, 0, 6);
+		Lua::setField(L, "name", reward->getName());
+		Lua::setField(L, "amount", reward->getItemAmount());
+		lua_rawseti(L, -2, ++index);
+	}
+
+
+
+	return getScriptInterface()->callFunction(6);
 }

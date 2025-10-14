@@ -151485,9 +151485,7 @@
 	<monster centerx="32090" centery="32613" centerz="12" radius="2">
 		<monster name="Demon Skeleton" x="0" y="-1" z="12" spawntime="90" />
 	</monster>
-	<monster centerx="32648" centery="32613" centerz="12" radius="1">
-		<monster name="Burning Book" x="0" y="0" z="12" spawntime="60" />
-	</monster>
+	<monster centerx="32648" centery="32613" centerz="12" radius="1" />
 	<monster centerx="32794" centery="32613" centerz="12" radius="1">
 		<monster name="Serpent Spawn" x="0" y="0" z="12" spawntime="90" />
 	</monster>
@@ -151633,9 +151631,7 @@
 	<monster centerx="33178" centery="32618" centerz="12" radius="2">
 		<monster name="Snake" x="1" y="0" z="12" spawntime="90" />
 	</monster>
-	<monster centerx="32648" centery="32619" centerz="12" radius="1">
-		<monster name="Burning Book" x="0" y="0" z="12" spawntime="60" />
-	</monster>
+	<monster centerx="32648" centery="32619" centerz="12" radius="1" />
 	<monster centerx="32616" centery="32620" centerz="12" radius="1">
 		<monster name="Rage Squid" x="0" y="0" z="12" spawntime="60" />
 	</monster>
@@ -151755,9 +151751,7 @@
 	<monster centerx="32616" centery="32627" centerz="12" radius="1">
 		<monster name="Rage Squid" x="0" y="0" z="12" spawntime="60" />
 	</monster>
-	<monster centerx="32648" centery="32627" centerz="12" radius="1">
-		<monster name="Burning Book" x="0" y="0" z="12" spawntime="60" />
-	</monster>
+	<monster centerx="32648" centery="32627" centerz="12" radius="1" />
 	<monster centerx="33073" centery="32627" centerz="12" radius="5">
 		<monster name="Scarab" x="0" y="-4" z="12" spawntime="90" />
 		<monster name="Larva" x="-4" y="-1" z="12" spawntime="90" />
@@ -151849,9 +151843,7 @@
 	<monster centerx="32806" centery="32632" centerz="12" radius="1">
 		<monster name="Centipede" x="1" y="0" z="12" spawntime="90" />
 	</monster>
-	<monster centerx="32648" centery="32633" centerz="12" radius="1">
-		<monster name="Burning Book" x="0" y="0" z="12" spawntime="60" />
-	</monster>
+	<monster centerx="32648" centery="32633" centerz="12" radius="1" />
 	<monster centerx="32764" centery="32633" centerz="12" radius="1">
 		<monster name="Serpent Spawn" x="0" y="0" z="12" spawntime="90" />
 	</monster>
@@ -151943,9 +151935,7 @@
 	<monster centerx="33372" centery="32637" centerz="12" radius="3">
 		<monster name="Ancient Scarab" x="-3" y="1" z="12" spawntime="90" />
 	</monster>
-	<monster centerx="32648" centery="32638" centerz="12" radius="1">
-		<monster name="Rage Squid" x="0" y="0" z="12" spawntime="60" />
-	</monster>
+	<monster centerx="32648" centery="32638" centerz="12" radius="1" />
 	<monster centerx="32755" centery="32639" centerz="12" radius="1">
 		<monster name="Hydra" x="1" y="0" z="12" spawntime="90" />
 	</monster>
@@ -151956,9 +151946,7 @@
 		<monster name="Stalker" x="-1" y="-2" z="12" spawntime="90" />
 		<monster name="Stalker" x="-1" y="3" z="12" spawntime="90" />
 	</monster>
-	<monster centerx="32648" centery="32642" centerz="12" radius="1">
-		<monster name="Burning Book" x="0" y="0" z="12" spawntime="60" />
-	</monster>
+	<monster centerx="32648" centery="32642" centerz="12" radius="1" />
 	<monster centerx="32755" centery="32643" centerz="12" radius="1">
 		<monster name="Hydra" x="0" y="0" z="12" spawntime="90" />
 	</monster>
@@ -152409,11 +152397,8 @@
 		<monster name="Mutated Bat" x="0" y="2" z="12" spawntime="90" />
 		<monster name="Clay Guardian" x="1" y="3" z="12" spawntime="90" />
 	</monster>
-	<monster centerx="32635" centery="32665" centerz="12" radius="1">
-		<monster name="Burning Book" x="0" y="0" z="12" spawntime="60" />
-	</monster>
+	<monster centerx="32635" centery="32665" centerz="12" radius="1" />
 	<monster centerx="32644" centery="32665" centerz="12" radius="3">
-		<monster name="Burning Book" x="-3" y="-1" z="12" spawntime="60" />
 		<monster name="Guardian Of Tales" x="-3" y="2" z="12" spawntime="60" />
 		<monster name="Rage Squid" x="1" y="3" z="12" spawntime="60" />
 	</monster>
@@ -180078,13 +180063,13 @@
 		<monster name="Sulphider" x="-4" y="-4" z="14" spawntime="60" />
 		<monster name="Undertaker" x="-1" y="-4" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="4" y="-4" z="14" spawntime="60" />
-		<monster name="Stalking Stalk" x="4" y="-2" z="14" spawntime="60" />
-		<monster name="Stalking Stalk" x="5" y="-2" z="14" spawntime="60" />
+		<monster name="Stalking Stalk" x="1" y="-2" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-5" y="-1" z="14" spawntime="60" />
+		<monster name="Undertaker" x="3" y="0" z="14" spawntime="60" />
 		<monster name="Undertaker" x="-3" y="1" z="14" spawntime="60" />
+		<monster name="Stalking Stalk" x="3" y="1" z="14" spawntime="60" />
 		<monster name="Sulphider" x="-4" y="3" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-2" y="3" z="14" spawntime="60" />
-		<monster name="Undertaker" x="2" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33686" centery="32803" centerz="14" radius="1">
 		<monster name="Sulphur Spouter" x="0" y="0" z="14" spawntime="60" />
@@ -180098,11 +180083,11 @@
 	</monster>
 	<monster centerx="33592" centery="32805" centerz="14" radius="5">
 		<monster name="Sulphider" x="-5" y="-5" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="-2" y="1" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="1" y="1" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="1" y="2" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="3" y="2" z="14" spawntime="60" />
 		<monster name="Sulphider" x="2" y="3" z="14" spawntime="60" />
-		<monster name="Sulphur Spouter" x="-4" y="4" z="14" spawntime="60" />
 		<monster name="Undertaker" x="1" y="5" z="14" spawntime="60" />
 		<monster name="Undertaker" x="2" y="5" z="14" spawntime="60" />
 	</monster>
@@ -180141,16 +180126,16 @@
 		<monster name="Crypt Shambler" x="2" y="2" z="14" spawntime="90" />
 		<monster name="Mummy" x="-1" y="3" z="14" spawntime="90" />
 	</monster>
-	<monster centerx="33567" centery="32811" centerz="14" radius="5">
-		<monster name="Sulphur Spouter" x="-4" y="-5" z="14" spawntime="60" />
-		<monster name="Undertaker" x="-3" y="-5" z="14" spawntime="60" />
-		<monster name="Undertaker" x="-1" y="-1" z="14" spawntime="60" />
-		<monster name="Stalking Stalk" x="-4" y="0" z="14" spawntime="60" />
-		<monster name="Undertaker" x="-3" y="3" z="14" spawntime="60" />
-		<monster name="Sulphider" x="0" y="3" z="14" spawntime="60" />
-		<monster name="Sulphur Spouter" x="2" y="3" z="14" spawntime="60" />
-		<monster name="Sulphider" x="5" y="3" z="14" spawntime="60" />
-		<monster name="Nighthunter" x="-4" y="4" z="14" spawntime="60" />
+	<monster centerx="33567" centery="32812" centerz="14" radius="5">
+		<monster name="Undertaker" x="1" y="-4" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="2" y="-3" z="14" spawntime="60" />
+		<monster name="Undertaker" x="-1" y="-2" z="14" spawntime="60" />
+		<monster name="Stalking Stalk" x="-4" y="-1" z="14" spawntime="60" />
+		<monster name="Sulphider" x="2" y="-1" z="14" spawntime="60" />
+		<monster name="Undertaker" x="-3" y="2" z="14" spawntime="60" />
+		<monster name="Sulphider" x="0" y="2" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="2" y="2" z="14" spawntime="60" />
+		<monster name="Nighthunter" x="-4" y="3" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33256" centery="32813" centerz="14" radius="5">
 		<monster name="Mummy" x="-2" y="-3" z="14" spawntime="90" />
@@ -180187,13 +180172,13 @@
 		<monster name="Sulphur Spouter" x="0" y="0" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33695" centery="32817" centerz="14" radius="5">
-		<monster name="Sulphur Spouter" x="-4" y="-4" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="-2" y="-4" z="14" spawntime="60" />
 		<monster name="Sulphider" x="2" y="-4" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="1" y="-3" z="14" spawntime="60" />
 		<monster name="Undertaker" x="0" y="-2" z="14" spawntime="60" />
 		<monster name="Sulphider" x="-1" y="-1" z="14" spawntime="60" />
-		<monster name="Undertaker" x="-5" y="3" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="3" y="-1" z="14" spawntime="60" />
+		<monster name="Undertaker" x="3" y="3" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-3" y="4" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="-2" y="4" z="14" spawntime="60" />
 	</monster>
@@ -180225,9 +180210,9 @@
 	</monster>
 	<monster centerx="33653" centery="32821" centerz="14" radius="5">
 		<monster name="Sulphider" x="1" y="-5" z="14" spawntime="60" />
-		<monster name="Sulphur Spouter" x="-5" y="-4" z="14" spawntime="60" />
 		<monster name="Undertaker" x="1" y="-3" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="-4" y="-2" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="-2" y="-2" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="5" y="1" z="14" spawntime="60" />
 		<monster name="Undertaker" x="4" y="2" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-1" y="3" z="14" spawntime="60" />
@@ -180244,12 +180229,12 @@
 		<monster name="Mummy" x="2" y="2" z="14" spawntime="90" />
 	</monster>
 	<monster centerx="33607" centery="32824" centerz="14" radius="5">
-		<monster name="Sulphur Spouter" x="4" y="-5" z="14" spawntime="60" />
 		<monster name="Sulphider" x="5" y="-4" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="-5" y="-3" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="-3" y="-3" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="1" y="-3" z="14" spawntime="60" />
 		<monster name="Undertaker" x="3" y="-2" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="0" y="1" z="14" spawntime="60" />
 		<monster name="Sulphider" x="5" y="1" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-4" y="3" z="14" spawntime="60" />
 	</monster>
@@ -180272,7 +180257,7 @@
 		<monster name="Sulphur Spouter" x="0" y="-3" z="14" spawntime="60" />
 		<monster name="Undertaker" x="-3" y="-2" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="2" y="-2" z="14" spawntime="60" />
-		<monster name="Sulphur Spouter" x="-5" y="-1" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="-4" y="-1" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="2" y="-1" z="14" spawntime="60" />
 		<monster name="Sulphider" x="1" y="0" z="14" spawntime="60" />
 		<monster name="Undertaker" x="3" y="0" z="14" spawntime="60" />
@@ -180286,8 +180271,8 @@
 		<monster name="Sulphur Spouter" x="0" y="-1" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="-5" y="0" z="14" spawntime="60" />
 		<monster name="Sulphider" x="2" y="1" z="14" spawntime="60" />
+		<monster name="Undertaker" x="0" y="2" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="-4" y="3" z="14" spawntime="60" />
-		<monster name="Undertaker" x="5" y="3" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-4" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33751" centery="32830" centerz="14" radius="1">
@@ -180357,11 +180342,11 @@
 	</monster>
 	<monster centerx="33685" centery="32835" centerz="14" radius="5">
 		<monster name="Nighthunter" x="-2" y="-4" z="14" spawntime="60" />
-		<monster name="Stalking Stalk" x="5" y="-3" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="0" y="-2" z="14" spawntime="60" />
 		<monster name="Sulphider" x="3" y="-2" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-3" y="0" z="14" spawntime="60" />
-		<monster name="Sulphur Spouter" x="3" y="3" z="14" spawntime="60" />
+		<monster name="Stalking Stalk" x="4" y="0" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="2" y="1" z="14" spawntime="60" />
 		<monster name="Undertaker" x="-4" y="4" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="-3" y="5" z="14" spawntime="60" />
 	</monster>
@@ -180400,14 +180385,14 @@
 		<monster name="Stone Rhino" x="3" y="2" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33566" centery="32841" centerz="14" radius="5">
-		<monster name="Undertaker" x="-2" y="-4" z="14" spawntime="60" />
 		<monster name="Sulphider" x="-3" y="-2" z="14" spawntime="60" />
+		<monster name="Undertaker" x="3" y="-2" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-3" y="-1" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="1" y="0" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="0" y="2" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="-2" y="3" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="0" y="3" z="14" spawntime="60" />
 		<monster name="Undertaker" x="5" y="4" z="14" spawntime="60" />
-		<monster name="Sulphur Spouter" x="2" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33623" centery="32841" centerz="14" radius="5">
 		<monster name="Sulphur Spouter" x="-5" y="-4" z="14" spawntime="60" />
@@ -180473,8 +180458,8 @@
 		<monster name="Stalking Stalk" x="-2" y="-3" z="14" spawntime="60" />
 		<monster name="Undertaker" x="3" y="-2" z="14" spawntime="60" />
 		<monster name="Sulphider" x="4" y="1" z="14" spawntime="60" />
+		<monster name="Stalking Stalk" x="2" y="3" z="14" spawntime="60" />
 		<monster name="Sulphider" x="4" y="3" z="14" spawntime="60" />
-		<monster name="Stalking Stalk" x="5" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="32765" centery="32846" centerz="14" radius="1">
 		<monster name="Diamond Servant Replica" x="0" y="0" z="14" spawntime="60" />
@@ -180648,11 +180633,11 @@
 		<monster name="Nighthunter" x="4" y="2" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-2" y="3" z="14" spawntime="60" />
 		<monster name="Sulphider" x="2" y="3" z="14" spawntime="60" />
-		<monster name="Stalking Stalk" x="-4" y="4" z="14" spawntime="60" />
+		<monster name="Stalking Stalk" x="2" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33680" centery="32858" centerz="14" radius="5">
-		<monster name="Sulphur Spouter" x="-5" y="-5" z="14" spawntime="60" />
-		<monster name="Sulphider" x="-1" y="-5" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="-2" y="-3" z="14" spawntime="60" />
+		<monster name="Sulphider" x="1" y="-3" z="14" spawntime="60" />
 		<monster name="Undertaker" x="4" y="-2" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="-1" y="0" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="4" y="0" z="14" spawntime="60" />
@@ -180712,10 +180697,10 @@
 		<monster name="Sulphur Spouter" x="4" y="-2" z="14" spawntime="60" />
 		<monster name="Sulphider" x="2" y="-1" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-1" y="1" z="14" spawntime="60" />
+		<monster name="Nighthunter" x="-3" y="2" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="1" y="2" z="14" spawntime="60" />
-		<monster name="Nighthunter" x="-5" y="3" z="14" spawntime="60" />
+		<monster name="Nighthunter" x="2" y="3" z="14" spawntime="60" />
 		<monster name="Undertaker" x="-1" y="4" z="14" spawntime="60" />
-		<monster name="Nighthunter" x="-1" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33090" centery="32864" centerz="14" radius="6">
 		<monster name="Necromancer" x="-2" y="-6" z="14" spawntime="90" />
@@ -180853,13 +180838,13 @@
 	<monster centerx="33621" centery="32875" centerz="14" radius="5">
 		<monster name="Undertaker" x="-2" y="-5" z="14" spawntime="60" />
 		<monster name="Undertaker" x="0" y="-4" z="14" spawntime="60" />
-		<monster name="Sulphur Spouter" x="2" y="-4" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="-4" y="-2" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="2" y="-1" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="-3" y="1" z="14" spawntime="60" />
+		<monster name="Sulphider" x="2" y="2" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="5" y="3" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="-3" y="4" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="-1" y="4" z="14" spawntime="60" />
-		<monster name="Sulphider" x="4" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33704" centery="32875" centerz="14" radius="5">
 		<monster name="Mercurial Menace" x="1" y="-2" z="14" spawntime="60" />
@@ -180876,11 +180861,11 @@
 		<monster name="Iron Servant" x="0" y="0" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33647" centery="32876" centerz="14" radius="5">
-		<monster name="Sulphur Spouter" x="5" y="-5" z="14" spawntime="60" />
 		<monster name="Nighthunter" x="-1" y="-4" z="14" spawntime="60" />
 		<monster name="Undertaker" x="2" y="-3" z="14" spawntime="60" />
 		<monster name="Sulphider" x="-1" y="-1" z="14" spawntime="60" />
 		<monster name="Undertaker" x="0" y="-1" z="14" spawntime="60" />
+		<monster name="Sulphur Spouter" x="4" y="-1" z="14" spawntime="60" />
 		<monster name="Sulphur Spouter" x="3" y="2" z="14" spawntime="60" />
 		<monster name="Undertaker" x="5" y="2" z="14" spawntime="60" />
 		<monster name="Stalking Stalk" x="-4" y="3" z="14" spawntime="60" />
@@ -180994,26 +180979,24 @@
 		<monster name="Mantosaurus" x="0" y="0" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33552" centery="32887" centerz="14" radius="5">
-		<monster name="Sabretooth" x="5" y="-5" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-2" y="-4" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="4" y="-4" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-1" y="-3" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="2" y="-2" z="14" spawntime="60" />
+		<monster name="Sabretooth" x="-1" y="-1" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-2" y="2" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="2" y="2" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="-3" y="4" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="-1" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33734" centery="32887" centerz="14" radius="5">
 		<monster name="Noxious Ripptor" x="4" y="-5" z="14" spawntime="60" />
 		<monster name="Shrieking Cry-Stal" x="-3" y="-4" z="14" spawntime="60" />
 		<monster name="Noxious Ripptor" x="1" y="-3" z="14" spawntime="60" />
+		<monster name="Headpecker" x="0" y="-2" z="14" spawntime="60" />
 		<monster name="Mantosaurus" x="3" y="-2" z="14" spawntime="60" />
 		<monster name="Shrieking Cry-Stal" x="-3" y="-1" z="14" spawntime="60" />
 		<monster name="Headpecker" x="-2" y="0" z="14" spawntime="60" />
-		<monster name="Headpecker" x="5" y="0" z="14" spawntime="60" />
-		<monster name="Noxious Ripptor" x="4" y="1" z="14" spawntime="60" />
-		<monster name="Mercurial Menace" x="5" y="3" z="14" spawntime="60" />
-		<monster name="Mercurial Menace" x="1" y="4" z="14" spawntime="60" />
+		<monster name="Noxious Ripptor" x="-3" y="2" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33136" centery="32888" centerz="14" radius="4">
 		<monster name="Stalker" x="-2" y="-3" z="14" spawntime="90" />
@@ -181082,6 +181065,8 @@
 		<monster name="Stalker" x="-3" y="3" z="14" spawntime="90" />
 	</monster>
 	<monster centerx="33744" centery="32895" centerz="14" radius="5">
+		<monster name="Mercurial Menace" x="-2" y="-2" z="14" spawntime="60" />
+		<monster name="Mercurial Menace" x="3" y="-2" z="14" spawntime="60" />
 		<monster name="Mantosaurus" x="-4" y="0" z="14" spawntime="60" />
 		<monster name="Headpecker" x="-2" y="0" z="14" spawntime="60" />
 		<monster name="Mercurial Menace" x="-3" y="1" z="14" spawntime="60" />
@@ -181145,9 +181130,9 @@
 		<monster name="Mantosaurus" x="0" y="0" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33588" centery="32902" centerz="14" radius="5">
-		<monster name="Emerald Tortoise" x="-1" y="-5" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="0" y="-2" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="3" y="-2" z="14" spawntime="60" />
+		<monster name="Emerald Tortoise" x="-3" y="-1" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="1" y="-1" z="14" spawntime="60" />
 		<monster name="Sabretooth" x="-5" y="1" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="1" y="1" z="14" spawntime="60" />
@@ -181214,13 +181199,13 @@
 		<monster name="Bonebeast" x="-2" y="4" z="14" spawntime="90" />
 	</monster>
 	<monster centerx="33613" centery="32905" centerz="14" radius="5">
-		<monster name="Hulking Prehemoth" x="3" y="-4" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="2" y="-3" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="-1" y="-2" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="2" y="-2" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="1" y="-2" z="14" spawntime="60" />
 		<monster name="Sabretooth" x="-3" y="-1" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="-1" y="0" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="3" y="0" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="-5" y="2" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="-4" y="3" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="1" y="2" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="-5" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33632" centery="32905" centerz="14" radius="5">
@@ -181243,6 +181228,16 @@
 	<monster centerx="32973" centery="32910" centerz="14" radius="3">
 		<monster name="Twisted Shaper" x="1" y="-2" z="14" spawntime="60" />
 	</monster>
+	<monster centerx="33548" centery="32910" centerz="14" radius="4">
+		<monster name="Gore Horn" x="-1" y="-2" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="2" y="-1" z="14" spawntime="60" />
+		<monster name="Sabretooth" x="-2" y="0" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="2" y="0" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="4" y="1" z="14" spawntime="60" />
+		<monster name="Emerald Tortoise" x="-1" y="2" z="14" spawntime="60" />
+		<monster name="Sabretooth" x="0" y="3" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="3" y="3" z="14" spawntime="60" />
+	</monster>
 	<monster centerx="33734" centery="32910" centerz="14" radius="5">
 		<monster name="Shrieking Cry-Stal" x="0" y="-3" z="14" spawntime="60" />
 		<monster name="Noxious Ripptor" x="4" y="-3" z="14" spawntime="60" />
@@ -181252,17 +181247,6 @@
 		<monster name="Headpecker" x="0" y="0" z="14" spawntime="60" />
 		<monster name="Mercurial Menace" x="1" y="1" z="14" spawntime="60" />
 		<monster name="Noxious Ripptor" x="5" y="4" z="14" spawntime="60" />
-	</monster>
-	<monster centerx="33549" centery="32911" centerz="14" radius="5">
-		<monster name="Gore Horn" x="4" y="-5" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="4" y="-3" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="3" y="-2" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="4" y="-2" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="3" y="0" z="14" spawntime="60" />
-		<monster name="Emerald Tortoise" x="-2" y="1" z="14" spawntime="60" />
-		<monster name="Sabretooth" x="-1" y="2" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="-1" y="5" z="14" spawntime="60" />
-		<monster name="Sabretooth" x="5" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33126" centery="32913" centerz="14" radius="3">
 		<monster name="Stalker" x="2" y="0" z="14" spawntime="90" />
@@ -181339,9 +181323,9 @@
 		<monster name="Headpecker" x="-4" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33757" centery="32917" centerz="14" radius="5">
-		<monster name="Mantosaurus" x="4" y="-5" z="14" spawntime="60" />
 		<monster name="Headpecker" x="0" y="-4" z="14" spawntime="60" />
 		<monster name="Mercurial Menace" x="1" y="-4" z="14" spawntime="60" />
+		<monster name="Mantosaurus" x="2" y="-3" z="14" spawntime="60" />
 		<monster name="Mantosaurus" x="1" y="2" z="14" spawntime="60" />
 		<monster name="Shrieking Cry-Stal" x="3" y="3" z="14" spawntime="60" />
 		<monster name="Mercurial Menace" x="5" y="3" z="14" spawntime="60" />
@@ -181384,15 +181368,14 @@
 		<monster name="Broken Shaper" x="-2" y="0" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33598" centery="32926" centerz="14" radius="5">
-		<monster name="Gorerilla" x="-4" y="-4" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="-5" y="-2" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="1" y="-4" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="3" y="-2" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="-1" y="-1" z="14" spawntime="60" />
 		<monster name="Sabretooth" x="1" y="-1" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="-5" y="0" z="14" spawntime="60" />
-		<monster name="Sabretooth" x="5" y="1" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="5" y="2" z="14" spawntime="60" />
+		<monster name="Sabretooth" x="3" y="0" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="1" y="1" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="-2" y="2" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="1" y="3" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="4" y="3" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="2" y="4" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="4" y="5" z="14" spawntime="60" />
 	</monster>
@@ -181401,7 +181384,8 @@
 		<monster name="Hulking Prehemoth" x="-1" y="-3" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="-3" y="-2" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="2" y="-2" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="5" y="-1" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="1" y="0" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="-3" y="2" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="-1" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33067" centery="32927" centerz="14" radius="6">
@@ -181444,8 +181428,8 @@
 		<monster name="Emerald Tortoise" x="-1" y="-1" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="4" y="1" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="1" y="2" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="3" y="3" z="14" spawntime="60" />
 		<monster name="Sabretooth" x="-1" y="4" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="-5" y="5" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-3" y="5" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="1" y="5" z="14" spawntime="60" />
 	</monster>
@@ -181488,16 +181472,14 @@
 		<monster name="Sabretooth" x="1" y="2" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-3" y="5" z="14" spawntime="60" />
 	</monster>
-	<monster centerx="33576" centery="32933" centerz="14" radius="5">
-		<monster name="Sabretooth" x="-5" y="-3" z="14" spawntime="60" />
-		<monster name="Emerald Tortoise" x="-3" y="-2" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="1" y="0" z="14" spawntime="60" />
+	<monster centerx="33577" centery="32933" centerz="14" radius="4">
+		<monster name="Sabretooth" x="-1" y="-2" z="14" spawntime="60" />
+		<monster name="Emerald Tortoise" x="-2" y="0" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="0" y="0" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="-1" y="2" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="0" y="2" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="1" y="2" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="-5" y="3" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="-1" y="3" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="3" y="4" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="-4" y="5" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="-2" y="3" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="2" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33558" centery="32934" centerz="14" radius="5">
 		<monster name="Emerald Tortoise" x="4" y="-5" z="14" spawntime="60" />
@@ -181541,11 +181523,11 @@
 		<monster name="Hulking Prehemoth" x="0" y="-4" z="14" spawntime="60" />
 		<monster name="Sabretooth" x="-4" y="-2" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-4" y="-1" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="5" y="-1" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-3" y="0" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="3" y="0" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="1" y="1" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="0" y="3" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="-4" y="4" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="2" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33705" centery="32937" centerz="14" radius="5">
 		<monster name="Mantosaurus" x="5" y="-5" z="14" spawntime="60" />
@@ -181685,13 +181667,13 @@
 	</monster>
 	<monster centerx="33611" centery="32950" centerz="14" radius="5">
 		<monster name="Gorerilla" x="1" y="-5" z="14" spawntime="60" />
+		<monster name="Emerald Tortoise" x="2" y="-2" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="-3" y="-1" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="1" y="0" z="14" spawntime="60" />
 		<monster name="Sabretooth" x="-5" y="1" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="0" y="1" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="0" y="3" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="2" y="3" z="14" spawntime="60" />
-		<monster name="Emerald Tortoise" x="4" y="3" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="0" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33646" centery="32950" centerz="14" radius="1">
@@ -181741,23 +181723,21 @@
 		<monster name="Noxious Ripptor" x="-2" y="3" z="14" spawntime="60" />
 		<monster name="Mantosaurus" x="-4" y="5" z="14" spawntime="60" />
 	</monster>
-	<monster centerx="33567" centery="32954" centerz="14" radius="5">
-		<monster name="Gore Horn" x="-1" y="-5" z="14" spawntime="60" />
+	<monster centerx="33567" centery="32954" centerz="14" radius="4">
 		<monster name="Gore Horn" x="-1" y="-4" z="14" spawntime="60" />
-		<monster name="Sabretooth" x="-5" y="1" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="-2" y="-2" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="3" y="-1" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="0" y="1" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="1" y="1" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="-5" y="3" z="14" spawntime="60" />
+		<monster name="Sabretooth" x="-3" y="3" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="2" y="3" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="4" y="3" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="-5" y="5" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="-2" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33663" centery="32954" centerz="14" radius="5">
 		<monster name="Hulking Prehemoth" x="-3" y="-5" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="0" y="-5" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="3" y="-5" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="3" y="-4" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="1" y="-2" z="14" spawntime="60" />
 		<monster name="Sabretooth" x="-4" y="-1" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-2" y="3" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="2" y="3" z="14" spawntime="60" />
@@ -181783,8 +181763,8 @@
 		<monster name="Hulking Prehemoth" x="-4" y="-1" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="0" y="-1" z="14" spawntime="60" />
 		<monster name="Sabretooth" x="1" y="-1" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="5" y="0" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="-3" y="5" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="3" y="0" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="0" y="4" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="-1" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33619" centery="32959" centerz="14" radius="1">
@@ -181851,13 +181831,13 @@
 		<monster name="Mercurial Menace" x="1" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33635" centery="32967" centerz="14" radius="5">
-		<monster name="Gore Horn" x="-5" y="-4" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="-2" y="-4" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="0" y="-2" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="-2" y="0" z="14" spawntime="60" />
 		<monster name="Gorerilla" x="0" y="0" z="14" spawntime="60" />
-		<monster name="Sabretooth" x="-4" y="1" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="-1" y="1" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="0" y="1" z="14" spawntime="60" />
+		<monster name="Sabretooth" x="3" y="1" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-1" y="2" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="0" y="3" z="14" spawntime="60" />
 	</monster>
@@ -181910,12 +181890,21 @@
 		<monster name="Sabretooth" x="-1" y="-1" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-1" y="0" z="14" spawntime="60" />
 		<monster name="Emerald Tortoise" x="-2" y="1" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="-5" y="4" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="-2" y="3" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="1" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33127" centery="32976" centerz="14" radius="2">
 		<monster name="Stalker" x="0" y="-2" z="14" spawntime="90" />
 		<monster name="Stalker" x="0" y="1" z="14" spawntime="90" />
+	</monster>
+	<monster centerx="33587" centery="32976" centerz="14" radius="5">
+		<monster name="Hulking Prehemoth" x="2" y="-2" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="-4" y="0" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="0" y="1" z="14" spawntime="60" />
+		<monster name="Emerald Tortoise" x="2" y="2" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="-4" y="3" z="14" spawntime="60" />
+		<monster name="Hulking Prehemoth" x="-1" y="4" z="14" spawntime="60" />
+		<monster name="Gore Horn" x="2" y="4" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33743" centery="32977" centerz="14" radius="5">
 		<monster name="Shrieking Cry-Stal" x="-4" y="-5" z="14" spawntime="60" />
@@ -181948,11 +181937,11 @@
 		<monster name="Emerald Tortoise" x="-4" y="-5" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-2" y="-4" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="-5" y="-2" z="14" spawntime="60" />
+		<monster name="Gorerilla" x="3" y="-1" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="-1" y="1" z="14" spawntime="60" />
 		<monster name="Sabretooth" x="5" y="1" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="1" y="3" z="14" spawntime="60" />
 		<monster name="Gore Horn" x="0" y="4" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="3" y="4" z="14" spawntime="60" />
 		<monster name="Hulking Prehemoth" x="0" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33083" centery="32979" centerz="14" radius="6">
@@ -181978,17 +181967,6 @@
 	</monster>
 	<monster centerx="33558" centery="32979" centerz="14" radius="1">
 		<monster name="Emerald Tortoise" x="0" y="0" z="14" spawntime="60" />
-	</monster>
-	<monster centerx="33588" centery="32979" centerz="14" radius="5">
-		<monster name="Gorerilla" x="-4" y="-5" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="1" y="-5" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="-5" y="-3" z="14" spawntime="60" />
-		<monster name="Gorerilla" x="-5" y="0" z="14" spawntime="60" />
-		<monster name="Sabretooth" x="5" y="0" z="14" spawntime="60" />
-		<monster name="Emerald Tortoise" x="2" y="3" z="14" spawntime="60" />
-		<monster name="Emerald Tortoise" x="-5" y="5" z="14" spawntime="60" />
-		<monster name="Hulking Prehemoth" x="-2" y="5" z="14" spawntime="60" />
-		<monster name="Gore Horn" x="2" y="5" z="14" spawntime="60" />
 	</monster>
 	<monster centerx="33127" centery="32985" centerz="14" radius="4">
 		<monster name="Ghost" x="-1" y="-4" z="14" spawntime="90" />

@@ -6358,6 +6358,29 @@ bool Player::onKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit)
 	}
 	return unjustified;
 }
+void Player::addKosTaskKills(const std::shared_ptr<MonsterType> &mType) {
+	if (mType->info.isTaskMonster) {
+		if (kosTask != nullptr && !isKosTaskCompleted() && kosTask->containsMonster(mType->name)) {
+			uint32_t requiredAmount = kosTask->getRequiredKillsByStage(kosTaskStage);
+			if (kosTaskKills <= requiredAmount) {
+				// Add kills multiplied by kosTaskSystemKillMultiplier
+				uint32_t killsAmount = 1 * g_configManager().getNumber(KOS_TASK_SYSTEM_KILL_MULTIPLIER);
+
+				g_logger().debug("KosTaskSystem - Add {}/{} kills to {} {} task", killsAmount, requiredAmount, getName(), kosTask->getName());
+				kosTaskKills += killsAmount;
+			}
+
+			if (isKosTaskCompleted()) {
+				kosTaskKills = requiredAmount;
+				g_logger().debug("KosTaskSystem - Player {} have complete {} task", getName(), kosTask->getName());
+				g_creatureEvents().playerKosTaskComplete(static_self_cast<Player>());
+
+			} else {
+				g_creatureEvents().playerKosTaskProgress(static_self_cast<Player>());
+			}
+		}
+	}
+}
 
 void Player::addHuntingTaskKill(const std::shared_ptr<MonsterType> &mType) {
 	const auto &taskSlot = getTaskHuntingWithCreature(mType->info.raceid);
@@ -6414,9 +6437,14 @@ bool Player::onKilledMonster(const std::shared_ptr<Monster> &monster) {
 	}
 
 	if (!monster->getSoulPit()) {
+
 		addHuntingTaskKill(mType);
 		addBestiaryKill(mType);
 		addBosstiaryKill(mType);
+		// Add kills to KosTaskSystem
+		if (g_configManager().getBoolean(KOS_TASK_SYSTEM)) {
+			addKosTaskKills(mType);
+		}
 	}
 
 	return false;
@@ -11957,6 +11985,67 @@ uint16_t Player::getMantraTotal() const {
 		}
 	}
 	return static_cast<uint16_t>(mantra);
+}
+void Player::setKosTask(const std::shared_ptr<KosTask> &task) {
+	kosTask = task;
+}
+std::shared_ptr<KosTask> Player::getKosTask() {
+	return kosTask;
+}
+void Player::setKosTaskStage(uint16_t stage) {
+	kosTaskStage = stage;
+}
+uint16_t Player::getKosTaskStage() const {
+	return kosTaskStage;
+}
+void Player::setKosTaskKills(uint32_t kills) {
+	kosTaskKills = kills;
+}
+uint32_t Player::getKosTaskKills() {
+	return kosTaskKills;
+}
+void Player::setKosTaskPoints(uint32_t points) {
+	kosTaskPoints = points;
+}
+uint32_t Player::getKosTaskPoints() {
+	return kosTaskPoints;
+}
+bool Player::completeKosTask() {
+	if (isKosTaskCompleted()) {
+		g_logger().debug("KosTaskSystem - Player {} have completed {} task", getName(), kosTask->getName());
+		uint64_t xpReward = kosTask->getXpRewardByStage(kosTaskStage);
+		uint64_t moneyReward = kosTask->getMoneyRewardByStage(kosTaskStage);
+
+		g_logger().debug("KosTaskSystem - XP: {}", xpReward);
+		g_logger().debug("KosTaskSystem - Money: {}", moneyReward);
+
+		addExperience(nullptr, xpReward);
+		g_game().addMoney(getPlayer(), moneyReward);
+
+		std::vector<std::shared_ptr<Item>> rewards;
+		rewards.reserve(kosTask->getRewardItems().size());
+		for (auto reward : kosTask->getRewardItems()) {
+			const std::shared_ptr<Item> item = Item::CreateItem(reward.id, reward.amount * kosTaskStage);
+
+			g_game().internalPlayerAddItem(getPlayer(), item, true);
+			rewards.emplace_back(item);
+			g_logger().debug("KosTaskSystem - {} x {}", item->getName(), item->getItemAmount());
+		}
+
+		uint16_t pointsAmount = kosTaskStage * g_configManager().getNumber(KOS_TASK_SYSTEM_POINTS_MULTIPLIER);
+		const std::shared_ptr<KosTask> task = kosTask;
+		kosTask = nullptr;
+		kosTaskStage = 0;
+		kosTaskKills = 0;
+		kosTaskPoints += pointsAmount;
+		g_logger().debug("KosTaskSystem - {} Task points", pointsAmount);
+		g_creatureEvents().playerKosTaskCompleted(static_self_cast<Player>(), task, xpReward, moneyReward, rewards, pointsAmount);
+
+
+
+		return true;
+	}
+	return false;
 }
 
 int16_t Player::getMantraAbsorbPercent(int16_t mantraAbsorbValue) const {

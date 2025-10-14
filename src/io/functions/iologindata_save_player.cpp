@@ -329,10 +329,29 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 		query << "`onlinetime` = `onlinetime` + " << std::chrono::duration_cast<std::chrono::seconds>(now - lastLoginSaved).count() << ",";
 	}
 
+
+	// Save KosTaskSystem
+	if (g_configManager().getBoolean(KOS_TASK_SYSTEM)) {
+		uint16_t kosTaskId = 0;
+		if (auto task = player->getKosTask()) {
+			kosTaskId = task->getId();
+		}
+
+
+
+		query << "`kos_task_points` = " << player->getKosTaskPoints() << ",";
+		query << "`kos_task_id` = " << kosTaskId << ",";
+		query << "`kos_task_stage` = " << player->getKosTaskStage() << ",";
+		query << "`kos_task_kills` = " << player->getKosTaskKills() << ",";
+		g_logger().debug("KosTaskSystem - Saved {} task system. Points : {} Task_id : {}, Stage : {}, Kills: {}", player->getName(),player->getKosTaskPoints(), kosTaskId, player->getKosTaskStage(), player->getKosTaskKills());
+	}
+
+
 	for (int i = 1; i <= 8; i++) {
 		query << "`blessings" << i << "`"
 			  << " = " << static_cast<uint32_t>(player->getBlessingCount(static_cast<uint8_t>(i))) << ((i == 8) ? " " : ",");
 	}
+
 	query << " WHERE `id` = " << player->getGUID();
 
 	if (!db.executeQuery(query.str())) {
@@ -922,3 +941,4 @@ bool IOLoginDataSave::savePlayerMounts(const std::shared_ptr<Player> &player) {
 	player->setMountsModified(false);
 	return true;
 }
+

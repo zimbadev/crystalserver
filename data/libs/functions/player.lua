@@ -815,7 +815,7 @@ do
 	local loyaltySystem = {
 		enable = configManager.getBoolean(configKeys.LOYALTY_ENABLED),
 		titles = {
-			[1] = { name = "Scout of Tibia", points = 50 },
+			[1] = { name = "Scout of Tibia", points = 4 },
 			[2] = { name = "Sentinel of Tibia", points = 100 },
 			[3] = { name = "Steward of Tibia", points = 200 },
 			[4] = { name = "Warden of Tibia", points = 400 },
@@ -827,7 +827,7 @@ do
 			[10] = { name = "Savant of Tibia", points = 6000 },
 			[11] = { name = "Enlightened of Tibia", points = 7000 },
 		},
-		bonus = {
+        bonus = {
 			{ minPoints = 360, percentage = 5 },
 			{ minPoints = 720, percentage = 10 },
 			{ minPoints = 1080, percentage = 15 },

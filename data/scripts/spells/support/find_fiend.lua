@@ -95,7 +95,7 @@ function spell.onCastSpell(creature, variant)
 		end
 	end
 
-	message = string.format("The monster " .. message .. '. Be prepared to find a creature of difficulty level "' .. stringLevel .. '".')
+	message = string.format("The " .. target:getName() .. " " .. message .. '. Be prepared to find a creature of difficulty level "' .. stringLevel .. '".')
 	local timeLeft = math.floor((target:getTimeToChangeFiendish() - os.time()) / 60)
 	if timeLeft < 15 then
 		message = string.format(message .. " " .. ForgeMonster:getTimeLeftToChangeMonster(target))

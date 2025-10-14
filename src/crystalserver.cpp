@@ -41,6 +41,7 @@
 #include "server/network/protocol/protocolstatus.hpp"
 #include "server/network/webhook/webhook.hpp"
 #include "creatures/players/vocations/vocation.hpp"
+#include "kosots/kostasks.h"
 
 CrystalServer::CrystalServer(
 	Logger &logger,
@@ -344,6 +345,10 @@ void CrystalServer::loadModules() {
 	modulesLoadHelper(g_vocations().loadFromXml(), "XML/vocations.xml");
 	modulesLoadHelper(g_eventsScheduler().loadScheduleEventFromXml(), "XML/events.xml");
 	modulesLoadHelper(Outfits::getInstance().loadFromXml(), "XML/outfits.xml");
+	if (g_configManager().getBoolean(KOS_TASK_SYSTEM)) {
+		modulesLoadHelper(KosTasks::getInstance().loadFromXml(), "XML/tasks.xml");
+	}
+
 	modulesLoadHelper(Familiars::getInstance().loadFromXml(), "XML/familiars.xml");
 	modulesLoadHelper(g_imbuements().loadFromXml(), "XML/imbuements.xml");
 	modulesLoadHelper(g_storages().loadFromXML(), "XML/storages.xml");

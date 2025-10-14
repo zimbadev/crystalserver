@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "kosots/lua/kos_task_functions.h"
 #include "lua/scripts/luascript.hpp"
 #include "lua/functions/events/action_functions.hpp"
 #include "lua/functions/events/creature_event_functions.hpp"
@@ -42,6 +43,7 @@ public:
 		MoveEventFunctions::init(L);
 		TalkActionFunctions::init(L);
 		EventCallbackFunctions::init(L);
+		KosTaskFunctions::init(L);
 		/* Move, Creature, Talk, Global events goes all here */
 	}
 };

@@ -169,6 +169,18 @@ do
 			self:type("extendedopcode")
 			self:onExtendedOpcode(value)
 			return
+		elseif key == "onKosTaskProgress" then
+			self:type("kostaskprogress")
+			self:onKosTaskProgress(value)
+			return
+		elseif key == "onKosTaskComplete" then
+			self:type("kostaskcomplete")
+			self:onKosTaskProgress(value)
+			return
+		elseif key == "onKosTaskCompleted" then
+			self:type("kostaskcompleted")
+			self:onKosTaskProgress(value)
+			return
 		end
 		rawset(self, key, value)
 	end

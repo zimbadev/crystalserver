@@ -95,6 +95,10 @@ std::string Lua::getErrorDesc(ErrorCode_t code) {
 			return "TalkAction not found";
 		case LUA_ERROR_ZONE_NOT_FOUND:
 			return "Zone not found";
+		case LUA_ERROR_KOSTASK_NOT_FOUND:
+			return "Task not found";
+		case LUA_ERROR_KOSTASK_INVALID_STAGE:
+			return "Invalid task stage";
 		default:
 			return "Bad error code";
 	}
