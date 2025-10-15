@@ -10977,9 +10977,6 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 			bed->wakeUp(static_self_cast<Player>());
 		}
 
-		auto version = client->oldProtocol ? getProtocolVersion() : CLIENT_VERSION;
-		g_logger().info("{} has logged in. (Protocol: {})", name, version);
-
 		if (guild) {
 			guild->addMember(static_self_cast<Player>());
 		}

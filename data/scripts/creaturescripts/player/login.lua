@@ -177,6 +177,9 @@ function playerLoginGlobal.onLogin(player)
 	-- fix stash
 	player:setSpecialContainersAvailable(true, true, true)
 
+	-- login log
+	player:saveLoginLog()
+
 	player:initializeLoyaltySystem()
 	player:registerEvent("PlayerDeath")
 	player:registerEvent("DropLoot")
