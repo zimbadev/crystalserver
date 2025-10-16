@@ -260,103 +260,120 @@ void Items::loadFromProtobuf() {
 }
 
 bool Items::loadFromXml() {
-	pugi::xml_document doc;
-	auto folder = g_configManager().getString(CORE_DIRECTORY) + "/items/items.xml";
-	pugi::xml_parse_result result = doc.load_file(folder.c_str());
-	if (!result) {
-		printXMLError(__FUNCTION__, folder, result);
-		return false;
-	}
+	// Load items.xml from both directories
+	std::vector<std::string> directories = {
+		g_configManager().getString(CORE_DIRECTORY) + "/items/",
+		g_configManager().getString(DATA_DIRECTORY) + "/items/"
+	};
 
-	for (const auto itemNode : doc.child("items").children()) {
-		if (auto idAttribute = itemNode.attribute("id")) {
-			parseItemNode(itemNode, pugi::cast<uint16_t>(idAttribute.value()));
+	// Load items.xml files
+	for (const auto &dir : directories) {
+		pugi::xml_document doc;
+		auto filePath = dir + "items.xml";
+		pugi::xml_parse_result result = doc.load_file(filePath.c_str());
+
+		if (!result) {
+			// Only show error if file exists but failed to load
+			if (std::filesystem::exists(filePath)) {
+				printXMLError(__FUNCTION__, filePath, result);
+			}
 			continue;
 		}
 
-		auto fromIdAttribute = itemNode.attribute("fromid");
-		if (!fromIdAttribute) {
-			g_logger().warn("[Items::loadFromXml] - No item id found, use id or fromid");
-			continue;
-		}
+		for (const auto itemNode : doc.child("items").children()) {
+			if (auto idAttribute = itemNode.attribute("id")) {
+				parseItemNode(itemNode, pugi::cast<uint16_t>(idAttribute.value()));
+				continue;
+			}
 
-		auto toIdAttribute = itemNode.attribute("toid");
-		if (!toIdAttribute) {
-			g_logger().warn("[Items::loadFromXml] - "
-			                "tag fromid: {} without toid",
-			                fromIdAttribute.value());
-			continue;
-		}
+			auto fromIdAttribute = itemNode.attribute("fromid");
+			if (!fromIdAttribute) {
+				g_logger().warn("[Items::loadFromXml] - No item id found, use id or fromid");
+				continue;
+			}
 
-		auto id = pugi::cast<uint16_t>(fromIdAttribute.value());
-		const auto toId = pugi::cast<uint16_t>(toIdAttribute.value());
-		while (id <= toId) {
-			parseItemNode(itemNode, id++);
-		}
-	}
+			auto toIdAttribute = itemNode.attribute("toid");
+			if (!toIdAttribute) {
+				g_logger().warn("[Items::loadFromXml] - tag fromid: {} without toid", fromIdAttribute.value());
+				continue;
+			}
 
-	// Load bags.xml
-	pugi::xml_document docBags;
-	auto folderBags = g_configManager().getString(CORE_DIRECTORY) + "/items/bags.xml";
-	pugi::xml_parse_result resultBags = docBags.load_file(folderBags.c_str());
-	if (!resultBags) {
-		printXMLError(__FUNCTION__, folderBags, resultBags);
-		return false;
-	}
-
-	for (auto nodeBags : docBags.child("bags").children()) {
-		auto bagItemidAttr = nodeBags.attribute("itemid");
-		if (!bagItemidAttr) {
-			g_logger().warn("[Items::loadFromXml] - No item id found, use id");
-			continue;
-		}
-
-		auto bagNameAttr = nodeBags.attribute("name");
-		if (!bagNameAttr) {
-			g_logger().warn("[Items::loadFromXml] - No item name found, use name");
-			continue;
-		}
-
-		uint16_t itemId = pugi::cast<uint16_t>(bagItemidAttr.value());
-		std::string itemName = bagNameAttr.as_string();
-
-		double chance = 0;
-		auto chanceAttr = nodeBags.attribute("chance");
-		if (chanceAttr) {
-			chance = pugi::cast<double>(chanceAttr.value());
-		}
-
-		uint32_t minAmount = 1;
-		auto minAmountAttr = nodeBags.attribute("minAmount");
-		if (minAmountAttr) {
-			minAmount = pugi::cast<uint32_t>(minAmountAttr.value());
-			if (minAmount <= 0) {
-				minAmount = 1;
+			auto id = pugi::cast<uint16_t>(fromIdAttribute.value());
+			const auto toId = pugi::cast<uint16_t>(toIdAttribute.value());
+			while (id <= toId) {
+				parseItemNode(itemNode, id++);
 			}
 		}
+	}
 
-		uint32_t maxAmount = 1;
-		auto maxAmountAttr = nodeBags.attribute("maxAmount");
-		if (maxAmountAttr) {
-			maxAmount = pugi::cast<uint32_t>(maxAmountAttr.value());
-			if (maxAmount <= 0) {
-				maxAmount = 1;
+	// Load bags.xml from both directories
+	for (const auto &dir : directories) {
+		pugi::xml_document docBags;
+		auto filePath = dir + "bags.xml";
+		pugi::xml_parse_result resultBags = docBags.load_file(filePath.c_str());
+
+		if (!resultBags) {
+			// Only show error if file exists but failed to load
+			if (std::filesystem::exists(filePath)) {
+				printXMLError(__FUNCTION__, filePath, resultBags);
 			}
+			continue;
 		}
 
-		std::string monsterClass = "";
-		auto monsterClassAttr = nodeBags.attribute("class");
-		if (monsterClassAttr) {
-			monsterClass = monsterClassAttr.as_string();
-		}
+		for (auto nodeBags : docBags.child("bags").children()) {
+			auto bagItemidAttr = nodeBags.attribute("itemid");
+			if (!bagItemidAttr) {
+				g_logger().warn("[Items::loadFromXml] - No item id found, use id");
+				continue;
+			}
 
-		uint32_t monsterRaceId = 0;
-		auto monsterRaceIdAttr = nodeBags.attribute("raceId");
-		if (monsterRaceIdAttr) {
-			monsterRaceId = pugi::cast<uint32_t>(monsterRaceIdAttr.value());
-		}
+			auto bagNameAttr = nodeBags.attribute("name");
+			if (!bagNameAttr) {
+				g_logger().warn("[Items::loadFromXml] - No item name found, use name");
+				continue;
+			}
 
-		setItemBag(itemId, itemName, chance, minAmount, maxAmount, monsterClass, monsterRaceId);
+			uint16_t itemId = pugi::cast<uint16_t>(bagItemidAttr.value());
+			std::string itemName = bagNameAttr.as_string();
+
+			double chance = 0;
+			auto chanceAttr = nodeBags.attribute("chance");
+			if (chanceAttr) {
+				chance = pugi::cast<double>(chanceAttr.value());
+			}
+
+			uint32_t minAmount = 1;
+			auto minAmountAttr = nodeBags.attribute("minAmount");
+			if (minAmountAttr) {
+				minAmount = pugi::cast<uint32_t>(minAmountAttr.value());
+				if (minAmount <= 0) {
+					minAmount = 1;
+				}
+			}
+
+			uint32_t maxAmount = 1;
+			auto maxAmountAttr = nodeBags.attribute("maxAmount");
+			if (maxAmountAttr) {
+				maxAmount = pugi::cast<uint32_t>(maxAmountAttr.value());
+				if (maxAmount <= 0) {
+					maxAmount = 1;
+				}
+			}
+
+			std::string monsterClass = "";
+			auto monsterClassAttr = nodeBags.attribute("class");
+			if (monsterClassAttr) {
+				monsterClass = monsterClassAttr.as_string();
+			}
+
+			uint32_t monsterRaceId = 0;
+			auto monsterRaceIdAttr = nodeBags.attribute("raceId");
+			if (monsterRaceIdAttr) {
+				monsterRaceId = pugi::cast<uint32_t>(monsterRaceIdAttr.value());
+			}
+
+			setItemBag(itemId, itemName, chance, minAmount, maxAmount, monsterClass, monsterRaceId);
+		}
 	}
 
 	return true;
