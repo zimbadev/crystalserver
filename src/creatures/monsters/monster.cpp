@@ -2380,22 +2380,28 @@ std::shared_ptr<Item> Monster::getCorpse(const std::shared_ptr<Creature> &lastHi
 
 // Corpse loot highlight system - only for non-boss monsters
 if (!mType->isBoss() && g_configManager().getBoolean(LOOT_HIGHLIGHT_EFFECT_STATUS)) {
-  // Mark corpse as unlooted
-  corpse->setCustomAttribute("unlooted", true);
+	// Mark corpse as unlooted
+	corpse->setCustomAttribute("unlooted", true);
 
-  // Send loot highlight effect with small delay to ensure corpse is placed
-  g_dispatcher().scheduleEvent(100, [corpse] {
-    g_game().addMagicEffect(corpse->getPosition(), CONST_ME_LOOT_HIGHLIGHT);
-  }, "CorpseHighlight");
+	// Send loot highlight effect with small delay to ensure corpse is placed
+	g_dispatcher().scheduleEvent(
+		100, [corpse] {
+			g_game().addMagicEffect(corpse->getPosition(), CONST_ME_LOOT_HIGHLIGHT);
+		},
+		"CorpseHighlight"
+	);
 
-  // Auto-remove unlooted attribute and effect after configured time if not opened
-  uint32_t autoRemoveTimer = g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF);
-  g_dispatcher().scheduleEvent(autoRemoveTimer, [corpse, autoRemoveTimer] {
-    if (corpse && corpse->getCustomAttribute("unlooted")) {
-      corpse->removeCustomAttribute("unlooted");
-      g_game().removeMagicEffect(corpse->getPosition(), CONST_ME_LOOT_HIGHLIGHT);
-    }
-  }, "CorpseHighlight::AutoRemove");
+	// Auto-remove unlooted attribute and effect after configured time if not opened
+	uint32_t autoRemoveTimer = g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF);
+	g_dispatcher().scheduleEvent(
+		autoRemoveTimer, [corpse, autoRemoveTimer] {
+			if (corpse && corpse->getCustomAttribute("unlooted")) {
+				corpse->removeCustomAttribute("unlooted");
+				g_game().removeMagicEffect(corpse->getPosition(), CONST_ME_LOOT_HIGHLIGHT);
+			}
+		},
+		"CorpseHighlight::AutoRemove"
+	);
 }
 
 return corpse;
