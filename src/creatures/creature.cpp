@@ -723,7 +723,7 @@ bool Creature::dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, cons
 					g_dispatcher().addEvent([player, corpseContainer, corpsePosition = corpse->getPosition()] {
 						g_game().playerQuickLootCorpse(player, corpseContainer, corpsePosition, true); // true = fromAutoLoot
 					},
-																	"Game::playerQuickLootCorpse");
+					                        "Game::playerQuickLootCorpse");
 				}
 			}
 		}
