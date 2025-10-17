@@ -651,12 +651,13 @@ void Creature::onDeath() {
 
 bool Creature::dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, const std::shared_ptr<Creature> &mostDamageCreature, bool lastHitUnjustified, bool mostDamageUnjustified) {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
+	std::shared_ptr<Item> corpse = nullptr;
 	if (!lootDrop && getMonster()) {
 		if (getMaster()) {
 			// Scripting event onDeath
 			const CreatureEventList &deathEvents = getCreatureEvents(CREATURE_EVENT_DEATH);
 			for (const auto &deathEventPtr : deathEvents) {
-				deathEventPtr->executeOnDeath(static_self_cast<Creature>(), nullptr, lastHitCreature, mostDamageCreature, lastHitUnjustified, mostDamageUnjustified);
+				deathEventPtr->executeOnDeath(static_self_cast<Creature>(), corpse, lastHitCreature, mostDamageCreature, lastHitUnjustified, mostDamageUnjustified);
 			}
 		}
 
@@ -687,7 +688,7 @@ bool Creature::dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, cons
 			splash->startDecaying();
 		}
 
-		const auto &corpse = getCorpse(lastHitCreature, mostDamageCreature);
+		corpse = getCorpse(lastHitCreature, mostDamageCreature);
 		if (tile && corpse) {
 			g_game().internalAddItem(tile, corpse, INDEX_WHEREEVER, FLAG_NOLIMIT);
 			dropLoot(corpse->getContainer(), lastHitCreature);
@@ -718,10 +719,11 @@ bool Creature::dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, cons
 				auto isReachable = g_game().map.getPathMatching(player->getPosition(), dirList, FrozenPathingConditionCall(corpse->getPosition()), fpp);
 
 				if (player->checkAutoLoot(monster->isRewardBoss()) && isReachable) {
+					// Corpse loot highlight system - playerQuickLootCorpse will handle removing the effect
 					g_dispatcher().addEvent([player, corpseContainer, corpsePosition = corpse->getPosition()] {
-						g_game().playerQuickLootCorpse(player, corpseContainer, corpsePosition);
+						g_game().playerQuickLootCorpse(player, corpseContainer, corpsePosition, true); // true = fromAutoLoot
 					},
-					                        "Game::playerQuickLootCorpse");
+																	"Game::playerQuickLootCorpse");
 				}
 			}
 		}

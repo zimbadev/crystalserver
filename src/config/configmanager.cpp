@@ -296,6 +296,9 @@ bool ConfigManager::load() {
 	loadIntConfig(L, HOUSE_PRICE_PER_SQM, "housePriceEachSQM", 1000);
 	loadIntConfig(L, KICK_AFTER_MINUTES, "kickIdlePlayerAfterMinutes", 15);
 	loadIntConfig(L, LOOTPOUCH_MAXLIMIT, "lootPouchMaxLimit", 2000);
+	loadBoolConfig(L, LOOT_HIGHLIGHT_EFFECT_STATUS, "lootHighlightEffectStatus", true);
+	loadIntConfig(L, LOOT_HIGHLIGHT_EFFECT_TIMER_OFF, "lootHighlightEffectTimerOff", 20000);
+	loadIntConfig(L, LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT, "lootHighlightEffectTimerOffInAutoLoot", 2000);
 	loadIntConfig(L, LOW_LEVEL_BONUS_EXP, "lowLevelBonusExp", 50);
 	loadIntConfig(L, LOYALTY_POINTS_PER_CREATION_DAY, "loyaltyPointsPerCreationDay", 1);
 	loadIntConfig(L, LOYALTY_POINTS_PER_PREMIUM_DAY_PURCHASED, "loyaltyPointsPerPremiumDayPurchased", 0);
