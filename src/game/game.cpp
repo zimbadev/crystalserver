@@ -1937,16 +1937,19 @@ void Game::playerMoveItem(const std::shared_ptr<Player> &player, const Position 
 		return;
 	}
 
-// Corpse loot highlight system - remove effect when moving corpse
-// Check if item is a corpse (container) and has unlooted attribute
-auto container = item->getContainer();
-if (container && item->getCustomAttribute("unlooted")) {
-  item->removeCustomAttribute("unlooted");
-  // Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
-  g_dispatcher().scheduleEvent(150, [fromPos, this] {
-    removeMagicEffect(fromPos, CONST_ME_LOOT_HIGHLIGHT);
-  }, "CorpseHighlight::RemoveOnMove");
-}
+	// Corpse loot highlight system - remove effect when moving corpse
+	// Check if item is a corpse (container) and has unlooted attribute
+	auto container = item->getContainer();
+	if (container && item->getCustomAttribute("unlooted")) {
+		item->removeCustomAttribute("unlooted");
+		// Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
+		g_dispatcher().scheduleEvent(
+			150, [fromPos, this] {
+				removeMagicEffect(fromPos, CONST_ME_LOOT_HIGHLIGHT);
+			},
+			"CorpseHighlight::RemoveOnMove"
+		);
+	}
 
 	player->cancelPush();
 
@@ -2931,18 +2934,18 @@ std::shared_ptr<Item> Game::transformItem(std::shared_ptr<Item> item, uint16_t n
 	}
 
 	// Replace the old item with the new one, maintaining the old position
-  // Preserve corpse highlight system attributes during transformation
-  bool hasUnlootedAttribute = item->getCustomAttribute("unlooted") != nullptr;
+	// Preserve corpse highlight system attributes during transformation
+	bool hasUnlootedAttribute = item->getCustomAttribute("unlooted") != nullptr;
 
-  auto newItem = item->transform(newItemId);
-  if (newItem == nullptr) {
-    return nullptr;
-  }
+	auto newItem = item->transform(newItemId);
+	if (newItem == nullptr) {
+		return nullptr;
+	}
 
-  // Transfer unlooted attribute to the new item if it was present
-  if (hasUnlootedAttribute && newItem->getContainer()) {
-    newItem->setCustomAttribute("unlooted", true);
-  }
+	// Transfer unlooted attribute to the new item if it was present
+	if (hasUnlootedAttribute && newItem->getContainer()) {
+		newItem->setCustomAttribute("unlooted", true);
+	}
 
 	return newItem;
 }
@@ -3118,22 +3121,25 @@ void Game::playerQuickLootCorpse(const std::shared_ptr<Player> &player, const st
 
 	player->lastQuickLootNotification = OTSYS_TIME();
 
-// Corpse loot highlight system - remove marker when opened (ALWAYS execute at the end)
-if (corpse->getCustomAttribute("unlooted")) {
-  // Remove the unlooted marker
-  corpse->removeCustomAttribute("unlooted");
+	// Corpse loot highlight system - remove marker when opened (ALWAYS execute at the end)
+	if (corpse->getCustomAttribute("unlooted")) {
+		// Remove the unlooted marker
+		corpse->removeCustomAttribute("unlooted");
 
-  // Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
-  // Use autoloot timer only if fromAutoLoot, otherwise use fixed 150ms
-  uint32_t removeDelay = fromAutoLoot ? g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT) + 150 : 150;
-  g_dispatcher().scheduleEvent(removeDelay, [position, this] {
-    // Remove the loot highlight effect
-    removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
+		// Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
+		// Use autoloot timer only if fromAutoLoot, otherwise use fixed 150ms
+		uint32_t removeDelay = fromAutoLoot ? g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT) + 150 : 150;
+		g_dispatcher().scheduleEvent(
+			removeDelay, [position, this] {
+				// Remove the loot highlight effect
+				removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
 
-    // Send visual confirmation effect
-    addMagicEffect(position, CONST_ME_BLOCKHIT);
-  }, "CorpseHighlight::Remove");
-}
+				// Send visual confirmation effect
+				addMagicEffect(position, CONST_ME_BLOCKHIT);
+			},
+			"CorpseHighlight::Remove"
+		);
+	}
 
 	std::shared_ptr<Container> Game::findManagedContainer(const std::shared_ptr<Player> &player, bool &fallbackConsumed, ObjectCategory_t category, bool isLootContainer) {
 		auto lootContainer = player->getManagedContainer(category, isLootContainer);
@@ -5756,29 +5762,32 @@ if (corpse->getCustomAttribute("unlooted")) {
 		sendLootMessageWithCooldown(player, msg.str());
 	}
 
-void Game::handleCorpseLoot(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &pos, bool lootAll) {
-	if (corpse->isRewardCorpse()) {
-		auto rewardId = corpse->getAttribute<time_t>(ItemAttribute_t::DATE);
-		auto reward = player->getReward(rewardId, false);
-		if (reward) {
-			playerQuickLootCorpse(player, reward->getContainer(), corpse->getPosition());
+	void Game::handleCorpseLoot(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &pos, bool lootAll) {
+		if (corpse->isRewardCorpse()) {
+			auto rewardId = corpse->getAttribute<time_t>(ItemAttribute_t::DATE);
+			auto reward = player->getReward(rewardId, false);
+			if (reward) {
+				playerQuickLootCorpse(player, reward->getContainer(), corpse->getPosition());
+			}
+		} else if (!lootAll) {
+			playerQuickLootCorpse(player, corpse, corpse->getPosition());
+		} else {
+			// Corpse loot highlight system - remove marker when opened (early return case)
+			if (corpse->getCustomAttribute("unlooted")) {
+				corpse->removeCustomAttribute("unlooted");
+				// Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
+				// Use autoloot timer only if fromAutoLoot, otherwise use fixed 150ms
+				uint32_t removeDelay = fromAutoLoot ? g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT) + 150 : 150;
+				g_dispatcher().scheduleEvent(
+					removeDelay, [position, this] {
+						removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
+						addMagicEffect(position, CONST_ME_BLOCKHIT);
+					},
+					"CorpseHighlight::Remove"
+				);
+			}
+			return;
 		}
-	} else if (!lootAll) {
-		playerQuickLootCorpse(player, corpse, corpse->getPosition());
-	} else {
-  // Corpse loot highlight system - remove marker when opened (early return case)
-  if (corpse->getCustomAttribute("unlooted")) {
-    corpse->removeCustomAttribute("unlooted");
-    // Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
-    // Use autoloot timer only if fromAutoLoot, otherwise use fixed 150ms
-    uint32_t removeDelay = fromAutoLoot ? g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT) + 150 : 150;
-    g_dispatcher().scheduleEvent(removeDelay, [position, this] {
-      removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
-      addMagicEffect(position, CONST_ME_BLOCKHIT);
-    }, "CorpseHighlight::Remove");
-  }
-  return;
-}
 
 		void Game::sendLootMessageWithCooldown(const std::shared_ptr<Player> &player, const std::string &message) {
 			uint64_t now = OTSYS_TIME();
