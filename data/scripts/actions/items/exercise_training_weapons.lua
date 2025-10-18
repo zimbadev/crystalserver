@@ -121,9 +121,31 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 
 	if weapon:getAttribute(ITEM_ATTRIBUTE_CHARGES) <= 0 then
 		weapon:remove(1)
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Your training weapon has disappeared.")
-		leaveExerciseTraining(playerId)
-		return false
+
+		local found = false
+		for containerId = 0, 11 do
+			local container = player:getContainerById(containerId)
+			if container then
+				for slot = 0, container:getSize() - 1 do
+					local item = container:getItem(slot)
+					if item and item:getId() == weaponId and item:hasAttribute(ITEM_ATTRIBUTE_CHARGES) and item:getAttribute(ITEM_ATTRIBUTE_CHARGES) > 0 then
+						found = true
+						break
+					end
+				end
+			end
+			if found then
+				break
+			end
+		end
+
+		if found then
+			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "A new training weapon has been equipped.")
+		else
+			player:sendTextMessage(MESSAGE_FAILURE, "You don't have another training weapon. Training has been stopped.")
+			leaveExerciseTraining(playerId)
+			return false
+		end
 	end
 
 	local vocation = player:getVocation()
