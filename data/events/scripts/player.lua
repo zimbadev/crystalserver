@@ -176,7 +176,12 @@ local function useStaminaXpBoost(player)
 		end
 		_G.NextUseXpStamina[playerId] = currentTime + 60
 	end
+
 	player:setXpBoostTime(xpBoostMinutes * 60)
+
+	if xpBoostMinutes <= 0 then
+		player:setXpBoostPercent(0)
+	end
 end
 
 local function useConcoctionTime(player)
