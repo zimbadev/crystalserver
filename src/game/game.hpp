@@ -385,7 +385,7 @@ public:
 	void playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode);
 	void playerLookAt(uint32_t playerId, uint16_t itemId, const Position &pos, uint8_t stackPos);
 	void playerLookInBattleList(uint32_t playerId, uint32_t creatureId);
-	void playerQuickLootCorpse(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position);
+	void playerQuickLootCorpse(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position, bool fromAutoLoot = false);
 	void playerQuickLoot(uint32_t playerId, const Position &pos, uint16_t itemId, uint8_t stackPos, const std::shared_ptr<Item> &defaultItem = nullptr, bool lootAllCorpses = false, bool autoLoot = false);
 	void playerLootAllCorpses(const std::shared_ptr<Player> &player, const Position &pos, bool alsoLootNearbyTiles);
 	void playerSetManagedContainer(uint32_t playerId, ObjectCategory_t category, const Position &pos, uint16_t itemId, uint8_t stackPos, bool isLootContainer);

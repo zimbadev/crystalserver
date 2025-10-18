@@ -2362,20 +2362,40 @@ void Monster::death(const std::shared_ptr<Creature> &) {
 }
 
 std::shared_ptr<Item> Monster::getCorpse(const std::shared_ptr<Creature> &lastHitCreature, const std::shared_ptr<Creature> &mostDamageCreature) {
-	const auto &corpse = Creature::getCorpse(lastHitCreature, mostDamageCreature);
-	if (corpse) {
-		if (mostDamageCreature) {
-			if (mostDamageCreature->getPlayer()) {
-				corpse->setAttribute(ItemAttribute_t::CORPSEOWNER, mostDamageCreature->getID());
-			} else {
-				const auto &mostDamageCreatureMaster = mostDamageCreature->getMaster();
-				if (mostDamageCreatureMaster && mostDamageCreatureMaster->getPlayer()) {
-					corpse->setAttribute(ItemAttribute_t::CORPSEOWNER, mostDamageCreatureMaster->getID());
-				}
-			}
-		}
-	}
-	return corpse;
+    const auto &corpse = Creature::getCorpse(lastHitCreature, mostDamageCreature);
+    if (corpse) {
+        if (mostDamageCreature) {
+            if (mostDamageCreature->getPlayer()) {
+                corpse->setAttribute(ItemAttribute_t::CORPSEOWNER, mostDamageCreature->getID());
+            } else {
+                const auto &mostDamageCreatureMaster = mostDamageCreature->getMaster();
+                if (mostDamageCreatureMaster && mostDamageCreatureMaster->getPlayer()) {
+                    corpse->setAttribute(ItemAttribute_t::CORPSEOWNER, mostDamageCreatureMaster->getID());
+                }
+            }
+        }
+
+        // Corpse loot highlight system - only for non-boss monsters
+        if (!mType->isBoss() && g_configManager().getBoolean(LOOT_HIGHLIGHT_EFFECT_STATUS)) {
+            // Mark corpse as unlooted
+            corpse->setCustomAttribute("unlooted", true);
+
+            // Send loot highlight effect with small delay to ensure corpse is placed
+            g_dispatcher().scheduleEvent(100, [corpse] {
+                g_game().addMagicEffect(corpse->getPosition(), CONST_ME_LOOT_HIGHLIGHT);
+            }, "CorpseHighlight");
+
+            // Auto-remove unlooted attribute and effect after configured time if not opened
+            uint32_t autoRemoveTimer = g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF);
+            g_dispatcher().scheduleEvent(autoRemoveTimer, [corpse, autoRemoveTimer] {
+                if (corpse && corpse->getCustomAttribute("unlooted")) {
+                    corpse->removeCustomAttribute("unlooted");
+                    g_game().removeMagicEffect(corpse->getPosition(), CONST_ME_LOOT_HIGHLIGHT);
+                }
+            }, "CorpseHighlight::AutoRemove");
+        }
+    }
+    return corpse;
 }
 
 bool Monster::isInSpawnRange(const Position &pos) const {
