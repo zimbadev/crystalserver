@@ -45,5 +45,5 @@ function theAncientOasisLever.onUse(player, item, fromPosition, target, toPositi
 	return true
 end
 
-theAncientOasisLever:aid(12107)
+theAncientOasisLever:aid(12108)
 theAncientOasisLever:register()
