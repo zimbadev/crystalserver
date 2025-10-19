@@ -2,6 +2,9 @@ local firstRaid = MoveEvent()
 local secondRaid = MoveEvent()
 local thirdRaid = MoveEvent()
 
+-- Cooldown tracking between raids
+local lastRaidEndTimes = {}
+
 local spawnMonsterName = "Brachiodemon"
 local spawnMonsterName2 = "Infernal Demon"
 local spawnMonsterName3 = "Infernal Phantom"
@@ -43,6 +46,7 @@ for raidNumber, raid in ipairs(SoulWarQuest.claustrophobicInfernoRaids) do
 			zone:refresh()
 			zone:removePlayers()
 		end, SoulWarQuest.claustrophobicInfernoRaids.timeToKick * 1000, raid.getZone())
+		lastRaidEndTimes[raidNumber] = os.time()
 		logger.debug("{} has ended", raidName)
 	end
 
@@ -58,6 +62,13 @@ for raidNumber, raid in ipairs(SoulWarQuest.claustrophobicInfernoRaids) do
 		if fromPosition.y == position.y - (raidNumber % 2 ~= 0 and -1 or 1) then -- if player comes from the raid zone don't start the raid
 			return
 		end
+
+		local lastEnd = lastRaidEndTimes[raidNumber]
+		if lastEnd and (os.time() - lastEnd) < 10 then
+			logger.debug("{} blocked by cooldown: {} seconds remaining", raidName, 10 - (os.time() - lastEnd))
+			return true
+		end
+
 		logger.debug("{} has started", raidName)
 		encounter:start()
 		return true
