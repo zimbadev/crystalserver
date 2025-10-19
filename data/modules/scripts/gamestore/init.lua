@@ -1623,6 +1623,16 @@ function GameStore.processPremiumPurchase(player, offerId)
 	if configManager.getBoolean(configKeys.VIP_SYSTEM_ENABLED) then
 		player:onAddVip(offerId - 3000)
 	end
+
+	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "VIP activated! Relogging in 3 seconds...")
+	player:getPosition():sendMagicEffect(CONST_ME_FIREWORK_YELLOW)
+
+	addEvent(function()
+		local p = Player(player:getId())
+		if p then
+			p:remove()
+		end
+	end, 3000)
 end
 
 function GameStore.processStackablePurchase(player, offerId, offerCount, offerName, movable, setOwner)
