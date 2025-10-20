@@ -324,8 +324,8 @@ minTownIdToBankTransferFromMain = 4
 
 -- Corpse Loot Highlight System
 -- NOTE: lootHighlightEffectStatus enables/disables the visual highlight effect on corpses with loot
--- NOTE: lootHighlightEffectTimerOff is the time in milliseconds before the effect auto-removes if corpse is not opened (default: 20000 = 20 seconds)
--- NOTE: lootHighlightEffectTimerOffInAutoLoot is the delay in milliseconds before removing effect when using autoloot (default: 2000 = 2 seconds)
+-- NOTE: lootHighlightEffectTimerOff is the time in milliseconds before the effect auto-removes if corpse is not opened (default: 30000 = 30 seconds)
+-- NOTE: lootHighlightEffectTimerOffInAutoLoot is the delay in milliseconds before removing effect when using autoloot (default: 5000 = 5 seconds)
 lootHighlightEffectStatus = true
 lootHighlightEffectTimerOff = 30000
 lootHighlightEffectTimerOffInAutoLoot = 5000
