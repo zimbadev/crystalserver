@@ -1937,6 +1937,20 @@ void Game::playerMoveItem(const std::shared_ptr<Player> &player, const Position 
 		return;
 	}
 
+	// Corpse loot highlight system - remove effect when moving corpse
+	// Check if item is a corpse (container) and has unlooted attribute
+	auto container = item->getContainer();
+	if (container && item->getCustomAttribute("unlooted")) {
+		item->removeCustomAttribute("unlooted");
+		// Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
+		g_dispatcher().scheduleEvent(
+			150, [fromPos, this] {
+				removeMagicEffect(fromPos, CONST_ME_LOOT_HIGHLIGHT);
+			},
+			"CorpseHighlight::RemoveOnMove"
+		);
+	}
+
 	const auto ret = internalMoveItem(fromCylinder, toCylinder, toIndex, item, count, nullptr, 0, player);
 	if (ret != RETURNVALUE_NOERROR) {
 		player->sendCancelMessage(ret);
@@ -2870,10 +2884,17 @@ std::shared_ptr<Item> Game::transformItem(std::shared_ptr<Item> item, uint16_t n
 					return nullptr;
 				} else if (newItemId != newId) {
 					// Replacing the the old item with the std::make_shared< while> maintaining the old position
+					// Preserve corpse highlight system attributes during transformation
+					bool hasUnlootedAttribute = item->getCustomAttribute("unlooted") != nullptr;
+
 					auto newItem = item->transform(newItemId);
 					if (newItem == nullptr) {
-						g_logger().error("[{}] new item with id {} is nullptr, (ERROR CODE: 01)", __FUNCTION__, newItemId);
 						return nullptr;
+					}
+
+					// Transfer unlooted attribute to the new item if it was present
+					if (hasUnlootedAttribute && newItem->getContainer()) {
+						newItem->setCustomAttribute("unlooted", true);
 					}
 
 					return newItem;
@@ -2969,143 +2990,197 @@ ReturnValue Game::internalTeleport(const std::shared_ptr<Thing> &thing, const Po
 	return RETURNVALUE_NOTPOSSIBLE;
 }
 
-void Game::playerQuickLootCorpse(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position) {
+void Game::playerQuickLootCorpse(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position, bool fromAutoLoot) {
 	if (!player || !corpse) {
 		return;
 	}
 
+	processSingleCorpseLoot(player, corpse, position, fromAutoLoot);
+}
+
+void Game::processSingleCorpseLoot(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position, bool fromAutoLoot) {
 	std::vector<std::shared_ptr<Item>> itemList;
 	bool ignoreListItems = (player->quickLootFilter == QUICKLOOTFILTER_SKIPPEDLOOT);
 
-	bool missedAnyGold = false;
-	bool missedAnyItem = false;
+	if (!corpse || corpse->getItemCount() == 0) {
+		// Corpse loot highlight system - remove marker when opened (early return case)
+		if (corpse && corpse->getCustomAttribute("unlooted")) {
+			corpse->removeCustomAttribute("unlooted");
+			// Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
+			// Use autoloot timer only if fromAutoLoot, otherwise use fixed 150ms
+			const uint32_t removeDelay = fromAutoLoot ? static_cast<uint32_t>(g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT) + 150) : 150;
+			g_dispatcher().scheduleEvent(removeDelay, [position, this] {
+				removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
+				addMagicEffect(position, CONST_ME_BLOCKHIT);
+			}, "CorpseHighlight::Remove");
+		}
+		return;
+	}
 
 	for (ContainerIterator it = corpse->iterator(); it.hasNext(); it.advance()) {
 		const auto &item = *it;
 		bool listed = player->isQuickLootListedItem(item);
 		if ((listed && ignoreListItems) || (!listed && !ignoreListItems)) {
-			if (item->getWorth() != 0) {
-				missedAnyGold = true;
+			continue;
+		}
+		itemList.push_back(item);
+	}
+
+	if (itemList.empty()) {
+		return;
+	}
+
+	// Process items in batch for better performance
+	auto result = processBatchLootItems(player, itemList);
+
+	// Send single consolidated message instead of multiple individual messages
+	// Use debounce to prevent spam of messages
+	static std::unordered_map<uint32_t, int64_t> lastLootMessage;
+	const int64_t currentTime = OTSYS_TIME();
+	constexpr int64_t messageDebounce = 200; // 200ms debounce for messages
+
+	if (result.totalLootedGold > 0 || result.totalLootedItems > 0) {
+		// Only send message if enough time has passed since last message
+		if (lastLootMessage[player->getID()] + messageDebounce <= currentTime) {
+			// Create a single consolidated loot message
+			std::string consolidatedMessage;
+			if (result.totalLootedGold > 0 && result.totalLootedItems > 0) {
+				consolidatedMessage = "Looted " + std::to_string(result.totalLootedGold) + " gold and " + std::to_string(result.totalLootedItems) + " items.";
+			} else if (result.totalLootedGold > 0) {
+				consolidatedMessage = "Looted " + std::to_string(result.totalLootedGold) + " gold.";
 			} else {
-				missedAnyItem = true;
+				consolidatedMessage = "Looted " + std::to_string(result.totalLootedItems) + " items.";
+			}
+			player->sendTextMessage(MESSAGE_LOOT, consolidatedMessage);
+			lastLootMessage[player->getID()] = currentTime;
+		}
+	}
+
+	// Handle capacity and container notifications
+	if (result.shouldNotifyCapacity) {
+		player->sendTextMessage(MESSAGE_GAME_HIGHLIGHT, "Attention! The loot you are trying to pick up is too heavy for you to carry.");
+	} else if (result.shouldNotifyNotEnoughRoom != OBJECTCATEGORY_NONE) {
+		std::string notificationMessage = "Attention! The container assigned to category " + getObjectCategoryName(result.shouldNotifyNotEnoughRoom) + " is full.";
+		player->sendTextMessage(MESSAGE_GAME_HIGHLIGHT, notificationMessage);
+	}
+
+	// Corpse loot highlight system - remove marker when opened (ALWAYS execute at the end)
+	if (corpse->getCustomAttribute("unlooted")) {
+		// Remove the unlooted marker
+		corpse->removeCustomAttribute("unlooted");
+
+		// Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
+		// Use autoloot timer only if fromAutoLoot, otherwise use fixed 150ms
+		const uint32_t removeDelay = fromAutoLoot ? static_cast<uint32_t>(g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT) + 150) : 150;
+		g_dispatcher().scheduleEvent(removeDelay, [position, this] {
+			// Remove the loot highlight effect
+			removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
+
+			// Send visual confirmation effect
+			addMagicEffect(position, CONST_ME_BLOCKHIT);
+		}, "CorpseHighlight::Remove");
+	}
+}
+
+Game::BatchLootResult Game::processBatchLootItems(const std::shared_ptr<Player> &player, const std::vector<std::shared_ptr<Item>> &itemList) {
+	BatchLootResult result;
+
+	if (itemList.empty()) {
+		return result;
+	}
+
+	// Pre-cache containers to avoid repeated lookups
+	std::map<ObjectCategory_t, std::shared_ptr<Container>> containerCache;
+
+	// Group items by category for batch processing
+	std::map<ObjectCategory_t, std::vector<std::shared_ptr<Item>>> itemsByCategory;
+
+	for (const auto &item : itemList) {
+		ObjectCategory_t category = getObjectCategory(item);
+		itemsByCategory[category].push_back(item);
+
+		// Pre-cache container for this category
+		if (containerCache.find(category) == containerCache.end()) {
+			bool fallbackConsumed = false;
+			containerCache[category] = findManagedContainer(player, fallbackConsumed, category, true);
+		}
+	}
+
+	// Process each category in batch
+	for (const auto &[category, items] : itemsByCategory) {
+		// Use cached container to avoid repeated lookups
+		std::shared_ptr<Container> lootContainer = containerCache[category];
+
+		if (!lootContainer) {
+			// Mark all items in this category as missed
+			for (const auto &item : items) {
+				if (item->getWorth() != 0) {
+					result.missedAnyGold = true;
+				} else {
+					result.missedAnyItem = true;
+				}
 			}
 			continue;
 		}
 
-		itemList.push_back(item);
-	}
-
-	bool shouldNotifyCapacity = false;
-	ObjectCategory_t shouldNotifyNotEnoughRoom = OBJECTCATEGORY_NONE;
-
-	uint32_t totalLootedGold = 0;
-	uint32_t totalLootedItems = 0;
-	for (const std::shared_ptr<Item> &item : itemList) {
-		uint32_t worth = item->getWorth();
-		uint16_t baseCount = item->getItemCount();
-		ObjectCategory_t category = getObjectCategory(item);
-
-		ReturnValue ret = internalCollectManagedItems(player, item, category);
-		if (ret == RETURNVALUE_NOTENOUGHCAPACITY) {
-			shouldNotifyCapacity = true;
-		} else if (ret == RETURNVALUE_CONTAINERNOTENOUGHROOM) {
-			shouldNotifyNotEnoughRoom = category;
+		// Group similar items to reduce processing overhead
+		std::map<uint16_t, std::vector<std::shared_ptr<Item>>> itemsByType;
+		for (const auto &item : items) {
+			itemsByType[item->getID()].push_back(item);
 		}
 
-		bool success = ret == RETURNVALUE_NOERROR;
-		if (worth != 0) {
-			missedAnyGold = missedAnyGold || !success;
-			if (success) {
-				player->sendLootStats(item, baseCount);
-				totalLootedGold += worth;
-			} else {
-				// item is not completely moved
-				totalLootedGold += worth - item->getWorth();
-			}
-		} else {
-			missedAnyItem = missedAnyItem || !success;
-			if (success || item->getItemCount() != baseCount) {
-				totalLootedItems++;
-				player->sendLootStats(item, item->getItemCount());
-			}
-		}
-	}
+		// Process items by type for better efficiency
+		std::vector<std::pair<std::shared_ptr<Item>, uint16_t>> lootStatsToSend;
+		bool fallbackConsumed = false;
 
-	std::stringstream ss;
-	if (totalLootedGold != 0 || missedAnyGold || totalLootedItems != 0 || missedAnyItem) {
-		bool lootedAllGold = totalLootedGold != 0 && !missedAnyGold;
-		bool lootedAllItems = totalLootedItems != 0 && !missedAnyItem;
-		if (lootedAllGold) {
-			if (totalLootedItems != 0 || missedAnyItem) {
-				ss << "You looted the complete " << totalLootedGold << " gold";
+		for (const auto &[itemId, itemsOfType] : itemsByType) {
+			for (const auto &item : itemsOfType) {
+				uint32_t worth = item->getWorth();
+				uint16_t baseCount = item->getItemCount();
 
-				if (lootedAllItems) {
-					ss << " and all dropped items";
-				} else if (totalLootedItems != 0) {
-					ss << ", but you only looted some of the items";
-				} else if (missedAnyItem) {
-					ss << " but none of the dropped items";
+				ReturnValue ret = processLootItems(player, lootContainer, item, fallbackConsumed);
+
+				if (ret == RETURNVALUE_NOTENOUGHCAPACITY) {
+					result.shouldNotifyCapacity = true;
+				} else if (ret == RETURNVALUE_CONTAINERNOTENOUGHROOM) {
+					result.shouldNotifyNotEnoughRoom = category;
 				}
-			} else {
-				ss << "You looted " << totalLootedGold << " gold";
-			}
-		} else if (lootedAllItems) {
-			if (totalLootedItems == 1) {
-				ss << "You looted 1 item";
-			} else if (totalLootedGold != 0 || missedAnyGold) {
-				ss << "You looted all of the dropped items";
-			} else {
-				ss << "You looted all items";
-			}
 
-			if (totalLootedGold != 0) {
-				ss << ", but you only looted " << totalLootedGold << " of the dropped gold";
-			} else if (missedAnyGold) {
-				ss << " but none of the dropped gold";
+				bool success = ret == RETURNVALUE_NOERROR;
+				if (worth != 0) {
+					result.missedAnyGold = result.missedAnyGold || !success;
+					if (success) {
+						lootStatsToSend.emplace_back(item, baseCount);
+						result.totalLootedGold += worth;
+					} else {
+						// item is not completely moved
+						result.totalLootedGold += worth - item->getWorth();
+					}
+				} else {
+					result.missedAnyItem = result.missedAnyItem || !success;
+					if (success || item->getItemCount() != baseCount) {
+						result.totalLootedItems++;
+						lootStatsToSend.emplace_back(item, item->getItemCount());
+					}
+				}
 			}
-		} else if (totalLootedGold != 0) {
-			ss << "You only looted " << totalLootedGold << " of the dropped gold";
-			if (totalLootedItems != 0) {
-				ss << " and some of the dropped items";
-			} else if (missedAnyItem) {
-				ss << " but none of the dropped items";
-			}
-		} else if (totalLootedItems != 0) {
-			ss << "You looted some of the dropped items";
-			if (missedAnyGold) {
-				ss << " but none of the dropped gold";
-			}
-		} else if (missedAnyGold) {
-			ss << "You looted none of the dropped gold";
-			if (missedAnyItem) {
-				ss << " and none of the items";
-			}
-		} else if (missedAnyItem) {
-			ss << "You looted none of the dropped items";
 		}
-	} else {
-		ss << "No loot";
-	}
-	ss << ".";
-	player->sendTextMessage(MESSAGE_STATUS, ss.str());
 
-	if (shouldNotifyCapacity) {
-		ss.str(std::string());
-		ss << "Attention! The loot you are trying to pick up is too heavy for you to carry.";
-	} else if (shouldNotifyNotEnoughRoom != OBJECTCATEGORY_NONE) {
-		ss.str(std::string());
-		ss << "Attention! The container assigned to category " << getObjectCategoryName(shouldNotifyNotEnoughRoom) << " is full.";
-	} else {
-		return;
-	}
+		// Only send stats if there are items to report
+		if (!lootStatsToSend.empty()) {
+			std::map<uint16_t, uint32_t> itemCounts;
+			for (const auto &[item, count] : lootStatsToSend) {
+				itemCounts[item->getID()] += count;
+			}
 
-	if (player->lastQuickLootNotification + 15000 < OTSYS_TIME()) {
-		player->sendTextMessage(MESSAGE_GAME_HIGHLIGHT, ss.str());
-	} else {
-		player->sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
+			for (const auto &[itemId, totalCount] : itemCounts) {
+				auto tempItem = Item::CreateItem(itemId, totalCount);
+				player->sendLootStats(tempItem, totalCount);
+			}
+		}
 	}
 
-	player->lastQuickLootNotification = OTSYS_TIME();
+	return result;
 }
 
 std::shared_ptr<Container> Game::findManagedContainer(const std::shared_ptr<Player> &player, bool &fallbackConsumed, ObjectCategory_t category, bool isLootContainer) {
@@ -3168,14 +3243,18 @@ bool Game::handleFallbackLogic(const std::shared_ptr<Player> &player, std::share
 ReturnValue Game::processMoveOrAddItemToLootContainer(const std::shared_ptr<Item> &item, const std::shared_ptr<Container> &lootContainer, uint32_t &remainderCount, const std::shared_ptr<Player> &player) {
 	std::shared_ptr<Item> moveItem = nullptr;
 	ReturnValue ret;
+
+	// Optimize: Skip unnecessary checks for auto loot
 	if (item->getParent()) {
 		ret = internalMoveItem(item->getParent(), lootContainer, INDEX_WHEREEVER, item, item->getItemCount(), &moveItem, 0, player, nullptr, false);
 	} else {
 		ret = internalAddItem(lootContainer, item, INDEX_WHEREEVER);
 	}
+
 	if (moveItem) {
 		remainderCount -= moveItem->getItemCount();
 	}
+
 	return ret;
 }
 

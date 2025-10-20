@@ -145,6 +145,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_FREE_QUEST, "toggleFreeQuest", true);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_ALLOW_ANYTHING, "toggleGoldPouchAllowAnything", false);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_QUICKLOOT_ONLY, "toggleGoldPouchQuickLootOnly", false);
+	loadBoolConfig(L, LOOT_HIGHLIGHT_EFFECT_STATUS, "lootHighlightEffectStatus", true);
 	loadBoolConfig(L, TOGGLE_HAZARDSYSTEM, "toogleHazardSystem", true);
 	loadBoolConfig(L, TOGGLE_HOUSE_TRANSFER_ON_SERVER_RESTART, "togglehouseTransferOnRestart", false);
 	loadBoolConfig(L, TOGGLE_IMBUEMENT_NON_AGGRESSIVE_FIGHT_ONLY, "toggleImbuementNonAggressiveFightOnly", false);
@@ -296,6 +297,8 @@ bool ConfigManager::load() {
 	loadIntConfig(L, HOUSE_PRICE_PER_SQM, "housePriceEachSQM", 1000);
 	loadIntConfig(L, KICK_AFTER_MINUTES, "kickIdlePlayerAfterMinutes", 15);
 	loadIntConfig(L, LOOTPOUCH_MAXLIMIT, "lootPouchMaxLimit", 2000);
+	loadIntConfig(L, LOOT_HIGHLIGHT_EFFECT_TIMER_OFF, "lootHighlightEffectTimerOff", 30000);
+	loadIntConfig(L, LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT, "lootHighlightEffectTimerOffInAutoloot", 5000);
 	loadIntConfig(L, LOW_LEVEL_BONUS_EXP, "lowLevelBonusExp", 50);
 	loadIntConfig(L, LOYALTY_POINTS_PER_CREATION_DAY, "loyaltyPointsPerCreationDay", 1);
 	loadIntConfig(L, LOYALTY_POINTS_PER_PREMIUM_DAY_PURCHASED, "loyaltyPointsPerPremiumDayPurchased", 0);
