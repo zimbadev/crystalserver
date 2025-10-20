@@ -2988,10 +2988,13 @@ void Game::processSingleCorpseLoot(const std::shared_ptr<Player> &player, const 
 			// Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
 			// Use autoloot timer only if fromAutoLoot, otherwise use fixed 150ms
 			const uint32_t removeDelay = fromAutoLoot ? static_cast<uint32_t>(g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT) + 150) : 150;
-			g_dispatcher().scheduleEvent(removeDelay, [position, this] {
-				removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
-				addMagicEffect(position, CONST_ME_BLOCKHIT);
-			}, "CorpseHighlight::Remove");
+			g_dispatcher().scheduleEvent(
+				removeDelay, [position, this] {
+					removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
+					addMagicEffect(position, CONST_ME_BLOCKHIT);
+				},
+				"CorpseHighlight::Remove"
+			);
 		}
 		return;
 	}
@@ -3051,13 +3054,16 @@ void Game::processSingleCorpseLoot(const std::shared_ptr<Player> &player, const 
 		// Schedule removal to ensure the effect was already added (100ms delay in monster.cpp)
 		// Use autoloot timer only if fromAutoLoot, otherwise use fixed 150ms
 		const uint32_t removeDelay = fromAutoLoot ? static_cast<uint32_t>(g_configManager().getNumber(LOOT_HIGHLIGHT_EFFECT_TIMER_OFF_IN_AUTOLOOT) + 150) : 150;
-		g_dispatcher().scheduleEvent(removeDelay, [position, this] {
-			// Remove the loot highlight effect
-			removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
+		g_dispatcher().scheduleEvent(
+			removeDelay, [position, this] {
+				// Remove the loot highlight effect
+				removeMagicEffect(position, CONST_ME_LOOT_HIGHLIGHT);
 
-			// Send visual confirmation effect
-			addMagicEffect(position, CONST_ME_BLOCKHIT);
-		}, "CorpseHighlight::Remove");
+				// Send visual confirmation effect
+				addMagicEffect(position, CONST_ME_BLOCKHIT);
+			},
+			"CorpseHighlight::Remove"
+		);
 	}
 }
 
