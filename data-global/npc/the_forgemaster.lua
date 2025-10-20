@@ -115,27 +115,27 @@ local forgeItem = {
 
 local requiredItems = {
 	["critical"] = {
-		{ id = 49892, count = 1 },  -- demon finger
-        { id = 12541, count = 1 },  -- skin of Gravalon
-        { id = 22728, count = 100 }, -- vexclaw talons
-        { id = 49894, count = 500 }, -- demonic matter
-        { id = 5954, count = 50 },  -- demon horn
-        { id = 6499, count = 350 }, -- demonic essence
-        { id = 6558, count = 750 }, -- demonic blood
+		{ id = 49892, count = 1 }, -- demon finger
+		{ id = 12541, count = 1 }, -- skin of Gravalon
+		{ id = 22728, count = 100 }, -- vexclaw talons
+		{ id = 49894, count = 500 }, -- demonic matter
+		{ id = 5954, count = 50 }, -- demon horn
+		{ id = 6499, count = 350 }, -- demonic essence
+		{ id = 6558, count = 750 }, -- demonic blood
 	},
 	["mana"] = {
-		{ id = 49891, count = 1 },   -- skin of Twisterror
-        { id = 22730, count = 100 }, -- grimeleech wings
-        { id = 49894, count = 500 }, -- demonic matter
-        { id = 6499, count = 750 },  -- demonic essence
-        { id = 9647, count = 200 },  -- demonic skeletal hand
+		{ id = 49891, count = 1 }, -- skin of Twisterror
+		{ id = 22730, count = 100 }, -- grimeleech wings
+		{ id = 49894, count = 500 }, -- demonic matter
+		{ id = 6499, count = 750 }, -- demonic essence
+		{ id = 9647, count = 200 }, -- demonic skeletal hand
 	},
 	["life"] = {
-		{ id = 49893, count = 1 },   -- skin of Malvaroth
-        { id = 9663, count = 100 },  -- pieces of dead brain
-        { id = 49894, count = 500 }, -- demonic matter
-        { id = 6558, count = 750 },  -- demonic blood
-        { id = 5906, count = 50 },   -- demon dust
+		{ id = 49893, count = 1 }, -- skin of Malvaroth
+		{ id = 9663, count = 100 }, -- pieces of dead brain
+		{ id = 49894, count = 500 }, -- demonic matter
+		{ id = 6558, count = 750 }, -- demonic blood
+		{ id = 5906, count = 50 }, -- demon dust
 	},
 }
 
