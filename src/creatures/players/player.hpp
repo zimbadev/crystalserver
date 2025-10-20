@@ -1003,6 +1003,11 @@ public:
 	void postAddNotification(const std::shared_ptr<Thing> &thing, const std::shared_ptr<Cylinder> &oldParent, int32_t index, CylinderLink_t link = LINK_OWNER) override;
 	void postRemoveNotification(const std::shared_ptr<Thing> &thing, const std::shared_ptr<Cylinder> &newParent, int32_t index, CylinderLink_t link = LINK_OWNER) override;
 
+	// Batch notification optimization for auto loot
+	bool isAutoLootActive() const;
+	void scheduleBatchInventoryUpdate();
+	void executeBatchInventoryUpdate();
+
 	void setNextAction(int64_t time);
 	bool canDoAction() const;
 
@@ -1567,6 +1572,10 @@ private:
 	int64_t lastQuickLootNotification = 0;
 	int64_t lastWalking = 0;
 	uint64_t asyncOngoingTasks = 0;
+
+	// Batch notification system for auto loot optimization
+	bool batchInventoryUpdateScheduled = false;
+	int64_t lastBatchInventoryUpdate = 0;
 
 	std::vector<Kill> unjustifiedKills;
 

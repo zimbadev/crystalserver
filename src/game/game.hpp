@@ -22,6 +22,7 @@
 #include "creatures/players/cyclopedia/player_title.hpp"
 #include "creatures/players/grouping/familiars.hpp"
 #include "creatures/players/grouping/groups.hpp"
+#include "enums/object_category.hpp"
 #include "lua/creature/raids.hpp"
 #include "map/map.hpp"
 #include "modal_window/modal_window.hpp"
@@ -385,7 +386,19 @@ public:
 	void playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode);
 	void playerLookAt(uint32_t playerId, uint16_t itemId, const Position &pos, uint8_t stackPos);
 	void playerLookInBattleList(uint32_t playerId, uint32_t creatureId);
-	void playerQuickLootCorpse(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position);
+
+	struct BatchLootResult {
+		bool shouldNotifyCapacity = false;
+		ObjectCategory_t shouldNotifyNotEnoughRoom = OBJECTCATEGORY_NONE;
+		uint32_t totalLootedGold = 0;
+		uint32_t totalLootedItems = 0;
+		bool missedAnyGold = false;
+		bool missedAnyItem = false;
+	};
+
+	void playerQuickLootCorpse(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position, bool fromAutoLoot = false);
+	void processSingleCorpseLoot(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position, bool fromAutoLoot = false);
+	BatchLootResult processBatchLootItems(const std::shared_ptr<Player> &player, const std::vector<std::shared_ptr<Item>> &itemList);
 	void playerQuickLoot(uint32_t playerId, const Position &pos, uint16_t itemId, uint8_t stackPos, const std::shared_ptr<Item> &defaultItem = nullptr, bool lootAllCorpses = false, bool autoLoot = false);
 	void playerLootAllCorpses(const std::shared_ptr<Player> &player, const Position &pos, bool alsoLootNearbyTiles);
 	void playerSetManagedContainer(uint32_t playerId, ObjectCategory_t category, const Position &pos, uint16_t itemId, uint8_t stackPos, bool isLootContainer);

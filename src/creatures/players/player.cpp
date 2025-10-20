@@ -8300,6 +8300,43 @@ void Player::onThink(uint32_t interval) {
 	wheel()->onThink();
 
 	g_callbacks().executeCallback(EventCallback_t::playerOnThink, &EventCallback::playerOnThink, getPlayer(), interval);
+
+	// Execute batch inventory updates if scheduled
+	if (batchInventoryUpdateScheduled) {
+		executeBatchInventoryUpdate();
+	}
+}
+
+bool Player::isAutoLootActive() const {
+	int64_t currentTime = OTSYS_TIME();
+	return (currentTime - lastBatchInventoryUpdate) < 500; // Active if updated within last 500ms
+}
+
+void Player::scheduleBatchInventoryUpdate() {
+	if (!batchInventoryUpdateScheduled) {
+		batchInventoryUpdateScheduled = true;
+		lastBatchInventoryUpdate = OTSYS_TIME();
+	}
+}
+
+void Player::executeBatchInventoryUpdate() {
+	if (batchInventoryUpdateScheduled) {
+		// Execute all pending inventory updates at once
+		updateInventoryWeight();
+		updateItemsLight();
+		sendInventoryIds();
+		sendStats();
+
+		// Also update all open containers in batch
+		for (const auto &[containerId, containerInfo] : openContainers) {
+			const auto &container = containerInfo.container;
+			if (container && container->getTopParent() == getPlayer()) {
+				onSendContainer(container);
+			}
+		}
+
+		batchInventoryUpdateScheduled = false;
+	}
 }
 
 void Player::postAddNotification(const std::shared_ptr<Thing> &thing, const std::shared_ptr<Cylinder> &oldParent, int32_t index, CylinderLink_t link) {
@@ -8318,15 +8355,25 @@ void Player::postAddNotification(const std::shared_ptr<Thing> &thing, const std:
 			requireListUpdate = oldParent != getPlayer();
 		}
 
-		updateInventoryWeight();
-		updateItemsLight();
-		sendInventoryIds();
-		sendStats();
+		// Batch notifications for better performance during auto loot
+		if (isAutoLootActive()) {
+			scheduleBatchInventoryUpdate();
+		} else {
+			updateInventoryWeight();
+			updateItemsLight();
+			sendInventoryIds();
+			sendStats();
+		}
 	}
 
 	if (const auto &item = thing->getItem()) {
 		if (const auto &container = item->getContainer()) {
-			onSendContainer(container);
+			// Batch container updates during auto loot
+			if (isAutoLootActive()) {
+				scheduleBatchInventoryUpdate();
+			} else {
+				onSendContainer(container);
+			}
 		}
 
 		if (shopOwner && !scheduledSaleUpdate && requireListUpdate) {
@@ -8379,10 +8426,15 @@ void Player::postRemoveNotification(const std::shared_ptr<Thing> &thing, const s
 			requireListUpdate = copyNewParent != getPlayer();
 		}
 
-		updateInventoryWeight();
-		updateItemsLight();
-		sendInventoryIds();
-		sendStats();
+		// Batch notifications for better performance during auto loot
+		if (isAutoLootActive()) {
+			scheduleBatchInventoryUpdate();
+		} else {
+			updateInventoryWeight();
+			updateItemsLight();
+			sendInventoryIds();
+			sendStats();
+		}
 	}
 
 	if (const auto &item = copyThing->getItem()) {
@@ -8392,7 +8444,12 @@ void Player::postRemoveNotification(const std::shared_ptr<Thing> &thing, const s
 			if (container->isRemoved() || !Position::areInRange<1, 1, 0>(getPosition(), container->getPosition())) {
 				autoCloseContainers(container);
 			} else if (container->getTopParent() == getPlayer()) {
-				onSendContainer(container);
+				// Batch container updates during auto loot
+				if (isAutoLootActive()) {
+					scheduleBatchInventoryUpdate();
+				} else {
+					onSendContainer(container);
+				}
 			} else if (const auto &topContainer = std::dynamic_pointer_cast<Container>(container->getTopParent())) {
 				if (const auto &depotChest = std::dynamic_pointer_cast<DepotChest>(topContainer)) {
 					bool isOwner = false;
@@ -8404,7 +8461,12 @@ void Player::postRemoveNotification(const std::shared_ptr<Thing> &thing, const s
 
 						if (depotChestMap == depotChest) {
 							isOwner = true;
-							onSendContainer(container);
+							// Batch container updates during auto loot
+							if (isAutoLootActive()) {
+								scheduleBatchInventoryUpdate();
+							} else {
+								onSendContainer(container);
+							}
 						}
 					}
 
@@ -10728,10 +10790,20 @@ uint8_t Player::getOpenedContainersLimit() const {
 }
 
 void Player::openPlayerContainers() {
-	// skip if client lost connection
 	if (!client) {
 		return;
 	}
+
+	// Throttle container updates to prevent FPS drops during autoloot
+	static std::unordered_map<uint32_t, int64_t> lastContainerUpdate;
+	int64_t currentTime = OTSYS_TIME();
+	int64_t throttleDelay = 100; // 100ms
+
+	if (lastContainerUpdate[getID()] + throttleDelay > currentTime) {
+		return;
+	}
+
+	lastContainerUpdate[getID()] = currentTime;
 
 	std::map<uint8_t, std::shared_ptr<Container>> openContainersList;
 
@@ -10781,9 +10853,21 @@ void Player::openPlayerContainers() {
 // Quickloot
 
 void Player::sendLootContainers() const {
-	if (client) {
-		client->sendLootContainers();
+	if (!client) {
+		return;
 	}
+
+	// Throttle loot container updates to prevent FPS drops during autoloot
+	static std::unordered_map<uint32_t, int64_t> lastLootContainerUpdate;
+	int64_t currentTime = OTSYS_TIME();
+	int64_t throttleDelay = 200; // 200ms
+
+	if (lastLootContainerUpdate[getID()] + throttleDelay > currentTime) {
+		return;
+	}
+
+	lastLootContainerUpdate[getID()] = currentTime;
+	client->sendLootContainers();
 }
 
 void Player::sendSingleSoundEffect(const Position &pos, SoundEffect_t id, SourceEffect_t source) const {
