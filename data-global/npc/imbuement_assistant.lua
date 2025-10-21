@@ -157,6 +157,15 @@ local imbuementPackagesData = {
 		},
 	},
 	-- Additional attributes packages
+	["punch"] = {
+		text = "fist fighting",
+		moneyRequired = 16700,
+		itemList = {
+			{ itemId = 11489, count = 20 }, -- mantassin tails
+			{ itemId = 10281, count = 25 }, -- tarantula eggs
+			{ itemId = 40529, count = 15 }, -- gold-brocaded cloth
+		},
+	},
 	["featherweight"] = {
 		text = "capacity increase",
 		moneyRequired = 12250,
@@ -334,7 +343,7 @@ local function creatureSayCallback(npc, creature, type, message)
 	end
 
 	local imbuementPackages =
-		"These are the available imbuement packages, Skill increase: {bash}, {blockade}, {chop}, {epiphany}, {precision}, {slash}. Additional attributes: {featherweight}, {strike}, {swiftness}, {vampirism}, {vibrancy}, {void}. Elemental damage: {electrify}, {frost}, {reap}, {scorch}, {venom}. Elemental protection: {cloud fabric}, {demon presence}, {dragon hide}, {lich shroud}, {quara scale}, {snake skin}."
+		"These are the available imbuement packages, Skill increase: {bash}, {blockade}, {chop}, {epiphany}, {precision}, {slash}. Additional attributes: {punch}, {featherweight}, {strike}, {swiftness}, {vampirism}, {vibrancy}, {void}. Elemental damage: {electrify}, {frost}, {reap}, {scorch}, {venom}. Elemental protection: {cloud fabric}, {demon presence}, {dragon hide}, {lich shroud}, {quara scale}, {snake skin}."
 	if MsgContains(message, "imbuement packages") then
 		npcHandler:setTopic(playerId, 1)
 		npcHandler:say(imbuementPackages, npc, creature)
@@ -365,6 +374,9 @@ npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 npcConfig.shop = {
+	{ itemName = "gold-brocaded cloth", clientId = 40529, buy = 175 },
+	{ itemName = "mantassin tail", clientId = 11489, buy = 280 },
+	{ itemName = "tarantula egg", clientId = 10281, buy = 80 },
 	{ itemName = "battle stone", clientId = 11447, buy = 290 },
 	{ itemName = "blazing bone", clientId = 16131, buy = 610 },
 	{ itemName = "bloody pincers", clientId = 9633, buy = 100 },

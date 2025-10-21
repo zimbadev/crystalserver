@@ -97,13 +97,13 @@ function flaskPotion.onUse(player, item, fromPosition, target, toPosition, isHot
 		target:say("Aaaah...", MESSAGE_POTION)
 
 		local deactivatedFlasks = player:kv():get("talkaction.potions.flask") or false
-        if not deactivatedFlasks and configManager.getBoolean(configKeys.REMOVE_POTION_CHARGES) then
-            if fromPosition.x == CONTAINER_POSITION then
-                player:addItem(potion.flask, 1)
-            else
-                Game.createItem(potion.flask, 1, fromPosition)
-            end
-        end
+		if not deactivatedFlasks and configManager.getBoolean(configKeys.REMOVE_POTION_CHARGES) then
+			if fromPosition.x == CONTAINER_POSITION then
+				player:addItem(potion.flask, 1)
+			else
+				Game.createItem(potion.flask, 1, fromPosition)
+			end
+		end
 	end
 
 	player:getPosition():sendSingleSoundEffect(SOUND_EFFECT_TYPE_ITEM_USE_POTION, player:isInGhostMode() and nil or player)

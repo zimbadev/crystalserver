@@ -125,6 +125,18 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "getHouseCountByAccount", GameFunctions::luaHouseGetHouseCountByAccount);
 
 	Lua::registerMethod(L, "Game", "setGuildMotd", GameFunctions::luaGameSetGuildMotd);
+
+	// Guild management functions
+	Lua::registerMethod(L, "Game", "disbandGuild", GameFunctions::luaGameDisbandGuild);
+	Lua::registerMethod(L, "Game", "invitePlayerToGuild", GameFunctions::luaGameInvitePlayerToGuild);
+	Lua::registerMethod(L, "Game", "removePlayerFromGuild", GameFunctions::luaGameRemovePlayerFromGuild);
+	Lua::registerMethod(L, "Game", "promotePlayer", GameFunctions::luaGamePromotePlayer);
+	Lua::registerMethod(L, "Game", "demotePlayer", GameFunctions::luaGameDemotePlayer);
+	Lua::registerMethod(L, "Game", "passLeadership", GameFunctions::luaGamePassLeadership);
+	Lua::registerMethod(L, "Game", "setPlayerGuildNick", GameFunctions::luaGameSetPlayerGuildNick);
+	Lua::registerMethod(L, "Game", "setRankName", GameFunctions::luaGameSetRankName);
+	Lua::registerMethod(L, "Game", "createGuild", GameFunctions::luaGameCreateGuild);
+	Lua::registerMethod(L, "Game", "joinGuild", GameFunctions::luaGameJoinGuild);
 }
 
 // Game
@@ -1155,5 +1167,106 @@ int GameFunctions::luaGameSetGuildMotd(lua_State* L) {
 
 	g_game().setGuildMotd(guildId, newMotd);
 	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameDisbandGuild(lua_State* L) {
+	// Game:disbandGuild(guildId)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+
+	g_game().disbandGuild(guildId);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameInvitePlayerToGuild(lua_State* L) {
+	// Game:invitePlayerToGuild(guildId, playerName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	g_game().invitePlayerToGuild(guildId, playerName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameRemovePlayerFromGuild(lua_State* L) {
+	// Game:removePlayerFromGuild(guildId, playerName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	g_game().removePlayerFromGuild(guildId, playerName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGamePromotePlayer(lua_State* L) {
+	// Game:promotePlayer(guildId, playerName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	g_game().promotePlayer(guildId, playerName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameDemotePlayer(lua_State* L) {
+	// Game:demotePlayer(guildId, playerName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	g_game().demotePlayer(guildId, playerName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGamePassLeadership(lua_State* L) {
+	// Game:passLeadership(guildId, newLeaderName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string newLeaderName = Lua::getString(L, 2);
+
+	g_game().passLeadership(guildId, newLeaderName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameSetPlayerGuildNick(lua_State* L) {
+	// Game:setPlayerGuildNick(guildId, playerName, nick)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+	const std::string nick = Lua::getString(L, 3);
+
+	g_game().setPlayerGuildNick(guildId, playerName, nick);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameSetRankName(lua_State* L) {
+	// Game:setRankName(guildId, rankLevel, newName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	uint8_t rankLevel = Lua::getNumber<uint8_t>(L, 2);
+	const std::string newName = Lua::getString(L, 3);
+
+	g_game().setRankName(guildId, rankLevel, newName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameCreateGuild(lua_State* L) {
+	// Game:createGuild(guildName, leaderName)
+	const std::string guildName = Lua::getString(L, 1);
+	const std::string leaderName = Lua::getString(L, 2);
+
+	uint32_t guildId = g_game().createGuild(guildName, leaderName);
+	Lua::pushNumber(L, guildId);
+	return 1;
+}
+
+int GameFunctions::luaGameJoinGuild(lua_State* L) {
+	// Game:joinGuild(guildName, playerName)
+	const std::string guildName = Lua::getString(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	bool success = g_game().joinGuild(guildName, playerName);
+	Lua::pushBoolean(L, success);
 	return 1;
 }

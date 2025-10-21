@@ -106,4 +106,16 @@ private:
 
 	static int luaHouseGetHouseCountByAccount(lua_State* L);
 	static int luaGameSetGuildMotd(lua_State* L);
+
+	// Guild management functions
+	static int luaGameDisbandGuild(lua_State* L);
+	static int luaGameInvitePlayerToGuild(lua_State* L);
+	static int luaGameRemovePlayerFromGuild(lua_State* L);
+	static int luaGamePromotePlayer(lua_State* L);
+	static int luaGameDemotePlayer(lua_State* L);
+	static int luaGamePassLeadership(lua_State* L);
+	static int luaGameSetPlayerGuildNick(lua_State* L);
+	static int luaGameSetRankName(lua_State* L);
+	static int luaGameCreateGuild(lua_State* L);
+	static int luaGameJoinGuild(lua_State* L);
 };

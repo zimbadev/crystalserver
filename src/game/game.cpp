@@ -8797,6 +8797,91 @@ void Game::setGuildMotd(uint32_t guildId, const std::string &newMotd) {
 	}
 }
 
+void Game::disbandGuild(uint32_t guildId) {
+	if (guildId == 0) {
+		return;
+	}
+
+	if (!IOGuild::disbandGuild(guildId)) {
+		return;
+	}
+
+	// Remove guild from memory
+	removeGuild(guildId);
+}
+
+void Game::invitePlayerToGuild(uint32_t guildId, const std::string &playerName) {
+	if (guildId == 0 || playerName.empty()) {
+		return;
+	}
+
+	IOGuild::invitePlayerToGuild(guildId, playerName);
+}
+
+void Game::removePlayerFromGuild(uint32_t guildId, const std::string &playerName) {
+	if (guildId == 0 || playerName.empty()) {
+		return;
+	}
+
+	IOGuild::removePlayerFromGuild(guildId, playerName);
+}
+
+void Game::promotePlayer(uint32_t guildId, const std::string &playerName) {
+	if (guildId == 0 || playerName.empty()) {
+		return;
+	}
+
+	IOGuild::promotePlayer(guildId, playerName);
+}
+
+void Game::demotePlayer(uint32_t guildId, const std::string &playerName) {
+	if (guildId == 0 || playerName.empty()) {
+		return;
+	}
+
+	IOGuild::demotePlayer(guildId, playerName);
+}
+
+void Game::passLeadership(uint32_t guildId, const std::string &newLeaderName) {
+	if (guildId == 0 || newLeaderName.empty()) {
+		return;
+	}
+
+	IOGuild::passLeadership(guildId, newLeaderName);
+}
+
+void Game::setPlayerGuildNick(uint32_t guildId, const std::string &playerName, const std::string &nick) {
+	if (guildId == 0 || playerName.empty()) {
+		return;
+	}
+
+	IOGuild::setPlayerGuildNick(guildId, playerName, nick);
+}
+
+void Game::setRankName(uint32_t guildId, uint8_t rankLevel, const std::string &newName) {
+	if (guildId == 0 || newName.empty()) {
+		return;
+	}
+
+	IOGuild::setRankName(guildId, rankLevel, newName);
+}
+
+uint32_t Game::createGuild(const std::string &guildName, const std::string &leaderName) {
+	if (guildName.empty() || leaderName.empty()) {
+		return 0;
+	}
+
+	return IOGuild::createGuild(guildName, leaderName);
+}
+
+bool Game::joinGuild(const std::string &guildName, const std::string &playerName) {
+	if (guildName.empty() || playerName.empty()) {
+		return false;
+	}
+
+	return IOGuild::joinGuild(guildName, playerName);
+}
+
 void Game::sendGuildMotd(uint32_t playerId, uint32_t guildId) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
@@ -9391,6 +9476,11 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 			// Do not register a transaction for coins creating an offer
 			player->getAccount()->removeCoins(CoinType::Transferable, static_cast<uint32_t>(amount), "");
 		} else {
+			if (player->getStashItemCount(it.wareId) > 0) {
+				g_logger().debug("[Market] Player {} has item {} in stash, forcing tier 0 for the offer.", player->getName(), itemId);
+				tier = 0;
+			}
+
 			if (!removeOfferItems(player, depotLocker, it, amount, tier, offerStatus)) {
 				g_logger().error("[{}] failed to remove item with id {}, from player {}, errorcode: {}", __FUNCTION__, it.id, player->getName(), offerStatus.str());
 				return;

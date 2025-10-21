@@ -267,6 +267,19 @@ public:
 
 	void setGuildMotd(uint32_t guildId, const std::string &newMotd);
 	void sendGuildMotd(uint32_t playerId, uint32_t guildId);
+
+	// Guild management functions
+	void disbandGuild(uint32_t guildId);
+	void invitePlayerToGuild(uint32_t guildId, const std::string &playerName);
+	void removePlayerFromGuild(uint32_t guildId, const std::string &playerName);
+	void promotePlayer(uint32_t guildId, const std::string &playerName);
+	void demotePlayer(uint32_t guildId, const std::string &playerName);
+	void passLeadership(uint32_t guildId, const std::string &newLeaderName);
+	void setPlayerGuildNick(uint32_t guildId, const std::string &playerName, const std::string &nick);
+	void setRankName(uint32_t guildId, uint8_t rankLevel, const std::string &newName);
+	uint32_t createGuild(const std::string &guildName, const std::string &leaderName);
+	bool joinGuild(const std::string &guildName, const std::string &playerName);
+
 	void kickPlayer(uint32_t playerId, bool displayEffect);
 	void playerReportBug(uint32_t playerId, const std::string &message, const Position &position, uint8_t category);
 	void playerPreyAction(uint32_t playerId, uint8_t slot, uint8_t action, uint8_t option, int8_t index, uint16_t raceId);

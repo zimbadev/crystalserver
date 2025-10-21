@@ -1025,6 +1025,24 @@ void Combat::combatTileEffects(const CreatureVector &spectators, const std::shar
 		ReturnValue ret = g_game().internalAddItem(tile, item);
 		if (ret == RETURNVALUE_NOERROR) {
 			item->startDecaying();
+
+			// Apply field damage immediately when field is created
+			if (item->isMagicField()) {
+				const auto &magicField = item->getMagicField();
+				if (magicField) {
+					// Get creatures on this tile at the same floor level
+					const Position &tilePos = tile->getPosition();
+					const int32_t fieldZ = tilePos.z;
+
+					if (CreatureVector* creatures = tile->getCreatures()) {
+						for (const auto &creature : *creatures) {
+							if (creature->getPosition().z == fieldZ) {
+								magicField->onStepInField(creature);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
