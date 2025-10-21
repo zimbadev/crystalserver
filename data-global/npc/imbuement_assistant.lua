@@ -374,7 +374,7 @@ npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 npcConfig.shop = {
-	{ itemName = "gold-brocaded cloth", clientId = 11489, buy = 175 },
+	{ itemName = "gold-brocaded cloth", clientId = 40529, buy = 175 },
 	{ itemName = "mantassin tail", clientId = 11489, buy = 280 },
 	{ itemName = "tarantula egg", clientId = 10281, buy = 80 },
 	{ itemName = "battle stone", clientId = 11447, buy = 290 },
