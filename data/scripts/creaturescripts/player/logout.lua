@@ -25,6 +25,11 @@ function playerLogout.onLogout(player)
 		_G.OnExerciseTraining[playerId] = nil
 		player:setTraining(false)
 	end
+
+	if _G.TrainingMonkStaminaCooldown and _G.TrainingMonkStaminaCooldown[playerId] then
+		_G.TrainingMonkStaminaCooldown[playerId] = nil
+	end
+
 	return true
 end
 

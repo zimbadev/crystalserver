@@ -73,4 +73,44 @@ monster.elements = {
 
 monster.immunities = {}
 
+if not _G.TrainingMonkStaminaCooldown then
+	_G.TrainingMonkStaminaCooldown = {}
+end
+
+local trainingMonkHealth = CreatureEvent("TrainingMonkHealth")
+function trainingMonkHealth.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
+	if not attacker or not attacker:isPlayer() then
+		return primaryDamage, primaryType, secondaryDamage, secondaryType
+	end
+
+	local player = attacker
+	local playerId = player:getId()
+
+	if not configManager.getBoolean(configKeys.STAMINA_TRAINER) then
+		return primaryDamage, primaryType, secondaryDamage, secondaryType
+	end
+
+	local period = staminaBonus.period
+	local bonus = staminaBonus.bonus
+
+	local currentTime = os.time() * 1000
+	local lastTime = _G.TrainingMonkStaminaCooldown[playerId] or 0
+
+	if (currentTime - lastTime) >= period then
+		local currentStamina = player:getStamina()
+		if currentStamina < 2520 then
+			player:setStamina(currentStamina + bonus)
+			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("You gained %d minute(s) of stamina from training.", bonus))
+			_G.TrainingMonkStaminaCooldown[playerId] = currentTime
+		end
+	end
+
+	return primaryDamage, primaryType, secondaryDamage, secondaryType
+end
+trainingMonkHealth:register()
+
+monster.events = {
+	"TrainingMonkHealth",
+}
+
 mType:register(monster)
