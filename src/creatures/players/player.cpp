@@ -11302,7 +11302,6 @@ void Player::sendMessageDialog(const std::string &message) const {
 }
 
 // Account
-// Account
 
 bool Player::setAccount(uint32_t accountId) {
 	if (account) {

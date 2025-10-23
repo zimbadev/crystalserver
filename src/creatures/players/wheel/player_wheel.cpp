@@ -1188,13 +1188,13 @@ void PlayerWheel::destroyGem(uint16_t index) {
 
 	switch (gem.quality) {
 		case WheelGemQuality_t::Lesser:
-			lesserFragments = normal_random(1, 5);
+			lesserFragments = uniform_random(1, 5);
 			break;
 		case WheelGemQuality_t::Regular:
-			lesserFragments = normal_random(2, 10);
+			lesserFragments = uniform_random(2, 10);
 			break;
 		case WheelGemQuality_t::Greater:
-			greaterFragments = normal_random(1, 5);
+			greaterFragments = uniform_random(1, 5);
 			break;
 	}
 
