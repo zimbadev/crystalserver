@@ -8,7 +8,7 @@ monster.outfit = {
 }
 
 monster.events = {
-    "TrainingStamina"
+	"TrainingStamina",
 }
 
 monster.health = 1000000
