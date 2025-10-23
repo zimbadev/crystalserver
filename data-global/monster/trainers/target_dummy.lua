@@ -7,6 +7,10 @@ monster.outfit = {
 	lookType = 1142,
 }
 
+monster.events = {
+    "TrainingStamina"
+}
+
 monster.health = 1000000
 monster.maxHealth = monster.health
 monster.race = "undead"

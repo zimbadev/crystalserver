@@ -7,6 +7,10 @@ function playerLogout.onLogout(player)
 		_G.NextUseStaminaTime[playerId] = nil
 	end
 
+	if _G.TrainingStaminaGiven then
+		_G.TrainingStaminaGiven[playerId] = nil
+	end
+
 	local stats = player:inBossFight()
 	if stats then
 		local boss = Monster(stats.bossId)
