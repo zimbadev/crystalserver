@@ -80,6 +80,32 @@ function Creature:onTargetCombat(target)
 	end
 
 	self:addEventStamina(target)
+
+	if self:isPlayer() and target:isMonster() then
+		local monsterName = target:getName():lower()
+		if monsterName == "training monk" then
+			local player = self
+			local playerId = player:getId()
+
+			if not _G.TrainingMonkStaminaCooldown then
+				_G.TrainingMonkStaminaCooldown = {}
+			end
+
+			local currentTime = os.time()
+			local lastTime = _G.TrainingMonkStaminaCooldown[playerId] or 0
+			local delay = configManager.getNumber(configKeys.STAMINA_TRAINER_DELAY) * 60
+
+			if currentTime - lastTime >= delay then
+				local currentStamina = player:getStamina()
+				if currentStamina < 2520 then
+					local gain = configManager.getNumber(configKeys.STAMINA_TRAINER_GAIN)
+					player:setStamina(math.min(2520, currentStamina + gain))
+					player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("You gained %d minute(s) of stamina from training.", gain))
+				end
+				_G.TrainingMonkStaminaCooldown[playerId] = currentTime
+			end
+		end
+	end
 	return true
 end
 
