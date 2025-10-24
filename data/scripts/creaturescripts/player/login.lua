@@ -190,15 +190,3 @@ function playerLoginGlobal.onLogin(player)
 end
 
 playerLoginGlobal:register()
-
-local trainingLogout = CreatureEvent("TrainingLogout")
-
-function trainingLogout.onLogout(player)
-	local playerId = player:getId()
-	if _G.TrainingStaminaGiven then
-		_G.TrainingStaminaGiven[playerId] = nil
-	end
-	return true
-end
-
-trainingLogout:register()
