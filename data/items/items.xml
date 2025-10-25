@@ -75596,9 +75596,13 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="attack" value="8" />
 		<attribute key="elementfire" value="46" />
+		<attribute key="manaleechamount" value="300"/>
+		<attribute key="manaleechchance" value="100"/>
+		<attribute key="lifeleechamount" value="600"/>
+		<attribute key="lifeleechchance" value="100"/>
 		<attribute key="extradef" value="3" />
 		<attribute key="defense" value="32" />
-		<attribute key="skillsword" value="5" />
+		<attribute key="skillsword" value="4" />
 		<attribute key="weight" value="6100" />
 		<attribute key="imbuementslot" value="3">
 			<attribute key="life leech" value="3" />
@@ -75624,9 +75628,14 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="attack" value="8" />
 		<attribute key="elementfire" value="46" />
+		<attribute key="slotType" value="two-handed"/>
+		<attribute key="manaleechamount" value="300"/>
+		<attribute key="manaleechchance" value="100"/>
+		<attribute key="lifeleechamount" value="600"/>
+		<attribute key="lifeleechchance" value="100"/>
 		<attribute key="extradef" value="3" />
 		<attribute key="defense" value="32" />
-		<attribute key="skillsword" value="5" />
+		<attribute key="skillsword" value="4" />
 		<attribute key="weight" value="6000" />
 		<attribute key="imbuementslot" value="3">
 			<attribute key="life leech" value="3" />
@@ -75655,9 +75664,13 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="club" />
 		<attribute key="attack" value="8" />
 		<attribute key="elementdeath" value="46" />
+		<attribute key="manaleechamount" value="100"/>
+		<attribute key="manaleechchance" value="100"/>
+		<attribute key="lifeleechamount" value="300"/>
+		<attribute key="lifeleechchance" value="100"/>
 		<attribute key="extradef" value="3" />
 		<attribute key="defense" value="32" />
-		<attribute key="skillclub" value="5" />
+		<attribute key="skillclub" value="4" />
 		<attribute key="weight" value="6900" />
 		<attribute key="imbuementslot" value="3">
 			<attribute key="life leech" value="3" />
@@ -75683,11 +75696,15 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="club" />
 		<attribute key="attack" value="8" />
 		<attribute key="elementdeath" value="46" />
+		<attribute key="manaleechamount" value="100"/>
+		<attribute key="manaleechchance" value="100"/>
+		<attribute key="lifeleechamount" value="300"/>
+		<attribute key="lifeleechchance" value="100"/>
 		<attribute key="extradef" value="3" />
 		<attribute key="defense" value="32" />
-		<attribute key="skillclub" value="5" />
+		<attribute key="skillclub" value="4" />
 		<attribute key="weight" value="6800" />
-		<attribute key="imbuementslot" value="3">
+		<attribute key="imbuementslot" value="2">
 			<attribute key="life leech" value="3" />
 			<attribute key="mana leech" value="3" />
 			<attribute key="critical hit" value="3" />
@@ -75711,11 +75728,15 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="attack" value="8" />
 		<attribute key="elementfire" value="46" />
+		<attribute key="manaleechamount" value="100"/>
+		<attribute key="manaleechchance" value="100"/>
+		<attribute key="lifeleechamount" value="300"/>
+		<attribute key="lifeleechchance" value="100"/>
 		<attribute key="extradef" value="3" />
 		<attribute key="defense" value="32" />
-		<attribute key="skillaxe" value="5" />
+		<attribute key="skillaxe" value="4" />
 		<attribute key="weight" value="7200" />
-		<attribute key="imbuementslot" value="3">
+		<attribute key="imbuementslot" value="2">
 			<attribute key="life leech" value="3" />
 			<attribute key="mana leech" value="3" />
 			<attribute key="critical hit" value="3" />
@@ -75739,11 +75760,15 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="axe" />
 		<attribute key="attack" value="8" />
 		<attribute key="elementfire" value="46" />
+		<attribute key="manaleechamount" value="100"/>
+		<attribute key="manaleechchance" value="100"/>
+		<attribute key="lifeleechamount" value="300"/>
+		<attribute key="lifeleechchance" value="100"/>
 		<attribute key="extradef" value="3" />
 		<attribute key="defense" value="32" />
-		<attribute key="skillaxe" value="5" />
+		<attribute key="skillaxe" value="4" />
 		<attribute key="weight" value="7200" />
-		<attribute key="imbuementslot" value="3">
+		<attribute key="imbuementslot" value="2">
 			<attribute key="life leech" value="3" />
 			<attribute key="mana leech" value="3" />
 			<attribute key="critical hit" value="3" />
@@ -75771,7 +75796,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="criticalhitdamage" value="1000" />
 		<attribute key="attack" value="8" />
 		<attribute key="defense" value="35" />
-		<attribute key="skillsword" value="5" />
+		<attribute key="skillsword" value="4" />
 		<attribute key="weight" value="8100" />
 		<attribute key="imbuementslot" value="3">
 			<attribute key="life leech" value="3" />
@@ -75800,7 +75825,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="criticalhitchance" value="1000" />
 		<attribute key="attack" value="8" />
 		<attribute key="defense" value="35" />
-		<attribute key="skillsword" value="5" />
+		<attribute key="skillsword" value="4" />
 		<attribute key="weight" value="7900" />
 		<attribute key="imbuementslot" value="3">
 			<attribute key="life leech" value="3" />
@@ -75829,7 +75854,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="criticalhitchance" value="1000" />
 		<attribute key="attack" value="8" />
 		<attribute key="defense" value="35" />
-		<attribute key="skillclub" value="5" />
+		<attribute key="skillclub" value="4" />
 		<attribute key="weight" value="9300" />
 		<attribute key="imbuementslot" value="3">
 			<attribute key="life leech" value="3" />
@@ -75858,7 +75883,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="criticalhitchance" value="1000" />
 		<attribute key="attack" value="8" />
 		<attribute key="defense" value="35" />
-		<attribute key="skillclub" value="5" />
+		<attribute key="skillclub" value="4" />
 		<attribute key="weight" value="9100" />
 		<attribute key="imbuementslot" value="3">
 			<attribute key="life leech" value="3" />
@@ -75887,7 +75912,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="criticalhitchance" value="1000" />
 		<attribute key="attack" value="8" />
 		<attribute key="defense" value="35" />
-		<attribute key="skillaxe" value="5" />
+		<attribute key="skillaxe" value="4" />
 		<attribute key="weight" value="8500" />
 		<attribute key="imbuementslot" value="3">
 			<attribute key="life leech" value="3" />
@@ -75916,7 +75941,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="criticalhitchance" value="1000" />
 		<attribute key="attack" value="8" />
 		<attribute key="defense" value="35" />
-		<attribute key="skillaxe" value="5" />
+		<attribute key="skillaxe" value="4" />
 		<attribute key="weight" value="8300" />
 		<attribute key="imbuementslot" value="3">
 			<attribute key="life leech" value="3" />
@@ -75967,7 +75992,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="criticalhitchance" value="1000" />
 		<attribute key="ammotype" value="arrow" />
 		<attribute key="absorbpercentearth" value="6" />
-		<attribute key="skilldist" value="4" />
+		<attribute key="skilldist" value="3" />
 		<attribute key="hitchance" value="6" />
 		<attribute key="range" value="6" />
 		<attribute key="attack" value="9" />
@@ -75999,7 +76024,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="criticalhitchance" value="1000" />
 		<attribute key="ammotype" value="arrow" />
 		<attribute key="absorbpercentearth" value="6" />
-		<attribute key="skilldist" value="4" />
+		<attribute key="skilldist" value="3" />
 		<attribute key="hitchance" value="6" />
 		<attribute key="range" value="6" />
 		<attribute key="attack" value="9" />
@@ -76114,7 +76139,11 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="energy" />
 		<attribute key="absorbpercentearth" value="7" />
-		<attribute key="magiclevelpoints" value="5" />
+		<attribute key="magiclevelpoints" value="4" />
+		<attribute key="manaleechamount" value="100"/>
+		<attribute key="manaleechchance" value="100"/>
+		<attribute key="lifeleechamount" value="200"/>
+		<attribute key="lifeleechchance" value="100"/>
 		<attribute key="firemagiclevelpoints" value="1" />
 		<attribute key="energymagiclevelpoints" value="1" />
 		<attribute key="criticalhitdamage" value="1200" />
@@ -76151,7 +76180,11 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="energy" />
 		<attribute key="absorbpercentearth" value="7" />
-		<attribute key="magiclevelpoints" value="5" />
+		<attribute key="magiclevelpoints" value="4" />
+		<attribute key="manaleechamount" value="100" />
+		<attribute key="manaleechchance" value="100" />
+		<attribute key="lifeleechamount" value="200" />
+		<attribute key="lifeleechchance" value="100" />
 		<attribute key="firemagiclevelpoints" value="1" />
 		<attribute key="energymagiclevelpoints" value="1" />
 		<attribute key="range" value="6" />
@@ -76218,8 +76251,12 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="earth" />
 		<attribute key="absorbpercentdeath" value="7" />
+		<attribute key="manaleechamount" value="100" />
+		<attribute key="manaleechchance" value="100" />
+		<attribute key="lifeleechamount" value="600" />
+		<attribute key="lifeleechchance" value="100" />
 		<attribute key="range" value="6" />
-		<attribute key="magiclevelpoints" value="5" />
+		<attribute key="magiclevelpoints" value="4" />
 		<attribute key="earthmagiclevelpoints" value="1" />
 		<attribute key="icemagiclevelpoints" value="1" />
 		<attribute key="criticalhitdamage" value="500" />
@@ -76255,7 +76292,11 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="wand" />
 		<attribute key="shootType" value="earth" />
 		<attribute key="absorbpercentdeath" value="7" />
-		<attribute key="magiclevelpoints" value="5" />
+		<attribute key="magiclevelpoints" value="4" />
+		<attribute key="manaleechamount" value="100" />
+		<attribute key="manaleechchance" value="100" />
+		<attribute key="lifeleechamount" value="600" />
+		<attribute key="lifeleechchance" value="100" />
 		<attribute key="earthmagiclevelpoints" value="1" />
 		<attribute key="range" value="6" />
 		<attribute key="icemagiclevelpoints" value="1" />
