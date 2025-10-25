@@ -75596,9 +75596,9 @@ Granted by TibiaGoals.com" />
 		<attribute key="weaponType" value="sword" />
 		<attribute key="attack" value="8" />
 		<attribute key="elementfire" value="46" />
-		<attribute key="manaleechamount" value="300"/>
+		<attribute key="manaleechamount" value="100"/>
 		<attribute key="manaleechchance" value="100"/>
-		<attribute key="lifeleechamount" value="600"/>
+		<attribute key="lifeleechamount" value="300"/>
 		<attribute key="lifeleechchance" value="100"/>
 		<attribute key="extradef" value="3" />
 		<attribute key="defense" value="32" />
@@ -75629,9 +75629,9 @@ Granted by TibiaGoals.com" />
 		<attribute key="attack" value="8" />
 		<attribute key="elementfire" value="46" />
 		<attribute key="slotType" value="two-handed"/>
-		<attribute key="manaleechamount" value="300"/>
+		<attribute key="manaleechamount" value="100"/>
 		<attribute key="manaleechchance" value="100"/>
-		<attribute key="lifeleechamount" value="600"/>
+		<attribute key="lifeleechamount" value="300"/>
 		<attribute key="lifeleechchance" value="100"/>
 		<attribute key="extradef" value="3" />
 		<attribute key="defense" value="32" />
