@@ -516,11 +516,16 @@ void Npc::onPlayerSellAllLoot(uint32_t playerId, uint16_t itemId, bool ignore, u
 		auto ss = std::stringstream();
 		if (!madeProgress) {
 			if (totalPrice == 0) {
-				ss << "You have no sellable items in your loot pouch.";
-				player->sendTextMessage(MESSAGE_FAILURE, ss.str());
+				if (preSize > 0) {
+					ss << "You don't have enough space. Free up space in your bag.";
+					player->sendTextMessage(MESSAGE_FAILURE, ss.str());
+				} else {
+					ss << "You have no sellable items in your loot pouch.";
+					player->sendTextMessage(MESSAGE_FAILURE, ss.str());
+				}
 			} else {
 				ss << "Finished selling. Some items in your loot pouch could not be sold.";
-				player->sendTextMessage(MESSAGE_LOOK, ss.str());
+				player->sendTextMessage(MESSAGE_ADMINISTRATOR, ss.str());
 			}
 		} else {
 			if (totalPrice == 0) {
