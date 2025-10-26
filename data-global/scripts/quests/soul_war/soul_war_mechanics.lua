@@ -672,28 +672,44 @@ end
 condensedRemorse:id(SoulWarQuest.condensedRemorseId)
 condensedRemorse:register()
 
+local function removePulsatingEnergy(position, itemId)
+    local tile = Tile(position)
+    if tile then
+        local item = tile:getItemById(itemId)
+        if item then
+            item:remove()
+            position:sendMagicEffect(CONST_ME_POFF)
+        end
+    end
+end
+
 local furiousCraterAccess = EventCallback("FuriousCraterAccessDropLoot")
 
 function furiousCraterAccess.monsterOnDropLoot(monster, corpse)
-	if not monster or not corpse then
-		return
-	end
+    if not monster or not corpse then
+        return
+    end
 
-	local player = Player(corpse:getCorpseOwner())
-	if not player or not player:canReceiveLoot() then
-		return
-	end
+    local player = Player(corpse:getCorpseOwner())
+    if not player or not player:canReceiveLoot() then
+        return
+    end
 
-	local mType = monster:getType()
-	if not mType then
-		return
-	end
+    local mType = monster:getType()
+    if not mType then
+        return
+    end
 
-	if not table.contains(SoulWarQuest.pulsatingEnergyMonsters, mType:getName()) then
-		return
-	end
+    if not table.contains(SoulWarQuest.pulsatingEnergyMonsters, mType:getName()) then
+        return
+    end
 
-	Game.createItem(SoulWarQuest.pulsatingEnergyId, 1, monster:getPosition())
+    local position = monster:getPosition()
+    Game.createItem(SoulWarQuest.pulsatingEnergyId, 1, position)
+
+	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The pulsating energy will disappear in 5 seconds!")
+
+    addEvent(removePulsatingEnergy, 5000, position, SoulWarQuest.pulsatingEnergyId)
 end
 
 furiousCraterAccess:register()
