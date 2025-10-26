@@ -526,6 +526,7 @@ void Npc::onPlayerSellAllLoot(uint32_t playerId, uint16_t itemId, bool ignore, u
 			} else {
 				ss << "Sale stopped. Some items in your loot bag could not be sold. Make sure you have enough space in your bag.";
 				player->sendTextMessage(MESSAGE_ADMINISTRATOR, ss.str());
+				ss.str("");
 				ss.clear();
 				ss << "You sold all of the items from your loot pouch for " << totalPrice << " gold.";
 				player->sendTextMessage(MESSAGE_LOOK, ss.str());
