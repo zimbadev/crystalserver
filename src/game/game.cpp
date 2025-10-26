@@ -3506,7 +3506,7 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 				&& !(it.weaponType == WEAPON_DISTANCE)
 				&& !rightItem->isQuiver()
 				&& (!leftItem || leftItem->getWeaponType() != WEAPON_DISTANCE)
-				&& !it.isQuiver()   /* Allows equipping quiver even with item in right slot */
+				&& !it.isQuiver() /* Allows equipping quiver even with item in right slot */
 			) {
 				ret = internalCollectManagedItems(player, rightItem, getObjectCategory(rightItem), false);
 			}
@@ -3526,17 +3526,17 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 				if (slot == CONST_SLOT_RIGHT && leftItem && leftItem->getSlotPosition() & SLOTP_TWO_HAND) {
 					// Don't unequip distance bow when equipping quiver
 					if (!it.isQuiver() || leftItem->getWeaponType() != WEAPON_DISTANCE) {
-					// Unequip the two-handed weapon from the left slot
-					ret = internalMoveItem(leftItem->getParent(), player, INDEX_WHEREEVER, leftItem, leftItem->getItemCount(), nullptr);
-					if (ret == RETURNVALUE_NOERROR) {
-						g_logger().debug("Two-handed weapon {} was unequipped to equip shield", leftItem->getName());
-					} else {
-						player->sendCancelMessage(ret);
-						return;
+						// Unequip the two-handed weapon from the left slot
+						ret = internalMoveItem(leftItem->getParent(), player, INDEX_WHEREEVER, leftItem, leftItem->getItemCount(), nullptr);
+						if (ret == RETURNVALUE_NOERROR) {
+							g_logger().debug("Two-handed weapon {} was unequipped to equip shield", leftItem->getName());
+						} else {
+							player->sendCancelMessage(ret);
+							return;
+						}
 					}
 				}
 			}
-		}
 
 			if (slotItem) {
 				ret = internalMoveItem(slotItem->getParent(), player, INDEX_WHEREEVER, slotItem, slotItem->getItemCount(), nullptr);
