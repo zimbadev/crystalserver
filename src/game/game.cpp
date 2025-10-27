@@ -3454,7 +3454,7 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 
 	if (player->hasCondition(CONDITION_FEARED)) {
 		/*
-		 *	When player is feared the player can´t equip any items.
+		 *  When player is feared the player can´t equip any items.
 		 */
 		player->sendTextMessage(MESSAGE_FAILURE, "You are feared.");
 		return;
@@ -3497,17 +3497,19 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 
 			const int32_t &slotPosition = equipItem->getSlotPosition();
 
-			// Checks if a two-handed item is being equipped in the left slot when the right slot is already occupied and move to backpack
-			/* BUT allows quiver to be equipped when a distance weapon (bow) is in the left hand */
-			if (
-				(slotPosition & SLOTP_LEFT)
-				&& (slotPosition & SLOTP_TWO_HAND)
-				&& rightItem
-				&& !(it.weaponType == WEAPON_DISTANCE)
-				&& !rightItem->isQuiver()
-				&& (!leftItem || leftItem->getWeaponType() != WEAPON_DISTANCE)
-				&& !it.isQuiver() /* Allows equipping quiver even with item in right slot */
-			) {
+			/* Check if trying to equip a two-handed weapon when shield or other item is equipped */
+			if (slot == CONST_SLOT_LEFT && (slotPosition & SLOTP_TWO_HAND) && rightItem && !rightItem->isQuiver()) {
+				// Remove the shield/item from right slot to make room for two-handed weapon
+				ret = internalCollectManagedItems(player, rightItem, getObjectCategory(rightItem), false);
+				if (ret != RETURNVALUE_NOERROR) {
+					player->sendCancelMessage(ret);
+					return;
+				}
+			}
+
+			/* Checks if a two-handed item is being equipped in the left slot when the right slot is already occupied
+			BUT allows quiver to be equipped when a distance weapon (bow) is in the left hand */
+			if ((slotPosition & SLOTP_LEFT) && (slotPosition & SLOTP_TWO_HAND) && rightItem && !rightItem->isQuiver() && !it.isQuiver()) {
 				ret = internalCollectManagedItems(player, rightItem, getObjectCategory(rightItem), false);
 			}
 
@@ -3525,7 +3527,7 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 				// Check if trying to equip a shield while a two-handed weapon is equipped in the left slot
 				if (slot == CONST_SLOT_RIGHT && leftItem && leftItem->getSlotPosition() & SLOTP_TWO_HAND) {
 					// Don't unequip distance bow when equipping quiver
-					if (!it.isQuiver() || leftItem->getWeaponType() != WEAPON_DISTANCE) {
+					if (!it.isQuiver()) {
 						// Unequip the two-handed weapon from the left slot
 						ret = internalMoveItem(leftItem->getParent(), player, INDEX_WHEREEVER, leftItem, leftItem->getItemCount(), nullptr);
 						if (ret == RETURNVALUE_NOERROR) {
