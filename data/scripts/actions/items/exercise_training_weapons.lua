@@ -53,10 +53,7 @@ local function findTrainingWeaponBySkill(player, currentWeaponId)
 		if container then
 			for slot = 0, container:getSize() - 1 do
 				local item = container:getItem(slot)
-				if item
-					and item:hasAttribute(ITEM_ATTRIBUTE_CHARGES)
-					and item:getAttribute(ITEM_ATTRIBUTE_CHARGES) > 0
-				then
+				if item and item:hasAttribute(ITEM_ATTRIBUTE_CHARGES) and item:getAttribute(ITEM_ATTRIBUTE_CHARGES) > 0 then
 					local itemId = item:getId()
 					local weaponData = exerciseWeaponsTable[itemId]
 					if weaponData and weaponData.skill == targetSkill then
@@ -101,10 +98,7 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 
 	local playerPosition = player:getPosition()
 	if not playerPosition:isProtectionZoneTile() then
-		player:sendTextMessage(
-			MESSAGE_FAILURE,
-			"You are no longer in a protection zone, the training has stopped."
-		)
+		player:sendTextMessage(MESSAGE_FAILURE, "You are no longer in a protection zone, the training has stopped.")
 		leaveExerciseTraining(playerId)
 		return false
 	end
@@ -114,30 +108,21 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 	end
 
 	if _G.OnExerciseTraining[playerId].chargesUsed >= maxChargesPerSession then
-		player:sendTextMessage(
-			MESSAGE_EVENT_ADVANCE,
-			"You have reached the maximum training limit of " .. maxChargesPerSession .. " charges per session."
-		)
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have reached the maximum training limit of " .. maxChargesPerSession .. " charges per session.")
 		leaveExerciseTraining(playerId)
 		return false
 	end
 
 	local currentWeaponId = _G.OnExerciseTraining[playerId].weaponId
 	if player:getItemCount(currentWeaponId) <= 0 then
-		player:sendTextMessage(
-			MESSAGE_FAILURE,
-			"You need the training weapon in the backpack, the training has stopped."
-		)
+		player:sendTextMessage(MESSAGE_FAILURE, "You need the training weapon in the backpack, the training has stopped.")
 		leaveExerciseTraining(playerId)
 		return false
 	end
 
 	local weapon = player:getItemById(currentWeaponId, true)
 	if not weapon:isItem() or not weapon:hasAttribute(ITEM_ATTRIBUTE_CHARGES) then
-		player:sendTextMessage(
-			MESSAGE_FAILURE,
-			"The selected item is not a training weapon, the training has stopped."
-		)
+		player:sendTextMessage(MESSAGE_FAILURE, "The selected item is not a training weapon, the training has stopped.")
 		leaveExerciseTraining(playerId)
 		return false
 	end
@@ -150,29 +135,16 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 		if newWeaponId then
 			_G.OnExerciseTraining[playerId].weaponId = newWeaponId
 			if newWeaponId ~= currentWeaponId then
-				player:sendTextMessage(
-					MESSAGE_EVENT_ADVANCE,
-					"A different training weapon of the same type has been equipped."
-				)
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "A different training weapon of the same type has been equipped.")
 			else
 				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "A new training weapon has been equipped.")
 			end
 
 			local vocation = player:getVocation()
-			_G.OnExerciseTraining[playerId].event = addEvent(
-				exerciseTrainingEvent,
-				vocation:getBaseAttackSpeed() / configManager.getFloat(configKeys.RATE_EXERCISE_TRAINING_SPEED),
-				playerId,
-				tilePosition,
-				newWeaponId,
-				dummyId
-			)
+			_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, vocation:getBaseAttackSpeed() / configManager.getFloat(configKeys.RATE_EXERCISE_TRAINING_SPEED), playerId, tilePosition, newWeaponId, dummyId)
 			return true
 		else
-			player:sendTextMessage(
-				MESSAGE_FAILURE,
-				"You don't have another training weapon of this type. Training has been stopped."
-			)
+			player:sendTextMessage(MESSAGE_FAILURE, "You don't have another training weapon of this type. Training has been stopped.")
 			leaveExerciseTraining(playerId)
 			return false
 		end
@@ -200,14 +172,7 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 	end
 
 	local vocation = player:getVocation()
-	_G.OnExerciseTraining[playerId].event = addEvent(
-		exerciseTrainingEvent,
-		vocation:getBaseAttackSpeed() / configManager.getFloat(configKeys.RATE_EXERCISE_TRAINING_SPEED),
-		playerId,
-		tilePosition,
-		currentWeaponId,
-		dummyId
-	)
+	_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, vocation:getBaseAttackSpeed() / configManager.getFloat(configKeys.RATE_EXERCISE_TRAINING_SPEED), playerId, tilePosition, currentWeaponId, dummyId)
 	return true
 end
 
@@ -266,10 +231,7 @@ function exerciseTraining.onUse(player, item, fromPosition, target, toPosition, 
 		end
 
 		if player:hasExhaustion("training-exhaustion") then
-			player:sendTextMessage(
-				MESSAGE_FAILURE,
-				"This exercise dummy can only be used after a " .. exhaustionTime .. " seconds cooldown."
-			)
+			player:sendTextMessage(MESSAGE_FAILURE, "This exercise dummy can only be used after a " .. exhaustionTime .. " seconds cooldown.")
 			return true
 		end
 
@@ -277,8 +239,7 @@ function exerciseTraining.onUse(player, item, fromPosition, target, toPosition, 
 		_G.OnExerciseTraining[playerId].chargesUsed = 0
 		_G.OnExerciseTraining[playerId].weaponId = item.itemid
 		if not _G.OnExerciseTraining[playerId].event then
-			_G.OnExerciseTraining[playerId].event =
-				addEvent(exerciseTrainingEvent, 0, playerId, targetPos, item.itemid, targetId)
+			_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, 0, playerId, targetPos, item.itemid, targetId)
 			_G.OnExerciseTraining[playerId].dummyPos = targetPos
 			player:setTraining(true)
 			player:setExhaustion("training-exhaustion", exhaustionTime)
