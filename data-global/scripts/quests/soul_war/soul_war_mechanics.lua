@@ -706,9 +706,6 @@ function furiousCraterAccess.monsterOnDropLoot(monster, corpse)
 
 	local position = monster:getPosition()
 	Game.createItem(SoulWarQuest.pulsatingEnergyId, 1, position)
-
-	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The pulsating energy will disappear in 5 seconds!")
-
 	addEvent(removePulsatingEnergy, 5000, position, SoulWarQuest.pulsatingEnergyId)
 end
 
