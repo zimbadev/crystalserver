@@ -1,6 +1,7 @@
 target_sources(${PROJECT_NAME}_lib PRIVATE
     appearance/mounts/mounts.cpp
     appearance/outfit/outfit.cpp
+    appearance/attached_effects/attached_effects.cpp
     combat/combat.cpp
     combat/condition.cpp
     combat/spells.cpp
@@ -23,6 +24,7 @@ target_sources(${PROJECT_NAME}_lib PRIVATE
     players/storages/storages.cpp
     players/player.cpp
     players/achievement/player_achievement.cpp
+    players/attached_effects/player_attached_effects.cpp
     players/cyclopedia/player_badge.cpp
     players/cyclopedia/player_cyclopedia.cpp
     players/cyclopedia/player_title.cpp

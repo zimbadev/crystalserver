@@ -46,6 +46,7 @@ class IOWheel;
 class ItemClassification;
 class Guild;
 class Mounts;
+class AttachedEffects;
 class Spectators;
 class Player;
 class Account;
@@ -731,6 +732,9 @@ public:
 	std::unique_ptr<IOWheel> &getIOWheel();
 	const std::unique_ptr<IOWheel> &getIOWheel() const;
 
+	std::unique_ptr<AttachedEffects> &getAttachedEffects();
+	const std::unique_ptr<AttachedEffects> &getAttachedEffects() const;
+
 	void setTransferPlayerHouseItems(uint32_t houseId, uint32_t playerId);
 	void transferHouseItemsToDepot();
 
@@ -758,6 +762,11 @@ public:
 	const std::map<uint8_t, std::string> &getBlessingNames();
 	const std::unordered_map<uint16_t, std::string> &getHirelingSkills();
 	const std::unordered_map<uint16_t, std::string> &getHirelingOutfits();
+	void sendAttachedEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId);
+	void sendDetachEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId);
+	void updateCreatureShader(const std::shared_ptr<Creature> &creature);
+	void playerSetTyping(uint32_t playerId, uint8_t typing);
+	void refreshItem(const std::shared_ptr<Item> &item);
 
 private:
 	std::map<uint16_t, Achievement> m_achievements;
@@ -970,6 +979,8 @@ private:
 
 	// Variable members (m_)
 	std::unique_ptr<IOWheel> m_IOWheel;
+
+	std::unique_ptr<AttachedEffects> m_attachedEffects;
 
 	void cacheQueryHighscore(const std::string &key, const std::string &query, uint32_t page, uint8_t entriesPerPage);
 	void processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage);
