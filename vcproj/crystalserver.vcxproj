@@ -18,6 +18,7 @@
     <ClInclude Include="..\src\config\configmanager.hpp" />
     <ClInclude Include="..\src\config\config_definitions.hpp" />
     <ClInclude Include="..\src\core.hpp" />
+    <ClInclude Include="..\src\creatures\appearance\attached_effects\attached_effects.hpp" />
     <ClInclude Include="..\src\creatures\appearance\mounts\mounts.hpp" />
     <ClInclude Include="..\src\creatures\appearance\outfit\outfit.hpp" />
     <ClInclude Include="..\src\creatures\combat\combat.hpp" />
@@ -32,6 +33,7 @@
     <ClInclude Include="..\src\creatures\npcs\npc.hpp" />
     <ClInclude Include="..\src\creatures\npcs\npcs.hpp" />
     <ClInclude Include="..\src\creatures\npcs\spawns\spawn_npc.hpp" />
+    <ClInclude Include="..\src\creatures\players\attached_effects\player_attached_effects.hpp" />
     <ClInclude Include="..\src\creatures\players\grouping\familiars.hpp" />
     <ClInclude Include="..\src\creatures\players\grouping\groups.hpp" />
     <ClInclude Include="..\src\creatures\players\grouping\guild.hpp" />
@@ -235,6 +237,7 @@
     <ClCompile Include="..\src\account\account_repository.cpp" />
     <ClCompile Include="..\src\account\account_repository_db.cpp" />
     <ClCompile Include="..\src\config\configmanager.cpp" />
+    <ClCompile Include="..\src\creatures\appearance\attached_effects\attached_effects.cpp" />
     <ClCompile Include="..\src\creatures\appearance\mounts\mounts.cpp" />
     <ClCompile Include="..\src\creatures\appearance\outfit\outfit.cpp" />
     <ClCompile Include="..\src\creatures\combat\combat.cpp" />
@@ -249,6 +252,7 @@
     <ClCompile Include="..\src\creatures\npcs\npcs.cpp" />
     <ClCompile Include="..\src\creatures\npcs\spawns\spawn_npc.cpp" />
     <ClCompile Include="..\src\account\account.cpp" />
+    <ClCompile Include="..\src\creatures\players\attached_effects\player_attached_effects.cpp" />
     <ClCompile Include="..\src\creatures\players\grouping\familiars.cpp" />
     <ClCompile Include="..\src\creatures\players\grouping\groups.cpp" />
     <ClCompile Include="..\src\creatures\players\grouping\guild.cpp" />

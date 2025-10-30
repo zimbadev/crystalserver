@@ -21,6 +21,7 @@
 #include "config/configmanager.hpp"
 #include "core.hpp"
 #include "creatures/appearance/mounts/mounts.hpp"
+#include "creatures/appearance/attached_effects/attached_effects.hpp"
 #include "creatures/combat/condition.hpp"
 #include "creatures/combat/spells.hpp"
 #include "creatures/interactions/chat.hpp"
@@ -347,6 +348,10 @@ void ProtocolGame::AddItem(NetworkMessage &msg, uint16_t id, uint8_t count, uint
 			msg.addByte(0xFF);
 		}
 
+		// OTCR Features
+		if (isOTCR) {
+			msg.addString(""); // g_game.enableFeature(GameItemShader)
+		}
 		return;
 	}
 
@@ -380,6 +385,11 @@ void ProtocolGame::AddItem(NetworkMessage &msg, uint16_t id, uint8_t count, uint
 	if (it.isWrapKit && !oldProtocol) {
 		msg.add<uint16_t>(0x00);
 	}
+
+	// OTCR Features
+	if (isOTCR) {
+		msg.addString(""); // g_game.enableFeature(GameItemShader)
+	}
 }
 
 void ProtocolGame::AddItem(NetworkMessage &msg, const std::shared_ptr<Item> &item) {
@@ -410,6 +420,10 @@ void ProtocolGame::AddItem(NetworkMessage &msg, const std::shared_ptr<Item> &ite
 			msg.addByte(0xFF);
 		}
 
+		// OTCR Features
+		if (isOTCR) {
+			msg.addString(item->getShader()); // g_game.enableFeature(GameItemShader)
+		}
 		return;
 	}
 
@@ -524,6 +538,11 @@ void ProtocolGame::AddItem(NetworkMessage &msg, const std::shared_ptr<Item> &ite
 			msg.add<uint16_t>(0x00);
 		}
 	}
+
+	// OTCR Features
+	if (isOTCR) {
+		msg.addString(item->getShader()); // g_game.enableFeature(GameItemShader)
+	}
 }
 
 void ProtocolGame::release() {
@@ -546,6 +565,9 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 	// Extended opcodes
 	if (operatingSystem >= CLIENTOS_OTCLIENT_LINUX) {
 		isOTC = true;
+		if (isOTC && otclientV8 == 0) {
+			sendOTCRFeatures();
+		}
 		NetworkMessage opcodeMessage;
 		opcodeMessage.addByte(0x32);
 		opcodeMessage.addByte(0x00);
@@ -1108,6 +1130,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 		case 0x32:
 			parseExtendedOpcode(msg);
 			break; // otclient extended opcode
+		case 0x38:
+			parsePlayerTyping(msg); // player are typing or not
+			break;
 		case 0x60:
 			parseInventoryImbuements(msg);
 			break;
@@ -1778,18 +1803,30 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg) {
 		newOutfit.lookAddons = msg.getByte();
 		if (outfitType == 0) {
 			newOutfit.lookMount = msg.get<uint16_t>();
+			bool setMount = false;
 			if (!oldProtocol) {
 				newOutfit.lookMountHead = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookMountBody = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookMountLegs = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookMountFeet = std::min<uint8_t>(132, msg.getByte());
 
-				bool isMounted = msg.getByte();
+				setMount = msg.getByte();
 				newOutfit.lookFamiliarsType = msg.get<uint16_t>();
-				g_logger().debug("Bool isMounted: {}", isMounted);
+			}
 
-				bool randomizeMount = msg.getByte() == 0x01;
-				g_game().playerChangeOutfit(player->getID(), newOutfit, isMounted, randomizeMount);
+			uint8_t isMountRandomized = !oldProtocol ? msg.getByte() : 0;
+			// g_game.enableFeature(GameWingsAurasEffectsShader)
+			newOutfit.lookWing = isOTCR ? msg.get<uint16_t>() : 0;
+			newOutfit.lookAura = isOTCR ? msg.get<uint16_t>() : 0;
+			newOutfit.lookEffect = isOTCR ? msg.get<uint16_t>() : 0;
+			std::string shaderName = isOTCR ? msg.getString() : "";
+			if (!shaderName.empty()) {
+				const auto &shader = g_game().getAttachedEffects()->getShaderByName(shaderName);
+				newOutfit.lookShader = shader ? shader->id : 0;
+			}
+
+			if (!oldProtocol) {
+				g_game().playerChangeOutfit(player->getID(), newOutfit, setMount, isMountRandomized);
 			} else {
 				g_game().playerChangeOutfit(player->getID(), newOutfit, false, 0);
 			}
@@ -2601,6 +2638,11 @@ void ProtocolGame::parseCyclopediaMonsterTracker(NetworkMessage &msg) {
 			player->removeMonsterFromCyclopediaTrackerList(mtype, false, true);
 		}
 	}
+}
+
+void ProtocolGame::parsePlayerTyping(NetworkMessage &msg) {
+	uint8_t typing = msg.getByte();
+	g_dispatcher().addEvent([self = getThis(), playerID = player->getID(), typing] { g_game().playerSetTyping(playerID, typing); }, __FUNCTION__);
 }
 
 void ProtocolGame::sendTeamFinderList() {
@@ -7500,6 +7542,28 @@ void ProtocolGame::sendOutfitWindow() {
 		currentOutfit.lookMount = 0;
 	}
 
+	auto &playerAttachedEffects = player->attachedEffects();
+	// Wings
+	const auto &currentWing = g_game().getAttachedEffects()->getWingByID(playerAttachedEffects.getCurrentWing());
+	if (currentWing) {
+		currentOutfit.lookWing = currentWing->id;
+	}
+	// Auras
+	const auto &currentAura = g_game().getAttachedEffects()->getAuraByID(playerAttachedEffects.getCurrentAura());
+	if (currentAura) {
+		currentOutfit.lookAura = currentAura->id;
+	}
+	// Effects
+	const auto &currentEffect = g_game().getAttachedEffects()->getEffectByID(playerAttachedEffects.getCurrentEffect());
+	if (currentEffect) {
+		currentOutfit.lookEffect = currentEffect->id;
+	}
+	// Shader
+	const auto &currentShader = g_game().getAttachedEffects()->getShaderByID(playerAttachedEffects.getCurrentShader());
+	if (currentShader) {
+		currentOutfit.lookShader = currentShader->id;
+	}
+
 	AddOutfit(msg, currentOutfit);
 
 	if (oldProtocol) {
@@ -7537,6 +7601,10 @@ void ProtocolGame::sendOutfitWindow() {
 		for (const auto &mount : mounts) {
 			msg.add<uint16_t>(mount->clientId);
 			msg.addString(mount->name);
+		}
+
+		if (isOTCR) {
+			sendOutfitWindowCustomOTCR(msg); // g_game.enableFeature(GameWingsAurasEffectsShader)
 		}
 
 		player->hasRequestedOutfit(true);
@@ -7677,6 +7745,10 @@ void ProtocolGame::sendOutfitWindow() {
 
 	// Version 12.81 - Random mount 'bool'
 	msg.addByte(isSupportOutfit ? 0x00 : (player->isRandomMounted() ? 0x01 : 0x00));
+
+	if (isOTCR) {
+		sendOutfitWindowCustomOTCR(msg); // g_game.enableFeature(GameWingsAurasEffectsShader)
+	}
 
 	player->hasRequestedOutfit(true);
 	writeToOutputBuffer(msg);
@@ -8177,6 +8249,14 @@ void ProtocolGame::AddCreature(NetworkMessage &msg, const std::shared_ptr<Creatu
 	}
 
 	msg.addByte(player->canWalkthroughEx(creature) ? 0x00 : 0x01);
+
+	if (isOTCR) {
+		msg.addString(creature->getShader()); // g_game.enableFeature(GameCreatureShader)
+		msg.addByte(static_cast<uint8_t>(creature->getAttachedEffectList().size())); // g_game.enableFeature(GameCreatureAttachedEffect)
+		for (const uint16_t id : creature->getAttachedEffectList()) {
+			msg.add<uint16_t>(id); // g_game.enableFeature(GameCreatureAttachedEffect)
+		}
+	}
 }
 
 void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
@@ -8405,6 +8485,16 @@ void ProtocolGame::AddOutfit(NetworkMessage &msg, const Outfit_t &outfit, bool a
 
 	if (addMount) {
 		msg.add<uint16_t>(outfit.lookMount);
+		if (!oldProtocol && outfit.lookMount != 0) {
+			msg.addByte(outfit.lookMountHead);
+			msg.addByte(outfit.lookMountBody);
+			msg.addByte(outfit.lookMountLegs);
+			msg.addByte(outfit.lookMountFeet);
+		}
+	}
+
+	if (isOTCR) {
+		AddOutfitCustomOTCR(msg, outfit); // g_game.enableFeature(GameWingsAurasEffectsShader)
 	}
 }
 
@@ -8898,6 +8988,26 @@ void ProtocolGame::sendFeatures() {
 	for (const auto &[gameFeature, haveFeature] : features) {
 		msg.addByte(static_cast<uint8_t>(gameFeature));
 		msg.addByte(haveFeature ? 1 : 0);
+	}
+	writeToOutputBuffer(msg);
+}
+
+// OTCR
+void ProtocolGame::sendOTCRFeatures() {
+	isOTCR = true;
+	const auto &enabledFeatures = g_configManager().getEnabledFeaturesOTC();
+	const auto &disabledFeatures = g_configManager().getDisabledFeaturesOTC();
+	NetworkMessage msg;
+	msg.addByte(0x43);
+	auto totalFeatures = static_cast<uint16_t>(enabledFeatures.size() + disabledFeatures.size());
+	msg.add<uint16_t>(totalFeatures);
+	for (auto feature : enabledFeatures) {
+		msg.addByte(static_cast<uint8_t>(feature));
+		msg.addByte(0x01);
+	}
+	for (auto feature : disabledFeatures) {
+		msg.addByte(static_cast<uint8_t>(feature));
+		msg.addByte(0x00);
 	}
 	writeToOutputBuffer(msg);
 }
@@ -9799,6 +9909,155 @@ void ProtocolGame::sendTakeScreenshot(Screenshot_t screenshotType) {
 	msg.addByte(0x75);
 	msg.addByte(screenshotType);
 	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendOutfitWindowCustomOTCR(NetworkMessage &msg) {
+	if (!isOTCR) {
+		return;
+	}
+	// wings
+	auto startWings = msg.getBufferPosition();
+	uint16_t limitWings = std::numeric_limits<uint16_t>::max();
+	uint16_t wingSize = 0;
+	msg.skipBytes(1);
+	const auto &wings = g_game().getAttachedEffects()->getWings();
+	for (const auto &wing : wings) {
+		if (player->attachedEffects().hasWing(wing)) {
+			msg.add<uint16_t>(wing->id);
+			msg.addString(wing->name);
+			++wingSize;
+		}
+		if (wingSize == limitWings) {
+			break;
+		}
+	}
+	auto endWings = msg.getBufferPosition();
+	msg.setBufferPosition(startWings);
+	msg.add<uint8_t>(wingSize);
+	msg.setBufferPosition(endWings);
+	// auras
+	auto startAuras = msg.getBufferPosition();
+	uint16_t limitAuras = std::numeric_limits<uint16_t>::max();
+	uint16_t auraSize = 0;
+	msg.skipBytes(1);
+	const auto &auras = g_game().getAttachedEffects()->getAuras();
+	for (const auto &aura : auras) {
+		if (player->attachedEffects().hasAura(aura)) {
+			msg.add<uint16_t>(aura->id);
+			msg.addString(aura->name);
+			++auraSize;
+		}
+		if (auraSize == limitAuras) {
+			break;
+		}
+	}
+	auto endAuras = msg.getBufferPosition();
+	msg.setBufferPosition(startAuras);
+	msg.add<uint8_t>(auraSize);
+	msg.setBufferPosition(endAuras);
+	// effects
+	auto startEffects = msg.getBufferPosition();
+	uint16_t limitEffects = std::numeric_limits<uint16_t>::max();
+	uint16_t effectSize = 0;
+	msg.skipBytes(1);
+	const auto &effects = g_game().getAttachedEffects()->getEffects();
+	for (const auto &effect : effects) {
+		if (player->attachedEffects().hasEffect(effect)) {
+			msg.add<uint16_t>(effect->id);
+			msg.addString(effect->name);
+			++effectSize;
+		}
+		if (effectSize == limitEffects) {
+			break;
+		}
+	}
+	auto endEffects = msg.getBufferPosition();
+	msg.setBufferPosition(startEffects);
+	msg.add<uint8_t>(effectSize);
+	msg.setBufferPosition(endEffects);
+	// shader
+	std::vector<const Shader*> shaders;
+	for (const auto &shader : g_game().getAttachedEffects()->getShaders()) {
+		if (player->attachedEffects().hasShader(shader.get())) {
+			shaders.push_back(shader.get());
+		}
+	}
+	msg.addByte(static_cast<uint8_t>(shaders.size()));
+	for (const Shader* shader : shaders) {
+		msg.add<uint16_t>(shader->id);
+		msg.addString(shader->name);
+	}
+}
+
+void ProtocolGame::sendAttachedEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x34);
+	msg.add<uint32_t>(creature->getID());
+	msg.add<uint16_t>(effectId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendDetachEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x35);
+	msg.add<uint32_t>(creature->getID());
+	msg.add<uint16_t>(effectId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendShader(const std::shared_ptr<Creature> &creature, const std::string &shaderName) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x36);
+	msg.add<uint32_t>(creature->getID());
+	msg.addString(shaderName);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendMapShader(const std::string &shaderName) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x37);
+	msg.addString(shaderName);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendPlayerTyping(const std::shared_ptr<Creature> &creature, uint8_t typing) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x38);
+	msg.add<uint32_t>(creature->getID());
+	msg.addByte(typing);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::AddOutfitCustomOTCR(NetworkMessage &msg, const Outfit_t &outfit) {
+	if (!isOTCR) {
+		return;
+	}
+
+	msg.add<uint16_t>(outfit.lookWing);
+	msg.add<uint16_t>(outfit.lookAura);
+	msg.add<uint16_t>(outfit.lookEffect);
+	const auto &shader = g_game().getAttachedEffects()->getShaderByID(outfit.lookShader);
+	msg.addString(shader ? shader->name : "");
 }
 
 void ProtocolGame::parseCyclopediaHouseAuction(NetworkMessage &msg) {

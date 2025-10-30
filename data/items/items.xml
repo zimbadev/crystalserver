@@ -76382,6 +76382,20 @@ Granted by TibiaGoals.com" />
 		<attribute key="decayTo" value="0" />
 		<attribute key="duration" value="5" />
 	</item>
+	<item id="44024" name="corpse" name="dead chagorz">
+        <attribute key="containersize" value="8" />
+        <attribute key="decayTo" value="44025" />
+        <attribute key="duration" value="5" />
+    </item>
+	<item id="44025" name="corpse" name="dead chagorz">
+        <attribute key="containersize" value="8" />
+        <attribute key="decayTo" value="44026" />
+        <attribute key="duration" value="5" />
+    </item>
+	<item id="44026" name="corpse" name="dead chagorz">        
+        <attribute key="decayTo" value="0" />
+        <attribute key="duration" value="5" />
+    </item>
 	<item id="44021" article="a" name="dead vemiath">
 		<attribute key="containerSize" value="8" />
 		<attribute key="decayTo" value="44022" />

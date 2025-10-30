@@ -21,6 +21,7 @@
 #include "config/configmanager.hpp"
 #include "core.hpp"
 #include "creatures/appearance/mounts/mounts.hpp"
+#include "creatures/appearance/attached_effects/attached_effects.hpp"
 #include "creatures/combat/combat.hpp"
 #include "creatures/combat/condition.hpp"
 #include "creatures/interactions/chat.hpp"
@@ -84,7 +85,8 @@ Player::Player(std::shared_ptr<ProtocolGame> p) :
 	lastLoad(OTSYS_TIME()),
 	inbox(std::make_shared<Inbox>(ITEM_INBOX)),
 	client(std::move(p)),
-	m_animusMastery(*this) {
+	m_animusMastery(*this),
+	m_playerAttachedEffects(*this) {
 	m_playerVIP = std::make_unique<PlayerVIP>(*this);
 	m_wheelPlayer = std::make_unique<PlayerWheel>(*this);
 	m_playerAchievement = std::make_unique<PlayerAchievement>(*this);
@@ -1291,7 +1293,15 @@ uint16_t Player::getLookCorpse() const {
 
 void Player::addStorageValue(const uint32_t key, const int32_t value, const bool isLogin /* = false*/) {
 	if (IS_IN_KEYRANGE(key, RESERVED_RANGE)) {
-		if (IS_IN_KEYRANGE(key, FAMILIARS_RANGE)) {
+		if (IS_IN_KEYRANGE(key, WING_RANGE)) {
+			// do nothing
+		} else if (IS_IN_KEYRANGE(key, EFFECT_RANGE)) {
+			// do nothing
+		} else if (IS_IN_KEYRANGE(key, AURA_RANGE)) {
+			// do nothing
+		} else if (IS_IN_KEYRANGE(key, SHADER_RANGE)) {
+			// do nothing
+		} else if (IS_IN_KEYRANGE(key, FAMILIARS_RANGE)) {
 			familiars.emplace_back(
 				value >> 16
 			);
@@ -10790,6 +10800,14 @@ void Player::sendLootContainers() const {
 	}
 }
 
+void Player::sendPlayerTyping(const std::shared_ptr<Creature> &creature, uint8_t typing) const {
+	if (!client) {
+		return;
+	}
+
+	client->sendPlayerTyping(creature, typing);
+}
+
 void Player::sendSingleSoundEffect(const Position &pos, SoundEffect_t id, SourceEffect_t source) const {
 	if (client) {
 		client->sendSingleSoundEffect(pos, id, source);
@@ -11495,6 +11513,15 @@ AnimusMastery &Player::animusMastery() {
 
 const AnimusMastery &Player::animusMastery() const {
 	return m_animusMastery;
+}
+
+// Attached Effects interface
+PlayerAttachedEffects &Player::attachedEffects() {
+	return m_playerAttachedEffects;
+}
+
+const PlayerAttachedEffects &Player::attachedEffects() const {
+	return m_playerAttachedEffects;
 }
 
 void Player::sendLootMessage(const std::string &message) const {
