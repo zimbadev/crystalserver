@@ -28,6 +28,7 @@
 #include "server/server_definitions.hpp"
 #include "creatures/players/proficiencies/proficiencies.hpp"
 #include "creatures/players/proficiencies/proficiencies_definitions.hpp"
+#include "creatures/players/attached_effects/player_attached_effects.hpp"
 
 class AnimusMastery;
 class House;
@@ -66,6 +67,10 @@ struct ModalWindow;
 struct Achievement;
 struct VIPGroup;
 struct Mount;
+struct Wing;
+struct Effect;
+struct Shader;
+struct Aura;
 struct OutfitEntry;
 struct Outfit;
 struct FamiliarEntry;
@@ -1459,6 +1464,10 @@ public:
 	AnimusMastery &animusMastery();
 	const AnimusMastery &animusMastery() const;
 
+	// Player attached effects interface
+	PlayerAttachedEffects &attachedEffects();
+	const PlayerAttachedEffects &attachedEffects() const;
+
 	void sendLootMessage(const std::string &message) const;
 
 	std::shared_ptr<Container> getLootPouch();
@@ -1470,6 +1479,8 @@ public:
 	bool canSpeakWithHireling(uint8_t speechbubble);
 
 	uint16_t getPlayerVocationEnum() const;
+
+	void sendPlayerTyping(const std::shared_ptr<Creature> &creature, uint8_t typing) const;
 
 	void resetOldCharms();
 	bool isFirstOnStack() const;
@@ -1872,6 +1883,7 @@ private:
 	friend class PlayerCyclopedia;
 	friend class PlayerTitle;
 	friend class PlayerVIP;
+	friend class PlayerAttachedEffects;
 
 	std::unique_ptr<PlayerWheel> m_wheelPlayer;
 	std::unique_ptr<PlayerAchievement> m_playerAchievement;
@@ -1880,6 +1892,7 @@ private:
 	std::unique_ptr<PlayerTitle> m_playerTitle;
 	std::unique_ptr<PlayerVIP> m_playerVIP;
 	AnimusMastery m_animusMastery;
+	PlayerAttachedEffects m_playerAttachedEffects;
 
 	std::mutex quickLootMutex;
 

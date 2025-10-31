@@ -61,3 +61,39 @@ Before [creating a pull request](https://github.com/zimbadev/crystalserver/pulls
 
 https://github.com/user-attachments/assets/58089db8-c86b-43ed-9601-556af2405a80
 
+### Compiling from Source (Guided Scripts)
+If you prefer to compile the server yourself, you can use one of our guided installer scripts. You only need to download the file that matches your operating system (`crystal_windows_installer.ps1` for Windows, or `linux_installer.sh` for Linux).
+
+#### Windows (PowerShell)
+A guided PowerShell script is available to automate the entire compilation process, including the installation of Git, CMake, and Visual Studio.
+
+1.  Download the `crystal_windows_installer.ps1` script to your computer.
+2.  Right-click your Start menu and select **"Windows Terminal (Admin)"** or **"PowerShell (Admin)"**.
+3.  Due to Windows security, you must first bypass the execution policy *for this session*. Type the following command and press Enter:
+    ```powershell
+    Set-ExecutionPolicy Bypass -Scope Process
+    ```
+4.  Navigate to the script's location (e.g., your Desktop):
+    ```powershell
+    cd C:\Users\YourUser\Desktop
+    ```
+5.  Run the installer:
+    ```powershell
+    .\crystal_windows_installer.ps1
+    ```
+6.  The script will automatically set the correct policy for future runs and guide you through the language, branch, and installation steps.
+
+#### Linux (Bash)
+A guided Bash script is available for most modern distributions (Debian/Ubuntu, Arch, Fedora).
+
+1.  Download the `linux_installer.sh` script.
+2.  Open your terminal and navigate to the script's location.
+3.  Make the script executable:
+    ```bash
+    chmod +x linux_installer.sh
+    ```
+4.  Run the installer (do **not** use `sudo` to run the script itself):
+    ```bash
+    ./linux_installer.sh
+    ```
+5.  The script will guide you through the process and will only ask for your password (via `sudo`) when it needs to install system packages.

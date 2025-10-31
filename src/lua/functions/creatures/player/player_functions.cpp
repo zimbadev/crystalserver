@@ -450,6 +450,12 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "onClearAllImbuementsOnEtcher", PlayerFunctions::luaPlayerOnClearAllImbuementsOnEtcher);
 	Lua::registerMethod(L, "Player", "sendWeaponProficiencyExperience", PlayerFunctions::luaPlayerSendWeaponProficiencyExperience);
 
+	// OTCR Features
+	Lua::registerMethod(L, "Player", "getMapShader", PlayerFunctions::luaPlayerGetMapShader);
+	Lua::registerMethod(L, "Player", "setMapShader", PlayerFunctions::luaPlayerSetMapShader);
+	Lua::registerMethod(L, "Player", "removeCustomOutfit", PlayerFunctions::luaPlayerRemoveCustomOutfit);
+	Lua::registerMethod(L, "Player", "addCustomOutfit", PlayerFunctions::luaPlayerAddCustomOutfit);
+
 	GroupFunctions::init(L);
 	GuildFunctions::init(L);
 	MountFunctions::init(L);
@@ -5356,5 +5362,77 @@ int PlayerFunctions::luaPlayerSendWeaponProficiencyExperience(lua_State* L) {
 
 	player->sendWeaponProficiencyExperience(itemId, addProficiencyExperience);
 	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetMapShader(lua_State* L) {
+	// player:getMapShader()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 0;
+	}
+
+	Lua::pushString(L, player->attachedEffects().getMapShader());
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetMapShader(lua_State* L) {
+	// player:setMapShader(shaderName, [temporary])
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 0;
+	}
+	const auto shaderName = Lua::getString(L, 2);
+	player->attachedEffects().setMapShader(shaderName);
+	player->attachedEffects().sendMapShader(shaderName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerAddCustomOutfit(lua_State* L) {
+	// player:addCustomOutfit(type, id or name)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 0;
+	}
+
+	std::string type = Lua::getString(L, 2);
+	std::variant<uint16_t, std::string> idOrName;
+
+	if (Lua::isNumber(L, 3)) {
+		idOrName = Lua::getNumber<uint16_t>(L, 3);
+	} else {
+		idOrName = Lua::getString(L, 3);
+	}
+
+	Lua::pushBoolean(L, player->attachedEffects().addCustomOutfit(type, idOrName));
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerRemoveCustomOutfit(lua_State* L) {
+	// player:removeCustomOutfit(type, id or name)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 0;
+	}
+
+	std::string type = Lua::getString(L, 2);
+	std::variant<uint16_t, std::string> idOrName;
+
+	if (Lua::isNumber(L, 3)) {
+		idOrName = Lua::getNumber<uint16_t>(L, 3);
+	} else {
+		idOrName = Lua::getString(L, 3);
+	}
+
+	Lua::pushBoolean(L, player->attachedEffects().removeCustomOutfit(type, idOrName));
 	return 1;
 }

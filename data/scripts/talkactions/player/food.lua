@@ -2,7 +2,7 @@ local food = TalkAction("!food")
 
 local config = {
 	price = 1000,
-	itemId = 3731,
+	itemId = 3725, --Brown Mushroom
 	quantity = 100,
 }
 
