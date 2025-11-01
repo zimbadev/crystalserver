@@ -1841,30 +1841,31 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg) {
 		newOutfit.lookAddons = msg.getByte();
 		if (outfitType == 0) {
 			newOutfit.lookMount = msg.get<uint16_t>();
-			bool setMount = false;
 			if (!oldProtocol) {
 				newOutfit.lookMountHead = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookMountBody = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookMountLegs = std::min<uint8_t>(132, msg.getByte());
 				newOutfit.lookMountFeet = std::min<uint8_t>(132, msg.getByte());
 
-				setMount = msg.getByte();
+				bool isMounted = msg.getByte();
 				newOutfit.lookFamiliarsType = msg.get<uint16_t>();
-			}
+				g_logger().debug("Bool isMounted: {}", isMounted);
 
-			uint8_t isMountRandomized = !oldProtocol ? msg.getByte() : 0;
-			// g_game.enableFeature(GameWingsAurasEffectsShader)
-			newOutfit.lookWing = isOTCR ? msg.get<uint16_t>() : 0;
-			newOutfit.lookAura = isOTCR ? msg.get<uint16_t>() : 0;
-			newOutfit.lookEffect = isOTCR ? msg.get<uint16_t>() : 0;
-			std::string shaderName = isOTCR ? msg.getString() : "";
-			if (!shaderName.empty()) {
-				const auto &shader = g_game().getAttachedEffects()->getShaderByName(shaderName);
-				newOutfit.lookShader = shader ? shader->id : 0;
-			}
+				bool randomizeMount = msg.getByte() == 0x01;
 
-			if (!oldProtocol) {
-				g_game().playerChangeOutfit(player->getID(), newOutfit, setMount, isMountRandomized);
+				if (isOTCR) {
+					// g_game.enableFeature(GameWingsAurasEffectsShader)
+					newOutfit.lookWing = msg.get<uint16_t>();
+					newOutfit.lookAura = msg.get<uint16_t>();
+					newOutfit.lookEffect =  msg.get<uint16_t>();
+					std::string shaderName = msg.getString();
+					if (!shaderName.empty()) {
+						const auto &shader = g_game().getAttachedEffects()->getShaderByName(shaderName);
+						newOutfit.lookShader = shader ? shader->id : 0;
+					}
+				}
+
+				g_game().playerChangeOutfit(player->getID(), newOutfit, isMounted, randomizeMount);
 			} else {
 				g_game().playerChangeOutfit(player->getID(), newOutfit, false, 0);
 			}
@@ -7678,12 +7679,11 @@ void ProtocolGame::sendOutfitWindow() {
 		return;
 	}
 
-	if (currentOutfit.lookMount == 0) {
-		msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountHead);
-		msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountBody);
-		msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountLegs);
-		msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountFeet);
-	}
+	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountHead);
+	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountBody);
+	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountLegs);
+	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountFeet);
+
 	msg.add<uint16_t>(currentOutfit.lookFamiliarsType);
 
 	auto startOutfits = msg.getBufferPosition();
@@ -8553,12 +8553,6 @@ void ProtocolGame::AddOutfit(NetworkMessage &msg, const Outfit_t &outfit, bool a
 
 	if (addMount) {
 		msg.add<uint16_t>(outfit.lookMount);
-		if (!oldProtocol && outfit.lookMount != 0) {
-			msg.addByte(outfit.lookMountHead);
-			msg.addByte(outfit.lookMountBody);
-			msg.addByte(outfit.lookMountLegs);
-			msg.addByte(outfit.lookMountFeet);
-		}
 	}
 
 	if (isOTCR) {
