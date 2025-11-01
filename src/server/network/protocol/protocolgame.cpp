@@ -7612,10 +7612,12 @@ void ProtocolGame::sendOutfitWindow() {
 		return;
 	}
 
-	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountHead);
-	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountBody);
-	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountLegs);
-	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountFeet);
+	if (currentOutfit.lookMount == 0) {
+		msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountHead);
+		msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountBody);
+		msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountLegs);
+		msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountFeet);
+	}
 	msg.add<uint16_t>(currentOutfit.lookFamiliarsType);
 
 	auto startOutfits = msg.getBufferPosition();
