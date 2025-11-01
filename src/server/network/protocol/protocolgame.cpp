@@ -1383,24 +1383,24 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 		case 0xCF:
 			sendBlessingWindow();
 			break;
-                case 0xD2: {
-                        uint16_t startBufferPosition = msg.getBufferPosition();
-                        const auto &outfitModule = g_modules().getEventByRecvbyte(0xD2, false);
-                        if (outfitModule) {
-                                outfitModule->executeOnRecvbyte(player, msg);
-                        }
-                        if (msg.getBufferPosition() == startBufferPosition) {
-                                uint32_t creatureId = 0;
-                                if (!oldProtocol) {
-                                        auto availableBytes = static_cast<int32_t>(msg.getLength() - msg.getBufferPosition());
-                                        if (availableBytes >= static_cast<int32_t>(sizeof(uint32_t))) {
-                                                creatureId = msg.get<uint32_t>();
-                                        }
-                                }
-                                g_game().playerRequestOutfit(player->getID(), creatureId);
-                        }
-                        break;
-                }
+		case 0xD2: {
+			uint16_t startBufferPosition = msg.getBufferPosition();
+			const auto &outfitModule = g_modules().getEventByRecvbyte(0xD2, false);
+			if (outfitModule) {
+				outfitModule->executeOnRecvbyte(player, msg);
+			}
+			if (msg.getBufferPosition() == startBufferPosition) {
+				uint32_t creatureId = 0;
+				if (!oldProtocol) {
+					auto availableBytes = static_cast<int32_t>(msg.getLength() - msg.getBufferPosition());
+					if (availableBytes >= static_cast<int32_t>(sizeof(uint32_t))) {
+						creatureId = msg.get<uint32_t>();
+					}
+				}
+				g_game().playerRequestOutfit(player->getID(), creatureId);
+			}
+			break;
+		}
 		case 0xD3: {
 			uint16_t startBufferPosition = msg.getBufferPosition();
 			const auto &outfitModule = g_modules().getEventByRecvbyte(0xD3, false);
