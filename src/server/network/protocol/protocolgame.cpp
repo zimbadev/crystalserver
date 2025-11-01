@@ -1383,17 +1383,24 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 		case 0xCF:
 			sendBlessingWindow();
 			break;
-		case 0xD2: {
-			uint16_t startBufferPosition = msg.getBufferPosition();
-			const auto &outfitModule = g_modules().getEventByRecvbyte(0xD2, false);
-			if (outfitModule) {
-				outfitModule->executeOnRecvbyte(player, msg);
-			}
-			if (msg.getBufferPosition() == startBufferPosition) {
-				g_game().playerRequestOutfit(player->getID());
-			}
-			break;
-		}
+                case 0xD2: {
+                        uint16_t startBufferPosition = msg.getBufferPosition();
+                        const auto &outfitModule = g_modules().getEventByRecvbyte(0xD2, false);
+                        if (outfitModule) {
+                                outfitModule->executeOnRecvbyte(player, msg);
+                        }
+                        if (msg.getBufferPosition() == startBufferPosition) {
+                                uint32_t creatureId = 0;
+                                if (!oldProtocol) {
+                                        auto availableBytes = static_cast<int32_t>(msg.getLength() - msg.getBufferPosition());
+                                        if (availableBytes >= static_cast<int32_t>(sizeof(uint32_t))) {
+                                                creatureId = msg.get<uint32_t>();
+                                        }
+                                }
+                                g_game().playerRequestOutfit(player->getID(), creatureId);
+                        }
+                        break;
+                }
 		case 0xD3: {
 			uint16_t startBufferPosition = msg.getBufferPosition();
 			const auto &outfitModule = g_modules().getEventByRecvbyte(0xD3, false);
@@ -1809,7 +1816,26 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg) {
 	}
 
 	if (msg.getBufferPosition() == startBufferPosition) {
-		uint8_t outfitType = !oldProtocol ? msg.getByte() : 0;
+		uint32_t creatureId = 0;
+		uint8_t outfitType = 0;
+		if (!oldProtocol) {
+			auto availableBytes = static_cast<int32_t>(msg.getLength() - msg.getBufferPosition());
+			if (availableBytes >= static_cast<int32_t>(sizeof(uint32_t) + sizeof(uint8_t))) {
+				creatureId = msg.get<uint32_t>();
+			}
+
+			if (creatureId != 0 && creatureId != player->getID()) {
+				return;
+			}
+
+			if (player->getOutfitWindowTargetId() != 0 && creatureId != 0
+			    && creatureId != player->getOutfitWindowTargetId()) {
+				return;
+			}
+
+			outfitType = msg.getByte();
+		}
+
 		Outfit_t newOutfit;
 		newOutfit.lookType = msg.get<uint16_t>();
 		newOutfit.lookHead = std::min<uint8_t>(132, msg.getByte());
@@ -7543,6 +7569,14 @@ void ProtocolGame::sendHouseWindow(uint32_t windowTextId, const std::string &tex
 void ProtocolGame::sendOutfitWindow() {
 	NetworkMessage msg;
 	msg.addByte(0xC8);
+
+	if (!oldProtocol) {
+		uint32_t creatureId = player->getOutfitWindowTargetId();
+		if (creatureId == 0) {
+			creatureId = player->getID();
+		}
+		msg.add<uint32_t>(creatureId);
+	}
 
 	Outfit_t currentOutfit = player->getDefaultOutfit();
 	auto isSupportOutfit = player->isWearingSupportOutfit();

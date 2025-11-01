@@ -2474,10 +2474,19 @@ void Player::sendExperienceTracker(int64_t rawExp, int64_t finalExp) const {
 	}
 }
 
-void Player::sendOutfitWindow() const {
-	if (client) {
-		client->sendOutfitWindow();
+void Player::sendOutfitWindow(uint32_t creatureId) {
+	if (!client) {
+		return;
 	}
+
+	outfitWindowTargetId = creatureId != 0 ? creatureId : getID();
+
+	client->sendOutfitWindow();
+}
+
+
+uint32_t Player::getOutfitWindowTargetId() const {
+	return outfitWindowTargetId;
 }
 
 // House auction

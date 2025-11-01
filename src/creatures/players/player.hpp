@@ -950,7 +950,8 @@ public:
 	void sendChannelsDialog() const;
 	void sendOpenPrivateChannel(const std::string &receiver) const;
 	void sendExperienceTracker(int64_t rawExp, int64_t finalExp) const;
-	void sendOutfitWindow() const;
+	void sendOutfitWindow(uint32_t creatureId = 0);
+	uint32_t getOutfitWindowTargetId() const;
 
 	// House Auction
 	BidErrorMessage canBidHouse(uint32_t houseId);
@@ -1712,6 +1713,7 @@ private:
 	bool requestedOutfit = false;
 	bool outfitAttributes = false;
 	bool mountAttributes = false;
+	uint32_t outfitWindowTargetId = 0;
 
 	// Hazard system
 	int64_t lastHazardSystemCriticalHit = 0;

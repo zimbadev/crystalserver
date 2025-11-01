@@ -6230,23 +6230,32 @@ void Game::playerTurn(uint32_t playerId, Direction dir) {
 	internalCreatureTurn(player, dir);
 }
 
-void Game::playerRequestOutfit(uint32_t playerId) {
-	if (!g_configManager().getBoolean(ALLOW_CHANGEOUTFIT)) {
-		return;
-	}
+void Game::playerRequestOutfit(uint32_t playerId, uint32_t creatureId /* = 0 */) {
+        if (!g_configManager().getBoolean(ALLOW_CHANGEOUTFIT)) {
+                return;
+        }
 
-	const auto &player = getPlayerByID(playerId);
-	if (!player) {
-		return;
-	}
+        const auto &player = getPlayerByID(playerId);
+        if (!player) {
+                return;
+        }
 
-	if (!player->canDoExAction()) {
-		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
-		return;
-	}
+        if (!player->canDoExAction()) {
+                player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
+                return;
+        }
 
-	player->sendOutfitWindow();
-	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
+        uint32_t outfitTargetId = 0;
+        if (creatureId != 0 && creatureId != player->getID()) {
+                const auto &creature = getCreatureByID(creatureId);
+                if (creature && !creature->isRemoved() && player->canSeeCreature(creature)
+                    && player->canSee(creature->getPosition()) && !creature->getPlayer()) {
+                        outfitTargetId = creatureId;
+                }
+        }
+
+        player->sendOutfitWindow(outfitTargetId);
+        player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
 void Game::playerToggleMount(uint32_t playerId, bool mount) {
