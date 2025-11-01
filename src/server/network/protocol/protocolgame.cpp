@@ -1857,7 +1857,7 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg) {
 					// g_game.enableFeature(GameWingsAurasEffectsShader)
 					newOutfit.lookWing = msg.get<uint16_t>();
 					newOutfit.lookAura = msg.get<uint16_t>();
-					newOutfit.lookEffect =  msg.get<uint16_t>();
+					newOutfit.lookEffect = msg.get<uint16_t>();
 					std::string shaderName = msg.getString();
 					if (!shaderName.empty()) {
 						const auto &shader = g_game().getAttachedEffects()->getShaderByName(shaderName);
