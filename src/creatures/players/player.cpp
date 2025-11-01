@@ -2484,7 +2484,6 @@ void Player::sendOutfitWindow(uint32_t creatureId) {
 	client->sendOutfitWindow();
 }
 
-
 uint32_t Player::getOutfitWindowTargetId() const {
 	return outfitWindowTargetId;
 }
