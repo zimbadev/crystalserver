@@ -119,7 +119,8 @@ std::string ItemType::getFormattedAugmentDescription(const std::shared_ptr<Augme
 		return fmt::format("{} -> {:+}% {} {}", augmentSpellNameCapitalized, augmentInfo->value, augmentName, spell ? (spell->getGroup() == SPELLGROUP_HEALING ? "healing" : "damage") : "unknown");
 	}
 
-	return fmt::format("{} -> {:+}% {}", augmentSpellNameCapitalized, augmentInfo->value, augmentName);
+	const double percent = augmentInfo->value / 100.0;
+	return fmt::format("{} -> {:+}% {}", augmentSpellNameCapitalized, percent, augmentName);
 }
 
 void ItemType::addAugment(std::string spellName, Augment_t augmentType, int32_t value) {
@@ -144,6 +145,8 @@ bool Items::reload() {
 
 void Items::loadFromProtobuf() {
 	using namespace Crystal::protobuf::appearances;
+
+	uint16_t countProficiencyItems = 0;
 
 	bool supportAnimation = g_configManager().getBoolean(OLD_PROTOCOL);
 	for (uint32_t it = 0; it < g_game().m_appearancesPtr->object_size(); ++it) {
@@ -251,10 +254,19 @@ void Items::loadFromProtobuf() {
 		iType.expireStop = object.flags().expirestop();
 		iType.isWrapKit = object.flags().wrapkit();
 
+		if (object.flags().proficiency().has_proficiency_id()) {
+			iType.proficiencyId = static_cast<uint32_t>(object.flags().proficiency().proficiency_id());
+			countProficiencyItems++;
+		} else {
+			iType.proficiencyId = 0;
+		}
+
 		if (!iType.name.empty()) {
 			nameToItems.insert({ asLowerCaseString(iType.name), iType.id });
 		}
 	}
+
+	g_logger().info("Loaded {} items with proficiency.", countProficiencyItems);
 
 	items.shrink_to_fit();
 }

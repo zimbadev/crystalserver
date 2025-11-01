@@ -422,6 +422,10 @@ class PlayerFunctions {
 	static int luaPlayerGetVirtue(lua_State* L);
 	static int luaPlayerSetVirtue(lua_State* L);
 
+	static int luaPlayerApplyImbuementScrollToItem(lua_State* L);
+	static int luaPlayerOnClearAllImbuementsOnEtcher(lua_State* L);
+	static int luaPlayerSendWeaponProficiencyExperience(lua_State* L);
+
 	static int luaPlayerGetMapShader(lua_State* L);
 	static int luaPlayerSetMapShader(lua_State* L);
 	static int luaPlayerAddCustomOutfit(lua_State* L);

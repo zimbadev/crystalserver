@@ -76,6 +76,8 @@
 #include "map/spectators.hpp"
 #include "creatures/players/vocations/vocation.hpp"
 #include "creatures/players/wheel/wheel_definitions.hpp"
+#include "creatures/players/proficiencies/proficiencies.hpp"
+#include "creatures/players/proficiencies/proficiencies_definitions.hpp"
 
 MuteCountMap Player::muteCountMap;
 
@@ -645,13 +647,13 @@ int32_t Player::getDefense(bool sendToClient /* = false*/) const {
 	getShieldAndWeapon(shield, weapon);
 
 	if (weapon) {
-		defenseValue = weapon->getDefense() + weapon->getExtraDefense();
+		defenseValue = (weapon->getDefense() + equippedWeaponProficiency.defense) + (weapon->getExtraDefense() + equippedWeaponProficiency.weaponShieldMod);
 		defenseSkill = getWeaponSkill(weapon);
 	}
 
 	if (shield) {
 		defenseValue = (weapon != nullptr)
-			? shield->getDefense() + weapon->getExtraDefense()
+			? shield->getDefense() + (weapon->getExtraDefense() + equippedWeaponProficiency.weaponShieldMod)
 			: shield->getDefense();
 		// Wheel of destiny - Combat Mastery
 		if (shield->getDefense() > 0) {
@@ -682,11 +684,11 @@ uint16_t Player::getDefenseEquipment() const {
 	getShieldAndWeapon(shield, weapon);
 
 	if (weapon) {
-		defenseValue = weapon->getDefense() + weapon->getExtraDefense();
+		defenseValue = (weapon->getDefense() + equippedWeaponProficiency.defense) + (weapon->getExtraDefense() + equippedWeaponProficiency.weaponShieldMod);
 	}
 
 	if (shield) {
-		defenseValue = weapon != nullptr ? shield->getDefense() + weapon->getExtraDefense() : shield->getDefense();
+		defenseValue = weapon != nullptr ? (shield->getDefense() + equippedWeaponProficiency.defense) + (weapon->getExtraDefense() + equippedWeaponProficiency.weaponShieldMod) : shield->getDefense();
 		if (shield->getDefense() > 0) {
 			defenseValue += wheel()->getMajorStatConditional("Combat Mastery", WheelMajor_t::DEFENSE);
 		}
@@ -2499,34 +2501,45 @@ void Player::sendHouseAuctionMessage(uint32_t houseId, HouseAuctionType type, ui
 
 // Imbuements
 
-void Player::onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<Item> &item, uint8_t slot, bool protectionCharm) {
+void Player::onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<Item> &item, uint8_t slot) {
 	if (!imbuement || !item) {
 		return;
 	}
 
-	auto itemSlots = item->getImbuementSlot();
-	if (slot >= itemSlots) {
-		g_logger().error("[Player::onApplyImbuement] - Player {} attempted to apply imbuement in an invalid slot ({})", this->getName(), slot);
-		this->sendImbuementResult("Invalid slot selection.");
-		return;
-	}
+	const auto &thisPlayer = getPlayer();
+	bool canAddImbuement = false;
 
-	ImbuementInfo imbuementInfo;
-	if (item->getImbuementInfo(slot, &imbuementInfo)) {
-		g_logger().error("[Player::onApplyImbuement] - An error occurred while player with name {} try to apply imbuement, item already contains imbuement", this->getName());
-		this->sendImbuementResult("An error ocurred, please reopen imbuement window.");
-		return;
-	}
-
-	for (uint8_t i = 0; i < item->getImbuementSlot(); i++) {
-		if (i == slot) {
-			continue;
+	const auto itemId = item->getID();
+	if (itemId != ITEM_BLANK_IMBUEMENT_SCROLL) {
+		canAddImbuement = item->canAddImbuement(slot, thisPlayer, imbuement);
+		if (!canAddImbuement) {
+			return;
 		}
-		ImbuementInfo existingImbuement;
-		if (item->getImbuementInfo(i, &existingImbuement) && existingImbuement.imbuement) {
-			if (existingImbuement.imbuement->getName() == imbuement->getName()) {
-				g_logger().error("[Player::onApplyImbuement] - Player {} attempted to apply the same imbuement in multiple slots", this->getName());
-				this->sendImbuementResult("You cannot apply the same imbuement in multiple slots.");
+
+		ImbuementInfo imbuementInfo;
+		if (item->getImbuementInfo(slot, &imbuementInfo)) {
+			g_logger().error("[Player::onApplyImbuement] - An error occurred while player with name {} try to apply imbuement, item already contains imbuement", this->getName());
+			this->sendImbuementResult("An error ocurred, please reopen imbuement window.");
+			return;
+		}
+
+		for (uint8_t i = 0; i < item->getImbuementSlot(); i++) {
+			if (i == slot) {
+				continue;
+			}
+
+			ImbuementInfo existingImbuement;
+			if (item->getImbuementInfo(i, &existingImbuement) && existingImbuement.imbuement) {
+				if (existingImbuement.imbuement->getName() == imbuement->getName()) {
+					g_logger().error("[{}] - Player {} attempted to apply the same imbuement in multiple slots", __FUNCTION__, this->getName());
+					this->sendImbuementResult("You cannot apply the same imbuement in multiple slots.");
+					return;
+				}
+			}
+
+			if (imbuementInfo.imbuement == imbuement) {
+				g_logger().error("[Player::onApplyImbuement] - Duplicate imbuement application detected for '{}'", imbuement->getName());
+				sendImbuementResult("This imbuement is already applied to this item.");
 				return;
 			}
 		}
@@ -2535,10 +2548,15 @@ void Player::onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<
 	const auto &items = imbuement->getItems();
 	for (auto &[key, value] : items) {
 		const ItemType &itemType = Item::items[key];
-		if (static_self_cast<Player>()->getItemTypeCount(key) + this->getStashItemCount(itemType.id) < value) {
+		if (getItemTypeCount(key) + this->getStashItemCount(itemType.id) < value) {
 			this->sendImbuementResult("You don't have all necessary items.");
 			return;
 		}
+	}
+
+	if (itemId == ITEM_BLANK_IMBUEMENT_SCROLL && getItemTypeCount(itemId) < 1) {
+		this->sendImbuementResult("You don't have a blank imbuement scroll.");
+		return;
 	}
 
 	const BaseImbuement* baseImbuement = g_imbuements().getBaseByID(imbuement->getBaseID());
@@ -2547,12 +2565,19 @@ void Player::onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<
 	}
 
 	uint32_t price = baseImbuement->price;
-	price += protectionCharm ? baseImbuement->protectionPrice : 0;
 
-	if (!g_game().removeMoney(static_self_cast<Player>(), price, 0, true)) {
+	if ((getMoney() + getBankBalance()) < price) {
+		const std::string &message = fmt::format("You don't have {} gold coins.", price);
+
+		g_logger().error("[{}] - An error occurred while player with name {} try to apply imbuement, player do not have money", __FUNCTION__, this->getName());
+		sendImbuementResult(message);
+		return;
+	}
+
+	if (!g_game().removeMoney(thisPlayer, price, 0, true)) {
 		const std::string message = fmt::format("You don't have {} gold coins.", price);
 
-		g_logger().error("[Player::onApplyImbuement] - An error occurred while player with name {} try to apply imbuement, player do not have money", this->getName());
+		g_logger().error("[{}] - An error occurred while player with name {} try to apply imbuement, player do not have money", __FUNCTION__, this->getName());
 		sendImbuementResult(message);
 		return;
 	}
@@ -2575,31 +2600,30 @@ void Player::onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<
 
 		const ItemType &itemType = Item::items[key];
 
-		withdrawItemMessage << "Using " << mathItemCount << "x " << itemType.name << " from your supply stash. ";
+		withdrawItemMessage << "Using " << mathItemCount << "x " << itemType.name << " from your stash. ";
 		withdrawItem(itemType.id, mathItemCount);
 		sendTextMessage(MESSAGE_STATUS, withdrawItemMessage.str());
 	}
 
-	if (!protectionCharm && uniform_random(1, 100) > baseImbuement->percent) {
-		openImbuementWindow(item);
-		sendImbuementResult("Oh no!\n\nThe imbuement has failed. You have lost the astral sources and gold you needed for the imbuement.\n\nNext time use a protection charm to better your chances.");
-		openImbuementWindow(item);
-		return;
+	if (itemId != ITEM_BLANK_IMBUEMENT_SCROLL) {
+		if (canAddImbuement) {
+			item->setImbuement(slot, imbuement->getID(), baseImbuement->duration);
+			// Update imbuement stats item if the item is equipped
+			if (item->getParent() == thisPlayer) {
+				addItemImbuementStats(imbuement);
+				updateImbuementTrackerStats();
+			}
+		}
+
+		openImbuementWindow(IMBUEMENT_WINDOW_CHOICE);
+	} else {
+		onApplyImbuementOnScroll(imbuement);
+		this->sendImbuementResult("Congratulations! You have successfully imbued your item.");
+		openImbuementWindow(IMBUEMENT_WINDOW_SCROLL, item);
 	}
 
-	if (!item->addImbuement(slot, imbuement->getID(), baseImbuement->duration)) {
-		g_logger().error("[Player::onApplyImbuement] - An error occurred while player with name {} trying to apply imbuement in a different item than the opened in the window, probably trying to abuse bug", this->getName());
-		return;
-	}
-
-	// Update imbuement stats item if the item is equipped
-	if (item->getParent() == getPlayer()) {
-		addItemImbuementStats(imbuement);
-	}
-
-	sendSkills(); // skills need to be updated because now it shows in the player skills window
-	updateImbuementTrackerStats();
-	openImbuementWindow(item);
+	sendStats();
+	sendSkills();
 }
 
 void Player::onClearImbuement(const std::shared_ptr<Item> &item, uint8_t slot) {
@@ -2624,22 +2648,119 @@ void Player::onClearImbuement(const std::shared_ptr<Item> &item, uint8_t slot) {
 
 		g_logger().error("[Player::onClearImbuement] - An error occurred while player with name {} try to apply imbuement, player do not have money", this->getName());
 		this->sendImbuementResult(message);
-		this->openImbuementWindow(item);
+		this->openImbuementWindow(IMBUEMENT_WINDOW_CHOICE);
 		return;
 	}
 	g_metrics().addCounter("balance_decrease", baseImbuement->removeCost, { { "player", getName() }, { "context", "clear_imbuement" } });
 
+	item->clearImbuement(slot, imbuementInfo.imbuement->getID());
+
 	if (item->getParent() == getPlayer()) {
 		removeItemImbuementStats(imbuementInfo.imbuement);
+		updateImbuementTrackerStats();
 	}
 
-	item->clearImbuement(slot, imbuementInfo.imbuement->getID());
-	sendSkills(); // skills need to be updated because now it shows in the player skills window
-	updateImbuementTrackerStats();
-	this->openImbuementWindow(item);
+	this->openImbuementWindow(IMBUEMENT_WINDOW_CHOICE);
 }
 
-void Player::openImbuementWindow(const std::shared_ptr<Item> &item) {
+void Player::openImbuementWindow(const Imbuement_Window_t type, const std::shared_ptr<Item> &item /*= nullptr*/) const {
+	if (!client) {
+		return;
+	}
+
+	if (item) {
+		if (item->getID() != ITEM_BLANK_IMBUEMENT_SCROLL) {
+			if (item->getImbuementSlot() <= 0) {
+				this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "This item is not imbuable.");
+				return;
+			}
+
+			const auto &itemParent = item->getTopParent();
+			if (itemParent && itemParent != getPlayer()) {
+				this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have to pick up the item to imbue it.");
+				return;
+			}
+		} else {
+			if (type != IMBUEMENT_WINDOW_SCROLL) {
+				this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "This item is not imbuable.");
+				return;
+			}
+		}
+	}
+
+	client->openImbuementWindow(type, item);
+}
+
+void Player::onApplyImbuementOnScroll(const Imbuement* imbuement) {
+	if (!imbuement) {
+		return;
+	}
+
+	const uint16_t newScrollId = imbuement->getScrollId();
+	if (newScrollId == 0) {
+		return;
+	}
+
+	if (removeItemOfType(ITEM_BLANK_IMBUEMENT_SCROLL, 1, -1, false)) {
+		const auto &newImbuementScrollItem = Item::CreateItem(newScrollId, 1);
+		auto returnValue = g_game().internalPlayerAddItem(static_self_cast<Player>(), newImbuementScrollItem, false, CONST_SLOT_WHEREEVER);
+		if (returnValue != RETURNVALUE_NOERROR) {
+			g_logger().error("[{}] - An error occurred while player with name {} try to apply imbuement, item already contains imbuement", __FUNCTION__, this->getName());
+			this->sendImbuementResult("An error ocurred, please reopen imbuement window.");
+			return;
+		}
+	}
+}
+
+void Player::onClearAllImbuementsOnEtcher(const std::shared_ptr<Item> &item) {
+	if (!item) {
+		return;
+	}
+
+	if (getItemTypeCount(ITEM_ETCHER) < 1) {
+		this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You don't have an etcher.");
+		return;
+	}
+
+	bool removedImbuement = false;
+
+	for (uint8_t slot = 0; slot < item->getImbuementSlot(); slot++) {
+		ImbuementInfo imbuementInfo;
+		if (!item->getImbuementInfo(slot, &imbuementInfo)) {
+			continue;
+		}
+
+		removedImbuement = true;
+	}
+
+	if (removedImbuement) {
+		if (removeItemOfType(ITEM_ETCHER, 1, -1, false)) {
+			for (uint8_t slot = 0; slot < item->getImbuementSlot(); slot++) {
+				ImbuementInfo imbuementInfo;
+				if (!item->getImbuementInfo(slot, &imbuementInfo)) {
+					continue;
+				}
+
+				const BaseImbuement* baseImbuement = g_imbuements().getBaseByID(imbuementInfo.imbuement->getBaseID());
+				if (!baseImbuement) {
+					return;
+				}
+
+				if (item->getParent() == getPlayer()) {
+					removeItemImbuementStats(imbuementInfo.imbuement);
+				}
+
+				item->clearImbuement(slot, imbuementInfo.imbuement->getID());
+			}
+
+			updateImbuementTrackerStats();
+
+			this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You successfully extracted all imbuements from the object.");
+		}
+	}
+}
+
+void Player::applyImbuementScrollToItem(const uint16_t scrollId, const std::shared_ptr<Item> &item) {
 	if (!client || !item) {
 		return;
 	}
@@ -2655,7 +2776,81 @@ void Player::openImbuementWindow(const std::shared_ptr<Item> &item) {
 		return;
 	}
 
-	client->openImbuementWindow(item);
+	const uint8_t itemSlots = item->getImbuementSlot();
+	uint8_t slot = itemSlots;
+
+	for (uint8_t slotid = 0; slotid < itemSlots; slotid++) {
+		ImbuementInfo imbuementInfo;
+		if (!item->getImbuementInfo(slotid, &imbuementInfo)) {
+			slot = slotid;
+			break;
+		}
+	}
+
+	if (slot < 0 || slot >= itemSlots) {
+		this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have apply imbuement in an invalid slot.");
+		return;
+	}
+
+	uint16_t imbuementId = 0;
+
+	std::vector<Imbuement*> imbuements = g_imbuements().getImbuements(static_self_cast<Player>(), item);
+	for (const Imbuement* imbuement : imbuements) {
+		const uint16_t newScrollId = imbuement->getScrollId();
+		if (newScrollId == scrollId) {
+			imbuementId = imbuement->getID();
+			break;
+		}
+	}
+
+	const Imbuement* imbuement = g_imbuements().getImbuement(imbuementId);
+	if (!imbuement) {
+		this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You don't have a valid imbuement.");
+		return;
+	}
+
+	ImbuementInfo imbuementInfo;
+	if (item->getImbuementInfo(slot, &imbuementInfo)) {
+		this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have try to apply imbuement, item already contains imbuement.");
+		return;
+	}
+
+	for (uint8_t i = 0; i < itemSlots; i++) {
+		if (i == slot) {
+			continue;
+		}
+
+		ImbuementInfo existingImbuement;
+		if (item->getImbuementInfo(i, &existingImbuement) && existingImbuement.imbuement) {
+			if (existingImbuement.imbuement->getName() == imbuement->getName()) {
+				this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You cannot apply the same imbuement in multiple slots.");
+				return;
+			}
+		}
+	}
+
+	if (getItemTypeCount(scrollId) < 1) {
+		this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You don't have an imbuement scroll.");
+		return;
+	}
+
+	const BaseImbuement* baseImbuement = g_imbuements().getBaseByID(imbuement->getBaseID());
+	if (!baseImbuement) {
+		this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You don't have a valid tier imbuement.");
+		return;
+	}
+
+	if (removeItemOfType(scrollId, 1, -1, false)) {
+		item->setImbuement(slot, imbuement->getID(), baseImbuement->duration);
+
+		// Update imbuement stats item if the item is equipped
+		if (item->getParent() == getPlayer()) {
+			addItemImbuementStats(imbuement);
+			updateImbuementTrackerStats();
+		}
+
+		this->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have successfully imbued the object.");
+	}
 }
 
 // inventory
@@ -6432,6 +6627,9 @@ bool Player::onKilledMonster(const std::shared_ptr<Monster> &monster) {
 		addHuntingTaskKill(mType);
 		addBestiaryKill(mType);
 		addBosstiaryKill(mType);
+		addWeaponProficiencyExperience(mType, monster->getMonsterForgeClassification(), false);
+	} else if (monster->getForgeStack() == 40) {
+		addWeaponProficiencyExperience(mType, monster->getMonsterForgeClassification(), true);
 	}
 
 	return false;
@@ -7182,6 +7380,11 @@ uint32_t Player::getMagicLevel() const {
 	// Wheel of destiny magic bonus
 	magic += m_wheelPlayer->getStat(WheelStat_t::MAGIC); // Regular bonus
 	magic += m_wheelPlayer->getMajorStatConditional("Positional Tactics", WheelMajor_t::MAGIC); // Revelation bonus
+
+	if (auto it = equippedWeaponProficiency.skillBonus.find(SKILL_MAGLEVEL); it != equippedWeaponProficiency.skillBonus.end()) {
+		magic += it->second;
+	}
+
 	return magic;
 }
 
@@ -7261,13 +7464,22 @@ uint16_t Player::getSkillLevel(skills_t skill) const {
 		skillLevel += m_wheelPlayer->getStat(WheelStat_t::MAGIC);
 	} else if (skill == SKILL_LIFE_LEECH_AMOUNT) {
 		skillLevel += m_wheelPlayer->getStat(WheelStat_t::LIFE_LEECH);
+		skillLevel += equippedWeaponProficiency.lifeLeech; // Proficiency Perk: lifeLeech
 	} else if (skill == SKILL_MANA_LEECH_AMOUNT) {
 		skillLevel += m_wheelPlayer->getStat(WheelStat_t::MANA_LEECH);
+		skillLevel += equippedWeaponProficiency.manaLeech; // Proficiency Perk: manaLeech
 	} else if (skill == SKILL_CRITICAL_HIT_DAMAGE) {
+		skillLevel += 1000; // Flag Bonus
 		skillLevel += m_wheelPlayer->getStat(WheelStat_t::CRITICAL_DAMAGE);
 		skillLevel += m_wheelPlayer->getMajorStatConditional("Combat Mastery", WheelMajor_t::CRITICAL_DMG_2);
 		skillLevel += m_wheelPlayer->getMajorStatConditional("Ballistic Mastery", WheelMajor_t::CRITICAL_DMG);
 		skillLevel += m_wheelPlayer->checkAvatarSkill(WheelAvatarSkill_t::CRITICAL_DAMAGE);
+		skillLevel += equippedWeaponProficiency.critExtraDamage; // Proficiency Perk: critExtraDamage
+	}
+
+	if (skill == SKILL_CRITICAL_HIT_CHANCE) {
+		skillLevel += 500; // Flag Bonus
+		skillLevel += equippedWeaponProficiency.critHitChance; // Proficiency Perk: critHitChance
 	}
 
 	const int32_t avatarCritChance = m_wheelPlayer->checkAvatarSkill(WheelAvatarSkill_t::CRITICAL_CHANCE);
@@ -7279,6 +7491,10 @@ uint16_t Player::getSkillLevel(skills_t skill) const {
 		const uint16_t skillFist = getBaseSkill(skill);
 		const uint16_t bonusVirtueJustice = static_cast<uint16_t>(skillFist * (isSerene() ? 0.30 : 0.15));
 		skillLevel += bonusVirtueJustice;
+	}
+
+	if (auto it = equippedWeaponProficiency.skillBonus.find(skill); it != equippedWeaponProficiency.skillBonus.end()) {
+		skillLevel += it->second;
 	}
 
 	return std::min<uint16_t>(std::numeric_limits<uint16_t>::max(), std::max<uint16_t>(0, static_cast<uint16_t>(skillLevel)));
@@ -7350,6 +7566,11 @@ int32_t Player::getPerfectShotDamage(uint8_t range, bool useCharges) const {
 		}
 	}
 
+	auto it2 = equippedWeaponProficiency.gainDamageAtRange.find(range);
+	if (it2 != equippedWeaponProficiency.gainDamageAtRange.end()) {
+		result += static_cast<int32_t>(it2->second);
+	}
+
 	return result;
 }
 
@@ -7382,6 +7603,8 @@ int32_t Player::getSpecializedMagicLevel(CombatType_t combat, bool useCharges) c
 		}
 	}
 
+	// Proficiency Perk: specialMagicLevel
+	result += equippedWeaponProficiency.specialMagicLevel[combatTypeToIndex(combat)];
 	return result;
 }
 
@@ -12019,4 +12242,412 @@ int16_t Player::getMantraAbsorbPercent(int16_t mantraAbsorbValue) const {
 	}
 
 	return static_cast<int16_t>(std::floor(mantraAbsorbValue * multiplier));
+}
+
+EquippedWeaponProficiencyBonuses &Player::getEquippedWeaponProficiency() {
+	return equippedWeaponProficiency;
+}
+
+void Player::addWeaponProficiencyExperience(const std::shared_ptr<MonsterType> &mType, const ForgeClassifications_t classification, const bool bossSoulpit) {
+	uint32_t addProficiencyExperience = 0;
+	if (bossSoulpit) {
+		addProficiencyExperience = 1500;
+	} else {
+		if (mType->isBoss()) {
+			const BosstiaryRarity_t bosstiaryRace = mType->info.bosstiaryRace;
+			switch (bosstiaryRace) {
+				case BosstiaryRarity_t::RARITY_BANE:
+					addProficiencyExperience = 500;
+					break;
+				case BosstiaryRarity_t::RARITY_ARCHFOE:
+					addProficiencyExperience = 5000;
+					break;
+				case BosstiaryRarity_t::RARITY_NEMESIS:
+					addProficiencyExperience = 15000;
+					break;
+				default:
+					g_logger().error("[{}] Monster {} Invalid bosstiaryRace value: {}.", __FUNCTION__, mType->name, bosstiaryRace);
+					addProficiencyExperience = 0;
+					break;
+			}
+		} else {
+			const uint8_t bestiaryStars = mType->info.bestiaryStars;
+			switch (bestiaryStars) {
+				case 0:
+					addProficiencyExperience = 1;
+					break;
+				case 1:
+					addProficiencyExperience = 30;
+					break;
+				case 2:
+					addProficiencyExperience = 70;
+					break;
+				case 3:
+					addProficiencyExperience = 100;
+					break;
+				case 4:
+					addProficiencyExperience = 165;
+					break;
+				case 5:
+					addProficiencyExperience = 240;
+					break;
+				default:
+					g_logger().error("[{}] Monster {} Invalid bestiaryStars value: {}.", __FUNCTION__, mType->name, bestiaryStars);
+					addProficiencyExperience = 0;
+					break;
+			}
+
+			if (classification == ForgeClassifications_t::FORGE_INFLUENCED_MONSTER) {
+				addProficiencyExperience = static_cast<uint32_t>(addProficiencyExperience * 1.1);
+			} else if (classification == ForgeClassifications_t::FORGE_FIENDISH_MONSTER) {
+				addProficiencyExperience = static_cast<uint32_t>(addProficiencyExperience * 2.5);
+			}
+		}
+	}
+
+	const auto &weapon = getWeapon(true);
+	if (!weapon) {
+		return;
+	}
+
+	const uint16_t weaponItemId = weapon->getID();
+
+	const ItemType &itemType = Item::items[weaponItemId];
+	if (!itemType.proficiencyId) {
+		return;
+	}
+
+	const uint8_t addLifeGainOnKill = equippedWeaponProficiency.lifeGainOnKill;
+	if (addLifeGainOnKill > 0) {
+		CombatDamage proficiencyLifeOnKill;
+		proficiencyLifeOnKill.primary.value = addLifeGainOnKill;
+		proficiencyLifeOnKill.primary.type = COMBAT_HEALING;
+		g_game().combatChangeHealth(nullptr, static_self_cast<Player>(), proficiencyLifeOnKill);
+	}
+
+	const uint8_t addManaGainOnKill = equippedWeaponProficiency.manaGainOnKill;
+	if (addManaGainOnKill > 0) {
+		CombatDamage proficiencyManaOnKill;
+		proficiencyManaOnKill.primary.value = addManaGainOnKill;
+		proficiencyManaOnKill.origin = ORIGIN_NONE;
+		g_game().combatChangeMana(nullptr, static_self_cast<Player>(), proficiencyManaOnKill);
+	}
+
+	sendWeaponProficiencyExperience(weaponItemId, addProficiencyExperience);
+}
+
+void Player::sendWeaponProficiencyExperience(const uint16_t itemId, const uint32_t addProficiencyExperience) {
+	const ItemType &itemType = Item::items[itemId];
+	if (!itemType.proficiencyId) {
+		return;
+	}
+
+	auto iter = weaponProficiencies.find(itemId);
+	if (iter == weaponProficiencies.end()) {
+		if (addProficiencyExperience > 0) {
+			WeaponProficiencyData data;
+			data.experience = addProficiencyExperience;
+			iter = weaponProficiencies.emplace(itemId, std::move(data)).first;
+		}
+
+		if (client) {
+			client->sendWeaponProficiencyExperience(itemId, addProficiencyExperience);
+		}
+	} else {
+		iter->second.experience += addProficiencyExperience;
+
+		if (client) {
+			client->sendWeaponProficiencyExperience(itemId, iter->second.experience);
+		}
+	}
+}
+
+void Player::sendWeaponProficiencyInfo(const uint16_t itemId) const {
+	if (client) {
+		client->sendWeaponProficiencyInfo(itemId);
+	}
+}
+
+void Player::resetAllWeaponProficiencyPerks(const uint16_t itemId) {
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		return;
+	}
+
+	it->second.activePerks.clear();
+}
+
+void Player::applyEquippedWeaponProficiency(const uint16_t itemId) {
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		return;
+	}
+
+	const WeaponProficiencyData &playerProficiencyData = it->second;
+
+	const WeaponProficiencyStruct* proficiencyData = g_proficiencies().getProficiencyByItemId(itemId);
+	if (!proficiencyData) {
+		return;
+	}
+
+	equippedWeaponProficiency.reset();
+
+	for (const auto &lvl : proficiencyData->proficiencyDataLevel) {
+		for (const auto &perk : lvl.proficiencyDataPerks) {
+			auto perkActive = std::find_if(
+				playerProficiencyData.activePerks.begin(), playerProficiencyData.activePerks.end(),
+				[&](const WeaponProficiencyPerk &p) {
+					return p.proficiencyLevel == lvl.proficiencyLevel && p.perkPosition == perk.positionSlot;
+				}
+			);
+
+			if (perkActive == playerProficiencyData.activePerks.end()) {
+				continue;
+			}
+
+			if (perk.perkValue < 0.0f) {
+				continue;
+			}
+
+			int32_t damageTypeIndex = 0;
+			if (perk.damageType > 0) {
+				switch (perk.damageType) {
+					case PROFICIENCY_DAMAGETYPE_FIRE: {
+						damageTypeIndex = static_cast<int32_t>(COMBAT_FIREDAMAGE);
+						break;
+					}
+					case PROFICIENCY_DAMAGETYPE_EARTH: {
+						damageTypeIndex = static_cast<int32_t>(COMBAT_EARTHDAMAGE);
+						break;
+					}
+					case PROFICIENCY_DAMAGETYPE_ENERGY: {
+						damageTypeIndex = static_cast<int32_t>(COMBAT_ENERGYDAMAGE);
+						break;
+					}
+					case PROFICIENCY_DAMAGETYPE_ICE: {
+						damageTypeIndex = static_cast<int32_t>(COMBAT_ICEDAMAGE);
+						break;
+					}
+					case PROFICIENCY_DAMAGETYPE_HOLY: {
+						damageTypeIndex = static_cast<int32_t>(COMBAT_HOLYDAMAGE);
+						break;
+					}
+					case PROFICIENCY_DAMAGETYPE_DEATH: {
+						damageTypeIndex = static_cast<int32_t>(COMBAT_DEATHDAMAGE);
+						break;
+					}
+					case PROFICIENCY_DAMAGETYPE_HEALING: {
+						damageTypeIndex = static_cast<int32_t>(COMBAT_HEALING);
+						break;
+					}
+				}
+			}
+
+			skills_t skillTypeIndex = SKILL_NONE;
+			if (perk.skillId > 0) {
+				switch (perk.skillId) {
+					case PROFICIENCY_SKILL_MAGIC: {
+						skillTypeIndex = SKILL_MAGLEVEL;
+						break;
+					}
+					case PROFICIENCY_SKILL_SHIELD: {
+						skillTypeIndex = SKILL_SHIELD;
+						break;
+					}
+					case PROFICIENCY_SKILL_DISTANCE: {
+						skillTypeIndex = SKILL_DISTANCE;
+						break;
+					}
+					case PROFICIENCY_SKILL_SWORD: {
+						skillTypeIndex = SKILL_SWORD;
+						break;
+					}
+					case PROFICIENCY_SKILL_CLUB: {
+						skillTypeIndex = SKILL_CLUB;
+						break;
+					}
+					case PROFICIENCY_SKILL_AXE: {
+						skillTypeIndex = SKILL_AXE;
+						break;
+					}
+					case PROFICIENCY_SKILL_FIST: {
+						skillTypeIndex = SKILL_FIST;
+						break;
+					}
+					case PROFICIENCY_SKILL_FISHING: {
+						skillTypeIndex = SKILL_FISHING;
+						break;
+					}
+				}
+			}
+
+			switch (perk.perkType) {
+				case PROFICIENCY_PERK_ATTACK_DAMAGE: {
+					equippedWeaponProficiency.attack += static_cast<uint8_t>(perk.perkValue);
+					break;
+				}
+				case PROFICIENCY_PERK_DEFENSE: {
+					equippedWeaponProficiency.defense += static_cast<uint8_t>(perk.perkValue);
+					break;
+				}
+				case PROFICIENCY_PERK_WEAPON_SHIELD_MOD: {
+					equippedWeaponProficiency.weaponShieldMod += static_cast<uint8_t>(perk.perkValue);
+					break;
+				}
+				case PROFICIENCY_PERK_SKILLID_BONUS: {
+					if (skillTypeIndex != SKILL_NONE) {
+						equippedWeaponProficiency.skillBonus[skillTypeIndex] = std::max(0, equippedWeaponProficiency.skillBonus[skillTypeIndex] + static_cast<uint8_t>(perk.perkValue));
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_SPECIAL_MAGIC_LEVEL: {
+					if (damageTypeIndex > 0) {
+						equippedWeaponProficiency.specialMagicLevel[damageTypeIndex] = std::max(0, equippedWeaponProficiency.specialMagicLevel[damageTypeIndex] + static_cast<int32_t>(perk.perkValue));
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_AUGMENT_TYPE: {
+					if (perk.augmentType != PROFICIENCY_AUGMENTTYPE_NONE && perk.spellId > 0) {
+						WeaponProficiencyAugment augment;
+						augment.spellId = perk.spellId;
+						augment.augmentType = static_cast<WeaponProficiencyPerkAugmentType_t>(perk.augmentType);
+						augment.value = perk.perkValue;
+						equippedWeaponProficiency.spellAugments.push_back(augment);
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_BESTIARY_DAMAGE: {
+					if (perk.bestiaryId > 0) {
+						equippedWeaponProficiency.bestiaryRacePercentDamageGain += perk.perkValue;
+						equippedWeaponProficiency.bestiaryId = perk.bestiaryId;
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_DAMAGE_GAIN_BOSS_AND_SINISTER_EMBRACED: {
+					equippedWeaponProficiency.damageGainBossAndSinisterEmbraced += perk.perkValue;
+					break;
+				}
+				case PROFICIENCY_PERK_CRITICAL_HIT_CHANCE: {
+					equippedWeaponProficiency.critHitChance += static_cast<uint16_t>(perk.perkValue * 10000.0f);
+					break;
+				}
+				case PROFICIENCY_PERK_CRITICAL_HIT_CHANCE_FOR_ELEMENT_ID_SPELLS_AND_RUNES: {
+					if (damageTypeIndex > 0) {
+						equippedWeaponProficiency.critHitChanceForElementIdToSpellsAndRunes[damageTypeIndex] = std::max(0, equippedWeaponProficiency.critHitChanceForElementIdToSpellsAndRunes[damageTypeIndex] + static_cast<uint16_t>(perk.perkValue * 10000.0f));
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_CRITICAL_HIT_CHANCE_FOR_OFFENSIVE_RUNES: {
+					equippedWeaponProficiency.critHitChanceForOffensiveRunes += static_cast<uint16_t>(perk.perkValue * 10000.0f);
+					break;
+				}
+				case PROFICIENCY_PERK_CRITICAL_HIT_CHANCE_FOR_AUTOATTACK: {
+					equippedWeaponProficiency.critHitChanceForAutoAttack += static_cast<uint16_t>(perk.perkValue * 10000.0f);
+					break;
+				}
+				case PROFICIENCY_PERK_CRITICAL_EXTRA_DAMAGE: {
+					equippedWeaponProficiency.critExtraDamage += static_cast<uint16_t>(perk.perkValue * 10000.0f);
+					break;
+				}
+				case PROFICIENCY_PERK_CRITICAL_EXTRA_DAMAGE_FOR_ELEMENT_ID_SPELLS_AND_RUNES: {
+					if (damageTypeIndex > 0) {
+						equippedWeaponProficiency.critExtraDamageForElementIdToSpellsAndRunes[damageTypeIndex] = std::max(0, equippedWeaponProficiency.critExtraDamageForElementIdToSpellsAndRunes[damageTypeIndex] + static_cast<uint16_t>(perk.perkValue * 10000.0f));
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_CRITICAL_EXTRA_DAMAGE_FOR_OFFENSIVE_RUNES: {
+					equippedWeaponProficiency.critExtraDamageForOffensiveRunes += static_cast<uint16_t>(perk.perkValue * 10000.0f);
+					break;
+				}
+				case PROFICIENCY_PERK_CRITICAL_EXTRA_DAMAGE_FOR_AUTOATTACK: {
+					equippedWeaponProficiency.critExtraDamageForAutoAttack += static_cast<uint16_t>(perk.perkValue * 10000.0f);
+					break;
+				}
+				case PROFICIENCY_PERK_MANA_LEECH: {
+					equippedWeaponProficiency.manaLeech += static_cast<uint16_t>(perk.perkValue * 10000.0f);
+					break;
+				}
+				case PROFICIENCY_PERK_LIFE_LEECH: {
+					equippedWeaponProficiency.lifeLeech += static_cast<uint16_t>(perk.perkValue * 10000.0f);
+					break;
+				}
+				case PROFICIENCY_PERK_MANA_GAIN_ONHIT: {
+					equippedWeaponProficiency.manaGainOnHit += static_cast<uint8_t>(perk.perkValue);
+					break;
+				}
+				case PROFICIENCY_PERK_LIFE_GAIN_ONHIT: {
+					equippedWeaponProficiency.lifeGainOnHit += static_cast<uint8_t>(perk.perkValue);
+					break;
+				}
+				case PROFICIENCY_PERK_MANA_GAIN_ONKILL: {
+					equippedWeaponProficiency.manaGainOnKill += static_cast<uint8_t>(perk.perkValue);
+					break;
+				}
+				case PROFICIENCY_PERK_LIFE_GAIN_ONKILL: {
+					equippedWeaponProficiency.lifeGainOnKill += static_cast<uint8_t>(perk.perkValue);
+					break;
+				}
+				case PROFICIENCY_PERK_GAIN_DAMAGE_AT_RANGE: {
+					if (perk.range > 0) {
+						uint8_t actualDamageWeaponProficiencyByRange = 0;
+						auto it = equippedWeaponProficiency.gainDamageAtRange.find(perk.range);
+						if (it != equippedWeaponProficiency.gainDamageAtRange.end()) {
+							actualDamageWeaponProficiencyByRange += it->second;
+						}
+
+						equippedWeaponProficiency.gainDamageAtRange[perk.range] = actualDamageWeaponProficiencyByRange + static_cast<uint8_t>(perk.perkValue);
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_RANGED_HIT_CHANCE: {
+					equippedWeaponProficiency.rangedHitChance += perk.perkValue;
+					break;
+				}
+				case PROFICIENCY_PERK_ATTACK_RANGE: {
+					equippedWeaponProficiency.attackRange += static_cast<uint8_t>(perk.perkValue);
+					break;
+				}
+				case PROFICIENCY_PERK_SKILLID_PERCENTAGE_AS_EXTRA_DAMAGE_FOR_AUTOATTACK: {
+					if (skillTypeIndex != SKILL_NONE) {
+						equippedWeaponProficiency.skillPercentageAsExtraDamageForAutoAttack[skillTypeIndex] = std::max(0.0f, equippedWeaponProficiency.skillPercentageAsExtraDamageForAutoAttack[skillTypeIndex] + perk.perkValue);
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_SKILLID_PERCENTAGE_AS_EXTRA_DAMAGE_FOR_SPELLS: {
+					if (skillTypeIndex != SKILL_NONE) {
+						equippedWeaponProficiency.skillPercentageAsExtraDamageForSpells[skillTypeIndex] = std::max(0.0f, equippedWeaponProficiency.skillPercentageAsExtraDamageForSpells[skillTypeIndex] + perk.perkValue);
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_SKILLID_PERCENTAGE_AS_EXTRA_HEALING_FOR_SPELLS: {
+					if (skillTypeIndex != SKILL_NONE) {
+						equippedWeaponProficiency.skillPercentageAsExtraHealingForSpells[skillTypeIndex] = std::max(0.0f, equippedWeaponProficiency.skillPercentageAsExtraHealingForSpells[skillTypeIndex] + perk.perkValue);
+					}
+					break;
+				}
+			}
+		}
+	}
+
+	sendStats();
+	sendSkills();
+}
+
+void Player::removeEquippedWeaponProficiency(const uint16_t itemId) {
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		return;
+	}
+
+	const WeaponProficiencyData &playerProficiencyData = it->second;
+
+	const WeaponProficiencyStruct* proficiencyData = g_proficiencies().getProficiencyByItemId(itemId);
+	if (!proficiencyData) {
+		return;
+	}
+
+	equippedWeaponProficiency.reset();
+
+	sendStats();
+	sendSkills();
 }

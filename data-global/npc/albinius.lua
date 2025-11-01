@@ -70,12 +70,29 @@ local runes = {
 	{ runeid = 24959 },
 }
 
-local function getTable()
-	local itemsList = {
-		{ name = "heavy old tome", id = 23986, sell = 30 },
-	}
-	return itemsList
-end
+npcConfig.shop = {
+	{
+		itemName = "heavy old tome",
+		clientId = 23986,
+		sell = 30,
+		storageKey = Storage.Quest.U11_02.ForgottenKnowledge.Tomes,
+		storageValue = 1,
+	},
+	{
+		itemName = "etcher",
+		clientId = 51443,
+		buy = 30000,
+		storageKey = Storage.Quest.U11_02.ForgottenKnowledge.Tomes,
+		storageValue = 1,
+	},
+	{
+		itemName = "blank imbuement scroll",
+		clientId = 51442,
+		buy = 25000,
+		storageKey = Storage.Quest.U11_02.ForgottenKnowledge.Tomes,
+		storageValue = 1,
+	},
+}
 
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)

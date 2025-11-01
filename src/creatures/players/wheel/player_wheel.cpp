@@ -4005,10 +4005,10 @@ float PlayerWheel::calculateMitigation() const {
 		if (weapon->getAmmoType() == AMMO_BOLT || weapon->getAmmoType() == AMMO_ARROW) {
 			distanceFactor = m_player.vocation->mitigationSecondaryShield;
 		} else if (weapon->getSlotPosition() & SLOTP_TWO_HAND) {
-			defenseValue = weapon->getDefense() + weapon->getExtraDefense();
+			defenseValue = (weapon->getDefense() + m_player.getEquippedWeaponProficiency().defense) + (weapon->getExtraDefense() + m_player.getEquippedWeaponProficiency().weaponShieldMod);
 			shieldFactor = m_player.vocation->mitigationSecondaryShield;
 		} else {
-			defenseValue += weapon->getExtraDefense();
+			defenseValue += weapon->getExtraDefense() + m_player.getEquippedWeaponProficiency().weaponShieldMod;
 			shieldFactor = m_player.vocation->mitigationPrimaryShield;
 		}
 	}

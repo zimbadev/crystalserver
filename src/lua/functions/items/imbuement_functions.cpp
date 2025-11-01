@@ -110,8 +110,6 @@ int ImbuementFunctions::luaImbuementGetBase(lua_State* L) {
 	Lua::setField(L, "id", baseImbuement->id);
 	Lua::setField(L, "name", baseImbuement->name);
 	Lua::setField(L, "price", baseImbuement->price);
-	Lua::setField(L, "protection", baseImbuement->protectionPrice);
-	Lua::setField(L, "percent", baseImbuement->percent);
 	Lua::setField(L, "removeCost", baseImbuement->removeCost);
 	Lua::setField(L, "duration", baseImbuement->duration);
 	return 1;

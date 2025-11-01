@@ -1041,3 +1041,55 @@ void IOLoginDataLoad::loadPlayerUpdateSystem(const std::shared_ptr<Player> &play
 	player->updateInventoryWeight();
 	player->updateItemsLight(true);
 }
+
+void IOLoginDataLoad::loadPlayerWeaponProficiency(const std::shared_ptr<Player> &player, const DBResult_ptr &result) {
+	if (!result || !player) {
+		g_logger().warn("[{}] - Player or Result nullptr", __FUNCTION__);
+		return;
+	}
+
+	unsigned long blobSize;
+	const char* blob = result->getStream("weapon_proficiencies", blobSize);
+
+	PropStream stream;
+	stream.init(blob, blobSize);
+
+	player->weaponProficiencies.clear();
+
+	uint16_t mapSize;
+	if (!stream.read<uint16_t>(mapSize)) {
+		return;
+	}
+
+	for (uint16_t i = 0; i < mapSize; ++i) {
+		uint16_t itemId;
+		if (!stream.read<uint16_t>(itemId)) {
+			break;
+		}
+
+		WeaponProficiencyData data;
+		if (!stream.read<uint32_t>(data.experience)) {
+			break;
+		}
+
+		uint8_t perkCount;
+		if (!stream.read<uint8_t>(perkCount)) {
+			break;
+		}
+
+		for (uint8_t j = 0; j < perkCount; ++j) {
+			WeaponProficiencyPerk perk {};
+			if (!stream.read<uint8_t>(perk.proficiencyLevel)) {
+				break;
+			}
+
+			if (!stream.read<uint8_t>(perk.perkPosition)) {
+				break;
+			}
+
+			data.activePerks.push_back(perk);
+		}
+
+		player->weaponProficiencies[itemId] = std::move(data);
+	}
+}

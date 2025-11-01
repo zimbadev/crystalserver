@@ -21,10 +21,14 @@
     "bshoshany-thread-pool",
     "atomic-queue",
     "boost-locale",
+    "nlohmann-json",
     {
       "name": "opentelemetry-cpp",
       "default-features": true,
-      "features": ["otlp-http", "prometheus"]
+      "features": [
+        "otlp-http",
+        "prometheus"
+      ]
     },
     {
       "name": "gmp",

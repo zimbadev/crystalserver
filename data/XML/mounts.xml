@@ -269,4 +269,7 @@
 	<mount id="240" clientid="1842" name="Corpse Phoenix" speed="10" premium="no" type="store" />
 	<mount id="241" clientid="1843" name="Death Phoenix" speed="10" premium="no" type="store" />
 	<mount id="242" clientid="1844" name="Soul Phoenix" speed="10" premium="no" type="store" />
+	<mount id="243" clientid="1866" name="White Gloom Maw" speed="10" premium="yes" type="quest" />
+	<mount id="244" clientid="1867" name="Gloom Maw" speed="10" premium="yes" type="quest" />
+	<mount id="245" clientid="1873" name="Battle Werewolf" speed="10" premium="no" type="store" />
 </mounts>

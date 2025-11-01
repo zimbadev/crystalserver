@@ -32,4 +32,5 @@ target_sources(${PROJECT_NAME}_lib PRIVATE
     players/wheel/wheel_gems.cpp
     players/vocations/vocation.cpp
     players/vip/player_vip.cpp
+    players/proficiencies/proficiencies.cpp
 )

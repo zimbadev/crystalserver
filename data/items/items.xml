@@ -76752,7 +76752,7 @@ Granted by TibiaGoals.com" />
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="wrath of nature" value="critical extra damage">
-				<attribute key="value" value="5" />
+				<attribute key="value" value="500" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -76824,7 +76824,7 @@ Granted by TibiaGoals.com" />
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="divine missile" value="critical extra damage">
-				<attribute key="value" value="5" />
+				<attribute key="value" value="500" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -76844,10 +76844,10 @@ Granted by TibiaGoals.com" />
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="great energy beam" value="critical extra damage">
-				<attribute key="value" value="5" />
+				<attribute key="value" value="500" />
 			</attribute>
 			<attribute key="great death beam" value="critical extra damage">
-				<attribute key="value" value="5" />
+				<attribute key="value" value="500" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -77307,14 +77307,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost sword" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000" />
-			</attribute>
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14" />
-			</attribute>
-		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
 			<attribute key="unproperly" value="true" />
@@ -77336,14 +77328,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost axe" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000" />
-			</attribute>
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14" />
-			</attribute>
-		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
 			<attribute key="unproperly" value="true" />
@@ -77364,14 +77348,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="mana leech" value="3" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost club" value="3" />
-		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000" />
-			</attribute>
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14" />
-			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
@@ -77398,11 +77374,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost distance" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="divine grenade" value="critical extra damage">
-				<attribute key="value" value="8" />
-			</attribute>
-		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
 			<attribute key="unproperly" value="true" />
@@ -77423,11 +77394,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="mana leech" value="3" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost magic level" value="3" />
-		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="rage of the skies" value="critical extra damage">
-				<attribute key="value" value="10" />
-			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
@@ -77455,11 +77421,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost magic level" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="strong ice wave" value="critical extra damage">
-				<attribute key="value" value="6" />
-			</attribute>
-		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
 			<attribute key="mana" value="20" />
@@ -77486,14 +77447,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost sword" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000" />
-			</attribute>
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14" />
-			</attribute>
-		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
 			<attribute key="unproperly" value="true" />
@@ -77516,14 +77469,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost axe" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000" />
-			</attribute>
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14" />
-			</attribute>
-		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
 			<attribute key="unproperly" value="true" />
@@ -77545,14 +77490,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="mana leech" value="3" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost club" value="3" />
-		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="annihilation" value="cooldown">
-				<attribute key="value" value="8000" />
-			</attribute>
-			<attribute key="annihilation" value="critical extra damage">
-				<attribute key="value" value="14" />
-			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
@@ -77579,11 +77516,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="mana leech" value="3" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost distance" value="3" />
-		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="divine missile" value="critical extra damage">
-				<attribute key="value" value="5" />
-			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
@@ -83084,7 +83016,7 @@ Granted by TibiaGoals.com" />
 				<attribute key="value" value="900000" />
 			</attribute>
 			<attribute key="chained penance" value="critical extra damage">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -83568,7 +83500,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="skillfist" value="1" />
 		<attribute key="augments" value="1">
 			<attribute key="swift jab" value="critical extra damage">
-				<attribute key="value" value="10" />
+				<attribute key="value" value="1000" />
 			</attribute>
 		</attribute>
 		<attribute key="weight" value="3500" />
@@ -83880,14 +83812,6 @@ Granted by TibiaGoals.com" />
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost fist" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="devastating knockout-" value="critical extra damage">
-				<attribute key="value" value="14" />
-			</attribute>
-			<attribute key="devastating knockout" value="cooldown">
-				<attribute key="value" value="-12" />
-			</attribute>
-		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="330" />
 			<attribute key="unproperly" value="true" />
@@ -84109,7 +84033,7 @@ Granted by TibiaGoals.com" />
 		<attribute key="skillfist" value="1" />
 		<attribute key="augments" value="1">
 			<attribute key="mystic repulse" value="critical extra damage">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="weight" value="11000" />
@@ -84159,7 +84083,7 @@ Granted by TibiaGoals.com" />
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="greater flurry of blows" value="critical extra damage">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="weight" value="10600" />
@@ -84910,8 +84834,302 @@ Granted by TibiaGoals.com" />
 		<attribute key="wrapableto" value="23398" />
 	</item>
 	<item id="51237" article="a" name="voodoo mask">
-		<attribute key="primarytype" value="wall hangings" />
-		<attribute key="wrapableto" value="23398" />
+		<attribute key="primarytype" value="wall hangings"/>
+		<attribute key="wrapableto" value="23398"/>
+	</item>
+	<item id="51259" article="a" name="reality splinter">
+		<attribute key="description" value="Split from an alternative reality, frozen in time and space"/>
+		<attribute key="primarytype" value="quest items"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51260" name="norcferatu skullguard">
+		<attribute key="primarytype" value="helmets"/>
+		<attribute key="armor" value="9"/>
+		<attribute key="skilldist" value="2"/>
+		<attribute key="absorbpercentphysical" value="3"/>
+		<attribute key="absorbpercentice" value="6"/>
+		<attribute key="weight" value="3200"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="mana leech" value="3"/>
+			<attribute key="skillboost fist" value="3"/>
+		</attribute>
+		<attribute key="augments" value="1">
+			<attribute key="ethereal spear" value="base">
+				<attribute key="value" value="4000"/>
+			</attribute>
+			<attribute key="ethereal spear" value="critical hit chance">
+				<attribute key="value" value="200"/>
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="270"/>
+			<attribute key="slot" value="head"/>
+			<attribute key="vocation" value="Paladin;true, Royal Paladin"/>
+		</attribute>
+	</item>
+	<item id="51261" name="norcferatu bonehood">
+		<attribute key="primarytype" value="helmets"/>
+		<attribute key="armor" value="5"/>
+		<attribute key="mantra" value="8"/>
+		<attribute key="skillfist" value="2"/>
+		<attribute key="absorbpercentphysical" value="2"/>
+		<attribute key="absorbpercentice" value="5"/>
+		<attribute key="weight" value="1400"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="mana leech" value="3"/>
+			<attribute key="skillboost fist" value="3"/>
+		</attribute>
+		<attribute key="augments" value="1">
+			<attribute key="greater tiger clash" value="base">
+				<attribute key="value" value="3300"/>
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="230"/>
+			<attribute key="slot" value="head"/>
+			<attribute key="vocation" value="Monk;true, Exalted Monk"/>
+		</attribute>
+	</item>
+	<item id="51262" name="norcferatu tuskplate">
+		<attribute key="primarytype" value="armors"/>
+		<attribute key="armor" value="22"/>
+		<attribute key="skillsword" value="3"/>
+		<attribute key="skillclub" value="3"/>
+		<attribute key="skillaxe" value="3"/>
+		<attribute key="absorbpercentphysical" value="4"/>
+		<attribute key="weight" value="14800"/>
+		<attribute key="augments" value="1">
+			<attribute key="brutal strike" value="cooldown">
+				<attribute key="value" value="2000"/>
+			</attribute>
+			<attribute key="brutal strike" value="critical extra damage">
+				<attribute key="value" value="1000"/>
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="270"/>
+			<attribute key="slot" value="armor"/>
+			<attribute key="vocation" value="Knight;true, Elite Knight"/>
+		</attribute>
+	</item>
+	<item id="51263" name="norcferatu bloodhide">
+		<attribute key="primarytype" value="armors"/>
+		<attribute key="armor" value="16"/>
+		<attribute key="energymagiclevelpoints" value="6"/>
+		<attribute key="firemagiclevelpoints" value="3"/>
+		<attribute key="absorbpercentearth" value="8"/>
+		<attribute key="weight" value="3900"/>
+		<attribute key="augments" value="1">
+			<attribute key="ultimate energy strike" value="critical extra damage">
+				<attribute key="value" value="1400"/>
+			</attribute>
+			<attribute key="ultimate energy strike" value="critical hit chance">
+				<attribute key="value" value="500"/>
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="270"/>
+			<attribute key="slot" value="armor"/>
+			<attribute key="vocation" value="Sorcerer;true, Master Sorcerer"/>
+		</attribute>
+	</item>
+	<item id="51264" name="norcferatu bonecloak">
+		<attribute key="primarytype" value="armors"/>
+		<attribute key="armor" value="16"/>
+		<attribute key="earthmagiclevelpoints" value="6"/>
+		<attribute key="healingmagiclevelpoints" value="3"/>
+		<attribute key="absorbpercentice" value="8"/>
+		<attribute key="weight" value="4200"/>
+		<attribute key="augments" value="1">
+			<attribute key="Ultimate Terra Strike" value="critical extra damage">
+				<attribute key="value" value="1400"/>
+			</attribute>
+			<attribute key="Ultimate Terra Strike" value="critical hit chance">
+				<attribute key="value" value="500"/>
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="270"/>
+			<attribute key="slot" value="armor"/>
+			<attribute key="vocation" value="Druid;true, Elder Druid"/>
+		</attribute>
+	</item>
+	<item id="51265" name="norcferatu thornwraps">
+		<attribute key="primarytype" value="legs"/>
+		<attribute key="armor" value="9"/>
+		<attribute key="skilldist" value="2"/>
+		<attribute key="absorbpercentphysical" value="4"/>
+		<attribute key="absorbpercentdeath" value="4"/>
+		<attribute key="weight" value="11500"/>
+		<attribute key="augments" value="1">
+			<attribute key="etheral spear" value="base">
+				<attribute key="value" value="4000"/>
+			</attribute>
+			<attribute key="etheral spear" value="critical extra damage">
+				<attribute key="value" value="800"/>
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="270"/>
+			<attribute key="slot" value="legs"/>
+			<attribute key="vocation" value="Paladin;true, Royal Paladin"/>
+		</attribute>
+	</item>
+	<item id="51266" name="norcferatu bloodstrider">
+		<attribute key="primarytype" value="legs"/>
+		<attribute key="armor" value="8"/>
+		<attribute key="magiclevelpoints" value="2"/>
+		<attribute key="absorbpercentdeath" value="4"/>
+		<attribute key="weight" value="11500"/>
+		<attribute key="augments" value="1">
+			<attribute key="ultimate energy strike" value="base">
+				<attribute key="value" value="3300"/>
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="270"/>
+			<attribute key="slot" value="legs"/>
+			<attribute key="vocation" value="Druid;true, Elder Druid"/>
+		</attribute>
+	</item>
+	<item id="51267" name="norcferatu fleshguards">
+		<attribute key="primarytype" value="legs"/>
+		<attribute key="armor" value="5"/>
+		<attribute key="mantra" value="6"/>
+		<attribute key="skillfist" value="2"/>
+		<attribute key="absorbpercentdeath" value="4"/>
+		<attribute key="weight" value="11500"/>
+		<attribute key="augments" value="1">
+			<attribute key="Greater Tiger Clash" value="critical hit chance">
+				<attribute key="value" value="250"/>
+			</attribute>
+			<attribute key="reater Tiger Clash" value="critical extra damage">
+				<attribute key="value" value="1000"/>
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="230"/>
+			<attribute key="slot" value="legs"/>
+			<attribute key="vocation" value="Monk;true, Exalted Monk"/>
+		</attribute>
+	</item>
+	<item id="51268" name="norcferatu goretrampers">
+		<attribute key="primarytype" value="boots"/>
+		<attribute key="absorbpercentearth" value="5"/>
+		<attribute key="absorbpercentphysical" value="5"/>
+		<attribute key="imbuementslot" value="1">
+			<attribute key="increase speed" value="3"/>
+		</attribute>
+		<attribute key="armor" value="3"/>
+		<attribute key="weight" value="12500"/>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="270"/>
+			<attribute key="slot" value="feet"/>
+			<attribute key="vocation" value="Knight;true, Elite Knight"/>
+		</attribute>
+	</item>
+	<item id="51269" name="norcferatu fangstompers">
+		<attribute key="primarytype" value="boots"/>
+		<attribute key="armor" value="2"/>
+		<attribute key="magiclevelpoints" value="1"/>
+		<attribute key="absorbpercentdeath" value="3"/>
+		<attribute key="weight" value="11000"/>
+		<attribute key="augments" value="1">
+			<attribute key="ultimate energy strike" value="base">
+				<attribute key="value" value="3300"/>
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="level" value="270"/>
+			<attribute key="slot" value="feet"/>
+			<attribute key="vocation" value="Sorcerer;true, Master Sorcerer"/>
+		</attribute>
+	</item>
+	<item id="51270" name="ink blade">
+		<attribute key="primarytype" value="decoration"/>
+		<attribute key="showAttributes" value="1"/>
+		<attribute key="absorbpercentenergy" value="2"/>
+		<attribute key="weight" value="350"/>
+		<attribute key="augments" value="1">
+			<attribute key="knight familiar" value="cooldown">
+				<attribute key="value" value="300000" />
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="slot" value="ammo"/>
+			<attribute key="vocation" value="Knight;true, Elite Knight"/>
+		</attribute>
+	</item>
+	<item id="51271" name="ink quill">
+		<attribute key="primarytype" value="decoration"/>
+		<attribute key="showAttributes" value="1"/>
+		<attribute key="absorbpercentenergy" value="2"/>
+		<attribute key="weight" value="220"/>
+		<attribute key="augments" value="1">
+			<attribute key="paladin familiar" value="cooldown">
+				<attribute key="value" value="300000" />
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="slot" value="ammo"/>
+			<attribute key="vocation" value="Paladin;true, Royal Paladin"/>
+		</attribute>
+	</item>
+	<item id="51272" name="ink claw">
+		<attribute key="primarytype" value="decoration"/>
+		<attribute key="showAttributes" value="1"/>
+		<attribute key="absorbpercentenergy" value="2"/>
+		<attribute key="weight" value="310"/>
+		<attribute key="augments" value="1">
+			<attribute key="sorcerer familiar" value="cooldown">
+				<attribute key="value" value="300000" />
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="slot" value="ammo"/>
+			<attribute key="vocation" value="Sorcerer;true, Master Sorcerer"/>
+		</attribute>
+	</item>
+	<item id="51273" name="ink vine">
+		<attribute key="primarytype" value="decoration"/>
+		<attribute key="showAttributes" value="1"/>
+		<attribute key="absorbpercentenergy" value="2"/>
+		<attribute key="weight" value="230"/>
+		<attribute key="augments" value="1">
+			<attribute key="druid familiar" value="cooldown">
+				<attribute key="value" value="300000" />
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="slot" value="ammo"/>
+			<attribute key="vocation" value="Druid;true, Elder Druid"/>
+		</attribute>
+	</item>
+	<item id="51274" name="ink brush">
+		<attribute key="primarytype" value="decoration"/>
+		<attribute key="showAttributes" value="1"/>
+		<attribute key="absorbpercentenergy" value="2"/>
+		<attribute key="weight" value="230"/>
+		<attribute key="augments" value="1">
+			<attribute key="monk familiar" value="cooldown">
+				<attribute key="value" value="300000" />
+			</attribute>
+		</attribute>
+		<attribute key="script" value="moveevent">
+			<attribute key="slot" value="ammo"/>
+			<attribute key="vocation" value="Monk;true, Exalted Monk"/>
+		</attribute>
+	</item>
+	<item id="51275" article="a" name="greater garlic necklace">
+		<attribute key="primarytype" value="amulets and necklaces"/>
+		<attribute key="showCharges" value="1"/>
+		<attribute key="showAttributes" value="1"/>
+		<attribute key="absorbpercentlifedrain" value="50"/>
+		<attribute key="charges" value="500"/>
+		<attribute key="weight" value="630"/>
+		<attribute key="script" value="moveevent">
+			<attribute key="slot" value="necklace"/>
+		</attribute>
 	</item>
 	<item id="51294" name="spirit bind">
 		<attribute key="description" value="A sturdy robe interwoven with ethereal spirits" />
@@ -84927,5 +85145,728 @@ Granted by TibiaGoals.com" />
 			<attribute key="slot" value="armor" />
 			<attribute key="vocation" value="Monk;true, Exalted Monk" />
 		</attribute>
+	</item>
+	<item id="51419" article="a" name="paper plane">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="50"/>
+	</item>
+	<item id="51420" article="a" name="paper boat">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="50"/>
+	</item>
+	<item id="51422" article="a" name="star ink">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="60"/>
+	</item>
+	<item id="51423" article="a" name="book with a dragon">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="800"/>
+	</item>
+	<item id="51425" article="a" name="book with an hourglass">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="800"/>
+	</item>
+	<item id="51426" article="a" name="sealing wax">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="100"/>
+	</item>
+	<item id="51427" article="a" name="torn page">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51442" article="a" name="blank imbuement scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51443" name="etcher">
+		<attribute key="weight" value="150"/>
+	</item>
+	<item id="51444" article="a" name="powerful bash scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51445" article="a" name="powerful blockade scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51446" article="a" name="powerful chop scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51447" article="a" name="powerful cloud fabric scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51448" article="a" name="powerful demon presence scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51449" article="a" name="powerful dragon hide scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51450" article="a" name="powerful electrify scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51451" article="a" name="powerful epiphany scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51452" article="a" name="powerful featherweight scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51453" article="a" name="powerful frost scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51454" article="a" name="powerful lich shroud scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51455" article="a" name="powerful precision scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51456" article="a" name="powerful punch scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51457" article="a" name="powerful quara scale scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51458" article="a" name="powerful reap scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51459" article="a" name="powerful scorch scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51460" article="a" name="powerful slash scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51461" article="a" name="powerful snake skin scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51462" article="a" name="powerful strike scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51463" article="a" name="powerful swiftness scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51464" article="a" name="powerful vampirism scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51465" article="a" name="powerful venom scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51466" article="a" name="powerful vibrancy scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51467" article="a" name="powerful void scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51468" name="dread doll">
+		<attribute key="description" value="Souvenir from Thais Museum" />
+		<attribute key="weight" value="1100" />
+	</item>
+	<item id="51470" name="tiny bat coffin">
+		<attribute key="weight" value="630" />
+	</item>
+	<item id="51471" article="a" name="tiny bat coffin">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="630"/>
+	</item>
+	<item id="51472" article="a" name="chain leash">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51473" article="a" name="blood amulet">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51474" article="a" name="piece of frozen night">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51475" article="a" name="ritual bone knife">
+		<attribute key="primarytype" value="sword weapons"/>
+		<attribute key="weaponType" value="sword"/>
+		<attribute key="attack" value="5"/>
+		<attribute key="defense" value="1"/>
+		<attribute key="weight" value="20"/>
+		<attribute key="script" value="moveevent;weapon">
+			<attribute key="weaponType" value="sword"/>
+			<attribute key="slot" value="hand"/>
+		</attribute>
+	</item>
+	<item id="51476" article="a" name="pot of orcish warpaint">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51477" article="a" name="orcish toothbrush">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51478" article="a" name="bone rattle">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51479" name="spiked bracers">
+		<attribute key="weight" value="20" />
+	</item>
+	<item id="51480" article="a" name="blood hood">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51481" name="blood sceptre">
+		<attribute key="weight" value="20" />
+	</item>
+	<item id="51482" article="a" name="bloodshot giant eye">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51483" name="blood crown">
+		<attribute key="weight" value="20" />
+	</item>
+	<item id="51484" article="a" name="heart amphora">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51485" article="a" name="bone fibula">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51421" article="a" name="colourful quill">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="60"/>
+	</item>
+	<item id="51486" name="spiked gorget">
+		<attribute key="weight" value="20" />
+	</item>
+	<item id="51487" article="a" name="norcferatu talisman">
+		<attribute key="primarytype" value="creature products"/>
+		<attribute key="weight" value="20"/>
+	</item>
+	<item id="51494" article="a" name="slain crusader">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51495" article="a" name="slain crusader">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51494"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51496" article="a" name="slain crusader">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51495"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51497" article="a" name="slain crusader">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51496"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51498" article="a" name="slain bramble wyrmling">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51499" article="a" name="slain bramble wyrmling">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51498"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51500" article="a" name="slain bramble wyrmling">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51499"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51501" article="a" name="slain bramble wyrmling">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51500"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51504" article="a" name="slain bluebeak">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51505" article="a" name="slain bluebeak">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51504"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51506" article="a" name="slain cinder wyrmling">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51507" article="a" name="slain cinder wyrmling">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51506"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51508" article="a" name="slain cinder wyrmling">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51507"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51509" article="a" name="slain cinder wyrmling">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51508"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51510" name="painted healing herbs">
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="51511" name="painted bandages">
+		<attribute key="weight" value="50" />
+	</item>
+	<item id="51512" name="saturated painted bandages">
+		<attribute key="weight" value="60" />
+	</item>
+	<item id="51526" name="special bat coffin">
+		<attribute key="weight" value="630" />
+	</item>
+	<item id="51527" name="special bat coffin">
+		<attribute key="weight" value="630" />
+	</item>
+	<item id="51529" article="a" name="slain norcferatu nightweaver">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51530"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51530" article="a" name="slain norcferatu nightweaver">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51531"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51531" article="a" name="slain norcferatu nightweaver">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51532"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51532" article="a" name="slain norcferatu nightweaver">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51533" article="a" name="slain norcferatu heartless">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51534"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51534" article="a" name="slain norcferatu heartless">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51535"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51535" article="a" name="slain norcferatu heartless">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51536"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51536" article="a" name="slain norcferatu heartless">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51537" article="a" name="slain dworc shadowstalker">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51540"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51538" article="a" name="slain orclops bloodbreaker">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51543"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51540" article="a" name="slain dworc shadowstalker">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51541"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51541" article="a" name="slain dworc shadowstalker">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51542"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51542" article="a" name="slain dworc shadowstalker">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51543" article="a" name="slain orclops bloodbreaker">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51544"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51544" article="a" name="slain orclops bloodbreaker">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51545"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51545" article="a" name="slain orclops bloodbreaker">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51546" article="a" name="slain varg">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51547"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51547" article="a" name="slain varg">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51548"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51548" article="a" name="slain varg">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51549" article="a" name="slain headwalker">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51550" article="a" name="slain headwalker">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51549"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51551" article="a" name="slain headwalker">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51550"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51552" article="a" name="slain headwalker">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51551"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51553" article="a" name="slain shell drake">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51554" article="a" name="slain shell drake">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51553"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51555" article="a" name="slain shell drake">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51554"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51556" article="a" name="slain shell drake">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51555"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51561" article="a" name="slain lion hydra">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51562" article="a" name="slain lion hydra">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51561"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51563" article="a" name="slain lion hydra">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51562"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51564" article="a" name="slain lion hydra">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51563"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51568" name="boat ticket">
+		<attribute key="weight" value="50" />
+	</item>
+	<item id="51584" article="a" name="slain gloom maw">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51585"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51585" article="a" name="slain gloom maw">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51586"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51586" article="a" name="slain gloom maw">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51587"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51587" article="a" name="slain gloom maw">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51595" article="a" name="slain vampiric essence">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51594"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51594" article="a" name="slain vampiric essence">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51593"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51593" article="a" name="slain vampiric essence">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51592"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51592" article="a" name="slain vampiric maessencew">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51572" article="a" name="slain vladrukh">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51571"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51571" article="a" name="slain vladrukh">
+		<attribute key="duration" value="300"/>
+		<attribute key="decayTo" value="51570"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51570" article="a" name="slain vladrukh">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="51569"/>
+		<attribute key="containersize" value="24"/>
+	</item>
+	<item id="51569" article="a" name="slain vladrukh">
+		<attribute key="duration" value="60"/>
+		<attribute key="decayTo" value="0"/>
+	</item>
+	<item id="51588" article="a" name="proficiency catalyst">
+		<attribute key="primarytype" value="valuables"/>
+		<attribute key="weight" value="500"/>
+	</item>
+	<item id="51589" article="a" name="greater proficiency catalyst">
+		<attribute key="primarytype" value="valuables"/>
+		<attribute key="weight" value="750"/>
+	</item>
+	<item id="51623" name="deer fur brush">
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="51641" name="norcferatu heartless soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51642" name="varg soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51643" name="norcferatu nightweaver soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51644" name="dworc shadowstalker soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51645" name="orclops bloodbreaker soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51646" name="gloom maw soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51647" name="cinder wyrmling soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51648" name="bramble wyrmling soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51649" name="headwalker soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51650" name="bluebeak soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51651" name="hawk hopper soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51652" name="shell drake soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51653" name="crusader soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51654" name="lion hydra soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51656" name="scallop shell">
+		<attribute key="description" value="It has been used as a colour palette" />
+		<attribute key="weight" value="120" />
+	</item>
+	<item id="51657" name="sand-filled horn">
+		<attribute key="description" value="The fine, white sand is trickling out" />
+		<attribute key="weight" value="120" />
+	</item>
+	<item id="51666" name="ink sword">
+		<attribute key="attack" value="14" />
+		<attribute key="weight" value="3510" />
+		<attribute key="imbuementslot" value="2" />
+	</item>
+	<item id="51702" name="the Tale of Joran and Yvette - Part I" />
+	<item id="51703" name="the Tale of Joran and Yvette - Part II" />
+	<item id="51704" name="the Tale of Joran and Yvette - Part III" />
+	<item id="51706" name="effigy of winged vengeance">
+		<attribute key="description" value="Hewn in stone, this winged avatar stands watch until the time of vengeance arrives" />
+	</item>
+	<item id="51707" name="effigy of winged vengeance">
+		<attribute key="description" value="Hewn in stone, this winged avatar stands watch until the time of vengeance arrives" />
+	</item>
+	<item id="51708" name="effigy of winged vengeance">
+		<attribute key="description" value="Hewn in stone, this winged avatar stands watch until the time of vengeance arrives" />
+	</item>
+	<item id="51709" name="effigy of winged vengeance">
+		<attribute key="description" value="Hewn in stone, this winged avatar stands watch until the time of vengeance arrives" />
+	</item>
+	<item id="51710" name="effigy of winged vengeance">
+		<attribute key="description" value="Hewn in stone, this winged avatar stands watch until the time of vengeance arrives" />
+	</item>
+	<item id="51711" name="effigy of winged vengeance">
+		<attribute key="description" value="Hewn in stone, this winged avatar stands watch until the time of vengeance arrives" />
+	</item>
+	<item id="51712" name="effigy of winged vengeance">
+		<attribute key="description" value="Hewn in stone, this winged avatar stands watch until the time of vengeance arrives" />
+	</item>
+	<item id="51713" name="effigy of winged vengeance">
+		<attribute key="description" value="Hewn in stone, this winged avatar stands watch until the time of vengeance arrives" />
+	</item>
+	<item id="51714" name="norcferatu talisman">
+		<attribute key="weight" value="20" />
+	</item>
+	<item id="51721" name="ink splash soul core">
+		<attribute key="description" value="Offers a soul to the Soulpit. Combine with another soul core to create a random new soul core" />
+		<attribute key="weight" value="1000" />
+	</item>
+	<item id="51724" article="a" name="intricate bash scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51725" article="a" name="intricate blockade scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51726" article="a" name="intricate chop scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51727" article="a" name="intricate cloud fabric scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51728" article="a" name="intricate demon presence scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51729" article="a" name="intricate dragon hide scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51730" article="a" name="intricate electrify scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51731" article="a" name="intricate epiphany scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51732" article="a" name="intricate featherweight scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51733" article="a" name="intricate frost scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51734" article="a" name="intricate lich shroud scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51735" article="a" name="intricate precision scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51736" article="a" name="intricate punch scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51737" article="a" name="intricate quara scale scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51738" article="a" name="intricate reap scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51739" article="a" name="intricate scorch scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51740" article="a" name="intricate slash scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51741" article="a" name="intricate snake skin scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51742" article="a" name="intricate strike scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51743" article="a" name="intricate swiftness scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51744" article="a" name="intricate vampirism scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51745" article="a" name="intricate venom scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51746" article="a" name="intricate vibrancy scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="51747" article="a" name="intricate void scroll">
+		<attribute key="primarytype" value="documents and papers"/>
+		<attribute key="weight" value="250"/>
+	</item>
+	<item id="50547" name="stairs">
+		<attribute key="floorchange" value="north"/>
+	</item>
+	<item id="50551" name="stairs">
+		<attribute key="floorchange" value="west"/>
+	</item>
+	<item id="50553" name="stairs">
+		<attribute key="floorchange" value="east"/>
+	</item>
+	<item id="50555" name="stairs">
+		<attribute key="floorchange" value="south"/>
 	</item>
 </items>

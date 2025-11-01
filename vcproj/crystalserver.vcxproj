@@ -42,6 +42,8 @@
     <ClInclude Include="..\src\creatures\players\imbuements\imbuements.hpp" />
     <ClInclude Include="..\src\creatures\players\management\ban.hpp" />
     <ClInclude Include="..\src\creatures\players\management\waitlist.hpp" />
+    <ClInclude Include="..\src\creatures\players\proficiencies\proficiencies.hpp" />
+    <ClInclude Include="..\src\creatures\players\proficiencies\proficiencies_definitions.hpp" />
     <ClInclude Include="..\src\creatures\players\storages\storages.hpp" />
     <ClInclude Include="..\src\creatures\players\player.hpp" />
     <ClInclude Include="..\src\creatures\players\vocations\vocation.hpp" />
@@ -260,6 +262,7 @@
     <ClCompile Include="..\src\creatures\players\imbuements\imbuements.cpp" />
     <ClCompile Include="..\src\creatures\players\management\ban.cpp" />
     <ClCompile Include="..\src\creatures\players\management\waitlist.cpp" />
+    <ClCompile Include="..\src\creatures\players\proficiencies\proficiencies.cpp" />
     <ClCompile Include="..\src\creatures\players\storages\storages.cpp" />
     <ClCompile Include="..\src\creatures\players\player.cpp" />
     <ClCompile Include="..\src\creatures\players\vocations\vocation.cpp" />

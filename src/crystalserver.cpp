@@ -22,6 +22,7 @@
 #include "creatures/npcs/npcs.hpp"
 #include "creatures/players/grouping/familiars.hpp"
 #include "creatures/players/imbuements/imbuements.hpp"
+#include "creatures/players/proficiencies/proficiencies.hpp"
 #include "creatures/players/storages/storages.hpp"
 #include "database/databasemanager.hpp"
 #include "declarations.hpp"
@@ -218,7 +219,7 @@ void CrystalServer::logInfos() {
 	logger.debug("Linked with {} for Lua support", LUAJIT_VERSION);
 #endif
 
-	logger.info("A server developed by: {}", SOFTWARE_DEVELOPERS);
+	logger.info("Game Update: {}", GAME_UPDATE);
 	logger.info("Visit our GitHub:  https://github.com/zimbadev/crystalserver");
 }
 
@@ -346,6 +347,7 @@ void CrystalServer::loadModules() {
 	modulesLoadHelper(Outfits::getInstance().loadFromXml(), "XML/outfits.xml");
 	modulesLoadHelper(Familiars::getInstance().loadFromXml(), "XML/familiars.xml");
 	modulesLoadHelper(g_imbuements().loadFromXml(), "XML/imbuements.xml");
+	modulesLoadHelper(g_proficiencies().loadFromJson(), "items/proficiencies.json");
 	modulesLoadHelper(g_storages().loadFromXML(), "XML/storages.xml");
 
 	modulesLoadHelper(Item::items.loadFromXml(), "items.xml");

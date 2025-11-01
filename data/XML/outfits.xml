@@ -155,7 +155,9 @@
 	<outfit type="0" looktype="1832" name="Winged Druid" premium="no" unlocked="no" enabled="yes" from="store" />
 	<outfit type="0" looktype="1838" name="Martial Artist" premium="no" unlocked="no" enabled="yes" from="store" />
 	<outfit type="0" looktype="1846" name="Necromancer" premium="no" unlocked="no" enabled="yes" from="store" />
-	
+	<outfit type="0" looktype="1861" name="Illuminator" premium="yes" unlocked="no" enabled="yes" from="quest" />
+	<outfit type="0" looktype="1875" name="Bat Knight" premium="no" unlocked="no" enabled="yes" from="store" />
+
 	<!-- Male -->
 	<outfit type="1" looktype="128" name="Citizen" premium="no" unlocked="yes" enabled="yes" />
 	<outfit type="1" looktype="129" name="Hunter" premium="no" unlocked="yes" enabled="yes" />
@@ -284,4 +286,6 @@
 	<outfit type="1" looktype="1831" name="Winged Druid" premium="no" unlocked="no" enabled="yes" from="store" />
 	<outfit type="1" looktype="1837" name="Martial Artist" premium="no" unlocked="no" enabled="yes" from="store" />
 	<outfit type="1" looktype="1845" name="Necromancer" premium="no" unlocked="no" enabled="yes" from="store" />
+	<outfit type="1" looktype="1860" name="Illuminator" premium="yes" unlocked="no" enabled="yes" from="quest" />
+	<outfit type="1" looktype="1874" name="Bat Knight" premium="no" unlocked="no" enabled="yes" from="store" />
 </outfits>

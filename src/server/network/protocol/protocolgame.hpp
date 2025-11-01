@@ -273,7 +273,7 @@ private:
 	void parseCloseChannel(NetworkMessage &msg);
 
 	// Imbuement info
-	void addImbuementInfo(NetworkMessage &msg, uint16_t imbuementId) const;
+	void addImbuementInfo(NetworkMessage &msg, uint16_t imbuementId, bool isScroll) const;
 
 	// Send functions
 	void sendChannelMessage(const std::string &author, const std::string &text, SpeakClasses type, uint16_t channel);
@@ -290,7 +290,7 @@ private:
 	void sendIconBakragore(const IconBakragore icon);
 	void sendFYIBox(const std::string &message);
 
-	void openImbuementWindow(const std::shared_ptr<Item> &item);
+	void openImbuementWindow(const Imbuement_Window_t type, const std::shared_ptr<Item> &item = nullptr);
 	void sendImbuementResult(const std::string &message);
 	void closeImbuementWindow();
 
@@ -544,6 +544,11 @@ private:
 	void sendSereneProtocol(const bool isSerene);
 	void sendVirtueProtocol(const uint8_t virtueValue);
 	void parseSelectSpellAimProtocol(NetworkMessage &msg);
+
+	void parseImbuementWindow(NetworkMessage &msg);
+	void parseWeaponProficiency(NetworkMessage &msg);
+	void sendWeaponProficiencyExperience(const uint16_t itemId, const uint32_t experience);
+	void sendWeaponProficiencyInfo(const uint16_t itemId);
 
 	friend class Player;
 	friend class PlayerWheel;
