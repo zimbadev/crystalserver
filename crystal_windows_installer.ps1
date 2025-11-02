@@ -56,11 +56,6 @@ while ($lang -eq $null) {
                 AdminWarning1   = "Administrator privileges are required!"
                 AdminWarning2   = "Please re-run this script by right-clicking it and selecting 'Run as administrator'."
                 PressEnterExit  = "Press Enter to exit"
-                BranchTitle     = "--- STEP 0.5: Select Branch ---"
-                BranchQuestion  = "Which branch do you want to compile?"
-                BranchOption1   = "  1: Main (Latest official version)"
-                BranchOption2   = "  2: Tibia 15.11"
-                BranchPrompt    = "Enter 1 or 2"
                 CheckFound      = "found. Skipping."
                 CheckNotFound   = "not found. Starting installation guide..."
                 Step1Title      = "--- STEP 1: Checking for Git ---"
@@ -117,11 +112,6 @@ while ($lang -eq $null) {
                 AdminWarning1   = "Privilégios de Administrador são necessários!"
                 AdminWarning2   = "Por favor, execute este script novamente clicando com o botão direito e selecionando 'Executar como administrador'."
                 PressEnterExit  = "Pressione Enter para sair"
-                BranchTitle     = "--- PASSO 0.5: Selecionar Branch ---"
-                BranchQuestion  = "Qual branch você deseja compilar?"
-                BranchOption1   = "  1: Main (Versão oficial mais recente)"
-                BranchOption2   = "  2: Tibia 15.11"
-                BranchPrompt    = "Digite 1 ou 2"
                 CheckFound      = "encontrado. Pulando."
                 CheckNotFound   = "nao encontrado. Iniciando guia de instalacao..."
                 Step1Title      = "--- PASSO 1: Verificando o Git ---"
@@ -179,11 +169,6 @@ while ($lang -eq $null) {
                 AdminWarning1   = "Wymagane sa uprawnienia Administratora!"
                 AdminWarning2   = "Uruchom ten skrypt ponownie, klikajac na niego prawym przyciskiem myszy i wybierajac 'Uruchom jako administrator'."
                 PressEnterExit  = "Nacisnij Enter, aby zakonczyc"
-                BranchTitle     = "--- KROK 0.5: Wybierz Galaz (Branch) ---"
-                BranchQuestion  = "Ktora galaz chcesz skompilowac?"
-                BranchOption1   = "  1: Main (Najnowsza oficjalna wersja)"
-                BranchOption2   = "  2: Tibia 15.11"
-                BranchPrompt    = "Wpisz 1 lub 2"
                 CheckFound      = "znaleziony. Pomijanie."
                 CheckNotFound   = "nie znaleziony. Uruchamianie instrukcji instalacji..."
                 Step1Title      = "--- KROK 1: Sprawdzanie GIT ---"
@@ -240,27 +225,10 @@ while ($lang -eq $null) {
     }
 }
 
-# --- Krok 0.5: Wybór Gałęzi (Branch) ---
-$branchName = $null
-while ($branchName -eq $null) {
-    Clear-Host
-    Write-Host $lang.BranchTitle -ForegroundColor Yellow
-    Write-Host $lang.BranchQuestion
-    Write-Host ""
-    Write-Host $lang.BranchOption1
-    Write-Host $lang.BranchOption2
-    Write-Host ""
-    $branchChoice = Read-Host -Prompt $lang.BranchPrompt
-    
-    switch ($branchChoice) {
-        '1' { $branchName = "main" }
-        '2' { $branchName = "tibia1511" }
-        default {
-            Write-Warning "Invalid selection. Wybór nieprawidłowy. Seleção inválida."
-            Start-Sleep -Seconds 2
-        }
-    }
-}
+# --- Branch Configuration ---
+# Script uses 'main' branch by default.
+$branchName = "main"
+Write-Host "Branch set to '$branchName'." -ForegroundColor Cyan
 
 
 # --- Rozpoczęcie skryptu / Script Start ---

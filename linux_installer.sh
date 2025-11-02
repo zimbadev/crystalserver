@@ -46,14 +46,9 @@ while [[ -z "${lang[Title]}" ]]; do
         '1')
             lang[Title]="--- Interactive CrystalServer (Canary) Compiler ---"
             lang[AdminWarning]="This script will occasionally use 'sudo' and may ask for your password to install system packages."
-            lang[BranchTitle]="--- STEP 0.5: Select Branch ---"
-            lang[BranchQuestion]="Which branch do you want to compile?"
-            lang[BranchOption1]="  1: Main (Latest official version)"
-            lang[BranchOption2]="  2: Tibia 15.11"
-            lang[BranchPrompt]="Enter 1 or 2: "
             lang[Step1Title]="--- STEP 1: Installing System Dependencies ---"
             lang[Step1Desc]="Updating package lists and installing required tools like git, cmake, build-essential..."
-            lang[Step2Title]="--- STEP 2: Setting up GCC-12 (Debian/Ubuntu only) ---"
+            lang[Step2Title]="--- STEP 2: Setting up GCC-12 (Debian/Ubuntu/Lingmo only) ---"
             lang[Step2Desc]="Ensuring GCC version 12 is installed and set as the default compiler..."
             lang[Step3Title]="--- STEP 3: Setting up vcpkg ---"
             lang[Step3Clone]="Cloning vcpkg repository into your home directory (~/vcpkg)..."
@@ -77,14 +72,9 @@ while [[ -z "${lang[Title]}" ]]; do
         '2')
             lang[Title]="--- Compilador Interativo CrystalServer (Canary) ---"
             lang[AdminWarning]="Este script usará 'sudo' ocasionalmente e pode pedir sua senha para instalar pacotes do sistema."
-            lang[BranchTitle]="--- PASSO 0.5: Selecionar Branch ---"
-            lang[BranchQuestion]="Qual branch você deseja compilar?"
-            lang[BranchOption1]="  1: Main (Versão oficial mais recente)"
-            lang[BranchOption2]="  2: Tibia 15.11"
-            lang[BranchPrompt]="Digite 1 ou 2: "
             lang[Step1Title]="--- PASSO 1: Instalando Dependências do Sistema ---"
             lang[Step1Desc]="Atualizando listas de pacotes e instalando ferramentas como git, cmake, build-essential..."
-            lang[Step2Title]="--- PASSO 2: Configurando GCC-12 (Apenas Debian/Ubuntu) ---"
+            lang[Step2Title]="--- PASSO 2: Configurando GCC-12 (Apenas Debian/Ubuntu/Lingmo) ---"
             lang[Step2Desc]="Garantindo que a versão 12 do GCC está instalada e definida como compilador padrão..."
             lang[Step3Title]="--- PASSO 3: Configurando o vcpkg ---"
             lang[Step3Clone]="Clonando o repositório vcpkg no seu diretório home (~/vcpkg)..."
@@ -108,14 +98,9 @@ while [[ -z "${lang[Title]}" ]]; do
         '3')
             lang[Title]="--- Interaktywny Kompilator CrystalServer (Canary) ---"
             lang[AdminWarning]="Ten skrypt bedzie czasami uzywal 'sudo' i moze poprosic o haslo w celu instalacji pakietow systemowych."
-            lang[BranchTitle]="--- KROK 0.5: Wybierz Galaz (Branch) ---"
-            lang[BranchQuestion]="Ktora galaz chcesz skompilowac?"
-            lang[BranchOption1]="  1: Main (Najnowsza oficjalna wersja)"
-            lang[BranchOption2]="  2: Tibia 15.11"
-            lang[BranchPrompt]="Wpisz 1 lub 2: "
             lang[Step1Title]="--- KROK 1: Instalacja Zaleznosci Systemowych ---"
             lang[Step1Desc]="Aktualizowanie listy pakietow i instalowanie wymaganych narzedzi, takich jak git, cmake, build-essential..."
-            lang[Step2Title]="--- KROK 2: Konfiguracja GCC-12 (Tylko Debian/Ubuntu) ---"
+            lang[Step2Title]="--- KROK 2: Konfiguracja GCC-12 (Tylko Debian/Ubuntu/Lingmo) ---"
             lang[Step2Desc]="Upewnianie sie, ze GCC w wersji 12 jest zainstalowany i ustawiony jako domyslny kompilator..."
             lang[Step3Title]="--- KROK 3: Konfiguracja vcpkg ---"
             lang[Step3Clone]="Klonowanie repozytorium vcpkg do Twojego katalogu domowego (~/vcpkg)..."
@@ -143,26 +128,9 @@ while [[ -z "${lang[Title]}" ]]; do
     esac
 done
 
-BRANCH_NAME=""
-while [[ -z "$BRANCH_NAME" ]]; do
-    clear
-    info "${lang[BranchTitle]}"
-    echo "${lang[BranchQuestion]}"
-    echo ""
-    echo "${lang[BranchOption1]}"
-    echo "${lang[BranchOption2]}"
-    echo ""
-    read -p "${lang[BranchPrompt]}" branch_choice
-
-    case "$branch_choice" in
-        '1') BRANCH_NAME="main" ;;
-        '2') BRANCH_NAME="tibia1511" ;;
-        *)
-            warn "Invalid selection. Wybór nieprawidłowy. Seleção inválida."
-            sleep 2
-            ;;
-    esac
-done
+# Zamiast interaktywnego wyboru gałęzi ustawiamy domyślnie 'main'.
+BRANCH_NAME="main"
+info "Branch set to: $BRANCH_NAME"
 
 # --- Section 2: Main Script Body ---
 
@@ -184,7 +152,7 @@ else
 fi
 
 case "$DISTRO" in
-    ubuntu|debian)
+    ubuntu|debian|lingmo)
         sudo apt-get update && sudo apt-get dist-upgrade -y
         sudo apt-get install -y git cmake build-essential autoconf libtool ca-certificates curl zip unzip tar pkg-config ninja-build ccache linux-headers-$(uname -r) acl
         ;;
@@ -202,8 +170,8 @@ case "$DISTRO" in
         ;;
 esac
 
-# -- Step 2: Setup gcc-12 (Ubuntu/Debian only)
-if [[ "$DISTRO" == "ubuntu" || "$DISTRO" == "debian" ]]; then
+# -- Step 2: Setup gcc-12 (Ubuntu/Debian/Lingmo only)
+if [[ "$DISTRO" == "ubuntu" || "$DISTRO" == "debian" || "$DISTRO" == "lingmo" ]]; then
     info "${lang[Step2Title]}"
     echo "${lang[Step2Desc]}"
     sudo apt-get install -y gcc-12 g++-12
