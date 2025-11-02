@@ -471,6 +471,12 @@
 	<npc centerx="33791" centery="31383" centerz="6" radius="1">
 		<npc name="Captain Jack Rat" x="0" y="0" z="6" spawntime="60" />
 	</npc>
+	<npc centerx="32956" centery="31420" centerz="6" radius="1">
+		<npc name="An Orchish Ancestor Spirit" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="32914" centery="31444" centerz="6" radius="5">
+		<npc name="Anaztassja Moroia" x="0" y="0" z="6" spawntime="60" />
+	</npc>
 	<npc centerx="33606" centery="31444" centerz="6" radius="1">
 		<npc name="Enpa Rudra" x="-1" y="0" z="6" spawntime="60" />
 	</npc>
@@ -2490,6 +2496,9 @@
 	<npc centerx="32533" centery="31437" centerz="10" radius="1">
 		<npc name="Bolfona" x="0" y="0" z="10" spawntime="60" />
 	</npc>
+	<npc centerx="32881" centery="31437" centerz="10" radius="5">
+		<npc name="Anaztassja Moroia" x="0" y="0" z="10" spawntime="60" />
+	</npc>
 	<npc centerx="32533" centery="31440" centerz="10" radius="1">
 		<npc name="Drog" x="0" y="0" z="10" spawntime="60" />
 	</npc>
@@ -2671,6 +2680,9 @@
 	<npc centerx="33040" centery="32484" centerz="11" radius="1">
 		<npc name="Zarifan" x="0" y="0" z="11" spawntime="60" />
 	</npc>
+	<npc centerx="32538" centery="32574" centerz="11" radius="5">
+		<npc name="Quill" x="0" y="0" z="11" spawntime="60" />
+	</npc>
 	<npc centerx="32242" centery="32598" centerz="11" radius="1">
 		<npc name="Gnombold" x="0" y="0" z="11" spawntime="60" />
 	</npc>
@@ -2694,6 +2706,9 @@
 	</npc>
 	<npc centerx="32682" centery="31392" centerz="12" radius="1">
 		<npc name="Zirkon" x="0" y="0" z="12" spawntime="60" />
+	</npc>
+	<npc centerx="32898" centery="31421" centerz="12" radius="5">
+		<npc name="Anaztassja Moroia" x="0" y="0" z="12" spawntime="60" />
 	</npc>
 	<npc centerx="33037" centery="31533" centerz="12" radius="1">
 		<npc name="Esrik" x="0" y="0" z="12" spawntime="60" />
@@ -2860,6 +2875,9 @@
 	<npc centerx="32614" centery="31502" centerz="14" radius="1">
 		<npc name="Xorlosh" x="0" y="0" z="14" spawntime="60" />
 	</npc>
+	<npc centerx="32944" centery="31504" centerz="14" radius="5">
+		<npc name="Anaztassja Moroia" x="0" y="0" z="14" spawntime="60" />
+	</npc>
 	<npc centerx="32609" centery="31515" centerz="14" radius="1">
 		<npc name="Grombur" x="0" y="0" z="14" spawntime="60" />
 	</npc>
@@ -2967,6 +2985,9 @@
 	</npc>
 	<npc centerx="32589" centery="31407" centerz="15" radius="1">
 		<npc name="Pythius The Rotten" x="0" y="0" z="15" spawntime="60" />
+	</npc>
+	<npc centerx="32950" centery="31462" centerz="15" radius="5">
+		<npc name="Anaztassja Moroia" x="0" y="0" z="15" spawntime="60" />
 	</npc>
 	<npc centerx="33027" centery="31525" centerz="15" radius="1">
 		<npc name="Prezil" x="0" y="0" z="15" spawntime="60" />

@@ -19,6 +19,7 @@
 
 #include "config/configmanager.hpp"
 #include "creatures/appearance/mounts/mounts.hpp"
+#include "creatures/appearance/attached_effects/attached_effects.hpp"
 #include "creatures/combat/condition.hpp"
 #include "creatures/combat/spells.hpp"
 #include "creatures/creature.hpp"
@@ -232,6 +233,7 @@ Game::Game() {
 
 	// Create instance of IOWheel to Game class
 	m_IOWheel = std::make_unique<IOWheel>();
+	m_attachedEffects = std::make_unique<AttachedEffects>();
 
 	wildcardTree = std::make_shared<WildcardTreeNode>(false);
 
@@ -649,6 +651,7 @@ void Game::setGameState(GameState_t newState) {
 			raids.startup();
 
 			mounts->loadFromXml();
+			m_attachedEffects->loadFromXml();
 
 			loadMotdNum();
 			loadPlayersRecord();
@@ -2685,21 +2688,30 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 		g_logger().error("[{}] cylinder is nullptr", __FUNCTION__);
 		return false;
 	}
+
 	if (money == 0) {
 		return true;
 	}
+
+	// Gather all money-like items (worth > 0) from this cylinder and nested containers.
 	std::vector<std::shared_ptr<Container>> containers;
-	std::multimap<uint32_t, std::shared_ptr<Item>> moneyMap;
+	containers.reserve(8);
+
+	std::vector<std::pair<uint32_t, std::shared_ptr<Item>>> moneyItems;
+	moneyItems.reserve(16);
+
 	uint64_t moneyCount = 0;
 	for (size_t i = cylinder->getFirstIndex(), j = cylinder->getLastIndex(); i < j; ++i) {
 		const std::shared_ptr<Thing> &thing = cylinder->getThing(i);
 		if (!thing) {
 			continue;
 		}
+
 		const auto &item = thing->getItem();
 		if (!item) {
 			continue;
 		}
+
 		const std::shared_ptr<Container> &container = item->getContainer();
 		if (container) {
 			containers.push_back(container);
@@ -2707,10 +2719,11 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 			const uint32_t worth = item->getWorth();
 			if (worth != 0) {
 				moneyCount += worth;
-				moneyMap.emplace(worth, item);
+				moneyItems.emplace_back(worth, item);
 			}
 		}
 	}
+
 	size_t i = 0;
 	while (i < containers.size()) {
 		const std::shared_ptr<Container> &container = containers[i++];
@@ -2722,7 +2735,7 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 				const uint32_t worth = item->getWorth();
 				if (worth != 0) {
 					moneyCount += worth;
-					moneyMap.emplace(worth, item);
+					moneyItems.emplace_back(worth, item);
 				}
 			}
 		}
@@ -2738,15 +2751,24 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 		return false;
 	}
 
-	for (const auto &moneyEntry : moneyMap) {
-		const std::shared_ptr<Item> &item = moneyEntry.second;
-		if (moneyEntry.first < money) {
+	// Sort money items descending by worth to minimize item operations.
+	std::sort(moneyItems.begin(), moneyItems.end(), [](const auto &a, const auto &b) {
+		return a.first > b.first;
+	});
+
+	for (const auto &entry : moneyItems) {
+		const uint32_t worthTotal = entry.first;
+		const std::shared_ptr<Item> &item = entry.second;
+		if (worthTotal < money) {
 			internalRemoveItem(item);
-			money -= moneyEntry.first;
-		} else if (moneyEntry.first > money) {
-			const uint32_t worth = moneyEntry.first / item->getItemCount();
-			const uint32_t removeCount = std::ceil(money / static_cast<double>(worth));
-			addMoney(cylinder, (worth * removeCount) - money, flags);
+			money -= worthTotal;
+			if (money == 0) {
+				return true;
+			}
+		} else if (worthTotal > money) {
+			const uint32_t unitWorth = worthTotal / item->getItemCount();
+			const uint32_t removeCount = std::ceil(money / static_cast<double>(unitWorth));
+			addMoney(cylinder, (unitWorth * removeCount) - money, flags);
 			internalRemoveItem(item, removeCount);
 			return true;
 		} else {
@@ -2755,6 +2777,7 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 		}
 	}
 
+	// If still needed, debit from bank balance (keeps original behavior: items first, then bank)
 	if (useBalance && player && player->getBankBalance() >= money) {
 		player->setBankBalance(player->getBankBalance() - money);
 	}
@@ -2767,11 +2790,15 @@ void Game::addMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money, u
 		g_logger().error("[{}] cylinder is nullptr", __FUNCTION__);
 		return;
 	}
+
 	if (money == 0) {
 		return;
 	}
 
 	auto addCoins = [&](uint16_t itemId, uint32_t count) {
+		if (count == 0) {
+			return;
+		}
 		while (count > 0) {
 			const uint16_t createCount = std::min<uint32_t>(100, count);
 			const std::shared_ptr<Item> &remaindItem = Item::CreateItem(itemId, createCount);
@@ -2785,16 +2812,20 @@ void Game::addMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money, u
 		}
 	};
 
-	uint32_t crystalCoins = money / 10000;
-	money -= crystalCoins * 10000;
-	addCoins(ITEM_CRYSTAL_COIN, crystalCoins);
+	uint32_t crystalCoins = static_cast<uint32_t>(money / 10000);
+	if (crystalCoins) {
+		money -= static_cast<uint64_t>(crystalCoins) * 10000ULL;
+		addCoins(ITEM_CRYSTAL_COIN, crystalCoins);
+	}
 
-	uint16_t platinumCoins = money / 100;
-	money -= platinumCoins * 100;
-	addCoins(ITEM_PLATINUM_COIN, platinumCoins);
+	uint32_t platinumCoins = static_cast<uint32_t>(money / 100);
+	if (platinumCoins) {
+		money -= static_cast<uint64_t>(platinumCoins) * 100ULL;
+		addCoins(ITEM_PLATINUM_COIN, static_cast<uint16_t>(platinumCoins));
+	}
 
 	if (money > 0) {
-		addCoins(ITEM_GOLD_COIN, money);
+		addCoins(ITEM_GOLD_COIN, static_cast<uint32_t>(money));
 	}
 }
 
@@ -3509,19 +3540,24 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 				ret = internalCollectManagedItems(player, rightItem, getObjectCategory(rightItem), false);
 			}
 
-			// Check if trying to equip a quiver while another quiver is already equipped in the right slot
-			if (slot == CONST_SLOT_RIGHT && rightItem && rightItem->isQuiver() && it.isQuiver()) {
-				// Replace the existing quiver with the new one
-				ret = internalMoveItem(rightItem->getParent(), player, INDEX_WHEREEVER, rightItem, rightItem->getItemCount(), nullptr);
-				if (ret == RETURNVALUE_NOERROR) {
-					g_logger().debug("Quiver {} was unequipped to equip new quiver", rightItem->getName());
-				} else {
-					player->sendCancelMessage(ret);
-					return;
+			/* FIX: Auto-unequip shield when equipping two-handed bow */
+			if (slot == CONST_SLOT_LEFT && (slotPosition & SLOTP_TWO_HAND) && equipItem->getWeaponType() == WEAPON_DISTANCE) {
+				if (rightItem && !rightItem->isQuiver()) {
+					// Unequip item from right slot (shield or other item)
+					ret = internalMoveItem(rightItem->getParent(), player, INDEX_WHEREEVER, rightItem, rightItem->getItemCount(), nullptr);
+					if (ret == RETURNVALUE_NOERROR) {
+						g_logger().debug("Item {} was unequipped to equip two-handed bow", rightItem->getName());
+					} else {
+						player->sendCancelMessage(ret);
+						return;
+					}
 				}
-			} else {
-				// Check if trying to equip a shield while a two-handed weapon is equipped in the left slot
-				if (slot == CONST_SLOT_RIGHT && leftItem && leftItem->getSlotPosition() & SLOTP_TWO_HAND) {
+			}
+
+			// Check if trying to equip a shield while a two-handed weapon is equipped in the left slot
+			if (slot == CONST_SLOT_RIGHT && leftItem && leftItem->getSlotPosition() & SLOTP_TWO_HAND) {
+				// FIX: Don't unequip bow if quiver is equipped */
+				if (!it.isQuiver() || leftItem->getWeaponType() != WEAPON_DISTANCE) {
 					// Unequip the two-handed weapon from the left slot
 					ret = internalMoveItem(leftItem->getParent(), player, INDEX_WHEREEVER, leftItem, leftItem->getItemCount(), nullptr);
 					if (ret == RETURNVALUE_NOERROR) {
@@ -6141,7 +6177,7 @@ void Game::playerRequestEditVip(uint32_t playerId, uint32_t guid, const std::str
 	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
-void Game::playerApplyImbuement(uint32_t playerId, uint16_t imbuementid, uint8_t slot, bool protectionCharm) {
+void Game::playerApplyImbuement(uint32_t playerId, uint16_t imbuementid, uint8_t slot) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
@@ -6166,13 +6202,13 @@ void Game::playerApplyImbuement(uint32_t playerId, uint16_t imbuementid, uint8_t
 		return;
 	}
 
-	if (item->getTopParent() != player) {
+	if (item->getTopParent() != player && item->getID() != ITEM_BLANK_IMBUEMENT_SCROLL) {
 		g_logger().error("[Game::playerApplyImbuement] - An error occurred while player with name {} try to apply imbuement", player->getName());
 		player->sendImbuementResult("An error has occurred, reopen the imbuement window. If the problem persists, contact your administrator.");
 		return;
 	}
 
-	player->onApplyImbuement(imbuement, item, slot, protectionCharm);
+	player->onApplyImbuement(imbuement, item, slot);
 	player->setNextImbuement(OTSYS_TIME() + g_configManager().getNumber(IMBUEMENT_ACTIONS_DELAY_INTERVAL) - 10);
 }
 
@@ -6339,6 +6375,82 @@ void Game::playerChangeOutfit(uint32_t playerId, Outfit_t outfit, bool isMounted
 		}
 
 		internalCreatureChangeOutfit(player, outfit);
+	}
+
+	auto &playerAttachedEffects = player->attachedEffects();
+	// Wings
+	if (outfit.lookWing != 0) {
+		const auto &wing = m_attachedEffects->getWingByID(outfit.lookWing);
+		if (!wing) {
+			return;
+		}
+
+		player->detachEffectById(playerAttachedEffects.getCurrentWing());
+		playerAttachedEffects.setCurrentWing(wing->id);
+		player->attachEffectById(wing->id);
+	} else {
+		if (playerAttachedEffects.isWinged()) {
+			playerAttachedEffects.diswing();
+		}
+		player->detachEffectById(playerAttachedEffects.getCurrentWing());
+		playerAttachedEffects.setWasWinged(false);
+	}
+	// Effect
+	if (outfit.lookEffect != 0) {
+		const auto &effect = m_attachedEffects->getEffectByID(outfit.lookEffect);
+		if (!effect) {
+			return;
+		}
+
+		player->detachEffectById(playerAttachedEffects.getCurrentEffect());
+		playerAttachedEffects.setCurrentEffect(effect->id);
+		player->attachEffectById(effect->id);
+	} else {
+		if (playerAttachedEffects.isEffected()) {
+			playerAttachedEffects.diseffect();
+		}
+		player->detachEffectById(playerAttachedEffects.getCurrentEffect());
+		playerAttachedEffects.setWasEffected(false);
+	}
+
+	// Aura
+	if (outfit.lookAura != 0) {
+		const auto &aura = m_attachedEffects->getAuraByID(outfit.lookAura);
+		if (!aura) {
+			return;
+		}
+
+		player->detachEffectById(playerAttachedEffects.getCurrentAura());
+		playerAttachedEffects.setCurrentAura(aura->id);
+		player->attachEffectById(aura->id);
+	} else {
+		if (playerAttachedEffects.isAuraed()) {
+			playerAttachedEffects.disaura();
+		}
+		player->detachEffectById(playerAttachedEffects.getCurrentAura());
+		playerAttachedEffects.setWasAuraed(false);
+	}
+	// Shaders
+	if (outfit.lookShader != 0) {
+		const auto &shaderPtr = m_attachedEffects->getShaderByID(outfit.lookShader);
+		if (!shaderPtr) {
+			return;
+		}
+		Shader* shader = shaderPtr.get();
+
+		if (!playerAttachedEffects.hasShader(shader)) {
+			return;
+		}
+
+		playerAttachedEffects.setCurrentShader(shader->id);
+		playerAttachedEffects.sendShader(player, shader->name);
+
+	} else {
+		if (playerAttachedEffects.isShadered()) {
+			playerAttachedEffects.disshader();
+		}
+		playerAttachedEffects.sendShader(player, "Outfit - Default");
+		playerAttachedEffects.setWasShadered(false);
 	}
 }
 
@@ -8387,12 +8499,13 @@ void Game::checkImbuementsAndSereneStatus() {
 		}
 
 		const auto &party = mapPlayer->getParty();
-		if (party) {
-			mapPlayer->setSerene(isPlayerNoBoxed(mapPlayer));
-			continue;
-		}
+		bool hasNearbyPartyMembers = party ? hasPartyMembersNearby(mapPlayer) : false;
+		bool hasLessThanSixMonsters = isPlayerNoBoxed(mapPlayer);
 
-		mapPlayer->setSerene(true);
+		bool condition1 = !party || !hasNearbyPartyMembers;
+		bool condition2 = hasLessThanSixMonsters;
+
+		mapPlayer->setSerene(condition1 && condition2);
 	}
 }
 
@@ -11008,6 +11121,14 @@ const std::unique_ptr<IOWheel> &Game::getIOWheel() const {
 	return m_IOWheel;
 }
 
+std::unique_ptr<AttachedEffects> &Game::getAttachedEffects() {
+	return m_attachedEffects;
+}
+
+const std::unique_ptr<AttachedEffects> &Game::getAttachedEffects() const {
+	return m_attachedEffects;
+}
+
 void Game::transferHouseItemsToDepot() {
 	if (!g_configManager().getBoolean(TOGGLE_HOUSE_TRANSFER_ON_SERVER_RESTART)) {
 		return;
@@ -11731,6 +11852,45 @@ void Game::createIllusion(const std::shared_ptr<Player> &player, const Outfit_t 
 	player->addCondition(outfitCondition);
 }
 
+bool Game::hasPartyMembersNearby(const std::shared_ptr<Player> &player) {
+	if (!player) {
+		return false;
+	}
+
+	const auto &party = player->getParty();
+	if (!party) {
+		return false;
+	}
+
+	const Position &centerPos = player->getPosition();
+	for (int offsetX = -3; offsetX <= 3; ++offsetX) {
+		for (int offsetY = -3; offsetY <= 3; ++offsetY) {
+			if (offsetX == 0 && offsetY == 0) {
+				continue;
+			}
+
+			const auto &tile = g_game().map.getTile(static_cast<uint16_t>(centerPos.x + offsetX), static_cast<uint16_t>(centerPos.y + offsetY), centerPos.z);
+			if (!tile) {
+				continue;
+			}
+
+			const auto &topCreature = tile->getTopCreature();
+			if (!topCreature) {
+				continue;
+			}
+
+			const auto &nearbyPlayer = topCreature->getPlayer();
+			if (nearbyPlayer && nearbyPlayer != player) {
+				if (nearbyPlayer->getParty() == party) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
 bool Game::isPlayerNoBoxed(const std::shared_ptr<Player> &player) {
 	if (!player) {
 		return true;
@@ -11756,6 +11916,11 @@ bool Game::isPlayerNoBoxed(const std::shared_ptr<Player> &player) {
 			}
 
 			if (topCreature->getMaster() && topCreature->getMaster()->getPlayer() == player) {
+				continue;
+			}
+
+			// Ignore other players (including party members)
+			if (topCreature->getPlayer()) {
 				continue;
 			}
 
@@ -11815,5 +11980,93 @@ void Game::internalDecayItem(const std::shared_ptr<Item> &item) {
 		if (ret != RETURNVALUE_NOERROR) {
 			g_logger().warn("[Game::internalDecayItem] Failed to remove item during decay, item id: {}, error code: {}", item->getID(), static_cast<uint32_t>(ret));
 		}
+	}
+}
+
+void Game::sendAttachedEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId) {
+	auto spectators = Spectators().find<Player>(creature->getPosition(), true);
+	for (const auto &spectator : spectators) {
+		const auto &player = spectator->getPlayer();
+		if (player) {
+			player->attachedEffects().sendAttachedEffect(creature, effectId);
+		}
+	}
+}
+
+void Game::sendDetachEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId) {
+	auto spectators = Spectators().find<Player>(creature->getPosition(), true);
+	for (const auto &spectator : spectators) {
+		const auto &player = spectator->getPlayer();
+		if (player) {
+			player->attachedEffects().sendDetachEffect(creature, effectId);
+		}
+	}
+}
+
+void Game::updateCreatureShader(const std::shared_ptr<Creature> &creature) {
+	auto spectators = Spectators().find<Player>(creature->getPosition(), true);
+	for (const auto &spectator : spectators) {
+		const auto &player = spectator->getPlayer();
+		if (player) {
+			player->attachedEffects().sendShader(creature, creature->getShader());
+		}
+	}
+}
+
+void Game::playerSetTyping(uint32_t playerId, uint8_t typing) {
+	const auto &player = getPlayerByID(playerId);
+	if (!player) {
+		return;
+	}
+	for (const auto &spectator : Spectators().find<Player>(player->getPosition(), true)) {
+		if (const auto &tmpPlayer = spectator->getPlayer()) {
+			tmpPlayer->sendPlayerTyping(player, typing);
+		}
+	}
+}
+
+void Game::refreshItem(const std::shared_ptr<Item> &item) {
+	if (!item) {
+		return;
+	}
+	const auto &parent = item->getParent();
+	if (!parent) {
+		return;
+	}
+	if (const auto &creature = parent->getCreature()) {
+		if (const auto &player = creature->getPlayer()) {
+			int32_t index = player->getThingIndex(item);
+			if (index > -1) {
+				player->sendInventoryItem(static_cast<Slots_t>(index), item);
+			}
+		}
+		return;
+	}
+	if (const auto &container = parent->getContainer()) {
+		int32_t index = container->getThingIndex(item);
+		if (index > -1 && index <= std::numeric_limits<uint16_t>::max()) {
+			const auto spectators = Spectators().find<Player>(container->getPosition(), false, 2, 2, 2, 2);
+			// send to client
+			for (const auto &spectator : spectators) {
+				const auto &player = spectator->getPlayer();
+				if (!player) {
+					continue;
+				}
+				player->sendUpdateContainerItem(container, static_cast<uint16_t>(index), item);
+			}
+		}
+		return;
+	}
+	if (const auto &tile = parent->getTile()) {
+		const auto spectators = Spectators().find<Player>(tile->getPosition(), true);
+		// send to client
+		for (const auto &spectator : spectators) {
+			const auto &player = spectator->getPlayer();
+			if (!player) {
+				continue;
+			}
+			player->sendUpdateTileItem(tile, tile->getPosition(), item);
+		}
+		return;
 	}
 }

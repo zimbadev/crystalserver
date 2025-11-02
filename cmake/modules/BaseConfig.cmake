@@ -35,6 +35,7 @@ endif()
 find_package(mio REQUIRED)
 find_package(pugixml CONFIG REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 find_package(unofficial-argon2 CONFIG REQUIRED)
 find_package(unofficial-libmariadb CONFIG REQUIRED)
 

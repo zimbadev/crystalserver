@@ -141,15 +141,11 @@ void Item::setImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration) {
 	setCustomAttribute(std::to_string(ITEM_IMBUEMENT_SLOT + slot), valueDuration);
 }
 
-bool Item::addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration) {
-	const auto &player = getHoldingPlayer();
-	if (!player) {
-		return false;
-	}
-
-	// Get imbuement by the id
-	const Imbuement* imbuement = g_imbuements().getImbuement(imbuementId);
-	if (!imbuement) {
+bool Item::canAddImbuement(uint8_t slot, const std::shared_ptr<Player> &player, const Imbuement* imbuement) {
+	auto itemSlots = getImbuementSlot();
+	if (itemSlots == 0 || slot >= itemSlots) {
+		g_logger().error("[Player::onApplyImbuement] - Player {} attempted to apply imbuement in an invalid slot ({})", player->getName(), slot);
+		player->sendImbuementResult("Invalid slot selection.");
 		return false;
 	}
 
@@ -165,8 +161,6 @@ bool Item::addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration) {
 		player->sendImbuementResult("An error ocurred, please reopen imbuement window.");
 		return false;
 	}
-
-	setImbuement(slot, imbuementId, duration);
 
 	return true;
 }
@@ -3552,4 +3546,22 @@ int32_t ItemProperties::getDuration() const {
 	} else {
 		return getAttribute<int32_t>(ItemAttribute_t::DURATION);
 	}
+}
+
+void ItemProperties::setShader(const std::string &shaderName) {
+	if (shaderName.empty()) {
+		removeCustomAttribute("shader");
+		return;
+	}
+
+	setCustomAttribute("shader", shaderName);
+}
+
+bool ItemProperties::hasShader() const {
+	return getCustomAttribute("shader") != nullptr;
+}
+
+std::string ItemProperties::getShader() const {
+	const CustomAttribute* shader = getCustomAttribute("shader");
+	return shader ? shader->getString() : "";
 }

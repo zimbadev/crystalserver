@@ -383,6 +383,8 @@ public:
 
 	std::string elementalBond;
 	int16_t mantra = 0;
+
+	uint32_t proficiencyId = 0;
 };
 
 class Items {

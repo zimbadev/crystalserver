@@ -361,7 +361,7 @@ ReturnValue Actions::internalUseItem(const std::shared_ptr<Player> &player, cons
 		const uint32_t corpseOwner = container->getCorpseOwner();
 		if (container->isRewardCorpse()) {
 			// only players who participated in the fight can open the corpse
-			if (player->getGroup()->id >= GROUP_TYPE_GAMEMASTER) {
+			if (player->getGroup()->id == GROUP_TYPE_GAMEMASTER) {
 				return RETURNVALUE_YOUCANTOPENCORPSEADM;
 			}
 			const auto &reward = player->getReward(rewardId, false);

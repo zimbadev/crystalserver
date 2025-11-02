@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
     CONSTRAINT `server_config_pk` PRIMARY KEY (`config`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '55'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
+INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '58'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -148,9 +148,11 @@ CREATE TABLE IF NOT EXISTS `players` (
     `forge_dust_level` bigint(21) NOT NULL DEFAULT '100',
     `randomize_mount` tinyint(1) NOT NULL DEFAULT '0',
     `boss_points` int NOT NULL DEFAULT '0',
+    `loyalty_points` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `animus_mastery` mediumblob DEFAULT NULL,
     `virtue` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `harmony` int(10) UNSIGNED NOT NULL DEFAULT '0',
+    `weapon_proficiencies` mediumblob DEFAULT NULL,
     INDEX `account_id` (`account_id`),
     INDEX `vocation` (`vocation`),
     CONSTRAINT `players_pk` PRIMARY KEY (`id`),

@@ -713,7 +713,7 @@ void Spell::getCombatDataAugment(const std::shared_ptr<Player> &player, CombatDa
 				if (
 					augment->type == Augment_t::IncreasedDamage || augment->type == Augment_t::PowerfulImpact || augment->type == Augment_t::StrongImpact || augment->type == Augment_t::Base
 				) {
-					const float augmentPercent = augment->value / 100.0;
+					const float augmentPercent = augment->value / 10000.0f;
 					damage.primary.value += static_cast<int32_t>(damage.primary.value * augmentPercent);
 					damage.secondary.value += static_cast<int32_t>(damage.secondary.value * augmentPercent);
 				} else if (augment->type != Augment_t::Cooldown) {
@@ -721,6 +721,44 @@ void Spell::getCombatDataAugment(const std::shared_ptr<Player> &player, CombatDa
 					damage.lifeLeech += augment->type == Augment_t::LifeLeech ? augmentValue : 0;
 					damage.manaLeech += augment->type == Augment_t::ManaLeech ? augmentValue : 0;
 					damage.criticalDamage += augment->type == Augment_t::CriticalExtraDamage ? augmentValue : 0;
+					damage.criticalChance += augment->type == Augment_t::CriticalHitChance ? augment->value : 0;
+				}
+			}
+		}
+
+		for (const auto &playerProficiencyAugment : player->getEquippedWeaponProficiency().spellAugments) {
+			if (playerProficiencyAugment.spellId == getSpellId()) {
+				if (playerProficiencyAugment.value == 0) {
+					continue;
+				}
+
+				switch (playerProficiencyAugment.augmentType) {
+					case PROFICIENCY_AUGMENTTYPE_BASE_DAMAGE: {
+						const float augmentPercent = playerProficiencyAugment.value;
+						damage.primary.value += static_cast<int32_t>(damage.primary.value * augmentPercent);
+						damage.secondary.value += static_cast<int32_t>(damage.secondary.value * augmentPercent);
+						break;
+					}
+					case PROFICIENCY_AUGMENTTYPE_LIFE_LEECH: {
+						const int32_t augmentValueLifeLeech = playerProficiencyAugment.value * 1000;
+						damage.lifeLeech += augmentValueLifeLeech;
+						break;
+					}
+					case PROFICIENCY_AUGMENTTYPE_MANA_LEECH: {
+						const int32_t augmentValueManaLeech = playerProficiencyAugment.value * 1000;
+						damage.manaLeech += augmentValueManaLeech;
+						break;
+					}
+					case PROFICIENCY_AUGMENTTYPE_CRITICAL_EXTRA_DAMAGE: {
+						const int32_t augmentValueCriticalDamage = playerProficiencyAugment.value * 1000;
+						damage.criticalDamage += augmentValueCriticalDamage;
+						break;
+					}
+					case PROFICIENCY_AUGMENTTYPE_CRITICAL_HIT_CHANCE: {
+						const int32_t augmentValueCriticalChance = playerProficiencyAugment.value * 1000;
+						damage.criticalChance += augmentValueCriticalChance;
+						break;
+					}
 				}
 			}
 		}
@@ -734,6 +772,15 @@ int32_t Spell::calculateAugmentSpellCooldownReduction(const std::shared_ptr<Play
 		const auto augments = item->getAugmentsBySpellNameAndType(getName(), Augment_t::Cooldown);
 		for (const auto &augment : augments) {
 			spellCooldown += augment->value;
+		}
+	}
+
+	for (const auto &playerProficiencyAugment : player->getEquippedWeaponProficiency().spellAugments) {
+		if (playerProficiencyAugment.spellId == getSpellId()) {
+			if (playerProficiencyAugment.augmentType == PROFICIENCY_AUGMENTTYPE_COOLDOWN) {
+				const int32_t augmentValue = playerProficiencyAugment.value * 1;
+				spellCooldown += augmentValue;
+			}
 		}
 	}
 

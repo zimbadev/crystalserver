@@ -121,6 +121,29 @@ message Appearance {
 	optional bytes description = 5;
 }
 
+enum WEAPON_TYPE {
+  WEAPON_TYPE_NOWEAPON = 0;
+  WEAPON_TYPE_SWORD = 1;
+  WEAPON_TYPE_AXE = 2;
+  WEAPON_TYPE_CLUB = 3;
+  WEAPON_TYPE_FIST = 4;
+  WEAPON_TYPE_BOW = 5;
+  WEAPON_TYPE_CROSSBOW = 6;
+  WEAPON_TYPE_WAND_ROD = 7;
+  WEAPON_TYPE_THROW = 8;
+}
+
+enum VOCATION {
+  VOCATION_ANY = -1;
+  VOCATION_NONE = 0;
+  VOCATION_KNIGHT = 1;
+  VOCATION_PALADIN = 2;
+  VOCATION_SORCERER = 3;
+  VOCATION_DRUID = 4;
+  VOCATION_MONK = 5;
+  VOCATION_PROMOTED = 10;
+}
+
 message AppearanceFlags {
 	optional AppearanceFlagBank bank = 1;
 	optional bool clip = 2;
@@ -179,6 +202,13 @@ message AppearanceFlags {
 	optional bool expire = 55;
 	optional bool expirestop = 56;
 	optional bool wrapkit = 57;
+	optional AppearanceFlagSkillWheelGem skillwheel_gem = 58;
+	optional bool dual_wielding = 59;
+	optional AppearanceFlagImbueable imbueable = 60;
+	optional AppearanceFlagProficiency proficiency = 61;
+	repeated VOCATION restrict_to_vocation = 62;
+	optional uint32 minimum_level = 63;
+	optional WEAPON_TYPE weapon_type = 64;
 }
 
 message AppearanceFlagUpgradeClassification {
@@ -270,4 +300,17 @@ enum FIXED_FRAME_GROUP {
 	FIXED_FRAME_GROUP_OUTFIT_IDLE = 0;
 	FIXED_FRAME_GROUP_OUTFIT_MOVING = 1;
 	FIXED_FRAME_GROUP_OBJECT_INITIAL = 2;
+}
+
+message AppearanceFlagSkillWheelGem {
+  optional uint32 gem_quality_id = 1;
+  optional uint32 vocation_id = 2;
+}
+
+message AppearanceFlagImbueable {
+  optional uint32 slot_count = 1;
+}
+
+message AppearanceFlagProficiency {
+  optional uint32 proficiency_id = 1;
 }

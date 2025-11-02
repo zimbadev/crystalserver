@@ -254,6 +254,10 @@ local looktypes = {
 	1824,
 	1831,
 	1837,
+	1861,
+	1875,
+	1860,
+	1874,
 }
 
 function addaddon.onSay(player, words, param)

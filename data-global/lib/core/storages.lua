@@ -2891,6 +2891,17 @@ Storage = {
 				},
 			},
 		},
+		U15_10 = { -- update 15.10 - Reserved Storages 48000 - 48030
+			BloodyTusks = {
+				Questline = 48000,
+				IntoTheGrave = 48001,
+				ThroughTheMist = 48002,
+				TheWrathOfTheAncestorst = 48003,
+				DanceOfDeath = 48004,
+				TheNextStep = 48005,
+				Bloodbath = 48006,
+			},
+		},
 	},
 
 	-- Reserved storage from 63951 - 63999

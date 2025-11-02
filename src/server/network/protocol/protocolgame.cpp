@@ -21,6 +21,7 @@
 #include "config/configmanager.hpp"
 #include "core.hpp"
 #include "creatures/appearance/mounts/mounts.hpp"
+#include "creatures/appearance/attached_effects/attached_effects.hpp"
 #include "creatures/combat/condition.hpp"
 #include "creatures/combat/spells.hpp"
 #include "creatures/interactions/chat.hpp"
@@ -288,11 +289,33 @@ namespace {
 	 * @param[in] skill The specific skill to calculate (e.g., Life Leech, Mana Leech, Critical Hit Damage, etc.).
 	 */
 	void addCyclopediaSkills(std::shared_ptr<Player> &player, NetworkMessage &msg, skills_t skill) {
+		uint16_t concoctionBonus = 0;
+		uint16_t flatBonus = 0;
+		if (skill == SKILL_CRITICAL_HIT_DAMAGE) {
+			flatBonus = 1000;
+		} else if (skill == SKILL_CRITICAL_HIT_CHANCE) {
+			flatBonus = 500;
+			if (player->isConcoctionActive(Concoction_t::StrikeEnhancement)) {
+				concoctionBonus = 500; // Concoction Bonus
+			}
+		}
+
 		const auto skillTotal = player->getSkillLevel(skill);
 		const auto &playerItem = player->getInventoryItem(CONST_SLOT_LEFT);
 		double skillEquipment = 0.0;
 		if (playerItem) {
 			skillEquipment = playerItem->getSkill(skill);
+
+			// Weapon Proficiency
+			if (skill == SKILL_LIFE_LEECH_AMOUNT) {
+				skillEquipment += player->getEquippedWeaponProficiency().lifeLeech;
+			} else if (skill == SKILL_MANA_LEECH_AMOUNT) {
+				skillEquipment += player->getEquippedWeaponProficiency().manaLeech;
+			} else if (skill == SKILL_CRITICAL_HIT_DAMAGE) {
+				skillEquipment += player->getEquippedWeaponProficiency().critExtraDamage;
+			} else if (skill == SKILL_CRITICAL_HIT_CHANCE) {
+				skillEquipment += player->getEquippedWeaponProficiency().critHitChance;
+			}
 		}
 
 		double skillWheel = 0.0;
@@ -308,13 +331,23 @@ namespace {
 			skillWheel += playerWheel->checkAvatarSkill(WheelAvatarSkill_t::CRITICAL_DAMAGE);
 		}
 
-		double skillImbuement = skillTotal - skillEquipment - skillWheel;
+		double skillImbuement = skillTotal - concoctionBonus - flatBonus - skillEquipment - skillWheel;
 
-		msg.addDouble(skillTotal / 10000.);
-		msg.addDouble(skillEquipment / 10000.);
-		msg.addDouble(skillImbuement / 10000.);
-		msg.addDouble(skillWheel / 10000.);
-		msg.addDouble(0.00);
+		msg.addDouble(skillTotal / 10000.); // Total Bonus
+
+		if (skill == SKILL_CRITICAL_HIT_DAMAGE || skill == SKILL_CRITICAL_HIT_CHANCE) {
+			msg.addDouble(flatBonus / 10000.); // Flat Bonus
+		}
+
+		msg.addDouble(skillEquipment / 10000.); // Equipament Bonus
+		msg.addDouble(skillImbuement / 10000.); // Imbuement Bonus
+		msg.addDouble(skillWheel / 10000.); // Whell Bonus
+
+		if (skill == SKILL_LIFE_LEECH_AMOUNT || skill == SKILL_MANA_LEECH_AMOUNT) {
+			msg.addDouble(0.00); // Event Bonus
+		} else if (skill == SKILL_CRITICAL_HIT_CHANCE || skill == SKILL_CRITICAL_HIT_DAMAGE) {
+			msg.addDouble(concoctionBonus / 10000.); // Concoction Bonus
+		}
 	}
 } // namespace
 
@@ -347,6 +380,10 @@ void ProtocolGame::AddItem(NetworkMessage &msg, uint16_t id, uint8_t count, uint
 			msg.addByte(0xFF);
 		}
 
+		// OTCR Features
+		if (isOTCR) {
+			msg.addString(""); // g_game.enableFeature(GameItemShader)
+		}
 		return;
 	}
 
@@ -380,6 +417,11 @@ void ProtocolGame::AddItem(NetworkMessage &msg, uint16_t id, uint8_t count, uint
 	if (it.isWrapKit && !oldProtocol) {
 		msg.add<uint16_t>(0x00);
 	}
+
+	// OTCR Features
+	if (isOTCR) {
+		msg.addString(""); // g_game.enableFeature(GameItemShader)
+	}
 }
 
 void ProtocolGame::AddItem(NetworkMessage &msg, const std::shared_ptr<Item> &item) {
@@ -410,6 +452,10 @@ void ProtocolGame::AddItem(NetworkMessage &msg, const std::shared_ptr<Item> &ite
 			msg.addByte(0xFF);
 		}
 
+		// OTCR Features
+		if (isOTCR) {
+			msg.addString(item->getShader()); // g_game.enableFeature(GameItemShader)
+		}
 		return;
 	}
 
@@ -524,6 +570,11 @@ void ProtocolGame::AddItem(NetworkMessage &msg, const std::shared_ptr<Item> &ite
 			msg.add<uint16_t>(0x00);
 		}
 	}
+
+	// OTCR Features
+	if (isOTCR) {
+		msg.addString(item->getShader()); // g_game.enableFeature(GameItemShader)
+	}
 }
 
 void ProtocolGame::release() {
@@ -546,6 +597,9 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 	// Extended opcodes
 	if (operatingSystem >= CLIENTOS_OTCLIENT_LINUX) {
 		isOTC = true;
+		if (isOTC && otclientV8 == 0) {
+			sendOTCRFeatures();
+		}
 		NetworkMessage opcodeMessage;
 		opcodeMessage.addByte(0x32);
 		opcodeMessage.addByte(0x00);
@@ -1108,6 +1162,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 		case 0x32:
 			parseExtendedOpcode(msg);
 			break; // otclient extended opcode
+		case 0x38:
+			parsePlayerTyping(msg); // player are typing or not
+			break;
 		case 0x60:
 			parseInventoryImbuements(msg);
 			break;
@@ -1325,6 +1382,12 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			break;
 		case 0xB1:
 			parseHighscores(msg);
+			break;
+		case 0xB2:
+			parseImbuementWindow(msg);
+			break;
+		case 0xB3:
+			parseWeaponProficiency(msg);
 			break;
 		case 0xBA:
 			parseTaskHuntingAction(msg);
@@ -1789,6 +1852,19 @@ void ProtocolGame::parseSetOutfit(NetworkMessage &msg) {
 				g_logger().debug("Bool isMounted: {}", isMounted);
 
 				bool randomizeMount = msg.getByte() == 0x01;
+
+				if (isOTCR) {
+					// g_game.enableFeature(GameWingsAurasEffectsShader)
+					newOutfit.lookWing = msg.get<uint16_t>();
+					newOutfit.lookAura = msg.get<uint16_t>();
+					newOutfit.lookEffect = msg.get<uint16_t>();
+					std::string shaderName = msg.getString();
+					if (!shaderName.empty()) {
+						const auto &shader = g_game().getAttachedEffects()->getShaderByName(shaderName);
+						newOutfit.lookShader = shader ? shader->id : 0;
+					}
+				}
+
 				g_game().playerChangeOutfit(player->getID(), newOutfit, isMounted, randomizeMount);
 			} else {
 				g_game().playerChangeOutfit(player->getID(), newOutfit, false, 0);
@@ -1822,8 +1898,7 @@ void ProtocolGame::parseToggleMount(NetworkMessage &msg) {
 void ProtocolGame::parseApplyImbuement(NetworkMessage &msg) {
 	uint8_t slot = msg.getByte();
 	auto imbuementId = msg.get<uint32_t>();
-	bool protectionCharm = msg.getByte() != 0x00;
-	g_game().playerApplyImbuement(player->getID(), imbuementId, slot, protectionCharm);
+	g_game().playerApplyImbuement(player->getID(), imbuementId, slot);
 }
 
 void ProtocolGame::parseClearImbuement(NetworkMessage &msg) {
@@ -2601,6 +2676,11 @@ void ProtocolGame::parseCyclopediaMonsterTracker(NetworkMessage &msg) {
 			player->removeMonsterFromCyclopediaTrackerList(mtype, false, true);
 		}
 	}
+}
+
+void ProtocolGame::parsePlayerTyping(NetworkMessage &msg) {
+	uint8_t typing = msg.getByte();
+	g_dispatcher().addEvent([self = getThis(), playerID = player->getID(), typing] { g_game().playerSetTyping(playerID, typing); }, __FUNCTION__);
 }
 
 void ProtocolGame::sendTeamFinderList() {
@@ -4269,12 +4349,7 @@ void ProtocolGame::sendCyclopediaCharacterOffenceStats() {
 	msg.addByte(CYCLOPEDIA_CHARACTERINFO_OFFENCESTATS);
 	msg.addByte(0x00); // 0x00 Here means 'no error'
 
-	msg.addDouble(player->getSkillLevel(SKILL_CRITICAL_HIT_CHANCE) / 10000.); // Crit Chance Total
-	msg.addDouble(0.00);
-	msg.addDouble(0.00);
-	msg.addDouble(0.00);
-	msg.addDouble(0.00);
-
+	addCyclopediaSkills(player, msg, SKILL_CRITICAL_HIT_CHANCE);
 	addCyclopediaSkills(player, msg, SKILL_CRITICAL_HIT_DAMAGE);
 	addCyclopediaSkills(player, msg, SKILL_LIFE_LEECH_AMOUNT);
 	addCyclopediaSkills(player, msg, SKILL_MANA_LEECH_AMOUNT);
@@ -4287,7 +4362,7 @@ void ProtocolGame::sendCyclopediaCharacterOffenceStats() {
 	msg.addDouble(player->getCleavePercent() / 100.);
 
 	// Perfect shot range (12.70)
-	for (uint8_t range = 1; range <= 5; range++) {
+	for (uint8_t range = 1; range <= 7; range++) {
 		msg.add<uint16_t>(static_cast<uint16_t>(player->getPerfectShotDamage(range)));
 	}
 
@@ -4407,8 +4482,34 @@ void ProtocolGame::sendCyclopediaCharacterOffenceStats() {
 
 		msg.addDouble(0.0);
 		msg.addByte(0x00);
-		msg.addByte(0x00);
+
+		msg.addByte(0x00); // distanceAccuracySize
 	}
+
+	msg.addDouble(0x00);
+
+	msg.add<uint16_t>(0x00);
+
+	msg.addByte(0x00);
+
+	msg.addDouble(0x00);
+	msg.addDouble(0x00);
+
+	msg.addByte(0x00);
+
+	msg.addDouble(0x00);
+	msg.addDouble(0x00);
+
+	msg.add<uint16_t>(0x00);
+	msg.add<uint16_t>(0x00);
+	msg.add<uint16_t>(0x00);
+	msg.add<uint16_t>(0x00);
+
+	msg.addByte(0x00);
+
+	msg.addByte(0x00);
+
+	msg.addByte(0x00);
 
 	writeToOutputBuffer(msg);
 }
@@ -4527,6 +4628,9 @@ void ProtocolGame::sendCyclopediaCharacterMiscStats() {
 		msg.add<uint32_t>(concoction.second);
 	}
 
+	msg.addByte(0x00);
+	msg.addByte(0x00);
+	msg.addByte(0x00);
 	msg.addByte(0x00);
 
 	writeToOutputBuffer(msg);
@@ -4818,9 +4922,11 @@ void ProtocolGame::sendTextMessage(const TextMessage &message) {
 		}
 		case MESSAGE_HEALED:
 		case MESSAGE_HEALED_OTHERS: {
-			msg.addPosition(message.position);
-			msg.add<uint32_t>(message.primary.value);
-			msg.addByte(message.primary.color);
+			if (!oldProtocol) {
+				msg.addPosition(message.position);
+				msg.add<uint32_t>(message.primary.value);
+				msg.addByte(message.primary.color);
+			}
 			break;
 		}
 		case MESSAGE_EXPERIENCE:
@@ -6444,6 +6550,7 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId, uint8_t tier) {
 			} else {
 				msg.add<uint16_t>(0x00); // no mantra
 			}
+			msg.add<uint16_t>(0x00); // string imbuement effect
 			msg.addString(ss.str());
 		} else if (it.upgradeClassification > 0 && tier == 0) {
 			msg.addString(std::to_string(it.upgradeClassification));
@@ -6453,6 +6560,7 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId, uint8_t tier) {
 			} else {
 				msg.add<uint16_t>(0x00); // no mantra
 			}
+			msg.add<uint16_t>(0x00); // string imbuement effect
 			msg.addString(std::to_string(tier));
 		} else {
 			msg.add<uint16_t>(0x00); // no classification
@@ -6462,6 +6570,7 @@ void ProtocolGame::sendMarketDetail(uint16_t itemId, uint8_t tier) {
 			} else {
 				msg.add<uint16_t>(0x00); // no mantra
 			}
+			msg.add<uint16_t>(0x00); // string imbuement effect
 			msg.add<uint16_t>(0x00); // no tier
 		}
 	}
@@ -7500,6 +7609,28 @@ void ProtocolGame::sendOutfitWindow() {
 		currentOutfit.lookMount = 0;
 	}
 
+	auto &playerAttachedEffects = player->attachedEffects();
+	// Wings
+	const auto &currentWing = g_game().getAttachedEffects()->getWingByID(playerAttachedEffects.getCurrentWing());
+	if (currentWing) {
+		currentOutfit.lookWing = currentWing->id;
+	}
+	// Auras
+	const auto &currentAura = g_game().getAttachedEffects()->getAuraByID(playerAttachedEffects.getCurrentAura());
+	if (currentAura) {
+		currentOutfit.lookAura = currentAura->id;
+	}
+	// Effects
+	const auto &currentEffect = g_game().getAttachedEffects()->getEffectByID(playerAttachedEffects.getCurrentEffect());
+	if (currentEffect) {
+		currentOutfit.lookEffect = currentEffect->id;
+	}
+	// Shader
+	const auto &currentShader = g_game().getAttachedEffects()->getShaderByID(playerAttachedEffects.getCurrentShader());
+	if (currentShader) {
+		currentOutfit.lookShader = currentShader->id;
+	}
+
 	AddOutfit(msg, currentOutfit);
 
 	if (oldProtocol) {
@@ -7539,6 +7670,10 @@ void ProtocolGame::sendOutfitWindow() {
 			msg.addString(mount->name);
 		}
 
+		if (isOTCR) {
+			sendOutfitWindowCustomOTCR(msg); // g_game.enableFeature(GameWingsAurasEffectsShader)
+		}
+
 		player->hasRequestedOutfit(true);
 		writeToOutputBuffer(msg);
 		return;
@@ -7548,6 +7683,7 @@ void ProtocolGame::sendOutfitWindow() {
 	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountBody);
 	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountLegs);
 	msg.addByte(isSupportOutfit ? 0 : currentOutfit.lookMountFeet);
+
 	msg.add<uint16_t>(currentOutfit.lookFamiliarsType);
 
 	auto startOutfits = msg.getBufferPosition();
@@ -7677,6 +7813,10 @@ void ProtocolGame::sendOutfitWindow() {
 
 	// Version 12.81 - Random mount 'bool'
 	msg.addByte(isSupportOutfit ? 0x00 : (player->isRandomMounted() ? 0x01 : 0x00));
+
+	if (isOTCR) {
+		sendOutfitWindowCustomOTCR(msg); // g_game.enableFeature(GameWingsAurasEffectsShader)
+	}
 
 	player->hasRequestedOutfit(true);
 	writeToOutputBuffer(msg);
@@ -8177,6 +8317,14 @@ void ProtocolGame::AddCreature(NetworkMessage &msg, const std::shared_ptr<Creatu
 	}
 
 	msg.addByte(player->canWalkthroughEx(creature) ? 0x00 : 0x01);
+
+	if (isOTCR) {
+		msg.addString(creature->getShader()); // g_game.enableFeature(GameCreatureShader)
+		msg.addByte(static_cast<uint8_t>(creature->getAttachedEffectList().size())); // g_game.enableFeature(GameCreatureAttachedEffect)
+		for (const uint16_t id : creature->getAttachedEffectList()) {
+			msg.add<uint16_t>(id); // g_game.enableFeature(GameCreatureAttachedEffect)
+		}
+	}
 }
 
 void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
@@ -8406,93 +8554,162 @@ void ProtocolGame::AddOutfit(NetworkMessage &msg, const Outfit_t &outfit, bool a
 	if (addMount) {
 		msg.add<uint16_t>(outfit.lookMount);
 	}
+
+	if (isOTCR) {
+		AddOutfitCustomOTCR(msg, outfit); // g_game.enableFeature(GameWingsAurasEffectsShader)
+	}
 }
 
-void ProtocolGame::addImbuementInfo(NetworkMessage &msg, uint16_t imbuementId) const {
+void ProtocolGame::addImbuementInfo(NetworkMessage &msg, uint16_t imbuementId, bool isScroll) const {
 	Imbuement* imbuement = g_imbuements().getImbuement(imbuementId);
-	const BaseImbuement* baseImbuement = g_imbuements().getBaseByID(imbuement->getBaseID());
-	const CategoryImbuement* categoryImbuement = g_imbuements().getCategoryByID(imbuement->getCategory());
+	const uint16_t imbuementBaseId = imbuement->getBaseID();
+	const BaseImbuement* baseImbuement = g_imbuements().getBaseByID(imbuementBaseId);
 
 	msg.add<uint32_t>(imbuementId);
 	msg.addString(baseImbuement->name + " " + imbuement->getName());
 	msg.addString(imbuement->getDescription());
-	msg.addString(categoryImbuement->name + imbuement->getSubGroup());
+
+	msg.addByte(imbuementBaseId - 1); // 0 = Basic / 1 = Intricate / 2 = Powerful
 
 	msg.add<uint16_t>(imbuement->getIconID());
 	msg.add<uint32_t>(baseImbuement->duration);
 
-	msg.addByte(imbuement->isPremium() ? 0x01 : 0x00);
+	const auto &items = imbuement->getItems();
+	const uint8_t itemCount = static_cast<uint8_t>(isScroll ? items.size() + 1 : items.size());
 
-	const auto items = imbuement->getItems();
-	msg.addByte(items.size());
+	msg.addByte(itemCount);
 
-	for (const auto &itm : items) {
-		const ItemType &it = Item::items[itm.first];
-		msg.add<uint16_t>(itm.first);
-		msg.addString(it.name);
-		msg.add<uint16_t>(itm.second);
+	for (const auto &[needItemId, needItemCount] : items) {
+		const ItemType &itemType = Item::items[needItemId];
+		msg.add<uint16_t>(needItemId);
+		msg.addString(itemType.name);
+		msg.add<uint16_t>(needItemCount);
+	}
+
+	if (isScroll) {
+		const ItemType &itemType = Item::items[ITEM_BLANK_IMBUEMENT_SCROLL];
+		msg.add<uint16_t>(ITEM_BLANK_IMBUEMENT_SCROLL);
+		msg.addString(itemType.name);
+		msg.add<uint16_t>(1);
 	}
 
 	msg.add<uint32_t>(baseImbuement->price);
-	msg.addByte(baseImbuement->percent);
-	msg.add<uint32_t>(baseImbuement->protectionPrice);
 }
 
-void ProtocolGame::openImbuementWindow(const std::shared_ptr<Item> &item) {
-	if (!item || item->isRemoved()) {
-		return;
-	}
-
+void ProtocolGame::openImbuementWindow(const Imbuement_Window_t type, const std::shared_ptr<Item> &item /*= nullptr*/) {
 	player->setImbuingItem(item);
+
+	sendResourcesBalance(player->getMoney(), player->getBankBalance(), player->getPreyCards(), player->getTaskHuntingPoints());
 
 	NetworkMessage msg;
 	msg.addByte(0xEB);
-	msg.add<uint16_t>(item->getID());
-	if (!oldProtocol && item->getClassification() > 0) {
-		msg.addByte(0);
-	}
-	msg.addByte(item->getImbuementSlot());
 
-	// Send imbuement time
-	for (uint8_t slotid = 0; slotid < static_cast<uint8_t>(item->getImbuementSlot()); slotid++) {
-		ImbuementInfo imbuementInfo;
-		if (!item->getImbuementInfo(slotid, &imbuementInfo)) {
-			msg.addByte(0x00);
-			continue;
+	msg.addByte(static_cast<uint8_t>(type)); // type
+
+	if (item == nullptr || type == IMBUEMENT_WINDOW_CHOICE) {
+		msg.addByte(0x00); // unknown
+
+		msg.add<uint16_t>(0x00);
+		msg.add<uint32_t>(0x00);
+
+	} else if (type == IMBUEMENT_WINDOW_SELECT_ITEM) {
+		msg.addByte(0x00); // unknown
+
+		msg.add<uint16_t>(item->getID());
+		if (!oldProtocol && item->getClassification() > 0) {
+			msg.addByte(item->getTier());
 		}
 
-		msg.addByte(0x01);
-		addImbuementInfo(msg, imbuementInfo.imbuement->getID());
-		msg.add<uint32_t>(imbuementInfo.duration);
-		msg.add<uint32_t>(g_imbuements().getBaseByID(imbuementInfo.imbuement->getBaseID())->removeCost);
-	}
+		msg.addByte(item->getImbuementSlot()); // slot size
 
-	std::vector<Imbuement*> imbuements = g_imbuements().getImbuements(player, item);
-	phmap::flat_hash_map<uint16_t, uint16_t> needItems;
+		// Send imbuement time
+		for (uint8_t slotid = 0; slotid < static_cast<uint8_t>(item->getImbuementSlot()); slotid++) {
+			ImbuementInfo imbuementInfo;
+			if (!item->getImbuementInfo(slotid, &imbuementInfo)) {
+				msg.addByte(0x00);
+				continue;
+			}
 
-	msg.add<uint16_t>(imbuements.size());
-	for (const Imbuement* imbuement : imbuements) {
-		addImbuementInfo(msg, imbuement->getID());
+			msg.addByte(0x01); // imbuement slot is occupied
+			addImbuementInfo(msg, imbuementInfo.imbuement->getID(), false);
+			msg.add<uint32_t>(imbuementInfo.duration);
+			msg.add<uint32_t>(g_imbuements().getBaseByID(imbuementInfo.imbuement->getBaseID())->removeCost);
+		}
 
-		const auto items = imbuement->getItems();
-		for (const auto &itm : items) {
-			if (!needItems.count(itm.first)) {
-				needItems[itm.first] = player->getItemTypeCount(itm.first);
-				uint32_t stashCount = player->getStashItemCount(Item::items[itm.first].id);
-				if (stashCount > 0) {
-					needItems[itm.first] += stashCount;
+		std::vector<Imbuement*> imbuements = g_imbuements().getImbuements(player, item);
+		phmap::flat_hash_map<uint16_t, uint16_t> needItems;
+
+		msg.add<uint16_t>(imbuements.size());
+		for (const Imbuement* imbuement : imbuements) {
+			const uint16_t imbuementBaseId = imbuement->getBaseID();
+			if (imbuementBaseId == 0 || imbuementBaseId > 3) {
+				continue; // Skip basic imbuements
+			}
+
+			addImbuementInfo(msg, imbuement->getID(), false);
+
+			const auto &items = imbuement->getItems();
+			for (auto &[needItemId, needItemCount] : items) {
+				if (!needItems.count(needItemId)) {
+					needItems[needItemId] = player->getItemTypeCount(needItemId);
+					const uint32_t stashCount = player->getStashItemCount(needItemId);
+					if (stashCount > 0) {
+						needItems[needItemId] += stashCount;
+					}
 				}
 			}
 		}
-	}
 
-	msg.add<uint32_t>(needItems.size());
-	for (const auto &itm : needItems) {
-		msg.add<uint16_t>(itm.first);
-		msg.add<uint16_t>(itm.second);
-	}
+		msg.add<uint32_t>(needItems.size());
+		for (auto &[needItemId, needItemCount] : needItems) {
+			msg.add<uint16_t>(needItemId);
+			msg.add<uint16_t>(needItemCount);
+		}
 
-	sendResourcesBalance(player->getMoney(), player->getBankBalance(), player->getPreyCards(), player->getTaskHuntingPoints());
+	} else if (type == IMBUEMENT_WINDOW_SCROLL) {
+		msg.addByte(0x00); // unknown
+
+		msg.addByte(0x00); // unknown
+		msg.addByte(0x00); // unknown
+
+		std::vector<Imbuement*> imbuements = g_imbuements().getAllImbuementsIntricateAndPowerful(player);
+		phmap::flat_hash_map<uint16_t, uint16_t> needItems;
+
+		msg.add<uint16_t>(imbuements.size());
+		for (const Imbuement* imbuement : imbuements) {
+			const uint16_t imbuementBaseId = imbuement->getBaseID();
+			if (imbuementBaseId == 0 || imbuementBaseId > 3) {
+				continue; // Skip basic imbuements
+			}
+
+			addImbuementInfo(msg, imbuement->getID(), true);
+
+			const auto &items = imbuement->getItems();
+			for (auto &[needItemId, needItemCount] : items) {
+				if (!needItems.count(needItemId)) {
+					needItems[needItemId] = player->getItemTypeCount(needItemId);
+					const uint32_t stashCount = player->getStashItemCount(needItemId);
+					if (stashCount > 0) {
+						needItems[needItemId] += stashCount;
+					}
+				}
+			}
+
+			if (!needItems.count(ITEM_BLANK_IMBUEMENT_SCROLL)) {
+				needItems[ITEM_BLANK_IMBUEMENT_SCROLL] = player->getItemTypeCount(ITEM_BLANK_IMBUEMENT_SCROLL);
+				const uint32_t stashCount = player->getStashItemCount(ITEM_BLANK_IMBUEMENT_SCROLL);
+				if (stashCount > 0) {
+					needItems[ITEM_BLANK_IMBUEMENT_SCROLL] += stashCount;
+				}
+			}
+		}
+
+		msg.add<uint32_t>(needItems.size());
+		for (auto &[needItemId, needItemCount] : needItems) {
+			msg.add<uint16_t>(needItemId);
+			msg.add<uint16_t>(needItemCount);
+		}
+	}
 
 	writeToOutputBuffer(msg);
 }
@@ -8898,6 +9115,26 @@ void ProtocolGame::sendFeatures() {
 	for (const auto &[gameFeature, haveFeature] : features) {
 		msg.addByte(static_cast<uint8_t>(gameFeature));
 		msg.addByte(haveFeature ? 1 : 0);
+	}
+	writeToOutputBuffer(msg);
+}
+
+// OTCR
+void ProtocolGame::sendOTCRFeatures() {
+	isOTCR = true;
+	const auto &enabledFeatures = g_configManager().getEnabledFeaturesOTC();
+	const auto &disabledFeatures = g_configManager().getDisabledFeaturesOTC();
+	NetworkMessage msg;
+	msg.addByte(0x43);
+	auto totalFeatures = static_cast<uint16_t>(enabledFeatures.size() + disabledFeatures.size());
+	msg.add<uint16_t>(totalFeatures);
+	for (auto feature : enabledFeatures) {
+		msg.addByte(static_cast<uint8_t>(feature));
+		msg.addByte(0x01);
+	}
+	for (auto feature : disabledFeatures) {
+		msg.addByte(static_cast<uint8_t>(feature));
+		msg.addByte(0x00);
 	}
 	writeToOutputBuffer(msg);
 }
@@ -9801,6 +10038,155 @@ void ProtocolGame::sendTakeScreenshot(Screenshot_t screenshotType) {
 	writeToOutputBuffer(msg);
 }
 
+void ProtocolGame::sendOutfitWindowCustomOTCR(NetworkMessage &msg) {
+	if (!isOTCR) {
+		return;
+	}
+	// wings
+	auto startWings = msg.getBufferPosition();
+	uint16_t limitWings = std::numeric_limits<uint16_t>::max();
+	uint16_t wingSize = 0;
+	msg.skipBytes(1);
+	const auto &wings = g_game().getAttachedEffects()->getWings();
+	for (const auto &wing : wings) {
+		if (player->attachedEffects().hasWing(wing)) {
+			msg.add<uint16_t>(wing->id);
+			msg.addString(wing->name);
+			++wingSize;
+		}
+		if (wingSize == limitWings) {
+			break;
+		}
+	}
+	auto endWings = msg.getBufferPosition();
+	msg.setBufferPosition(startWings);
+	msg.add<uint8_t>(wingSize);
+	msg.setBufferPosition(endWings);
+	// auras
+	auto startAuras = msg.getBufferPosition();
+	uint16_t limitAuras = std::numeric_limits<uint16_t>::max();
+	uint16_t auraSize = 0;
+	msg.skipBytes(1);
+	const auto &auras = g_game().getAttachedEffects()->getAuras();
+	for (const auto &aura : auras) {
+		if (player->attachedEffects().hasAura(aura)) {
+			msg.add<uint16_t>(aura->id);
+			msg.addString(aura->name);
+			++auraSize;
+		}
+		if (auraSize == limitAuras) {
+			break;
+		}
+	}
+	auto endAuras = msg.getBufferPosition();
+	msg.setBufferPosition(startAuras);
+	msg.add<uint8_t>(auraSize);
+	msg.setBufferPosition(endAuras);
+	// effects
+	auto startEffects = msg.getBufferPosition();
+	uint16_t limitEffects = std::numeric_limits<uint16_t>::max();
+	uint16_t effectSize = 0;
+	msg.skipBytes(1);
+	const auto &effects = g_game().getAttachedEffects()->getEffects();
+	for (const auto &effect : effects) {
+		if (player->attachedEffects().hasEffect(effect)) {
+			msg.add<uint16_t>(effect->id);
+			msg.addString(effect->name);
+			++effectSize;
+		}
+		if (effectSize == limitEffects) {
+			break;
+		}
+	}
+	auto endEffects = msg.getBufferPosition();
+	msg.setBufferPosition(startEffects);
+	msg.add<uint8_t>(effectSize);
+	msg.setBufferPosition(endEffects);
+	// shader
+	std::vector<const Shader*> shaders;
+	for (const auto &shader : g_game().getAttachedEffects()->getShaders()) {
+		if (player->attachedEffects().hasShader(shader.get())) {
+			shaders.push_back(shader.get());
+		}
+	}
+	msg.addByte(static_cast<uint8_t>(shaders.size()));
+	for (const Shader* shader : shaders) {
+		msg.add<uint16_t>(shader->id);
+		msg.addString(shader->name);
+	}
+}
+
+void ProtocolGame::sendAttachedEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x34);
+	msg.add<uint32_t>(creature->getID());
+	msg.add<uint16_t>(effectId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendDetachEffect(const std::shared_ptr<Creature> &creature, uint16_t effectId) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x35);
+	msg.add<uint32_t>(creature->getID());
+	msg.add<uint16_t>(effectId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendShader(const std::shared_ptr<Creature> &creature, const std::string &shaderName) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x36);
+	msg.add<uint32_t>(creature->getID());
+	msg.addString(shaderName);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendMapShader(const std::string &shaderName) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x37);
+	msg.addString(shaderName);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendPlayerTyping(const std::shared_ptr<Creature> &creature, uint8_t typing) {
+	if (!isOTCR) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x38);
+	msg.add<uint32_t>(creature->getID());
+	msg.addByte(typing);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::AddOutfitCustomOTCR(NetworkMessage &msg, const Outfit_t &outfit) {
+	if (!isOTCR) {
+		return;
+	}
+
+	msg.add<uint16_t>(outfit.lookWing);
+	msg.add<uint16_t>(outfit.lookAura);
+	msg.add<uint16_t>(outfit.lookEffect);
+	const auto &shader = g_game().getAttachedEffects()->getShaderByID(outfit.lookShader);
+	msg.addString(shader ? shader->name : "");
+}
+
 void ProtocolGame::parseCyclopediaHouseAuction(NetworkMessage &msg) {
 	if (oldProtocol) {
 		return;
@@ -10038,4 +10424,113 @@ void ProtocolGame::parseSelectSpellAimProtocol(NetworkMessage &msg) {
 	}
 
 	player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
+}
+
+void ProtocolGame::parseImbuementWindow(NetworkMessage &msg) {
+	if (!player || oldProtocol) {
+		return;
+	}
+
+	const Imbuement_Window_t type = static_cast<Imbuement_Window_t>(msg.getByte());
+
+	if (type == IMBUEMENT_WINDOW_CHOICE) {
+		player->openImbuementWindow(type);
+	} else if (type == IMBUEMENT_WINDOW_SELECT_ITEM) {
+		const Position &pos = msg.getPosition();
+		const uint16_t itemId = msg.get<uint16_t>();
+		const uint8_t stackPos = msg.getByte();
+
+		const std::shared_ptr<Thing> &thing = g_game().internalGetThing(player, pos, stackPos, itemId, STACKPOS_USETARGET);
+		if (!thing) {
+			return;
+		}
+
+		const std::shared_ptr<Item> &item = thing->getItem();
+		if (!item) {
+			return;
+		}
+
+		player->openImbuementWindow(type, item);
+
+	} else if (type == IMBUEMENT_WINDOW_SCROLL) {
+		const std::shared_ptr<Item> &blankImbuementScroll = Item::CreateItem(ITEM_BLANK_IMBUEMENT_SCROLL, 1);
+		if (!blankImbuementScroll) {
+			return;
+		}
+
+		player->openImbuementWindow(type, blankImbuementScroll);
+	}
+}
+
+void ProtocolGame::parseWeaponProficiency(NetworkMessage &msg) {
+	if (oldProtocol) {
+		return;
+	}
+
+	const WeaponProficiency_t type = static_cast<WeaponProficiency_t>(msg.getByte());
+
+	if (type == WEAPON_PROFICIENCY_ITEM_INFO) {
+		const uint16_t itemId = msg.get<uint16_t>();
+		player->sendWeaponProficiencyInfo(itemId);
+
+	} else if (type == WEAPON_PROFICIENCY_LIST_INFO) {
+		for (const auto &[itemId, _] : player->weaponProficiencies) {
+			player->sendWeaponProficiencyInfo(itemId);
+		}
+
+	} else if (type == WEAPON_PROFICIENCY_RESET_PERKS) {
+		const uint16_t itemId = msg.get<uint16_t>();
+
+	} else if (type == WEAPON_PROFICIENCY_APPLY_PERKS) {
+		const uint16_t itemId = msg.get<uint16_t>();
+
+		auto &proficiency = player->weaponProficiencies[itemId];
+		proficiency.activePerks.clear();
+
+		const uint8_t sizeActivePerksList = msg.getByte();
+		for (uint8_t i = 0; i < sizeActivePerksList; i++) {
+			const uint8_t proficiencyLevel = msg.getByte();
+			const uint8_t perkPosition = msg.getByte();
+
+			proficiency.activePerks.push_back({ static_cast<uint8_t>(proficiencyLevel + 1),
+			                                    static_cast<uint8_t>(perkPosition + 1) });
+		}
+
+		player->applyEquippedWeaponProficiency(itemId);
+	}
+}
+
+void ProtocolGame::sendWeaponProficiencyExperience(const uint16_t itemId, const uint32_t experience) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x5C);
+	msg.add<uint16_t>(itemId);
+	msg.add<uint32_t>(experience);
+	msg.addByte(0x01);
+
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendWeaponProficiencyInfo(const uint16_t itemId) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	auto it = player->weaponProficiencies.find(itemId);
+	if (it != player->weaponProficiencies.end()) {
+		const auto &proficiency = it->second;
+		NetworkMessage msg;
+		msg.addByte(0xC4);
+		msg.add<uint16_t>(itemId);
+		msg.add<uint32_t>(proficiency.experience);
+		msg.addByte(static_cast<uint8_t>(proficiency.activePerks.size()));
+		for (const auto &perk : proficiency.activePerks) {
+			msg.addByte(perk.proficiencyLevel - 1);
+			msg.addByte(perk.perkPosition - 1);
+		}
+		writeToOutputBuffer(msg);
+	}
 }

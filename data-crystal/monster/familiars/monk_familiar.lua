@@ -4,7 +4,7 @@ local monster = {}
 monster.description = "a monk familiar"
 monster.experience = 0
 monster.outfit = {
-	--lookType = 994,
+	--lookType = 1818,
 	lookHead = 0,
 	lookBody = 0,
 	lookLegs = 0,
@@ -18,7 +18,7 @@ monster.maxHealth = 20000
 monster.race = "undead"
 monster.corpse = 0
 monster.speed = 154
-monster.manaCost = 3000
+monster.manaCost = 1500
 
 monster.changeTarget = {
 	interval = 4000,
@@ -43,7 +43,7 @@ monster.flags = {
 	canPushItems = false,
 	canPushCreatures = true,
 	staticAttackChance = 90,
-	targetDistance = 2,
+	targetDistance = 3,
 	runHealth = 0,
 	healthHidden = false,
 	isBlockable = false,
@@ -67,10 +67,9 @@ monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -200 },
-	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_HOLYDAMAGE, minDamage = -200, maxDamage = -270, range = 5, radius = 3, shootEffect = CONST_ANI_HOLY, effect = CONST_ME_HOLYAREA, target = true },
-	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_FIREDAMAGE, minDamage = -200, maxDamage = -270, range = 5, radius = 3, shootEffect = CONST_ANI_FIRE, effect = CONST_ME_FIREATTACK, target = true },
-	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_FIREDAMAGE, minDamage = -170, maxDamage = -230, range = 5, radius = 5, shootEffect = CONST_ANI_FIRE, effect = CONST_ME_FIREATTACK, target = true },
-	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_HOLYDAMAGE, minDamage = -170, maxDamage = -230, range = 5, radius = 5, shootEffect = CONST_ANI_HOLY, effect = CONST_ME_HOLYAREA, target = true },
+	{ name = "combat", interval = 2000, chance = 45, type = COMBAT_ENERGYDAMAGE, minDamage = -200, maxDamage = -250, range = 5, radius = 3, effect = CONST_ME_PINK_ENERGYPULSE, target = true },
+	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_PHYSICALDAMAGE, minDamage = -300, maxDamage = -350, range = 5, effect = CONST_ME_WHITE_TIGERCLASH, target = true },
+	{ name = "monk familiar wave", interval = 2000, chance = 30, minDamage = -200, maxDamage = -250, target = false },
 }
 
 monster.defenses = {
