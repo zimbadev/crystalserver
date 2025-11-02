@@ -2688,21 +2688,30 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 		g_logger().error("[{}] cylinder is nullptr", __FUNCTION__);
 		return false;
 	}
+
 	if (money == 0) {
 		return true;
 	}
+
+	// Gather all money-like items (worth > 0) from this cylinder and nested containers.
 	std::vector<std::shared_ptr<Container>> containers;
-	std::multimap<uint32_t, std::shared_ptr<Item>> moneyMap;
+	containers.reserve(8);
+
+	std::vector<std::pair<uint32_t, std::shared_ptr<Item>>> moneyItems;
+	moneyItems.reserve(16);
+
 	uint64_t moneyCount = 0;
 	for (size_t i = cylinder->getFirstIndex(), j = cylinder->getLastIndex(); i < j; ++i) {
 		const std::shared_ptr<Thing> &thing = cylinder->getThing(i);
 		if (!thing) {
 			continue;
 		}
+
 		const auto &item = thing->getItem();
 		if (!item) {
 			continue;
 		}
+
 		const std::shared_ptr<Container> &container = item->getContainer();
 		if (container) {
 			containers.push_back(container);
@@ -2710,10 +2719,11 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 			const uint32_t worth = item->getWorth();
 			if (worth != 0) {
 				moneyCount += worth;
-				moneyMap.emplace(worth, item);
+				moneyItems.emplace_back(worth, item);
 			}
 		}
 	}
+
 	size_t i = 0;
 	while (i < containers.size()) {
 		const std::shared_ptr<Container> &container = containers[i++];
@@ -2725,7 +2735,7 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 				const uint32_t worth = item->getWorth();
 				if (worth != 0) {
 					moneyCount += worth;
-					moneyMap.emplace(worth, item);
+					moneyItems.emplace_back(worth, item);
 				}
 			}
 		}
@@ -2741,15 +2751,24 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 		return false;
 	}
 
-	for (const auto &moneyEntry : moneyMap) {
-		const std::shared_ptr<Item> &item = moneyEntry.second;
-		if (moneyEntry.first < money) {
+	// Sort money items descending by worth to minimize item operations.
+	std::sort(moneyItems.begin(), moneyItems.end(), [](const auto &a, const auto &b) {
+		return a.first > b.first;
+	});
+
+	for (const auto &entry : moneyItems) {
+		const uint32_t worthTotal = entry.first;
+		const std::shared_ptr<Item> &item = entry.second;
+		if (worthTotal < money) {
 			internalRemoveItem(item);
-			money -= moneyEntry.first;
-		} else if (moneyEntry.first > money) {
-			const uint32_t worth = moneyEntry.first / item->getItemCount();
-			const uint32_t removeCount = std::ceil(money / static_cast<double>(worth));
-			addMoney(cylinder, (worth * removeCount) - money, flags);
+			money -= worthTotal;
+			if (money == 0) {
+				return true;
+			}
+		} else if (worthTotal > money) {
+			const uint32_t unitWorth = worthTotal / item->getItemCount();
+			const uint32_t removeCount = std::ceil(money / static_cast<double>(unitWorth));
+			addMoney(cylinder, (unitWorth * removeCount) - money, flags);
 			internalRemoveItem(item, removeCount);
 			return true;
 		} else {
@@ -2758,6 +2777,7 @@ bool Game::removeMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money
 		}
 	}
 
+	// If still needed, debit from bank balance (keeps original behavior: items first, then bank)
 	if (useBalance && player && player->getBankBalance() >= money) {
 		player->setBankBalance(player->getBankBalance() - money);
 	}
@@ -2770,11 +2790,15 @@ void Game::addMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money, u
 		g_logger().error("[{}] cylinder is nullptr", __FUNCTION__);
 		return;
 	}
+
 	if (money == 0) {
 		return;
 	}
 
 	auto addCoins = [&](uint16_t itemId, uint32_t count) {
+		if (count == 0) {
+			return;
+		}
 		while (count > 0) {
 			const uint16_t createCount = std::min<uint32_t>(100, count);
 			const std::shared_ptr<Item> &remaindItem = Item::CreateItem(itemId, createCount);
@@ -2788,16 +2812,20 @@ void Game::addMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money, u
 		}
 	};
 
-	uint32_t crystalCoins = money / 10000;
-	money -= crystalCoins * 10000;
-	addCoins(ITEM_CRYSTAL_COIN, crystalCoins);
+	uint32_t crystalCoins = static_cast<uint32_t>(money / 10000);
+	if (crystalCoins) {
+		money -= static_cast<uint64_t>(crystalCoins) * 10000ULL;
+		addCoins(ITEM_CRYSTAL_COIN, crystalCoins);
+	}
 
-	uint16_t platinumCoins = money / 100;
-	money -= platinumCoins * 100;
-	addCoins(ITEM_PLATINUM_COIN, platinumCoins);
+	uint32_t platinumCoins = static_cast<uint32_t>(money / 100);
+	if (platinumCoins) {
+		money -= static_cast<uint64_t>(platinumCoins) * 100ULL;
+		addCoins(ITEM_PLATINUM_COIN, static_cast<uint16_t>(platinumCoins));
+	}
 
 	if (money > 0) {
-		addCoins(ITEM_GOLD_COIN, money);
+		addCoins(ITEM_GOLD_COIN, static_cast<uint32_t>(money));
 	}
 }
 
@@ -3512,19 +3540,24 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 				ret = internalCollectManagedItems(player, rightItem, getObjectCategory(rightItem), false);
 			}
 
-			// Check if trying to equip a quiver while another quiver is already equipped in the right slot
-			if (slot == CONST_SLOT_RIGHT && rightItem && rightItem->isQuiver() && it.isQuiver()) {
-				// Replace the existing quiver with the new one
-				ret = internalMoveItem(rightItem->getParent(), player, INDEX_WHEREEVER, rightItem, rightItem->getItemCount(), nullptr);
-				if (ret == RETURNVALUE_NOERROR) {
-					g_logger().debug("Quiver {} was unequipped to equip new quiver", rightItem->getName());
-				} else {
-					player->sendCancelMessage(ret);
-					return;
+			/* FIX: Auto-unequip shield when equipping two-handed bow */
+			if (slot == CONST_SLOT_LEFT && (slotPosition & SLOTP_TWO_HAND) && equipItem->getWeaponType() == WEAPON_DISTANCE) {
+				if (rightItem && !rightItem->isQuiver()) {
+					// Unequip item from right slot (shield or other item)
+					ret = internalMoveItem(rightItem->getParent(), player, INDEX_WHEREEVER, rightItem, rightItem->getItemCount(), nullptr);
+					if (ret == RETURNVALUE_NOERROR) {
+						g_logger().debug("Item {} was unequipped to equip two-handed bow", rightItem->getName());
+					} else {
+						player->sendCancelMessage(ret);
+						return;
+					}
 				}
-			} else {
-				// Check if trying to equip a shield while a two-handed weapon is equipped in the left slot
-				if (slot == CONST_SLOT_RIGHT && leftItem && leftItem->getSlotPosition() & SLOTP_TWO_HAND) {
+			}
+
+			// Check if trying to equip a shield while a two-handed weapon is equipped in the left slot
+			if (slot == CONST_SLOT_RIGHT && leftItem && leftItem->getSlotPosition() & SLOTP_TWO_HAND) {
+				// FIX: Don't unequip bow if quiver is equipped */
+				if (!it.isQuiver() || leftItem->getWeaponType() != WEAPON_DISTANCE) {
 					// Unequip the two-handed weapon from the left slot
 					ret = internalMoveItem(leftItem->getParent(), player, INDEX_WHEREEVER, leftItem, leftItem->getItemCount(), nullptr);
 					if (ret == RETURNVALUE_NOERROR) {

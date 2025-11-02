@@ -62,9 +62,9 @@
 	<raid name="Blightfather" file="farmine/the_blightfather.xml" interval2="1440" margin="360" />
 	<raid name="Draptor" file="farmine/draptor.xml" interval2="1440" margin="360" />
 	<raid name="Dreadmaw" file="farmine/dreadmaw.xml" interval2="1440" margin="360" />
-	<raid name="Fleabringer1" file="farmine/Fleabringer1.xml" interval2="1440" margin="360" />
-	<raid name="Fleabringer2" file="farmine/Fleabringer2.xml" interval2="1440" margin="360" />
-	<raid name="Fleabringer3" file="farmine/Fleabringer3.xml" interval2="1440" margin="360" />
+	<raid name="Fleabringer1" file="farmine/fleabringer1.xml" interval2="1440" margin="360" />
+	<raid name="Fleabringer2" file="farmine/fleabringer2.xml" interval2="1440" margin="360" />
+	<raid name="Fleabringer3" file="farmine/fleabringer3.xml" interval2="1440" margin="360" />
 	<raid name="Gnarlhounds" file="farmine/gnarlhounds.xml" interval2="1440" margin="180" />
 	<raid name="Jailer" file="farmine/jailer.xml" interval2="1440" margin="360" />
 	<raid name="Zevelon" file="farmine/zevelon_duskbringer.xml" interval2="1440" margin="360" />
@@ -74,7 +74,7 @@
 	<raid name="Raxias" file="feyrist/raxias.xml" interval2="1440" margin="360" />
 
 	<!-- Fury Gate -->
-	<raid name="Furyosa" file="fury_gate/Furyosa.xml" interval2="1440" margin="360" />
+	<raid name="Furyosa" file="fury_gate/furyosa.xml" interval2="1440" margin="360" />
 
 	<!-- Kazordoon -->
 	<raid name="Kneebiter" file="kazordoon/foreman_kneebiter.xml" interval2="1440" margin="360" />
@@ -144,7 +144,7 @@
 	<raid name="IceGolems" file="svargrond/ice_golems.xml" interval2="1440" margin="180" />
 	<raid name="ManInTheCave" file="svargrond/man_in_the_cave.xml" interval2="1440" margin="360" />
 	<raid name="Ocyakao" file="svargrond/ocyakao.xml" interval2="1440" margin="360" />
-	<raid name="Yakchal" file="svargrond/Yakchal.xml" interval2="1440" margin="360" />
+	<raid name="Yakchal" file="svargrond/yakchal.xml" interval2="1440" margin="360" />
 	<raid name="Zushuka" file="svargrond/zushuka.xml" interval2="1440" margin="360"/>
 
 	<!-- Thais -->

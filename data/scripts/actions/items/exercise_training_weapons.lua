@@ -1,5 +1,4 @@
 local exhaustionTime = 10
-local maxChargesPerSession = 14400
 
 local exerciseWeaponsTable = {
 	-- MELE
@@ -43,29 +42,6 @@ local exerciseWeaponsTable = {
 
 local dummies = Game.getDummies()
 
-local function findTrainingWeaponBySkill(player, currentWeaponId)
-	local targetSkill = exerciseWeaponsTable[currentWeaponId].skill
-	local targetEffect = exerciseWeaponsTable[currentWeaponId].effect
-	local targetAllowFarUse = exerciseWeaponsTable[currentWeaponId].allowFarUse
-
-	for containerId = 0, 11 do
-		local container = player:getContainerById(containerId)
-		if container then
-			for slot = 0, container:getSize() - 1 do
-				local item = container:getItem(slot)
-				if item and item:hasAttribute(ITEM_ATTRIBUTE_CHARGES) and item:getAttribute(ITEM_ATTRIBUTE_CHARGES) > 0 then
-					local itemId = item:getId()
-					local weaponData = exerciseWeaponsTable[itemId]
-					if weaponData and weaponData.skill == targetSkill then
-						return itemId
-					end
-				end
-			end
-		end
-	end
-	return nil
-end
-
 local function leaveExerciseTraining(playerId)
 	if _G.OnExerciseTraining[playerId] then
 		stopEvent(_G.OnExerciseTraining[playerId].event)
@@ -103,24 +79,13 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 		return false
 	end
 
-	if not _G.OnExerciseTraining[playerId] then
-		return leaveExerciseTraining(playerId)
-	end
-
-	if _G.OnExerciseTraining[playerId].chargesUsed >= maxChargesPerSession then
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have reached the maximum training limit of " .. maxChargesPerSession .. " charges per session.")
-		leaveExerciseTraining(playerId)
-		return false
-	end
-
-	local currentWeaponId = _G.OnExerciseTraining[playerId].weaponId
-	if player:getItemCount(currentWeaponId) <= 0 then
+	if player:getItemCount(weaponId) <= 0 then
 		player:sendTextMessage(MESSAGE_FAILURE, "You need the training weapon in the backpack, the training has stopped.")
 		leaveExerciseTraining(playerId)
 		return false
 	end
 
-	local weapon = player:getItemById(currentWeaponId, true)
+	local weapon = player:getItemById(weaponId, true)
 	if not weapon:isItem() or not weapon:hasAttribute(ITEM_ATTRIBUTE_CHARGES) then
 		player:sendTextMessage(MESSAGE_FAILURE, "The selected item is not a training weapon, the training has stopped.")
 		leaveExerciseTraining(playerId)
@@ -129,25 +94,10 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 
 	local weaponCharges = weapon:getAttribute(ITEM_ATTRIBUTE_CHARGES)
 	if not weaponCharges or weaponCharges <= 0 then
-		weapon:remove(1)
-
-		local newWeaponId = findTrainingWeaponBySkill(player, currentWeaponId)
-		if newWeaponId then
-			_G.OnExerciseTraining[playerId].weaponId = newWeaponId
-			if newWeaponId ~= currentWeaponId then
-				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "A different training weapon of the same type has been equipped.")
-			else
-				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "A new training weapon has been equipped.")
-			end
-
-			local vocation = player:getVocation()
-			_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, vocation:getBaseAttackSpeed() / configManager.getFloat(configKeys.RATE_EXERCISE_TRAINING_SPEED), playerId, tilePosition, newWeaponId, dummyId)
-			return true
-		else
-			player:sendTextMessage(MESSAGE_FAILURE, "You don't have another training weapon of this type. Training has been stopped.")
-			leaveExerciseTraining(playerId)
-			return false
-		end
+		weapon:remove(1) -- ??
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Your training weapon has disappeared.")
+		leaveExerciseTraining(playerId)
+		return false
 	end
 
 	if not dummies[dummyId] then
@@ -155,24 +105,29 @@ local function exerciseTrainingEvent(playerId, tilePosition, weaponId, dummyId)
 	end
 
 	local rate = dummies[dummyId] / 100
-	local isMagic = exerciseWeaponsTable[currentWeaponId].skill == SKILL_MAGLEVEL
+	local isMagic = exerciseWeaponsTable[weaponId].skill == SKILL_MAGLEVEL
 	if isMagic then
 		player:addManaSpent(500 * rate)
 	else
-		player:addSkillTries(exerciseWeaponsTable[currentWeaponId].skill, 7 * rate)
+		player:addSkillTries(exerciseWeaponsTable[weaponId].skill, 7 * rate)
 	end
 
 	weapon:setAttribute(ITEM_ATTRIBUTE_CHARGES, (weaponCharges - 1))
-	_G.OnExerciseTraining[playerId].chargesUsed = _G.OnExerciseTraining[playerId].chargesUsed + 1
-
 	tilePosition:sendMagicEffect(CONST_ME_HITAREA)
 
-	if exerciseWeaponsTable[currentWeaponId].effect then
-		playerPosition:sendDistanceEffect(tilePosition, exerciseWeaponsTable[currentWeaponId].effect)
+	if exerciseWeaponsTable[weaponId].effect then
+		playerPosition:sendDistanceEffect(tilePosition, exerciseWeaponsTable[weaponId].effect)
+	end
+
+	if weapon:getAttribute(ITEM_ATTRIBUTE_CHARGES) <= 0 then
+		weapon:remove(1)
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Your training weapon has disappeared.")
+		leaveExerciseTraining(playerId)
+		return false
 	end
 
 	local vocation = player:getVocation()
-	_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, vocation:getBaseAttackSpeed() / configManager.getFloat(configKeys.RATE_EXERCISE_TRAINING_SPEED), playerId, tilePosition, currentWeaponId, dummyId)
+	_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, vocation:getBaseAttackSpeed() / configManager.getFloat(configKeys.RATE_EXERCISE_TRAINING_SPEED), playerId, tilePosition, weaponId, dummyId)
 	return true
 end
 
@@ -236,8 +191,6 @@ function exerciseTraining.onUse(player, item, fromPosition, target, toPosition, 
 		end
 
 		_G.OnExerciseTraining[playerId] = {}
-		_G.OnExerciseTraining[playerId].chargesUsed = 0
-		_G.OnExerciseTraining[playerId].weaponId = item.itemid
 		if not _G.OnExerciseTraining[playerId].event then
 			_G.OnExerciseTraining[playerId].event = addEvent(exerciseTrainingEvent, 0, playerId, targetPos, item.itemid, targetId)
 			_G.OnExerciseTraining[playerId].dummyPos = targetPos
