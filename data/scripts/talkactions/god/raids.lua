@@ -90,7 +90,7 @@ function listRaid.onSay(player, words, param)
 	end
 	table.sort(raids)
 
-	local message = "Registered raids: "
+	local message = "Registered raids (" .. #raids .. "): "
 	for _, name in ipairs(raids) do
 		message = message .. name .. ", "
 	end
