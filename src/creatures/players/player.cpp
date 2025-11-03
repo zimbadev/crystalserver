@@ -4186,6 +4186,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		sendSkills();
 		sendReLoginWindow(unfairFightReduction);
 		sendBlessStatus();
+		lastLogout = getTimeNow();
 		if (getSkull() == SKULL_BLACK) {
 			health = g_configManager().getNumber(BLACK_SKULL_DEATH_HEALTH);
 			mana = g_configManager().getNumber(BLACK_SKULL_DEATH_MANA);

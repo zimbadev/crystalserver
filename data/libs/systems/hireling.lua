@@ -251,7 +251,7 @@ function Hireling:setOutfit(outfit)
 	self.lookhead = outfit.lookHead
 	self.lookbody = outfit.lookBody
 	self.looklegs = outfit.lookLegs
-	self.lookfeet = outfit.lookHead
+	self.lookfeet = outfit.lookFeet
 	self.lookAddons = outfit.lookAddons
 end
 
@@ -433,6 +433,17 @@ function GetHirelingSkillNameById(id)
 	for _, skill in pairs(HIRELING_SKILLS) do
 		if skill[1] == id then
 			return skill[2]
+		end
+	end
+	return nil
+end
+
+function getHirelingByCid(cid)
+	local hireling
+	for i = 1, #HIRELINGS do
+		hireling = HIRELINGS[i]
+		if hireling.cid == cid then
+			return hireling
 		end
 	end
 	return nil
