@@ -85,7 +85,7 @@ function Party:onShareExperience(exp)
 		uniqueVocationsCount = 4
 	end
 
-	local sharedExperienceMultiplier = partyVocationBonus[uniqueVocationsCount] or 1.30
+	local sharedExperienceMultiplier = partyVocationBonus[uniqueVocationsCount] or 1
 	local sharedExp = (exp * sharedExperienceMultiplier) / partySize
 
 	return math.ceil(sharedExp)
