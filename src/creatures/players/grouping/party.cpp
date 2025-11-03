@@ -536,11 +536,9 @@ void Party::shareExperience(uint64_t experience, const std::shared_ptr<Creature>
 	g_callbacks().executeCallback(EventCallback_t::partyOnShareExperience, &EventCallback::partyOnShareExperience, getParty(), std::ref(shareExperience));
 
 	for (const auto &member : getMembers()) {
-		const auto memberStaminaBoost = static_cast<float>(member->getStaminaXpBoost()) / 100;
-		member->onGainSharedExperience(shareExperience * memberStaminaBoost, target);
+		member->onGainSharedExperience(shareExperience, target);
 	}
-	const auto leaderStaminaBoost = static_cast<float>(leader->getStaminaXpBoost()) / 100;
-	leader->onGainSharedExperience(shareExperience * leaderStaminaBoost, target);
+	leader->onGainSharedExperience(shareExperience, target);
 }
 
 bool Party::canUseSharedExperience(const std::shared_ptr<Player> &player) {
