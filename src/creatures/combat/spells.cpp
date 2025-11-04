@@ -717,10 +717,9 @@ void Spell::getCombatDataAugment(const std::shared_ptr<Player> &player, CombatDa
 					damage.primary.value += static_cast<int32_t>(damage.primary.value * augmentPercent);
 					damage.secondary.value += static_cast<int32_t>(damage.secondary.value * augmentPercent);
 				} else if (augment->type != Augment_t::Cooldown) {
-					const int32_t augmentValue = augment->value * 100;
-					damage.lifeLeech += augment->type == Augment_t::LifeLeech ? augmentValue : 0;
-					damage.manaLeech += augment->type == Augment_t::ManaLeech ? augmentValue : 0;
-					damage.criticalDamage += augment->type == Augment_t::CriticalExtraDamage ? augmentValue : 0;
+					damage.lifeLeech += augment->type == Augment_t::LifeLeech ? augment->value : 0;
+					damage.manaLeech += augment->type == Augment_t::ManaLeech ? augment->value : 0;
+					damage.criticalDamage += augment->type == Augment_t::CriticalExtraDamage ? augment->value : 0;
 					damage.criticalChance += augment->type == Augment_t::CriticalHitChance ? augment->value : 0;
 				}
 			}
@@ -763,7 +762,7 @@ void Spell::getCombatDataAugment(const std::shared_ptr<Player> &player, CombatDa
 			}
 		}
 	}
-};
+}
 
 int32_t Spell::calculateAugmentSpellCooldownReduction(const std::shared_ptr<Player> &player) const {
 	int32_t spellCooldown = 0;
