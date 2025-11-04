@@ -458,6 +458,39 @@ void Npc::onPlayerSellAllLoot(uint32_t playerId, uint16_t itemId, bool ignore, u
 		const auto preSize = container->size();
 		const uint64_t preTotal = totalPrice;
 
+		bool hasSellable = false;
+		const auto &shopVector = getShopItemVector(player->getGUID());
+		for (ContainerIterator it = container->iterator(); it.hasNext(); it.advance()) {
+			const auto &item = *it;
+			if (!item) {
+				continue;
+			}
+			uint32_t sellPriceCandidate = 0;
+			const ItemType &itemType = Item::items[item->getID()];
+			for (const ShopBlock &shopBlock : shopVector) {
+				if (itemType.id == shopBlock.itemId && shopBlock.itemSellPrice != 0) {
+					sellPriceCandidate = shopBlock.itemSellPrice;
+					break;
+				}
+			}
+			if (sellPriceCandidate == 0) {
+				continue;
+			}
+			if (item->getTier() > 0 || item->hasImbuements()) {
+				continue;
+			}
+			if (const auto &child = item->getContainer()) {
+				if (child->size() > 0) {
+					continue;
+				}
+			}
+			if (!item->hasMarketAttributes()) {
+				continue;
+			}
+			hasSellable = true;
+			break;
+		}
+
 		phmap::flat_hash_map<uint16_t, uint16_t> toSell;
 		uint32_t MAX_BATCH_SIZE = 10;
 		uint32_t processedCount = 0;
@@ -516,11 +549,14 @@ void Npc::onPlayerSellAllLoot(uint32_t playerId, uint16_t itemId, bool ignore, u
 		auto ss = std::stringstream();
 		if (!madeProgress) {
 			if (totalPrice == 0) {
-				if (preSize > 0) {
-					ss << "You don't have enough space. Free up space in your bag.";
+				if (preSize == 0) {
+					ss << "You have no items in your loot pouch.";
+					player->sendTextMessage(MESSAGE_FAILURE, ss.str());
+				} else if (!hasSellable) {
+					ss << "You have no sellable items in your loot pouch.";
 					player->sendTextMessage(MESSAGE_FAILURE, ss.str());
 				} else {
-					ss << "You have no sellable items in your loot pouch.";
+					ss << "You don't have enough space. Free up space in your bag.";
 					player->sendTextMessage(MESSAGE_FAILURE, ss.str());
 				}
 			} else {
@@ -536,7 +572,7 @@ void Npc::onPlayerSellAllLoot(uint32_t playerId, uint16_t itemId, bool ignore, u
 				ss << "You have no items in your loot pouch.";
 				player->sendTextMessage(MESSAGE_FAILURE, ss.str());
 			} else {
-				ss << "You sold all of the items from your loot pouch for " << totalPrice << " gold.";
+				ss << "Congratulations. You sold all of the items from your loot pouch for " << totalPrice << " gold.";
 				player->sendTextMessage(MESSAGE_LOOK, ss.str());
 			}
 		}
