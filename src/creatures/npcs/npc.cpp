@@ -572,7 +572,7 @@ void Npc::onPlayerSellAllLoot(uint32_t playerId, uint16_t itemId, bool ignore, u
 				ss << "You have no items in your loot pouch.";
 				player->sendTextMessage(MESSAGE_FAILURE, ss.str());
 			} else {
-				ss << "Congratulations. You sold all of the items from your loot pouch for " << totalPrice << " gold.";
+				ss << "You sold all of the items from your loot pouch for " << totalPrice << " gold.";
 				player->sendTextMessage(MESSAGE_LOOK, ss.str());
 			}
 		}
