@@ -574,10 +574,10 @@ CREATE TABLE IF NOT EXISTS `players_online` (
 -- Table structure `player_charm`
 CREATE TABLE IF NOT EXISTS `player_charms` (
     `player_id` int(11) NOT NULL,
-    `charm_points` SMALLINT NOT NULL DEFAULT '0',
-    `minor_charm_echoes` SMALLINT NOT NULL DEFAULT '0',
-    `max_charm_points` SMALLINT NOT NULL DEFAULT '0',
-    `max_minor_charm_echoes` SMALLINT NOT NULL DEFAULT '0',
+    `charm_points` int(10) UNSIGNED NOT NULL DEFAULT 0,
+    `minor_charm_echoes` int(10) UNSIGNED NOT NULL DEFAULT 0,
+    `max_charm_points` int(10) UNSIGNED NOT NULL DEFAULT 0,
+    `max_minor_charm_echoes` int(10) UNSIGNED NOT NULL DEFAULT 0,
     `charm_expansion` BOOLEAN NOT NULL DEFAULT FALSE,
     `UsedRunesBit` INT NOT NULL DEFAULT '0',
     `UnlockedRunesBit` INT NOT NULL DEFAULT '0',
