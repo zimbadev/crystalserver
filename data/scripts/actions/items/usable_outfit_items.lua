@@ -29,7 +29,7 @@ local outfitConfig = {
 	-- decaying defender
 	[43899] = { female = 1663, male = 1662, addon = 1, achievement = "Fully Decayed" },
 	[43900] = { female = 1663, male = 1662, addon = 2, achievement = "Fully Decayed" },
-	
+
 	-- rascoohan
 	[35595] = { female = 1372, male = 1371, addon = 1, achievement = "Honorary Rascoohan", orangeText = "You feel a bit more raccoonish." },
 	[35695] = { female = 1372, male = 1371, addon = 2, achievement = "Honorary Rascoohan", orangeText = "Hmmm, trash cans!!" },
