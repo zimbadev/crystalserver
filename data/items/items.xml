@@ -85869,4 +85869,12 @@ Granted by TibiaGoals.com" />
 	<item id="50555" name="stairs">
 		<attribute key="floorchange" value="south" />
 	</item>
+	<item id="43899" article="a" name="cursed wood">
+        <attribute key="description" value="A piece of wood imbued with a vile presence." />
+        <attribute key="primarytype" value="quest items" />
+    </item>
+    <item id="43900" article="a" name="darklight geode">
+        <attribute key="description" value="A geode pulsating with darklight energy." />
+        <attribute key="primarytype" value="quest items" />
+    </item>
 </items>

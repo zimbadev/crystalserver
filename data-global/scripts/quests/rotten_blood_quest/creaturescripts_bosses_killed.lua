@@ -35,8 +35,8 @@ function bakragoreOnDeath.onDeath(creature)
 		if not checkBoss then
 			kv:set(bossName, true)
 			if not player:hasOutfit("1663") or not player:hasOutfit("1662") then
-				player:addOutfitAddon("1663", 1)
-				player:addOutfitAddon("1662", 1)
+				player:addOutfitAddon("1663")
+				player:addOutfitAddon("1662")
 				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Congratulations! You have won a Decaying Defender Outfit.")
 			end
 		end
