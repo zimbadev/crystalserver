@@ -106,67 +106,16 @@ monster.loot = {
 
 monster.attacks = {
 	{ name = "melee", interval = 3000, chance = 100, minDamage = -1500, maxDamage = -2300 },
-	{
-		name = "combat",
-		interval = 1000,
-		chance = 10,
-		type = COMBAT_PHYSICALDAMAGE,
-		minDamage = -700,
-		maxDamage = -1000,
-		length = 12,
-		spread = 0,
-		effect = 249,
-		target = false,
-	},
-	{
-		name = "combat",
-		interval = 2000,
-		chance = 20,
-		type = COMBAT_MANADRAIN,
-		minDamage = -2600,
-		maxDamage = -2300,
-		length = 12,
-		spread = 0,
-		effect = 193,
-		target = false,
-	},
-	{
-		name = "combat",
-		interval = 2000,
-		chance = 20,
-		type = COMBAT_FIREDAMAGE,
-		minDamage = -900,
-		maxDamage = -1500,
-		length = 6,
-		spread = 0,
-		effect = CONST_ME_FIREAREA,
-		target = false,
-	},
-	{
-		name = "speed",
-		interval = 2000,
-		chance = 35,
-		speedChange = -600,
-		radius = 8,
-		effect = CONST_ME_MAGIC_RED,
-		target = false,
-		duration = 15000,
-	},
+	{ name = "combat", interval = 1000, chance = 10, type = COMBAT_PHYSICALDAMAGE, minDamage = -700, maxDamage = -1000, length = 12, spread = 0, effect = 249, target = false },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_MANADRAIN, minDamage = -2600, maxDamage = -2300, length = 12, spread = 0, effect = 193, target = false },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_FIREDAMAGE, minDamage = -900, maxDamage = -1500, length = 6, spread = 0, effect = CONST_ME_FIREAREA, target = false },
+	{ name = "speed", interval = 2000, chance = 35, speedChange = -600, radius = 8, effect = CONST_ME_MAGIC_RED, target = false, duration = 15000 },
 }
 
 monster.defenses = {
 	defense = 105,
 	armor = 105,
-	{
-		name = "combat",
-		interval = 3000,
-		chance = 10,
-		type = COMBAT_HEALING,
-		minDamage = 800,
-		maxDamage = 1200,
-		effect = 236,
-		target = false,
-	},
+	{ name = "combat", interval = 3000, chance = 10, type = COMBAT_HEALING, minDamage = 800, maxDamage = 1200, effect = 236, target = false },
 }
 
 monster.elements = {
