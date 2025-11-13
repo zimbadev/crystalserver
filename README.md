@@ -28,7 +28,7 @@ at [this link](https://github.com/zimbadev/crystalserver/blob/main/CODE_OF_CONDU
 You can use your own tool to generate Monster Loot and Monster Elements at [this link](https://crystalsever.vercel.app).
 
 ### Official Discord
-Enjoy our [Discord](https://discord.gg/7AYJEHTghQ)
+Enjoy our [Discord](https://discord.gg/zm4MTKtQQh)
 
 ### Thanks
 - [Open Tibia](https://github.com/opentibia/server) and their [contributors](https://github.com/opentibia/server/graphs/contributors).

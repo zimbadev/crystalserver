@@ -3451,7 +3451,7 @@ int PlayerFunctions::luaPlayerCloseImbuementWindow(lua_State* L) {
 		return 1;
 	}
 
-	player->openImbuementWindow(IMBUEMENT_WINDOW_CHOICE);
+	player->closeImbuementWindow();
 	return 1;
 }
 

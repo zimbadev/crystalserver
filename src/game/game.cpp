@@ -1032,7 +1032,12 @@ std::shared_ptr<Player> Game::getMarketPlayerByGUID(uint32_t &guid) {
 		}
 	}
 
-	return getPlayerByGUID(guid, true);
+	std::shared_ptr<Player> tmpPlayer = std::make_shared<Player>(nullptr);
+	if (!IOLoginData::loadPlayerById(tmpPlayer, guid, false)) {
+		return nullptr;
+	}
+	tmpPlayer->setOnline(false);
+	return tmpPlayer;
 }
 
 std::shared_ptr<Creature> Game::getCreatureByName(const std::string &s) {
