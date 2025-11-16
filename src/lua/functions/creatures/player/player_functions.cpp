@@ -5441,11 +5441,11 @@ int PlayerFunctions::luaPlayerRemoveCustomOutfit(lua_State* L) {
 
 int PlayerFunctions::luaPlayerDropConnection(lua_State* L) {
 	// player:dropConnection()
-	auto player = Lua::getUserdataShared<Player>(L, 1, "Player");
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (!player) {
 		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
 		Lua::pushBoolean(L, false);
-		return 1;
+		return 0;
 	}
 
 	player->disconnect();
