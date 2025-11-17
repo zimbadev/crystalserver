@@ -21,6 +21,7 @@
 #include "creatures/combat/spells.hpp"
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
+#include "items/items.hpp"
 #include "game/game.hpp"
 #include "io/io_bosstiary.hpp"
 #include "lua/scripts/scripts.hpp"
@@ -103,6 +104,7 @@ void MonsterTypeFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "MonsterType", "getLoot", MonsterTypeFunctions::luaMonsterTypeGetLoot);
 	Lua::registerMethod(L, "MonsterType", "addLoot", MonsterTypeFunctions::luaMonsterTypeAddLoot);
+	Lua::registerMethod(L, "MonsterType", "getSurpriseBagLoot", MonsterTypeFunctions::luaMonsterTypeGetSurpriseBagLoot);
 
 	Lua::registerMethod(L, "MonsterType", "getCreatureEvents", MonsterTypeFunctions::luaMonsterTypeGetCreatureEvents);
 	Lua::registerMethod(L, "MonsterType", "registerEvent", MonsterTypeFunctions::luaMonsterTypeRegisterEvent);
@@ -1179,6 +1181,25 @@ int MonsterTypeFunctions::luaMonsterTypeGetLoot(lua_State* L) {
 	}
 
 	createMonsterTypeLootLuaTable(L, monsterType->info.lootItems);
+	return 1;
+}
+
+int MonsterTypeFunctions::luaMonsterTypeGetSurpriseBagLoot(lua_State* L) {
+	// monsterType:getSurpriseBagLoot()
+	const auto &monsterType = Lua::getUserdataShared<MonsterType>(L, 1);
+	if (!monsterType) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const auto drops = Item::items.rollSurpriseBagLoot(monsterType);
+	lua_createtable(L, 0, drops.size());
+	for (const auto &drop : drops) {
+		lua_pushnumber(L, drop.itemId);
+		lua_createtable(L, 0, 1);
+		Lua::setField(L, "count", drop.count);
+		lua_settable(L, -3);
+	}
 	return 1;
 }
 
