@@ -147,7 +147,7 @@
 			<flag notgainskill="1" />
 			<flag setmaxspeed="1" />
 			<flag specialvip="1" />
-			<flag notgenerateloot="1" />
+			<flag notgenerateloot="0" />
 			<flag cantalkredchannelanonymous="1" />
 			<flag ignoreprotectionzone="1" />
 			<flag ignorespellcheck="1" />
