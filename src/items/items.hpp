@@ -1,6 +1,3 @@
-#include <memory>
-
-class MonsterType;
 ////////////////////////////////////////////////////////////////////////
 // Crystal Server - an opensource roleplaying game
 ////////////////////////////////////////////////////////////////////////
@@ -19,7 +16,8 @@ class MonsterType;
 ////////////////////////////////////////////////////////////////////////
 
 #pragma once
-
+#include <memory>
+class MonsterType;
 #include "creatures/creatures_definitions.hpp"
 #include "game/movement/position.hpp"
 #include "items/items_definitions.hpp"
