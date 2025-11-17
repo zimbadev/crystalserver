@@ -540,6 +540,10 @@ std::vector<Items::SurpriseBagDrop> Items::rollSurpriseBagLoot(const std::shared
 			continue;
 		}
 
+		if (isBoss && !bagItem.bossOnly) {
+			continue;
+		}
+
 		if (bagItem.bossOnly && !isBoss) {
 			continue;
 		}
