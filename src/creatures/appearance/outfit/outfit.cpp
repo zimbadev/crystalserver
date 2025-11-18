@@ -260,12 +260,12 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 
 	// Apply Conditions
 	if (outfit->manaShield) {
-		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_MANASHIELD, -1, 0);
+		auto condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_MANASHIELD, -1, 0);
 		player->addCondition(condition);
 	}
 
 	if (outfit->invisible) {
-		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_INVISIBLE, -1, 0);
+		auto condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_INVISIBLE, -1, 0);
 		player->addCondition(condition);
 	}
 
@@ -274,7 +274,7 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 	}
 
 	if (outfit->regeneration) {
-		const auto &condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_REGENERATION, -1, 0);
+		auto condition = Condition::createCondition(CONDITIONID_OUTFIT, CONDITION_REGENERATION, -1, 0);
 		if (outfit->healthGain) {
 			condition->setParam(CONDITION_PARAM_HEALTHGAIN, outfit->healthGain);
 		}
