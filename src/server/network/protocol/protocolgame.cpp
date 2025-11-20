@@ -46,6 +46,7 @@
 #include "game/game.hpp"
 #include "game/modal_window/modal_window.hpp"
 #include "game/scheduling/dispatcher.hpp"
+#include "game/scheduling/save_manager.hpp"
 #include "io/functions/iologindata_load_player.hpp"
 #include "io/io_bosstiary.hpp"
 #include "io/iobestiary.hpp"
@@ -565,9 +566,16 @@ void ProtocolGame::AddItem(NetworkMessage &msg, const std::shared_ptr<Item> &ite
 }
 
 void ProtocolGame::release() {
-	// dispatcher thread
 	if (player && player->client == shared_from_this()) {
-		player->client.reset();
+		auto p = player;
+		if (!p->isRemoved()) {
+			g_creatureEvents().playerLogout(p);
+			g_game().removeCreature(p, true);
+			g_saveManager().savePlayer(p);
+		} else {
+			g_saveManager().savePlayer(p);
+		}
+		p->client.reset();
 		player = nullptr;
 	}
 
