@@ -94,11 +94,11 @@ public:
 		return type;
 	}
 
-	std::variant<int64_t, std::shared_ptr<std::string>> getDefaultValueForType(ItemAttribute_t attributeType) const {
+	std::variant<int64_t, std::string> getDefaultValueForType(ItemAttribute_t attributeType) const {
 		if (ItemAttributeHelper::isAttributeInteger(attributeType)) {
 			return 0;
 		} else if (ItemAttributeHelper::isAttributeString(attributeType)) {
-			return std::make_shared<std::string>();
+			return std::string();
 		} else {
 			return {};
 		}
@@ -110,8 +110,8 @@ public:
 		}
 	}
 	void setValue(const std::string &newValue) {
-		if (std::holds_alternative<std::shared_ptr<std::string>>(value)) {
-			value = std::make_shared<std::string>(newValue);
+		if (std::holds_alternative<std::string>(value)) {
+			value = newValue;
 		}
 	}
 	const int64_t &getInteger() const {
@@ -122,17 +122,17 @@ public:
 		return emptyValue;
 	}
 
-	std::shared_ptr<std::string> getString() const {
-		if (std::holds_alternative<std::shared_ptr<std::string>>(value)) {
-			return std::get<std::shared_ptr<std::string>>(value);
+	const std::string &getString() const {
+		if (std::holds_alternative<std::string>(value)) {
+			return std::get<std::string>(value);
 		}
-		static std::shared_ptr<std::string> emptyPtr;
-		return emptyPtr;
+		static std::string emptyValue;
+		return emptyValue;
 	}
 
 private:
 	ItemAttribute_t type;
-	std::variant<int64_t, std::shared_ptr<std::string>> value;
+	std::variant<int64_t, std::string> value;
 };
 
 class ItemAttribute : public ItemAttributeHelper {
