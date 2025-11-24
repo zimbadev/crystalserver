@@ -75578,7 +75578,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75609,7 +75609,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 			<attribute key="intense wound cleansing" value="cooldown">
 				<attribute key="value" value="120000" />
@@ -75642,7 +75642,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75672,7 +75672,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75702,7 +75702,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75732,7 +75732,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75760,7 +75760,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75787,7 +75787,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75814,7 +75814,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75841,7 +75841,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75868,7 +75868,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75895,7 +75895,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="fierce berserk" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75948,7 +75948,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="divine caldera" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -75978,7 +75978,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="divine caldera" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -76008,7 +76008,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="divine caldera" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -76038,7 +76038,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="divine caldera" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -76091,10 +76091,10 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="hell's core" value="base">
-				<attribute key="value" value="3" />
+				<attribute key="value" value="300" />
 			</attribute>
 			<attribute key="energy wave" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -76123,16 +76123,16 @@
 		<attribute key="criticalhitdamage" value="500" />
 		<attribute key="weight" value="2100" />
 		<attribute key="imbuementslot" value="2">
-			<attribute key="mana leech" value="3" />
-			<attribute key="critical hit" value="3" />
-			<attribute key="skillboost magic level" value="3" />
+			<attribute key="mana leech" value="300" />
+			<attribute key="critical hit" value="300" />
+			<attribute key="skillboost magic level" value="300" />
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="hell's core" value="base">
-				<attribute key="value" value="6" />
+				<attribute key="value" value="600" />
 			</attribute>
 			<attribute key="energy wave" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -76197,10 +76197,10 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="eternal winter" value="base">
-				<attribute key="value" value="3" />
+				<attribute key="value" value="300" />
 			</attribute>
 			<attribute key="terra wave" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -76235,10 +76235,10 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="eternal winter" value="base">
-				<attribute key="value" value="6" />
+				<attribute key="value" value="600" />
 			</attribute>
 			<attribute key="terra wave" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -76605,7 +76605,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="front sweep" value="life leech">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -76633,7 +76633,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="strong ethereal spear" value="life leech">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -76661,7 +76661,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="energy wave" value="life leech">
-				<attribute key="value" value="5" />
+				<attribute key="value" value="500" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -76689,7 +76689,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="terra wave" value="life leech">
-				<attribute key="value" value="3" />
+				<attribute key="value" value="300" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -76716,7 +76716,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="divine missile" value="base">
-				<attribute key="value" value="6" />
+				<attribute key="value" value="600" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -76774,7 +76774,7 @@
 		<attribute key="weight" value="5100" />
 		<attribute key="augments" value="1">
 			<attribute key="intense wound cleansing" value="base">
-				<attribute key="value" value="50" />
+				<attribute key="value" value="5000" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -76791,10 +76791,10 @@
 		<attribute key="weight" value="3400" />
 		<attribute key="augments" value="1">
 			<attribute key="great energy beam" value="base">
-				<attribute key="value" value="7" />
+				<attribute key="value" value="700" />
 			</attribute>
 			<attribute key="great death beam" value="base">
-				<attribute key="value" value="7" />
+				<attribute key="value" value="700" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -77121,7 +77121,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="ultimate flame strike" value="base">
-				<attribute key="value" value="33" />
+				<attribute key="value" value="3300" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -77152,7 +77152,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="ultimate ice strike" value="base">
-				<attribute key="value" value="33" />
+				<attribute key="value" value="3300" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -77211,7 +77211,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="wound cleansing" value="base">
-				<attribute key="value" value="16" />
+				<attribute key="value" value="1650" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -81589,7 +81589,7 @@
 		<attribute key="weight" value="2600" />
 		<attribute key="augments" value="1">
 			<attribute key="front sweep" value="ManaLeech">
-				<attribute key="value" value="3" />
+				<attribute key="value" value="300" />
 			</attribute>
 		</attribute>
 		<attribute key="imbuementslot" value="2">
@@ -81613,7 +81613,7 @@
 		<attribute key="weight" value="3600" />
 		<attribute key="augments" value="1">
 			<attribute key="strong ethereal spear" value="ManaLeech">
-				<attribute key="value" value="3" />
+				<attribute key="value" value="300" />
 			</attribute>
 		</attribute>
 		<attribute key="imbuementslot" value="2">
@@ -81635,7 +81635,7 @@
 		<attribute key="weight" value="1500" />
 		<attribute key="augments" value="1">
 			<attribute key="energy wave" value="ManaLeech">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="imbuementslot" value="2">
@@ -81658,7 +81658,7 @@
 		<attribute key="weight" value="1500" />
 		<attribute key="augments" value="1">
 			<attribute key="terra wave" value="ManaLeech">
-				<attribute key="value" value="2" />
+				<attribute key="value" value="200" />
 			</attribute>
 		</attribute>
 		<attribute key="imbuementslot" value="2">
@@ -83182,7 +83182,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="sweeping takedown" value="base">
-				<attribute key="value" value="4" />
+				<attribute key="value" value="400" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -83212,7 +83212,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="sweeping takedown" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -83519,11 +83519,6 @@
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost fist" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="mystic repulse" value="base">
-				<attribute key="value" value="14" />
-			</attribute>
-		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="135" />
 			<attribute key="unproperly" value="true" />
@@ -83674,7 +83669,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="flurry of blows" value="mana leech">
-				<attribute key="value" value="3" />
+				<attribute key="value" value="300" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -83985,7 +83980,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="spirit mend" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -84107,7 +84102,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="flurry of blows" value="life leech">
-				<attribute key="value" value="3" />
+				<attribute key="value" value="300" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -84150,7 +84145,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="flurry of blows" value="life leech">
-				<attribute key="value" value="3" />
+				<attribute key="value" value="300" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -84229,7 +84224,7 @@
 		<attribute key="weight" value="2100" />
 		<attribute key="augments" value="1">
 			<attribute key="double jab" value="base">
-				<attribute key="value" value="12" />
+				<attribute key="value" value="1200" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -84278,7 +84273,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="greater tiger clash" value="base">
-				<attribute key="value" value="8" />
+				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent;weapon">
@@ -84304,11 +84299,6 @@
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost fist" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="greater tiger clash" value="base">
-				<attribute key="value" value="16" />
-			</attribute>
-		</attribute>
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="100" />
 			<attribute key="unproperly" value="true" />
@@ -84331,11 +84321,6 @@
 			<attribute key="critical hit" value="3" />
 			<attribute key="skillboost fist" value="3" />
 		</attribute>
-		<attribute key="augments" value="1">
-			<attribute key="greater tiger clash" value="base">
-				<attribute key="value" value="12" />
-			</attribute>
-		</attribute>
 		<attribute key="weight" value="2900" />
 		<attribute key="script" value="moveevent;weapon">
 			<attribute key="level" value="50" />
@@ -84357,7 +84342,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="chained penance" value="base">
-				<attribute key="value" value="6" />
+				<attribute key="value" value="600" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -84861,7 +84846,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="ethereal spear" value="base">
-				<attribute key="value" value="40" />
+				<attribute key="value" value="4000" />
 			</attribute>
 			<attribute key="ethereal spear" value="critical hit chance">
 				<attribute key="value" value="200" />
@@ -84887,7 +84872,7 @@
 		</attribute>
 		<attribute key="augments" value="1">
 			<attribute key="greater tiger clash" value="base">
-				<attribute key="value" value="33" />
+				<attribute key="value" value="3300" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
@@ -84968,10 +84953,10 @@
 		<attribute key="absorbpercentdeath" value="4" />
 		<attribute key="weight" value="11500" />
 		<attribute key="augments" value="1">
-			<attribute key="etheral spear" value="base">
-				<attribute key="value" value="40" />
+			<attribute key="ethereal spear" value="base">
+				<attribute key="value" value="4000" />
 			</attribute>
-			<attribute key="etheral spear" value="critical extra damage">
+			<attribute key="ethereal spear" value="critical extra damage">
 				<attribute key="value" value="800" />
 			</attribute>
 		</attribute>
@@ -85042,7 +85027,7 @@
 		<attribute key="weight" value="11000" />
 		<attribute key="augments" value="1">
 			<attribute key="ultimate energy strike" value="base">
-				<attribute key="value" value="33" />
+				<attribute key="value" value="3300" />
 			</attribute>
 		</attribute>
 		<attribute key="script" value="moveevent">
