@@ -48,9 +48,9 @@ end
 
 function SendOberonAsking(monster)
 	local currentLife = monster:getStorageValue(GrandMasterOberonConfig.Storage.Life)
-  if currentLife >= GrandMasterOberonConfig.AmountLife then
-      return
-  end
+	if currentLife >= GrandMasterOberonConfig.AmountLife then
+		return
+	end
 	monster:registerEvent("OberonImmunity")
 	local random = math.random(#GrandMasterOberonAsking)
 	monster:say(GrandMasterOberonAsking[random].msg, TALKTYPE_MONSTER_SAY)
