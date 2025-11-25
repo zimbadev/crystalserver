@@ -1293,7 +1293,12 @@ bool Game::removeCreature(const std::shared_ptr<Creature> &creature, bool isLogo
 		creature->setMaster(nullptr);
 	}
 
-	creature->getParent()->postRemoveNotification(creature, nullptr, 0);
+	auto parent = creature->getParent();
+	if (!parent) {
+		return false;
+	}
+
+	parent->postRemoveNotification(creature, nullptr, 0);
 	afterCreatureZoneChange(creature, fromZones, {});
 
 	creature->removeList();
