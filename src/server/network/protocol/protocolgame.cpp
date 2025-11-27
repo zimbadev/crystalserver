@@ -569,8 +569,7 @@ void ProtocolGame::release() {
 	if (player && player->client == shared_from_this()) {
 		auto p = player;
 		if (!p->isRemoved()) {
-			g_creatureEvents().playerLogout(p);
-			g_game().removeCreature(p, true);
+			logout(false, false);
 			g_saveManager().savePlayer(p);
 		} else {
 			g_saveManager().savePlayer(p);
