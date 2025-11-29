@@ -1,28 +1,28 @@
 ---
 name: Lua-format
+
 on:
   pull_request:
     paths:
       - "data*/**"
-  merge_group:
   push:
     paths:
       - "data*/**"
+
 jobs:
   lua-formatter:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Git
-        if: ${{ github.ref != 'refs/heads/main' }}
+        if: ${{ github.event_name == 'push' }}
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
-      - name: Actions checkout
-        if: ${{ github.ref != 'refs/heads/main' }}
+
+      - name: Checkout code
         uses: actions/checkout@v3
         with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: ${{ github.head_ref || github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: JohnnyMorganz/stylua-action@v3
@@ -32,7 +32,7 @@ jobs:
           args: .
 
       - name: Run add and commit
-        if: ${{ github.ref != 'refs/heads/main' }}
+        if: ${{ github.event_name == 'push' }}
         uses: EndBug/add-and-commit@v9
         with:
           author_name: GitHub Actions
