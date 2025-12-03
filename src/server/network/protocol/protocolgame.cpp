@@ -779,7 +779,7 @@ void ProtocolGame::connect(const std::string &playerName, OperatingSystem_t oper
 
 	player->sendHarmonyProtocol();
 	player->sendSereneProtocol();
-	
+
 	sendAddCreature(player, player->getPosition(), 0, true);
 	player->lastIP = player->getIP();
 	player->lastLoad = OTSYS_TIME();
