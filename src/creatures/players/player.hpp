@@ -1528,6 +1528,7 @@ public:
 	void setSerene(const bool isSerene);
 	uint64_t getSereneCooldown();
 	void setSereneCooldown(const uint64_t addTime);
+	void resyncSpellCooldowns() const;
 	void sendVirtueProtocol() const;
 	void setVirtue(const VirtueMonk_t virtue);
 	VirtueMonk_t getVirtue() const;

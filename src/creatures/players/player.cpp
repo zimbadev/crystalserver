@@ -12210,6 +12210,26 @@ void Player::setSereneCooldown(const uint64_t addTime) {
 	m_serene_cooldown = timenow + addTime;
 }
 
+void Player::resyncSpellCooldowns() const {
+	if (!client) {
+		return;
+	}
+
+	// Resync individual spell cooldowns
+	for (const auto &condition : getConditionsByType(CONDITION_SPELLCOOLDOWN)) {
+		uint16_t spellId = condition->getSubId();
+		uint32_t ticks = condition->getTicks();
+		sendSpellCooldown(spellId, ticks);
+	}
+
+	// Resync group spell cooldowns
+	for (const auto &condition : getConditionsByType(CONDITION_SPELLGROUPCOOLDOWN)) {
+		SpellGroup_t groupId = static_cast<SpellGroup_t>(condition->getSubId());
+		uint32_t ticks = condition->getTicks();
+		client->sendSpellGroupCooldown(groupId, ticks);
+	}
+}
+
 void Player::sendVirtueProtocol() const {
 	if (client && m_virtue != VIRTUE_NONE) {
 		client->sendVirtueProtocol(static_cast<uint8_t>(m_virtue));

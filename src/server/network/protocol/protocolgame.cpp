@@ -779,6 +779,7 @@ void ProtocolGame::connect(const std::string &playerName, OperatingSystem_t oper
 
 	player->sendHarmonyProtocol();
 	player->sendSereneProtocol();
+	player->resyncSpellCooldowns();
 
 	sendAddCreature(player, player->getPosition(), 0, true);
 	player->lastIP = player->getIP();
