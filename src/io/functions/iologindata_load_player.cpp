@@ -528,7 +528,7 @@ void IOLoginDataLoad::loadPlayerBestiaryCharms(const std::shared_ptr<Player> &pl
 		}
 
 		unsigned long attrBestSize;
-		const char* Bestattr = result->getStream("tracker list", attrBestSize);
+		const char* Bestattr = result->getStream("tracker_list", attrBestSize);
 		PropStream propBestStream;
 		propBestStream.init(Bestattr, attrBestSize);
 
