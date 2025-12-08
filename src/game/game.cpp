@@ -6541,7 +6541,7 @@ void Game::playerSay(uint32_t playerId, uint16_t channelId, SpeakClasses type, c
 		return;
 	}
 
-	if (!text.empty() && text.front() == '/' && player->isAccessPlayer()) {
+	if (text.front() == '/' && player->isAccessPlayer()) {
 		return;
 	}
 
@@ -6597,12 +6597,17 @@ bool Game::playerSaySpell(const std::shared_ptr<Player> &player, SpeakClasses ty
 	}
 
 	std::string words = text;
-	TalkActionResult_t result = g_talkActions().checkPlayerCanSayTalkAction(player, type, words, type == TALKTYPE_SAY ? (unsigned)CHANNEL_DEFAULT : channelId);
-	if (result == TALKACTION_BREAK) {
-		return true;
+	const std::string &lowerWords = asLowerCaseString(words);
+
+	TalkActionResult_t result = TALKACTION_FAILED;
+	if (text.front() == '/' || text.front() == '!') {
+		result = g_talkActions().checkPlayerCanSayTalkAction(player, type, words, type == TALKTYPE_SAY ? (unsigned)CHANNEL_DEFAULT : channelId);
+		if (result == TALKACTION_BREAK) {
+			return true;
+		}
 	}
 
-	result = g_spells().playerSaySpell(player, words);
+	result = g_spells().playerSaySpell(player, words, lowerWords);
 	if (result == TALKACTION_BREAK) {
 		if (!g_configManager().getBoolean(PUSH_WHEN_ATTACKING)) {
 			player->cancelPush();

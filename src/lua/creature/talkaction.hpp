@@ -20,6 +20,7 @@
 #include "account/account.hpp"
 #include "utils/utils_definitions.hpp"
 #include "declarations.hpp"
+#include <parallel_hashmap/phmap.h>
 
 class Player;
 class LuaScriptInterface;
@@ -105,12 +106,12 @@ public:
 	bool registerLuaEvent(const TalkAction_ptr &talkAction);
 	void clear();
 
-	const std::map<std::string, std::shared_ptr<TalkAction>> &getTalkActionsMap() const {
+	const phmap::flat_hash_map<std::string, std::shared_ptr<TalkAction>> &getTalkActionsMap() const {
 		return talkActions;
 	};
 
 private:
-	std::map<std::string, std::shared_ptr<TalkAction>> talkActions;
+	phmap::flat_hash_map<std::string, std::shared_ptr<TalkAction>> talkActions;
 };
 
 constexpr auto g_talkActions = TalkActions::getInstance;
