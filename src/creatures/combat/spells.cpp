@@ -32,7 +32,7 @@
 #include "lib/di/container.hpp"
 
 Spells::Spells() {
-    instants.reserve(1000);
+	instants.reserve(1000);
 }
 
 Spells::~Spells() = default;
@@ -63,7 +63,7 @@ TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player,
 		player->sendTextMessage(MESSAGE_FAILURE, "You are feared.");
 		return TALKACTION_FAILED;
 	}
-		
+
 	trimString(str_words);
 
 	std::string param;

@@ -24,7 +24,7 @@
 #include "lib/di/container.hpp"
 
 TalkActions::TalkActions() {
-    talkActions.reserve(100);
+	talkActions.reserve(100);
 }
 
 TalkActions::~TalkActions() = default;
