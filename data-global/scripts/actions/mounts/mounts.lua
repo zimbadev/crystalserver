@@ -50,6 +50,7 @@ local config = {
 	[37397] = { NAME = "wind-up loco", ID = 194, BREAK = false, TYPE = TYPE_ITEM, CHANCE = 100, FAIL_MSG = {}, SUCCESS_MSG = "You wind the small locomotive up. It starts to move ... and grows!", ACHIEV = "Engine Driver" },
 	[12802] = { NAME = "Wild Horse", ID = 17, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 15, FAIL_MSG = { { 1, "Weeeheeeehee. With its last strength the horse the horse runs to safety." }, { 2, "The wild horse happily munches the sugar oat and runs on." } }, SUCCESS_MSG = "*snort* The horse eats the sugar oat and accepts you as its new master.", ACHIEV = "Lucky Horseshoe" },
 	[34258] = { NAME = "White Lion", ID = 174, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 50, FAIL_MSG = { { 1, "The White Lion runs away." }, { 2, "The White Lion ate the flower." } }, SUCCESS_MSG = "You have tamed the white lion.", ACHIEV = "Well Roared, Lion!" },
+	[43901] = { NAME = "Foxmouse", ID = 218, BREAK = false, TYPE = TYPE_MONSTER, CHANCE = 100, FAIL_MSG = { { 1, "The foxmouse ran away." } }, SUCCESS_MSG = "You have tamed the foxmouse.", ACHIEV = "Like Fox and Mouse" },
 }
 
 local function doFailAction(cid, mount, pos, item, itemEx, loseItem)
@@ -94,6 +95,10 @@ function mounts.onUse(cid, item, fromPosition, itemEx, toPosition)
 		end
 
 		if mount.NAME == targetMonster:getName() then
+			if mount.NAME == "Foxmouse" and player:hasCondition(CONDITION_CURSED) then
+				player:say("The foxmouse senses your curse and refuses to be tamed. Consume Purple Nightshade Blossoms to cure it first.", TALKTYPE_MONSTER_SAY)
+				return true
+			end
 			if rand > mount.CHANCE then
 				doFailAction(cid, mount, toPosition, item, itemEx, mount.BREAK)
 				return true

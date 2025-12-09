@@ -76298,6 +76298,9 @@
 		<attribute key="description" value="A geode pulsating with darklight energy." />
 		<attribute key="primarytype" value="quest items" />
 	</item>
+	<item id="43901" article="a" name="toy ball">
+		<attribute key="weight" value="150" />
+	</item>
 	<item id="43902" article="a" name="crack">
 		<attribute key="description" value="You see to be able to fit through there" />
 	</item>
