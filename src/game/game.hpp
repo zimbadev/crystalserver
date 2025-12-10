@@ -134,6 +134,10 @@ public:
 	void loadCustomMaps(const std::filesystem::path &customMapPath);
 	void loadMap(const std::string &path, const Position &pos = Position());
 
+	uint64_t getLastMapLoadTime() const {
+		return lastMapLoadTime;
+	}
+
 	void getMapDimensions(uint32_t &width, uint32_t &height) const {
 		width = map.width;
 		height = map.height;
@@ -922,6 +926,8 @@ private:
 	int32_t lightHour = SUNRISE + (SUNSET - SUNRISE) / 2;
 	// (1440 total light of tibian day)/(3600 real seconds each tibian day) * 10 seconds event interval
 	int32_t lightHourDelta = (LIGHT_DAY_LENGTH * (EVENT_LIGHTINTERVAL_MS / 1000)) / DAY_LENGTH_SECONDS;
+
+	uint64_t lastMapLoadTime = 0;
 
 	ServiceManager* serviceManager = nullptr;
 

@@ -1080,6 +1080,10 @@ TileAction = {
 			{ x = 33231, y = 31760, z = 2 },
 		},
 	},
+	[50366] = {
+		itemId = false,
+		itemPos = { { x = 33205, y = 32537, z = 6 } },
+	},
 }
 
 TileUnique = {

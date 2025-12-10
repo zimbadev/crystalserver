@@ -1115,6 +1115,12 @@ public:
 	void setNextPotionAction(int64_t time);
 	bool canDoPotionAction() const;
 
+	void setNextNecklaceAction(int64_t time);
+	bool canEquipNecklace() const;
+
+	void setNextRingAction(int64_t time);
+	bool canEquipRing() const;
+
 	void setNextExAction(int64_t time);
 	bool canDoExAction() const;
 
@@ -1483,7 +1489,7 @@ public:
 	void sendPlayerTyping(const std::shared_ptr<Creature> &creature, uint8_t typing) const;
 
 	void resetOldCharms();
-	bool isFirstOnStack() const;
+	[[nodiscard]] bool isFirstOnStack() const;
 
 	/*******************************************************************************
 	 * Deflect Condition
@@ -1522,12 +1528,18 @@ public:
 	void setSerene(const bool isSerene);
 	uint64_t getSereneCooldown();
 	void setSereneCooldown(const uint64_t addTime);
+	void resyncSpellCooldowns() const;
 	void sendVirtueProtocol() const;
 	void setVirtue(const VirtueMonk_t virtue);
 	VirtueMonk_t getVirtue() const;
 	uint16_t getMantraTotal() const;
 
 	std::unordered_map<uint16_t, uint8_t> spellActivedAimMap;
+
+	using ManagedContainerMap = std::map<ObjectCategory_t, std::pair<std::shared_ptr<Container>, std::shared_ptr<Container>>>;
+	[[nodiscard]] const ManagedContainerMap &getManagedContainers() const {
+		return m_managedContainers;
+	}
 
 private:
 	friend class PlayerLock;
@@ -1614,7 +1626,7 @@ private:
 
 	std::map<uint64_t, std::shared_ptr<Reward>> rewardMap;
 
-	std::map<ObjectCategory_t, std::pair<std::shared_ptr<Container>, std::shared_ptr<Container>>> m_managedContainers;
+	ManagedContainerMap m_managedContainers;
 	std::vector<ForgeHistory> forgeHistoryVector;
 
 	std::vector<uint16_t> quickLootListItemIds;
@@ -1675,6 +1687,8 @@ private:
 	int64_t nextExAction = 0;
 	int64_t nextImbuementAction = 0;
 	int64_t nextPotionAction = 0;
+	int64_t nextNecklaceAction = 0;
+	int64_t nextRingAction = 0;
 	int64_t nextMarketAction = 0;
 	int64_t lastQuickLootNotification = 0;
 	int64_t lastWalking = 0;

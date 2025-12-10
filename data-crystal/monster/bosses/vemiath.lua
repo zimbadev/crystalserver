@@ -96,6 +96,7 @@ monster.loot = {
 	{ name = "vemiath's infused basalt", chance = 7914, maxCount = 1 },
 	{ name = "violet gem", chance = 7210, maxCount = 1 },
 	{ id = 43895, chance = 360 }, -- Bag you covet
+	{ name = "darklight geode", chance = 500 },
 }
 
 monster.attacks = {

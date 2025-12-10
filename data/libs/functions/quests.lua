@@ -123,7 +123,9 @@ function Player.getMissionsData(self, storage)
 					local mission = quest.missions[missionId]
 					if mission.storageId == storage then
 						local data = {
+							questId = questId,
 							missionId = mission.missionId,
+							questName = quest.name,
 							missionName = self:getMissionName(questId, missionId),
 							missionDesc = self:getMissionDescription(questId, missionId),
 						}
@@ -299,7 +301,7 @@ function Player.sendQuestLog(self)
 		if self:questIsStarted(questId) then
 			msg:addU16(questId)
 			msg:addString(Quests[questId].name)
-			msg:addByte(self:questIsCompleted(questId) and 1 or 0)
+			msg:addByte(self:questIsCompleted(questId) and 0x01 or 0x00)
 		end
 	end
 	msg:sendToPlayer(self)
@@ -361,6 +363,25 @@ function Player.sendUpdateTrackedQuest(self, mission)
 	msg:delete()
 end
 
+function Player.sendRemoveTrackedQuest(self)
+	local playerId = self:getId()
+	PlayerTrackedMissionsData = PlayerTrackedMissionsData or {}
+	PlayerTrackedMissionsData[playerId] = PlayerTrackedMissionsData[playerId] or {}
+	if #PlayerTrackedMissionsData[playerId] < 1 then
+		return
+	end
+	for i = #PlayerTrackedMissionsData[self:getId()], 1, -1 do
+		local missionData = PlayerTrackedMissionsData[self:getId()][i]
+		local _, questId, missionIndex = self:getQuestDataByMissionId(missionData.missionId)
+
+		if self:questIsCompleted(questId) or self:missionIsCompleted(questId, missionIndex) then
+			table.remove(PlayerTrackedMissionsData[self:getId()], i)
+		end
+	end
+	local maxAllowed = self:getAllowedTrackedQuestCount()
+	self:sendTrackedQuests(maxAllowed - #PlayerTrackedMissionsData[self:getId()], PlayerTrackedMissionsData[self:getId()])
+end
+
 function Player.updateStorage(self, key, value, oldValue, currentFrameTime)
 	local playerId = self:getId()
 	if LastQuestlogUpdate[playerId] ~= currentFrameTime and Game.isQuestStorage(key, value, oldValue) then
@@ -369,11 +390,24 @@ function Player.updateStorage(self, key, value, oldValue, currentFrameTime)
 			self:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Your questlog has been updated.")
 		end
 	end
+	local trackNewQuest = self:kv():get("tracker-new-quest") or 0
+	local untrackQuest = self:kv():get("untracker-quest") or 0
 	local missions = self:getMissionsData(key)
 	for i = 1, #missions do
 		local mission = missions[i]
+		local _, questId, missionIndex = self:getQuestDataByMissionId(mission.missionId)
+
 		if self:hasTrackingQuest(mission.missionId) then
 			self:sendUpdateTrackedQuest(mission)
+		elseif trackNewQuest == 1 then
+			PlayerTrackedMissionsData[playerId] = PlayerTrackedMissionsData[playerId] or {}
+
+			table.insert(PlayerTrackedMissionsData[playerId], mission)
+			self:sendUpdateTrackedQuest(mission)
+		end
+
+		if untrackQuest == 1 and self:missionIsCompleted(questId, missionIndex) then
+			self:sendRemoveTrackedQuest()
 		end
 	end
 end

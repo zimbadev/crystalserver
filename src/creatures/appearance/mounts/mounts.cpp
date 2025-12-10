@@ -193,17 +193,17 @@ bool Mounts::addAttributes(uint32_t playerId, uint8_t mountId) {
 
 	// Apply Conditions
 	if (mount->manaShield) {
-		const auto &condition = Condition::createCondition(CONDITIONID_MOUNT, CONDITION_MANASHIELD, -1, 0);
+		auto condition = Condition::createCondition(CONDITIONID_MOUNT, CONDITION_MANASHIELD, -1, 0);
 		player->addCondition(condition);
 	}
 
 	if (mount->invisible) {
-		const auto &condition = Condition::createCondition(CONDITIONID_MOUNT, CONDITION_INVISIBLE, -1, 0);
+		auto condition = Condition::createCondition(CONDITIONID_MOUNT, CONDITION_INVISIBLE, -1, 0);
 		player->addCondition(condition);
 	}
 
 	if (mount->regeneration) {
-		const auto &condition = Condition::createCondition(CONDITIONID_MOUNT, CONDITION_REGENERATION, -1, 0);
+		auto condition = Condition::createCondition(CONDITIONID_MOUNT, CONDITION_REGENERATION, -1, 0);
 		if (mount->healthGain) {
 			condition->setParam(CONDITION_PARAM_HEALTHGAIN, mount->healthGain);
 		}
@@ -279,12 +279,12 @@ bool Mounts::removeAttributes(uint32_t playerId, uint8_t mountId) {
 		return mount->id == mountId;
 	});
 
-	auto mount = *it;
-
-	if (!mount) {
+	if (it == mounts.end()) {
 		g_logger().warn("[Mounts::removeAttributes] Mount with ID {} not found.", mountId);
 		return false;
 	}
+
+	auto mount = *it;
 
 	// Remove conditions
 	if (mount->manaShield) {

@@ -541,7 +541,7 @@ private:
 	void parseWheelGemAction(NetworkMessage &msg);
 
 	void sendHarmonyProtocol(const uint8_t harmonyValue);
-	void sendSereneProtocol(const bool isSerene);
+	void sendSereneProtocol(const bool isSerene = true);
 	void sendVirtueProtocol(const uint8_t virtueValue);
 	void parseSelectSpellAimProtocol(NetworkMessage &msg);
 

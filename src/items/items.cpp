@@ -24,6 +24,7 @@
 #include "lua/creature/movement.hpp"
 #include "utils/pugicast.hpp"
 #include "creatures/combat/spells.hpp"
+#include "creatures/monsters/monsters.hpp"
 #include "utils/tools.hpp"
 
 #include <appearances.pb.h>
@@ -385,7 +386,12 @@ bool Items::loadFromXml() {
 				monsterRaceId = pugi::cast<uint32_t>(monsterRaceIdAttr.value());
 			}
 
-			setItemBag(itemId, itemName, chance, minAmount, maxAmount, monsterClass, monsterRaceId);
+			bool bossOnly = false;
+			if (const auto bossOnlyAttr = nodeBags.attribute("bossOnly")) {
+				bossOnly = bossOnlyAttr.as_bool();
+			}
+
+			setItemBag(itemId, itemName, chance, minAmount, maxAmount, monsterClass, monsterRaceId, bossOnly);
 		}
 	}
 
@@ -502,7 +508,7 @@ bool Items::hasItemType(size_t hasId) const {
 	return false;
 }
 
-void Items::setItemBag(uint16_t itemId, const std::string &itemName, double chance, uint32_t minAmount, uint32_t maxAmount, const std::string &monsterClass, uint32_t monsterRaceId) {
+void Items::setItemBag(uint16_t itemId, const std::string &itemName, double chance, uint32_t minAmount, uint32_t maxAmount, const std::string &monsterClass, uint32_t monsterRaceId, bool bossOnly) {
 	BagItemInfo itemInfo;
 	itemInfo.name = itemName;
 	itemInfo.id = itemId;
@@ -511,7 +517,61 @@ void Items::setItemBag(uint16_t itemId, const std::string &itemName, double chan
 	itemInfo.maxAmount = maxAmount;
 	itemInfo.monsterClass = monsterClass;
 	itemInfo.monsterRaceId = monsterRaceId;
+	itemInfo.bossOnly = bossOnly;
 	bagItems[itemId] = itemInfo;
+}
+
+std::vector<Items::SurpriseBagDrop> Items::rollSurpriseBagLoot(const std::shared_ptr<MonsterType> &monsterType) const {
+	std::vector<SurpriseBagDrop> drops;
+	if (!g_configManager().getBoolean(SURPRISE_BAGS)) {
+		return drops;
+	}
+
+	if (!monsterType) {
+		return drops;
+	}
+
+	const bool isBoss = monsterType->isBoss();
+	const uint16_t raceId = monsterType->info.raceid;
+	const std::string monsterClass = asLowerCaseString(monsterType->info.bestiaryClass);
+
+	for (const auto &[_, bagItem] : bagItems) {
+		if (bagItem.chance <= 0) {
+			continue;
+		}
+
+		if (isBoss && !bagItem.bossOnly) {
+			continue;
+		}
+
+		if (bagItem.bossOnly && !isBoss) {
+			continue;
+		}
+
+		if (bagItem.monsterRaceId != 0 && bagItem.monsterRaceId != raceId) {
+			continue;
+		}
+
+		if (!bagItem.monsterClass.empty() && monsterClass != asLowerCaseString(bagItem.monsterClass)) {
+			continue;
+		}
+
+		double randomChance = normal_random(0, 100);
+		if (randomChance > bagItem.chance) {
+			continue;
+		}
+
+		const uint32_t minAmount = std::max<uint32_t>(1, bagItem.minAmount);
+		const uint32_t maxAmount = std::max<uint32_t>(minAmount, bagItem.maxAmount);
+		uint16_t dropAmount = static_cast<uint16_t>(normal_random(minAmount, maxAmount));
+		if (dropAmount == 0) {
+			dropAmount = 1;
+		}
+
+		drops.push_back({ bagItem.id, dropAmount });
+	}
+
+	return drops;
 }
 
 uint32_t Abilities::getHealthGain() const {

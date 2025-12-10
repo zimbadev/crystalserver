@@ -23,8 +23,12 @@ local outfitConfig = {
 	[32631] = { female = 1271, male = 1270, addon = 2, effect = CONST_ME_BLUE_GHOST, achievement = "Mainstreet Nightmare", orangeText = "You can use the ghost claw now!" },
 
 	-- revenant
-	[34075] = { female = 1323, male = 1322, addon = 1, effect = CONST_ME_HOLYAREA, achievement = "Unleash the Beast", orangeText = "Now the beast is unleashed!" },
-	[34076] = { female = 1323, male = 1322, addon = 2, effect = CONST_ME_HOLYAREA, achievement = "Unleash the Beast", orangeText = "Wild power flows though your body!" },
+	[34075] = { female = 1323, male = 1322, addon = 2, effect = CONST_ME_HOLYAREA, achievement = "Unleash the Beast", orangeText = "Now the beast is unleashed!" },
+	[34076] = { female = 1323, male = 1322, addon = 1, effect = CONST_ME_HOLYAREA, achievement = "Unleash the Beast", orangeText = "Wild power flows though your body!" },
+
+	-- decaying defender
+	[43899] = { female = 1663, male = 1662, addon = 1, achievement = "Fully Decayed" },
+	[43900] = { female = 1663, male = 1662, addon = 2, achievement = "Fully Decayed" },
 
 	-- rascoohan
 	[35595] = { female = 1372, male = 1371, addon = 1, achievement = "Honorary Rascoohan", orangeText = "You feel a bit more raccoonish." },

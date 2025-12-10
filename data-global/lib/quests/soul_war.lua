@@ -1283,63 +1283,70 @@ function Player:resetTaints(skipCheckTime)
 end
 
 function Monster:tryTeleportToPlayer(sayMessage)
+	if math.random(100) > 10 then
+		return
+	end
+
 	local range = 30
-	local spectators = Game.getSpectators(self:getPosition(), false, false, range, range, range, range)
+	local selfPos = self:getPosition()
+
+	local spectators = Game.getSpectators(selfPos, false, true, range, range, range, range)
 	local maxDistance = 0
 	local farthestPlayer = nil
 
-	for i, spectator in ipairs(spectators) do
-		if spectator:isPlayer() then
-			local player = spectator:getPlayer()
-			if player:getTaintNameByNumber(1) and player:getSoulWarZoneMonster() ~= nil then
-				local distance = self:getPosition():getDistance(player:getPosition())
-				if distance > maxDistance then
-					maxDistance = distance
-					farthestPlayer = player
-					logger.trace("Found player {} to teleport", player:getName())
-				end
+	for i = 1, #spectators do
+		local player = spectators[i]
+		if player and player:getTaintNameByNumber(1) and player:getSoulWarZoneMonster() ~= nil then
+			local playerPos = player:getPosition()
+			local distance = selfPos:getDistance(playerPos)
+			if distance > maxDistance then
+				maxDistance = distance
+				farthestPlayer = player
+				logger.trace("Found player {} to teleport", player:getName())
 			end
 		end
 	end
 
-	if farthestPlayer and math.random(100) <= 10 then
-		local playerPosition = farthestPlayer:getPosition()
-		if TaintTeleportCooldown[farthestPlayer:getId()] then
-			logger.trace("Cooldown is active to player {}", farthestPlayer:getName())
+	if not farthestPlayer then
+		return
+	end
+
+	if TaintTeleportCooldown[farthestPlayer:getId()] then
+		logger.trace("Cooldown is active to player {}", farthestPlayer:getName())
+		return
+	end
+
+	TaintTeleportCooldown[farthestPlayer:getId()] = true
+
+	logger.trace("Scheduling player {} to teleport", farthestPlayer:getName())
+	selfPos:sendMagicEffect(CONST_ME_MORTAREA)
+	farthestPlayer:getPosition():sendMagicEffect(CONST_ME_MORTAREA)
+
+	addEvent(function(playerId, monsterId, sayText)
+		local monsterEvent = Monster(monsterId)
+		local playerEvent = Player(playerId)
+		if not monsterEvent or not playerEvent then
 			return
 		end
 
-		if not TaintTeleportCooldown[farthestPlayer:getId()] then
-			TaintTeleportCooldown[farthestPlayer:getId()] = true
-
-			logger.trace("Scheduling player {} to teleport", farthestPlayer:getName())
-			self:getPosition():sendMagicEffect(CONST_ME_MORTAREA)
-			farthestPlayer:getPosition():sendMagicEffect(CONST_ME_MORTAREA)
-			addEvent(function(playerId, monsterId)
-				local monsterEvent = Monster(monsterId)
-				local playerEvent = Player(playerId)
-				if monsterEvent and playerEvent then
-					local destinationTile = Tile(playerPosition)
-					if destinationTile and not (destinationTile:hasProperty(CONST_PROP_BLOCKPROJECTILE) or destinationTile:hasProperty(CONST_PROP_MOVEABLE)) then
-						monsterEvent:say(sayMessage)
-						monsterEvent:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
-						monsterEvent:teleportTo(playerPosition, true)
-						monsterEvent:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
-					end
-				end
-			end, 2000, farthestPlayer:getId(), self:getId())
-
-			addEvent(function(playerId)
-				local playerEvent = Player(playerId)
-				if not playerEvent then
-					return
-				end
-
-				logger.trace("Cleaning player cooldown")
-				TaintTeleportCooldown[playerEvent:getId()] = nil
-			end, 10000, farthestPlayer:getId())
+		local destinationPos = playerEvent:getPosition()
+		local destinationTile = Tile(destinationPos)
+		if destinationTile and not (destinationTile:hasProperty(CONST_PROP_BLOCKPROJECTILE) or destinationTile:hasProperty(CONST_PROP_MOVEABLE)) then
+			monsterEvent:say(sayText)
+			monsterEvent:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
+			monsterEvent:teleportTo(destinationPos, true)
+			monsterEvent:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
 		end
-	end
+	end, 2000, farthestPlayer:getId(), self:getId(), sayMessage)
+
+	addEvent(function(playerId)
+		local playerEvent = Player(playerId)
+		if not playerEvent then
+			return
+		end
+		logger.trace("Cleaning player cooldown")
+		TaintTeleportCooldown[playerEvent:getId()] = nil
+	end, 10000, farthestPlayer:getId())
 end
 
 function Monster:getSoulWarKV()

@@ -6,7 +6,7 @@ function sacrificeTeleport.onStepIn(creature, item, position, fromPosition)
 		return true
 	end
 
-	if player:getStorageValue(Storage.Quest.U10_55.SanctuaryOfTheLizardGod.LizardGodTeleport) == 1 then
+	if player:kv():scoped("lizard-god-teleport"):get("discovered") then
 		player:teleportTo({ x = 32124, y = 31938, z = 8 })
 		player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
 	else

@@ -40,11 +40,16 @@ function deathEvent.onDeath(creature, _corpse, _lastHitKiller, mostDamageKiller)
 	local targetName = creature:getName():lower()
 
 	onDeathForParty(creature, mostDamageKiller, function(creature, player)
-		for i, bossName in ipairs(taskBoss) do
+		for i, bossName in pairs(taskBoss) do
 			if targetName == bossName then
-				if player:getStorageValue(bossKillCount + i) == 0 then
-					player:setStorageValue(bossKillCount + i, 1)
+				local storageKey = bossKillCount + i
+				local current = player:getStorageValue(storageKey)
+
+				if current < 0 then
+					current = 0
 				end
+
+				player:setStorageValue(storageKey, current + 1)
 				return true
 			end
 		end

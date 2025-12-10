@@ -2489,46 +2489,25 @@ void Monster::dropLoot(const std::shared_ptr<Container> &corpse, const std::shar
 		}
 
 		if (g_configManager().getBoolean(SURPRISE_BAGS)) {
-			const auto allBagItems = Item::items.getAllBagItems();
-
-			// Filter out items with chance <= 0
-			std::vector<const Items::BagItemInfo*> validBagItems;
-			for (const auto &bagItem : allBagItems) {
-				if (bagItem->chance > 0 && (bagItem->monsterRaceId == 0 || bagItem->monsterRaceId == mType->info.raceid) && (bagItem->monsterClass.empty() || asLowerCaseString(mType->info.bestiaryClass) == asLowerCaseString(bagItem->monsterClass))) {
-					validBagItems.push_back(bagItem);
+			const auto surpriseDrops = Item::items.rollSurpriseBagLoot(mType);
+			for (const auto &drop : surpriseDrops) {
+				if (drop.itemId == 0) {
+					continue;
 				}
-			}
 
-			if (!validBagItems.empty()) {
-				// Iterate through valid items and drop them based on probability
-				for (const auto &bagItem : validBagItems) {
-					double randomChance = normal_random(0, 100);
+				std::shared_ptr<Item> newItem;
+				if (drop.count > 1) {
+					newItem = Item::CreateItem(drop.itemId, drop.count);
+				} else {
+					newItem = Item::CreateItem(drop.itemId, 1);
+				}
 
-					if (randomChance <= bagItem->chance) {
-						auto chosenBagId = bagItem->id;
-						auto minAmount = bagItem->minAmount;
-						auto maxAmount = bagItem->maxAmount;
-						auto dropAmount = static_cast<uint16_t>(normal_random(minAmount, maxAmount));
+				if (!newItem) {
+					continue;
+				}
 
-						if (chosenBagId != 0) {
-							std::shared_ptr<Item> newItem = nullptr;
-							if (dropAmount > 1) {
-								newItem = Item::CreateItem(chosenBagId, dropAmount);
-								if (newItem) {
-									if (g_game().internalAddItem(corpse, newItem) != RETURNVALUE_NOERROR) {
-										corpse->internalAddThing(newItem);
-									}
-								}
-							} else {
-								newItem = Item::CreateItem(chosenBagId, 1);
-								if (newItem) {
-									if (g_game().internalAddItem(corpse, newItem) != RETURNVALUE_NOERROR) {
-										corpse->internalAddThing(newItem);
-									}
-								}
-							}
-						}
-					}
+				if (g_game().internalAddItem(corpse, newItem) != RETURNVALUE_NOERROR) {
+					corpse->internalAddThing(newItem);
 				}
 			}
 		}

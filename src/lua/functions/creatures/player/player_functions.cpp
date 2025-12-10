@@ -456,6 +456,8 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "removeCustomOutfit", PlayerFunctions::luaPlayerRemoveCustomOutfit);
 	Lua::registerMethod(L, "Player", "addCustomOutfit", PlayerFunctions::luaPlayerAddCustomOutfit);
 
+	Lua::registerMethod(L, "Player", "dropConnection", PlayerFunctions::luaPlayerDropConnection);
+
 	GroupFunctions::init(L);
 	GuildFunctions::init(L);
 	MountFunctions::init(L);
@@ -5434,5 +5436,19 @@ int PlayerFunctions::luaPlayerRemoveCustomOutfit(lua_State* L) {
 	}
 
 	Lua::pushBoolean(L, player->attachedEffects().removeCustomOutfit(type, idOrName));
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerDropConnection(lua_State* L) {
+	// player:dropConnection()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 0;
+	}
+
+	player->disconnect();
+	Lua::pushBoolean(L, true);
 	return 1;
 }

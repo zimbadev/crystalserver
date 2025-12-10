@@ -123,7 +123,11 @@ monster.immunities = {
 }
 
 mType.onThink = function(monster, interval)
-	if monster:getStorageValue(GrandMasterOberonConfig.Storage.Life) <= GrandMasterOberonConfig.AmountLife then
+	if monster:getStorageValue(GrandMasterOberonConfig.Storage.Life) == -1 then
+		monster:setStorageValue(GrandMasterOberonConfig.Storage.Life, 0)
+	end
+	local currentLifeStorage = monster:getStorageValue(GrandMasterOberonConfig.Storage.Life)
+	if currentLifeStorage < GrandMasterOberonConfig.AmountLife then
 		local percentageHealth = (monster:getHealth() * 100) / monster:getMaxHealth()
 		if percentageHealth <= 20 then
 			SendOberonAsking(monster)

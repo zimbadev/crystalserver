@@ -3369,6 +3369,26 @@ bool Player::canDoAction() const {
 	return nextAction <= OTSYS_TIME();
 }
 
+void Player::setNextNecklaceAction(int64_t time) {
+	if (time > nextNecklaceAction) {
+		nextNecklaceAction = time;
+	}
+}
+
+void Player::setNextRingAction(int64_t time) {
+	if (time > nextRingAction) {
+		nextRingAction = time;
+	}
+}
+
+bool Player::canEquipNecklace() const {
+	return OTSYS_TIME() >= nextNecklaceAction;
+}
+
+bool Player::canEquipRing() const {
+	return OTSYS_TIME() >= nextRingAction;
+}
+
 void Player::setNextPotionAction(int64_t time) {
 	if (time > nextPotionAction) {
 		nextPotionAction = time;
@@ -4164,16 +4184,28 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			bool hasSkull = (playerSkull == Skulls_t::SKULL_RED || playerSkull == Skulls_t::SKULL_BLACK);
 			uint8_t maxBlessing = 8;
 			if (!hasSkull && pvpDeath && hasBlessing(1)) {
-				removeBlessing(1, 1); // Remove TOF only
+				auto storeCount = getBlessingCount(1, true);
+				if (storeCount > 0) {
+					auto currentStore = kv()->scoped("summary")->scoped("blessings")->scoped(fmt::format("{}", 1))->get("amount");
+					if (currentStore) {
+						auto newAmount = std::max(0, static_cast<int>(currentStore->getNumber()) - 1);
+						kv()->scoped("summary")->scoped("blessings")->scoped(fmt::format("{}", 1))->set("amount", newAmount);
+					}
+				} else {
+					removeBlessing(1, 1);
+				}
 			} else {
 				for (int i = 2; i <= maxBlessing; i++) {
-					removeBlessing(i, 1);
-				}
-
-				const auto &playerAmulet = getThing(CONST_SLOT_NECKLACE);
-				bool usingAol = (playerAmulet && playerAmulet->getItem()->getID() == ITEM_AMULETOFLOSS);
-				if (usingAol) {
-					removeItemOfType(ITEM_AMULETOFLOSS, 1, -1);
+					auto storeCount = getBlessingCount(i, true);
+					if (storeCount > 0) {
+						auto currentStore = kv()->scoped("summary")->scoped("blessings")->scoped(fmt::format("{}", i))->get("amount");
+						if (currentStore) {
+							auto newAmount = std::max(0, static_cast<int>(currentStore->getNumber()) - 1);
+							kv()->scoped("summary")->scoped("blessings")->scoped(fmt::format("{}", i))->set("amount", newAmount);
+						}
+					} else {
+						removeBlessing(i, 1);
+					}
 				}
 			}
 		}
@@ -12176,6 +12208,26 @@ uint64_t Player::getSereneCooldown() {
 void Player::setSereneCooldown(const uint64_t addTime) {
 	const uint64_t timenow = OTSYS_TIME();
 	m_serene_cooldown = timenow + addTime;
+}
+
+void Player::resyncSpellCooldowns() const {
+	if (!client) {
+		return;
+	}
+
+	// Resync individual spell cooldowns
+	for (const auto &condition : getConditionsByType(CONDITION_SPELLCOOLDOWN)) {
+		uint16_t spellId = condition->getSubId();
+		uint32_t ticks = condition->getTicks();
+		sendSpellCooldown(spellId, ticks);
+	}
+
+	// Resync group spell cooldowns
+	for (const auto &condition : getConditionsByType(CONDITION_SPELLGROUPCOOLDOWN)) {
+		SpellGroup_t groupId = static_cast<SpellGroup_t>(condition->getSubId());
+		uint32_t ticks = condition->getTicks();
+		client->sendSpellGroupCooldown(groupId, ticks);
+	}
 }
 
 void Player::sendVirtueProtocol() const {
