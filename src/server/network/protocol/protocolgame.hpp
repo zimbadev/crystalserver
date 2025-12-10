@@ -174,7 +174,7 @@ private:
 
 	void sendSessionEndInformation(SessionEndInformations information);
 
-	void sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, bool cyclopedia);
+	void sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, uint8_t inspectionType);
 	void parseInspectionObject(NetworkMessage &msg);
 
 	void parseFriendSystemAction(NetworkMessage &msg);

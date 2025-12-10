@@ -8377,9 +8377,9 @@ void Player::sendAddMarker(const Position &pos, uint8_t markType, const std::str
 	}
 }
 
-void Player::sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, bool cyclopedia) const {
+void Player::sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, uint8_t inspectionType) const {
 	if (client) {
-		client->sendItemInspection(itemId, itemCount, item, cyclopedia);
+		client->sendItemInspection(itemId, itemCount, item, inspectionType);
 	}
 }
 

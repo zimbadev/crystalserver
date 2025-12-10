@@ -1073,7 +1073,7 @@ public:
 	void sendChannel(uint16_t channelId, const std::string &channelName, const UsersMap* channelUsers, const InvitedMap* invitedUsers) const;
 	void sendTutorial(uint8_t tutorialId) const;
 	void sendAddMarker(const Position &pos, uint8_t markType, const std::string &desc) const;
-	void sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, bool cyclopedia) const;
+	void sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, uint8_t inspectionType) const;
 	void sendCyclopediaCharacterNoData(CyclopediaCharacterInfoType_t characterInfoType, uint8_t errorCode) const;
 	void sendCyclopediaCharacterBaseInformation() const;
 	void sendCyclopediaCharacterGeneralStats() const;
