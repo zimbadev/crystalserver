@@ -1642,7 +1642,8 @@ private:
 
 	std::vector<std::shared_ptr<Party>> invitePartyList;
 	std::vector<uint32_t> modalWindows;
-	std::vector<std::string> learnedInstantSpellList;
+	std::unordered_set<std::string> learnedInstantSpellList;
+
 	// TODO: This variable is only temporarily used when logging in, get rid of it somehow.
 	std::vector<std::shared_ptr<Condition>> storedConditionList;
 

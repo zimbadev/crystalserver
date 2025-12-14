@@ -3108,12 +3108,12 @@ void Player::setEditHouse(const std::shared_ptr<House> &house, uint32_t listId) 
 
 void Player::learnInstantSpell(const std::string &spellName) {
 	if (!hasLearnedInstantSpell(spellName)) {
-		learnedInstantSpellList.emplace_back(spellName);
+		learnedInstantSpellList.emplace(asLowerCaseString(spellName));
 	}
 }
 
 void Player::forgetInstantSpell(const std::string &spellName) {
-	std::erase(learnedInstantSpellList, spellName);
+	learnedInstantSpellList.erase(asLowerCaseString(spellName));
 }
 
 bool Player::hasLearnedInstantSpell(const std::string &spellName) const {
@@ -3125,9 +3125,11 @@ bool Player::hasLearnedInstantSpell(const std::string &spellName) const {
 		return true;
 	}
 
-	return std::ranges::any_of(learnedInstantSpellList, [&](const auto &learnedSpellName) {
-		return strcasecmp(learnedSpellName.c_str(), spellName.c_str()) == 0;
-	});
+	auto it = learnedInstantSpellList.find(asLowerCaseString(spellName));
+	if (it != learnedInstantSpellList.end()) {
+		return true;
+	}
+	return false;
 }
 
 void Player::updateRegeneration() const {
