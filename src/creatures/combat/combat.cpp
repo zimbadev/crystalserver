@@ -78,10 +78,10 @@ static void applyImproveMonkAttackSpender(const std::shared_ptr<Player> &player,
 		return;
 	}
 
-	uint8_t baseHarmonyBonusPercent = 8; // 8, 16, 32, 64, 128
+	uint8_t baseHarmonyBonusPercent = 7; // 7, 14, 28, 56, 112
 
 	if (player->getVirtue() == VIRTUE_HARMONY) {
-		baseHarmonyBonusPercent += (player->isSerene() ? 8 : 4);
+		baseHarmonyBonusPercent += (player->isSerene() ? 6 : 3);
 	}
 
 	const uint8_t stage = player->wheel()->getStage(WheelStage_t::ASCETIC);
