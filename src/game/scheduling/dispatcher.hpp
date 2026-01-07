@@ -170,7 +170,7 @@ private:
 
 	inline void mergeAsyncEvents();
 	inline void mergeEvents();
-	inline void __mergeEvents(const std::array<uint8_t, 2> &groups, const bool mergeScheduledEvents);
+	inline void __mergeEvents();
 
 	inline void executeEvents(const TaskGroup startGroup = TaskGroup::Walk);
 	inline void executeScheduledEvents();
@@ -201,12 +201,13 @@ private:
 			return {};
 		}
 
+		const size_t threadCount = threadPool.get_thread_count();
 		std::vector<std::pair<uint64_t, uint64_t>> list;
-		list.reserve(threadPool.get_thread_count());
+		list.reserve(threadCount);
 
-		const auto size_per_block = std::ceil(size / static_cast<float>(threadPool.get_thread_count()));
-		for (uint_fast64_t i = 0; i < size; i += size_per_block) {
-			list.emplace_back(i, std::min<uint64_t>(size, i + size_per_block));
+		const size_t sizePerBlock = (size + threadCount - 1) / threadCount;
+		for (size_t i = 0; i < size; i += sizePerBlock) {
+			list.emplace_back(i, std::min<uint64_t>(size, i + sizePerBlock));
 		}
 
 		return list;
