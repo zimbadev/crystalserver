@@ -22,6 +22,7 @@
 	#include <utility>
 	#include <vector>
 	#include <map>
+	#include <unordered_map>
 	#include <list>
 	#include <utility>
 	#include <cstdint>
@@ -1563,7 +1564,7 @@ struct HistoryMarketOffer {
 
 using MarketOfferList = std::list<MarketOffer>;
 using HistoryMarketOfferList = std::list<HistoryMarketOffer>;
-using StashItemList = std::map<uint16_t, uint32_t>;
+using StashItemList = std::unordered_map<uint16_t, uint32_t>;
 
 using ItemsTierCountList = std::map<uint16_t, std::map<uint8_t, uint32_t>>;
 /*

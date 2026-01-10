@@ -653,7 +653,7 @@ public:
 	void addItemOnStash(uint16_t itemId, uint32_t amount);
 	uint32_t getStashItemCount(uint16_t itemId) const;
 	bool withdrawItem(uint16_t itemId, uint32_t amount);
-	StashItemList getStashItems() const;
+	const StashItemList &getStashItems() const;
 
 	uint32_t getBaseCapacity() const;
 
