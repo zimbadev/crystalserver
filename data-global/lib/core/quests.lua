@@ -4392,7 +4392,7 @@ if not Quests then
 					startValue = 1,
 					endValue = 2,
 					states = {
-						[1] = "You are a friend of Dalbrect. \z
+						[2] = "You are a friend of Dalbrect. \z
 						Since you returned his family brooch he will sail you to the Isle of Kings unless you do something stupid.",
 					},
 				},

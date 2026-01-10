@@ -53,11 +53,9 @@ const int64_t &ItemAttribute::getAttributeValue(ItemAttribute_t type) const {
 }
 
 const Attributes* ItemAttribute::getAttribute(ItemAttribute_t type) const {
-	if (hasAttribute(type)) {
-		for (const Attributes &attribute : attributeVector) {
-			if (attribute.getAttributeType() == type) {
-				return &attribute;
-			}
+	for (auto it = attributeVector.cbegin(); it != attributeVector.cend(); ++it) {
+		if (it->getAttributeType() == type) {
+			return &*it;
 		}
 	}
 	return nullptr;
@@ -120,10 +118,12 @@ const std::map<std::string, CustomAttribute, std::less<>> &ItemAttribute::getCus
 =============================
 */
 const CustomAttribute* ItemAttribute::getCustomAttribute(const std::string &attributeName) const {
-	if (customAttributeMap.contains(asLowerCaseString(attributeName))) {
-		return &customAttributeMap.at(asLowerCaseString(attributeName));
+	const auto key = asLowerCaseString(attributeName);
+	const auto it = customAttributeMap.find(key);
+	if (it == customAttributeMap.end()) {
+		return nullptr;
 	}
-	return nullptr;
+	return &it->second;
 }
 
 void ItemAttribute::setCustomAttribute(const std::string &key, const int64_t value) {

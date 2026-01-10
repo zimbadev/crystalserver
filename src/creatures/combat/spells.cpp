@@ -31,10 +31,13 @@
 #include "lua/scripts/scripts.hpp"
 #include "lib/di/container.hpp"
 
-Spells::Spells() = default;
+Spells::Spells() {
+	instants.reserve(1000);
+}
+
 Spells::~Spells() = default;
 
-TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player, std::string &words) {
+TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player, std::string &words, const std::string &lowerWords) {
 	auto maxOnline = g_configManager().getNumber(MAX_PLAYERS_PER_ACCOUNT);
 	const auto &tile = player->getTile();
 	if (maxOnline > 1 && player->getAccountType() < ACCOUNT_TYPE_GAMEMASTER && tile && !tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
@@ -61,41 +64,25 @@ TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player,
 		return TALKACTION_FAILED;
 	}
 
-	// strip trailing spaces
 	trimString(str_words);
 
-	const auto &instantSpell = getInstantSpell(str_words);
-	if (!instantSpell) {
-		return TALKACTION_CONTINUE;
-	}
-
 	std::string param;
-
-	if (instantSpell->getHasParam()) {
-		size_t spellLen = instantSpell->getWords().length();
-		size_t paramLen = str_words.length() - spellLen;
-		std::string paramText = str_words.substr(spellLen, paramLen);
-		if (!paramText.empty() && paramText.front() == ' ') {
-			size_t loc1 = paramText.find('"', 1);
-			if (loc1 != std::string::npos) {
-				size_t loc2 = paramText.find('"', loc1 + 1);
-				if (loc2 == std::string::npos) {
-					loc2 = paramText.length();
-				} else if (paramText.find_last_not_of(' ') != loc2) {
-					return TALKACTION_CONTINUE;
-				}
-
-				param = paramText.substr(loc1 + 1, loc2 - loc1 - 1);
-			} else {
-				trimString(paramText);
-				loc1 = paramText.find(' ', 0);
-				if (loc1 == std::string::npos) {
-					param = paramText;
-				} else {
-					return TALKACTION_CONTINUE;
-				}
+	std::string instantWords = lowerWords;
+	if (instantWords.size() >= 4 && instantWords.front() != '"') {
+		size_t qpos = instantWords.find('"');
+		if (qpos != std::string::npos && qpos > 0 && instantWords[qpos - 1] == ' ') {
+			param = words.substr(qpos + 1);
+			instantWords = instantWords.substr(0, qpos);
+			trim_right(instantWords, ' ');
+			if (!param.empty() && param.back() == '"') {
+				param.pop_back();
 			}
 		}
+	}
+
+	const auto &instantSpell = getInstantSpell(instantWords);
+	if (!instantSpell || (!param.empty() && !instantSpell->getHasParam()) || (param.empty() && instantSpell->getHasParam())) {
+		return TALKACTION_CONTINUE;
 	}
 
 	if (instantSpell->playerCastInstant(player, param)) {
@@ -193,7 +180,7 @@ std::list<uint16_t> Spells::getSpellsByVocation(uint16_t vocationId) {
 	return spellsList;
 }
 
-const std::map<std::string, std::shared_ptr<InstantSpell>> &Spells::getInstantSpells() const {
+const phmap::flat_hash_map<std::string, std::shared_ptr<InstantSpell>> &Spells::getInstantSpells() const {
 	return instants;
 }
 
@@ -232,35 +219,9 @@ std::shared_ptr<RuneSpell> Spells::getRuneSpellByName(const std::string &name) {
 }
 
 std::shared_ptr<InstantSpell> Spells::getInstantSpell(const std::string &words) {
-	std::shared_ptr<InstantSpell> result = nullptr;
-
-	for (auto &it : instants) {
-		const std::string &instantSpellWords = it.second->getWords();
-		size_t spellLen = instantSpellWords.length();
-		if (strncasecmp(instantSpellWords.c_str(), words.c_str(), spellLen) == 0) {
-			if (!result || spellLen > result->getWords().length()) {
-				result = it.second;
-				if (words.length() == spellLen) {
-					break;
-				}
-			}
-		}
-	}
-
-	if (result) {
-		const std::string &resultWords = result->getWords();
-		if (words.length() > resultWords.length()) {
-			if (!result->getHasParam()) {
-				return nullptr;
-			}
-
-			size_t spellLen = resultWords.length();
-			size_t paramLen = words.length() - spellLen;
-			if (paramLen < 2 || words[spellLen] != ' ') {
-				return nullptr;
-			}
-		}
-		return result;
+	auto it = instants.find(words);
+	if (it != instants.end()) {
+		return it->second;
 	}
 	return nullptr;
 }

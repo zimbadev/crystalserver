@@ -78,10 +78,10 @@ static void applyImproveMonkAttackSpender(const std::shared_ptr<Player> &player,
 		return;
 	}
 
-	uint8_t baseHarmonyBonusPercent = 8; // 8, 16, 32, 64, 128
+	uint8_t baseHarmonyBonusPercent = 7; // 7, 14, 28, 56, 112
 
 	if (player->getVirtue() == VIRTUE_HARMONY) {
-		baseHarmonyBonusPercent += (player->isSerene() ? 8 : 4);
+		baseHarmonyBonusPercent += (player->isSerene() ? 6 : 3);
 	}
 
 	const uint8_t stage = player->wheel()->getStage(WheelStage_t::ASCETIC);
@@ -1189,6 +1189,22 @@ void Combat::addDistanceEffect(const std::shared_ptr<Creature> &caster, const Po
 			case WEAPON_CLUB:
 				effect = CONST_ANI_WHIRLWINDCLUB;
 				break;
+			case WEAPON_DISTANCE:
+			case WEAPON_AMMO: {
+				auto ammoOrWeapon = player->getWeapon();
+				if (ammoOrWeapon) {
+					const auto &iType = Item::items[ammoOrWeapon->getID()];
+					effect = iType.shootType;
+					if (effect == CONST_ANI_NONE) {
+						auto mainWeapon = player->getWeapon(true);
+						if (mainWeapon) {
+							const auto &mainType = Item::items[mainWeapon->getID()];
+							effect = mainType.shootType;
+						}
+					}
+				}
+				break;
+			}
 			case WEAPON_MISSILE: {
 				auto weapon = player->getWeapon();
 				if (weapon) {
@@ -1288,12 +1304,15 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 			break;
 		case WEAPON_DISTANCE:
 			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_DISTANCE), DIST_ATK_BOW, CONST_ANI_HOLY);
+			setParam(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_WEAPONTYPE);
 			break;
 		case WEAPON_AMMO:
 			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_DISTANCE), DIST_ATK_BOW, CONST_ANI_HOLY);
+			setParam(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_WEAPONTYPE);
 			break;
 		case WEAPON_MISSILE:
 			setCommonValues(g_configManager().getFloat(COMBAT_CHAIN_SKILL_FORMULA_MISSILE), DIST_ATK_BOW, CONST_ANI_HOLY);
+			setParam(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_WEAPONTYPE);
 			break;
 	}
 

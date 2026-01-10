@@ -528,7 +528,7 @@ void IOLoginDataLoad::loadPlayerBestiaryCharms(const std::shared_ptr<Player> &pl
 		}
 
 		unsigned long attrBestSize;
-		const char* Bestattr = result->getStream("tracker list", attrBestSize);
+		const char* Bestattr = result->getStream("tracker_list", attrBestSize);
 		PropStream propBestStream;
 		propBestStream.init(Bestattr, attrBestSize);
 
@@ -557,7 +557,7 @@ void IOLoginDataLoad::loadPlayerInstantSpellList(const std::shared_ptr<Player> &
 	query << "SELECT `player_id`, `name` FROM `player_spells` WHERE `player_id` = " << player->getGUID();
 	if ((result = db.storeQuery(query.str()))) {
 		do {
-			player->learnedInstantSpellList.emplace_back(result->getString("name"));
+			player->learnedInstantSpellList.emplace(result->getString("name"));
 		} while (result->next());
 	}
 }

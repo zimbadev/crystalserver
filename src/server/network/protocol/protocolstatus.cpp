@@ -111,22 +111,25 @@ void ProtocolStatus::sendStatusString() {
 
 	pugi::xml_node players = tsqp.append_child("players");
 	uint32_t real = 0;
+	uint32_t ips = 0;
 	std::map<uint32_t, uint32_t> listIP;
-	for (const auto &[key, player] : g_game().getPlayers()) {
-		if (player->getIP() != 0) {
-			auto ip = listIP.find(player->getIP());
+	for (const auto &it : g_game().getPlayers()) {
+		if (it.second->getIdleTime() <= 900000 && it.second->getIP() != 0) {
+			auto ip = listIP.find(it.second->getIP());
 			if (ip != listIP.end()) {
-				listIP[player->getIP()]++;
-				if (listIP[player->getIP()] < 5) {
+				listIP[it.second->getIP()]++;
+				if (listIP[it.second->getIP()] < 5) {
 					real++;
 				}
 			} else {
-				listIP[player->getIP()] = 1;
+				listIP[it.second->getIP()] = 1;
 				real++;
+				ips++;
 			}
 		}
 	}
 	players.append_attribute("online") = std::to_string(real).c_str();
+	players.append_attribute("unique") = std::to_string(ips).c_str();
 	players.append_attribute("max") = std::to_string(g_configManager().getNumber(MAX_PLAYERS)).c_str();
 	players.append_attribute("peak") = std::to_string(g_game().getPlayersRecord()).c_str();
 

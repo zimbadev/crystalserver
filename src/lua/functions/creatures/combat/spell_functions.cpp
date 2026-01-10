@@ -712,7 +712,7 @@ int SpellFunctions::luaSpellWords(lua_State* L) {
 				sep = Lua::getString(L, 3);
 			}
 			spell->setWords(Lua::getString(L, 2));
-			spell->setSeparator(sep);
+			spell->setSeparator(sep.empty() ? std::string_view { "\"" } : std::string_view { sep });
 			Lua::pushBoolean(L, true);
 		}
 	} else {

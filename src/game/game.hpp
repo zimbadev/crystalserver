@@ -651,7 +651,7 @@ public:
 	}
 
 	void playerInspectItem(const std::shared_ptr<Player> &player, const Position &pos);
-	void playerInspectItem(const std::shared_ptr<Player> &player, uint16_t itemId, uint8_t itemCount, bool cyclopedia);
+	void playerInspectItem(const std::shared_ptr<Player> &player, uint16_t itemId, uint8_t itemCount, uint8_t inspectionType);
 
 	void addCharmRune(const std::shared_ptr<Charm> &charm) {
 		CharmList.push_back(charm);

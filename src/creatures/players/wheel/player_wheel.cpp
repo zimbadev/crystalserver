@@ -2155,12 +2155,12 @@ void PlayerWheel::registerPlayerBonusData() {
 		}
 		if (m_playerBonusData.stages.divineGrenade >= 2) {
 			WheelSpells::Bonus bonus;
-			bonus.decrease.cooldown = 4 * 1000;
+			bonus.decrease.cooldown = 6 * 1000;
 			addSpellBonus("Divine Grenade", bonus);
 		}
 		if (m_playerBonusData.stages.divineGrenade >= 3) {
 			WheelSpells::Bonus bonus;
-			bonus.decrease.cooldown = 6 * 1000;
+			bonus.decrease.cooldown = 4 * 1000;
 			addSpellBonus("Divine Grenade", bonus);
 		}
 	} else {

@@ -75,17 +75,11 @@ function spell.onCastSpell(creature, var)
 		return false
 	end
 
-	local cooldownByGrade = { 26, 20, 14 }
-	local cooldown = cooldownByGrade[grade]
-
 	var.instantName = "Divine Grenade Cast"
 	if combatCast:execute(creature, var) then
 		local target = Creature(var:getNumber())
 		local position = creature:getPosition():getWithinRange(target:getPosition(), 4)
 		position:sendMagicEffect(CONST_ME_DIVINE_GRENADE)
-		local condition = Condition(CONDITION_SPELLCOOLDOWN, CONDITIONID_DEFAULT, 258)
-		condition:setTicks((cooldown * 1000) / configManager.getFloat(configKeys.RATE_SPELL_COOLDOWN))
-		creature:addCondition(condition)
 		return true
 	end
 	return false
@@ -101,7 +95,7 @@ spell:isPremium(true)
 spell:range(7)
 spell:needTarget(true)
 spell:blockWalls(true)
-spell:cooldown(1000) -- Cooldown is calculated on the casting
+spell:cooldown(26 * 1000)
 spell:groupCooldown(2 * 1000)
 spell:needLearn(true)
 spell:vocation("paladin;true", "royal paladin;true")
