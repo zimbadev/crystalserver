@@ -774,7 +774,7 @@ int GameFunctions::luaGameStartRaid(lua_State* L) {
 		return 1;
 	}
 
-	if (g_game().raids.getRunning()) {
+	if (g_game().raids.getRunning() || raid->getState() == RAIDSTATE_EXECUTING) {
 		lua_pushnumber(L, RETURNVALUE_ANOTHERRAIDISALREADYEXECUTING);
 		return 1;
 	}

@@ -127,6 +127,10 @@ void Raids::checkRaids() {
 
 		for (auto it = raidList.begin(), end = raidList.end(); it != end; ++it) {
 			const auto &raid = *it;
+			if (!raid->canBeRepeated() && raid->isExecuted()) {
+				continue;
+			}
+
 			if (now >= (getLastRaidEnd() + raid->getMargin())) {
 				const auto roll = static_cast<uint32_t>(uniform_random(0, MAX_RAND_RANGE));
 				const auto required = static_cast<uint32_t>(MAX_RAND_RANGE * raid->getInterval()) / CHECK_RAIDS_INTERVAL;
@@ -134,10 +138,6 @@ void Raids::checkRaids() {
 				if (shouldStart) {
 					setRunning(raid);
 					raid->startRaid();
-
-					if (!raid->canBeRepeated()) {
-						raidList.erase(it);
-					}
 					break;
 				}
 			}
@@ -225,6 +225,10 @@ bool Raid::loadFromXml(const std::string &filename) {
 }
 
 void Raid::startRaid() {
+	if (state == RAIDSTATE_EXECUTING) {
+		return;
+	}
+
 	const auto raidEvent = getNextRaidEvent();
 	if (raidEvent) {
 		state = RAIDSTATE_EXECUTING;
@@ -258,6 +262,7 @@ void Raid::executeRaidEvent(const std::shared_ptr<RaidEvent> &raidEvent) {
 void Raid::resetRaid() {
 	nextEvent = 0;
 	state = RAIDSTATE_IDLE;
+	executed = true;
 	g_game().raids.setRunning(nullptr);
 	g_game().raids.setLastRaidEnd(OTSYS_TIME());
 }
@@ -563,6 +568,7 @@ bool AreaSpawnEvent::executeEvent() {
 				const auto &topCreature = tile->getTopCreature();
 				if (!tile->isMovableBlocking() && !tile->hasFlag(TILESTATE_PROTECTIONZONE) && topCreature == nullptr && g_game().placeCreature(monster, tile->getPosition(), false, true)) {
 					monster->setForgeMonster(false);
+					monster->onSpawn(tile->getPosition());
 					break;
 				}
 			}
