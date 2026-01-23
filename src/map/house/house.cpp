@@ -478,9 +478,21 @@ void House::removeDoor(const std::shared_ptr<Door> &door) {
 	}
 }
 
+uint32_t House::getBedCount() const {
+	uint32_t count = 0;
+	for (const auto &bed : bedsList) {
+		if (bed->isBedComplete(bed->getNextBedItem())) {
+			count++;
+		}
+	}
+	return count / 2;
+}
+
 void House::addBed(const std::shared_ptr<BedItem> &bed) {
-	bedsList.push_back(bed);
-	bed->setHouse(static_self_cast<House>());
+	if (std::ranges::find(bedsList, bed) == bedsList.end()) {
+		bedsList.push_back(bed);
+		bed->setHouse(static_self_cast<House>());
+	}
 }
 
 void House::removeBed(const std::shared_ptr<BedItem> &bed) {
