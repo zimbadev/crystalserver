@@ -294,49 +294,61 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 		player->addCondition(condition);
 	}
 
+	bool update = false;
+
 	// Apply skills
 	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
 		if (outfit->skills[i]) {
 			player->setVarSkill(static_cast<skills_t>(i), outfit->skills[i]);
+			update = true;
 		}
 	}
 
 	// Apply life leech
 	if (outfit->lifeLeechChance > 0) {
 		player->setVarSkill(SKILL_LIFE_LEECH_CHANCE, outfit->lifeLeechChance);
+		update = true;
 	}
 
 	if (outfit->lifeLeechAmount > 0) {
 		player->setVarSkill(SKILL_LIFE_LEECH_AMOUNT, outfit->lifeLeechAmount);
+		update = true;
 	}
 
 	// Apply mana leech
 	if (outfit->manaLeechChance > 0) {
 		player->setVarSkill(SKILL_MANA_LEECH_CHANCE, outfit->manaLeechChance);
+		update = true;
 	}
 
 	if (outfit->manaLeechAmount > 0) {
 		player->setVarSkill(SKILL_MANA_LEECH_AMOUNT, outfit->manaLeechAmount);
+		update = true;
 	}
 
 	// Apply critical hit
 	if (outfit->criticalChance > 0) {
 		player->setVarSkill(SKILL_CRITICAL_HIT_CHANCE, outfit->criticalChance);
+		update = true;
 	}
 
 	if (outfit->criticalDamage > 0) {
 		player->setVarSkill(SKILL_CRITICAL_HIT_DAMAGE, outfit->criticalDamage);
+		update = true;
 	}
 
 	// Apply stats
 	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
 		if (outfit->stats[s]) {
 			player->setVarStats(static_cast<stats_t>(s), outfit->stats[s]);
+			update = true;
 		}
 	}
 
-	player->sendStats();
-	player->sendSkills();
+	if (update) {
+		player->sendStats();
+		player->sendSkills();
+	}
 	return true;
 }
 
@@ -374,48 +386,60 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 		player->removeCondition(CONDITION_REGENERATION, CONDITIONID_OUTFIT);
 	}
 
+	bool update = false;
+
 	// Remove skills
 	for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
 		if (outfit->skills[i]) {
 			player->setVarSkill(static_cast<skills_t>(i), -outfit->skills[i]);
+			update = true;
 		}
 	}
 
 	// Remove life leech
 	if (outfit->lifeLeechChance > 0) {
 		player->setVarSkill(SKILL_LIFE_LEECH_CHANCE, -outfit->lifeLeechChance);
+		update = true;
 	}
 
 	if (outfit->lifeLeechAmount > 0) {
 		player->setVarSkill(SKILL_LIFE_LEECH_AMOUNT, -outfit->lifeLeechAmount);
+		update = true;
 	}
 
 	// Remove mana leech
 	if (outfit->manaLeechChance > 0) {
 		player->setVarSkill(SKILL_MANA_LEECH_CHANCE, -outfit->manaLeechChance);
+		update = true;
 	}
 
 	if (outfit->manaLeechAmount > 0) {
 		player->setVarSkill(SKILL_MANA_LEECH_AMOUNT, -outfit->manaLeechAmount);
+		update = true;
 	}
 
 	// Remove critical hit
 	if (outfit->criticalChance > 0) {
 		player->setVarSkill(SKILL_CRITICAL_HIT_CHANCE, -outfit->criticalChance);
+		update = true;
 	}
 
 	if (outfit->criticalDamage > 0) {
 		player->setVarSkill(SKILL_CRITICAL_HIT_DAMAGE, -outfit->criticalDamage);
+		update = true;
 	}
 
 	// Remove stats
 	for (uint32_t s = STAT_FIRST; s <= STAT_LAST; ++s) {
 		if (outfit->stats[s]) {
 			player->setVarStats(static_cast<stats_t>(s), -outfit->stats[s]);
+			update = true;
 		}
 	}
 
-	player->sendStats();
-	player->sendSkills();
+	if (update) {
+		player->sendStats();
+		player->sendSkills();
+	}
 	return true;
 }
