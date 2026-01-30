@@ -255,6 +255,7 @@ void Items::loadFromProtobuf() {
 		iType.expire = object.flags().expire();
 		iType.expireStop = object.flags().expirestop();
 		iType.isWrapKit = object.flags().wrapkit();
+		iType.isDualWielding = object.flags().dual_wielding();
 
 		if (object.flags().proficiency().has_proficiency_id()) {
 			iType.proficiencyId = static_cast<uint32_t>(object.flags().proficiency().proficiency_id());
