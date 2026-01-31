@@ -26,6 +26,7 @@
 #include "game/game.hpp"
 #include "core.hpp"
 #include "enums/account_errors.hpp"
+#include "utils/tools.hpp"
 
 void ProtocolLogin::disconnectClient(const std::string &message) const {
 	const auto output = OutputMessagePool::getOutputMessage();
