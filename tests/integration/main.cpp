@@ -74,10 +74,10 @@ int main() {
 		AccountRepositoryDB accRepo{};
 		createAccount(db);
 
-		auto acc = std::make_unique<AccountInfo>();
+		AccountInfo acc;
 		accRepo.loadByID(111, acc);
 		assertAccountLoad(acc);
-		expect(eq(acc->sessionExpires, 0));
+		expect(eq(acc.sessionExpires, 0));
 	});
 
 	test("AccountRepositoryDB::loadByEmailOrName") = databaseTest(db, [&db] {
@@ -85,10 +85,10 @@ int main() {
 		AccountRepositoryDB accRepo {};
 		createAccount(db);
 
-		auto acc = std::make_unique<AccountInfo>();
+		AccountInfo acc;
 		accRepo.loadByEmailOrName(false, "@test", acc);
 		assertAccountLoad(acc);
-		expect(eq(acc->sessionExpires, 0));
+		expect(eq(acc.sessionExpires, 0));
 	});
 
 	test("AccountRepositoryDB::loadBySession") = databaseTest(db, [&db] {
@@ -96,25 +96,25 @@ int main() {
 		AccountRepositoryDB accRepo {};
 		createAccount(db);
 
-		auto acc = std::make_unique<AccountInfo>();
+		AccountInfo acc;
 		accRepo.loadBySession("test", acc);
 
 		assertAccountLoad(acc);
-		expect(eq(acc->sessionExpires, 1337));
+		expect(eq(acc.sessionExpires, 1337));
 	});
 
 	test("AccountRepositoryDB load sets premium day purchased = remaining days, if needed") = databaseTest(db, [&db] {
 		InMemoryLogger logger{};
 		AccountRepositoryDB accRepo{};
 
-		auto acc = std::make_unique<AccountInfo>();
+		AccountInfo acc;
 		accRepo.loadByID(1, acc);
-		acc->premiumRemainingDays = 10;
+		acc.premiumRemainingDays = 10;
 		accRepo.save(acc);
 
 		accRepo.loadByID(1, acc);
 
-		expect(eq(acc->premiumDaysPurchased, 10));
+		expect(eq(acc.premiumDaysPurchased, 10));
 	});
 
 	test("AccountRepositoryDB::getPassword") = databaseTest(db, [&db] {
@@ -143,21 +143,21 @@ int main() {
 		InMemoryLogger logger {};
 		AccountRepositoryDB accRepo {};
 
-		auto acc = std::make_unique<AccountInfo>();
-		acc->id = 1;
-		acc->accountType = AccountType::ACCOUNT_TYPE_SENIORTUTOR;
-		acc->premiumRemainingDays = 10;
-		acc->premiumLastDay = 10;
-		acc->sessionExpires = 99999999;
+		AccountInfo acc;
+		acc.id = 1;
+		acc.accountType = AccountType::ACCOUNT_TYPE_SENIORTUTOR;
+		acc.premiumRemainingDays = 10;
+		acc.premiumLastDay = 10;
+		acc.sessionExpires = 99999999;
 		expect(accRepo.save(acc));
 
-		auto acc2 = std::make_unique<AccountInfo>();
+		AccountInfo acc2;
 		accRepo.loadByID(1, acc2);
-		expect(eq(acc2->id, 1));
-		expect(eq(acc2->accountType, AccountType::ACCOUNT_TYPE_SENIORTUTOR));
-		expect(eq(acc2->premiumRemainingDays, 10));
-		expect(eq(acc2->premiumLastDay, 10));
+		expect(eq(acc2.id, 1));
+		expect(eq(acc2.accountType, AccountType::ACCOUNT_TYPE_SENIORTUTOR));
+		expect(eq(acc2.premiumRemainingDays, 10));
+		expect(eq(acc2.premiumLastDay, 10));
 		// sessionExpires is not saved
-		expect(eq(acc2->sessionExpires, 0));
+		expect(eq(acc2.sessionExpires, 0));
 	});
 }
