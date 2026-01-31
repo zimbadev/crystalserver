@@ -83,7 +83,7 @@ namespace tests {
 			return !failGetPassword;
 		}
 
-		bool getCoins(const uint32_t &id, CoinType type, uint32_t &coins) final {
+		bool getCoins(const uint32_t &id, const uint8_t &type, uint32_t &coins) final {
 			auto accountCoins = coins_.find(id);
 
 			if (accountCoins == coins_.end()) {
@@ -100,7 +100,7 @@ namespace tests {
 			return true;
 		}
 
-		bool setCoins(const uint32_t &id, CoinType type, const uint32_t &amount) final {
+		bool setCoins(const uint32_t &id, const uint8_t &type, const uint32_t &amount) final {
 			auto accountCoins = coins_.find(id);
 
 			if (accountCoins == coins_.end()) {
