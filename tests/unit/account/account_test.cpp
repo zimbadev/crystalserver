@@ -335,7 +335,7 @@ suite<"account"> accountTest = [] {
 		accountRepository.failAddCoins = false;
 		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, enumToValue(CoinType::Normal), 100);
-		accountRepository.setCoins(1, CoinType::Tournament, 57);
+		accountRepository.setCoins(1, enumToValue(CoinType::Tournament), 57);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.removeCoins(enumToValue(CoinType::Normal), 100), AccountErrors_t::Ok));

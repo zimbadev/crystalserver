@@ -36,15 +36,15 @@ void createAccount(Database &db) {
 	));
 }
 
-void assertAccountLoad(const std::unique_ptr<AccountInfo> &acc) {
-	expect(eq(acc->id, 111));
-	expect(eq(acc->accountType, AccountType::ACCOUNT_TYPE_SENIORTUTOR));
-	expect(eq(acc->premiumRemainingDays, 11));
-	expect(eq(acc->premiumLastDay, 1293912));
-	expect(eq(acc->players.size(), 0));
-	expect(eq(acc->oldProtocol, false));
-	expect(eq(acc->premiumDaysPurchased, 11));
-	expect(approx(acc->creationTime, 42183281, 60 * 60 * 1000));
+void assertAccountLoad(const AccountInfo &acc) {
+	expect(eq(acc.id, 111));
+	expect(eq(acc.accountType, AccountType::ACCOUNT_TYPE_SENIORTUTOR));
+	expect(eq(acc.premiumRemainingDays, 11));
+	expect(eq(acc.premiumLastDay, 1293912));
+	expect(eq(acc.players.size(), 0));
+	expect(eq(acc.oldProtocol, false));
+	expect(eq(acc.premiumDaysPurchased, 11));
+	expect(approx(acc.creationTime, 42183281, 60 * 60 * 1000));
 }
 
 int main() {
