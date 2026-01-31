@@ -177,13 +177,13 @@ suite<"account"> accountTest = [] {
 		Account acc { 1 };
 		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 		accountRepository.setCoins(1, enumToValue(CoinType::Normal), 100);
-		accountRepository.setCoins(1, CoinType::Tournament, 100);
+		accountRepository.setCoins(1, enumToValue(CoinType::Tournament), 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(std::get<0>(acc.getCoins(enumToValue(CoinType::Normal))), 100));
 		expect(eqEnum(std::get<1>(acc.getCoins(enumToValue(CoinType::Normal))), AccountErrors_t::Ok));
-		expect(eqEnum(std::get<0>(acc.getCoins(CoinType::Tournament)), 100));
-		expect(eqEnum(std::get<1>(acc.getCoins(CoinType::Tournament)), AccountErrors_t::Ok));
+		expect(eqEnum(std::get<0>(acc.getCoins(enumToValue(CoinType::Tournament))), 100));
+		expect(eqEnum(std::get<1>(acc.getCoins(enumToValue(CoinType::Tournament))), AccountErrors_t::Ok));
 	};
 
 	test("Account::addCoins returns error if not yet loaded") = [] {
@@ -210,7 +210,7 @@ suite<"account"> accountTest = [] {
 		accountRepository.setCoins(1, enumToValue(CoinType::Normal), 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
-		expect(eqEnum(acc.addCoins(CoinType::Tournament, 100), AccountErrors_t::Storage));
+		expect(eqEnum(acc.addCoins(enumToValue(CoinType::Tournament), 100), AccountErrors_t::Storage));
 	};
 
 	test("Account::addCoins adds coins") = [&injectionFixture] {
@@ -250,15 +250,15 @@ suite<"account"> accountTest = [] {
 		Account acc { 1 };
 		accountRepository.failAddCoins = false;
 		accountRepository.setCoins(1, enumToValue(CoinType::Normal), 100);
-		accountRepository.setCoins(1, CoinType::Tournament, 57);
+		accountRepository.setCoins(1, enumToValue(CoinType::Tournament), 57);
 		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.addCoins(enumToValue(CoinType::Normal), 100), AccountErrors_t::Ok));
 		expect(eqEnum(std::get<0>(acc.getCoins(enumToValue(CoinType::Normal))), 200));
 		expect(eqEnum(std::get<1>(acc.getCoins(enumToValue(CoinType::Normal))), AccountErrors_t::Ok));
-		expect(eqEnum(std::get<0>(acc.getCoins(CoinType::Tournament)), 57));
-		expect(eqEnum(std::get<1>(acc.getCoins(CoinType::Tournament)), AccountErrors_t::Ok));
+		expect(eqEnum(std::get<0>(acc.getCoins(enumToValue(CoinType::Tournament))), 57));
+		expect(eqEnum(std::get<1>(acc.getCoins(enumToValue(CoinType::Tournament))), AccountErrors_t::Ok));
 
 		expect(eq(accountRepository.coinsTransactions_.size(), 1) >> fatal);
 		expect(eq(accountRepository.coinsTransactions_[1].size(), 1) >> fatal);
@@ -341,8 +341,8 @@ suite<"account"> accountTest = [] {
 		expect(eqEnum(acc.removeCoins(enumToValue(CoinType::Normal), 100), AccountErrors_t::Ok));
 		expect(eqEnum(std::get<0>(acc.getCoins(enumToValue(CoinType::Normal))), 0));
 		expect(eqEnum(std::get<1>(acc.getCoins(enumToValue(CoinType::Normal))), AccountErrors_t::Ok));
-		expect(eqEnum(std::get<0>(acc.getCoins(CoinType::Tournament)), 57));
-		expect(eqEnum(std::get<1>(acc.getCoins(CoinType::Tournament)), AccountErrors_t::Ok));
+		expect(eqEnum(std::get<0>(acc.getCoins(enumToValue(CoinType::Tournament))), 57));
+		expect(eqEnum(std::get<1>(acc.getCoins(enumToValue(CoinType::Tournament))), AccountErrors_t::Ok));
 
 		expect(eq(accountRepository.coinsTransactions_.size(), 1) >> fatal);
 		expect(eq(accountRepository.coinsTransactions_[1].size(), 1) >> fatal);
@@ -402,8 +402,8 @@ suite<"account"> accountTest = [] {
 		expect(eqEnum(std::get<0>(acc.getCoins(enumToValue(CoinType::Normal))), 21));
 		expect(eqEnum(std::get<1>(acc.getCoins(enumToValue(CoinType::Normal))), AccountErrors_t::Ok));
 
-		acc.registerCoinTransaction(CoinTransactionType::Add, enumToValue(CoinType::Normal), 100, "");
-		acc.registerCoinTransaction(CoinTransactionType::Remove, enumToValue(CoinType::Normal), 100, "");
+		acc.registerCoinTransaction(enumToValue(CoinTransactionType::Add), enumToValue(CoinType::Normal), 100, "");
+		acc.registerCoinTransaction(enumToValue(CoinTransactionType::Remove), enumToValue(CoinType::Normal), 100, "");
 
 		expect(eq(accountRepository.coinsTransactions_.size(), 0));
 	};
