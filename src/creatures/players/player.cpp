@@ -11589,11 +11589,11 @@ bool Player::setAccount(uint32_t accountId) {
 	}
 
 	account = std::make_shared<Account>(accountId);
-	return AccountErrors_t::Ok == account->load();
+	return AccountErrors_t::Ok == enumFromValue<AccountErrors_t>(account->load());
 }
 
 uint8_t Player::getAccountType() const {
-	return account ? account->getAccountType() : AccountType::ACCOUNT_TYPE_NORMAL;
+	return account ? account->getAccountType() : static_cast<uint8_t>(AccountType::ACCOUNT_TYPE_NORMAL);
 }
 
 uint32_t Player::getAccountId() const {

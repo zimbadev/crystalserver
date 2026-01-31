@@ -49,7 +49,7 @@ void ProtocolLogin::getCharacterList(const std::string &accountDescriptor, const
 		return;
 	}
 
-	if (account.load() != AccountErrors_t::Ok || !account.authenticate(password)) {
+	if (account.load() != enumToValue(AccountErrors_t::Ok) || !account.authenticate(password)) {
 		std::ostringstream ss;
 		ss << (oldProtocol ? "Username" : "Email") << " or password is not correct.";
 		disconnectClient(ss.str());
@@ -74,7 +74,7 @@ void ProtocolLogin::getCharacterList(const std::string &accountDescriptor, const
 
 	// Add char list
 	auto [players, result] = account.getAccountPlayers();
-	if (AccountErrors_t::Ok != result) {
+	if (result != enumToValue(AccountErrors_t::Ok)) {
 		g_logger().warn("Account[{}] failed to load players!", account.getID());
 	}
 
