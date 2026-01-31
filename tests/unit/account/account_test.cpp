@@ -294,7 +294,7 @@ suite<"account"> accountTest = [] {
 		accountRepository.setCoins(1, enumToValue(CoinType::Normal), 100);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
-		expect(eqEnum(acc.removeCoins(CoinType::Tournament, 100), AccountErrors_t::Storage));
+		expect(eqEnum(acc.removeCoins(enumToValue(CoinType::Tournament), 100), AccountErrors_t::Storage));
 	};
 
 	test("Account::removeCoins removes coins") = [&injectionFixture] {
