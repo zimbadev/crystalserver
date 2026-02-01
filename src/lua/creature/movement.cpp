@@ -636,8 +636,7 @@ uint32_t MoveEvent::EquipItem(const std::shared_ptr<MoveEvent> &moveEvent, const
 		player->applyEquippedWeaponProficiency(itemId);
 	}
 
-	player->sendStats();
-	player->sendSkills();
+	player->addScheduledUpdates((PlayerUpdate_Stats | PlayerUpdate_Skills));
 	return 1;
 }
 
@@ -720,8 +719,7 @@ uint32_t MoveEvent::DeEquipItem(const std::shared_ptr<MoveEvent> &, const std::s
 		player->removeEquippedWeaponProficiency(itemId);
 	}
 
-	player->sendStats();
-	player->sendSkills();
+	player->addScheduledUpdates((PlayerUpdate_Stats | PlayerUpdate_Skills));
 	return 1;
 }
 

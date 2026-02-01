@@ -264,8 +264,7 @@ bool Mounts::addAttributes(uint32_t playerId, uint8_t mountId) {
 		}
 	}
 
-	player->sendStats();
-	player->sendSkills();
+	player->addScheduledUpdates((PlayerUpdate_Stats | PlayerUpdate_Skills));
 	return true;
 }
 
@@ -340,7 +339,6 @@ bool Mounts::removeAttributes(uint32_t playerId, uint8_t mountId) {
 		}
 	}
 
-	player->sendStats();
-	player->sendSkills();
+	player->addScheduledUpdates((PlayerUpdate_Stats | PlayerUpdate_Skills));
 	return true;
 }

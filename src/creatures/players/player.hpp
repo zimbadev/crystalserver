@@ -103,6 +103,15 @@ using UsersMap = std::map<uint32_t, std::shared_ptr<Player>>;
 using InvitedMap = std::map<uint32_t, std::shared_ptr<Player>>;
 using HouseMap = std::map<uint32_t, std::shared_ptr<House>>;
 
+enum PlayerUpdateFlags : uint32_t {
+	PlayerUpdate_Weight = 1 << 0,
+	PlayerUpdate_Light = 1 << 1,
+	PlayerUpdate_Stats = 1 << 2,
+	PlayerUpdate_Skills = 1 << 3,
+	PlayerUpdate_Inventory = 1 << 4,
+	PlayerUpdate_Sale = 1 << 5
+};
+
 struct CharmInfo {
 	uint16_t raceId = 0;
 	uint8_t tier = 0;
@@ -1149,6 +1158,9 @@ public:
 	void forgetInstantSpell(const std::string &spellName);
 	bool hasLearnedInstantSpell(const std::string &spellName) const;
 
+	void addScheduledUpdates(uint32_t flags);
+	bool hasScheduledUpdates(uint32_t flags) const;
+
 	void updateRegeneration() const;
 
 	void setScheduledSaleUpdate(bool scheduled);
@@ -1604,7 +1616,6 @@ private:
 	std::map<uint32_t, uint32_t> &getAllItemTypeCount(std::map<uint32_t, uint32_t> &countMap) const override;
 	// Function from player class with correct type sizes (uint16_t)
 	std::map<uint16_t, uint16_t> &getAllSaleItemIdAndCount(std::map<uint16_t, uint16_t> &countMap) const;
-	void getAllItemTypeCountAndSubtype(std::map<uint32_t, uint32_t> &countMap) const;
 	std::shared_ptr<Item> getForgeItemFromId(uint16_t itemId, uint8_t tier) const;
 	std::shared_ptr<Thing> getThing(size_t index) const override;
 
@@ -1720,6 +1731,8 @@ private:
 	uint32_t capacity = 40000;
 	uint32_t bonusCapacity = 0;
 
+	uint32_t scheduledUpdates = 0;
+
 	std::bitset<CombatType_t::COMBAT_COUNT> m_damageImmunities;
 	std::bitset<ConditionType_t::CONDITION_COUNT> m_conditionImmunities;
 	std::bitset<ConditionType_t::CONDITION_COUNT> m_conditionSuppressions;
@@ -1828,6 +1841,7 @@ private:
 	bool requestedOutfit = false;
 	bool outfitAttributes = false;
 	bool mountAttributes = false;
+	bool scheduledUpdate = false;
 
 	// Hazard system
 	int64_t lastHazardSystemCriticalHit = 0;

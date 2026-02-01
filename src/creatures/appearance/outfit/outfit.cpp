@@ -335,8 +335,7 @@ bool Outfits::addAttributes(uint32_t playerId, uint32_t outfitId, uint16_t sex, 
 		}
 	}
 
-	player->sendStats();
-	player->sendSkills();
+	player->addScheduledUpdates((PlayerUpdate_Stats | PlayerUpdate_Skills));
 	return true;
 }
 
@@ -415,7 +414,6 @@ bool Outfits::removeAttributes(uint32_t playerId, uint32_t outfitId, uint16_t se
 		}
 	}
 
-	player->sendStats();
-	player->sendSkills();
+	player->addScheduledUpdates((PlayerUpdate_Stats | PlayerUpdate_Skills));
 	return true;
 }

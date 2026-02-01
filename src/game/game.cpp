@@ -11907,6 +11907,40 @@ void Game::createIllusion(const std::shared_ptr<Player> &player, const Outfit_t 
 	player->addCondition(outfitCondition);
 }
 
+void Game::updatePlayerEvent(uint32_t playerId) {
+	std::shared_ptr<Player> player = getPlayerByID(playerId);
+	if (!player) {
+		return;
+	}
+
+	if (player->hasScheduledUpdates(PlayerUpdate_Weight)) {
+		player->updateInventoryWeight();
+	}
+
+	if (player->hasScheduledUpdates(PlayerUpdate_Light)) {
+		player->updateItemsLight();
+	}
+
+	if (player->hasScheduledUpdates(PlayerUpdate_Stats)) {
+		player->sendStats();
+	}
+
+	if (player->hasScheduledUpdates(PlayerUpdate_Skills)) {
+		player->sendSkills();
+	}
+
+	if (player->hasScheduledUpdates((PlayerUpdate_Inventory | PlayerUpdate_Sale))) {
+		std::map<uint16_t, uint16_t> inventoryMap;
+		if (player->hasScheduledUpdates(PlayerUpdate_Inventory)) {
+			player->sendInventoryIds();
+		}
+
+		if (player->hasScheduledUpdates(PlayerUpdate_Sale)) {
+			player->sendSaleItemList(player->getAllSaleItemIdAndCount(inventoryMap));
+		}
+	}
+}
+
 bool Game::hasPartyMembersNearby(const std::shared_ptr<Player> &player) {
 	if (!player) {
 		return false;

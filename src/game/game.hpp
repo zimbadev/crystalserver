@@ -312,6 +312,8 @@ public:
 	void playerForgeResourceConversion(uint32_t playerId, ForgeAction_t actionType);
 	void playerBrowseForgeHistory(uint32_t playerId, uint8_t page);
 
+	void updatePlayerEvent(uint32_t playerId);
+
 	void playerBosstiarySlot(uint32_t playerId, uint8_t slotId, uint32_t selectedBossId);
 	void playerSetMonsterPodium(uint32_t playerId, uint32_t monsterRaceId, const Position &pos, uint8_t stackPos, uint16_t itemId, uint8_t direction, const std::pair<uint8_t, uint8_t> &podiumAndMonsterVisible);
 	void playerRotatePodium(uint32_t playerId, const Position &pos, uint8_t stackPos, uint16_t itemId);

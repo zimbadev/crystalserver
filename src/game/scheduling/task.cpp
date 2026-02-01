@@ -24,8 +24,9 @@
 std::atomic_uint_fast64_t Task::LAST_EVENT_ID = 0;
 
 Task::Task(uint32_t expiresAfterMs, std::function<void(void)> &&f, std::string_view context) :
-	func(std::move(f)), context(context), utime(OTSYS_TIME()),
-	expiration(expiresAfterMs > 0 ? OTSYS_TIME() + expiresAfterMs : 0) {
+	func(std::move(f)), context(context),
+	utime(OTSYS_TIME(true)),
+	expiration(expiresAfterMs > 0 ? OTSYS_TIME(true) + expiresAfterMs : 0) {
 	if (this->context.empty()) {
 		g_logger().error("[{}]: task context cannot be empty!", __FUNCTION__);
 		return;
@@ -46,7 +47,7 @@ Task::Task(std::function<void(void)> &&f, std::string_view context, uint32_t del
 }
 
 [[nodiscard]] bool Task::hasExpired() const {
-	return expiration != 0 && expiration < OTSYS_TIME();
+	return expiration != 0 && expiration < OTSYS_TIME(true);
 }
 
 bool Task::execute() const {
