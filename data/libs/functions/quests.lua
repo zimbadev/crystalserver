@@ -72,7 +72,7 @@ function Player.resetTrackedMissions(self, receivedMissionsFromClient)
 					missionId = missionId,
 					questName = questName,
 					missionName = self:getMissionName(questId, missionIndex),
-					missionDesc = self:getMissionDescription(questId, missionIndex)
+					missionDesc = self:getMissionDescription(questId, missionIndex),
 				}
 				table.insert(currentMissions, current)
 				if #currentMissions >= maxAllowed then
@@ -140,7 +140,7 @@ function Player.getMissionsData(self, storage)
 							missionDesc = self:getMissionDescription(questId, missionId),
 							quest = quest,
 						}
-						missions[#missions+1] = data
+						missions[#missions + 1] = data
 					end
 				end
 			end
