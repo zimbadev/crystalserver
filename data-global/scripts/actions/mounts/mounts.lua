@@ -48,7 +48,7 @@ local config = {
 	[21186] = { NAME = "Walker", ID = 43, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 2, "This walker is incompatible with your control unit." }, { 4, "This walker is incompatible with your control unit." } }, SUCCESS_MSG = "You tamed the walker.", ACHIEV = "Gear Up" },
 	[17858] = { NAME = "Water Buffalo", ID = 35, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 1, "The water buffalo got scared and ran away." }, { 3, "The water buffalo is trying to nibble." } }, SUCCESS_MSG = "You tamed a water buffalo.", ACHIEV = "Swamp Beast" },
 	[37397] = { NAME = "wind-up loco", ID = 194, BREAK = false, TYPE = TYPE_ITEM, CHANCE = 100, FAIL_MSG = {}, SUCCESS_MSG = "You wind the small locomotive up. It starts to move ... and grows!", ACHIEV = "Engine Driver" },
-	[12802] = { NAME = "Wild Horse", ID = 17, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 15, FAIL_MSG = { { 1, "Weeeheeeehee. With its last strength the horse the horse runs to safety." }, { 2, "The wild horse happily munches the sugar oat and runs on." } }, SUCCESS_MSG = "*snort* The horse eats the sugar oat and accepts you as its new master.", ACHIEV = "Lucky Horseshoe" },
+	[12802] = { NAME = "Wild Horse", ID = 17, BREAK = false, TYPE = TYPE_MONSTER, CHANCE = 7, SUCCESS_MSG = "*snort* The horse eats the sugar oat and accepts you as its new master.", ACHIEV = "Lucky Horseshoe" },
 	[34258] = { NAME = "White Lion", ID = 174, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 50, FAIL_MSG = { { 1, "The White Lion runs away." }, { 2, "The White Lion ate the flower." } }, SUCCESS_MSG = "You have tamed the white lion.", ACHIEV = "Well Roared, Lion!" },
 	[43901] = { NAME = "Foxmouse", ID = 218, BREAK = false, TYPE = TYPE_MONSTER, CHANCE = 100, FAIL_MSG = { { 1, "The foxmouse ran away." } }, SUCCESS_MSG = "You have tamed the foxmouse.", ACHIEV = "Like Fox and Mouse" },
 }
@@ -87,10 +87,44 @@ function mounts.onUse(cid, item, fromPosition, itemEx, toPosition)
 	end
 
 	local rand = math.random(100)
+
 	--Monster Mount
 	if targetMonster ~= nil and mount.TYPE == TYPE_MONSTER then
 		if Creature(itemEx.uid):getMaster() then
-			player:say("You can't tame a summon!", TALKTYPE_MONSTER_SAY)
+			player:sendCancelMessage("You cannot tame a summon.")
+			return true
+		end
+
+		if mount.NAME == "Wild Horse" then
+			if rand <= 3 then
+				if mount.ACHIEV then
+					player:addAchievement(mount.ACHIEV)
+				end
+				player:addAchievement("Natural Born Cowboy")
+				player:addMount(mount.ID)
+				player:say(mount.SUCCESS_MSG, TALKTYPE_MONSTER_SAY)
+				targetMonster:remove()
+				toPosition:sendMagicEffect(CONST_ME_MAGIC_GREEN)
+				Item(item.uid):remove(1)
+				return true
+			end
+
+			local failRoll = math.random(100)
+
+			if failRoll <= 3 then
+				player:say("With its last strength the horse runs to safety.", TALKTYPE_MONSTER_SAY)
+				toPosition:sendMagicEffect(CONST_ME_POFF)
+				targetMonster:remove()
+			else
+				local regularMsgs = {
+					"The wild horse happily munches the sugar oat and runs on.",
+					"Weeeheeeehee.",
+				}
+				player:say(regularMsgs[math.random(#regularMsgs)], TALKTYPE_MONSTER_SAY)
+				toPosition:sendMagicEffect(CONST_ME_POFF)
+			end
+
+			Item(item.uid):remove(1)
 			return true
 		end
 
