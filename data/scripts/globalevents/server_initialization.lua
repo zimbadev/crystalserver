@@ -108,9 +108,50 @@ local function updateEventRates()
 		SCHEDULE_SPAWN_RATE = spawnRate
 	end
 
+	local fiendishRate = EventsScheduler.getEventSFiendish()
+	if fiendishRate ~= 100 then
+		SCHEDULE_FIENDISH_RATE = fiendishRate
+	end
+
+	local influencedRate = EventsScheduler.getEventSInfluenced()
+	if influencedRate ~= 100 then
+		SCHEDULE_INFLUENCED_RATE = influencedRate
+	end
+
+	local spawnRate = EventsScheduler.getSpawnMonsterSchedule()
+	if spawnRate ~= 100 then
+		SCHEDULE_SPAWN_RATE = spawnRate
+	end
+
+	local rates = {
+		{ name = "Exp", value = expRate },
+		{ name = "Loot", value = lootRate },
+		{ name = "Spawn", value = spawnRate },
+		{ name = "Skill", value = skillRate },
+		{ name = "Boss loot", value = bossLootRate },
+		{ name = "Fiendish", value = fiendishRate },
+		{ name = "Influenced", value = influencedRate },
+	}
+
 	-- Log information if any of the rates are not 100%
-	if expRate ~= 100 or lootRate ~= 100 or spawnRate ~= 100 or skillRate ~= 100 or bossLootRate ~= 100 then
-		logger.info("[Events] Exp: {}%, Loot: {}%, Spawn: {}%, Skill: {}%, Boss loot: {}%", expRate, lootRate, spawnRate, skillRate, bossLootRate)
+	local events = ""
+	local boostedEvents = {}
+
+	for _, rate in ipairs(rates) do
+		if rate.value ~= 100 then
+			table.insert(boostedEvents, rate)
+		end
+	end
+	for index, rate in ipairs(boostedEvents) do
+		events = events .. string.format("%s: %d%%", rate.name, rate.value)
+		if index < #boostedEvents then
+			events = events .. ", "
+		else
+			events = events .. "."
+		end
+	end
+	if events ~= "" then
+		logger.info("[Events]: {}", events)
 	end
 end
 

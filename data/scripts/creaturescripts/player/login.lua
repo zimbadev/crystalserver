@@ -84,6 +84,14 @@ function playerLoginGlobal.onLogin(player)
 		sendBoostMessage(player, "Skill Rate", SCHEDULE_SKILL_RATE > 100)
 	end
 
+	if SCHEDULE_FIENDISH_RATE ~= 100 then
+		sendBoostMessage(player, "Fiendish Monsters", SCHEDULE_FIENDISH_RATE > 100)
+	end
+
+	if SCHEDULE_INFLUENCED_RATE ~= 100 then
+		sendBoostMessage(player, "Influenced Monsters", SCHEDULE_INFLUENCED_RATE > 100)
+	end
+
 	-- Send Recruiter Outfit
 	local resultId = db.storeQuery("SELECT `recruiter` FROM `accounts` WHERE `id`= " .. Game.getPlayerAccountId(getPlayerName(player)))
 	if resultId then

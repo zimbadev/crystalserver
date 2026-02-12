@@ -415,6 +415,8 @@ bool ConfigManager::load() {
 	loadStringConfig(L, DISCORD_WEBHOOK_URL, "discordWebhookURL", "");
 	loadStringConfig(L, FORGE_FIENDISH_INTERVAL_TIME, "forgeFiendishIntervalTime", "1");
 	loadStringConfig(L, FORGE_FIENDISH_INTERVAL_TYPE, "forgeFiendishIntervalType", "hour");
+	loadStringConfig(L, FORGE_INFLUENCED_INTERVAL_TIME, "forgeInfluencedIntervalTime", "1");
+	loadStringConfig(L, FORGE_INFLUENCED_INTERVAL_TYPE, "forgeInfluencedIntervalType", "hour");
 	loadStringConfig(L, GLOBAL_SERVER_SAVE_TIME, "globalServerSaveTime", "06:00");
 	loadStringConfig(L, LOCATION, "location", "");
 	loadStringConfig(L, M_CONST, "memoryConst", "1<<16");
