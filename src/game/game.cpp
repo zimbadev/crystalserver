@@ -4719,6 +4719,9 @@ std::shared_ptr<Item> Game::wrapItem(const std::shared_ptr<Item> &item, const st
 	}
 
 	newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint16_t>(ItemAttribute_t::OWNER));
+	if (const int64_t storeAttribute = item->getAttribute<int64_t>(ItemAttribute_t::STORE); storeAttribute > 0) {
+		newItem->setAttribute(ItemAttribute_t::STORE, storeAttribute);
+	}
 	newItem->startDecaying();
 	return newItem;
 }
@@ -4736,6 +4739,7 @@ void Game::unwrapItem(const std::shared_ptr<Item> &item, uint16_t unWrapId, cons
 	}
 
 	const uint16_t ownerAttr = item->getAttribute<uint16_t>(ItemAttribute_t::OWNER);
+	const int64_t storeAttr = item->getAttribute<int64_t>(ItemAttribute_t::STORE);
 	const uint16_t amountAttr = item->getAttribute<uint16_t>(ItemAttribute_t::AMOUNT);
 	const uint16_t amount = amountAttr ? amountAttr : 1;
 
@@ -4756,6 +4760,9 @@ void Game::unwrapItem(const std::shared_ptr<Item> &item, uint16_t unWrapId, cons
 		newItem->removeAttribute(ItemAttribute_t::DESCRIPTION);
 		newItem->startDecaying();
 		newItem->setAttribute(ItemAttribute_t::OWNER, ownerAttr);
+		if (storeAttr > 0) {
+			newItem->setAttribute(ItemAttribute_t::STORE, storeAttr);
+		}
 	}
 }
 

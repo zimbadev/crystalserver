@@ -162,10 +162,11 @@
 			<flag canwearallmounts="1" />
 		</flags>
 	</group>
-	<group id="7" name="game tester" access="0" maxdepotitems="0" maxvipentries="200">
+	<group id="7" name="game tester" access="1" maxdepotitems="0" maxvipentries="200">
 		<flags>
 			<flag isgametester="1" />
 			<flag hasfulllight="1" />
+			<flag hasnoexhaustion="1" />
 		</flags>
 	</group>
 </groups>

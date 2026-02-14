@@ -105,11 +105,17 @@ npcConfig.shop = {
 	{ itemName = "short sword", clientId = 3294, buy = 26 },
 	{ itemName = "sickle", clientId = 3293, buy = 7 },
 	{ itemName = "spike sword", clientId = 3271, buy = 8000 },
-	{ itemName = "sword", clientId = 3264, buy = 85 },
+	{ itemName = "sword", clientId = 3264, buy = 85, sell = 25 },
 	{ itemName = "throwing knife", clientId = 3298, buy = 25 },
 	{ itemName = "two handed sword", clientId = 3265, buy = 950 },
 	{ itemName = "war hammer", clientId = 3279, buy = 10000 },
+	{ itemName = "pair of monk fists", clientId = 50181, buy = 270, sell = 90 },
+	{ itemName = "nunchaku", clientId = 50182, buy = 405, sell = 135 },
+	{ itemName = "sai", clientId = 50183, buy = 540, sell = 180 },
 }
+
+keywordHandler:addKeyword({ "child" }, StdModule.say, { npcHandler = npcHandler, text = "I have two children. Perhaps they are upstairs but I guess they are rather outside, playing." })
+
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
 	npc:sellItem(player, itemId, amount, subType, 0, ignore, inBackpacks)
@@ -120,5 +126,18 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+keywordHandler:addKeyword({ "buy", "sell", "offer" }, StdModule.say, { npcHandler = npcHandler, text = "I sell and buy weapons. If you'd like to see my offers, ask me for a {trade}." })
+keywordHandler:addKeyword({ "name" }, StdModule.say, { npcHandler = npcHandler, text = "My name is Rowenna." })
+keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I'm a blacksmith and the shop owner. If you need weapons you're at the right place." })
+keywordHandler:addKeyword({ "weapon" }, StdModule.say, { npcHandler = npcHandler, text = "I have many weapons to offer. If you'd like to see my offers, ask me for a {trade}." })
+keywordHandler:addKeyword({ "armor" }, StdModule.say, { npcHandler = npcHandler, text = "I sell only weapons. For armor, ask Cornelia in the other shop." })
+keywordHandler:addKeyword({ "elves", "elf" }, StdModule.say, { npcHandler = npcHandler, text = "They live in the northeast of Tibia." })
+keywordHandler:addKeyword({ "time" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, I don't know what time it is." })
+
+npcHandler:setMessage(MESSAGE_WALKAWAY, "Good bye. Come back soon.")
+npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye. Come back soon.")
+npcHandler:setMessage(MESSAGE_SENDTRADE, "Of course, just browse through my wares.")
+npcHandler:setMessage(MESSAGE_GREET, "Welcome to the finest weapon shop in the land, |PLAYERNAME|! Tell me if you're looking for a good trade.")
 
 npcType:register(npcConfig)

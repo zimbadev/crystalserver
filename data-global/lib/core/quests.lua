@@ -4675,7 +4675,7 @@ if not Quests then
 				},
 				[14] = {
 					name = "To Outfox a Fox",
-					storageId = Storage.Quest.U8_1.ToOutfoxAFoxQuest,
+					storageId = Storage.Quest.U8_1.ToOutfoxAFoxQuest.Questline,
 					missionId = 10432,
 					startValue = 1,
 					endValue = 2,

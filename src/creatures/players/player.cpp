@@ -5282,30 +5282,14 @@ uint32_t Player::getItemTypeCount(uint16_t itemId, int32_t subType /*= -1*/) con
 }
 
 void Player::stashContainer(const StashContainerList &itemDict) {
-	StashItemList stashItemDict; // ItemID - Count
-	for (const auto &[item, itemCount] : itemDict) {
-		if (!item) {
-			continue;
-		}
-
-		stashItemDict[item->getID()] = itemCount;
-	}
-
-	for (const auto &[itemId, itemCount] : stashItems) {
-		if (!stashItemDict[itemId]) {
-			stashItemDict[itemId] = itemCount;
-		} else {
-			stashItemDict[itemId] += itemCount;
-		}
-	}
-
 	uint32_t totalStowed = 0;
-	std::ostringstream retString;
 	uint16_t refreshDepotSearchOnItem = 0;
+
 	for (const auto &[item, itemCount] : itemDict) {
 		if (!item) {
 			continue;
 		}
+
 		const uint16_t iteratorCID = item->getID();
 		if (g_game().internalRemoveItem(item, itemCount) == RETURNVALUE_NOERROR) {
 			addItemOnStash(iteratorCID, itemCount);
@@ -5321,12 +5305,12 @@ void Player::stashContainer(const StashContainerList &itemDict) {
 		return;
 	}
 
-	retString << "Stowed " << totalStowed << " object" << (totalStowed > 1 ? "s." : ".");
+	std::string message = fmt::format("Stowed {} object{}.", totalStowed, totalStowed > 1 ? "s" : "");
 	if (moved) {
-		retString << " Moved " << movedItems << " object" << (movedItems > 1 ? "s." : ".");
+		message += fmt::format(" Moved {} object{}.", movedItems, movedItems > 1 ? "s" : "");
 		movedItems = 0;
 	}
-	sendTextMessage(MESSAGE_STATUS, retString.str());
+	sendTextMessage(MESSAGE_STATUS, message);
 
 	// Refresh depot search window if necessary
 	if (refreshDepotSearchOnItem != 0) {
@@ -5400,14 +5384,11 @@ bool Player::hasItemCountById(uint16_t itemId, uint32_t itemAmount, bool checkSt
 	}
 
 	// Check items from stash
-	for (StashItemList stashToSend = getStashItems();
-	     const auto &[stashItemId, itemCount] : stashToSend) {
-		if (!checkStash) {
-			break;
-		}
-
-		if (stashItemId == itemId) {
-			newCount += itemCount;
+	if (checkStash) {
+		for (const auto &[stashItemId, itemCount] : getStashItems()) {
+			if (stashItemId == itemId) {
+				newCount += itemCount;
+			}
 		}
 	}
 
@@ -5447,17 +5428,11 @@ bool Player::removeItemCountById(uint16_t itemId, uint32_t itemAmount, bool remo
 }
 
 void Player::addItemOnStash(uint16_t itemId, uint32_t amount) {
-	const auto it = stashItems.find(itemId);
-	if (it != stashItems.end()) {
-		stashItems[itemId] += amount;
-		return;
-	}
-
-	stashItems[itemId] = amount;
+	stashItems[itemId] += amount;
 }
 
 uint32_t Player::getStashItemCount(uint16_t itemId) const {
-	const auto it = stashItems.find(itemId);
+	auto it = stashItems.find(itemId);
 	if (it != stashItems.end()) {
 		return it->second;
 	}
@@ -5465,21 +5440,22 @@ uint32_t Player::getStashItemCount(uint16_t itemId) const {
 }
 
 bool Player::withdrawItem(uint16_t itemId, uint32_t amount) {
-	const auto it = stashItems.find(itemId);
+	auto it = stashItems.find(itemId);
 	if (it != stashItems.end()) {
 		if (it->second > amount) {
-			stashItems[itemId] -= amount;
-		} else if (it->second == amount) {
-			stashItems.erase(itemId);
-		} else {
-			return false;
+			it->second -= amount;
+			return true;
 		}
-		return true;
+
+		if (it->second == amount) {
+			stashItems.erase(it);
+			return true;
+		}
 	}
 	return false;
 }
 
-StashItemList Player::getStashItems() const {
+const StashItemList &Player::getStashItems() const {
 	return stashItems;
 }
 
@@ -7290,8 +7266,6 @@ bool Player::isPromoted() const {
 
 uint32_t Player::getAttackSpeed() const {
 	int32_t modifiers = 0;
-	bool onFistAttackSpeed = g_configManager().getBoolean(TOGGLE_ATTACK_SPEED_ONFIST);
-	uint32_t MAX_ATTACK_SPEED = g_configManager().getNumber(MAX_SPEED_ATTACKONFIST);
 
 	if (mountAttributes) {
 		const auto &mount = g_game().mounts->getMountByClientID(defaultOutfit.lookMount);
@@ -7319,20 +7293,8 @@ uint32_t Player::getAttackSpeed() const {
 		}
 	}
 
-	if (onFistAttackSpeed) {
-		uint32_t baseAttackSpeed = vocation->getAttackSpeed();
-		uint32_t skillLevel = getSkillLevel(SKILL_FIST);
-		uint32_t attackSpeed = baseAttackSpeed - (skillLevel * g_configManager().getNumber(MULTIPLIER_ATTACKONFIST)) - modifiers;
-
-		if (attackSpeed < MAX_ATTACK_SPEED) {
-			attackSpeed = MAX_ATTACK_SPEED;
-		}
-
-		return attackSpeed;
-	} else {
-		uint32_t attackSpeed = vocation->getAttackSpeed() - modifiers;
-		return attackSpeed;
-	}
+	uint32_t attackSpeed = vocation->getAttackSpeed() - modifiers;
+	return attackSpeed;
 }
 
 double Player::getLostPercent() const {
@@ -9134,13 +9096,19 @@ ReturnValue Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 			containersCache.emplace_back(obtainContainer);
 		}
 
-		for (const auto &item : obtainContainer->getItems(true)) {
-			const auto &subContainer = item->getContainer();
-			if (subContainer && subContainer->capacity() > subContainer->size()) {
-				containersCache.emplace_back(subContainer);
+		for (ContainerIterator it = obtainContainer->iterator(); it.hasNext(); it.advance()) {
+			const auto &item = *it;
+			if (!item) {
+				continue;
 			}
 
-			if (item && item->getID() == itemId && item->isStackable()) {
+			if (const auto &subContainer = item->getContainer()) {
+				if (subContainer->capacity() > subContainer->size()) {
+					containersCache.emplace_back(subContainer);
+				}
+			}
+
+			if (item->getID() == itemId && item->isStackable()) {
 				uint32_t availableSpace = item->getStackSize() - item->getItemCount();
 				if (availableSpace > 0) {
 					stackableItemsCache.emplace_back(item);
@@ -9416,7 +9384,9 @@ uint32_t sendStowItems(const std::shared_ptr<Item> &item, const std::shared_ptr<
 	}
 
 	if (const auto &container = stowItem->getContainer()) {
-		for (const auto &[stowableItem, stowableCount] : container->getStowableItems()) {
+		StashContainerList containerItems;
+		container->getStowableItems(containerItems);
+		for (const auto &[stowableItem, stowableCount] : containerItems) {
 			if (totalItemsToStow + itemsAdded >= maxItemsToStow) {
 				break;
 			}
@@ -9488,7 +9458,9 @@ void Player::stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool al
 			}
 		}
 	} else if (const auto &container = item->getContainer()) {
-		for (const auto &[stowableItem, stowableCount] : container->getStowableItems()) {
+		StashContainerList containerItems;
+		container->getStowableItems(containerItems);
+		for (const auto &[stowableItem, stowableCount] : containerItems) {
 			if (totalItemsToStow >= maxItemsToStow) {
 				break;
 			}
@@ -10068,8 +10040,7 @@ std::pair<std::vector<std::shared_ptr<Item>>, std::map<uint16_t, std::map<uint8_
 		}
 	}
 
-	StashItemList stashToSend = getStashItems();
-	for (const auto &[itemId, itemCount] : stashToSend) {
+	for (const auto &[itemId, itemCount] : getStashItems()) {
 		const ItemType &itemType = Item::items[itemId];
 		if (itemType.wareId != 0) {
 			lockerItems[itemType.wareId][0] += itemCount;
@@ -10131,13 +10102,14 @@ bool Player::saySpell(SpeakClasses type, const std::string &text, bool isGhostMo
 	}
 
 	// Send to client
+	bool emoteSpellsEnabled = g_configManager().getBoolean(EMOTE_SPELLS);
 	for (const auto &spectator : spectators) {
 		if (const auto &tmpPlayer = spectator->getPlayer()) {
 			if (!isGhostMode || tmpPlayer->canSeeCreature(static_self_cast<Player>())) {
-				if (g_configManager().getBoolean(EMOTE_SPELLS)) {
+				if (emoteSpellsEnabled) {
 					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_MONSTER_SAY, text, pos);
 				} else {
-					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_SPELL_USE, text, pos);
+					tmpPlayer->sendCreatureSay(static_self_cast<Player>(), TALKTYPE_SAY, text, pos);
 				}
 			}
 		}

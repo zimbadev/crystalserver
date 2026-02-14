@@ -113,9 +113,10 @@ public:
 	void resetRaid();
 
 	std::shared_ptr<RaidEvent> getNextRaidEvent();
-	void setState(RaidState_t newState) {
-		state = newState;
+	RaidState_t getState() const {
+		return state;
 	}
+
 	const std::string &getName() const {
 		return name;
 	}
@@ -133,6 +134,13 @@ public:
 		return repeat;
 	}
 
+	bool isExecuted() const {
+		return executed;
+	}
+	void setExecuted(bool v) {
+		executed = v;
+	}
+
 	void stopEvents();
 
 private:
@@ -145,6 +153,7 @@ private:
 	uint32_t nextEventEvent = 0;
 	bool loaded = false;
 	bool repeat;
+	bool executed = false;
 };
 
 class RaidEvent {

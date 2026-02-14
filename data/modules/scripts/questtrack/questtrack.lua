@@ -1,9 +1,23 @@
 function onRecvbyte(player, msg, byte)
 	if byte == 0xD0 then
-		local quests = {}
+		local function getRemainingBytes()
+			return msg:getLength() - (msg:getBufferPosition() - 7)
+		end
+
+		if getRemainingBytes() < 3 then
+			return
+		end
+
+		local receivedMissionsFromClient = {}
 		local missions = msg:getByte()
+
+		local requiredBytes = (missions * 2) + 2
+		if getRemainingBytes() < requiredBytes then
+			return
+		end
+
 		for i = 1, missions do
-			quests[#quests + 1] = msg:getU16()
+			table.insert(receivedMissionsFromClient, msg:getU16())
 		end
 
 		local automaticallyTrackNewQuests = msg:getByte()
@@ -21,6 +35,6 @@ function onRecvbyte(player, msg, byte)
 			player:kv():remove("untracker-quest")
 		end
 
-		player:resetTrackedMissions(quests)
+		player:resetTrackedMissions(receivedMissionsFromClient)
 	end
 end

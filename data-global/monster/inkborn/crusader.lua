@@ -42,7 +42,6 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "crystal coin", chance = 60590, maxCount = 99 },
 	{ name = "platinum coin", chance = 40590, maxCount = 20 },
 	{ name = "torn page", chance = 5590 }, -- new item
 	{ name = "small topaz", chance = 3030 },

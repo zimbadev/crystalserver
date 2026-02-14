@@ -13,7 +13,34 @@ function rake.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 			player:say("You have found a ring.", TALKTYPE_MONSTER_SAY)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.TheGovernorDaughter, 2)
 		end
+		-- The Grumpy Stone
+	elseif player:getStorageValue(2033032) == 1 then
+		local positions = {
+			{ x = 32617, y = 31863, z = 7 },
+			{ x = 32616, y = 31864, z = 7 },
+			{ x = 32615, y = 31866, z = 7 },
+			{ x = 32620, y = 31864, z = 7 },
+			{ x = 32619, y = 31865, z = 7 },
+		}
+		local positionStorages = {
+			[1] = 2033033,
+			[2] = 2033034,
+			[3] = 2033035,
+			[4] = 2033036,
+			[5] = 2033037,
+		}
+		for i, pos in ipairs(positions) do
+			if toPosition.x == pos.x and toPosition.y == pos.y and toPosition.z == pos.z then
+				if player:getStorageValue(positionStorages[i]) == 1 then
+					return true
+				end
+				player:setStorageValue(positionStorages[i], 1)
+				player:say("*scratch* *scratch*", TALKTYPE_MONSTER_SAY)
+				return true
+			end
+		end
 	end
+
 	return true
 end
 

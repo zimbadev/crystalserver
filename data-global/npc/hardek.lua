@@ -121,13 +121,11 @@ npcConfig.shop = {
 	{ itemName = "mace", clientId = 3286, buy = 90, sell = 30 },
 	{ itemName = "morning star", clientId = 3282, buy = 430, sell = 100 },
 	{ itemName = "orcish axe", clientId = 3316, sell = 350 },
-	{ itemName = "pair of monk fists", clientId = 50181, buy = 270, sell = 90 },
 	{ itemName = "plate armor", clientId = 3357, buy = 1200, sell = 400 },
 	{ itemName = "plate legs", clientId = 3557, sell = 115 },
 	{ itemName = "plate shield", clientId = 3410, buy = 125, sell = 45 },
 	{ itemName = "rapier", clientId = 3272, buy = 15, sell = 5 },
 	{ itemName = "sabre", clientId = 3273, buy = 35, sell = 12 },
-	{ itemName = "sai", clientId = 50183, buy = 540, sell = 180 },
 	{ itemName = "scale armor", clientId = 3377, buy = 260, sell = 75 },
 	{ itemName = "short sword", clientId = 3294, buy = 26, sell = 10 },
 	{ itemName = "sickle", clientId = 3293, buy = 7, sell = 3 },
@@ -147,6 +145,9 @@ npcConfig.shop = {
 	{ itemName = "viking shield", clientId = 3431, buy = 260 },
 	{ itemName = "war hammer", clientId = 3279, buy = 10000 },
 	{ itemName = "wooden shield", clientId = 3412, buy = 15 },
+	{ itemName = "pair of monk fists", clientId = 50181, buy = 270, sell = 90 },
+	{ itemName = "nunchaku", clientId = 50182, buy = 405, sell = 135 },
+	{ itemName = "sai", clientId = 50183, buy = 540, sell = 180 },
 }
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)

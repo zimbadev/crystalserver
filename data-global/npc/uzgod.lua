@@ -204,6 +204,9 @@ npcConfig.shop = {
 	{ itemName = "throwing knife", clientId = 3298, buy = 25 },
 	{ itemName = "two handed sword", clientId = 3265, buy = 950 },
 	{ itemName = "war hammer", clientId = 3279, buy = 10000 },
+	{ itemName = "pair of monk fists", clientId = 50181, buy = 270, sell = 90 },
+	{ itemName = "nunchaku", clientId = 50182, buy = 405, sell = 135 },
+	{ itemName = "sai", clientId = 50183, buy = 540, sell = 180 },
 }
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)

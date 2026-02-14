@@ -70,6 +70,10 @@ local config = {
 			text = "A KNIGHT! ARE YOU SURE? THIS DECISION IS IRREVERSIBLE!",
 			vocationId = VOCATION.ID.KNIGHT,
 		},
+		["monk"] = {
+			text = "A MONK! ARE YOU SURE? THIS DECISION IS IRREVERSIBLE!",
+			vocationId = VOCATION.ID.MONK,
+		},
 	},
 }
 
@@ -117,7 +121,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		if cityTable then
 			town[playerId] = cityTable
 			npcHandler:say("IN " .. string.upper(message) .. "! AND WHAT PROFESSION HAVE YOU CHOSEN: \z
-			{KNIGHT}, {PALADIN}, {SORCERER}, OR {DRUID}?", npc, creature)
+			{KNIGHT}, {PALADIN}, {SORCERER}, {DRUID} OR {MONK}?", npc, creature)
 			npcHandler:setTopic(playerId, 2)
 		else
 			npcHandler:say("IN WHICH TOWN DO YOU WANT TO LIVE: {CARLIN}, {THAIS}, OR {VENORE}?", npc, creature)
@@ -129,7 +133,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:setTopic(playerId, 3)
 			vocation[playerId] = vocationTable.vocationId
 		else
-			npcHandler:say("{KNIGHT}, {PALADIN}, {SORCERER}, OR {DRUID}?", npc, creature)
+			npcHandler:say("{KNIGHT}, {PALADIN}, {SORCERER}, {DRUID}, OR {MONK}?", npc, creature)
 		end
 	elseif npcHandler:getTopic(playerId) == 3 then
 		if MsgContains(message, "yes") then
@@ -140,7 +144,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:teleportTo(Town(town[playerId]):getTemplePosition())
 			player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
 		else
-			npcHandler:say("THEN WHAT? {KNIGHT}, {PALADIN}, {SORCERER}, OR {DRUID}?", npc, creature)
+			npcHandler:say("THEN WHAT? {KNIGHT}, {PALADIN}, {SORCERER}, {DRUID} OR {MONK}?", npc, creature)
 			npcHandler:setTopic(playerId, 2)
 		end
 	end

@@ -382,6 +382,8 @@ public:
 	bool isWrapKit = false;
 	bool m_canBeUsedByGuests = false;
 
+	bool isDualWielding = false;
+
 	std::string elementalBond;
 	int16_t mantra = 0;
 

@@ -216,6 +216,9 @@ function createHirelingType(HirelingName)
 			{ itemName = "viking shield", clientId = 3431, buy = 260, sell = 85 },
 			{ itemName = "war hammer", clientId = 3279, buy = 10000, sell = 470 },
 			{ itemName = "wooden shield", clientId = 3412, buy = 15, sell = 5 },
+			{ itemName = "pair of monk fists", clientId = 50181, buy = 270, sell = 90 },
+			{ itemName = "nunchaku", clientId = 50182, buy = 405, sell = 135 },
+			{ itemName = "sai", clientId = 50183, buy = 540, sell = 180 },
 		},
 		["distance"] = {
 			{ itemName = "arrow", clientId = 3447, buy = 2 },

@@ -8,8 +8,8 @@ function talkaction.onSay(player, words, param)
 		return true
 	end
 
-	if effectId < 0 or effectId > 252 then
-		player:sendCancelMessage("Effect ID must be between 0 and 252.")
+	if effectId < 0 or effectId > 303 then
+		player:sendCancelMessage("Effect ID must be between 0 and 303.")
 		return true
 	end
 

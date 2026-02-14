@@ -62,13 +62,7 @@ monster.voices = {
 	chance = 10,
 }
 
-monster.loot = {
-	{ name = "crystal coin", chance = 60590 },
-	{ name = "great spirit potion", chance = 31180, maxCount = 5 },
-	{ name = "sacred tree amulet", chance = 3590 },
-	{ name = "underworld rod", chance = 3030 },
-	{ id = 281, chance = 2690 }, -- giant shimmering pearl
-}
+-- monster.loot = { }
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = -500, maxDamage = -750 },

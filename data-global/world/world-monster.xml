@@ -38017,9 +38017,6 @@
 	<monster centerx="33395" centery="32135" centerz="7" radius="1">
 		<monster name="Fruit Drop" x="0" y="0" z="7" spawntime="120" />
 	</monster>
-	<monster centerx="33063" centery="32136" centerz="7" radius="1">
-		<monster name="Water Buffalo" x="0" y="0" z="7" spawntime="60" />
-	</monster>
 	<monster centerx="33354" centery="32136" centerz="7" radius="1">
 		<monster name="Gingerbread Man" x="0" y="0" z="7" spawntime="120" />
 	</monster>
@@ -38534,8 +38531,6 @@
 	</monster>
 	<monster centerx="32896" centery="32168" centerz="7" radius="3">
 		<monster name="Blue Butterfly" x="-3" y="0" z="7" spawntime="90" />
-		<monster name="Water Buffalo" x="1" y="1" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="2" y="1" z="7" spawntime="60" />
 		<monster name="Snake" x="3" y="3" z="7" spawntime="90" />
 	</monster>
 	<monster centerx="32903" centery="32168" centerz="7" radius="3">
@@ -38624,14 +38619,6 @@
 	</monster>
 	<monster centerx="32278" centery="32173" centerz="7" radius="2">
 		<monster name="Rabbit" x="1" y="1" z="7" spawntime="90" />
-	</monster>
-	<monster centerx="32825" centery="32173" centerz="7" radius="5">
-		<monster name="Water Buffalo" x="-5" y="-3" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="3" y="-2" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="5" y="-2" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="-5" y="-1" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="-1" y="-1" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="1" y="2" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="32623" centery="32174" centerz="7" radius="1">
 		<monster name="Orc Warrior" x="1" y="0" z="7" spawntime="90" />
@@ -38759,11 +38746,6 @@
 	<monster centerx="32757" centery="32180" centerz="7" radius="2">
 		<monster name="Tarantula" x="-1" y="2" z="7" spawntime="90" />
 	</monster>
-	<monster centerx="32899" centery="32180" centerz="7" radius="1">
-		<monster name="Water Buffalo" x="-1" y="0" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="0" y="0" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="1" y="1" z="7" spawntime="60" />
-	</monster>
 	<monster centerx="32459" centery="32181" centerz="7" radius="2">
 		<monster name="Snake" x="-1" y="1" z="7" spawntime="90" />
 	</monster>
@@ -38796,9 +38778,7 @@
 		<monster name="Rabbit" x="3" y="0" z="7" spawntime="90" />
 	</monster>
 	<monster centerx="32917" centery="32182" centerz="7" radius="3">
-		<monster name="Water Buffalo" x="-3" y="-1" z="7" spawntime="60" />
 		<monster name="Swampling" x="3" y="-1" z="7" spawntime="90" />
-		<monster name="Water Buffalo" x="3" y="1" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="32938" centery="32182" centerz="7" radius="3">
 		<monster name="Swampling" x="-1" y="-2" z="7" spawntime="90" />
@@ -39249,8 +39229,6 @@
 	</monster>
 	<monster centerx="32966" centery="32210" centerz="7" radius="3">
 		<monster name="Marsh Stalker" x="-2" y="1" z="7" spawntime="90" />
-		<monster name="Water Buffalo" x="-1" y="3" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="0" y="3" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="32980" centery="32210" centerz="7" radius="3">
 		<monster name="Swampling" x="3" y="-1" z="7" spawntime="90" />
@@ -39337,10 +39315,6 @@
 	</monster>
 	<monster centerx="32626" centery="32213" centerz="7" radius="1">
 		<monster name="Wild Warrior" x="1" y="0" z="7" spawntime="90" />
-	</monster>
-	<monster centerx="32957" centery="32213" centerz="7" radius="1">
-		<monster name="Water Buffalo" x="-1" y="0" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="0" y="0" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="32625" centery="32215" centerz="7" radius="1">
 		<monster name="Deer" x="1" y="0" z="7" spawntime="90" />
@@ -39435,10 +39409,6 @@
 	<monster centerx="32945" centery="32217" centerz="7" radius="3">
 		<monster name="Swamp Troll" x="1" y="-3" z="7" spawntime="90" />
 		<monster name="Swamp Troll" x="-2" y="2" z="7" spawntime="90" />
-	</monster>
-	<monster centerx="32964" centery="32217" centerz="7" radius="1">
-		<monster name="Water Buffalo" x="0" y="0" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="1" y="1" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="32994" centery="32217" centerz="7" radius="3">
 		<monster name="Snake" x="-2" y="-3" z="7" spawntime="90" />
@@ -39579,8 +39549,6 @@
 		<monster name="Bear" x="-1" y="-3" z="7" spawntime="90" />
 	</monster>
 	<monster centerx="32959" centery="32224" centerz="7" radius="3">
-		<monster name="Water Buffalo" x="3" y="-2" z="7" spawntime="60" />
-		<monster name="Water Buffalo" x="3" y="0" z="7" spawntime="60" />
 		<monster name="Swampling" x="2" y="2" z="7" spawntime="90" />
 	</monster>
 	<monster centerx="33400" centery="32224" centerz="7" radius="3">

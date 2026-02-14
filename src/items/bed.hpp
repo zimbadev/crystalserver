@@ -37,6 +37,8 @@ public:
 		return true;
 	}
 
+	void onRemoved() override;
+
 	uint32_t getSleeper() const {
 		return sleeperGUID;
 	}

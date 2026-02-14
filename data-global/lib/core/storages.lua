@@ -2613,6 +2613,7 @@ Storage = {
 					Fragrance = 46016,
 				},
 				FalconBastion = {
+					Access = 46117,
 					Questline = 46017,
 					KillingBosses = 46018,
 					OberonTimer = 46019,
