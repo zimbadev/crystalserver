@@ -931,6 +931,7 @@ SoulWarQuest.areaZones.mirroredNightmare:subtractArea({ x = 33884, y = 31181, z 
 SoulCagePosition = Position(33709, 31596, 14)
 TaintDurationSeconds = 14 * 24 * 60 * 60 -- 14 days
 GreedbeastKills = 0
+SoulSphereKills = 0
 
 SoulWarReflectDamageMap = {
 	[COMBAT_PHYSICALDAMAGE] = 10,
