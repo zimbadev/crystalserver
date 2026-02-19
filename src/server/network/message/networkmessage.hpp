@@ -37,8 +37,11 @@ public:
 
 	int32_t decodeHeader();
 
-	void reset() {
-		info = {};
+	virtual void reset() {
+		info.length = 0;
+		info.position = INITIAL_BUFFER_POSITION;
+		info.overrun = false;
+		buffer.fill(0);
 	}
 
 	// simply read functions for incoming message

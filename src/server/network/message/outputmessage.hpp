@@ -30,6 +30,11 @@ public:
 	OutputMessage(const OutputMessage &) = delete;
 	OutputMessage &operator=(const OutputMessage &) = delete;
 
+	void reset() override {
+		NetworkMessage::reset();
+		outputBufferStart = INITIAL_BUFFER_POSITION;
+	}
+
 	uint8_t* getOutputBuffer() {
 		return buffer.data() + outputBufferStart;
 	}

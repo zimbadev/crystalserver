@@ -69,6 +69,8 @@
 #include "enums/player_cyclopedia.hpp"
 #include "enums/container_type.hpp"
 
+#include <memory>
+
 /*
  * NOTE: This namespace is used so that we can add functions without having to declare them in the ".hpp/.hpp" file
  * Do not use functions only in the .cpp scope without having a namespace, it may conflict with functions in other files of the same name

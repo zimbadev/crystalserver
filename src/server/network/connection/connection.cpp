@@ -304,6 +304,7 @@ void Connection::parsePacket(const std::error_code &error) {
 		readTimer.async_wait([self = std::weak_ptr<Connection>(shared_from_this())](const std::error_code &error) { Connection::handleTimeout(self, error); });
 
 		if (!skipReadingNextPacket) {
+			m_msg.reset();
 			// Wait to the next packet
 			asio::async_read(socket, asio::buffer(m_msg.getBuffer(), HEADER_LENGTH), [self = shared_from_this()](const std::error_code &error, std::size_t N) { self->parseHeader(error); });
 		}
