@@ -1027,9 +1027,17 @@ void ProtocolGame::disconnectClient(const std::string &message) const {
 }
 
 void ProtocolGame::writeToOutputBuffer(NetworkMessage &msg) {
-	g_dispatcher().safeCall([self = getThis(), msg = std::move(msg)] {
-		self->getOutputBuffer(msg.getLength())->append(msg);
-	});
+	if (g_dispatcher().context().isAsync()) {
+		auto msgPtr = std::make_shared<NetworkMessage>(msg);
+		g_dispatcher().addEvent(
+			[self = getThis(), msgPtr] {
+				self->getOutputBuffer(msgPtr->getLength())->append(*msgPtr);
+			},
+			__FUNCTION__
+		);
+	} else {
+		getOutputBuffer(msg.getLength())->append(msg);
+	}
 }
 
 void ProtocolGame::parsePacket(NetworkMessage &msg) {
