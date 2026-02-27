@@ -11,6 +11,8 @@ on:
 jobs:
   lua-formatter:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Set up Git
         if: ${{ github.ref != 'refs/heads/main' }}
@@ -29,10 +31,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: latest
-          args: .
+          args: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && '--check .' || '.' }}
 
       - name: Run add and commit
-        if: ${{ github.ref != 'refs/heads/main' }}
+        if: ${{ github.ref != 'refs/heads/main' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
         uses: EndBug/add-and-commit@v9
         with:
           author_name: GitHub Actions

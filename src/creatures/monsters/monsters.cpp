@@ -215,6 +215,8 @@ bool Monsters::deserializeSpell(const std::shared_ptr<MonsterSpell> &spell, spel
 		combatPtr->setParam(COMBAT_PARAM_CREATEITEM, ITEM_POISONFIELD_PVP);
 	} else if (spellName == "energyfield") {
 		combatPtr->setParam(COMBAT_PARAM_CREATEITEM, ITEM_ENERGYFIELD_PVP);
+	} else if (spellName == "agonyfield") {
+		combatPtr->setParam(COMBAT_PARAM_CREATEITEM, 43297);
 	} else if (spellName == "condition") {
 		if (spell->conditionType == CONDITION_NONE) {
 			g_logger().error("[Monsters::deserializeSpell] - "
