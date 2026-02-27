@@ -579,11 +579,27 @@ function Player:onGainExperience(target, exp, rawExp)
 	}
 
 	local bakragoreMonsters = {
-		"sopping corpus", "oozing corpus", "mycobiontic beetle", "bloated man-maggot", "murcion",
-		"walking pillar", "darklight matter", "darklight source", "darklight striker", "vemiath",
-		"darklight emitter", "darklight construct", "wandering pillar", "converter", "chagorz",
-		"oozing carcass", "sopping carcass", "rotten man-maggot", "meandering mushroom", "ichgahal",
-		"bakragore"
+		"sopping corpus",
+		"oozing corpus",
+		"mycobiontic beetle",
+		"bloated man-maggot",
+		"murcion",
+		"walking pillar",
+		"darklight matter",
+		"darklight source",
+		"darklight striker",
+		"vemiath",
+		"darklight emitter",
+		"darklight construct",
+		"wandering pillar",
+		"converter",
+		"chagorz",
+		"oozing carcass",
+		"sopping carcass",
+		"rotten man-maggot",
+		"meandering mushroom",
+		"ichgahal",
+		"bakragore",
 	}
 
 	local monsterName = target:getName():lower()
