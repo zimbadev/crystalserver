@@ -11,7 +11,7 @@ local areaTo = Position(33016, 32342, 15)
 local spell = Spell("instant")
 
 function spell.onCastSpell(creature, var)
-	if not(combat:execute(creature, var)) then
+	if not (combat:execute(creature, var)) then
 		return false
 	end
 
@@ -40,18 +40,18 @@ function spell.onCastSpell(creature, var)
 	local maxMushrooms = 8
 	local minDistance = 1
 	local maxAttempts = 100
-	
+
 	if #validPositions > 0 then
 		for i = #validPositions, 2, -1 do
 			local j = math.random(1, i)
 			validPositions[i], validPositions[j] = validPositions[j], validPositions[i]
 		end
-		
+
 		local attempts = 0
 		while #selectedPositions < maxMushrooms and attempts < maxAttempts and #validPositions > 0 do
 			local randomIndex = math.random(1, #validPositions)
 			local candidatePos = validPositions[randomIndex]
-			
+
 			if #selectedPositions == 0 or isPositionValid(candidatePos, selectedPositions, minDistance) then
 				table.insert(selectedPositions, candidatePos)
 				table.remove(validPositions, randomIndex)
@@ -59,7 +59,7 @@ function spell.onCastSpell(creature, var)
 				attempts = attempts + 1
 			end
 		end
-		
+
 		for _, spawnPosition in ipairs(selectedPositions) do
 			local pillar = Game.createMonster("Mushroom", spawnPosition)
 			if pillar then
