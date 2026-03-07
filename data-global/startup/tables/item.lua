@@ -2839,7 +2839,7 @@ ItemUnique = {
 	-- Explorer Society Quest
 	-- Lizard Urn (Chor)
 	[40041] = {
-		itemId = 2904,
+		itemId = 4055,
 		itemPos = { x = 32957, y = 32834, z = 8 },
 	},
 	-- Frozen Dragon (Okolnir)

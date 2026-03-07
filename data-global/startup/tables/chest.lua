@@ -216,7 +216,7 @@ ChestUnique = {
 	-- Key 3667
 	[5016] = {
 		isKey = true,
-		itemId = 3204,
+		itemId = 4240,
 		itemPos = { x = 32576, y = 32216, z = 15 },
 		reward = { { 2969, 1 } },
 		storage = Storage.Quest.Key.ID3667,
