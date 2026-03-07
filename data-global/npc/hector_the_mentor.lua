@@ -73,7 +73,14 @@ keywordHandler:addKeyword({ "time" }, StdModule.say, { npcHandler = npcHandler, 
 keywordHandler:addKeyword({ "tibia" }, StdModule.say, { npcHandler = npcHandler, text = "The very soil you are standing on right now." })
 keywordHandler:addKeyword({ "king" }, StdModule.say, { npcHandler = npcHandler, text = "King Tibianus is the righteous and wise ruler I have the honour of working as an advisor for." })
 keywordHandler:addKeyword({ "thais" }, StdModule.say, { npcHandler = npcHandler, text = "Thais is the commercial and cultural centre of Tibia. There's a lot to see and do." })
-keywordHandler:addKeyword({ "wolf" }, StdModule.say, { npcHandler = npcHandler, text = "Never underestimate the wolf for they are cunning creatures. Let me give you example: when the leader of a wolf pack is attacked, his female will try to get close to him, apparently to seek protection ... The female wolf often appears to hide under the male in a situation like this, actually hiding the pack leader's throat from their assailant, whilst pretending to be scared." })
+keywordHandler:addKeyword(
+	{ "wolf" },
+	StdModule.say,
+	{
+		npcHandler = npcHandler,
+		text = "Never underestimate the wolf for they are cunning creatures. Let me give you example: when the leader of a wolf pack is attacked, his female will try to get close to him, apparently to seek protection ... The female wolf often appears to hide under the male in a situation like this, actually hiding the pack leader's throat from their assailant, whilst pretending to be scared.",
+	}
+)
 keywordHandler:addKeyword({ "edron" }, StdModule.say, { npcHandler = npcHandler, text = "I've been teaching and lecturing at Edron's academy for decades. It's an honourable faculty with many bright and talented individuals such as my dear friend and colleague {Spectulus}." })
 keywordHandler:addKeyword({ "spectulus" }, StdModule.say, { npcHandler = npcHandler, text = "A dear friend of mine who I have worked with many an hour on countless projects and experiments. He's quite the character, always busy but will grow on you over time." })
 keywordHandler:addKeyword({ "excalibug" }, StdModule.say, { npcHandler = npcHandler, text = "A tall tale, some warriors are quite obsessed with it." })
@@ -128,7 +135,7 @@ npcConfig.shop = {
 	{ itemName = "hatchet", clientId = 3276, sell = 25 },
 	{ itemName = "jagged sword", clientId = 7774, sell = 100 },
 	{ itemName = "leather armor", clientId = 3361, sell = 12 },
-	{ itemName = "leather boots", clientId = 3552, sell = 2 },	
+	{ itemName = "leather boots", clientId = 3552, sell = 2 },
 	{ itemName = "leather helmet", clientId = 3355, sell = 4 },
 	{ itemName = "brass shield", clientId = 3411, sell = 25 },
 	{ itemName = "carlin sword", clientId = 3283, sell = 118 },
@@ -157,7 +164,7 @@ npcConfig.shop = {
 	{ itemName = "studded helmet", clientId = 3376, sell = 20 },
 	{ itemName = "studded legs", clientId = 3362, sell = 15 },
 	{ itemName = "studded shield", clientId = 3426, sell = 16 },
-	{ itemName = "wand of vortex", clientId = 3074, sell = 100 },	
+	{ itemName = "wand of vortex", clientId = 3074, sell = 100 },
 	{ itemName = "wolf paw", clientId = 5897, sell = 70 },
 	{ itemName = "wolf tooth chain", clientId = 3012, sell = 100 },
 	{ itemName = "wooden shield", clientId = 3412, sell = 5 },
