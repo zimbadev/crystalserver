@@ -86,6 +86,7 @@ monster.loot = {
 	{ name = "stonerefiner's skull", chance = 20110 },
 	{ name = "poisonous slime", chance = 20040, maxCount = 3 },
 	{ name = "half-digested stones", chance = 15210, maxCount = 5 },
+	{ name = "rat cheese", chance = 10320 },
 }
 
 monster.attacks = {

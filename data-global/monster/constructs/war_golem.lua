@@ -87,7 +87,7 @@ monster.voices = {
 
 monster.loot = {
 	{ id = 3031, chance = 37500, maxCount = 90 }, -- gold coin
-	{ id = 3031, chance = 375000, maxCount = 80 }, -- gold coin
+	{ id = 3031, chance = 37500, maxCount = 80 }, -- gold coin
 	{ id = 953, chance = 5260, maxCount = 5 }, -- nail
 	{ id = 3265, chance = 5500 }, -- two handed sword
 	{ id = 3410, chance = 9000 }, -- plate shield

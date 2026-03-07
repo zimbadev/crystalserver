@@ -22,11 +22,11 @@ monster.bosstiary = {
 	bossRace = RARITY_NEMESIS,
 }
 
-monster.health = 350000
-monster.maxHealth = 350000
-monster.race = "undead"
+monster.health = 900000
+monster.maxHealth = 900000
+monster.race = "venom"
 monster.corpse = 44018
-monster.speed = 250
+monster.speed = 120
 monster.manaCost = 0
 
 monster.changeTarget = {
@@ -66,13 +66,6 @@ monster.light = {
 	color = 0,
 }
 
-monster.summon = {
-	maxSummons = 8,
-	summons = {
-		{ name = "Mushroom", chance = 30, interval = 5000, count = 8 },
-	},
-}
-
 monster.voices = {
 	interval = 5000,
 	chance = 10,
@@ -82,40 +75,42 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "crystal coin", chance = 14615, maxCount = 115 },
-	{ name = "ultimate spirit potion", chance = 7169, maxCount = 153 },
-	{ name = "mastermind potion", chance = 14651, maxCount = 45 },
-	{ name = "yellow gem", chance = 9243, maxCount = 5 },
-	{ name = "amber with a bug", chance = 7224, maxCount = 2 },
-	{ name = "ultimate mana potion", chance = 13137, maxCount = 179 },
-	{ name = "violet gem", chance = 14447, maxCount = 4 },
-	{ name = "raw watermelon tourmaline", chance = 6788, maxCount = 2 },
-	{ id = 3039, chance = 9047, maxCount = 1 }, -- red gem
-	{ name = "supreme health potion", chance = 14635, maxCount = 37 },
-	{ name = "berserk potion", chance = 14973, maxCount = 45 },
-	{ name = "amber with a dragonfly", chance = 6470, maxCount = 1 },
-	{ name = "gold ingot", chance = 11421, maxCount = 1 },
-	{ name = "blue gem", chance = 8394, maxCount = 1 },
-	{ name = "bullseye potion", chance = 13783, maxCount = 36 },
-	{ name = "putrefactive figurine", chance = 11416, maxCount = 1 },
-	{ name = "ichgahal's fungal infestation", chance = 7902, maxCount = 1 },
-	{ name = "white gem", chance = 13559, maxCount = 3 },
-	{ id = 43895, chance = 360 }, -- Bag you covet
-	{ id = 43899, chance = 500 }, -- cursed wood
+	{name = "crystal coin", chance = 100000, maxCount = 50},
+	{id = 49271, chance = 15000, maxCount = 5},
+	{name = "supreme health potion", chance = 65000, maxCount = 30},
+	{name = "ultimate mana potion", chance = 47000, maxCount = 70},
+	{name = "ultimate spirit potion", chance = 62000, maxCount = 55},
+	{name = "berserk potion", chance = 15000, maxCount = 5},
+	{name = "green gem", chance = 8000, maxCount = 2},
+	{name = "violet gem", chance = 8000, maxCount = 2},
+	{name = "raw watermelon tourmaline", chance = 7229},
+	{name = "amber with a dragonfly", chance = 3920},
+	{name = "putrefactive figurine", chance = 1100},
+	{name = "the essence of ichgahal", chance = 750},
+	{id = 43899, chance = 100}, -- Cursed Wood addon
+	{id = 43900, chance = 100}, -- Darklight Geode addon
+	{id = 44048, chance = 100}, -- Spiritual Horseshoe
+	{id = 43895, chance = 50}, -- Bag You Convet - Sanguine
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 3000, chance = 100, minDamage = -1500, maxDamage = -2300 },
-	{ name = "combat", interval = 1000, chance = 10, type = COMBAT_PHYSICALDAMAGE, minDamage = -700, maxDamage = -1000, length = 12, spread = 0, effect = 249, target = false },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_MANADRAIN, minDamage = -2600, maxDamage = -2300, length = 12, spread = 0, effect = 193, target = false },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_FIREDAMAGE, minDamage = -900, maxDamage = -1500, length = 6, spread = 0, effect = CONST_ME_FIREAREA, target = false },
-	{ name = "speed", interval = 2000, chance = 35, speedChange = -600, radius = 8, effect = CONST_ME_MAGIC_RED, target = false, duration = 15000 },
+	{name = "melee", interval = 2000, chance = 20, minDamage = 0, maxDamage = -2000},
+	{name = "ichgahal death ring", interval = 3000, chance = 30, minDamage = -800, maxDamage = -3200, target = false},
+	{name = "combat", interval = 3000, chance = 30, type = COMBAT_AGONYDAMAGE, minDamage = -600, maxDamage = -700, length = 9, effect = CONST_ME_MORTAREA, target = false},
+	{name = "speed", interval = 2000, chance = 30, speedChange = -800, radius = 5, effect = CONST_ME_SLEEP, target = false, duration = 30000 },
+	{name = "combat", interval = 3000, chance = 30, type = COMBAT_EARTHDAMAGE, minDamage = -800, maxDamage = -2900, radius = 6, effect = CONST_ME_SMALLPLANTS, target = false},
+	{name = "combat", interval = 3000, chance = 30, type = COMBAT_PHYSICALDAMAGE, minDamage = -800, maxDamage = -2400, range = 6, radius = 5, shootEffect = CONST_ANI_POISON, effect = CONST_ME_POISONAREA, target = true},
+	{name = "combat", interval = 3000, chance = 30, type = COMBAT_MANADRAIN, minDamage = -700, maxDamage = -1000, range = 6, effect = CONST_ME_PURPLETELEPORT, target = true},
+	{name = "combat", interval = 3000, chance = 30, type = COMBAT_MANADRAIN, minDamage = -700, maxDamage = -1000, radius = 6, effect = CONST_ME_STUN, target = false},
+	{name = "combat", interval = 3000, chance = 30, type = COMBAT_PHYSICALDAMAGE, minDamage = -600, maxDamage = -2000, radius = 4, effect = CONST_ME_GROUNDSHAKER, target = false},
+	{name = "mushroom ichgahal", interval = 30000, chance = 100, target = false},
+	--{name ="Elder Bloodjaw Murcion", interval = 60000, chance = 100, target = false}
 }
 
 monster.defenses = {
 	defense = 105,
 	armor = 105,
-	{ name = "combat", interval = 3000, chance = 10, type = COMBAT_HEALING, minDamage = 800, maxDamage = 1200, effect = 236, target = false },
+	{ name = "combat", interval = 3000, chance = 10, type = COMBAT_HEALING, minDamage = 800, maxDamage = 5600, effect = CONST_ME_MAGIC_GREEN, target = false },
 }
 
 monster.elements = {

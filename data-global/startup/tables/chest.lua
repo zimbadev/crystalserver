@@ -2353,7 +2353,7 @@ ChestUnique = {
 	[6273] = {
 		itemId = 2469,
 		itemPos = { x = 32551, y = 32652, z = 10 },
-		reward = { { 7369, 1 } },
+		reward = { { 7870, 1 } },
 		weight = 5.00,
 		storage = Storage.Quest.U8_2.TheThievesGuildQuest.GoldenGoblet,
 	},

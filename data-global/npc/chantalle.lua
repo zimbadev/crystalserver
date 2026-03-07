@@ -59,18 +59,33 @@ local function creatureSayCallback(npc, creature, type, message)
 	end
 
 	if MsgContains(message, "key") then
-		if player:getStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Mission06) == 1 then
+		local missionStorage = player:getStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Mission06)
+
+		-- method 1: amulet side quest
+		if missionStorage == 1 then
+			if player:getItemCount(7939) > 0 then
+				npcHandler:say("Oh what a beautiful piece of jewellery! How did you know how much I wanted that? However, you know what I want and I know you want the key to the living room. There's our deal.", npc, creature)
+				player:addItem(7934, 1)
+				player:removeItem(7939, 1)
+				player:setStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Mission06, 2)
+			else
+				local headItem = player:getSlotItem(CONST_SLOT_HEAD)
+				local isPostman = player:getStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Rank) == 5
+				local hasOfficerHat = headItem and headItem.itemid == 3576
+
+				if not (isPostman and hasOfficerHat and player:getSex() == PLAYERSEX_MALE) then
+					npcHandler:say("Are you insane?! I'd never misuse the trust placed upon me and hand you Master Loveless' key! I'm not as bribeable as Herbert.", npc, creature)
+				end
+			end
+		end
+
+		-- method 2: using officer hat
+		if missionStorage == 1 then
 			local headItem = player:getSlotItem(CONST_SLOT_HEAD)
-			if headItem and headItem.itemid == 3576 and player:getStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Rank) == 5 and player:getSex() ~= PLAYERSEX_FEMALE then
-				player:addItem(7934)
+			if headItem and headItem.itemid == 3576 and player:getStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Rank) == 5 and player:getSex() == PLAYERSEX_MALE then
+				player:addItem(7934, 1)
 				player:setStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Mission06, 2)
 				npcHandler:say("Oh my! You look so great in your uniform! You archpostmen are not only daring but also handsome. Here take it, that's the key you wanted. Just promise to visit me now and then!", npc, creature)
-			elseif player:removeItem(7939, 1) then
-				player:addItem(7934)
-				player:setStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Mission06, 2)
-				npcHandler:say("Oh my, such a lovely necklace! Here take it, that's the key you wanted. Now let me admire my precious necklace alone.", npc, creature)
-			else
-				npcHandler:say("I am sorry, I am not interested in your money. Maybe you should try your luck with Herbert, the postman instead.", npc, creature)
 			end
 		end
 	end

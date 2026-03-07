@@ -89,6 +89,7 @@ monster.loot = {
 	{ id = 7401, chance = 900 }, -- minotaur trophy,
 	{ id = 21174, chance = 12000 }, -- mino lance
 	{ id = 21175, chance = 6000 }, -- mino shield
+	{ id = 3396, chance = 9380 }, -- dwarven helmet
 }
 
 monster.attacks = {

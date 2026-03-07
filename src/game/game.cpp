@@ -2815,7 +2815,20 @@ void Game::addMoney(const std::shared_ptr<Cylinder> &cylinder, uint64_t money, u
 			const uint16_t createCount = std::min<uint32_t>(100, count);
 			const std::shared_ptr<Item> &remaindItem = Item::CreateItem(itemId, createCount);
 
-			ReturnValue ret = internalAddItem(cylinder, remaindItem, INDEX_WHEREEVER, flags);
+			ReturnValue ret = RETURNVALUE_NOTPOSSIBLE;
+			bool triedManaged = false;
+
+			if (const auto &player = std::dynamic_pointer_cast<Player>(cylinder)) {
+				if (!g_configManager().getBoolean(AUTOBANK)) {
+					ret = internalCollectManagedItems(player, remaindItem, getObjectCategory(remaindItem), true);
+					triedManaged = true;
+				}
+			}
+
+			if (!triedManaged || ret != RETURNVALUE_NOERROR) {
+				ret = internalAddItem(cylinder, remaindItem, INDEX_WHEREEVER, flags);
+			}
+
 			if (ret != RETURNVALUE_NOERROR) {
 				internalAddItem(cylinder->getTile(), remaindItem, INDEX_WHEREEVER, FLAG_NOLIMIT);
 			}

@@ -39696,7 +39696,7 @@
 		<monster name="Minotaur Guard" x="1" y="0" z="7" spawntime="120" />
 	</monster>
 	<monster centerx="32918" centery="32234" centerz="7" radius="1">
-		<monster name="Adventurer" x="1" y="1" z="7" spawntime="120" />
+		<monster name="Adventurer" x="1" y="1" z="7" spawntime="90" />
 	</monster>
 	<monster centerx="32651" centery="32235" centerz="7" radius="1">
 		<monster name="Blue Butterfly" x="1" y="0" z="7" spawntime="120" />
