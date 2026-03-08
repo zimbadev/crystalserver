@@ -580,7 +580,7 @@ LeverUnique = {
 		itemPos = { x = 32212, y = 31888, z = 12 },
 	},
 	[30012] = {
-		itemId = 27260,
+		itemId = 2772,
 		itemPos = { x = 32266, y = 31861, z = 11 },
 	},
 	-- Path: data\scripts\quests\the_queen_of_the_banshees\action(3)-third_seal_lever.lua
