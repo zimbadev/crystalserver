@@ -42,6 +42,7 @@
 #include "items/containers/rewards/rewardchest.hpp"
 #include "creatures/players/player.hpp"
 #include "utils/tools.hpp"
+#include "kv/kv.hpp"
 
 void IOLoginDataLoad::loadItems(ItemsMap &itemsMap, const DBResult_ptr &result, const std::shared_ptr<Player> &player) {
 	try {
@@ -480,14 +481,36 @@ void IOLoginDataLoad::loadPlayerStashItems(const std::shared_ptr<Player> &player
 		g_logger().warn("[{}] - Player or Result nullptr", __FUNCTION__);
 		return;
 	}
-
-	Database &db = Database::getInstance();
-	std::ostringstream query;
-	query << "SELECT `item_count`, `item_id`  FROM `player_stash` WHERE `player_id` = " << player->getGUID();
-	if ((result = db.storeQuery(query.str()))) {
-		do {
-			player->addItemOnStash(result->getNumber<uint16_t>("item_id"), result->getNumber<uint32_t>("item_count"));
-		} while (result->next());
+	const auto kvFlag = player->kv()->scoped("stashitems")->get("use-blob");
+	if (kvFlag && kvFlag->get<bool>()) {
+		Database &db = Database::getInstance();
+		std::ostringstream query;
+		query << "SELECT `stashitems` FROM `players` WHERE `id` = " << player->getGUID();
+		if ((result = db.storeQuery(query.str()))) {
+			unsigned long size;
+			const char* blob = result->getStream("stashitems", size);
+			if (blob && size > 0) {
+				PropStream ps;
+				ps.init(blob, size);
+				while (true) {
+					uint16_t itemId;
+					uint32_t itemCount;
+					if (!ps.read<uint16_t>(itemId) || !ps.read<uint32_t>(itemCount)) {
+						break;
+					}
+					player->addItemOnStash(itemId, itemCount);
+				}
+			}
+		}
+	} else {
+		Database &db = Database::getInstance();
+		std::ostringstream query;
+		query << "SELECT `item_count`, `item_id`  FROM `player_stash` WHERE `player_id` = " << player->getGUID();
+		if ((result = db.storeQuery(query.str()))) {
+			do {
+				player->addItemOnStash(result->getNumber<uint16_t>("item_id"), result->getNumber<uint32_t>("item_count"));
+			} while (result->next());
+		}
 	}
 }
 
@@ -553,12 +576,32 @@ void IOLoginDataLoad::loadPlayerInstantSpellList(const std::shared_ptr<Player> &
 	}
 
 	Database &db = Database::getInstance();
-	std::ostringstream query;
-	query << "SELECT `player_id`, `name` FROM `player_spells` WHERE `player_id` = " << player->getGUID();
-	if ((result = db.storeQuery(query.str()))) {
-		do {
-			player->learnedInstantSpellList.emplace(result->getString("name"));
-		} while (result->next());
+
+	const auto kvFlag = player->kv()->scoped("spells")->get("use-blob");
+	if (kvFlag && kvFlag->get<bool>()) {
+		std::ostringstream query;
+		query << "SELECT `spells` FROM `players` WHERE `id` = " << player->getGUID();
+		if ((result = db.storeQuery(query.str()))) {
+			unsigned long size;
+			const char* blob = result->getStream("spells", size);
+
+			if ((blob && size > 0)) {
+				PropStream ps;
+				ps.init(blob, size);
+				std::string spellName;
+				while (ps.readString(spellName)) {
+					player->learnedInstantSpellList.emplace_back(spellName);
+				}
+			}
+		}
+	} else {
+		std::ostringstream query;
+		query << "SELECT `player_id`, `name` FROM `player_spells` WHERE `player_id` = " << player->getGUID();
+		if ((result = db.storeQuery(query.str()))) {
+			do {
+				player->learnedInstantSpellList.emplace_back(result->getString("name"));
+			} while (result->next());
+		}
 	}
 }
 
@@ -568,51 +611,80 @@ void IOLoginDataLoad::loadPlayerInventoryItems(const std::shared_ptr<Player> &pl
 		return;
 	}
 
-	auto query = fmt::format("SELECT pid, sid, itemtype, count, attributes FROM player_items WHERE player_id = {} ORDER BY sid DESC", player->getGUID());
-
 	ItemsMap inventoryItems;
 	std::vector<std::shared_ptr<Item>> itemsToStartDecaying;
 
 	try {
-		if ((result = g_database().storeQuery(query))) {
-			loadItems(inventoryItems, result, player);
+		const auto kvFlag = player->kv()->scoped("items")->get("use-blob");
+		if (kvFlag && kvFlag->get<bool>()) {
+			Database &db = Database::getInstance();
+			std::ostringstream q;
+			q << "SELECT `items` FROM `players` WHERE `id` = " << player->getGUID();
+			if ((result = db.storeQuery(q.str()))) {
+				unsigned long size;
+				const char* blob = result->getStream("items", size);
+				if (blob && size > 0) {
+					PropStream ps;
+					ps.init(blob, size);
+					while (true) {
+						uint32_t pid, sid;
+						uint16_t type, count;
+						if (!ps.read<uint32_t>(pid) || !ps.read<uint32_t>(sid) || !ps.read<uint16_t>(type) || !ps.read<uint16_t>(count)) {
+							break;
+						}
+						std::string attrStr;
+						if (!ps.readString(attrStr)) {
+							break;
+						}
+						PropStream attrStream;
+						attrStream.init(attrStr.c_str(), attrStr.size());
+						try {
+							const auto &item = Item::CreateItem(type, count);
+							if (item && item->unserializeAttr(attrStream)) {
+								inventoryItems[sid] = std::make_pair(item, static_cast<int32_t>(pid));
+							}
+						} catch (...) { }
+					}
+				}
+			}
+		} else {
+			auto query = fmt::format("SELECT pid, sid, itemtype, count, attributes FROM player_items WHERE player_id = {} ORDER BY sid DESC", player->getGUID());
+			if ((result = g_database().storeQuery(query))) {
+				loadItems(inventoryItems, result, player);
+			}
+		}
 
-			for (auto it = inventoryItems.rbegin(), end = inventoryItems.rend(); it != end; ++it) {
-				const std::pair<std::shared_ptr<Item>, int32_t> &pair = it->second;
-				const auto &item = pair.first;
-				if (!item) {
+		for (auto it = inventoryItems.rbegin(), end = inventoryItems.rend(); it != end; ++it) {
+			const std::pair<std::shared_ptr<Item>, int32_t> &pair = it->second;
+			const auto &item = pair.first;
+			if (!item) {
+				continue;
+			}
+			int32_t pid = pair.second;
+			if (pid >= CONST_SLOT_FIRST && pid <= CONST_SLOT_LAST) {
+				player->internalAddThing(pid, item);
+				item->startDecaying();
+			} else {
+				ItemsMap::const_iterator it2 = inventoryItems.find(pid);
+				if (it2 == inventoryItems.end()) {
 					continue;
 				}
-
-				int32_t pid = pair.second;
-				if (pid >= CONST_SLOT_FIRST && pid <= CONST_SLOT_LAST) {
-					player->internalAddThing(pid, item);
-					item->startDecaying();
-				} else {
-					ItemsMap::const_iterator it2 = inventoryItems.find(pid);
-					if (it2 == inventoryItems.end()) {
-						continue;
-					}
-
-					const std::shared_ptr<Container> &container = it2->second.first->getContainer();
-					if (container) {
-						container->internalAddThing(item);
-						// Here, the sub-containers do not yet have a parent, since the main backpack has not yet been added to the player, so we need to postpone
-						itemsToStartDecaying.emplace_back(item);
-					}
+				const std::shared_ptr<Container> &container = it2->second.first->getContainer();
+				if (container) {
+					container->internalAddThing(item);
+					itemsToStartDecaying.emplace_back(item);
 				}
+			}
 
-				const std::shared_ptr<Container> &itemContainer = item->getContainer();
-				if (itemContainer) {
-					for (const bool isLootContainer : { true, false }) {
-						const auto checkAttribute = isLootContainer ? ItemAttribute_t::QUICKLOOTCONTAINER : ItemAttribute_t::OBTAINCONTAINER;
-						if (item->hasAttribute(checkAttribute)) {
-							const auto flags = item->getAttribute<uint32_t>(checkAttribute);
-
-							for (uint8_t category = OBJECTCATEGORY_FIRST; category <= OBJECTCATEGORY_LAST; category++) {
-								if (hasBitSet(1 << category, flags)) {
-									player->refreshManagedContainer(static_cast<ObjectCategory_t>(category), itemContainer, isLootContainer, true);
-								}
+			const std::shared_ptr<Container> &itemContainer = item->getContainer();
+			if (itemContainer) {
+				for (const bool isLootContainer : { true, false }) {
+					const auto checkAttribute = isLootContainer ? ItemAttribute_t::QUICKLOOTCONTAINER : ItemAttribute_t::OBTAINCONTAINER;
+					if (item->hasAttribute(checkAttribute)) {
+						const auto flags = item->getAttribute<uint32_t>(checkAttribute);
+						for (uint8_t category = OBJECTCATEGORY_FIRST; category <= OBJECTCATEGORY_LAST; category++) {
+							if (hasBitSet(1 << category, flags)) {
+								player->refreshManagedContainer(static_cast<ObjectCategory_t>(category), itemContainer, isLootContainer, true);
 							}
 						}
 					}
@@ -620,7 +692,6 @@ void IOLoginDataLoad::loadPlayerInventoryItems(const std::shared_ptr<Player> &pl
 			}
 		}
 
-		// Now that all items and containers have been added and parent chain is established, start decay
 		for (const auto &item : itemsToStartDecaying) {
 			item->startDecaying();
 		}
@@ -664,18 +735,47 @@ void IOLoginDataLoad::loadPlayerDepotItems(const std::shared_ptr<Player> &player
 		return;
 	}
 
-	ItemsMap depotItems;
-	std::vector<std::shared_ptr<Item>> itemsToStartDecaying;
-	auto query = fmt::format("SELECT pid, sid, itemtype, count, attributes FROM player_depotitems WHERE player_id = {} ORDER BY sid DESC", player->getGUID());
-	if ((result = g_database().storeQuery(query))) {
-		loadItems(depotItems, result, player);
-		for (auto it = depotItems.rbegin(), end = depotItems.rend(); it != end; ++it) {
+	const auto kvFlag = player->kv()->scoped("depotitems")->get("use-blob");
+	if (kvFlag && kvFlag->get<bool>()) {
+		ItemsMap depotItemsKV;
+		std::vector<std::shared_ptr<Item>> itemsToStartDecayingKV;
+		Database &db = Database::getInstance();
+		std::ostringstream query;
+		query << "SELECT `depotitems` FROM `players` WHERE `id` = " << player->getGUID();
+		if ((result = db.storeQuery(query.str()))) {
+			unsigned long size;
+			const char* blob = result->getStream("depotitems", size);
+			if (blob && size > 0) {
+				PropStream ps;
+				ps.init(blob, size);
+				while (true) {
+					uint32_t pid, sid;
+					uint16_t type, count;
+					if (!ps.read<uint32_t>(pid) || !ps.read<uint32_t>(sid) || !ps.read<uint16_t>(type) || !ps.read<uint16_t>(count)) {
+						break;
+					}
+					std::string attrStr;
+					if (!ps.readString(attrStr)) {
+						break;
+					}
+					PropStream attrStream;
+					attrStream.init(attrStr.c_str(), attrStr.size());
+					try {
+						const auto &item = Item::CreateItem(type, count);
+						if (item && item->unserializeAttr(attrStream)) {
+							depotItemsKV[sid] = std::make_pair(item, static_cast<int32_t>(pid));
+						}
+					} catch (...) { }
+				}
+			}
+		}
+
+		for (auto it = depotItemsKV.rbegin(), end = depotItemsKV.rend(); it != end; ++it) {
 			const std::pair<std::shared_ptr<Item>, int32_t> &pair = it->second;
 			const auto &item = pair.first;
 			if (!item) {
 				continue;
 			}
-
 			int32_t pid = pair.second;
 			if (pid >= 0 && pid < 100) {
 				const std::shared_ptr<DepotChest> &depotChest = player->getDepotChest(pid, true);
@@ -684,24 +784,62 @@ void IOLoginDataLoad::loadPlayerDepotItems(const std::shared_ptr<Player> &player
 					item->startDecaying();
 				}
 			} else {
-				auto depotIt = depotItems.find(pid);
-				if (depotIt == depotItems.end()) {
+				auto depotIt = depotItemsKV.find(pid);
+				if (depotIt == depotItemsKV.end()) {
 					continue;
 				}
-
 				const std::shared_ptr<Container> &container = depotIt->second.first->getContainer();
 				if (container) {
 					container->internalAddThing(item);
-					// Here, the sub-containers do not yet have a parent, since the main backpack has not yet been added to the player, so we need to postpone
-					itemsToStartDecaying.emplace_back(item);
+					itemsToStartDecayingKV.emplace_back(item);
 				}
 			}
 		}
-	}
 
-	// Now that all items and containers have been added and parent chain is established, start decay
-	for (const auto &item : itemsToStartDecaying) {
-		item->startDecaying();
+		// Now that all items and containers have been added and parent chain is established, start decay
+		for (const auto &item : itemsToStartDecayingKV) {
+			item->startDecaying();
+		}
+	} else {
+		ItemsMap depotItems;
+		std::vector<std::shared_ptr<Item>> itemsToStartDecaying;
+		auto query = fmt::format("SELECT pid, sid, itemtype, count, attributes FROM player_depotitems WHERE player_id = {} ORDER BY sid DESC", player->getGUID());
+		if ((result = g_database().storeQuery(query))) {
+			loadItems(depotItems, result, player);
+			for (auto it = depotItems.rbegin(), end = depotItems.rend(); it != end; ++it) {
+				const std::pair<std::shared_ptr<Item>, int32_t> &pair = it->second;
+				const auto &item = pair.first;
+				if (!item) {
+					continue;
+				}
+
+				int32_t pid = pair.second;
+				if (pid >= 0 && pid < 100) {
+					const std::shared_ptr<DepotChest> &depotChest = player->getDepotChest(pid, true);
+					if (depotChest) {
+						depotChest->internalAddThing(item);
+						item->startDecaying();
+					}
+				} else {
+					auto depotIt = depotItems.find(pid);
+					if (depotIt == depotItems.end()) {
+						continue;
+					}
+
+					const std::shared_ptr<Container> &container = depotIt->second.first->getContainer();
+					if (container) {
+						container->internalAddThing(item);
+						// Here, the sub-containers do not yet have a parent, since the main backpack has not yet been added to the player, so we need to postpone
+						itemsToStartDecaying.emplace_back(item);
+					}
+				}
+			}
+		}
+
+		// Now that all items and containers have been added and parent chain is established, start decay
+		for (const auto &item : itemsToStartDecaying) {
+			item->startDecaying();
+		}
 	}
 }
 
@@ -711,11 +849,40 @@ void IOLoginDataLoad::loadPlayerInboxItems(const std::shared_ptr<Player> &player
 		return;
 	}
 
-	std::vector<std::shared_ptr<Item>> itemsToStartDecaying;
-	auto query = fmt::format("SELECT pid, sid, itemtype, count, attributes FROM player_inboxitems WHERE player_id = {} ORDER BY sid DESC", player->getGUID());
-	if ((result = g_database().storeQuery(query))) {
-		ItemsMap inboxItems;
-		loadItems(inboxItems, result, player);
+	const auto kvFlag = player->kv()->scoped("inboxitems")->get("use-blob");
+	if (kvFlag && kvFlag->get<bool>()) {
+		ItemsMap inboxItemsKV;
+		std::vector<std::shared_ptr<Item>> itemsToStartDecayingKV;
+		Database &db = Database::getInstance();
+		std::ostringstream query;
+		query << "SELECT `inboxitems` FROM `players` WHERE `id` = " << player->getGUID();
+		if ((result = db.storeQuery(query.str()))) {
+			unsigned long size;
+			const char* blob = result->getStream("inboxitems", size);
+			if (blob && size > 0) {
+				PropStream ps;
+				ps.init(blob, size);
+				while (true) {
+					uint32_t pid, sid;
+					uint16_t type, count;
+					if (!ps.read<uint32_t>(pid) || !ps.read<uint32_t>(sid) || !ps.read<uint16_t>(type) || !ps.read<uint16_t>(count)) {
+						break;
+					}
+					std::string attrStr;
+					if (!ps.readString(attrStr)) {
+						break;
+					}
+					PropStream attrStream;
+					attrStream.init(attrStr.c_str(), attrStr.size());
+					try {
+						const auto &item = Item::CreateItem(type, count);
+						if (item && item->unserializeAttr(attrStream)) {
+							inboxItemsKV[sid] = std::make_pair(item, static_cast<int32_t>(pid));
+						}
+					} catch (...) { }
+				}
+			}
+		}
 
 		const auto &playerInbox = player->getInbox();
 		if (!playerInbox) {
@@ -723,35 +890,75 @@ void IOLoginDataLoad::loadPlayerInboxItems(const std::shared_ptr<Player> &player
 			return;
 		}
 
-		for (const auto &it : std::ranges::reverse_view(inboxItems)) {
-			const std::pair<std::shared_ptr<Item>, int32_t> &pair = it.second;
+		for (auto it = inboxItemsKV.rbegin(), end = inboxItemsKV.rend(); it != end; ++it) {
+			const std::pair<std::shared_ptr<Item>, int32_t> &pair = it->second;
 			const auto &item = pair.first;
 			if (!item) {
 				continue;
 			}
-
 			int32_t pid = pair.second;
 			if (pid >= 0 && pid < 100) {
 				playerInbox->internalAddThing(item);
 				item->startDecaying();
 			} else {
-				auto inboxIt = inboxItems.find(pid);
-				if (inboxIt == inboxItems.end()) {
+				auto inboxIt = inboxItemsKV.find(pid);
+				if (inboxIt == inboxItemsKV.end()) {
 					continue;
 				}
-
 				const std::shared_ptr<Container> &container = inboxIt->second.first->getContainer();
 				if (container) {
 					container->internalAddThing(item);
-					itemsToStartDecaying.emplace_back(item);
+					itemsToStartDecayingKV.emplace_back(item);
 				}
 			}
 		}
-	}
 
-	// Now that all items and containers have been added and parent chain is established, start decay
-	for (const auto &item : itemsToStartDecaying) {
-		item->startDecaying();
+		for (const auto &item : itemsToStartDecayingKV) {
+			item->startDecaying();
+		}
+	} else {
+		std::vector<std::shared_ptr<Item>> itemsToStartDecaying;
+		auto query = fmt::format("SELECT pid, sid, itemtype, count, attributes FROM player_inboxitems WHERE player_id = {} ORDER BY sid DESC", player->getGUID());
+		if ((result = g_database().storeQuery(query))) {
+			ItemsMap inboxItems;
+			loadItems(inboxItems, result, player);
+
+			const auto &playerInbox = player->getInbox();
+			if (!playerInbox) {
+				g_logger().warn("[{}] - Player inbox nullptr", __FUNCTION__);
+				return;
+			}
+
+			for (const auto &it : std::ranges::reverse_view(inboxItems)) {
+				const std::pair<std::shared_ptr<Item>, int32_t> &pair = it.second;
+				const auto &item = pair.first;
+				if (!item) {
+					continue;
+				}
+
+				int32_t pid = pair.second;
+				if (pid >= 0 && pid < 100) {
+					playerInbox->internalAddThing(item);
+					item->startDecaying();
+				} else {
+					auto inboxIt = inboxItems.find(pid);
+					if (inboxIt == inboxItems.end()) {
+						continue;
+					}
+
+					const std::shared_ptr<Container> &container = inboxIt->second.first->getContainer();
+					if (container) {
+						container->internalAddThing(item);
+						itemsToStartDecaying.emplace_back(item);
+					}
+				}
+			}
+		}
+
+		// Now that all items and containers have been added and parent chain is established, start decay
+		for (const auto &item : itemsToStartDecaying) {
+			item->startDecaying();
+		}
 	}
 }
 
@@ -762,12 +969,32 @@ void IOLoginDataLoad::loadPlayerStorageMap(const std::shared_ptr<Player> &player
 	}
 
 	Database &db = Database::getInstance();
-	std::ostringstream query;
-	query << "SELECT `key`, `value` FROM `player_storage` WHERE `player_id` = " << player->getGUID();
-	if ((result = db.storeQuery(query.str()))) {
-		do {
-			player->addStorageValue(result->getNumber<uint32_t>("key"), result->getNumber<int32_t>("value"), true);
-		} while (result->next());
+
+	const auto kvFlag = player->kv()->scoped("storages")->get("use-blob");
+	if (kvFlag && kvFlag->get<bool>()) {
+		std::ostringstream query;
+		query << "SELECT `storages` FROM `players` WHERE `id` = " << player->getGUID();
+		if ((result = db.storeQuery(query.str()))) {
+			unsigned long size;
+			const char* blob = result->getStream("storages", size);
+			if (blob && size > 0) {
+				PropStream ps;
+				ps.init(blob, size);
+				uint32_t key;
+				int32_t value;
+				while (ps.read<uint32_t>(key) && ps.read<int32_t>(value)) {
+					player->addStorageValue(key, value, true);
+				}
+			}
+		}
+	} else {
+		std::ostringstream query;
+		query << "SELECT `key`, `value` FROM `player_storage` WHERE `player_id` = " << player->getGUID();
+		if ((result = db.storeQuery(query.str()))) {
+			do {
+				player->addStorageValue(result->getNumber<uint32_t>("key"), result->getNumber<int32_t>("value"), true);
+			} while (result->next());
+		}
 	}
 }
 

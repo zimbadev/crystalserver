@@ -49,5 +49,5 @@ protected:
 	using ItemRewardList = std::list<std::pair<int32_t, std::shared_ptr<Item>>>;
 	using ItemInboxList = std::list<std::pair<int32_t, std::shared_ptr<Item>>>;
 
-	static bool saveItems(const std::shared_ptr<Player> &player, const ItemBlockList &itemList, DBInsert &query_insert, PropWriteStream &stream);
+	static bool saveItems(const std::shared_ptr<Player> &player, const ItemBlockList &itemList, PropWriteStream &stream, std::ostringstream &query, DBInsert* query_insert, const std::string &blobColumn);
 };

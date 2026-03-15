@@ -276,15 +276,56 @@ function Player.getAccountStorage(self, key, forceUpdate)
 	if ACCOUNT_STORAGES[accountId] and not forceUpdate then
 		return ACCOUNT_STORAGES[accountId]
 	end
-
-	local query = db.storeQuery("SELECT `key`, MAX(`value`) as value FROM `player_storage` WHERE `player_id` IN (SELECT `id` FROM `players` WHERE `account_id` = " .. accountId .. ") AND `key` = " .. key .. " GROUP BY `key` LIMIT 1;")
-	if query ~= false then
-		local value = Result.getNumber(query, "value")
-		ACCOUNT_STORAGES[accountId] = value
-		Result.free(query)
-		return value
+	local kvFlag = self:kv():scoped("storages"):get("use-blob")
+	if kvFlag then
+		local result = db.storeQuery("SELECT `id`, `storages` FROM `players` WHERE `account_id` = " .. accountId)
+		if result ~= false then
+			local maxValue
+			repeat
+				local stream, length = Result.getStream(result, "storages")
+				if stream and length and length > 0 then
+					local pos = 1
+					local function read_u32_le(s, p)
+						local b1, b2, b3, b4 = s:byte(p, p + 3)
+						return b1 + b2 * 256 + b3 * 65536 + b4 * 16777216, p + 4
+					end
+					local function read_i32_le(s, p)
+						local u, np = read_u32_le(s, p)
+						if u >= 2147483648 then
+							u = u - 4294967296
+						end
+						return u, np
+					end
+					while pos + 7 <= length do
+						local k
+						k, pos = read_u32_le(stream, pos)
+						local v
+						v, pos = read_i32_le(stream, pos)
+						if k == key then
+							if maxValue == nil or v > maxValue then
+								maxValue = v
+							end
+						end
+					end
+				end
+			until not Result.next(result)
+			Result.free(result)
+			if maxValue ~= nil then
+				ACCOUNT_STORAGES[accountId] = maxValue
+				return maxValue
+			end
+		end
+		return false
+	else
+		local query = db.storeQuery("SELECT `key`, MAX(`value`) as value FROM `player_storage` WHERE `player_id` IN (SELECT `id` FROM `players` WHERE `account_id` = " .. accountId .. ") AND `key` = " .. key .. " GROUP BY `key` LIMIT 1;")
+		if query ~= false then
+			local value = Result.getNumber(query, "value")
+			ACCOUNT_STORAGES[accountId] = value
+			Result.free(query)
+			return value
+		end
+		return false
 	end
-	return false
 end
 
 function Player:getUpdatedAccountStorage(bucket)

@@ -28,107 +28,114 @@
 #include "items/containers/inbox/inbox.hpp"
 #include "items/containers/rewards/reward.hpp"
 #include "creatures/players/player.hpp"
+#include "kv/kv.hpp"
 
-bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const ItemBlockList &itemList, DBInsert &query_insert, PropWriteStream &propWriteStream) {
+bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const ItemBlockList &itemList, PropWriteStream &propWriteStream, std::ostringstream &query, DBInsert* query_insert, const std::string &blobColumn) {
 	if (!player) {
 		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
 		return false;
 	}
 
-	const Database &db = Database::getInstance();
-	std::ostringstream ss;
-
-	// Initialize variables
+	const auto &openContainers = player->getOpenContainers();
+	int32_t runningId = 100;
 	using ContainerBlock = std::pair<std::shared_ptr<Container>, int32_t>;
 	std::vector<ContainerBlock> containers;
-	containers.reserve(32);
+	containers.reserve(64);
 
-	int32_t runningId = 100;
+	Database &db = Database::getInstance();
+	PropWriteStream blobStream;
+	std::ostringstream ss;
 
-	// Loop through each item in itemList
-	const auto &openContainers = player->getOpenContainers();
+	const bool toBlob = !blobColumn.empty();
+	if (toBlob) {
+		const auto scope = player->kv()->scoped(blobColumn);
+		const auto kvFlag = scope->get("use-blob");
+		if (!(kvFlag && kvFlag->get<bool>())) {
+			scope->set("use-blob", true);
+		}
+
+		if (blobColumn == "stashitems") {
+			// Special-case: stash stores only (itemId, itemCount) pairs
+			for (const auto &[itemId, itemCount] : player->getStashItems()) {
+				blobStream.write<uint16_t>(static_cast<uint16_t>(itemId));
+				blobStream.write<uint32_t>(static_cast<uint32_t>(itemCount));
+			}
+
+			size_t blobSize;
+			const char* data = blobStream.getStream(blobSize);
+			query.str("");
+			query << "UPDATE `players` SET `" << blobColumn << "` = " << db.escapeBlob(data, static_cast<uint32_t>(blobSize)) << " WHERE `id` = " << player->getGUID();
+			return db.executeQuery(query.str());
+		}
+	}
+
 	for (const auto &it : itemList) {
 		const auto &item = it.second;
 		if (!item) {
 			continue;
 		}
-
 		int32_t pid = it.first;
-
 		++runningId;
 
-		// Update container attributes if necessary
 		if (const std::shared_ptr<Container> &container = item->getContainer()) {
-			if (!container) {
-				continue;
-			}
-
 			if (container->getAttribute<int64_t>(ItemAttribute_t::OPENCONTAINER) > 0) {
 				container->setAttribute(ItemAttribute_t::OPENCONTAINER, 0);
 			}
-
 			if (!openContainers.empty()) {
 				for (const auto &its : openContainers) {
 					auto openContainer = its.second;
 					auto opcontainer = openContainer.container;
-
 					if (opcontainer == container) {
 						container->setAttribute(ItemAttribute_t::OPENCONTAINER, ((int)its.first) + 1);
 						break;
 					}
 				}
 			}
-
-			// Add container to queue
 			containers.emplace_back(container, runningId);
 		}
 
-		// Serialize item attributes
 		propWriteStream.clear();
 		item->serializeAttr(propWriteStream);
-
 		size_t attributesSize;
 		const char* attributes = propWriteStream.getStream(attributesSize);
 
-		// Build query string and add row
-		ss << player->getGUID() << ',' << pid << ',' << runningId << ',' << item->getID() << ',' << item->getSubType() << ',' << db.escapeBlob(attributes, static_cast<uint32_t>(attributesSize));
-		if (!query_insert.addRow(ss)) {
-			g_logger().error("Error adding row to query.");
-			return false;
+		if (toBlob) {
+			blobStream.write<uint32_t>(pid);
+			blobStream.write<uint32_t>(runningId);
+			blobStream.write<uint16_t>(item->getID());
+			blobStream.write<uint16_t>(item->getSubType());
+			blobStream.writeString(std::string(attributes, attributesSize));
+		} else {
+			ss << player->getGUID() << ',' << pid << ',' << runningId << ',' << item->getID() << ',' << item->getSubType() << ',' << db.escapeBlob(attributes, static_cast<uint32_t>(attributesSize));
+			if (!query_insert || !query_insert->addRow(ss)) {
+				g_logger().error("Error adding row to query.");
+				return false;
+			}
 		}
 	}
 
-	// Loop through containers in queue
-	for (size_t i = 0; i < containers.size(); i++) {
-		const ContainerBlock &cb = containers[i];
+	for (size_t i = 0; i < containers.size(); ++i) {
+		const auto &cb = containers[i];
 		const std::shared_ptr<Container> &container = cb.first;
 		if (!container) {
 			continue;
 		}
-
 		int32_t parentId = cb.second;
-
-		// Loop through items in container
-		for (auto &item : container->getItemList()) {
-			if (!item) {
+		for (auto &subItem : container->getItemList()) {
+			if (!subItem) {
 				continue;
 			}
-
 			++runningId;
-
-			// Update sub-container attributes if necessary
-			const auto &subContainer = item->getContainer();
+			const auto &subContainer = subItem->getContainer();
 			if (subContainer) {
 				containers.emplace_back(subContainer, runningId);
 				if (subContainer->getAttribute<int64_t>(ItemAttribute_t::OPENCONTAINER) > 0) {
 					subContainer->setAttribute(ItemAttribute_t::OPENCONTAINER, 0);
 				}
-
 				if (!openContainers.empty()) {
 					for (const auto &it : openContainers) {
 						auto openContainer = it.second;
 						auto opcontainer = openContainer.container;
-
 						if (opcontainer == subContainer) {
 							subContainer->setAttribute(ItemAttribute_t::OPENCONTAINER, (it.first) + 1);
 							break;
@@ -136,29 +143,39 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 					}
 				}
 			}
-
-			// Serialize item attributes
 			propWriteStream.clear();
-			item->serializeAttr(propWriteStream);
-
+			subItem->serializeAttr(propWriteStream);
 			size_t attributesSize;
 			const char* attributes = propWriteStream.getStream(attributesSize);
 
-			// Build query string and add row
-			ss << player->getGUID() << ',' << parentId << ',' << runningId << ',' << item->getID() << ',' << item->getSubType() << ',' << db.escapeBlob(attributes, static_cast<uint32_t>(attributesSize));
-			if (!query_insert.addRow(ss)) {
-				g_logger().error("Error adding row to query for container item.");
-				return false;
+			if (toBlob) {
+				blobStream.write<uint32_t>(parentId);
+				blobStream.write<uint32_t>(runningId);
+				blobStream.write<uint16_t>(subItem->getID());
+				blobStream.write<uint16_t>(subItem->getSubType());
+				blobStream.writeString(std::string(attributes, attributesSize));
+			} else {
+				ss << player->getGUID() << ',' << parentId << ',' << runningId << ',' << subItem->getID() << ',' << subItem->getSubType() << ',' << db.escapeBlob(attributes, static_cast<uint32_t>(attributesSize));
+				if (!query_insert || !query_insert->addRow(ss)) {
+					g_logger().error("Error adding row to query for container item.");
+					return false;
+				}
 			}
 		}
 	}
 
-	// Execute query
-	if (!query_insert.execute()) {
+	if (toBlob) {
+		size_t blobSize;
+		const char* data = blobStream.getStream(blobSize);
+		query.str("");
+		query << "UPDATE `players` SET `" << blobColumn << "` = " << db.escapeBlob(data, static_cast<uint32_t>(blobSize)) << " WHERE `id` = " << player->getGUID();
+		return db.executeQuery(query.str());
+	}
+
+	if (!query_insert->execute()) {
 		g_logger().error("Error executing query.");
 		return false;
 	}
-
 	return true;
 }
 
@@ -366,28 +383,11 @@ bool IOLoginDataSave::savePlayerStash(const std::shared_ptr<Player> &player) {
 		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
 		return false;
 	}
-
-	Database &db = Database::getInstance();
+	ItemBlockList itemList;
 	std::ostringstream query;
-	query << "DELETE FROM `player_stash` WHERE `player_id` = " << player->getGUID();
-	if (!db.executeQuery(query.str())) {
-		return false;
-	}
-
-	query.str("");
-
-	DBInsert stashQuery("INSERT INTO `player_stash` (`player_id`,`item_id`,`item_count`) VALUES ");
-	for (const auto &[itemId, itemCount] : player->getStashItems()) {
-		query << player->getGUID() << ',' << itemId << ',' << itemCount;
-		if (!stashQuery.addRow(query)) {
-			return false;
-		}
-	}
-
-	if (!stashQuery.execute()) {
-		return false;
-	}
-	return true;
+	PropWriteStream propWriteStream;
+	propWriteStream.clear();
+	return saveItems(player, itemList, propWriteStream, query, nullptr, "stashitems");
 }
 
 bool IOLoginDataSave::savePlayerSpells(const std::shared_ptr<Player> &player) {
@@ -398,25 +398,22 @@ bool IOLoginDataSave::savePlayerSpells(const std::shared_ptr<Player> &player) {
 
 	Database &db = Database::getInstance();
 	std::ostringstream query;
-	query << "DELETE FROM `player_spells` WHERE `player_id` = " << player->getGUID();
-	if (!db.executeQuery(query.str())) {
-		return false;
+	const auto spellsScope = player->kv()->scoped("spells");
+	const auto kvFlag = spellsScope->get("use-blob");
+	if (!(kvFlag && kvFlag->get<bool>())) {
+		spellsScope->set("use-blob", true);
+	}
+	PropWriteStream stream;
+	for (const auto &spellName : player->learnedInstantSpellList) {
+		stream.writeString(spellName);
 	}
 
+	size_t size;
+	const char* data = stream.getStream(size);
 	query.str("");
-
-	DBInsert spellsQuery("INSERT INTO `player_spells` (`player_id`, `name` ) VALUES ");
-	for (const std::string &spellName : player->learnedInstantSpellList) {
-		query << player->getGUID() << ',' << db.escapeString(spellName);
-		if (!spellsQuery.addRow(query)) {
-			return false;
-		}
-	}
-
-	if (!spellsQuery.execute()) {
-		return false;
-	}
-	return true;
+	query << "UPDATE `players` SET `spells` = " << db.escapeBlob(data, static_cast<uint32_t>(size))
+		  << " WHERE `id` = " << player->getGUID();
+	return db.executeQuery(query.str());
 }
 
 bool IOLoginDataSave::savePlayerKills(const std::shared_ptr<Player> &player) {
@@ -498,18 +495,6 @@ bool IOLoginDataSave::savePlayerItem(const std::shared_ptr<Player> &player) {
 		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
 		return false;
 	}
-
-	Database &db = Database::getInstance();
-	PropWriteStream propWriteStream;
-	std::ostringstream query;
-	query << "DELETE FROM `player_items` WHERE `player_id` = " << player->getGUID();
-	if (!db.executeQuery(query.str())) {
-		g_logger().warn("[IOLoginData::savePlayer] - Error delete query 'player_items' from player: {}", player->getName());
-		return false;
-	}
-
-	DBInsert itemsQuery("INSERT INTO `player_items` (`player_id`, `pid`, `sid`, `itemtype`, `count`, `attributes`) VALUES ");
-
 	ItemBlockList itemList;
 	for (int32_t slotId = CONST_SLOT_FIRST; slotId <= CONST_SLOT_LAST; ++slotId) {
 		const auto &item = player->inventory[slotId];
@@ -517,12 +502,10 @@ bool IOLoginDataSave::savePlayerItem(const std::shared_ptr<Player> &player) {
 			itemList.emplace_back(slotId, item);
 		}
 	}
-
-	if (!saveItems(player, itemList, itemsQuery, propWriteStream)) {
-		g_logger().warn("[IOLoginData::savePlayer] - Failed for save items from player: {}", player->getName());
-		return false;
-	}
-	return true;
+	std::ostringstream query;
+	PropWriteStream propWriteStream;
+	propWriteStream.clear();
+	return saveItems(player, itemList, propWriteStream, query, nullptr, "items");
 }
 
 bool IOLoginDataSave::savePlayerDepotItems(const std::shared_ptr<Player> &player) {
@@ -531,33 +514,19 @@ bool IOLoginDataSave::savePlayerDepotItems(const std::shared_ptr<Player> &player
 		return false;
 	}
 
-	Database &db = Database::getInstance();
-	PropWriteStream propWriteStream;
-	ItemDepotList depotList;
-	if (player->lastDepotId != -1) {
-		std::ostringstream query;
-		query << "DELETE FROM `player_depotitems` WHERE `player_id` = " << player->getGUID();
-
-		if (!db.executeQuery(query.str())) {
-			return false;
-		}
-
-		query.str("");
-
-		DBInsert depotQuery("INSERT INTO `player_depotitems` (`player_id`, `pid`, `sid`, `itemtype`, `count`, `attributes`) VALUES ");
-
-		for (const auto &[pid, depotChest] : player->depotChests) {
-			for (const std::shared_ptr<Item> &item : depotChest->getItemList()) {
-				depotList.emplace_back(pid, item);
-			}
-		}
-
-		if (!saveItems(player, depotList, depotQuery, propWriteStream)) {
-			return false;
-		}
+	if (player->lastDepotId == -1) {
 		return true;
 	}
-	return true;
+	ItemBlockList itemList;
+	for (const auto &[pid, depotChest] : player->depotChests) {
+		for (const std::shared_ptr<Item> &item : depotChest->getItemList()) {
+			itemList.emplace_back(pid, item);
+		}
+	}
+	std::ostringstream query;
+	PropWriteStream propWriteStream;
+	propWriteStream.clear();
+	return saveItems(player, itemList, propWriteStream, query, nullptr, "depotitems");
 }
 
 bool IOLoginDataSave::saveRewardItems(const std::shared_ptr<Player> &player) {
@@ -587,7 +556,8 @@ bool IOLoginDataSave::saveRewardItems(const std::shared_ptr<Player> &player) {
 
 		DBInsert rewardQuery("INSERT INTO `player_rewards` (`player_id`, `pid`, `sid`, `itemtype`, `count`, `attributes`) VALUES ");
 		PropWriteStream propWriteStream;
-		if (!saveItems(player, rewardListItems, rewardQuery, propWriteStream)) {
+		std::ostringstream queryTmp;
+		if (!saveItems(player, rewardListItems, propWriteStream, queryTmp, &rewardQuery, std::string())) {
 			return false;
 		}
 	}
@@ -600,26 +570,14 @@ bool IOLoginDataSave::savePlayerInbox(const std::shared_ptr<Player> &player) {
 		return false;
 	}
 
-	Database &db = Database::getInstance();
-	PropWriteStream propWriteStream;
-	ItemInboxList inboxList;
+	ItemBlockList itemList;
+	for (auto it = player->getInbox()->getReversedItems(), end = player->getInbox()->getReversedEnd(); it != end; ++it) {
+		itemList.emplace_back(0, *it);
+	}
 	std::ostringstream query;
-	query << "DELETE FROM `player_inboxitems` WHERE `player_id` = " << player->getGUID();
-	if (!db.executeQuery(query.str())) {
-		return false;
-	}
-
-	query.str("");
-	DBInsert inboxQuery("INSERT INTO `player_inboxitems` (`player_id`, `pid`, `sid`, `itemtype`, `count`, `attributes`) VALUES ");
-
-	for (const auto &item : player->getInbox()->getItemList()) {
-		inboxList.emplace_back(0, item);
-	}
-
-	if (!saveItems(player, inboxList, inboxQuery, propWriteStream)) {
-		return false;
-	}
-	return true;
+	PropWriteStream propWriteStream;
+	propWriteStream.clear();
+	return saveItems(player, itemList, propWriteStream, query, nullptr, "inboxitems");
 }
 
 bool IOLoginDataSave::savePlayerPreyClass(const std::shared_ptr<Player> &player) {
@@ -814,27 +772,28 @@ bool IOLoginDataSave::savePlayerStorage(const std::shared_ptr<Player> &player) {
 
 	Database &db = Database::getInstance();
 	std::ostringstream query;
-	query << "DELETE FROM `player_storage` WHERE `player_id` = " << player->getGUID();
-	if (!db.executeQuery(query.str())) {
-		return false;
+
+	const auto storagesScope = player->kv()->scoped("storages");
+	const auto kvFlag = storagesScope->get("use-blob");
+	if (!(kvFlag && kvFlag->get<bool>())) {
+		storagesScope->set("use-blob", true);
 	}
 
-	query.str("");
-
-	DBInsert storageQuery("INSERT INTO `player_storage` (`player_id`, `key`, `value`) VALUES ");
 	player->genReservedStorageRange();
 
+	PropWriteStream stream;
 	for (const auto &[key, value] : player->storageMap) {
-		query << player->getGUID() << ',' << key << ',' << value;
-		if (!storageQuery.addRow(query)) {
-			return false;
-		}
+		stream.write<uint32_t>(key);
+		stream.write<int32_t>(value);
 	}
 
-	if (!storageQuery.execute()) {
-		return false;
-	}
-	return true;
+	size_t size;
+	const char* data = stream.getStream(size);
+
+	query.str("");
+	query << "UPDATE `players` SET `storages` = " << db.escapeBlob(data, static_cast<uint32_t>(size))
+		  << " WHERE `id` = " << player->getGUID();
+	return db.executeQuery(query.str());
 }
 
 bool IOLoginDataSave::savePlayerStatement(const std::shared_ptr<Player> &player, const std::string &receiver, uint16_t channelId, const std::string &text, uint32_t &statementId) {
