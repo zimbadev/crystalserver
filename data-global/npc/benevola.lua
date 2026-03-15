@@ -144,7 +144,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				if rand >= 95 then
 					npcHandler:say("Excellent! The white deer will be safer thanks to your efforts.", npc, creature)
 					player:removeItem(12369, 1)
-					local raidName = "WhiteDeers"
+					local raidName = "abdendriel.whitedeers"
 					if Raid.registry[raidName] then
 						local raid = Raid.registry[raidName]
 						raid:tryStart(true)

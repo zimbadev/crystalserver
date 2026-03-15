@@ -179,6 +179,7 @@ taskHuntingFreeRerollTime = 20 * 60 * 60
 -- NOTE: forgeInfluencedLimit, limit of influenced monsters that will be created in interval type and time
 -- NOTE: forgeFiendishLimit, limit of diabolic monsters that will be created in interval type and time, less than forgeInfluencedLimit
 -- NOTE: forgeFiendishIntervalType: "hour", "minute" or "second"
+-- NOTE forgeInfluencedIntervalTime and forgeInfluencedIntervalType: time and type of interval to limit the influenced monsters, for example, if you set forgeInfluencedIntervalTime to 1 and forgeInfluencedIntervalType to "hour", only 1 influenced monster will be created per hour, if the limit is reached, no more influenced monsters will be created until the next hour.
 forgeMaxItemTier = 10
 forgeCostOneSliver = 20
 forgeSliverAmount = 3
@@ -198,6 +199,8 @@ forgeInfluencedLimit = 300
 forgeFiendishLimit = 4
 forgeFiendishIntervalType = "hour"
 forgeFiendishIntervalTime = "1"
+forgeInfluencedIntervalType = "minute"
+forgeInfluencedIntervalTime = "30"
 
 ruseChanceFormulaA = 0.0307576
 ruseChanceFormulaB = 0.440697
@@ -512,12 +515,6 @@ minDelayBetweenConditions = 0
 criticalChance = 10
 skulledDeathLoseStoreItem = false
 experienceDisplayRates = true
--- configure attack base on Fist Fighting skill/experience
--- multiplierSpeedOnFist * 5  (multiplies the value obtained from the player fist skill and multiplies it * 5) max 25 is recommended due minTicks limits else player stop attack
--- maxSpeedOnFist 500 miliseconds  (The maximum attack speed that can be obtained no matter how high the player has the Fist Fighting skill.)
-toggleAttackSpeedOnFist = false
-multiplierSpeedOnFist = 5
-maxSpeedOnFist = 500
 disableLegacyRaids = false
 disableMonsterArmor = false
 minElementalResistance = -200

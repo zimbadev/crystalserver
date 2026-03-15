@@ -204,7 +204,7 @@ function ForgeMonster:exceededMaxInfluencedMonsters()
 			totalMonsters = totalMonsters + 1
 		end
 	end
-	local configMaxMonsters = configManager.getNumber(configKeys.FORGE_INFLUENCED_CREATURES_LIMIT)
+	local configMaxMonsters = configManager.getNumber(configKeys.FORGE_INFLUENCED_CREATURES_LIMIT) * (SCHEDULE_INFLUENCED_RATE / 100)
 	if totalMonsters >= configMaxMonsters then
 		return true
 	end

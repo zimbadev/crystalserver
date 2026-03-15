@@ -59,11 +59,11 @@ local function creatureSayCallback(npc, creature, type, message)
 	end
 
 	if MsgContains(message, "letter") then
-		if player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 7 then
-			if player:getItemCount(3506) > 0 then
-				if player:removeItem(3506, 1) then
+		if player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 6 then
+			if player:getItemCount(6113) > 0 then
+				if player:removeItem(6113, 1) then
 					npcHandler:say("A letter from that youngster Morgan? I believed him dead since years. These news are good news indeed. Thank you very much, my friend.", npc, creature)
-					player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 8)
+					player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 7)
 				end
 			end
 		end
@@ -238,5 +238,22 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+keywordHandler:addKeyword({ "spells" }, StdModule.say, {
+	npcHandler = npcHandler,
+	text = "I can teach you these spells: {Challenge}, {Conjure Wand of Darkness}, {Divine Dazzle} and {Wild Growth Rune}.",
+})
+
+local node1 = keywordHandler:addKeyword({ "challenge" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {challenge} magic spell for 2000 gold?" })
+node1:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "challenge", vocation = { 4, 8 }, price = 2000, level = 20 })
+
+local node2 = keywordHandler:addKeyword({ "conjure wand of darkness" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {conjure wand of darkness} magic spell for 5000 gold?" })
+node2:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "conjure wand of darkness", vocation = { 1, 5 }, price = 5000, level = 41 })
+
+local node3 = keywordHandler:addKeyword({ "divine dazzle" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {divine dazzle} magic spell for 250000 gold?" })
+node3:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "divine dazzle", vocation = { 3, 7 }, price = 250000, level = 250 })
+
+local node4 = keywordHandler:addKeyword({ "wild growth rune" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {wild growth rune} magic spell for 2000 gold?" })
+node4:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "wild growth rune", vocation = { 2, 6 }, price = 2000, level = 27 })
 
 npcType:register(npcConfig)

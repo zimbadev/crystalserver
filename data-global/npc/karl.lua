@@ -64,10 +64,8 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:setTopic(playerId, 1)
 		end
 	elseif MsgContains(message, "whisper beer") then
-		if player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 4 then
-			npcHandler:say("Do you want to buy a bottle of our finest whisper beer for 80 gold?", npc, creature)
-			npcHandler:setTopic(playerId, 2)
-		end
+		npcHandler:say("Do you want to buy a bottle of our finest whisper beer for 80 gold?", npc, creature)
+		npcHandler:setTopic(playerId, 2)
 	elseif MsgContains(message, "yes") then
 		if npcHandler:getTopic(playerId) == 1 then
 			if player:removeItem(404, 1) then
@@ -78,15 +76,12 @@ local function creatureSayCallback(npc, creature, type, message)
 			end
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 2 then
-			if player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 4 then
-				if player:removeMoneyBank(80) then
-					npcHandler:say("Here. Don't take it into the city though.", npc, creature)
-					player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 5)
-					player:addItem(6106, 1)
-					npcHandler:setTopic(playerId, 0)
-				else
-					npcHandler:say("You don't have enough money.", npc, creature)
-				end
+			if player:removeMoneyBank(80) then
+				npcHandler:say("Here. Don't take it into the city though.", npc, creature)
+				player:addItem(6106, 1)
+				npcHandler:setTopic(playerId, 0)
+			else
+				npcHandler:say("You don't have enough money.", npc, creature)
 			end
 		end
 	end
@@ -100,7 +95,6 @@ npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 npcConfig.shop = {
-	{ itemName = "bottle of whisper beer", clientId = 6106, buy = 80 },
 	{ itemName = "mug of beer", clientId = 2880, buy = 20, count = 3 },
 	{ itemName = "vial of beer", clientId = 2874, buy = 20, count = 1, subType = 3 },
 }

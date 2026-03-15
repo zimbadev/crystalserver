@@ -22,6 +22,7 @@
 	#include <utility>
 	#include <vector>
 	#include <map>
+	#include <unordered_map>
 	#include <list>
 	#include <utility>
 	#include <cstdint>
@@ -509,9 +510,10 @@ enum BestiaryType_t : uint8_t {
 	BESTY_RACE_SLIME = 18,
 	BESTY_RACE_UNDEAD = 19,
 	BESTY_RACE_VERMIN = 20,
+	BESTY_RACE_INKBORN = 21,
 
 	BESTY_RACE_FIRST = BESTY_RACE_AMPHIBIC,
-	BESTY_RACE_LAST = BESTY_RACE_VERMIN,
+	BESTY_RACE_LAST = BESTY_RACE_INKBORN,
 };
 
 enum MonstersEvent_t : uint8_t {
@@ -1563,7 +1565,7 @@ struct HistoryMarketOffer {
 
 using MarketOfferList = std::list<MarketOffer>;
 using HistoryMarketOfferList = std::list<HistoryMarketOffer>;
-using StashItemList = std::map<uint16_t, uint32_t>;
+using StashItemList = std::unordered_map<uint16_t, uint32_t>;
 
 using ItemsTierCountList = std::map<uint16_t, std::map<uint8_t, uint32_t>>;
 /*

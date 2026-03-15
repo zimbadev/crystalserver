@@ -57,24 +57,60 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
--- Travel
 local TheNewFrontier = Storage.Quest.U8_54.TheNewFrontier
-local function addTravelKeyword(keyword, text, cost, destination, condition, action)
+
+local function hasCheese(player)
+	return player:getItemCount(169) > 0
+end
+
+local function addTravelKeyword(keyword, text, cost, destination, condition)
 	if condition then
-		keywordHandler:addKeyword({ keyword }, StdModule.say, { npcHandler = npcHandler, text = "Never heard about a place like this." }, condition)
+		keywordHandler:addKeyword({ keyword }, StdModule.say, {
+			npcHandler = npcHandler,
+			text = "Never heard about a place like this.",
+		}, condition)
+		return
 	end
 
-	local travelKeyword = keywordHandler:addKeyword({ keyword }, StdModule.say, { npcHandler = npcHandler, text = "Do you seek a ride to " .. keyword:titleCase() .. " for |TRAVELCOST|?", cost = cost, discount = "postman" })
-	travelKeyword:addChildKeyword({ "yes" }, StdModule.travel, { npcHandler = npcHandler, premium = false, text = "Hold on!", cost = cost, discount = "postman", destination = destination })
-	travelKeyword:addChildKeyword({ "no" }, StdModule.say, { npcHandler = npcHandler, text = "You shouldn't miss the experience.", reset = true })
+	local travelKeyword = keywordHandler:addKeyword({ keyword }, StdModule.say, {
+		npcHandler = npcHandler,
+		text = text ~= "" and text or "Do you seek a ride to " .. keyword:titleCase() .. " for |TRAVELCOST|?",
+		cost = cost,
+		discount = "postman",
+	})
+
+	travelKeyword:addChildKeyword({ "yes" }, StdModule.say, {
+		npcHandler = npcHandler,
+		text = "Ugh... What is that stench? Cough! Cough! Not scarab cheese! Get out of here!",
+		reset = true,
+	}, hasCheese)
+
+	travelKeyword:addChildKeyword({ "yes" }, StdModule.travel, {
+		npcHandler = npcHandler,
+		premium = false,
+		text = "Hold on!",
+		cost = cost,
+		discount = "postman",
+		destination = destination,
+	}, function(player)
+		return not hasCheese(player)
+	end)
+
+	travelKeyword:addChildKeyword({ "no" }, StdModule.say, {
+		npcHandler = npcHandler,
+		text = "You shouldn't miss the experience.",
+		reset = true,
+	})
 end
 
 addTravelKeyword("farmine", "Do you seek a ride to Farmine for |TRAVELCOST|?", 60, Position(32983, 31539, 1), function(player)
 	return player:getStorageValue(TheNewFrontier.Mission10[1]) ~= 2
 end)
+
 addTravelKeyword("zao", "Do you seek a ride to Farmine for |TRAVELCOST|?", 60, Position(32983, 31539, 1), function(player)
 	return player:getStorageValue(TheNewFrontier.Mission10[1]) ~= 2
 end)
+
 addTravelKeyword("edron", "", 60, Position(33193, 31784, 3))
 addTravelKeyword("svargrond", "", 60, Position(32253, 31097, 4))
 addTravelKeyword("femor hills", "", 60, Position(32536, 31837, 4))
@@ -85,7 +121,10 @@ addTravelKeyword("issavi", "", 100, Position(33957, 31515, 0))
 addTravelKeyword("marapur", "Marapur", 70, Position(33805, 32767, 2))
 
 npcHandler:setMessage(MESSAGE_GREET, "Daraman's blessings, traveller |PLAYERNAME|.")
-keywordHandler:addKeyword({ "fly" }, StdModule.say, { npcHandler = npcHandler, text = "I can fly you to {Edron}, {Issavi}, {Svargrond}, {Kazordoon}, {Zao}, {Femor Hills} or to {Marapur} if you like. Where do you want to go?" })
+keywordHandler:addKeyword({ "fly" }, StdModule.say, {
+	npcHandler = npcHandler,
+	text = "I can fly you to {Edron}, {Issavi}, {Svargrond}, {Kazordoon}, {Femor Hills} or to {Marapur} if you like. Where do you want to go?",
+})
 npcHandler:setMessage(MESSAGE_FAREWELL, "It was a pleasure to help you, |PLAYERNAME|.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "It was a pleasure to help you, |PLAYERNAME|.")
 
@@ -96,15 +135,14 @@ npcConfig.shop = {
 	{ itemName = "letter", clientId = 3505, buy = 8 },
 	{ itemName = "parcel", clientId = 3503, buy = 15 },
 }
--- On buy npc shop message
+
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
 	npc:sellItem(player, itemId, amount, subType, 0, ignore, inBackpacks)
 end
--- On sell npc shop message
+
 npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name, totalCost)
 	player:sendTextMessage(MESSAGE_TRADE, string.format("Sold %ix %s for %i gold.", amount, name, totalCost))
 end
--- On check npc shop message (look item)
-npcType.onCheckItem = function(npc, player, clientId, subType) end
 
+npcType.onCheckItem = function(npc, player, clientId, subType) end
 npcType:register(npcConfig)

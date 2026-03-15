@@ -582,10 +582,6 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 		target:transform(594)
 		target:decay()
 		toPosition:sendMagicEffect(CONST_ME_HITAREA)
-	elseif target.itemid == 6298 and target.actionid > 0 then
-		target:transform(615)
-		target:decay()
-		toPosition:sendMagicEffect(CONST_ME_HITAREA)
 	elseif target.itemid == 21341 then
 		target:transform(21342)
 		target:decay()
@@ -651,7 +647,7 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 		--The Ice Islands Quest, Nibelor 1: Breaking the Ice
 		local missionProgress = player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Mission02)
 		local pickAmount = player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.PickAmount)
-		if missionProgress < 1 or pickAmount >= 3 or player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Questline) ~= 3 then
+		if (missionProgress < 0 or missionProgress >= 3) and pickAmount >= 3 then
 			return false
 		end
 
@@ -892,15 +888,15 @@ function onUseCrowbar(player, item, fromPosition, target, toPosition, isHotkey)
 				player:setStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Mission02, 2)
 				toPosition:sendMagicEffect(CONST_ME_MAGIC_BLUE)
 			end
-		elseif target:getActionId() == 40041 and target.itemid == 4848 then
-			-- The ape city - mission 7
-			local apeCityStorage = player:getStorageValue(Storage.Quest.U7_6.TheApeCity.Casks)
-			if apeCityStorage < 3 then
-				player:setStorageValue(Storage.Quest.U7_6.TheApeCity.Casks, math.max(0, apeCityStorage) + 1)
-				target:transform(3134)
-				toPosition:sendMagicEffect(CONST_ME_EXPLOSIONAREA)
-				addEvent(revertCask, 3 * 60 * 1000, toPosition)
-			end
+		end
+	elseif target:getActionId() == 40041 and target.itemid == 4848 then
+		-- The ape city - mission 7
+		local apeCityStorage = player:getStorageValue(Storage.Quest.U7_6.TheApeCity.Casks)
+		if apeCityStorage < 3 then
+			player:setStorageValue(Storage.Quest.U7_6.TheApeCity.Casks, math.max(0, apeCityStorage) + 1)
+			target:transform(3134)
+			toPosition:sendMagicEffect(CONST_ME_EXPLOSIONAREA)
+			addEvent(revertCask, 3 * 60 * 1000, toPosition)
 		end
 	elseif target.actionid == 12566 and player:getStorageValue(Storage.Quest.U8_1.SecretService.TBIMission06) == 1 then
 		-- Secret service quest

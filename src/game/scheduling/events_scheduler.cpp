@@ -97,6 +97,18 @@ bool EventsScheduler::loadScheduleEventFromXml() {
 				currentEventRates.skillrate = skillrate;
 				g_eventsScheduler().setSkillSchedule(skillrate);
 			}
+
+			if (ingameNode.attribute("fiendishrate")) {
+				uint16_t fiendishrate = static_cast<uint16_t>(ingameNode.attribute("fiendishrate").as_uint());
+				currentEventRates.fiendishrate = fiendishrate;
+				g_eventsScheduler().setFiendishSchedule(fiendishrate);
+			}
+
+			if (ingameNode.attribute("influencedrate")) {
+				uint16_t influencedrate = static_cast<uint16_t>(ingameNode.attribute("influencedrate").as_uint());
+				currentEventRates.influencedrate = influencedrate;
+				g_eventsScheduler().setInfluencedSchedule(influencedrate);
+			}
 		}
 
 		for (const auto &[eventName, rates] : eventsOnSameDay) {
@@ -116,6 +128,12 @@ bool EventsScheduler::loadScheduleEventFromXml() {
 			}
 			if (rates.skillrate != 100 && currentEventRates.skillrate != 100 && rates.skillrate == currentEventRates.skillrate) {
 				modifiedRates.emplace_back("skillrate");
+			}
+			if (rates.fiendishrate != 100 && currentEventRates.fiendishrate != 100 && rates.fiendishrate == currentEventRates.fiendishrate) {
+				modifiedRates.emplace_back("fiendishrate");
+			}
+			if (rates.influencedrate != 100 && currentEventRates.influencedrate != 100 && rates.influencedrate == currentEventRates.influencedrate) {
+				modifiedRates.emplace_back("influencedrate");
 			}
 
 			if (!modifiedRates.empty()) {

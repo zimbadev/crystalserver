@@ -32,6 +32,8 @@ struct EventRates {
 	uint32_t bosslootrate = 100;
 	uint32_t spawnrate = 100;
 	uint16_t skillrate = 100;
+	uint16_t fiendishrate = 100;
+	uint16_t influencedrate = 100;
 };
 
 class EventsScheduler {
@@ -78,6 +80,20 @@ public:
 		spawnMonsterSchedule = (spawnMonsterSchedule * spawnrate) / 100;
 	}
 
+	uint16_t getFiendishSchedule() const {
+		return fiendishSchedule;
+	}
+	void setFiendishSchedule(uint16_t fiendishrate) {
+		fiendishSchedule = (fiendishSchedule * fiendishrate) / 100;
+	}
+
+	uint16_t getInfluencedSchedule() const {
+		return influencedSchedule;
+	}
+	void setInfluencedSchedule(uint16_t influencedrate) {
+		influencedSchedule = (influencedSchedule * influencedrate) / 100;
+	}
+
 	uint16_t getSkillSchedule() const {
 		return skillSchedule;
 	}
@@ -92,6 +108,8 @@ private:
 	uint32_t bossLootSchedule = 100;
 	uint16_t skillSchedule = 100;
 	uint32_t spawnMonsterSchedule = 100;
+	uint16_t fiendishSchedule = 100;
+	uint16_t influencedSchedule = 100;
 
 	std::vector<EventScheduler> eventScheduler;
 

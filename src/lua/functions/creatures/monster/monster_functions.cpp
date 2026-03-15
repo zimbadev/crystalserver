@@ -63,6 +63,7 @@ void MonsterFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Monster", "setForgeStack", MonsterFunctions::luaMonsterSetForgeStack);
 	Lua::registerMethod(L, "Monster", "configureForgeSystem", MonsterFunctions::luaMonsterConfigureForgeSystem);
 	Lua::registerMethod(L, "Monster", "clearFiendishStatus", MonsterFunctions::luaMonsterClearFiendishStatus);
+	Lua::registerMethod(L, "Monster", "clearInfluencedStatus", MonsterFunctions::luaMonsterClearInfluencedStatus);
 	Lua::registerMethod(L, "Monster", "isForgeable", MonsterFunctions::luaMonsterIsForgeable);
 
 	Lua::registerMethod(L, "Monster", "getName", MonsterFunctions::luaMonsterGetName);
@@ -583,6 +584,19 @@ int MonsterFunctions::luaMonsterClearFiendishStatus(lua_State* L) {
 	}
 
 	monster->clearFiendishStatus();
+	return 1;
+}
+
+int MonsterFunctions::luaMonsterClearInfluencedStatus(lua_State* L) {
+	// monster:clearInfluencedStatus()
+	const auto &monster = Lua::getUserdataShared<Monster>(L, 1);
+	if (!monster) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_MONSTER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 0;
+	}
+
+	monster->clearInfluencedStatus();
 	return 1;
 }
 

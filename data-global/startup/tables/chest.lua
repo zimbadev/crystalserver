@@ -216,7 +216,7 @@ ChestUnique = {
 	-- Key 3667
 	[5016] = {
 		isKey = true,
-		itemId = 3204,
+		itemId = 4240,
 		itemPos = { x = 32576, y = 32216, z = 15 },
 		reward = { { 2969, 1 } },
 		storage = Storage.Quest.Key.ID3667,
@@ -2353,7 +2353,7 @@ ChestUnique = {
 	[6273] = {
 		itemId = 2469,
 		itemPos = { x = 32551, y = 32652, z = 10 },
-		reward = { { 7369, 1 } },
+		reward = { { 7870, 1 } },
 		weight = 5.00,
 		storage = Storage.Quest.U8_2.TheThievesGuildQuest.GoldenGoblet,
 	},

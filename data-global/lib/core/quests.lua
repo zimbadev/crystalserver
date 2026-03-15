@@ -3789,42 +3789,42 @@ if not Quests then
 					storageId = Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven,
 					missionId = 10273,
 					startValue = 2,
-					endValue = 13,
+					endValue = 12,
 					states = {
 						[2] = "Ariella asked you for a few days of adequate supply. \z
 						Help her and improve your reputation in Sabrehaven.",
-						[3] = "You have finished one mission. Ask around in Sabrehaven and surroundings whether the \z
-						people there might have missions for you. This will improve your reputation and earn their trust.",
-						[4] = "Morgan asked you to deliver a letter safely to old Eremo on Cormaya. \z
-						Help him and improve your reputation in Sabrehaven.",
-						[5] = "You delivered the letter safely to old Eremo. Report back to Morgan and \z
-						improve your reputation in Sabrehaven.",
-						[6] = "You have finished two missions. Ask around in Sabrehaven and surroundings \z
-						whether the people there might have missions for you. This will improve your reputation and earn their trust.",
-						[7] = "Duncan requested an atlas of the explorers society. Help him and improve your reputation in Sabrehaven.",
-						[8] = "You have finished three missions. Ask around in Sabrehaven and surroundings whether the \z
-						people there might have missions for you. This will improve your reputation and earn their trust.",
-						[9] = "Chondur asked at least five pirate voodoo dolls to lift the curse. Help him and improve \z
-						your reputation in Sabrehaven.",
-						[10] = "You have finished four missions. Ask around in Sabrehaven and surroundings whether the \z
-						people there might have missions for you. This will improve your reputation and earn their trust.",
-						[11] = "Ariella asked you to bring a sample of whisper beer from a secret whisper bar in Carlin. \z
+						[3] = "You have finished one mission. Ask Arelia again for another mission \z
+						This will improve your reputation in Sabrehaven.",
+						[4] = "Ariella asked you to bring a sample of whisper beer from a secret whisper bar in Carlin. \z
 						Help her and improve your reputation in Sabrehaven.",
-						[12] = "Take the sample of whisper beer to Ariella. Help her and improve your reputation in Sabrehaven.",
+						[5] = "You have finished two missions. Ask Morgan in Sabrehaven for another mission \z
+						This will improve your reputation in Sabrehaven.",
+						[6] = "Morgan asked you to deliver a letter safely to old Eremo on Cormaya. \z
+						Help him and improve your reputation in Sabrehaven.",
+						[7] = "You delivered the letter safely to old Eremo. Report back to Morgan and \z
+						improve your reputation in Sabrehaven.",
+						[8] = "You have finished three missions. Ask Duncan in Sabrehaven for another mission \z
+						This will improve your reputation and earn his trust.",
+						[9] = "Duncan requested an atlas of the explorers society. Help him and improve your reputation in Sabrehaven.",
+						[10] = "You have finished four missions. Ask Chondur in Sabrehaven for another mission \z
+						This will improve your reputation in Sabrehaven.",
+						[11] = "Chondur asked at least five pirate voodoo dolls to lift the curse. Help him and improve \z
+						your reputation in Sabrehaven.",
+						[12] = "You have finished five missions. You are now a friend of Sabrehaven.",
 					},
 				},
 				[12] = {
 					name = "Reputation in Sabrehaven: Friendly",
 					storageId = Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven,
 					missionId = 10274,
-					startValue = 14,
-					endValue = 17,
+					startValue = 12,
+					endValue = 14,
 					states = {
-						[14] = "You have finished five missions. People in Sabrehaven seem to start trusting you. \z
+						[12] = "You have finished five missions. People in Sabrehaven seem to start trusting you. \z
 						Maybe this is a good time for some more difficult missions.",
-						[15] = "You have finished six missions. People in Sabrehaven seem to start trusting you. \z
+						[13] = "You have finished six missions. People in Sabrehaven seem to start trusting you. \z
 						Maybe this is a good time for some more difficult missions.",
-						[16] = "You have finished seven missions. People in Sabrehaven seem to start trusting you. \z
+						[14] = "You have finished seven missions. People in Sabrehaven seem to start trusting you. \z
 						Maybe this is a good time for some more difficult missions.",
 					},
 				},
@@ -3832,8 +3832,8 @@ if not Quests then
 					name = "Reputation in Sabrehaven: Cordial",
 					storageId = Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven,
 					missionId = 10275,
-					startValue = 18,
-					endValue = 19,
+					startValue = 15,
+					endValue = 15,
 					description = "You have finished eight missions. \z
 					People in Sabrehaven seem to trust you, but there is still one last mission left.",
 				},
@@ -3841,11 +3841,11 @@ if not Quests then
 					name = "Reputation in Sabrehaven: Loyal",
 					storageId = Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven,
 					missionId = 10276,
-					startValue = 20,
-					endValue = 22,
+					startValue = 16,
+					endValue = 17,
 					states = {
-						[20] = "You have finished nine missions. People in Sabrehaven are considering you as one of them.",
-						[21] = "You have finished all missions. \z
+						[16] = "You have finished nine missions. People in Sabrehaven are considering you as one of them.",
+						[17] = "You have finished all missions. \z
 						People in Sabrehaven are considering you as one of them and you earned their full trust.",
 					},
 				},
@@ -4675,7 +4675,7 @@ if not Quests then
 				},
 				[14] = {
 					name = "To Outfox a Fox",
-					storageId = Storage.Quest.U8_1.ToOutfoxAFoxQuest,
+					storageId = Storage.Quest.U8_1.ToOutfoxAFoxQuest.Questline,
 					missionId = 10432,
 					startValue = 1,
 					endValue = 2,
@@ -5649,8 +5649,8 @@ if not Quests then
 					endValue = 3,
 					states = {
 						[1] = "Mr Morris tasked you to find an ancient amulet that was lost somewhere on Dawnport - probably next to a corpse somewhere.",
-						[2] = "Come back to Mr Morris.",
-						[3] = "Mr Morris thanks for you the help.",
+						[2] = "Deliver the ancient amulet back to Mr Morris.",
+						[3] = "You returned the lost amulet to Mr Morris and received your reward.",
 					},
 				},
 				[3] = {
@@ -5661,7 +5661,7 @@ if not Quests then
 					endValue = 2,
 					states = {
 						[1] = "Mr Morris urged you to find a log book that was stolen by trolls.",
-						[2] = "Mr Morris thanks you for the help.",
+						[2] = "You got the log book back from the troll caves and received a reward for your efforts.",
 					},
 				},
 				[4] = {
@@ -5672,8 +5672,8 @@ if not Quests then
 					endValue = 3,
 					states = {
 						[1] = "Mr Morris needs the rare Dawnfire herb harvested and brought to him. It grows on gray sand only, he said.",
-						[2] = "Come back to Mr Morris.",
-						[3] = "Mr Morris thanks you for the help.",
+						[2] = "You harvested a sample of the rare Dawnfire herb. Bring the sample to Mr Morris.",
+						[3] = "You managed to find the rare Dawnfire herb and were rewarded by Mr Morris. Nice job!",
 					},
 				},
 				[5] = {
@@ -5684,10 +5684,10 @@ if not Quests then
 					endValue = 5,
 					states = {
 						[1] = "The key to the adventurer's dormitory has disappeared. Maybe you can find it. Ask around to find out who was the last to have seen it.",
-						[2] = "Use the fishing rod in the nearby lake to fish Old Nasty.",
-						[3] = "Come back to Woblin with Old Nasty",
-						[4] = "Come back to Mr Morris with Key 0010",
-						[5] = "Mr Morris thanks for the help",
+						[2] = "Use a fishing rod in the pond to catch Old Nasty, you also requiere worms to use as bait.",
+						[3] = "You did it! You caught Old Nasty, you should inform Woblin about your catch.",
+						[4] = "Woblin was pleased about your catch his arch enemy Old Nasty. He gave you the lost adventurer's dormitory key as reward, hurry and delivery the key back to Mr Morris.",
+						[5] = "You found the key to the adventurers' dormitory and received a little reward on top of the thanks of everyone.",
 					},
 				},
 				[6] = {

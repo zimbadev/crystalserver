@@ -4,12 +4,6 @@ if not LastQuestlogUpdate then
 	LastQuestlogUpdate = {}
 end
 
-if not PlayerTrackedMissionsData then
-	PlayerTrackedMissionsData = {}
-end
-
--- Text functions
-
 local function evaluateText(value, player)
 	if type(value) == "function" then
 		return tostring(value(player))
@@ -18,10 +12,24 @@ local function evaluateText(value, player)
 	return tostring(value)
 end
 
--- Game functions
+if not TRACKED_MISSIONS then
+	TRACKED_MISSIONS = {}
+end
+
+function Player.getSavedMissions(self)
+	return TRACKED_MISSIONS[self:getId()] or {}
+end
+
+function Player.saveMissions(self, data)
+	TRACKED_MISSIONS[self:getId()] = data
+end
 
 function Player.hasTrackingQuest(self, missionId)
-	local trackedQuests = PlayerTrackedMissionsData[self:getId()]
+	local name, questId = self:getQuestDataByMissionId(missionId)
+	if not name or not questId then
+		return false
+	end
+	local trackedQuests = Player.getSavedMissions(self)
 	if trackedQuests then
 		for i = 1, #trackedQuests do
 			local mission = trackedQuests[i]
@@ -41,7 +49,7 @@ function Player.getQuestDataByMissionId(self, missionId)
 				for i = 1, #quest.missions do
 					local mission = quest.missions[i]
 					if mission and mission.missionId == missionId then
-						return quest.name, questId, i
+						return quest.name, questId, i, quest
 					end
 				end
 			end
@@ -50,30 +58,32 @@ function Player.getQuestDataByMissionId(self, missionId)
 	return false
 end
 
-function Player.resetTrackedMissions(self, missions)
+function Player.resetTrackedMissions(self, receivedMissionsFromClient)
 	local maxAllowed = self:getAllowedTrackedQuestCount()
-	PlayerTrackedMissionsData[self:getId()] = {}
-	for i = 1, #missions do
-		local missionId = missions[i]
+	local currentMissions = {}
+
+	for m = 1, #receivedMissionsFromClient do
+		local missionId = receivedMissionsFromClient[m]
 		local questName, questId, missionIndex = self:getQuestDataByMissionId(missionId)
 		if questName and questId and missionIndex then
 			if self:missionIsStarted(questId, missionIndex) then
-				local data = {
+				local current = {
 					questId = questId,
 					missionId = missionId,
 					questName = questName,
 					missionName = self:getMissionName(questId, missionIndex),
 					missionDesc = self:getMissionDescription(questId, missionIndex),
 				}
-				table.insert(PlayerTrackedMissionsData[self:getId()], data)
-				if #PlayerTrackedMissionsData[self:getId()] >= maxAllowed then
+				table.insert(currentMissions, current)
+				if #currentMissions >= maxAllowed then
 					break
 				end
 			end
 		end
 	end
 
-	self:sendTrackedQuests(maxAllowed - #PlayerTrackedMissionsData[self:getId()], PlayerTrackedMissionsData[self:getId()])
+	Player.saveMissions(self, currentMissions)
+	self:sendTrackedQuests(maxAllowed - #currentMissions, currentMissions)
 end
 
 function Player.getAllowedTrackedQuestCount(self)
@@ -123,11 +133,12 @@ function Player.getMissionsData(self, storage)
 					local mission = quest.missions[missionId]
 					if mission.storageId == storage then
 						local data = {
+							questName = quest.name,
 							questId = questId,
 							missionId = mission.missionId,
-							questName = quest.name,
 							missionName = self:getMissionName(questId, missionId),
 							missionDesc = self:getMissionDescription(questId, missionId),
+							quest = quest,
 						}
 						missions[#missions + 1] = data
 					end
@@ -300,7 +311,7 @@ function Player.sendQuestLog(self)
 	for questId = 1, #Quests do
 		if self:questIsStarted(questId) then
 			msg:addU16(questId)
-			msg:addString(Quests[questId].name)
+			msg:addString(Quests[questId].name, "Player.sendQuestLog")
 			msg:addByte(self:questIsCompleted(questId) and 0x01 or 0x00)
 		end
 	end
@@ -317,13 +328,13 @@ function Player.sendQuestLine(self, questId)
 		msg:addU16(questId)
 		msg:addByte(Game.getMissionsCount(self, questId))
 		if missions then
-			for missionId = 1, #missions do
-				if self:missionIsStarted(questId, missionId) then
+			for missionIndex in ipairs(missions) do
+				if self:missionIsStarted(questId, missionIndex) then
 					if self:getClient().version >= 1200 then
-						msg:addU16(self:getMissionId(questId, missionId))
+						msg:addU16(self:getMissionId(questId, missionIndex))
 					end
-					msg:addString(self:getMissionName(questId, missionId))
-					msg:addString(self:getMissionDescription(questId, missionId))
+					msg:addString(self:getMissionName(questId, missionIndex), "Player.sendQuestLine - mission.missionName")
+					msg:addString(self:getMissionDescription(questId, missionIndex), "Player.sendQuestLine - mission.missionDesc")
 				end
 			end
 		end
@@ -333,18 +344,130 @@ function Player.sendQuestLine(self, questId)
 	end
 end
 
+local function getCharmRune(value, count)
+	count = tonumber(count) or 0
+	value = value:gsub("^%s*(.-)%s*$", "%1")
+	local url = ("/compose_image.php?image=images/icons/%s.png&top=%s&bottom=%s"):format(value, value, count)
+	local img = getImage(url, { alt = value, charms = true })
+	return "<br>" .. img .. "<br>"
+end
+
+local tierIcons = {
+	["Momentum"] = { fallbackId = 50188 },
+	["Ruse"] = { fallbackId = 50254 },
+	["Transcendence"] = { fallbackId = 50146 },
+	["Onslaught"] = { fallbackId = 50158 },
+}
+
+local function getTierItem(value, count, slot)
+	count = tonumber(count) or 0
+	local url = "/compose_image.php?image=images/items/%s.gif&top=%s&bottom=%s"
+	local current = tierIcons[value]
+	local itemId = current.fallbackId
+
+	if slot then
+		itemId = slot:getId() or itemId
+	end
+	url = (url):format(itemId, value, count)
+
+	local img = getImage(url, { alt = value, size = 24, charms = true })
+	return "<br>" .. img .. "<br>"
+end
+
+local function isTierOrCharmTracker(name)
+	local isTierTracker = name:find("Tier")
+	local isCharmTracker = name:find("Charm")
+	local hasTrackerInName = isTierTracker or isCharmTracker
+	return hasTrackerInName, isCharmTracker, isTierTracker
+end
+
+local function handleTrackers(questName, mission, player)
+	local hasTrackerInName, isCharmTracker = isTierOrCharmTracker(questName)
+	mission.missionName = ""
+	if hasTrackerInName and mission.quest then
+		mission.quest.cachedTracker = mission.quest.cachedTracker or {}
+		local playerId = player:getId()
+		mission.quest.cachedTracker[playerId] = mission.quest.cachedTracker[playerId] or {}
+		local playerCache = mission.quest.cachedTracker[playerId]
+		local cacheKey = isCharmTracker and "charm" or "tier"
+		playerCache[cacheKey] = playerCache[cacheKey] or { init = false }
+		local cache = playerCache[cacheKey]
+		local array = isCharmTracker and mission.quest.parsedMissions or mission.quest.parsedTierMissions
+
+		if not cache.init then
+			cache.init = true
+			for index, v in ipairs(array) do
+				local count = v.getCount(player) or 0
+				if count > 0 then
+					local slot = player:getSlotItem(v.slot or 0)
+					cache[index] = isCharmTracker and getCharmRune(v.name, count) or getTierItem(v.name, count, slot)
+				end
+			end
+		else
+			if isCharmTracker then
+				local charmId = player:getLastCharmTrigger()
+				if charmId and charmId >= 0 then
+					local index = charmId + 1
+					local v = array[index]
+					if v then
+						local count = v.getCount(player) or 0
+						if count > 0 then
+							cache[index] = getCharmRune(v.name, count)
+						else
+							cache[index] = nil
+						end
+					end
+				end
+			else
+				local slotId = player:getLastItemUpgradeTriggerSlot()
+				if slotId and slotId > 0 then
+					for index, v in ipairs(array) do
+						if v.slot == slotId then
+							local count = v.getCount(player) or 0
+							if count > 0 then
+								cache[index] = getTierItem(v.name, count, player:getSlotItem(v.slot))
+							else
+								cache[index] = nil
+							end
+							break
+						end
+					end
+				end
+			end
+		end
+
+		local hasCount = false
+		for index = 1, #array do
+			local data = cache[index]
+			if data then
+				hasCount = true
+				mission.missionName = mission.missionName .. data .. "<br>"
+			end
+		end
+		mission.questName = questName
+		mission.missionDesc = not hasCount and "No data available." or ""
+		return mission
+	end
+
+	mission.questName = questName
+	return mission
+end
+
 function Player.sendTrackedQuests(self, remainingQuests, missions)
 	local msg = NetworkMessage()
 	msg:addByte(0xD0)
 	msg:addByte(0x01)
 	msg:addByte(remainingQuests)
 	msg:addByte(#missions)
-	for _, mission in ipairs(missions) do
-		msg:addU16(mission.questId)
+
+	for m = 1, #missions do
+		local mission = missions[m]
+		local hasTrackerInName = isTierOrCharmTracker(mission.missionName)
 		msg:addU16(mission.missionId)
+		msg:addU16(mission.questId)
 		msg:addString(mission.questName)
 		msg:addString(mission.missionName)
-		msg:addString(mission.missionDesc)
+		msg:addString(not hasTrackerInName and mission.missionDesc or "No data available.")
 	end
 	msg:sendToPlayer(self)
 	msg:delete()
@@ -354,32 +477,23 @@ function Player.sendUpdateTrackedQuest(self, mission)
 	local msg = NetworkMessage()
 	msg:addByte(0xD0)
 	msg:addByte(0x00)
-	msg:addU16(mission.questId)
+
+	local questName, questId = mission.questName, mission.questId
+
+	if not questName or not questId then
+		questName, questId = self:getQuestDataByMissionId(mission.missionId)
+	end
+
+	mission.questName = questName
+	mission = handleTrackers(questName, mission, self)
+	local hasTrackerInName = isTierOrCharmTracker(mission.missionName)
 	msg:addU16(mission.missionId)
-	msg:addString(mission.questName)
+	msg:addU16(questId)
+	msg:addString(not hasTrackerInName and questName or "")
 	msg:addString(mission.missionName)
 	msg:addString(mission.missionDesc)
 	msg:sendToPlayer(self)
 	msg:delete()
-end
-
-function Player.sendRemoveTrackedQuest(self)
-	local playerId = self:getId()
-	PlayerTrackedMissionsData = PlayerTrackedMissionsData or {}
-	PlayerTrackedMissionsData[playerId] = PlayerTrackedMissionsData[playerId] or {}
-	if #PlayerTrackedMissionsData[playerId] < 1 then
-		return
-	end
-	for i = #PlayerTrackedMissionsData[self:getId()], 1, -1 do
-		local missionData = PlayerTrackedMissionsData[self:getId()][i]
-		local _, questId, missionIndex = self:getQuestDataByMissionId(missionData.missionId)
-
-		if self:questIsCompleted(questId) or self:missionIsCompleted(questId, missionIndex) then
-			table.remove(PlayerTrackedMissionsData[self:getId()], i)
-		end
-	end
-	local maxAllowed = self:getAllowedTrackedQuestCount()
-	self:sendTrackedQuests(maxAllowed - #PlayerTrackedMissionsData[self:getId()], PlayerTrackedMissionsData[self:getId()])
 end
 
 function Player.updateStorage(self, key, value, oldValue, currentFrameTime)
@@ -390,24 +504,12 @@ function Player.updateStorage(self, key, value, oldValue, currentFrameTime)
 			self:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Your questlog has been updated.")
 		end
 	end
-	local trackNewQuest = self:kv():get("tracker-new-quest") or 0
-	local untrackQuest = self:kv():get("untracker-quest") or 0
+
 	local missions = self:getMissionsData(key)
 	for i = 1, #missions do
 		local mission = missions[i]
-		local _, questId, missionIndex = self:getQuestDataByMissionId(mission.missionId)
-
 		if self:hasTrackingQuest(mission.missionId) then
 			self:sendUpdateTrackedQuest(mission)
-		elseif trackNewQuest == 1 then
-			PlayerTrackedMissionsData[playerId] = PlayerTrackedMissionsData[playerId] or {}
-
-			table.insert(PlayerTrackedMissionsData[playerId], mission)
-			self:sendUpdateTrackedQuest(mission)
-		end
-
-		if untrackQuest == 1 and self:missionIsCompleted(questId, missionIndex) then
-			self:sendRemoveTrackedQuest()
 		end
 	end
 end

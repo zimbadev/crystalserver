@@ -206,6 +206,16 @@ end
 
 greedMonsterDeath:register()
 
+local soulSphereDeath = CreatureEvent("SoulSphereDeath")
+
+function soulSphereDeath.onDeath(creature, corpse, killer, mostDamageKiller, lastHitUnjustified, mostDamageUnjustified)
+	if creature:getName() == "Soul Sphere" then
+		SoulSphereKills = SoulSphereKills + 1
+	end
+end
+
+soulSphereDeath:register()
+
 local checkTaint = TalkAction("!checktaint")
 
 function checkTaint.onSay(player, words, param)

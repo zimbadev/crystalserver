@@ -12,4 +12,9 @@
 		<colors colordark="#735D10" colorlight="#8B6D05" />
 		<details displaypriority="6" isseasonal="0" specialevent="0" />
 	</event>
+	<event name="Double Fiendish Weekend" startdate="01/08/2025" enddate="01/15/2025">
+		<ingame fiendishrate="200" />
+		<colors colordark="#735D10" colorlight="#8B6D05" />
+		<description description="Find more Fiendish monsters on the map. Double Fiendish Rate: 200%" />
+	</event>
 </events>

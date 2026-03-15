@@ -115,8 +115,8 @@ local function creatureSayCallback(npc, creature, type, message)
 				"Listen! Since our base of operations is set in this isolated spot we depend on supplies from outside. These supplies are crucial for us to win the war. ...",
 				"Unfortunately, it has happened that some of our supplies have disappeared on their way to this fortress. At first we thought it was the Marid, but intelligence reports suggest a different explanation. ...",
 				"We now believe that a human was behind the theft! ...",
-				"His identity is still unknown but we have been told that the thief fled to the human settlement called Carlin. I want you to find him and report back to me. Nobody messes with the Efreet and lives to tell the tale! ...",
-				"Now go! Travel to the northern city Carlin! Keep your eyes open and look around for something that might give you a clue!",
+				"His identity is still unknown but we have been told that the thief fled to the human settlement called Thais. I want you to find him and report back to me. Nobody messes with the Efreet and lives to tell the tale! ...",
+				"Now go! Travel to the northern city Thais! Keep your eyes open and look around for something that might give you a clue!",
 			}, npc, creature)
 			player:setStorageValue(Storage.Quest.U7_4.DjinnWar.EfreetFaction.Start, 1)
 			player:setStorageValue(Storage.Quest.U7_4.DjinnWar.EfreetFaction.Mission01, 1)
@@ -129,7 +129,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:say("Finally! What is his name then?", npc, creature)
 			npcHandler:setTopic(playerId, 3)
 		elseif MsgContains(message, "no") then
-			npcHandler:say("Then go to Carlin and search for him! Look for something that might give you a clue!", npc, creature)
+			npcHandler:say("Then go to Thais and search for him! Look for something that might give you a clue!", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		end
 	elseif npcHandler:getTopic(playerId) == 3 then

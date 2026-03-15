@@ -1100,6 +1100,7 @@ void LuaEnums::initBestiaryEnums(lua_State* L) {
 	registerEnum(L, BESTY_RACE_GIANT);
 	registerEnum(L, BESTY_RACE_HUMAN);
 	registerEnum(L, BESTY_RACE_HUMANOID);
+	registerEnum(L, BESTY_RACE_INKBORN);
 	registerEnum(L, BESTY_RACE_LYCANTHROPE);
 	registerEnum(L, BESTY_RACE_MAGICAL);
 	registerEnum(L, BESTY_RACE_MAMMAL);

@@ -51,6 +51,7 @@ local itemsTable = {
 	},
 	["others"] = {
 		{ itemName = "spellwand", clientId = 651, sell = 299 },
+		{ itemName = "life ring", clientId = 3052, buy = 900 },
 	},
 	["runes"] = {
 		{ itemName = "animate dead rune", clientId = 3203, buy = 375 },

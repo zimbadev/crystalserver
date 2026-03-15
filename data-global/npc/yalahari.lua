@@ -68,7 +68,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.Mission03, 3) -- StorageValue for Questlog "Mission 03: Death to the Deathbringer"
 			player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.NotesAzerus, 1)
 			npcHandler:setTopic(playerId, 0)
-		elseif player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.NotesAzerus) == 1 and player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.Questline) == 18 then
+		elseif player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.NotesAzerus) >= 1 and player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.Questline) == 18 then
 			npcHandler:say({
 				"I'm mildly impressed by your previous deeds in our service. So I'm willing to grant you some more important {missions}. ...",
 				"If you please us, a life of luxury as an important person in our city is ensured. If you fail, you will be replaced by someone more capable than you. ...",

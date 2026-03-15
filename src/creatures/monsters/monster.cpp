@@ -2755,6 +2755,18 @@ void Monster::clearFiendishStatus() {
 	g_game().sendUpdateCreature(static_self_cast<Monster>());
 }
 
+void Monster::clearInfluencedStatus() {
+	forgeStack = 0;
+	monsterForgeClassification = ForgeClassifications_t::FORGE_NORMAL_MONSTER;
+
+	health = mType->info.health * mType->getHealthMultiplier();
+	healthMax = mType->info.healthMax * mType->getHealthMultiplier();
+
+	removeIcon("forge");
+	g_game().updateCreatureIcon(static_self_cast<Monster>());
+	g_game().sendUpdateCreature(static_self_cast<Monster>());
+}
+
 bool Monster::canDropLoot() const {
 	return !mType->info.lootItems.empty();
 }

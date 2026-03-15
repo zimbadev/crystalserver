@@ -128,7 +128,9 @@ function lionsRockFountain.onUse(player, item, fromPosition, target, toPosition,
 		local iType = ItemType(rewards[reward])
 		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Something sparkles in the fountain's water. You draw out " .. iType:getArticle() .. " " .. iType:getName() .. ".")
 		player:getPosition():sendMagicEffect(CONST_ME_HOLYAREA)
-		player:addAchievement("Lion's Den Explorer")
+		if not player:hasAchievement("Lion's Den Explorer") then
+			player:addAchievement("Lion's Den Explorer")
+		end
 		item:transform(lionsRockSanctuaryRockId)
 		player:addItem(rewards[reward], 1)
 		player:setStorageValue(Storage.Quest.U10_70.LionsRock.Time, os.time() + 24 * 60 * 60)

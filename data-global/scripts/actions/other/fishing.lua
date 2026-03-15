@@ -7,6 +7,54 @@ local lootVeryRare1 = { 281, 12557 }
 local lootRare1 = { 3026, 12557 }
 local lootCommon1 = { 3035, 237, 12557 }
 
+local fishableWaterIds = {
+	4597,
+	4598,
+	4599,
+	4600,
+	4601,
+	4602,
+	629,
+	630,
+	631,
+	632,
+	633,
+	634,
+	21312,
+}
+
+local nonFishableWaterIds = {
+	4609,
+	4610,
+	4611,
+	4612,
+	4613,
+	4614,
+	4809,
+	4810,
+	4811,
+	4812,
+	4813,
+	4814,
+	21314,
+}
+
+local transformToNonFishable = {
+	[4597] = { to = 4609, decay = true },
+	[4598] = { to = 4610, decay = true },
+	[4599] = { to = 4611, decay = true },
+	[4600] = { to = 4612, decay = true },
+	[4601] = { to = 4613, decay = true },
+	[4602] = { to = 4614, decay = true },
+	[629] = { to = 4809, decay = true },
+	[630] = { to = 4810, decay = true },
+	[631] = { to = 4811, decay = true },
+	[632] = { to = 4812, decay = true },
+	[633] = { to = 4813, decay = true },
+	[634] = { to = 4814, decay = true },
+	[21312] = { to = 21314, decay = true },
+}
+
 local elementals = {
 	chances = {
 		{ from = 0, to = 500, itemId = 3026 }, -- white pearl
@@ -35,6 +83,12 @@ function fishing.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	end
 
 	local targetId = target.itemid
+
+	if table.contains(nonFishableWaterIds, targetId) then
+		toPosition:sendMagicEffect(CONST_ME_LOSEENERGY)
+		return true
+	end
+
 	if targetId == 9582 then
 		local owner = target:getAttribute(ITEM_ATTRIBUTE_CORPSEOWNER)
 		if owner ~= 0 and owner ~= player.uid then
@@ -94,7 +148,7 @@ function fishing.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 		end
 	end
 
-	if player:getItemCount(3492) > 0 then
+	if player:getItemCount(3492) > 0 and table.contains(fishableWaterIds, targetId) then
 		player:addSkillTries(SKILL_FISHING, 1, true)
 	end
 
@@ -130,6 +184,15 @@ function fishing.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 				return true
 			end
 		end
+
+		if transformToNonFishable[targetId] then
+			local transformInfo = transformToNonFishable[targetId]
+			target:transform(transformInfo.to)
+			if transformInfo.decay then
+				target:decay()
+			end
+		end
+
 		player:addItem(3578, 1)
 		player:addAchievementProgress("Here, Fishy Fishy!", 250)
 	end

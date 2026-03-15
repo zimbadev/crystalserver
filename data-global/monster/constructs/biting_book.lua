@@ -15,8 +15,8 @@ monster.outfit = {
 
 monster.raceId = 1656
 monster.Bestiary = {
-	class = "Construct",
-	race = BESTY_RACE_CONSTRUCT,
+	class = "Inkborn",
+	race = BESTY_RACE_INKBORN,
 	toKill = 2500,
 	FirstUnlock = 100,
 	SecondUnlock = 1000,

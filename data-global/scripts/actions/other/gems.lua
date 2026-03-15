@@ -39,7 +39,7 @@ local lionsRock = {
 		storage = Storage.Quest.U10_70.LionsRock.Questline,
 		value = 6,
 		item = 3030,
-		fieldId = 2123,
+		fieldId = 21462,
 		message = "You place the ruby on the small socket. A red flame begins to burn.",
 		effect = CONST_ME_MAGIC_RED,
 	},
@@ -59,7 +59,7 @@ local lionsRock = {
 		storage = Storage.Quest.U10_70.LionsRock.Questline,
 		value = 8,
 		item = 3033,
-		fieldId = 7465,
+		fieldId = 21464,
 		message = "You place the amethyst on the small socket. A violet flame begins to burn.",
 		effect = CONST_ME_PURPLESMOKE,
 	},
@@ -185,4 +185,5 @@ end
 for index, value in pairs(shrine) do
 	gems:id(index)
 end
+gems:id(9057)
 gems:register()

@@ -50,15 +50,47 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
--- Travel
+local function hasCheese(player)
+	return player:getItemCount(169) > 0
+end
+
 local function addTravelKeyword(keyword, cost, destination, condition)
 	if condition then
-		keywordHandler:addKeyword({ keyword }, StdModule.say, { npcHandler = npcHandler, text = "I'm sorry but I don't sail there." }, condition)
+		keywordHandler:addKeyword({ keyword }, StdModule.say, {
+			npcHandler = npcHandler,
+			text = "I'm sorry but I don't sail there.",
+		}, condition)
 	end
 
-	local travelKeyword = keywordHandler:addKeyword({ keyword }, StdModule.say, { npcHandler = npcHandler, text = "Do you seek a passage to " .. keyword:titleCase() .. " for |TRAVELCOST|?", cost = cost, discount = "postman" })
-	travelKeyword:addChildKeyword({ "yes" }, StdModule.travel, { npcHandler = npcHandler, premium = false, cost = cost, discount = "postman", destination = destination })
-	travelKeyword:addChildKeyword({ "no" }, StdModule.say, { npcHandler = npcHandler, text = "We would like to serve you some time.", reset = true })
+	local travelKeyword = keywordHandler:addKeyword({ keyword }, StdModule.say, {
+		npcHandler = npcHandler,
+		text = "Do you seek a passage to " .. keyword:titleCase() .. " for |TRAVELCOST|?",
+		cost = cost,
+		discount = "postman",
+	})
+
+	travelKeyword:addChildKeyword({ "yes" }, StdModule.say, {
+		npcHandler = npcHandler,
+		text = "Scarab cheese? You smell like dragon breath! Get off my boat at once!",
+		reset = true,
+	}, hasCheese)
+
+	travelKeyword:addChildKeyword({ "yes" }, StdModule.travel, {
+		npcHandler = npcHandler,
+		premium = false,
+		text = "Set the sails!",
+		cost = cost,
+		discount = "postman",
+		destination = destination,
+	}, function(player)
+		return not hasCheese(player)
+	end)
+
+	travelKeyword:addChildKeyword({ "no" }, StdModule.say, {
+		npcHandler = npcHandler,
+		text = "We would like to serve you some time.",
+		reset = true,
+	})
 end
 
 addTravelKeyword("edron", 160, Position(33175, 31764, 6))
@@ -70,10 +102,7 @@ addTravelKeyword("yalahar", 230, Position(32816, 31272, 6), function(player)
 	return player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.SearoutesAroundYalahar.Ankrahmun) ~= 1 and player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.SearoutesAroundYalahar.TownsCounter) < 5
 end)
 
--- Kick
 keywordHandler:addKeyword({ "kick" }, StdModule.kick, { npcHandler = npcHandler, destination = { Position(33082, 32879, 6), Position(33085, 32879, 6), Position(33085, 32881, 6) } })
-
--- Basic
 keywordHandler:addKeyword({ "name" }, StdModule.say, { npcHandler = npcHandler, text = "I'm known all over the world as Captain Sinbeard" })
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I'm the captain of this sailing ship" })
 keywordHandler:addKeyword({ "captain" }, StdModule.say, { npcHandler = npcHandler, text = "I'm the captain of this sailing ship" })
@@ -81,7 +110,6 @@ keywordHandler:addKeyword({ "ship" }, StdModule.say, { npcHandler = npcHandler, 
 keywordHandler:addKeyword({ "line" }, StdModule.say, { npcHandler = npcHandler, text = "My ship is the fastest in the whole world." })
 keywordHandler:addKeyword({ "company" }, StdModule.say, { npcHandler = npcHandler, text = "My ship is the fastest in the whole world." })
 keywordHandler:addKeyword({ "tibia" }, StdModule.say, { npcHandler = npcHandler, text = "My ship is the fastest in the whole world." })
-keywordHandler:addKeyword({ "god" }, StdModule.say, { npcHandler = npcHandler, text = "Where do you want to go? To {Darashia}, {Venore}, {Liberty Bay}, {Port Hope}, {Yalahar} or {Edron}? Or to {Travora} - the island between the worlds?" })
 keywordHandler:addKeyword({ "passanger" }, StdModule.say, { npcHandler = npcHandler, text = "We would like to welcome you on board." })
 keywordHandler:addKeyword({ "trip" }, StdModule.say, { npcHandler = npcHandler, text = "Where do you want to go? To {Darashia}, {Venore}, {Liberty Bay}, {Port Hope}, {Yalahar} or {Edron}? Or to {Travora} - the island between the worlds?" })
 keywordHandler:addKeyword({ "route" }, StdModule.say, { npcHandler = npcHandler, text = "Where do you want to go? To {Darashia}, {Venore}, {Liberty Bay}, {Port Hope}, {Yalahar} or {Edron}? Or to {Travora} - the island between the worlds?" })
@@ -98,7 +126,7 @@ keywordHandler:addKeyword({ "ankrahmun" }, StdModule.say, { npcHandler = npcHand
 npcHandler:setMessage(MESSAGE_GREET, "Welcome on board, Sir |PLAYERNAME|. Where can I {sail} you today?")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye. Recommend us if you were satisfied with our service.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Good bye then.")
+
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
 npcType:register(npcConfig)

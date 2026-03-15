@@ -129,6 +129,7 @@ npcConfig.shop = {
 	{ itemName = "robe of enlightenment", clientId = 50268, buy = 150000, sell = 150 },
 	{ itemName = "sai of enlightenment", clientId = 50272, buy = 100000, sell = 100 },
 	{ itemName = "harmony amulet", clientId = 50195, buy = 1000 },
+	{ itemName = "light jo staff", clientId = 50166, buy = 250 },
 	{ itemName = "jo staff", clientId = 50171, buy = 500 },
 	{ itemName = "plain monk robe", clientId = 50257, buy = 450 },
 }

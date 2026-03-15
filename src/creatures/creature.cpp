@@ -508,12 +508,22 @@ void Creature::onDeath() {
 	const auto &lastHitCreature = g_game().getCreatureByID(lastHitCreatureId);
 	std::shared_ptr<Creature> lastHitCreatureMaster;
 	if (lastHitCreature && getPlayer()) {
-		/**
-		 * @deprecated -- This is here to trigger the deprecated onKill events in lua
-		 */
-		lastHitCreature->deprecatedOnKilledCreature(getCreature(), true);
-		lastHitUnjustified = lastHitCreature->onKilledPlayer(getPlayer(), true);
-		lastHitCreatureMaster = lastHitCreature->getMaster();
+		std::shared_ptr<Player> killerPlayer = nullptr;
+
+		if (lastHitCreature->getPlayer()) {
+			killerPlayer = lastHitCreature->getPlayer();
+		} else if (lastHitCreature->isSummon() && lastHitCreature->getMaster() && lastHitCreature->getMaster()->getPlayer()) {
+			killerPlayer = lastHitCreature->getMaster()->getPlayer();
+		}
+
+		if (killerPlayer) {
+			/**
+			 * @deprecated -- This is here to trigger the deprecated onKill events in lua
+			 */
+			lastHitCreature->deprecatedOnKilledCreature(getCreature(), true);
+			lastHitUnjustified = killerPlayer->onKilledPlayer(getPlayer(), true);
+			lastHitCreatureMaster = lastHitCreature->getMaster();
+		}
 	} else {
 		lastHitCreatureMaster = nullptr;
 	}
@@ -579,7 +589,16 @@ void Creature::onDeath() {
 		if (const auto &monster = getMonster()) {
 			killer->onKilledMonster(monster);
 		} else if (const auto &player = getPlayer(); player && mostDamageCreature != killer) {
-			killer->onKilledPlayer(player, false);
+			std::shared_ptr<Player> killerPlayer = nullptr;
+			if (killer->getPlayer()) {
+				killerPlayer = killer;
+			} else if (killer->isSummon() && killer->getMaster() && killer->getMaster()->getPlayer()) {
+				killerPlayer = killer->getMaster()->getPlayer();
+			}
+
+			if (killerPlayer) {
+				killerPlayer->onKilledPlayer(player, false);
+			}
 		}
 	}
 

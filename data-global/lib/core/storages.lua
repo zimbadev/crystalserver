@@ -2589,7 +2589,7 @@ Storage = {
 				CorymRescued06 = 45985,
 				CorymRescued07 = 45986,
 				CorymRescued08 = 45987,
-				CorymRescueMission = 45988,
+				CorymCaveSpider = 45988,
 			},
 		},
 		U11_80 = { -- update 11.80 - Reserved Storages 46001 - 46300
@@ -2850,6 +2850,7 @@ Storage = {
 		U13_20 = { -- update 13.20 - Reserved Storages 47952 - 47970
 			RottenBlood = {
 				AccessDoor = 47952,
+				PutrefactoryTask = 47956,
 			},
 		},
 		U14_10 = { -- update 14.10 - Reserved Storages 47971 - 47975 reserved to 3 miniBosses (47976, 47977, 47978)

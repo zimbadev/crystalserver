@@ -50,15 +50,47 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
--- Travel
+local function hasCheese(player)
+	return player:getItemCount(169) > 0
+end
+
 local function addTravelKeyword(keyword, cost, destination, condition)
 	if condition then
-		keywordHandler:addKeyword({ keyword }, StdModule.say, { npcHandler = npcHandler, text = "I'm sorry but I don't sail there." }, condition)
+		keywordHandler:addKeyword({ keyword }, StdModule.say, {
+			npcHandler = npcHandler,
+			text = "I'm sorry but I don't sail there.",
+		}, condition)
 	end
 
-	local travelKeyword = keywordHandler:addKeyword({ keyword }, StdModule.say, { npcHandler = npcHandler, text = "Do you seek a passage to " .. keyword:titleCase() .. " for |TRAVELCOST|?", cost = cost, discount = "postman" })
-	travelKeyword:addChildKeyword({ "yes" }, StdModule.travel, { npcHandler = npcHandler, premium = false, cost = cost, discount = "postman", destination = destination })
-	travelKeyword:addChildKeyword({ "no" }, StdModule.say, { npcHandler = npcHandler, text = "We would like to serve you some time.", reset = true })
+	local travelKeyword = keywordHandler:addKeyword({ keyword }, StdModule.say, {
+		npcHandler = npcHandler,
+		text = "Do you seek a passage to " .. keyword:titleCase() .. " for |TRAVELCOST|?",
+		cost = cost,
+		discount = "postman",
+	})
+
+	travelKeyword:addChildKeyword({ "yes" }, StdModule.say, {
+		npcHandler = npcHandler,
+		text = "That cheese of yours stinks! Please leave!",
+		reset = true,
+	}, hasCheese)
+
+	travelKeyword:addChildKeyword({ "yes" }, StdModule.travel, {
+		npcHandler = npcHandler,
+		premium = false,
+		text = "Set the sails!",
+		cost = cost,
+		discount = "postman",
+		destination = destination,
+	}, function(player)
+		return not hasCheese(player)
+	end)
+
+	travelKeyword:addChildKeyword({ "no" }, StdModule.say, {
+		npcHandler = npcHandler,
+		text = "We would like to serve you some time.",
+		reset = true,
+	})
 end
 
 addTravelKeyword("venore", 180, Position(32954, 32022, 6))
@@ -72,10 +104,11 @@ addTravelKeyword("gray island", 160, Position(33196, 31984, 7))
 addTravelKeyword("krailos", 200, Position(33493, 31712, 6))
 addTravelKeyword("issavi", 130, Position(33902, 31462, 6))
 
--- Kick
-keywordHandler:addKeyword({ "kick" }, StdModule.kick, { npcHandler = npcHandler, destination = { Position(33288, 32474, 6), Position(33291, 32474, 6), Position(33293, 32471, 6) } })
+keywordHandler:addKeyword({ "kick" }, StdModule.kick, {
+	npcHandler = npcHandler,
+	destination = { Position(33288, 32474, 6), Position(33291, 32474, 6), Position(33293, 32471, 6) },
+})
 
--- Basic
 keywordHandler:addKeyword({ "sail" }, StdModule.say, { npcHandler = npcHandler, text = "My boat is ready to bring you to {Venore}, {Port Hope}, {Liberty Bay}, {Yalahar}, {Gray Island}, {Ankrahmun}, {Krailos} or {Issavi}. Or to {Travora} - a place between the worlds." })
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I am the captain of this ship." })
 keywordHandler:addKeyword({ "passage" }, StdModule.say, { npcHandler = npcHandler, text = "Where do you want to go - {Krailos}, {Venore}, {Port Hope}, {Liberty Bay}, {Ankrahmun}, {Yalahar} or {Gray Island}?" })
@@ -88,5 +121,4 @@ npcHandler:setMessage(MESSAGE_WALKAWAY, "Bye")
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
 npcType:register(npcConfig)
