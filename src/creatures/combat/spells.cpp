@@ -85,6 +85,11 @@ TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player,
 		return TALKACTION_CONTINUE;
 	}
 
+	if (instantSpell->getName() == "Find Person" && !player->canExiva(param)) {
+		player->sendTextMessage(MESSAGE_TRADE, "The character you are trying to find with Exiva is currently protected from your spell.");
+		return TALKACTION_FAILED;
+	}
+
 	if (instantSpell->playerCastInstant(player, param)) {
 		if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
 			words = instantSpell->getWords();

@@ -542,6 +542,12 @@ combatChainSkillFormulaWandsAndRods = 1.0
 emoteSpells = false
 spellNameInsteadOfWords = false
 
+-- Exiva Restrictions
+-- NOTE: exivaRestrictionsOnlyOptionalWorlds = true to enable exiva restrictions only on optional worlds
+-- NOTE: maxExivaWhitelist = maximum number of players that can be whitelisted for exiva
+exivaRestrictionsOnlyOptionalWorlds = true
+maxExivaWhitelist = 100
+
 -- Global server Save
 -- NOTE: globalServerSaveNotifyDuration in minutes
 globalServerSaveNotifyMessage = true

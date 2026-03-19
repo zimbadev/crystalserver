@@ -191,6 +191,9 @@ bool IOLoginData::loadPlayer(const std::shared_ptr<Player> &player, const DBResu
 		IOLoginDataLoad::loadPlayerInitializeSystem(player);
 		IOLoginDataLoad::loadPlayerUpdateSystem(player);
 
+		// Load exiva restrictions
+		IOLoginDataLoad::loadPlayerExivaRestrictions(player);
+
 		return true;
 	} catch (const std::system_error &error) {
 		g_logger().warn("[{}] Error while load player: {}", __FUNCTION__, error.what());

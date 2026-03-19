@@ -172,6 +172,8 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 		player->changeHealth(1);
 	}
 
+	savePlayerExivaRestrictions(player);
+
 	Database &db = Database::getInstance();
 
 	std::ostringstream query;
@@ -941,4 +943,35 @@ bool IOLoginDataSave::savePlayerMounts(const std::shared_ptr<Player> &player) {
 
 	player->setMountsModified(false);
 	return true;
+}
+
+void IOLoginDataSave::savePlayerExivaRestrictions(const std::shared_ptr<Player> &player) {
+	if (!player) {
+		return;
+	}
+
+	const auto &restrictions = player->getExivaRestrictions();
+
+	const auto &scope = player->kv()->scoped("exiva-restrictions");
+
+	scope->set("allowAll", restrictions.allowAll);
+	scope->set("allowOwnGuild", restrictions.allowOwnGuild);
+	scope->set("allowOwnParty", restrictions.allowOwnParty);
+	scope->set("allowVipList", restrictions.allowVipList);
+	scope->set("allowPlayerWhitelist", restrictions.allowPlayerWhitelist);
+	scope->set("allowGuildWhitelist", restrictions.allowGuildWhitelist);
+
+	ArrayType playerArrayWrapper;
+	for (const auto &playerGuid : restrictions.playerWhitelist) {
+		playerArrayWrapper.push_back(ValueWrapper(static_cast<int>(playerGuid)));
+	}
+
+	scope->set("playerWhitelist", ValueWrapper(playerArrayWrapper));
+
+	ArrayType guildArrayWrapper;
+	for (const auto &guildId : restrictions.guildWhitelist) {
+		guildArrayWrapper.push_back(ValueWrapper(static_cast<int>(guildId)));
+	}
+
+	scope->set("guildWhitelist", ValueWrapper(guildArrayWrapper));
 }
