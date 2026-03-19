@@ -10607,7 +10607,6 @@ void ProtocolGame::sendWeaponProficiencyInfo(const uint16_t itemId) {
 	}
 }
 
-
 void ProtocolGame::parseExivaRestrictions(NetworkMessage &msg) {
 	if (!player || (g_game().getWorldType() == WORLDTYPE_OPTIONAL && !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS))) {
 		return;
