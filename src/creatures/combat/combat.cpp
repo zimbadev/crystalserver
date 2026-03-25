@@ -78,22 +78,25 @@ static void applyImproveMonkAttackSpender(const std::shared_ptr<Player> &player,
 		return;
 	}
 
-	uint8_t baseHarmonyBonusPercent = 7; // 7, 14, 28, 56, 112
+	// Flat base curve by harmony points: 1->8, 2->16, 3->26, 4->38, 5->52
+	static constexpr uint8_t baseByHarmony[] = {0, 8, 16, 26, 38, 52};
 
+	uint8_t virtueBonus = 0;
 	if (player->getVirtue() == VIRTUE_HARMONY) {
-		baseHarmonyBonusPercent += (player->isSerene() ? 6 : 3);
+		virtueBonus = player->isSerene() ? 6 : 3;
 	}
 
+	uint8_t asceticBonus = 0;
 	const uint8_t stage = player->wheel()->getStage(WheelStage_t::ASCETIC);
 	if (stage >= 3) {
-		baseHarmonyBonusPercent += 3;
+		asceticBonus = 3;
 	} else if (stage >= 2) {
-		baseHarmonyBonusPercent += 2;
+		asceticBonus = 2;
 	} else if (stage >= 1) {
-		baseHarmonyBonusPercent += 1;
+		asceticBonus = 1;
 	}
 
-	const int32_t totalBonusPercent = static_cast<int32_t>(baseHarmonyBonusPercent * (1 << (harmonyPoints - 1)));
+	const int32_t totalBonusPercent = static_cast<int32_t>(baseByHarmony[harmonyPoints] + virtueBonus + asceticBonus);
 
 	const float multiplier = 1.0f + (totalBonusPercent / 100.0f);
 	damage.primary.value = static_cast<int32_t>(damage.primary.value * multiplier);

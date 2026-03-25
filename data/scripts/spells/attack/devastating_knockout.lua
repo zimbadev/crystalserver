@@ -13,9 +13,9 @@ combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_TIGERCLASH)
 
 function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 62
+	local basePower = 70
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
-	local spellFactor = 1.0
+	local spellFactor = 1.1
 	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
 	return -total * 0.9, -total * 1.1
 end

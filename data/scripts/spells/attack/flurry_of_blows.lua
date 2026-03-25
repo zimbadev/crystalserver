@@ -24,9 +24,9 @@ combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_FLURRYOFBLOWS)
 combatEarth:setArea(createCombatArea(AREA_WAVE))
 
 function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 55
+	local basePower = 60
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
-	local spellFactor = 0.6
+	local spellFactor = 0.7
 	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
 	return -total * 0.9, -total * 1.1
 end

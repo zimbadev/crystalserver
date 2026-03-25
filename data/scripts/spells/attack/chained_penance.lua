@@ -110,7 +110,7 @@ local config = {
 }
 
 local function onGetFormulaValues(player, weaponDamage)
-	local basePower = 70
+	local basePower = 78
 
 	--[[
 	local helmetItem = player:getSlotItem(CONST_SLOT_HEAD)
@@ -123,7 +123,7 @@ local function onGetFormulaValues(player, weaponDamage)
 	local skill = player:getSkillLevel(SKILL_FIRST)
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 
-	local spellFactor = 2.0
+	local spellFactor = 2.15
 	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
 
 	local minDamage = -total * 0.9

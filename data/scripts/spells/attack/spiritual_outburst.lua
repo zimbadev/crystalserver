@@ -103,12 +103,12 @@ local config = {
 }
 
 local function onGetFormulaValues(player, weaponDamage)
-	local basePower = 42
+	local basePower = 45
 
 	local skill = player:getSkillLevel(SKILL_FIRST)
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 
-	local spellFactor = 2.5
+	local spellFactor = 2.65
 	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
 
 	local minDamage = -total * 0.9
