@@ -42,6 +42,7 @@
 #include "items/containers/rewards/rewardchest.hpp"
 #include "creatures/players/player.hpp"
 #include "utils/tools.hpp"
+#include "kv/kv.hpp"
 
 void IOLoginDataLoad::loadItems(ItemsMap &itemsMap, const DBResult_ptr &result, const std::shared_ptr<Player> &player) {
 	try {
