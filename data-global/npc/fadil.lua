@@ -51,6 +51,7 @@ npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 npcConfig.shop = {
 	{ itemName = "collar of blue plasma", clientId = 23542, sell = 6000 },
 	{ itemName = "collar of green plasma", clientId = 23543, sell = 6000 },
+	{ itemName = "collar of orange plasma", clientId = 50152, sell = 6000 },
 	{ itemName = "collar of red plasma", clientId = 23544, sell = 6000 },
 	{ itemName = "condensed energy", clientId = 23501, sell = 260 },
 	{ itemName = "crystal bone", clientId = 23521, sell = 250 },
@@ -69,6 +70,7 @@ npcConfig.shop = {
 	{ itemName = "plasmatic lightning", clientId = 23520, sell = 270 },
 	{ itemName = "ring of blue plasma", clientId = 23529, sell = 8000 },
 	{ itemName = "ring of green plasma", clientId = 23531, sell = 8000 },
+	{ itemName = "ring of orange plasma", clientId = 50150, sell = 8000 },
 	{ itemName = "ring of red plasma", clientId = 23533, sell = 8000 },
 	{ itemName = "single human eye", clientId = 25701, sell = 1000 },
 	{ itemName = "small energy ball", clientId = 23524, sell = 250 },
