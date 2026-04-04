@@ -268,7 +268,7 @@ local config = {
 			chance = 6000,
 			newItem = 6017,
 			after = 4302,
-		}, -- rabbit, after being killed		
+		}, -- rabbit, after being killed
 		[10426] = {
 			{
 				chance = 530,
