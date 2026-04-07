@@ -30,4 +30,5 @@ spell:level(20)
 spell:mana(70)
 spell:isSelfTarget(true)
 spell:isAggressive(false)
+
 spell:register()

@@ -179,6 +179,7 @@ taskHuntingFreeRerollTime = 20 * 60 * 60
 -- NOTE: forgeInfluencedLimit, limit of influenced monsters that will be created in interval type and time
 -- NOTE: forgeFiendishLimit, limit of diabolic monsters that will be created in interval type and time, less than forgeInfluencedLimit
 -- NOTE: forgeFiendishIntervalType: "hour", "minute" or "second"
+-- NOTE forgeInfluencedIntervalTime and forgeInfluencedIntervalType: time and type of interval to limit the influenced monsters, for example, if you set forgeInfluencedIntervalTime to 1 and forgeInfluencedIntervalType to "hour", only 1 influenced monster will be created per hour, if the limit is reached, no more influenced monsters will be created until the next hour.
 forgeMaxItemTier = 10
 forgeCostOneSliver = 20
 forgeSliverAmount = 3
@@ -198,6 +199,8 @@ forgeInfluencedLimit = 300
 forgeFiendishLimit = 4
 forgeFiendishIntervalType = "hour"
 forgeFiendishIntervalTime = "1"
+forgeInfluencedIntervalType = "minute"
+forgeInfluencedIntervalTime = "30"
 
 ruseChanceFormulaA = 0.0307576
 ruseChanceFormulaB = 0.440697
@@ -282,12 +285,14 @@ familiarTime = 30
 
 -- Party
 -- NOTE: partyShareRangeMultiplier: the range of the party share experience, default 3/2 (1.5)
+-- NOTE: advancedPartyProtection will nullfy the damage along your party members and their summons
 leavePartyOnDeath = false
 partyAutoShareExperience = true
 partyShareRangeMultiplier = 1.5
 partyShareLootBoosts = false
 partyShareLootBoostsDimishingFactor = 0.7
 experienceShareActivity = 2 * 60 * 1000
+advancedPartyProtection = false
 
 -- Tibiadrome concoctions
 tibiadromeConcoctionCooldown = 24 * 60 * 60 -- 24 hours
@@ -311,6 +316,10 @@ onlyPremiumAccount = false
 -- NOTE: startStreakLevel will make a reward streak level for new players who never logged in
 -- NOTE: if showLootsInBestiary is true, will cause all loots to be shown in the bestiary even if the player has not reached the required number of kills
 -- NOTE: minTownIdToBankTransferFromMain blocks towns less than defined from receiving money transfers
+-- NOTE: allowLureCreatures if true monsters can be lured far from spawn, if false they will despawn
+-- NOTE: blockRespawn if true players block monster respawns on their spot
+-- NOTE: enableOfflineTraining if false will disable offline training from beds only, set false at skill_trainer.lua if you want to completly disable the system
+-- NOTE: walkThroughPlayers if true players can pass through other players, if false they cannot, set allowWalkthrough same as you do here to avoid override or bug
 autoLoot = false
 autoBank = false
 toggleGoldPouchAllowAnything = false
@@ -327,6 +336,10 @@ enablePlayerPutItemInAmmoSlot = false
 startStreakLevel = 0
 showLootsInBestiary = false
 minTownIdToBankTransferFromMain = 4
+allowLureCreatures = false
+blockRespawn = false
+enableOfflineTraining = true
+walkThroughPlayers = true
 
 -- Stash
 -- NOTE: stashMoving = true, stow an container inside your stash
@@ -462,6 +475,7 @@ toggleMapCustom = false
 -- Market
 -- NOTE: marketRefreshPricesInterval (in minutes, minimum is 1 minute)
 -- NOTE: set it to 0 for disable, is the time in which the task will run updating the prices of the items that will be sent to the client
+enableMarket = true
 marketOfferDuration = 30 * 24 * 60 * 60
 marketRefreshPricesInterval = 30
 premiumToCreateMarketOffer = true
@@ -534,8 +548,15 @@ combatChainSkillFormulaMissile = 0.9
 combatChainSkillFormulaWandsAndRods = 1.0
 
 -- Spells
+toggleLearnSpells = true
 emoteSpells = false
 spellNameInsteadOfWords = false
+
+-- Exiva Restrictions
+-- NOTE: exivaRestrictionsOnlyOptionalWorlds = true to enable exiva restrictions only on optional worlds
+-- NOTE: maxExivaWhitelist = maximum number of players that can be whitelisted for exiva
+exivaRestrictionsOnlyOptionalWorlds = true
+maxExivaWhitelist = 100
 
 -- Global server Save
 -- NOTE: globalServerSaveNotifyDuration in minutes

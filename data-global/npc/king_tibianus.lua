@@ -182,7 +182,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		npcHandler:setTopic(playerId, 5) -- alterando o tópico para que no próximo YES ele faça a boots
 	else
 		if player:getStorageValue(TheNewFrontier.Questline) == 14 and player:getStorageValue(TheNewFrontier.Mission05.KingTibianus) == 1 then
-			npcHandler:say("Wrong Word.", npc, creature)
+			npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
 			player:setStorageValue(TheNewFrontier.Mission05.KingTibianus, 2)
 		end
 	end

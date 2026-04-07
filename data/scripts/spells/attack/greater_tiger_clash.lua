@@ -64,7 +64,7 @@ spell:isPremium(true)
 spell:needTarget(true)
 spell:blockWalls(true)
 spell:needWeapon(false)
-spell:needLearn(false)
+
 spell:cooldown(8 * 1000)
 spell:groupCooldown(2 * 1000)
 spell:vocation("monk;true", "exalted monk;true")

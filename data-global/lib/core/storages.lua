@@ -1191,6 +1191,28 @@ Storage = {
 				Mission03 = 41910,
 				Mission04 = 41911,
 				VengothAccess = 41912,
+				Mission05 = 41913,
+				Mission06 = 41914,
+				Mission07 = 41915,
+				Mission08 = 41916,
+				Mission09 = 41917,
+				Mission10 = 41918,
+				CastleEntranceSTG = 41919,
+				CastleBook = 41920,
+				BloodCrystalDoor = 41921,
+				CastleHiddenEntrance = 41922,
+				LibraryDoor = 41923,
+				BorethDoor = 41924,
+				BorethDead = 41925,
+				LersatioDoor = 41926,
+				LersatioDead = 41927,
+				Arthei_Marziel_Door = 41928,
+				MarzielDead = 41929,
+				ArtheiDoor = 41930,
+				ArtheiDead = 41931,
+				DiarySTG = 41932,
+				MapMarks_CastleEntrance = 41933,
+				MapMarks = 41934,
 			},
 			InServiceOfYalahar = {
 				TheWayToYalahar = 41950,
@@ -2335,6 +2357,7 @@ Storage = {
 				DiamondServant = 45508,
 				AstralPowerCounter = 45509,
 				AstralGlyph = 45510,
+				ForbiddenFruit = 193226,
 			},
 		},
 		U11_40 = { -- update 11.40 - Reserved Storages 45651 - 45850
@@ -2589,7 +2612,7 @@ Storage = {
 				CorymRescued06 = 45985,
 				CorymRescued07 = 45986,
 				CorymRescued08 = 45987,
-				CorymRescueMission = 45988,
+				CorymCaveSpider = 45988,
 			},
 		},
 		U11_80 = { -- update 11.80 - Reserved Storages 46001 - 46300
@@ -2850,6 +2873,7 @@ Storage = {
 		U13_20 = { -- update 13.20 - Reserved Storages 47952 - 47970
 			RottenBlood = {
 				AccessDoor = 47952,
+				PutrefactoryTask = 47956,
 			},
 		},
 		U14_10 = { -- update 14.10 - Reserved Storages 47971 - 47975 reserved to 3 miniBosses (47976, 47977, 47978)

@@ -53,7 +53,7 @@ spell:words("uteta tio")
 spell:level(150)
 spell:mana(110)
 spell:isPremium(false)
-spell:needLearn(false)
+
 spell:groupCooldown(2 * 1000)
 spell:cooldown(2 * 1000)
 spell:hasPlayerNameParam(true)

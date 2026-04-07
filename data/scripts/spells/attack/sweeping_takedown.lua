@@ -110,7 +110,7 @@ spell:level(60)
 spell:mana(195)
 spell:isPremium(true)
 spell:blockWalls(true)
-spell:needLearn(false)
+
 spell:needDirection(true)
 spell:harmony(true)
 spell:groupCooldown(2 * 1000)

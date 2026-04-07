@@ -184,7 +184,7 @@ spell:level(300)
 spell:mana(425)
 spell:harmony(true)
 spell:isPremium(true)
-spell:needLearn(false)
+
 spell:groupCooldown(2 * 1000)
 spell:cooldown(60 * 1000)
 spell:vocation("monk;true", "exalted monk;true")

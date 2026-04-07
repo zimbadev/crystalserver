@@ -102,7 +102,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		end
 	else
 		if player:getStorageValue(TheNewFrontier.Questline) == 14 and player:getStorageValue(TheNewFrontier.Mission05.Leeland) == 1 then
-			npcHandler:say("Wrong Word.", npc, creature)
+			npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
 			player:setStorageValue(TheNewFrontier.Mission05.Leeland, 2)
 		end
 	end

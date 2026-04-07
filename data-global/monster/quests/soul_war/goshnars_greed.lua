@@ -89,6 +89,7 @@ monster.loot = {
 	{ name = "dragon figurine", chance = 10000, maxCount = 1 },
 	{ name = "bullseye potion", chance = 15000, minCount = 10, maxCount = 25 },
 	{ name = "mastermind potion", chance = 15000, minCount = 10, maxCount = 25 },
+	{ id = 49271, chance = 15000, minCount = 0, maxCount = 20 }, -- transcendence potion
 	{ name = "berserk potion", chance = 15000, minCount = 10, maxCount = 25 },
 	{ name = "ultimate mana potion", chance = 18000, minCount = 50, maxCount = 100 },
 	{ name = "supreme health potion", chance = 18000, minCount = 50, maxCount = 100 },
@@ -96,7 +97,7 @@ monster.loot = {
 	{ name = "greed's arm", chance = 25000, maxCount = 1 },
 	{ name = "figurine of greed", chance = 400 },
 	{ name = "the skull of a beast", chance = 400 },
-	{ name = "bag you desire", chance = 100 },
+	{ name = "bag you desire", chance = 50 },
 }
 
 monster.attacks = {
@@ -137,25 +138,39 @@ monster.immunities = {
 local immuneTimeCount = 0
 local isImmune = nil
 local createdSoulSphere = nil
+
 mType.onThink = function(monsterCallback, interval)
-	if GreedbeastKills >= 5 and isImmune == nil then
-		isImmune = monsterCallback:immune(false)
+	if SoulSphereKills >= 1 then
+		SoulSphereKills = 0
+		if createdSoulSphere then
+			createdSoulSphere:remove()
+			createdSoulSphere = nil
+		end
+		monsterCallback:immune(false)
+		monsterCallback:teleportTo(Position(33746, 31666, 14))
+		monsterCallback:setSpeed(monster.speed)
+		isImmune = nil
+		immuneTimeCount = 0
+	end
+
+	if GreedbeastKills >= 5 then
+		GreedbeastKills = 0
+		isImmune = monsterCallback:immune(true)
 		monsterCallback:teleportTo(Position(33741, 31659, 14))
 		monsterCallback:setSpeed(0)
 		createdSoulSphere = Game.createMonster("Soul Sphere", Position(33752, 31659, 14), true, true)
 	end
 	if isImmune ~= nil then
 		immuneTimeCount = immuneTimeCount + interval
-		logger.info("Immune time count {}", immuneTimeCount)
-		if immuneTimeCount >= 45000 then
-			monsterCallback:immune(true)
-			monsterCallback:setSpeed(monster.speed)
-			monsterCallback:teleportTo(Position(33746, 31666, 14))
-			immuneTimeCount = 0
-			GreedbeastKills = 0
-			isImmune = nil
-			if createdSoulSphere then
+		if createdSoulSphere then
+			if immuneTimeCount >= 34000 then
 				createdSoulSphere:remove()
+				createdSoulSphere = nil
+				monsterCallback:immune(false)
+				monsterCallback:teleportTo(Position(33746, 31666, 14))
+				monsterCallback:setSpeed(monster.speed)
+				isImmune = nil
+				immuneTimeCount = 0
 			end
 		end
 	end
@@ -170,12 +185,14 @@ mType.onSpawn = function(monster)
 	monster:immune(true)
 	immuneTimeCount = 0
 	GreedbeastKills = 0
+	SoulSphereKills = 0
 end
 
 mType.onDisappear = function(monster, creature)
 	if creature:getName() == "Greedbeast" then
 		logger.debug("GreedbeastKills {}", GreedbeastKills)
 	end
+
 	if creature:getName() == "Goshnar's Greed" then
 		logger.debug("Killed goshnar's greed")
 		if createdSoulSphere then

@@ -74,7 +74,7 @@ spell:level(90)
 spell:mana(300)
 spell:isPremium(true)
 spell:blockWalls(true)
-spell:needLearn(false)
+
 spell:needDirection(true)
 spell:cooldown(10 * 1000)
 spell:groupCooldown(2 * 1000)

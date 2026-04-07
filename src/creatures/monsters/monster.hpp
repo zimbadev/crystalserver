@@ -219,6 +219,7 @@ public:
 	std::shared_ptr<MonsterType> getMonsterType() const;
 
 	void clearFiendishStatus();
+	void clearInfluencedStatus();
 	bool canDropLoot() const;
 
 	bool isImmune(ConditionType_t conditionType) const override;

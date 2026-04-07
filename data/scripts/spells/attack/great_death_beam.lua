@@ -48,6 +48,6 @@ spell:needDirection(true)
 spell:blockWalls(true)
 spell:cooldown(10 * 1000)
 spell:groupCooldown(2 * 1000, 6 * 1000)
-spell:needLearn(true)
+
 spell:vocation("sorcerer;true", "master sorcerer;true")
 spell:register()

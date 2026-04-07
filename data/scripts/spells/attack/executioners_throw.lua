@@ -60,6 +60,6 @@ spell:blockWalls(true)
 spell:needWeapon(true)
 spell:cooldown(18 * 1000)
 spell:groupCooldown(2 * 1000)
-spell:needLearn(true)
+
 spell:vocation("knight;true", "elite knight;true")
 spell:register()

@@ -114,7 +114,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			end
 		elseif npcHandler:getTopic(playerId) == 4 then
 			npcHandler:say("Here you have it.", npc, creature)
-			player:addItem(4845, 1) -----
+			player:addItem(4845, 1)
 			player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.JoiningTheExplorers, 4)
 			player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.QuestLine, 4)
 			npcHandler:setTopic(playerId, 0)
@@ -122,7 +122,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			if player:getMoney() + player:getBankBalance() >= 250 and player:getItemCount(5880) >= 3 then
 				if player:removeMoneyBank(250) and player:removeItem(5880, 3) then
 					npcHandler:say("Ah, that's how me like me customers. Ok, me do this... <pling pling> ... another fine swing of the hammer here and there... <ploing>... here you have it!", npc, creature)
-					player:addItem(7385, 1)
+					player:addItem(860, 1)
 					player:setStorageValue(Storage.Quest.U8_1.TheTravellingTrader.Mission05, 2)
 					npcHandler:setTopic(playerId, 0)
 				end

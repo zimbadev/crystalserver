@@ -306,7 +306,13 @@ ReturnValue Actions::internalUseItem(const std::shared_ptr<Player> &player, cons
 
 		if (bed->trySleep(player)) {
 			player->setBedItem(bed);
-			g_game().sendOfflineTrainingDialog(player);
+
+			if (g_configManager().getBoolean(ENABLE_OFFLINE_TRAINING)) {
+				g_game().sendOfflineTrainingDialog(player);
+			} else {
+				bed->sleep(player);
+				player->setBedItem(nullptr);
+			}
 		}
 
 		return RETURNVALUE_NOERROR;

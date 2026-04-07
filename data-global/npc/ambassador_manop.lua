@@ -31,6 +31,41 @@ npcConfig.voices = {
 local keywordHandler = KeywordHandler:new()
 local npcHandler = NpcHandler:new(keywordHandler)
 
+local node1 = keywordHandler:addKeyword({ "magic patch" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {magic patch} magic spell for free?" })
+node1:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "magic patch", vocation = { 1, 2, 3, 5, 6, 7, 9, 10 }, price = 0, level = 1 })
+
+local node2 = keywordHandler:addKeyword({ "light healing" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {light healing} magic spell for free?" })
+node2:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "light healing", vocation = { 1, 2, 3, 5, 6, 7, 9, 10 }, price = 0, level = 8 })
+
+local node3 = keywordHandler:addKeyword({ "find person" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {find person} magic spell for 80 gold?" })
+node3:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "find person", vocation = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, price = 80, level = 8 })
+
+local node4 = keywordHandler:addKeyword({ "magic rope" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {magic rope} magic spell for 200 gold?" })
+node4:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "magic rope", vocation = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, price = 200, level = 9 })
+
+local node5 = keywordHandler:addKeyword({ "cure poison" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {cure poison} magic spell for 150 gold?" })
+node5:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "cure poison", vocation = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, price = 150, level = 10 })
+
+local node6 = keywordHandler:addKeyword({ "great light" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {great light} magic spell for 500 gold?" })
+node6:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "great light", vocation = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, price = 500, level = 13 })
+
+local node7 = keywordHandler:addKeyword({ "light" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {light} magic spell for free?" })
+node7:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "light", vocation = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, price = 0, level = 8 })
+
+local node8 = keywordHandler:addKeyword({ "double jab" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {double jab} magic spell for 1000 gold?" })
+node8:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "double jab", vocation = { 9, 10 }, price = 1000, level = 14 })
+
+local node9 = keywordHandler:addKeyword({ "haste" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {haste} magic spell for 600 gold?" })
+node9:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "haste", vocation = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, price = 600, level = 14 })
+
+local node10 = keywordHandler:addKeyword({ "levitate" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {levitate} magic spell for 500 gold?" })
+node10:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "levitate", vocation = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, price = 500, level = 12 })
+
+keywordHandler:addKeyword({ "healing" }, StdModule.say, { npcHandler = npcHandler, text = "In this category I have '{magic patch}', '{light healing}' and '{cure poison}'." })
+keywordHandler:addKeyword({ "support" }, StdModule.say, { npcHandler = npcHandler, text = "In this category I have '{find person}', '{magic rope}', '{levitate}', '{light}', '{great light}' and '{haste}'." })
+keywordHandler:addKeyword({ "attack" }, StdModule.say, { npcHandler = npcHandler, text = "In this category I have '{double jab}'." })
+keywordHandler:addKeyword({ "spell" }, StdModule.say, { npcHandler = npcHandler, text = "I can teach you {healing spells}, {support spells} and {attack spells}. What kind of spell do you wish to learn?" })
+
 local MONK_QUEST = "the_way_of_the_monk_quest"
 
 local function hasAllShrines(player)
@@ -71,12 +106,12 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 	if msg == "job" then
 		npcHandler:say({
 			"I am a {Merudri} ambassador. Sent from the heart of the {Blue Valley} I am stationed here to {guide} seekers on our path and {pilgrimage}.",
-			"I have introduced myself as a guide: take my advice or choose a different path, you have every choice and every choice is yours.",
+			"I have introduced myself as a guide: take my advice or choose a different path, you have every choice and every choice is yours. I can also provide assistance with magic {spells} for monks.",
 		}, npc, creature)
 		return true
 	end
 
-	if msg == "merudri" then
+	if msg == "legacy" then
 		npcHandler:say("We are Merudri, warrior monks. Honing serenity, preserving our legacy, defending the {Blue Valley} and beyond.", npc, creature)
 		return true
 	end
@@ -112,7 +147,7 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 	end
 
 	if msg == "enpa" then
-		npcHandler:say("Our Enpa is guiding us, a keeper of our legacy and spirituality. You will meet Enpa Rudra once you take on the pilgrimage.", npc, creature)
+		npcHandler:say("Our Enpa is guiding us, a keeper of our {legacy} and spirituality. You will meet Enpa Rudra once you take on the pilgrimage.", npc, creature)
 		return true
 	end
 
@@ -121,7 +156,7 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 		return true
 	end
 
-	if msg == "invitation" and npcHandler:getTopic(playerId) == 1 then
+	if msg == "invitation" or msg == "merudri" and npcHandler:getTopic(playerId) == 1 then
 		npcHandler:say("Your path has led you to an ambassador of the Merudri. I am Manop and will do my best to explain you our {purpose}, legacy and role in it. Shall I continue?", npc, creature)
 		npcHandler:setTopic(playerId, 2)
 		return true
@@ -191,5 +226,7 @@ end
 npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
+
+npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 npcType:register(npcConfig)

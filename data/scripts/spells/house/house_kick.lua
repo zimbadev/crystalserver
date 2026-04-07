@@ -40,6 +40,11 @@ end
 
 spell:name("House Kick")
 spell:words("alana sio")
+spell:group("support")
+spell:vocation("druid;true", "elder druid;true", "knight;true", "elite knight;true", "paladin;true", "royal paladin;true", "sorcerer;true", "master sorcerer;true", "monk;true", "exalted monk;true")
+spell:level(8)
+spell:cooldown(2 * 1000)
+spell:groupCooldown(2 * 1000)
 spell:hasParams(true)
 spell:hasPlayerNameParam(true)
 spell:isAggressive(false)

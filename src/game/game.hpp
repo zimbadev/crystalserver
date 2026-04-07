@@ -691,12 +691,18 @@ public:
 	bool removeInfluencedMonster(uint32_t id, bool create = false);
 	bool removeFiendishMonster(uint32_t id, bool create = true);
 	void updateFiendishMonsterStatus(uint32_t monsterId, const std::string &monsterName);
+	void updateInfluencedMonsterStatus(uint32_t monsterId, const std::string &monsterName);
 	void createFiendishMonsters();
-	void createInfluencedMonsters();
+	void createInfluencedMonsters(bool scheduleEvent = true);
 	void updateForgeableMonsters();
 	void checkForgeEventId(uint32_t monsterId);
 	uint32_t makeFiendishMonster(uint32_t forgeableMonsterId = 0, bool createForgeableMonsters = false);
 	uint32_t makeInfluencedMonster();
+	void batchRefreshInfluencedMonsters();
+	void scheduleInfluencedMonstersUpdate();
+
+	uint32_t getFiendishLimit() const;
+	uint32_t getInfluencedLimit() const;
 
 	bool addInfluencedMonster(const std::shared_ptr<Monster> &monster);
 	void sendUpdateCreature(const std::shared_ptr<Creature> &creature);
@@ -790,6 +796,7 @@ private:
 	std::map<uint32_t, int32_t> forgeMonsterEventIds;
 	std::unordered_set<uint32_t> fiendishMonsters;
 	std::unordered_set<uint32_t> influencedMonsters;
+	uint64_t influencedMonstersEventId = 0;
 
 	bool playerSaySpell(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &text, uint16_t channelId);
 	void playerWhisper(const std::shared_ptr<Player> &player, const std::string &text);

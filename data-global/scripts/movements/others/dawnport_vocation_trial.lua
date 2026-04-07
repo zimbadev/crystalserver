@@ -3,6 +3,26 @@ local tutorialEffects = {
 	CONST_ME_TUTORIALSQUARE,
 }
 
+local vocationSpells = {
+	[VOCATION.ID.SORCERER] = { "Magic Patch", "Buzz", "Scorch" },
+	[VOCATION.ID.DRUID] = { "Magic Patch", "Chill Out", "Mud Attack" },
+	[VOCATION.ID.PALADIN] = { "Magic Patch", "Arrow Call", "Lesser Ethereal Spear" },
+	[VOCATION.ID.KNIGHT] = { "Bruise Bane", "Lesser Front Sweep" },
+	[VOCATION.ID.MONK] = { "Magic Patch", "Swift Jab", "Tiger Clash" },
+}
+
+local dawnportSpells = {
+	"Magic Patch",
+	"Buzz",
+	"Scorch",
+	"Chill Out",
+	"Mud Attack",
+	"Arrow Call",
+	"Bruise Bane",
+	"Swift Jab",
+	"Tiger Clash",
+}
+
 local vocationTrials = {
 	-- Sorcerer trial
 	[25005] = {
@@ -276,6 +296,27 @@ local function setOutfit(player, outfit)
 	})
 end
 
+local function forgetDawnportSpells(player)
+	for i = 1, #dawnportSpells do
+		local spellName = dawnportSpells[i]
+		if player:hasLearnedSpell(spellName) then
+			player:forgetSpell(spellName)
+		end
+	end
+end
+
+local function learnVocationSpells(player, vocationId)
+	local spells = vocationSpells[vocationId]
+	if spells then
+		for i = 1, #spells do
+			local spellName = spells[i]
+			if not player:hasLearnedSpell(spellName) then
+				player:learnSpell(spellName)
+			end
+		end
+	end
+end
+
 -- Dawnport trial tiles step event
 local dawnportVocationTrial = MoveEvent()
 
@@ -295,8 +336,12 @@ function dawnportVocationTrial.onStepIn(creature, item, position, fromPosition)
 		end
 		-- On step in the tile
 		tileStep(player, trial)
+		-- Forget spells
+		forgetDawnportSpells(player)
 		-- Change to new vocation, convert magic level and skills and set proper stats
 		player:changeVocation(trial.vocation.id)
+		-- Learn spells by vocation
+		learnVocationSpells(player, trial.vocation.id)
 		-- Remove vocation trial equipment items
 		removeItems(player)
 		-- Add player item

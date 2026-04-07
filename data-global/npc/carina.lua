@@ -60,7 +60,7 @@ local function creatureSayCallback(npc, creature, type, message)
 
 	if MsgContains(message, "precious necklace") then
 		if player:getItemCount(7940) > 0 then
-			npcHandler:say("Would you like to buy my precious necklace for 5000 gold?", npc, creature)
+			npcHandler:say("Oh, so you want to buy that rare and precious necklace for 5000 gold?", npc, creature)
 			npcHandler:setTopic(playerId, 1)
 		end
 	elseif MsgContains(message, "mouse") then
@@ -71,7 +71,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			if player:removeMoneyBank(5000) then
 				player:removeItem(7940, 1)
 				player:addItem(7939, 1)
-				npcHandler:say("Here you go kind sir.", npc, creature)
+				npcHandler:say("Here it is. A friend of mine will be quite sad about that sale but business is business.", npc, creature)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 2 then

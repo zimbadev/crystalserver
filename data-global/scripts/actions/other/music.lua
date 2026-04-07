@@ -15,7 +15,7 @@ local MusicEffect = {
 	[2963] = CONST_ME_SOUND_BLUE, --Harp
 	[2964] = CONST_ME_SOUND_BLUE, --Harp
 	[3219] = CONST_ME_SOUND_GREEN, --Waldo's Post Horn
-	[3252] = CONST_ME_SOUND_GREEN, --Post Horn
+	[2957] = CONST_ME_SOUND_GREEN, --Post Horn
 	-- non movable instruments
 	[3255] = CONST_ME_SOUND_GREEN, --Drum
 	[3256] = CONST_ME_SOUND_GREEN, --Simple Fanfare

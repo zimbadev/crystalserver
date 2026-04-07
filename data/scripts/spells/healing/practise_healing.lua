@@ -17,7 +17,7 @@ function spell.onCastSpell(creature, variant)
 	return combat:execute(creature, variant)
 end
 
-spell:name("Practice Healing")
+spell:name("Practise Healing")
 spell:words("exura dis")
 spell:group("healing")
 spell:vocation("none")
@@ -29,5 +29,5 @@ spell:level(1)
 spell:mana(5)
 spell:isSelfTarget(true)
 spell:isAggressive(false)
-spell:needLearn(false)
+
 spell:register()

@@ -78,6 +78,7 @@
 #include "creatures/players/wheel/wheel_definitions.hpp"
 #include "creatures/players/proficiencies/proficiencies.hpp"
 #include "creatures/players/proficiencies/proficiencies_definitions.hpp"
+#include "utils/tools.hpp"
 
 MuteCountMap Player::muteCountMap;
 
@@ -6866,7 +6867,11 @@ void Player::setSpecialMenuAvailable(bool stashBool, bool marketMenuBool, bool d
 	// Menu option 'show in market'
 	// Menu option to open depot search
 	stashMenuAvailable = stashBool;
-	marketMenu = marketMenuBool;
+	if (g_configManager().getBoolean(ENABLE_MARKET)) {
+		marketMenu = marketMenuBool;
+	} else {
+		marketMenu = false;
+	}
 	depotSearch = depotSearchBool;
 	if (client) {
 		client->sendSpecialContainersAvailable();
@@ -8962,6 +8967,12 @@ void Player::sendRemoveContainerItem(const std::shared_ptr<Container> &container
 void Player::sendContainer(uint8_t cid, const std::shared_ptr<Container> &container, bool hasParent, uint16_t firstIndex) const {
 	if (client) {
 		client->sendContainer(cid, container, hasParent, firstIndex);
+	}
+}
+
+void Player::sendExivaRestrictions() {
+	if (client) {
+		client->sendExivaRestrictions();
 	}
 }
 
@@ -11561,11 +11572,11 @@ bool Player::setAccount(uint32_t accountId) {
 	}
 
 	account = std::make_shared<Account>(accountId);
-	return AccountErrors_t::Ok == account->load();
+	return AccountErrors_t::Ok == enumFromValue<AccountErrors_t>(account->load());
 }
 
 uint8_t Player::getAccountType() const {
-	return account ? account->getAccountType() : AccountType::ACCOUNT_TYPE_NORMAL;
+	return account ? account->getAccountType() : static_cast<uint8_t>(AccountType::ACCOUNT_TYPE_NORMAL);
 }
 
 uint32_t Player::getAccountId() const {
@@ -12680,4 +12691,68 @@ void Player::removeEquippedWeaponProficiency(const uint16_t itemId) {
 
 	sendStats();
 	sendSkills();
+}
+
+bool Player::canExiva(const std::string &spellParam) const {
+	if (g_game().getWorldType() != WORLDTYPE_OPTIONAL && !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS)) {
+		return true;
+	}
+
+	const auto &targetPlayer = g_game().getPlayerByName(spellParam);
+	if (!targetPlayer) {
+		return false;
+	}
+
+	const auto &targetRestrictions = targetPlayer->getExivaRestrictions();
+
+	if (targetRestrictions.allowAll) {
+		return true;
+	}
+
+	if (targetRestrictions.allowOwnGuild) {
+		const auto &sourceGuild = getGuild();
+		const auto &targetGuild = targetPlayer->getGuild();
+		if (sourceGuild && targetGuild && sourceGuild->getId() == targetGuild->getId()) {
+			return true;
+		}
+	}
+
+	if (targetRestrictions.allowOwnParty) {
+		const auto &sourceParty = getParty();
+		const auto &targetParty = targetPlayer->getParty();
+		if (sourceParty && targetParty && sourceParty == targetParty) {
+			return true;
+		}
+	}
+
+	if (targetRestrictions.allowVipList && targetPlayer->vip() && targetPlayer->vip()->exists(getGUID())) {
+		return true;
+	}
+
+	if (targetRestrictions.allowGuildWhitelist) {
+		const auto &playerGuild = getGuild();
+		if (playerGuild) {
+			auto it = std::ranges::find(targetRestrictions.guildWhitelist, playerGuild->getId());
+			if (it != targetRestrictions.guildWhitelist.end()) {
+				return true;
+			}
+		}
+	}
+
+	if (targetRestrictions.allowPlayerWhitelist) {
+		auto it = std::ranges::find(targetRestrictions.playerWhitelist, getGUID());
+		if (it != targetRestrictions.playerWhitelist.end()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+Player::ExivaRestrictions &Player::getExivaRestrictions() {
+	return exivaRestrictions;
+}
+
+const Player::ExivaRestrictions &Player::getExivaRestrictions() const {
+	return exivaRestrictions;
 }

@@ -139,16 +139,10 @@ CreatureVector Spectators::getSpectators(const Position &centerPos, bool multifl
 	const int32_t endy2 = y2 - (y2 & SECTOR_MASK);
 
 	CreatureVector spectators;
-	// More accurate reserve based on sector count and typical creature density
-	const uint32_t sectorCount = ((endx2 - startx1) / SECTOR_SIZE + 1) * ((endy2 - starty1) / SECTOR_SIZE + 1);
-	spectators.reserve(sectorCount * 8); // Estimate 8 creatures per sector
+	spectators.reserve(std::max<uint8_t>(MAP_MAX_VIEW_PORT_X, MAP_MAX_VIEW_PORT_Y) * 2);
 
 	const MapSector* startSector = g_game().map.getMapSector(startx1, starty1);
 	const MapSector* sectorS = startSector;
-
-	// Pre-calculate type checks
-	const bool needsTypeCheck = onlyPlayers || onlyMonsters || onlyNpcs;
-
 	for (int32_t ny = starty1; ny <= endy2; ny += SECTOR_SIZE) {
 		const MapSector* sectorE = sectorS;
 		for (int32_t nx = startx1; nx <= endx2; nx += SECTOR_SIZE) {
@@ -160,19 +154,11 @@ CreatureVector Spectators::getSpectators(const Position &centerPos, bool multifl
 
 				for (const auto &creature : nodeList) {
 					const auto &cpos = creature->getPosition();
-
-					// Check Z range first (most likely to fail)
-					if (static_cast<uint32_t>(static_cast<int32_t>(cpos.z) - minRangeZ) > depth) {
-						continue;
-					}
-
-					const int_fast16_t offsetZ = Position::getOffsetZ(centerPos, cpos);
-					const int32_t adjustedX = cpos.x - offsetZ;
-					const int32_t adjustedY = cpos.y - offsetZ;
-
-					// Check X and Y ranges
-					if (static_cast<uint32_t>(adjustedX - min_x) <= width && static_cast<uint32_t>(adjustedY - min_y) <= height) {
-						spectators.emplace_back(creature);
+					if (static_cast<uint32_t>(static_cast<int32_t>(cpos.z) - minRangeZ) <= depth) {
+						const int_fast16_t offsetZ = Position::getOffsetZ(centerPos, cpos);
+						if (static_cast<uint32_t>(cpos.x - offsetZ - min_x) <= width && static_cast<uint32_t>(cpos.y - offsetZ - min_y) <= height) {
+							spectators.emplace_back(creature);
+						}
 					}
 				}
 				sectorE = sectorE->sectorE;

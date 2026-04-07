@@ -96,6 +96,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, DISABLE_MONSTER_ARMOR, "disableMonsterArmor", false);
 	loadBoolConfig(L, DISCORD_SEND_FOOTER, "discordSendFooter", true);
 	loadBoolConfig(L, EMOTE_SPELLS, "emoteSpells", false);
+	loadBoolConfig(L, LEARN_SPELLS, "toggleLearnSpells", true);
 	loadBoolConfig(L, ENABLE_PLAYER_PUT_ITEM_IN_AMMO_SLOT, "enablePlayerPutItemInAmmoSlot", false);
 	loadBoolConfig(L, ENABLE_SUPPORT_OUTFIT, "enableSupportOutfit", true);
 	loadBoolConfig(L, EXPERIENCE_FROM_PLAYERS, "experienceByKillingPlayers", false);
@@ -118,6 +119,12 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, PREY_ENABLED, "preySystemEnabled", true);
 	loadBoolConfig(L, PREY_FREE_THIRD_SLOT, "preyFreeThirdSlot", false);
 	loadBoolConfig(L, PUSH_WHEN_ATTACKING, "pushWhenAttacking", false);
+	loadBoolConfig(L, WALK_THROUGH_PLAYERS, "walkThroughPlayers", true);
+	loadBoolConfig(L, ALLOW_LURE_CREATURES, "allowLureCreatures", true);
+	loadBoolConfig(L, BLOCK_RESPAWN, "blockRespawn", true);
+	loadBoolConfig(L, ENABLE_OFFLINE_TRAINING, "enableOfflineTraining", true);
+	loadBoolConfig(L, ENABLE_MARKET, "enableMarket", true);
+	loadBoolConfig(L, ADVANCED_PARTY_PROTECTION, "advancedPartyProtection", true);
 	loadBoolConfig(L, RATE_USE_STAGES, "rateUseStages", false);
 	loadBoolConfig(L, REFUND_BEGINNING_WEAPON_MANA, "refundBeginningWeaponMana", false);
 	loadBoolConfig(L, REMOVE_BEGINNING_WEAPON_AMMO, "removeBeginningWeaponAmmunition", true);
@@ -184,6 +191,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_GUILD_WARS, "toggleGuildWars", false);
 	loadBoolConfig(L, INGAME_GUILD_MANAGEMENT, "ingameGuildManagement", true);
 	loadBoolConfig(L, CREATE_GUILD_ONLY_PREMIUM, "createGuildOnlyPremium", true);
+	loadBoolConfig(L, EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS, "exivaRestrictionsOnlyOptionalWorlds", true);
 
 	loadFloatConfig(L, BESTIARY_RATE_CHARM_SHOP_PRICE, "bestiaryRateCharmShopPrice", 1.0);
 	loadFloatConfig(L, COMBAT_CHAIN_SKILL_FORMULA_AXE, "combatChainSkillFormulaAxe", 0.9);
@@ -200,6 +208,7 @@ bool ConfigManager::load() {
 	loadFloatConfig(L, ONSLAUGHT_CHANCE_FORMULA_B, "onslaughtChanceFormulaB", 0.4);
 	loadFloatConfig(L, ONSLAUGHT_CHANCE_FORMULA_C, "onslaughtChanceFormulaC", 0.05);
 	loadFloatConfig(L, PARTY_SHARE_LOOT_BOOSTS_DIMINISHING_FACTOR, "partyShareLootBoostsDimishingFactor", 0.7f);
+	loadFloatConfig(L, PARTY_SHARE_RANGE_MULTIPLIER, "partyShareRangeMultiplier", 1.5f);
 	loadFloatConfig(L, PVP_RATE_DAMAGE_REDUCTION_PER_LEVEL, "pvpRateDamageReductionPerLevel", 0.0);
 	loadFloatConfig(L, PVP_RATE_DAMAGE_TAKEN_PER_LEVEL, "pvpRateDamageTakenPerLevel", 0.0);
 	loadFloatConfig(L, RATE_ATTACK_SPEED, "rateAttackSpeed", 1.0);
@@ -345,7 +354,6 @@ bool ConfigManager::load() {
 	loadIntConfig(L, STAMINA_PZ_GAIN, "staminaPzGain", 1);
 	loadIntConfig(L, STAMINA_TRAINER_DELAY, "staminaTrainerDelay", 5);
 	loadIntConfig(L, STAMINA_TRAINER_GAIN, "staminaTrainerGain", 1);
-	loadFloatConfig(L, PARTY_SHARE_RANGE_MULTIPLIER, "partyShareRangeMultiplier", 1.5f);
 	loadIntConfig(L, START_STREAK_LEVEL, "startStreakLevel", 0);
 	loadIntConfig(L, STATUSQUERY_TIMEOUT, "statusTimeout", 5000);
 	loadIntConfig(L, STORE_COIN_PACKET, "coinPacketSize", 25);
@@ -408,6 +416,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, GUILD_WARS_MINIMUM_FRAGS, "guildWarsMinimunFrags", 10);
 	loadIntConfig(L, GUILD_WARS_DEFAULT_FRAGS, "guildWarsDefaultFrags", 100);
 	loadIntConfig(L, LEVEL_TO_FORM_GUILD, "levelToFormGuild", 8);
+	loadIntConfig(L, MAX_EXIVA_WHITELIST, "maxExivaWhitelist", 100);
 
 	loadStringConfig(L, CORE_DIRECTORY, "coreDirectory", "data");
 	loadStringConfig(L, DATA_DIRECTORY, "dataPackDirectory", "data-global");
@@ -415,6 +424,8 @@ bool ConfigManager::load() {
 	loadStringConfig(L, DISCORD_WEBHOOK_URL, "discordWebhookURL", "");
 	loadStringConfig(L, FORGE_FIENDISH_INTERVAL_TIME, "forgeFiendishIntervalTime", "1");
 	loadStringConfig(L, FORGE_FIENDISH_INTERVAL_TYPE, "forgeFiendishIntervalType", "hour");
+	loadStringConfig(L, FORGE_INFLUENCED_INTERVAL_TIME, "forgeInfluencedIntervalTime", "1");
+	loadStringConfig(L, FORGE_INFLUENCED_INTERVAL_TYPE, "forgeInfluencedIntervalType", "hour");
 	loadStringConfig(L, GLOBAL_SERVER_SAVE_TIME, "globalServerSaveTime", "06:00");
 	loadStringConfig(L, LOCATION, "location", "");
 	loadStringConfig(L, M_CONST, "memoryConst", "1<<16");

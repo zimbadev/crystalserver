@@ -2383,6 +2383,10 @@ bool Monster::isInSpawnRange(const Position &pos) const {
 		return true;
 	}
 
+	if (g_configManager().getBoolean(ALLOW_LURE_CREATURES)) {
+		return true;
+	}
+
 	if (Monster::despawnRadius == 0) {
 		return true;
 	}
@@ -2744,6 +2748,18 @@ std::shared_ptr<MonsterType> Monster::getMonsterType() const {
 
 void Monster::clearFiendishStatus() {
 	timeToChangeFiendish = 0;
+	forgeStack = 0;
+	monsterForgeClassification = ForgeClassifications_t::FORGE_NORMAL_MONSTER;
+
+	health = mType->info.health * mType->getHealthMultiplier();
+	healthMax = mType->info.healthMax * mType->getHealthMultiplier();
+
+	removeIcon("forge");
+	g_game().updateCreatureIcon(static_self_cast<Monster>());
+	g_game().sendUpdateCreature(static_self_cast<Monster>());
+}
+
+void Monster::clearInfluencedStatus() {
 	forgeStack = 0;
 	monsterForgeClassification = ForgeClassifications_t::FORGE_NORMAL_MONSTER;
 

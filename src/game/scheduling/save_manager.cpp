@@ -36,15 +36,33 @@ SaveManager &SaveManager::getInstance() {
 void SaveManager::saveAll() {
 	Benchmark bm_saveAll;
 	logger.info("Saving server...");
-	const auto players = game.getPlayers();
+	const auto &players = game.getPlayers();
 
 	for (const auto &[_, player] : players) {
 		player->loginPosition = player->getPosition();
 		doSavePlayer(player);
 	}
 
-	auto guilds = game.getGuilds();
+	const auto &guilds = game.getGuilds();
 	for (const auto &[_, guild] : guilds) {
+		saveGuild(guild);
+	}
+
+	saveMap();
+	saveKV();
+	logger.info("Server saved in {} milliseconds.", bm_saveAll.duration());
+}
+
+void SaveManager::saveAll(const std::vector<std::shared_ptr<Player>> &players, const std::vector<std::shared_ptr<Guild>> &guilds) {
+	Benchmark bm_saveAll;
+	logger.info("Saving server...");
+
+	for (const auto &player : players) {
+		player->loginPosition = player->getPosition();
+		doSavePlayer(player);
+	}
+
+	for (const auto &guild : guilds) {
 		saveGuild(guild);
 	}
 
@@ -63,12 +81,23 @@ void SaveManager::scheduleAll() {
 		return;
 	}
 
-	threadPool.detach_task([this, scheduledAt]() {
+	std::vector<std::shared_ptr<Player>> playersToSave;
+	playersToSave.reserve(game.getPlayersOnline());
+	for (const auto &[_, player] : game.getPlayers()) {
+		playersToSave.push_back(player);
+	}
+
+	std::vector<std::shared_ptr<Guild>> guildsToSave;
+	for (const auto &[_, guild] : game.getGuilds()) {
+		guildsToSave.push_back(guild);
+	}
+
+	threadPool.detach_task([this, scheduledAt, playersToSave, guildsToSave]() {
 		if (m_scheduledAt.load() != scheduledAt) {
 			logger.warn("Skipping save for server because another save has been scheduled.");
 			return;
 		}
-		saveAll();
+		saveAll(playersToSave, guildsToSave);
 	});
 }
 
@@ -90,16 +119,23 @@ void SaveManager::schedulePlayer(std::weak_ptr<Player> playerPtr) {
 
 	logger.debug("Scheduling player {} for saving.", playerToSave->getName());
 	auto scheduledAt = std::chrono::steady_clock::now();
-	m_playerMap[playerToSave->getGUID()] = scheduledAt;
+	{
+		std::lock_guard<std::mutex> lock(m_mapMutex);
+		m_playerMap[playerToSave->getGUID()] = scheduledAt;
+	}
 	threadPool.detach_task([this, playerPtr, scheduledAt]() {
 		auto player = playerPtr.lock();
 		if (!player) {
 			logger.debug("Skipping save for player because player is no longer online.");
 			return;
 		}
-		if (m_playerMap[player->getGUID()] != scheduledAt) {
-			logger.warn("Skipping save for player because another save has been scheduled.");
-			return;
+		{
+			std::lock_guard<std::mutex> lock(m_mapMutex);
+			auto it = m_playerMap.find(player->getGUID());
+			if (it == m_playerMap.end() || it->second != scheduledAt) {
+				logger.warn("Skipping save for player because another save has been scheduled.");
+				return;
+			}
 		}
 		doSavePlayer(player);
 	});
@@ -113,7 +149,10 @@ bool SaveManager::doSavePlayer(std::shared_ptr<Player> player) {
 
 	Benchmark bm_savePlayer;
 	Player::PlayerLock lock(player);
-	m_playerMap.erase(player->getGUID());
+	{
+		std::lock_guard<std::mutex> mapLock(m_mapMutex);
+		m_playerMap.erase(player->getGUID());
+	}
 	if (g_game().getGameState() == GAME_STATE_NORMAL) {
 		logger.debug("Saving player {}.", player->getName());
 	}

@@ -37,12 +37,44 @@ They are fighting about power and influence but unity is the key to success. Our
 All our rituals and procedures rooted on unity and sharing, they can't neglect that.
 ]],
 	},
-	[6183] = {
+	[6179] = {
 		text = [[
 Looks like the fox is out!
 More luck next time!
 Signed:
 the horned fox
+]],
+	},
+	[6272] = {
+		text = [[
+Knight Brave: At last we meet face-to-face!
+Doctor Darkness: Too late, puny knight. You can't stop my master plan anymore!
+1st Knave: Watch out! It's a trap!
+Knight Brave: Don't quail, my faithful follower! We have mastered worse obstacles to get here!
+Doctor Darkness: Haha! You may not fear for your own life, but how about hers!?
+2nd Knave: Oh no! Look! It's Princess Buttercup! He's holding her hostage!
+Doctor Darkness: Indeed I do! Wouldn't it be a pity for such a beautiful young lady to die so tragically?
+Princess Buttercup: Don't care about me! Save the world!
+Doctor Darkness: Keep quiet! Else your hair will make the acquaintance of these scissors!
+All: You're such a monster!
+Doctor Darkness: Hahaha! Now drop your weapons or else...
+1st Knave: Never!
+2nd Knave: But what about the princess?
+Knight Brave: Trust me, my loyal minions. Drop your weapons.
+Doctor Darkness: At last! The brave Knight Brave in my hands! Your death is near!
+Knight Brave: Not that fast, Doctor Dumbness!
+Doctor Darkness: How dare you? Are you mad? I hold the princess hostage and you drop your weapons. You're all lost!
+Knight Brave: I don't think so, dear doctor!
+1st Knave: What's this? Behind the doctor?
+2nd Knave: Look! It's Lucky, the wonder dog!
+Lucky: Woof! Woof!
+Doctor Darkness: Noooooo!
+Knight Brave: Get him, boy!
+Lucky: Grrr!
+Doctor Darkness: Ahhhhhh!
+All: Hooray!
+Knight Brave: Lucky, once again you saved the day!
+Lucky: Woof!
 ]],
 	},
 }

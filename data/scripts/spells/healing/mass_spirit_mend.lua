@@ -74,6 +74,6 @@ spell:mana(250)
 spell:harmony(true)
 spell:isPremium(true)
 spell:isAggressive(false)
-spell:needLearn(false)
+
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_MASS_SPIRIT_MEND)
 spell:register()

@@ -13,7 +13,7 @@ spell:words("utevo nia")
 spell:level(275)
 spell:mana(500)
 spell:isPremium(false)
-spell:needLearn(false)
+
 spell:groupCooldown(2 * 1000)
 spell:cooldown(2 * 60 * 1000)
 spell:vocation("monk;true", "exalted monk;true")

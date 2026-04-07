@@ -204,7 +204,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U8_1.TheTravellingTrader.Mission05, 1)
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 15 then
-			if player:removeItem(7385, 1) then
+			if player:removeItem(860, 1) then
 				npcHandler:say("Ha! You are clever indeed, well done! I'll take this from you. Come see me tomorrow, I think we two might get into business after all.", npc, creature)
 				player:setStorageValue(Storage.Quest.U8_1.TheTravellingTrader.Mission05, 3)
 				npcHandler:setTopic(playerId, 0)

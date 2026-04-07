@@ -33,7 +33,7 @@ spell:words("utamo tio")
 spell:level(150)
 spell:mana(500)
 spell:isPremium(false)
-spell:needLearn(false)
+
 spell:groupCooldown(2 * 1000)
 spell:cooldown(10 * 60 * 1000)
 spell:vocation("monk;true", "exalted monk;true")

@@ -34,5 +34,6 @@ spell:hasParams(true)
 spell:hasPlayerNameParam(true)
 spell:allowOnSelf(false)
 spell:isAggressive(false)
+
 spell:isPremium(true)
 spell:register()

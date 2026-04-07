@@ -79,7 +79,7 @@ npcConfig.shop = {
 	{ itemName = "canopy headboard", clientId = 32481, buy = 40 },
 	{ itemName = "chest", clientId = 2472, buy = 10 },
 	{ itemName = "chimney kit", clientId = 7860, buy = 200 },
-	{ itemName = "coal basin kit", clientId = 3513, buy = 25 },
+	{ itemName = "coal basin kit", clientId = 2806, buy = 25 },
 	{ itemName = "cot footboard", clientId = 32486, buy = 40 },
 	{ itemName = "cot headboard", clientId = 32477, buy = 40 },
 	{ itemName = "crate", clientId = 2471, buy = 10 },

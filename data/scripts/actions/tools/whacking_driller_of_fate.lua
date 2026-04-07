@@ -1,5 +1,3 @@
-local toolGear = Action()
-
 local function createWooden(position, removeId, createId, actionId)
 	local woodPosition = Position(position)
 	local woodenPlanks = Tile(woodPosition):getItemById(removeId)
@@ -99,6 +97,10 @@ end
 local toolGear = Action()
 
 function toolGear.onUse(player, item, fromPosition, target, toPosition, isHotkey)
+	if not target or not target.itemid or target.itemid == 0 then
+		return false
+	end
+
 	if math.random(1000) > 10 then
 		if onUseCrowbar(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true

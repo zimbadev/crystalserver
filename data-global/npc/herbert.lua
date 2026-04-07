@@ -60,19 +60,19 @@ local function creatureSayCallback(npc, creature, type, message)
 
 	if MsgContains(message, "letter") then
 		if player:getStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Mission06) == 1 then
-			npcHandler:say("You would like Chantalle's letter? only if you are willing to pay a price. {gold} maybe?", npc, creature)
+			npcHandler:say("Well it's a simple letter from Venore for Chantalle. But I can't give it to you. The trust in a postman is of more value than {gold}, you know?", npc, creature)
 			npcHandler:setTopic(playerId, 1)
 		end
 	elseif MsgContains(message, "gold") then
 		if npcHandler:getTopic(playerId) == 1 then
-			npcHandler:say("Are you willing to pay 1000 gold for this letter?", npc, creature)
+			npcHandler:say("Uh, about how much gold are we talking here? About 1000?", npc, creature)
 			npcHandler:setTopic(playerId, 2)
 		end
 	elseif MsgContains(message, "yes") then
 		if npcHandler:getTopic(playerId) == 2 then
 			if player:removeMoneyBank(1000) then
 				player:addItem(7940, 1)
-				npcHandler:say("Here you go kind sir.", npc, creature)
+				npcHandler:say("Well, in that case you may deliver that letter to Chantalle. Here it is and now let me count my glittering gold.", npc, creature)
 				npcHandler:setTopic(playerId, 0)
 			end
 		end

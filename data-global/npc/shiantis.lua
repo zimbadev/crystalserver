@@ -102,7 +102,7 @@ npcConfig.shop = {
 	{ itemName = "candlestick", clientId = 2917, buy = 2 },
 	{ itemName = "chimney kit", clientId = 7860, buy = 200 },
 	{ itemName = "closed trap", clientId = 3481, buy = 280, sell = 75 },
-	{ itemName = "coal basin kit", clientId = 3513, buy = 25 },
+	{ itemName = "coal basin kit", clientId = 2806, buy = 25 },
 	{ itemName = "crowbar", clientId = 3304, buy = 260, sell = 50 },
 	{ itemName = "crusher", clientId = 46627, buy = 500 },
 	{ itemName = "cuckoo clock", clientId = 2664, buy = 40 },

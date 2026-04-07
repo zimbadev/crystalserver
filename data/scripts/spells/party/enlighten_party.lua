@@ -56,7 +56,7 @@ spell:words("utevo mas sio")
 spell:level(32)
 spell:mana(75)
 spell:isPremium(false)
-spell:needLearn(false)
+
 spell:cooldown(5 * 60 * 1000)
 spell:groupCooldown(1 * 1000)
 spell:isSelfTarget(true)

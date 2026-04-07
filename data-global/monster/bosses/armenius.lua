@@ -61,17 +61,16 @@ monster.voices = {
 	interval = 5000,
 	chance = 10,
 	{ text = "You know what, I changed my mind. BRING IT!", yell = false },
+	{ text = "You little fool will see what you get for messing with us.", yell = false },
+	{ text = "Not even Julius will be able to stop us!", yell = false },
+	{ text = "BLOOD!", yell = false },
 }
 
-monster.loot = {
-	{ id = 3434, chance = 5230 }, -- vampire shield
-	{ name = "gold coin", chance = 80000, maxCount = 23 },
-	{ name = "vampire lord token", chance = 10000 },
-}
+monster.loot = {}
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, skill = 50, attack = 50 },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_LIFEDRAIN, minDamage = -50, maxDamage = -200, range = 1, radius = 1, effect = CONST_ME_SMALLCLOUDS, target = true },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -300 },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_LIFEDRAIN, minDamage = -100, maxDamage = -400, range = 1, radius = 1, effect = CONST_ME_SMALLCLOUDS, target = true },
 	{ name = "speed", interval = 2000, chance = 15, speedChange = -400, radius = 1, effect = CONST_ME_MAGIC_RED, target = false, duration = 60000 },
 }
 
@@ -81,20 +80,20 @@ monster.defenses = {
 	--	mitigation = ???,
 	{ name = "outfit", interval = 2000, chance = 10, effect = CONST_ME_GROUNDSHAKER, target = false, duration = 5000, outfitMonster = "bat" },
 	{ name = "speed", interval = 2000, chance = 15, speedChange = 300, effect = CONST_ME_MAGIC_RED, target = false, duration = 3000 },
-	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_HEALING, minDamage = 15, maxDamage = 25, target = false },
+	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_HEALING, minDamage = 30, maxDamage = 50, target = false },
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = 25 },
 	{ type = COMBAT_ENERGYDAMAGE, percent = 0 },
-	{ type = COMBAT_EARTHDAMAGE, percent = 0 },
-	{ type = COMBAT_FIREDAMAGE, percent = 0 },
-	{ type = COMBAT_LIFEDRAIN, percent = 0 },
+	{ type = COMBAT_EARTHDAMAGE, percent = 100 },
+	{ type = COMBAT_FIREDAMAGE, percent = -10 },
+	{ type = COMBAT_LIFEDRAIN, percent = 100 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
-	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
+	{ type = COMBAT_DROWNDAMAGE, percent = 100 },
 	{ type = COMBAT_ICEDAMAGE, percent = 0 },
-	{ type = COMBAT_HOLYDAMAGE, percent = -50 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 0 },
+	{ type = COMBAT_HOLYDAMAGE, percent = -25 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 100 },
 }
 
 monster.immunities = {

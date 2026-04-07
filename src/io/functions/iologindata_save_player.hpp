@@ -42,6 +42,7 @@ public:
 	static bool savePlayerNamesAndChangeName(const std::shared_ptr<Player> &player, const std::string &newName, const std::string &oldName);
 	static bool savePlayerOutfits(const std::shared_ptr<Player> &player);
 	static bool savePlayerMounts(const std::shared_ptr<Player> &player);
+	static void savePlayerExivaRestrictions(const std::shared_ptr<Player> &player);
 
 protected:
 	using ItemBlockList = std::list<std::pair<int32_t, std::shared_ptr<Item>>>;

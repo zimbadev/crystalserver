@@ -125,26 +125,50 @@ local function creatureSayCallback(npc, creature, type, message)
 		end
 	elseif MsgContains(message, "plea") and player:getStorageValue(TheNewFrontier.Mission05.WyrdinKeyword) == 1 and player:getStorageValue(TheNewFrontier.Mission05.Wyrdin) == 1 then
 		if npcHandler:getTopic(playerId) == 2 then
-			local chance = math.random(1, 3)
+			local chance = math.random(1, 2)
 			if chance == 1 then
 				npcHandler:say("Hm, you are right, we are at the forefront of knowledge and innovation. Our dwarven friends could learn much from one of our representatives.", npc, creature)
-			elseif chance == 2 then
-				npcHandler:say("<sighs> Okay, sending some trader there won't hurt. I hope it will be worth the effort, though.", npc, creature)
 			else
-				npcHandler:say({ "Well, it can't be wrong to be there when new discoveries are made. Also, all those soldiers of fortune that might travel there could turn out to be a good source of income for a magic shop. ...", "I think we'll send a representative. At least, for some time." }, npc, creature)
+				npcHandler:say("<sighs> Okay, sending some trader there won't hurt. I hope it will be worth the effort, though.", npc, creature)
 			end
 			player:setStorageValue(TheNewFrontier.Mission05.Wyrdin, 3)
+			npcHandler:setTopic(playerId, 0)
 		end
 	elseif MsgContains(message, "bluff") and player:getStorageValue(TheNewFrontier.Mission05.WyrdinKeyword) == 2 and player:getStorageValue(TheNewFrontier.Mission05.Wyrdin) == 1 then
-		npcHandler:say("What do you mean the druids of Carlin could provide the service as well? They are incompetent imposters! I will not allow them to ruin our reputation! I'll send some trader with supplies right away!", npc, creature)
-		player:setStorageValue(TheNewFrontier.Mission05.Wyrdin, 3)
+		if npcHandler:getTopic(playerId) == 2 then
+			npcHandler:say("What do you mean the druids of Carlin could provide the service as well? They are incompetent imposters! I will not allow them to ruin our reputation! I'll send some trader with supplies right away!", npc, creature)
+			player:setStorageValue(TheNewFrontier.Mission05.Wyrdin, 3)
+			npcHandler:setTopic(playerId, 0)
+		end
 	elseif MsgContains(message, "flatter") and player:getStorageValue(TheNewFrontier.Mission05.WyrdinKeyword) == 3 and player:getStorageValue(TheNewFrontier.Mission05.Wyrdin) == 1 then
-		npcHandler:say("Hm, you are right, we are at the forefront of knowledge and innovation. Our dwarven friends could learn much from one of our representatives.", npc, creature)
-		player:setStorageValue(TheNewFrontier.Mission05.Wyrdin, 3)
-	else
-		if player:getStorageValue(TheNewFrontier.Questline) == 14 and player:getStorageValue(TheNewFrontier.Mission05.Wyrdin) == 1 then
-			npcHandler:say("Wrong Word.", npc, creature)
+		if npcHandler:getTopic(playerId) == 2 then
+			npcHandler:say("Hm, you are right, we are at the forefront of knowledge and innovation. Our dwarven friends could learn much from one of our representatives.", npc, creature)
+			player:setStorageValue(TheNewFrontier.Mission05.Wyrdin, 3)
+			npcHandler:setTopic(playerId, 0)
+		end
+	elseif MsgContains(message, "reason") and player:getStorageValue(TheNewFrontier.Mission05.WyrdinKeyword) == 4 and player:getStorageValue(TheNewFrontier.Mission05.Wyrdin) == 1 then
+		if npcHandler:getTopic(playerId) == 2 then
+			npcHandler:say({ "Well, it can't be wrong to be there when new discoveries are made. Also, all those soldiers of fortune that might travel there could turn out to be a good source of income for a magic shop. ...", "I think we'll send a representative. At least, for some time." }, npc, creature)
+			player:setStorageValue(TheNewFrontier.Mission05.Wyrdin, 3)
+			npcHandler:setTopic(playerId, 0)
+		end
+	elseif MsgContains(message, "impress") and player:getStorageValue(TheNewFrontier.Mission05.Wyrdin) == 1 then
+		if npcHandler:getTopic(playerId) == 2 then
+			npcHandler:say("Well, the efforts of the dwarfs are impressive but we really have no interest in mining or mineralogy.", npc, creature)
 			player:setStorageValue(TheNewFrontier.Mission05.Wyrdin, 2)
+			npcHandler:setTopic(playerId, 0)
+		end
+	elseif MsgContains(message, "threaten") and player:getStorageValue(TheNewFrontier.Mission05.Wyrdin) == 1 then
+		if npcHandler:getTopic(playerId) == 2 then
+			npcHandler:say("I still don't think that any success or failure of this project will have an impact on the academy. We will not intervene in this dwarven project.", npc, creature)
+			player:setStorageValue(TheNewFrontier.Mission05.Wyrdin, 2)
+			npcHandler:setTopic(playerId, 0)
+		end
+	else
+		if player:getStorageValue(TheNewFrontier.Questline) == 14 and player:getStorageValue(TheNewFrontier.Mission05.Wyrdin) == 1 and npcHandler:getTopic(playerId) == 2 then
+			npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
+			player:setStorageValue(TheNewFrontier.Mission05.Wyrdin, 2)
+			npcHandler:setTopic(playerId, 0)
 		end
 	end
 

@@ -100,6 +100,6 @@ spell:blockWalls(true)
 spell:needWeapon(false)
 spell:cooldown(24 * 1000)
 spell:groupCooldown(2 * 1000)
-spell:needLearn(false)
+
 spell:vocation("monk;true", "exalted monk;true")
 spell:register()
