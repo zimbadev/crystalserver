@@ -81,7 +81,7 @@ monster.loot = {
 	{ id = 3028, chance = 7100, maxCount = 2 }, -- small diamond
 	{ id = 3032, chance = 17900, maxCount = 2 }, -- small emerald
 	{ name = "small enchanted ruby", chance = 8190, maxCount = 3 },
-	{ id = 3030, chance = 11090, maxCount = 2 }, -- small ruby	
+	{ id = 3030, chance = 11090, maxCount = 2 }, -- small ruby
 	{ id = 9057, chance = 7970, maxCount = 2 }, -- small topaz
 	{ name = "royal star", chance = 3260, maxCount = 3 },
 	{ id = 3041, chance = 2750 }, -- blue gem
