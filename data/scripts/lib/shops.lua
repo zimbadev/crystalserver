@@ -1373,7 +1373,7 @@ LootShopConfigTable = {
 		{ itemName = "plasma pearls", clientId = 23506, sell = 250 },
 		{ itemName = "prismatic quartz", clientId = 24962, sell = 450 },
 		{ itemName = "purple tome", clientId = 2848, sell = 2000 },
-		{ itemName = "rainbow quartz", clientId = 25737, sell = 800 },
+		{ itemName = "rainbow quartz", clientId = 25737, sell = 500 },
 		{ itemName = "red crystal fragment", clientId = 16126, sell = 800 },
 		{ itemName = "red gem", clientId = 3039, sell = 1000 },
 		{ itemName = "red tome", clientId = 2852, sell = 2000 },
