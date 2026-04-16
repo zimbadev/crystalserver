@@ -85908,16 +85908,4 @@
 		<attribute key="primarytype" value="documents and papers" />
 		<attribute key="weight" value="250" />
 	</item>
-	<item id="50547" name="stairs">
-		<attribute key="floorchange" value="north"/>
-	</item>
-	<item id="50551" name="stairs">
-		<attribute key="floorchange" value="west"/>
-	</item>
-	<item id="50553" name="stairs">
-		<attribute key="floorchange" value="east"/>
-	</item>
-	<item id="50555" name="stairs">
-		<attribute key="floorchange" value="south"/>
-	</item>
 </items>
