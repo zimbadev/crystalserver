@@ -4185,8 +4185,13 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 
 			const auto playerSkull = getSkull();
 			bool hasSkull = (playerSkull == Skulls_t::SKULL_RED || playerSkull == Skulls_t::SKULL_BLACK);
+			const auto &amulet = getInventoryItem(CONST_SLOT_NECKLACE);
+			const bool usingAol = amulet && amulet->getID() == ITEM_AMULETOFLOSS;
+			const bool twistProtectsAol = !hasSkull && pvpDeath && hasBlessing(1);
+			bool consumedBlessingProtection = false;
 			uint8_t maxBlessing = 8;
-			if (!hasSkull && pvpDeath && hasBlessing(1)) {
+			if (twistProtectsAol) {
+				consumedBlessingProtection = true;
 				auto storeCount = getBlessingCount(1, true);
 				if (storeCount > 0) {
 					auto currentStore = kv()->scoped("summary")->scoped("blessings")->scoped(fmt::format("{}", 1))->get("amount");
@@ -4201,15 +4206,21 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 				for (int i = 2; i <= maxBlessing; i++) {
 					auto storeCount = getBlessingCount(i, true);
 					if (storeCount > 0) {
+						consumedBlessingProtection = true;
 						auto currentStore = kv()->scoped("summary")->scoped("blessings")->scoped(fmt::format("{}", i))->get("amount");
 						if (currentStore) {
 							auto newAmount = std::max(0, static_cast<int>(currentStore->getNumber()) - 1);
 							kv()->scoped("summary")->scoped("blessings")->scoped(fmt::format("{}", i))->set("amount", newAmount);
 						}
-					} else {
+					} else if (hasBlessing(i)) {
+						consumedBlessingProtection = true;
 						removeBlessing(i, 1);
 					}
 				}
+			}
+
+			if (usingAol && !consumedBlessingProtection) {
+				g_game().internalRemoveItem(amulet);
 			}
 		}
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, blessOutput.str());
