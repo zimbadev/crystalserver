@@ -592,7 +592,7 @@ rateSkill = 1
 rateLoot = 1
 rateMagic = 1
 rateSpawn = 1
-rateWeaponProficiency = 1.0
+rateWeaponProficiency = 1
 
 -- Killing in the name of Quest
 rateKillingInTheNameOfPoints = 1
