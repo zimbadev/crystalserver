@@ -12318,6 +12318,7 @@ EquippedWeaponProficiencyBonuses &Player::getEquippedWeaponProficiency() {
 
 void Player::addWeaponProficiencyExperience(const std::shared_ptr<MonsterType> &mType, const ForgeClassifications_t classification, const bool bossSoulpit) {
 	uint32_t addProficiencyExperience = 0;
+	const auto weaponProficiencyRate = std::max(0.0f, g_configManager().getFloat(RATE_WEAPON_PROFICIENCY));
 	if (bossSoulpit) {
 		addProficiencyExperience = 1500;
 	} else {
@@ -12372,6 +12373,8 @@ void Player::addWeaponProficiencyExperience(const std::shared_ptr<MonsterType> &
 			}
 		}
 	}
+
+	addProficiencyExperience = static_cast<uint32_t>(std::round(addProficiencyExperience * weaponProficiencyRate));
 
 	const auto &weapon = getWeapon(true);
 	if (!weapon) {
