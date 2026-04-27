@@ -446,6 +446,10 @@ maxHousesLimit = 3
 -- Item Usage
 timeBetweenActions = 200
 timeBetweenExActions = 1000
+timeBetweenNecklace = 500
+timeBetweenRing = 500
+timeBetweenAmmo = 500
+timeAfterParalyze = 500
 
 -- Push
 -- NOTE: pushDelay: interval for every push

@@ -269,6 +269,9 @@ bool ConfigManager::load() {
 	loadIntConfig(L, DEFAULT_DESPAWNRANGE, "deSpawnRange", 2);
 	loadIntConfig(L, DISCORD_WEBHOOK_DELAY_MS, "discordWebhookDelayMs", Webhook::DEFAULT_DELAY_MS);
 	loadIntConfig(L, EX_ACTIONS_DELAY_INTERVAL, "timeBetweenExActions", 1000);
+	loadIntConfig(L, NECKLACE_DELAY_INTERVAL, "timeBetweenNecklace", 200);
+	loadIntConfig(L, RING_DELAY_INTERVAL, "timeBetweenRing", 200);
+	loadIntConfig(L, PARALYZE_DELAY_INTERVAL, "timeAfterParalyze", 200);
 	loadIntConfig(L, EXP_FROM_PLAYERS_LEVEL_RANGE, "expFromPlayersLevelRange", 75);
 	loadIntConfig(L, FAMILIAR_TIME, "familiarTime", 30);
 	loadIntConfig(L, FORGE_BASE_SUCCESS_RATE, "forgeBaseSuccessRate", 50);
