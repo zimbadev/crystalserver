@@ -29,7 +29,7 @@ LuaEnvironment &LuaEnvironment::getInstance() {
 	return inject<LuaEnvironment>();
 }
 
-static const std::unique_ptr<AreaCombat> &AreaCombatNull {};
+static const std::unique_ptr<AreaCombat> AreaCombatNull {};
 
 LuaEnvironment::LuaEnvironment() :
 	LuaScriptInterface("Main Interface") { }

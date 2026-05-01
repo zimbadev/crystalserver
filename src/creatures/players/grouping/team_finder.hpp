@@ -60,4 +60,4 @@ public:
 	std::map<uint32_t, uint8_t> membersMap = {};
 };
 
-static const std::unique_ptr<TeamFinder> &TeamFinderNull {};
+inline const std::unique_ptr<TeamFinder> TeamFinderNull {};
