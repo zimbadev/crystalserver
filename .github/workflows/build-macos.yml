@@ -50,8 +50,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-13]
-        buildtype: [macos-release, macos-debug]
+        os: [macos-14]
+        buildtype: [macos-release]
 
     steps:
       - name: Checkout repository
