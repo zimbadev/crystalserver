@@ -58,7 +58,7 @@ jobs:
         uses: actions/checkout@main
 
       - name: Install macOS dependencies
-        run: brew install ccache
+        run: brew install ccache autoconf automake libtool
 
       - name: Setup cached CMake environment
         uses: ./.github/actions/setup-cmake-build-env
