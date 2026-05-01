@@ -51,16 +51,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@main
 
-      - name: Install vcpkg
-        run: |
-          $vcpkgJson = Get-Content .\vcpkg.json -Raw | ConvertFrom-Json
-          $vcpkgCommitId = $vcpkgJson.'builtin-baseline'.Trim()
-          Write-Host "vcpkg commit ID: $vcpkgCommitId"
-          git clone https://github.com/Microsoft/vcpkg.git
-          cd vcpkg
-          git checkout $vcpkgCommitId
-          .\bootstrap-vcpkg.bat
-          .\vcpkg integrate install
+      - name: Setup cached MSBuild environment
+        uses: ./.github/actions/setup-msbuild-env
+        with:
+          triplet: ${{ matrix.triplet }}
 
       - name: Print useful paths
         run: |

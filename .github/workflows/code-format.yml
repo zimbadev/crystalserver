@@ -1,0 +1,137 @@
+---
+name: Code Format
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  merge_group:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: code-format-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    if: ${{ github.event_name == 'push' || !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    outputs:
+      clang: ${{ steps.filter.outputs.clang }}
+      lua: ${{ steps.filter.outputs.lua }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: Detect relevant changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            clang:
+              - "src/**"
+              - ".clang-format"
+            lua:
+              - "data*/**"
+
+  noop:
+    needs: changes
+    if: ${{ needs.changes.outputs.clang != 'true' && needs.changes.outputs.lua != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "No C++ or Lua files require formatting."
+
+  clang-format:
+    needs: changes
+    if: ${{ needs.changes.outputs.clang == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure git
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+
+      - name: Checkout pull request head
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@main
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Checkout current ref
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: Run clang format lint
+        uses: DoozyX/clang-format-lint-action@v0.17
+        with:
+          source: src
+          exclude: src/protobuf
+          extensions: cpp,hpp,h
+          clangFormatVersion: 17
+          inplace: true
+
+      - name: Commit clang-format changes
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          author_name: GitHub Actions
+          author_email: github-actions[bot]@users.noreply.github.com
+          message: "Code format - (Clang-format)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  lua-format:
+    needs: changes
+    if: ${{ needs.changes.outputs.lua == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure git
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+
+      - name: Checkout pull request head
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@main
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Checkout current ref
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: Run StyLua
+        uses: JohnnyMorganz/stylua-action@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: .
+
+      - name: Commit StyLua changes
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: GitHub Actions
+          author_email: github-actions[bot]@users.noreply.github.com
+          message: "Lua code format - (Stylua)"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

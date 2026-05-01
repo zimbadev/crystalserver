@@ -70,29 +70,11 @@ jobs:
           sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 --slave /usr/bin/g++ g++ /usr/bin/g++-14 --slave /usr/bin/gcov gcov /usr/bin/gcov-14
           sudo update-alternatives --set gcc /usr/bin/gcc-14
 
-      - name: CCache
-        uses: hendrikmuhs/ccache-action@main
+      - name: Setup cached CMake environment
+        uses: ./.github/actions/setup-cmake-build-env
         with:
-          max-size: "1G"
-          key: ccache-${{ matrix.os }}-${{ matrix.buildtype }}
-          restore-keys: |
-            ccache-${{ matrix.os }}
-
-      - name: Restore artifacts and install vcpkg
-        id: vcpkg-step
-        run: |
-          vcpkgCommitId=$(grep '.builtin-baseline' vcpkg.json | awk -F: '{print $2}' | tr -d '," ')
-          echo "vcpkg commit ID: $vcpkgCommitId"
-          echo "VCPKG_GIT_COMMIT_ID=$vcpkgCommitId" >> "$GITHUB_ENV"
-
-      - name: Get vcpkg commit id from vcpkg.json
-        uses: lukka/run-vcpkg@main
-        with:
-          vcpkgGitURL: "https://github.com/microsoft/vcpkg.git"
-          vcpkgGitCommitId: ${{ env.VCPKG_GIT_COMMIT_ID }}
-
-      - name: Get latest CMake and ninja
-        uses: lukka/get-cmake@main
+          compiler-cache-key: ccache-${{ matrix.os }}-${{ matrix.buildtype }}
+          vcpkg-cache-suffix: ${{ matrix.os }}-${{ matrix.buildtype }}
 
       - name: Run CMake
         uses: lukka/run-cmake@main

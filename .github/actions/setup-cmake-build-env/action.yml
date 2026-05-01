@@ -1,0 +1,84 @@
+name: Setup CMake Build Environment
+description: Check out the repository, restore compiler caches, and prepare vcpkg/CMake.
+
+inputs:
+  compiler-cache-key:
+    description: Unique compiler cache key.
+    required: true
+  compiler-cache-variant:
+    description: Compiler cache variant, such as sccache.
+    required: false
+    default: ""
+  compiler-cache-max-size:
+    description: Maximum compiler cache size.
+    required: false
+    default: "1G"
+  vcpkg-cache-suffix:
+    description: Suffix added to the vcpkg binary cache key.
+    required: false
+    default: "default"
+
+runs:
+  using: composite
+  steps:
+    - name: Enable vcpkg binary cache on non-Windows
+      if: ${{ runner.os != 'Windows' }}
+      shell: bash
+      run: |
+        echo "VCPKG_DEFAULT_BINARY_CACHE=${GITHUB_WORKSPACE}/.vcpkg-cache" >> "$GITHUB_ENV"
+        echo "VCPKG_FEATURE_FLAGS=binarycaching" >> "$GITHUB_ENV"
+
+    - name: Enable vcpkg binary cache on Windows
+      if: ${{ runner.os == 'Windows' }}
+      shell: pwsh
+      run: |
+        "VCPKG_DEFAULT_BINARY_CACHE=$env:GITHUB_WORKSPACE/.vcpkg-cache" | Out-File -FilePath $env:GITHUB_ENV -Append
+        "VCPKG_FEATURE_FLAGS=binarycaching" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+    - name: Restore vcpkg binary cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ github.workspace }}/.vcpkg-cache
+        key: vcpkg-binary-${{ runner.os }}-${{ inputs.vcpkg-cache-suffix }}-${{ hashFiles('vcpkg.json', 'CMakePresets.json') }}
+        restore-keys: |
+          vcpkg-binary-${{ runner.os }}-${{ inputs.vcpkg-cache-suffix }}-
+          vcpkg-binary-${{ runner.os }}-
+
+    - name: Restore compiler cache
+      if: ${{ inputs.compiler-cache-variant == '' }}
+      uses: hendrikmuhs/ccache-action@main
+      with:
+        max-size: ${{ inputs.compiler-cache-max-size }}
+        key: ${{ inputs.compiler-cache-key }}
+
+    - name: Restore compiler cache with custom variant
+      if: ${{ inputs.compiler-cache-variant != '' }}
+      uses: hendrikmuhs/ccache-action@main
+      with:
+        max-size: ${{ inputs.compiler-cache-max-size }}
+        variant: ${{ inputs.compiler-cache-variant }}
+        key: ${{ inputs.compiler-cache-key }}
+
+    - name: Extract vcpkg baseline on non-Windows
+      if: ${{ runner.os != 'Windows' }}
+      shell: bash
+      run: |
+        vcpkg_commit_id=$(grep '.builtin-baseline' vcpkg.json | awk -F: '{print $2}' | tr -d '," ')
+        echo "VCPKG_GIT_COMMIT_ID=$vcpkg_commit_id" >> "$GITHUB_ENV"
+
+    - name: Extract vcpkg baseline on Windows
+      if: ${{ runner.os == 'Windows' }}
+      shell: pwsh
+      run: |
+        $json = Get-Content vcpkg.json -Raw | ConvertFrom-Json
+        $vcpkgCommitId = $json.'builtin-baseline'
+        "VCPKG_GIT_COMMIT_ID=$vcpkgCommitId" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+    - name: Install vcpkg
+      uses: lukka/run-vcpkg@main
+      with:
+        vcpkgGitURL: https://github.com/microsoft/vcpkg.git
+        vcpkgGitCommitId: ${{ env.VCPKG_GIT_COMMIT_ID }}
+
+    - name: Install CMake and Ninja
+      uses: lukka/get-cmake@main

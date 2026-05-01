@@ -1,0 +1,62 @@
+name: Setup MSBuild Environment
+description: Check out the repository and prepare a cached vcpkg setup for Visual Studio builds.
+
+inputs:
+  triplet:
+    description: Vcpkg triplet used by the build.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Enable vcpkg binary cache
+      shell: pwsh
+      run: |
+        "VCPKG_DEFAULT_BINARY_CACHE=$env:GITHUB_WORKSPACE/.vcpkg-cache" | Out-File -FilePath $env:GITHUB_ENV -Append
+        "VCPKG_FEATURE_FLAGS=binarycaching" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+    - name: Restore vcpkg cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ${{ github.workspace }}\.vcpkg-cache
+          ${{ github.workspace }}\vcpkg
+          ${{ github.workspace }}\vcpkg_installed
+        key: vcpkg-msbuild-${{ runner.os }}-${{ inputs.triplet }}-${{ hashFiles('vcpkg.json', 'vcproj/**/*.sln', 'vcproj/**/*.vcxproj', 'vcproj/**/*.props', 'vcproj/**/*.targets') }}
+        restore-keys: |
+          vcpkg-msbuild-${{ runner.os }}-${{ inputs.triplet }}-
+          vcpkg-msbuild-${{ runner.os }}-
+
+    - name: Extract vcpkg baseline
+      shell: pwsh
+      run: |
+        $vcpkgJson = Get-Content .\vcpkg.json -Raw | ConvertFrom-Json
+        $vcpkgCommitId = $vcpkgJson.'builtin-baseline'.Trim()
+        "VCPKG_GIT_COMMIT_ID=$vcpkgCommitId" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+    - name: Bootstrap vcpkg
+      shell: pwsh
+      run: |
+        if (-not (Test-Path .\vcpkg\.git)) {
+          Remove-Item -Recurse -Force .\vcpkg -ErrorAction SilentlyContinue
+          git clone https://github.com/Microsoft/vcpkg.git
+        }
+
+        Push-Location .\vcpkg
+
+        $currentCommit = ""
+        if (Test-Path .git) {
+          $currentCommit = (git rev-parse HEAD).Trim()
+        }
+
+        if ($currentCommit -ne $env:VCPKG_GIT_COMMIT_ID) {
+          git fetch --depth 1 origin $env:VCPKG_GIT_COMMIT_ID
+          git checkout $env:VCPKG_GIT_COMMIT_ID
+        }
+
+        if (-not (Test-Path .\vcpkg.exe)) {
+          .\bootstrap-vcpkg.bat
+        }
+
+        .\vcpkg.exe integrate install
+        Pop-Location

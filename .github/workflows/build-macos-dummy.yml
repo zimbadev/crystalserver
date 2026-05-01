@@ -1,0 +1,21 @@
+---
+name: Build - macOS (dummy)
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - "src/**"
+      - "cmake/**"
+      - "CMakeLists.txt"
+      - "CMakePresets.json"
+      - "vcpkg.json"
+
+jobs:
+  job:
+    if: ${{ github.event_name == 'push' || !github.event.pull_request.draft }}
+    name: macos-13-macos-release
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "This is a dummy job to satisfy branch protection checks"

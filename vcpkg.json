@@ -32,7 +32,7 @@
     },
     {
       "name": "gmp",
-      "platform": "linux"
+      "platform": "linux | osx"
     },
     {
       "name": "mpir",
