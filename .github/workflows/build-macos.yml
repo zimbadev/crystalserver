@@ -24,7 +24,6 @@ on:
 
 permissions:
   contents: read
-  actions: write
   pull-requests: read
 
 env:
@@ -33,6 +32,9 @@ env:
 jobs:
   cancel-runs:
     if: github.event_name == 'pull_request' && github.ref != 'refs/heads/main'
+    permissions:
+      actions: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
