@@ -32,8 +32,10 @@ endif()
 # *****************************************************************************
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
-# Configure build options for compatibility with commodity CPUs
-if(NOT MSVC)
+# Configure build options for compatibility with commodity CPUs.
+# These x86-specific flags break Apple Silicon and can interfere with
+# CMake feature detection such as FindThreads on macOS runners.
+if(NOT MSVC AND NOT APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=x86-64 -mtune=generic -mno-avx -mno-sse4")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64 -mtune=generic -mno-avx -mno-sse4")
 endif()
