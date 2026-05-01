@@ -115,7 +115,7 @@
       "displayName": "macOS - Release",
       "description": "macOS Release Build",
       "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "x64-osx",
+        "VCPKG_TARGET_TRIPLET": "arm64-osx",
         "RUN_TESTS_AFTER_BUILD": "OFF"
       },
       "condition": {
