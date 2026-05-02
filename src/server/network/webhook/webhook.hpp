@@ -20,6 +20,11 @@
 #include "lib/thread/thread_pool.hpp"
 
 struct WebhookTask {
+	WebhookTask() = default;
+	WebhookTask(std::string payload, std::string url) :
+		payload(std::move(payload)),
+		url(std::move(url)) { }
+
 	std::string payload;
 	std::string url;
 };

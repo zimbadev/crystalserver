@@ -59,6 +59,7 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           file: docker/Dockerfile.x86
+          network: host
           tags: ghcr.io/${{ github.repository }}:${{ steps.gitversion.outputs.semVer }}
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}
@@ -69,6 +70,7 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           file: docker/Dockerfile.x86
+          network: host
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ steps.gitversion.outputs.semVer }}
           cache-from: type=gha, scope=${{ github.workflow }}
@@ -105,6 +107,7 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           file: docker/Dockerfile.arm
+          network: host
           tags: ghcr.io/${{ github.repository }}:${{ steps.gitversion.outputs.semVer }}
           cache-from: type=gha, scope=${{ github.workflow }}
           cache-to: type=gha, scope=${{ github.workflow }}

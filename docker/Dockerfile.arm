@@ -1,12 +1,18 @@
 # Stage 1: Download all dependencies
 FROM ubuntu:24.04 AS dependencies
 
-RUN apt-get update && apt-get install -y --no-install-recommends cmake git \
-	unzip build-essential ca-certificates curl zip unzip tar \
-	pkg-config ninja-build autoconf automake libtool libluajit-5.1-dev libluajit-5.1-common \
-	python3 \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
+RUN set -eux; \
+	for attempt in 1 2 3; do \
+		apt-get update -o Acquire::Retries=3 && \
+		apt-get install -y --no-install-recommends -o Acquire::Retries=3 cmake git \
+			unzip build-essential ca-certificates curl zip unzip tar \
+			pkg-config ninja-build autoconf automake libtool libluajit-5.1-dev libluajit-5.1-common \
+			python3 && break; \
+		if [ "$attempt" -eq 3 ]; then exit 1; fi; \
+		sleep 10; \
+	done; \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt
 COPY vcpkg.json /opt
@@ -43,10 +49,16 @@ COPY config.lua.dist /crystalserver/config.lua
 
 WORKDIR /crystalserver
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	mariadb-client libluajit-5.1-dev libluajit-5.1-common wget curl \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
+RUN set -eux; \
+	for attempt in 1 2 3; do \
+		apt-get update -o Acquire::Retries=3 && \
+		apt-get install -y --no-install-recommends -o Acquire::Retries=3 \
+			mariadb-client libluajit-5.1-dev libluajit-5.1-common wget curl && break; \
+		if [ "$attempt" -eq 3 ]; then exit 1; fi; \
+		sleep 10; \
+	done; \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
 
 COPY docker/data/01-test_account.sql 01-test_account.sql
 COPY docker/data/02-test_account_players.sql 02-test_account_players.sql
