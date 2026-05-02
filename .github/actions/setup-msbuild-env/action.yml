@@ -12,7 +12,11 @@ runs:
     - name: Enable vcpkg binary cache
       shell: pwsh
       run: |
-        "VCPKG_DEFAULT_BINARY_CACHE=$env:GITHUB_WORKSPACE/.vcpkg-cache" | Out-File -FilePath $env:GITHUB_ENV -Append
+        $cacheDir = "$env:GITHUB_WORKSPACE\.vcpkg-cache"
+        if (-not (Test-Path $cacheDir)) {
+          New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
+        }
+        "VCPKG_DEFAULT_BINARY_CACHE=$cacheDir" | Out-File -FilePath $env:GITHUB_ENV -Append
         "VCPKG_FEATURE_FLAGS=binarycaching" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Restore vcpkg cache
