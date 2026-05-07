@@ -243,7 +243,7 @@ std::string generateToken(const std::string &key, uint32_t ticks) {
 	message.assign(transformToSHA1(iKeyPad));
 
 	// hmac concat outer pad with message, conversion from hex to int needed
-	for (uint8_t i = 0; i < message.length(); i += 2) {
+	for (std::string::size_type i = 0; i < message.length(); i += 2) {
 		oKeyPad.push_back(static_cast<char>(std::stol(message.substr(i, 2), nullptr, 16)));
 	}
 
