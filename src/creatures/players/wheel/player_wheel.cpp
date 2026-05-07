@@ -1163,9 +1163,9 @@ PlayerWheelGem &PlayerWheel::getGem(const std::string &uuid) {
 }
 
 uint16_t PlayerWheel::getGemIndex(const std::string &uuid) const {
-	for (uint16_t i = 0; i < m_revealedGems.size(); ++i) {
+	for (size_t i = 0; i < m_revealedGems.size(); ++i) {
 		if (m_revealedGems[i].uuid == uuid) {
-			return i;
+			return static_cast<uint16_t>(i);
 		}
 	}
 	g_logger().error("[{}] Failed to find gem with uuid {}", __FUNCTION__, uuid);
