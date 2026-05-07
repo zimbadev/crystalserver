@@ -229,7 +229,8 @@ std::string generateToken(const std::string &key, uint32_t ticks) {
 
 	// hmac key pad generation
 	std::string iKeyPad(64, 0x36), oKeyPad(64, 0x5C);
-	for (uint8_t i = 0; i < key.length(); ++i) {
+	const std::string::size_type keyPadLimit = std::min(key.length(), iKeyPad.length());
+	for (std::string::size_type i = 0; i < keyPadLimit; ++i) {
 		iKeyPad[i] ^= key[i];
 		oKeyPad[i] ^= key[i];
 	}
