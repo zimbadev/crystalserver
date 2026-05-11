@@ -266,17 +266,17 @@ local function creatureSayCallback(npc, creature, type, message)
 		text = "Fine.",
 		reset = true,
 	})
--- tibia coins
+	-- tibia coins
 	if MsgContains(message, "tibia coin") or MsgContains(message, "tibia coin") then
 		npcHandler:say("Here you are |PLAYERNAME|.", npc, creature)
 		player:addItem(22118, npcConfig.amountTibiaCoin)
 	end
--- gold coins
+	-- gold coins
 	if MsgContains(message, "money") or MsgContains(message, "gold") then
 		npcHandler:say("Here you are |PLAYERNAME|.", npc, creature)
 		player:addItem(3043, npcConfig.amountMoney)
 	end
--- experience
+	-- experience
 	if MsgContains(message, "exp") or MsgContains(message, "experience") then
 		if player:getLevel() > npcConfig.maxLevel then
 			npcHandler:say("You can not take more experience.", npc, creature)
@@ -287,7 +287,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:addExperience(experience - player:getExperience(), true, true)
 		end
 	end
--- skills
+	-- skills
 	if MsgContains(message, "skill") or MsgContains(message, "skills") then
 		if player:getMagicLevel() >= 90 and player:getSkillLevel(SKILL_FIST) >= 90 then
 			npcHandler:say("You already got skills for testing.", npc, creature)
@@ -330,7 +330,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		player:sendTextMessage(MESSAGE_STATUS, "You received the remaining " .. missingBlessAmt .. " blessings.")
 		player:getPosition():sendMagicEffect(CONST_ME_HOLYAREA)
 	end
--- reset your character
+	-- reset your character
 	if MsgContains(message, "reset") then
 		if player:getLevel() > 8 then
 			local level = 7

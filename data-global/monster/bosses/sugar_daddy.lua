@@ -63,14 +63,13 @@ monster.light = {
 }
 
 --monster.summon = {
-	--maxSummons = 5,
-	--summons = {
-		--{ name = "cheeky sugar cube", chance = 18, interval = 2000, count = 5 },
-		--{ name = "mint drop", chance = 18, interval = 2000, count = 5 },
-		--{ name = "truffle worker", chance = 18, interval = 2000, count = 5 },
-	--},
+--maxSummons = 5,
+--summons = {
+--{ name = "cheeky sugar cube", chance = 18, interval = 2000, count = 5 },
+--{ name = "mint drop", chance = 18, interval = 2000, count = 5 },
+--{ name = "truffle worker", chance = 18, interval = 2000, count = 5 },
+--},
 --}
-
 
 monster.voices = {
 	interval = 5000,
