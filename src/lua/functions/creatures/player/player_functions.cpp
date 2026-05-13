@@ -104,6 +104,40 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "addSoulsealsPoints", PlayerFunctions::luaPlayerAddSoulsealsPoints);
 	Lua::registerMethod(L, "Player", "removeSoulsealsPoints", PlayerFunctions::luaPlayerRemoveSoulsealsPoints);
 
+	// Task Board send functions
+	Lua::registerMethod(L, "Player", "sendBountyTaskData", PlayerFunctions::luaPlayersendBountyTaskData);
+	Lua::registerMethod(L, "Player", "sendWeeklyTaskData", PlayerFunctions::luaPlayersendWeeklyTaskData);
+	Lua::registerMethod(L, "Player", "sendHuntingTaskShopData", PlayerFunctions::luaPlayerSendHuntingTaskShop);
+	Lua::registerMethod(L, "Player", "sendTaskBoardResourceBalance", PlayerFunctions::luaPlayerSendTaskBoardResourceBalance);
+
+	// Bounty Task data manipulation
+	Lua::registerMethod(L, "Player", "setBountyTaskState", PlayerFunctions::luaPlayerSetBountyTaskState);
+	Lua::registerMethod(L, "Player", "setBountyTaskDifficulty", PlayerFunctions::luaPlayerSetBountyTaskDifficulty);
+	Lua::registerMethod(L, "Player", "setBountyActiveTask", PlayerFunctions::luaPlayerSetBountyActiveTask);
+	Lua::registerMethod(L, "Player", "clearBountyCreatureList", PlayerFunctions::luaPlayerClearBountyCreatureList);
+	Lua::registerMethod(L, "Player", "addBountyCreature", PlayerFunctions::luaPlayerAddBountyCreature);
+	Lua::registerMethod(L, "Player", "setBountyTalismanLevel", PlayerFunctions::luaPlayerSetBountyTalismanLevel);
+	Lua::registerMethod(L, "Player", "getBountyTalismanLevel", PlayerFunctions::luaPlayerGetBountyTalismanLevel);
+	Lua::registerMethod(L, "Player", "setBountyRerollTimestamp", PlayerFunctions::luaPlayerSetBountyRerollTimestamp);
+	Lua::registerMethod(L, "Player", "setBountyRerollTokens", PlayerFunctions::luaPlayerSetBountyRerollTokens);
+	Lua::registerMethod(L, "Player", "generateBountyCreatureList", PlayerFunctions::luaPlayerGenerateBountyCreatureList);
+	Lua::registerMethod(L, "Player", "isBountyTalismanEquipped", PlayerFunctions::luaPlayerIsBountyTalismanEquipped);
+
+	// Weekly Task data manipulation
+	Lua::registerMethod(L, "Player", "setWeeklyDifficulty", PlayerFunctions::luaPlayerSetWeeklyDifficulty);
+	Lua::registerMethod(L, "Player", "setWeeklyKillTaskProgress", PlayerFunctions::luaPlayerSetWeeklyKillTaskProgress);
+	Lua::registerMethod(L, "Player", "setWeeklyDeliveryTaskProgress", PlayerFunctions::luaPlayerSetWeeklyDeliveryTaskProgress);
+	Lua::registerMethod(L, "Player", "setWeeklyAnyCreatureProgress", PlayerFunctions::luaPlayerSetWeeklyAnyCreatureProgress);
+	Lua::registerMethod(L, "Player", "setWeeklyCompletedTasks", PlayerFunctions::luaPlayerSetWeeklyCompletedTasks);
+	Lua::registerMethod(L, "Player", "generateWeeklyTasks", PlayerFunctions::luaPlayerGenerateWeeklyTasks);
+	Lua::registerMethod(L, "Player", "setWeeklyProgressFinished", PlayerFunctions::luaPlayerSetWeeklyProgressFinished);
+	Lua::registerMethod(L, "Player", "setWeeklyResetTimestamp", PlayerFunctions::luaPlayerSetWeeklyResetTimestamp);
+	Lua::registerMethod(L, "Player", "setWeeklyUnknownByte", PlayerFunctions::luaPlayerSetWeeklyUnknownByte);
+	Lua::registerMethod(L, "Player", "setWeeklyRewards", PlayerFunctions::luaPlayerSetWeeklyRewards);
+	Lua::registerMethod(L, "Player", "setWeeklyRewardExp", PlayerFunctions::luaPlayerSetWeeklyRewardExp);
+	Lua::registerMethod(L, "Player", "setWeeklyDifficultyMultiplier", PlayerFunctions::luaPlayerSetWeeklyDifficultyMultiplier);
+	Lua::registerMethod(L, "Player", "setWeeklyDeliveryUnknowns", PlayerFunctions::luaPlayerSetWeeklyDeliveryUnknowns);
+
 	Lua::registerMethod(L, "Player", "getCapacity", PlayerFunctions::luaPlayerGetCapacity);
 	Lua::registerMethod(L, "Player", "setCapacity", PlayerFunctions::luaPlayerSetCapacity);
 
@@ -5706,5 +5740,411 @@ int PlayerFunctions::luaPlayerDropConnection(lua_State* L) {
 
 	player->disconnect();
 	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayersendBountyTaskData(lua_State* L) {
+	// player:sendBountyTaskData()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		player->sendBountyTaskData();
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayersendWeeklyTaskData(lua_State* L) {
+	// player:sendWeeklyTaskData()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		player->sendWeeklyTaskData();
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendHuntingTaskShop(lua_State* L) {
+	// player:sendHuntingTaskShopData()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		player->sendHuntingTaskShopData();
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendTaskBoardResourceBalance(lua_State* L) {
+	// player:sendTaskBoardResourceBalance()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		player->sendTaskBoardResourceBalance();
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetBountyTaskState(lua_State* L) {
+	// player:setBountyTaskState(state)
+	// 0=NONE, 1=SELECTION, 2=ACTIVE, 3=COMPLETED
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &bountyData = player->getBountyTaskData();
+		bountyData.state = static_cast<BountyTaskState_t>(Lua::getNumber<uint8_t>(L, 2));
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetBountyTaskDifficulty(lua_State* L) {
+	// player:setBountyTaskDifficulty(difficulty)
+	// 0=BEGINNER, 1=ADEPT, 2=EXPERT, 3=MASTER
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &bountyData = player->getBountyTaskData();
+		bountyData.selectedDifficulty = static_cast<BountyTaskDifficulty_t>(Lua::getNumber<uint8_t>(L, 2));
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetBountyActiveTask(lua_State* L) {
+	// player:setBountyActiveTask(raceId, requiredKills, currentKills, rewardExp, rewardBountyPoints, taskGrade, difficulty)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &bountyData = player->getBountyTaskData();
+		bountyData.activeTask.raceId = Lua::getNumber<uint16_t>(L, 2);
+		bountyData.activeTask.requiredKills = Lua::getNumber<uint16_t>(L, 3);
+		bountyData.activeTask.currentKills = Lua::getNumber<uint16_t>(L, 4, 0);
+		bountyData.activeTask.rewardExp = Lua::getNumber<uint32_t>(L, 5, 0);
+		bountyData.activeTask.rewardBountyPoints = Lua::getNumber<uint8_t>(L, 6, 0);
+		bountyData.activeTask.taskGrade = static_cast<BountyTaskGrade_t>(Lua::getNumber<uint8_t>(L, 7, 0));
+		bountyData.activeTask.difficulty = static_cast<BountyTaskDifficulty_t>(Lua::getNumber<uint8_t>(L, 8, 0));
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerClearBountyCreatureList(lua_State* L) {
+	// player:clearBountyCreatureList()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &bountyData = player->getBountyTaskData();
+		bountyData.currentCreaturesList.clear();
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerAddBountyCreature(lua_State* L) {
+	// player:addBountyCreature(raceId, requiredKills, currentKills, rewardExp, rewardBountyPoints, claimRewardType, taskGrade)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &bountyData = player->getBountyTaskData();
+		BountyCreatureEntry creature;
+		creature.raceId = Lua::getNumber<uint16_t>(L, 2);
+		creature.requiredKills = Lua::getNumber<uint16_t>(L, 3);
+		creature.currentKills = Lua::getNumber<uint16_t>(L, 4, 0);
+		creature.rewardExp = Lua::getNumber<uint32_t>(L, 5, 0);
+		creature.rewardBountyPoints = Lua::getNumber<uint8_t>(L, 6, 0);
+		creature.claimRewardType = static_cast<BountyClaimRewardType_t>(Lua::getNumber<uint8_t>(L, 7, 0));
+		creature.taskGrade = static_cast<BountyTaskGrade_t>(Lua::getNumber<uint8_t>(L, 8, 0));
+		creature.taskIndex = static_cast<uint8_t>(bountyData.currentCreaturesList.size());
+		bountyData.currentCreaturesList.push_back(creature);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetBountyTalismanLevel(lua_State* L) {
+	// player:setBountyTalismanLevel(pathIndex, level)
+	// pathIndex: 0=Damage, 1=LifeLeech, 2=Loot, 3=Bestiary
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto pathIndex = Lua::getNumber<uint8_t>(L, 2);
+		auto level = Lua::getNumber<uint8_t>(L, 3);
+		if (pathIndex < TALISMAN_PATH_COUNT) {
+			auto &bountyData = player->getBountyTaskData();
+			bountyData.talismanTiers[pathIndex].level = level;
+			IOBountyTasks::recalculateTalismanBonuses(bountyData.talismanTiers[pathIndex], pathIndex);
+			Lua::pushBoolean(L, true);
+		} else {
+			Lua::pushBoolean(L, false);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetBountyTalismanLevel(lua_State* L) {
+	// player:getBountyTalismanLevel(pathIndex)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto pathIndex = Lua::getNumber<uint8_t>(L, 2);
+		if (pathIndex < TALISMAN_PATH_COUNT) {
+			const auto &bountyData = player->getBountyTaskData();
+			lua_pushnumber(L, bountyData.talismanTiers[pathIndex].level);
+		} else {
+			lua_pushnumber(L, 0);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetBountyRerollTimestamp(lua_State* L) {
+	// player:setBountyRerollTimestamp(timestamp)
+	// timestamp in milliseconds (OTSYS_TIME format)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &bountyData = player->getBountyTaskData();
+		bountyData.freeRerollTimeStamp = Lua::getNumber<int64_t>(L, 2);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetBountyRerollTokens(lua_State* L) {
+	// player:setBountyRerollTokens(amount)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &bountyData = player->getBountyTaskData();
+		bountyData.rerollTasks = Lua::getNumber<uint8_t>(L, 2);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGenerateBountyCreatureList(lua_State* L) {
+	// player:generateBountyCreatureList(difficulty)
+	// Generates 3 random creatures and puts player in SELECTION state
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto difficulty = static_cast<BountyTaskDifficulty_t>(Lua::getNumber<uint8_t>(L, 2, 0));
+		g_iobountytasks().generateCreatureList(player, difficulty);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerIsBountyTalismanEquipped(lua_State* L) {
+	// player:isBountyTalismanEquipped()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		Lua::pushBoolean(L, player->isBountyTalismanEquipped());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyDifficulty(lua_State* L) {
+	// player:setWeeklyDifficulty(difficulty)
+	// 0=BEGINNER, 1=ADEPT, 2=EXPERT, 3=MASTER
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &weeklyData = player->getWeeklyTaskData();
+		auto difficulty = Lua::getNumber<uint8_t>(L, 2);
+		weeklyData.weeklyDifficulty = difficulty;
+		weeklyData.difficultyMultiplier = std::min(difficulty, static_cast<uint8_t>(DIFFICULTY_MULTIPLIER_MASTER));
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyKillTaskProgress(lua_State* L) {
+	// player:setWeeklyKillTaskProgress(taskIndex, currentKills)
+	// taskIndex is 0-based into killTasks vector
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &weeklyData = player->getWeeklyTaskData();
+		auto taskIndex = Lua::getNumber<uint8_t>(L, 2);
+		auto currentKills = Lua::getNumber<uint16_t>(L, 3);
+		if (taskIndex < weeklyData.killTasks.size()) {
+			weeklyData.killTasks[taskIndex].currentKills = currentKills;
+			Lua::pushBoolean(L, true);
+		} else {
+			Lua::pushBoolean(L, false);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyDeliveryTaskProgress(lua_State* L) {
+	// player:setWeeklyDeliveryTaskProgress(taskIndex, collectedItems, delivered)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &weeklyData = player->getWeeklyTaskData();
+		auto taskIndex = Lua::getNumber<uint8_t>(L, 2);
+		auto collectedItems = Lua::getNumber<uint32_t>(L, 3);
+		auto delivered = Lua::getNumber<uint8_t>(L, 4, 0);
+		if (taskIndex < weeklyData.deliveryTasks.size()) {
+			weeklyData.deliveryTasks[taskIndex].collectedItems = collectedItems;
+			weeklyData.deliveryTasks[taskIndex].delivered = delivered;
+			Lua::pushBoolean(L, true);
+		} else {
+			Lua::pushBoolean(L, false);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyAnyCreatureProgress(lua_State* L) {
+	// player:setWeeklyAnyCreatureProgress(currentKills)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &weeklyData = player->getWeeklyTaskData();
+		weeklyData.anyCreatureCurrentKills = Lua::getNumber<uint16_t>(L, 2);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyCompletedTasks(lua_State* L) {
+	// player:setWeeklyCompletedTasks(completedKill, completedDelivery)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &weeklyData = player->getWeeklyTaskData();
+		weeklyData.completedKillTasks = Lua::getNumber<uint8_t>(L, 2);
+		weeklyData.completedDeliveryTasks = Lua::getNumber<uint8_t>(L, 3, 0);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGenerateWeeklyTasks(lua_State* L) {
+	// player:generateWeeklyTasks(difficulty)
+	// Generates weekly kill and delivery tasks for the specified difficulty
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto difficulty = Lua::getNumber<uint8_t>(L, 2, 0);
+		g_ioweeklytasks().generateWeeklyTasks(player, difficulty);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyProgressFinished(lua_State* L) {
+	// player:setWeeklyProgressFinished(value)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto value = Lua::getNumber<uint8_t>(L, 2, 0);
+		player->getWeeklyTaskData().weeklyProgressFinished = value;
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyResetTimestamp(lua_State* L) {
+	// Deprecated - resetTimestamp is now global (calculated at server startup)
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyUnknownByte(lua_State* L) {
+	// Deprecated - unknownByte was identified as the expansion byte (now handled by hasWeeklyTaskExpansion)
+	// Kept for backward compatibility but does nothing
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyRewards(lua_State* L) {
+	// player:setWeeklyRewards(huntingTaskPoints, soulseals)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &weeklyData = player->getWeeklyTaskData();
+		weeklyData.rewardHuntingTasksPoints = Lua::getNumber<uint32_t>(L, 2, 0);
+		weeklyData.rewardSoulseals = Lua::getNumber<uint32_t>(L, 3, 0);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyRewardExp(lua_State* L) {
+	// player:setWeeklyRewardExp(killTaskExp, deliveryTaskExp)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto &weeklyData = player->getWeeklyTaskData();
+		weeklyData.killTaskRewardExp = Lua::getNumber<uint32_t>(L, 2, 0);
+		weeklyData.deliveryTaskRewardExp = Lua::getNumber<uint32_t>(L, 3, 0);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyDifficultyMultiplier(lua_State* L) {
+	// player:setWeeklyDifficultyMultiplier(value)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto value = Lua::getNumber<uint8_t>(L, 2, 0);
+		player->getWeeklyTaskData().difficultyMultiplier = value;
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetWeeklyDeliveryUnknowns(lua_State* L) {
+	// player:setWeeklyDeliveryUnknowns(taskIndex, unknown1, unknown2)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		auto taskIndex = Lua::getNumber<uint8_t>(L, 2, 0);
+		auto unknown1 = Lua::getNumber<uint8_t>(L, 3, 0);
+		auto unknown2 = Lua::getNumber<uint8_t>(L, 4, 0);
+		auto &weeklyData = player->getWeeklyTaskData();
+		if (taskIndex < weeklyData.deliveryTasks.size()) {
+			weeklyData.deliveryTasks[taskIndex].unknown1 = unknown1;
+			weeklyData.deliveryTasks[taskIndex].unknown2 = unknown2;
+			Lua::pushBoolean(L, true);
+		} else {
+			Lua::pushBoolean(L, false);
+		}
+	} else {
+		lua_pushnil(L);
+	}
 	return 1;
 }

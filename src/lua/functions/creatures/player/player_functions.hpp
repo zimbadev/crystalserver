@@ -79,6 +79,40 @@ class PlayerFunctions {
 	static int luaPlayerAddSoulsealsPoints(lua_State* L);
 	static int luaPlayerRemoveSoulsealsPoints(lua_State* L);
 
+	// Task Board send functions (Lua → protocol)
+	static int luaPlayersendBountyTaskData(lua_State* L);
+	static int luaPlayersendWeeklyTaskData(lua_State* L);
+	static int luaPlayerSendHuntingTaskShop(lua_State* L);
+	static int luaPlayerSendTaskBoardResourceBalance(lua_State* L);
+
+	// Bounty Task data setters
+	static int luaPlayerSetBountyTaskState(lua_State* L);
+	static int luaPlayerSetBountyTaskDifficulty(lua_State* L);
+	static int luaPlayerSetBountyActiveTask(lua_State* L);
+	static int luaPlayerClearBountyCreatureList(lua_State* L);
+	static int luaPlayerAddBountyCreature(lua_State* L);
+	static int luaPlayerSetBountyTalismanLevel(lua_State* L);
+	static int luaPlayerGetBountyTalismanLevel(lua_State* L);
+	static int luaPlayerSetBountyRerollTimestamp(lua_State* L);
+	static int luaPlayerSetBountyRerollTokens(lua_State* L);
+	static int luaPlayerGenerateBountyCreatureList(lua_State* L);
+	static int luaPlayerIsBountyTalismanEquipped(lua_State* L);
+
+	// Weekly Task data setters
+	static int luaPlayerSetWeeklyDifficulty(lua_State* L);
+	static int luaPlayerSetWeeklyKillTaskProgress(lua_State* L);
+	static int luaPlayerSetWeeklyDeliveryTaskProgress(lua_State* L);
+	static int luaPlayerSetWeeklyAnyCreatureProgress(lua_State* L);
+	static int luaPlayerSetWeeklyCompletedTasks(lua_State* L);
+	static int luaPlayerGenerateWeeklyTasks(lua_State* L);
+	static int luaPlayerSetWeeklyProgressFinished(lua_State* L);
+	static int luaPlayerSetWeeklyResetTimestamp(lua_State* L);
+	static int luaPlayerSetWeeklyUnknownByte(lua_State* L);
+	static int luaPlayerSetWeeklyRewards(lua_State* L);
+	static int luaPlayerSetWeeklyRewardExp(lua_State* L);
+	static int luaPlayerSetWeeklyDifficultyMultiplier(lua_State* L);
+	static int luaPlayerSetWeeklyDeliveryUnknowns(lua_State* L);
+
 	static int luaPlayerGetCapacity(lua_State* L);
 	static int luaPlayerSetCapacity(lua_State* L);
 
