@@ -89,6 +89,29 @@
 
 std::vector<std::weak_ptr<Creature>> checkCreatureLists[EVENT_CREATURECOUNT];
 
+namespace {
+bool isBountyHighscoreCategory(const std::string &categoryName) {
+	return categoryName == "bounty_points";
+}
+
+std::string getHighscorePointsExpression(const std::string &categoryName) {
+	if (isBountyHighscoreCategory(categoryName)) {
+		return "COALESCE(`pbt`.`bounty_points`, 0)";
+	}
+
+	return "`" + categoryName + "`";
+}
+
+std::string getHighscoreFromClause(const std::string &categoryName) {
+	std::ostringstream fromClause;
+	fromClause << "FROM `players` `p`";
+	if (isBountyHighscoreCategory(categoryName)) {
+		fromClause << " LEFT JOIN `player_bounty_tasks` `pbt` ON `pbt`.`player_id` = `p`.`id`";
+	}
+	return fromClause.str();
+}
+} // namespace
+
 namespace InternalGame {
 	void sendBlockEffect(BlockType_t blockType, CombatType_t combatType, const Position &targetPos, const std::shared_ptr<Creature> &source) {
 		if (blockType == BLOCK_DEFENSE) {
@@ -386,6 +409,7 @@ Game::Game() {
 	m_highscoreCategoriesNames = {
 		{ static_cast<uint8_t>(ACHIEVEMENTS), "Achievement Points" },
 		{ static_cast<uint8_t>(AXE_FIGHTING), "Axe Fighting" },
+		{ static_cast<uint8_t>(BOUNTY_POINTS_EARNED), "Bounty Points earned" },
 		{ static_cast<uint8_t>(BOSS_POINTS), "Boss Points" },
 		{ static_cast<uint8_t>(CHARMS), "Charm Points" },
 		{ static_cast<uint8_t>(CLUB_FIGHTING), "Club Fighting" },
@@ -402,6 +426,7 @@ Game::Game() {
 	};
 
 	m_highscoreCategories = {
+		HighscoreCategory("Bounty Points earned", static_cast<uint8_t>(HighscoreCategories_t::BOUNTY_POINTS_EARNED)),
 		HighscoreCategory("Boss Points", static_cast<uint8_t>(HighscoreCategories_t::BOSS_POINTS)),
 		HighscoreCategory("Experience Points", static_cast<uint8_t>(HighscoreCategories_t::EXPERIENCE)),
 		HighscoreCategory("Fist Fighting", static_cast<uint8_t>(HighscoreCategories_t::FIST_FIGHTING)),
@@ -9331,11 +9356,13 @@ std::string Game::generateHighscoreQueryForEntries(const std::string &categoryNa
 	std::ostringstream query;
 	uint32_t startPage = (static_cast<uint32_t>(page - 1) * static_cast<uint32_t>(entriesPerPage));
 	uint32_t endPage = startPage + static_cast<uint32_t>(entriesPerPage);
+	const std::string pointsExpression = getHighscorePointsExpression(categoryName);
+	const std::string fromClause = getHighscoreFromClause(categoryName);
 
-	query << "SELECT *, @row AS `entries`, " << page << " AS `page` FROM (SELECT *, (@row := @row + 1) AS `rn` FROM (SELECT `id`, `name`, `level`, `vocation`, `"
-		  << categoryName << "` AS `points`, @curRank := IF(@prevRank = `" << categoryName << "`, @curRank, IF(@prevRank := `" << categoryName
-		  << "`, @curRank + 1, @curRank + 1)) AS `rank` FROM `players` `p`, (SELECT @curRank := 0, @prevRank := NULL, @row := 0) `r` WHERE `group_id` < "
-		  << static_cast<int>(GROUP_TYPE_GAMEMASTER) << " ORDER BY `" << categoryName << "` DESC) `t`";
+	query << "SELECT *, @row AS `entries`, " << page << " AS `page` FROM (SELECT *, (@row := @row + 1) AS `rn` FROM (SELECT `id`, `name`, `level`, `vocation`, "
+		  << pointsExpression << " AS `points`, @curRank := IF(@prevRank = " << pointsExpression << ", @curRank, IF(@prevRank := " << pointsExpression
+		  << ", @curRank + 1, @curRank + 1)) AS `rank` " << fromClause << ", (SELECT @curRank := 0, @prevRank := NULL, @row := 0) `r` WHERE `group_id` < "
+		  << static_cast<int>(GROUP_TYPE_GAMEMASTER) << " ORDER BY " << pointsExpression << " DESC) `t`";
 
 	if (vocation != 0xFFFFFFFF) {
 		query << generateVocationConditionHighscore(vocation);
@@ -9348,11 +9375,13 @@ std::string Game::generateHighscoreQueryForEntries(const std::string &categoryNa
 std::string Game::generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation) {
 	std::ostringstream query;
 	std::string entriesStr = std::to_string(entriesPerPage);
+	const std::string pointsExpression = getHighscorePointsExpression(categoryName);
+	const std::string fromClause = getHighscoreFromClause(categoryName);
 
 	query << "SELECT *, @row AS `entries`, (@ourRow DIV " << entriesStr << ") + 1 AS `page` FROM (SELECT *, (@row := @row + 1) AS `rn`, @ourRow := IF(`id` = "
-		  << playerGUID << ", @row - 1, @ourRow) AS `rw` FROM (SELECT `id`, `name`, `level`, `vocation`, `" << categoryName << "` AS `points`, @curRank := IF(@prevRank = `"
-		  << categoryName << "`, @curRank, IF(@prevRank := `" << categoryName << "`, @curRank + 1, @curRank + 1)) AS `rank` FROM `players` `p`, (SELECT @curRank := 0, @prevRank := NULL, @row := 0, @ourRow := 0) `r` WHERE `group_id` < "
-		  << static_cast<int>(GROUP_TYPE_GAMEMASTER) << " ORDER BY `" << categoryName << "` DESC) `t`";
+		  << playerGUID << ", @row - 1, @ourRow) AS `rw` FROM (SELECT `id`, `name`, `level`, `vocation`, " << pointsExpression << " AS `points`, @curRank := IF(@prevRank = "
+		  << pointsExpression << ", @curRank, IF(@prevRank := " << pointsExpression << ", @curRank + 1, @curRank + 1)) AS `rank` " << fromClause << ", (SELECT @curRank := 0, @prevRank := NULL, @row := 0, @ourRow := 0) `r` WHERE `group_id` < "
+		  << static_cast<int>(GROUP_TYPE_GAMEMASTER) << " ORDER BY " << pointsExpression << " DESC) `t`";
 
 	if (vocation != 0xFFFFFFFF) {
 		query << generateVocationConditionHighscore(vocation);
@@ -9511,6 +9540,8 @@ std::string Game::getSkillNameById(uint8_t &skill) {
 			return "maglevel";
 		case HighscoreCategories_t::BOSS_POINTS:
 			return "boss_points";
+		case HighscoreCategories_t::BOUNTY_POINTS_EARNED:
+			return "bounty_points";
 		case HighscoreCategories_t::LOYALTY_POINTS:
 			return "loyalty_points";
 		default:
