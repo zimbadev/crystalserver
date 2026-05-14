@@ -115,6 +115,7 @@ enum class HighscoreCategories_t : uint8_t {
 	GOSHNAR = 13,
 	BOSS_POINTS = 14,
 	BOUNTY_POINTS_EARNED = 15,
+	WEEKLY_TASKS_COMPLETED = 16,
 };
 
 enum HighscoreType_t : uint8_t {

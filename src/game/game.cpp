@@ -94,9 +94,16 @@ namespace {
 		return categoryName == "bounty_points";
 	}
 
+	bool isWeeklyTasksCompletedHighscoreCategory(const std::string &categoryName) {
+		return categoryName == "weekly_tasks_completed";
+	}
+
 	std::string getHighscorePointsExpression(const std::string &categoryName) {
 		if (isBountyHighscoreCategory(categoryName)) {
 			return "COALESCE(`pbt`.`bounty_points`, 0)";
+		}
+		if (isWeeklyTasksCompletedHighscoreCategory(categoryName)) {
+			return "(COALESCE(`pwt`.`completed_kill_tasks`, 0) + COALESCE(`pwt`.`completed_delivery_tasks`, 0))";
 		}
 
 		return "`" + categoryName + "`";
@@ -107,6 +114,9 @@ namespace {
 		fromClause << "FROM `players` `p`";
 		if (isBountyHighscoreCategory(categoryName)) {
 			fromClause << " LEFT JOIN `player_bounty_tasks` `pbt` ON `pbt`.`player_id` = `p`.`id`";
+		}
+		if (isWeeklyTasksCompletedHighscoreCategory(categoryName)) {
+			fromClause << " LEFT JOIN `player_weekly_tasks` `pwt` ON `pwt`.`player_id` = `p`.`id`";
 		}
 		return fromClause.str();
 	}
@@ -423,6 +433,7 @@ Game::Game() {
 		{ static_cast<uint8_t>(MAGIC_LEVEL), "Magic Level" },
 		{ static_cast<uint8_t>(SHIELDING), "Shielding" },
 		{ static_cast<uint8_t>(SWORD_FIGHTING), "Sword Fighting" },
+		{ static_cast<uint8_t>(WEEKLY_TASKS_COMPLETED), "Weekly Tasks completed" },
 	};
 
 	m_highscoreCategories = {
@@ -437,7 +448,8 @@ Game::Game() {
 		HighscoreCategory("Shielding", static_cast<uint8_t>(HighscoreCategories_t::SHIELDING)),
 		HighscoreCategory("Fishing", static_cast<uint8_t>(HighscoreCategories_t::FISHING)),
 		HighscoreCategory("Magic Level", static_cast<uint8_t>(HighscoreCategories_t::MAGIC_LEVEL)),
-		HighscoreCategory("Loyalty Points", static_cast<uint8_t>(HighscoreCategories_t::LOYALTY_POINTS))
+		HighscoreCategory("Loyalty Points", static_cast<uint8_t>(HighscoreCategories_t::LOYALTY_POINTS)),
+		HighscoreCategory("Weekly Tasks completed", static_cast<uint8_t>(HighscoreCategories_t::WEEKLY_TASKS_COMPLETED))
 	};
 
 	m_summaryCategories = {
@@ -9544,6 +9556,8 @@ std::string Game::getSkillNameById(uint8_t &skill) {
 			return "bounty_points";
 		case HighscoreCategories_t::LOYALTY_POINTS:
 			return "loyalty_points";
+		case HighscoreCategories_t::WEEKLY_TASKS_COMPLETED:
+			return "weekly_tasks_completed";
 		default:
 			skill = static_cast<uint8_t>(HighscoreCategories_t::EXPERIENCE);
 			return "experience";
