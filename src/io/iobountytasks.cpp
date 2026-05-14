@@ -519,8 +519,8 @@ void IOBountyTasks::onCreatureKill(const std::shared_ptr<Player> &player, uint16
 	uint32_t kills = g_configManager().getNumber(BOUNTY_TASKS_KILL_MULTIPLIER);
 
 	bountyData.activeTask.currentKills = std::min(
-    bountyData.activeTask.currentKills + kills,
-    (uint32_t)bountyData.activeTask.requiredKills
+		bountyData.activeTask.currentKills + kills,
+		(uint32_t)bountyData.activeTask.requiredKills
 	);
 
 	if (bountyData.activeTask.currentKills >= bountyData.activeTask.requiredKills) {
