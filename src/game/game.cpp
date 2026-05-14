@@ -90,26 +90,26 @@
 std::vector<std::weak_ptr<Creature>> checkCreatureLists[EVENT_CREATURECOUNT];
 
 namespace {
-bool isBountyHighscoreCategory(const std::string &categoryName) {
-	return categoryName == "bounty_points";
-}
-
-std::string getHighscorePointsExpression(const std::string &categoryName) {
-	if (isBountyHighscoreCategory(categoryName)) {
-		return "COALESCE(`pbt`.`bounty_points`, 0)";
+	bool isBountyHighscoreCategory(const std::string &categoryName) {
+		return categoryName == "bounty_points";
 	}
 
-	return "`" + categoryName + "`";
-}
+	std::string getHighscorePointsExpression(const std::string &categoryName) {
+		if (isBountyHighscoreCategory(categoryName)) {
+			return "COALESCE(`pbt`.`bounty_points`, 0)";
+		}
 
-std::string getHighscoreFromClause(const std::string &categoryName) {
-	std::ostringstream fromClause;
-	fromClause << "FROM `players` `p`";
-	if (isBountyHighscoreCategory(categoryName)) {
-		fromClause << " LEFT JOIN `player_bounty_tasks` `pbt` ON `pbt`.`player_id` = `p`.`id`";
+		return "`" + categoryName + "`";
 	}
-	return fromClause.str();
-}
+
+	std::string getHighscoreFromClause(const std::string &categoryName) {
+		std::ostringstream fromClause;
+		fromClause << "FROM `players` `p`";
+		if (isBountyHighscoreCategory(categoryName)) {
+			fromClause << " LEFT JOIN `player_bounty_tasks` `pbt` ON `pbt`.`player_id` = `p`.`id`";
+		}
+		return fromClause.str();
+	}
 } // namespace
 
 namespace InternalGame {
