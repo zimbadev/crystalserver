@@ -162,6 +162,7 @@ bountyTasksEnabled = true
 bountyTasksExpMultiplier = 1
 bountyTasksPointsMultiplier = 1
 bountyTasksRerollMultiplier = 1
+bountyTasksKillMultiplier = 1
 bountyTasksFreeRerollTime = 20 * 60 * 60
 
 -- Wweekly Tasks system

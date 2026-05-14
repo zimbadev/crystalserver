@@ -368,6 +368,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, BOUNTY_TASKS_FREE_REROLL_TIME, "bountyTasksFreeRerollTime", 72000);
 	loadIntConfig(L, BOUNTY_TASKS_POINTS_MULTIPLIER, "bountyTasksPointsMultiplier", 1);
 	loadIntConfig(L, BOUNTY_TASKS_REROLL_MULTIPLIER, "bountyTasksRerollMultiplier", 1);
+	loadIntConfig(L, BOUNTY_TASKS_KILL_MULTIPLIER, "bountyTasksKillMultiplier", 1);
 	loadIntConfig(L, TASK_HUNTING_BONUS_REROLL_PRICE, "taskHuntingBonusRerollPrice", 1);
 	loadIntConfig(L, TASK_HUNTING_FREE_REROLL_TIME, "taskHuntingFreeRerollTime", 72000);
 	loadIntConfig(L, TASK_HUNTING_LIMIT_EXHAUST, "taskHuntingLimitedTasksExhaust", 72000);
