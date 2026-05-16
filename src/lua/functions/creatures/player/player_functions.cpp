@@ -3278,11 +3278,12 @@ int PlayerFunctions::luaPlayerRemoveTransferableAndTibiaCoins(lua_State* L) {
 	}
 
 	if (player->account->removeCoins(
-		enumToValue(CoinType::Transferable),
-		enumToValue(CoinType::Normal),
-		Lua::getNumber<uint32_t>(L, 2),
-		"REMOVE Coins"
-	) != enumToValue(AccountErrors_t::Ok)) {
+			enumToValue(CoinType::Transferable),
+			enumToValue(CoinType::Normal),
+			Lua::getNumber<uint32_t>(L, 2),
+			"REMOVE Coins"
+		)
+	    != enumToValue(AccountErrors_t::Ok)) {
 		Lua::reportErrorFunc("failed to remove transferable and regular coins");
 		lua_pushnil(L);
 		return 1;
