@@ -177,17 +177,6 @@ uint8_t Account::removeCoins(const uint8_t &primaryType, const uint8_t &secondar
 	if (result != enumToValue(AccountErrors_t::Ok)) {
 		return result;
 	}
-
-	if (!detail.empty()) {
-		if (primaryCoinsRemoved > 0) {
-			registerCoinTransaction(enumToValue(CoinTransactionType::Remove), primaryType, primaryCoinsRemoved, detail);
-		}
-
-		if (secondaryCoinsRemoved > 0) {
-			registerCoinTransaction(enumToValue(CoinTransactionType::Remove), secondaryType, secondaryCoinsRemoved, detail);
-		}
-	}
-
 	return enumToValue(AccountErrors_t::Ok);
 }
 
