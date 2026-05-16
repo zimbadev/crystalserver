@@ -269,6 +269,7 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "getTransferableCoins", PlayerFunctions::luaPlayerGetTransferableCoins);
 	Lua::registerMethod(L, "Player", "addTransferableCoins", PlayerFunctions::luaPlayerAddTransferableCoins);
 	Lua::registerMethod(L, "Player", "removeTransferableCoins", PlayerFunctions::luaPlayerRemoveTransferableCoins);
+	Lua::registerMethod(L, "Player", "removeTransferableAndTibiaCoins", PlayerFunctions::luaPlayerRemoveTransferableAndTibiaCoins);
 
 	Lua::registerMethod(L, "Player", "sendBlessStatus", PlayerFunctions::luaPlayerSendBlessStatus);
 	Lua::registerMethod(L, "Player", "hasBlessing", PlayerFunctions::luaPlayerHasBlessing);
@@ -3252,6 +3253,37 @@ int PlayerFunctions::luaPlayerRemoveTransferableCoins(lua_State* L) {
 
 	if (player->account->removeCoins(enumToValue(CoinType::Transferable), Lua::getNumber<uint32_t>(L, 2)) != enumToValue(AccountErrors_t::Ok)) {
 		Lua::reportErrorFunc("failed to remove transferable coins");
+		lua_pushnil(L);
+		return 1;
+	}
+
+	if (player->getAccount()->save() != enumToValue(AccountErrors_t::Ok)) {
+		Lua::reportErrorFunc("failed to save account");
+		lua_pushnil(L);
+		return 1;
+	}
+
+	Lua::pushBoolean(L, true);
+
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerRemoveTransferableAndTibiaCoins(lua_State* L) {
+	// player:removeTransferableAndTibiaCoins(coins)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player || !player->getAccount()) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushnil(L);
+		return 1;
+	}
+
+	if (player->account->removeCoins(
+		enumToValue(CoinType::Transferable),
+		enumToValue(CoinType::Normal),
+		Lua::getNumber<uint32_t>(L, 2),
+		"REMOVE Coins"
+	) != enumToValue(AccountErrors_t::Ok)) {
+		Lua::reportErrorFunc("failed to remove transferable and regular coins");
 		lua_pushnil(L);
 		return 1;
 	}

@@ -34,6 +34,15 @@ public:
 
 	bool getCoins(const uint32_t &id, const uint8_t &type, uint32_t &coins) override;
 	bool setCoins(const uint32_t &id, const uint8_t &type, const uint32_t &amount) override;
+	uint8_t removeCoins(
+		const uint32_t &id,
+		const uint8_t &primaryType,
+		const uint8_t &secondaryType,
+		const uint32_t &amount,
+		const std::string &detail,
+		uint32_t &primaryCoinsRemoved,
+		uint32_t &secondaryCoinsRemoved
+	) override;
 	bool registerCoinsTransaction(
 		const uint32_t &id,
 		uint8_t type,

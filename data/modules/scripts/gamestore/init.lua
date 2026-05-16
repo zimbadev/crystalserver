@@ -1179,15 +1179,18 @@ function sendStorePurchaseSuccessful(playerId, message)
 	end
 
 	local oldProtocol = player:getClient().version < 1200
+	local transferableCoins = player:getTransferableCoins()
+	local regularCoins = player:getTibiaCoins()
+	local totalCoins = regularCoins + transferableCoins
 	local msg = NetworkMessage()
 	msg:addByte(GameStore.SendingPackets.S_CompletePurchase)
 	msg:addByte(0x00)
 	msg:addString(message, "sendStorePurchaseSuccessful - message")
 	if oldProtocol then
 		-- Send all coins can be used for buy store offers
-		msg:addU32(player:getTibiaCoins())
+		msg:addU32(totalCoins)
 		-- Send transferable coins can be used on transfer
-		msg:addU32(player:getTransferableCoins())
+		msg:addU32(transferableCoins)
 	end
 
 	msg:sendToPlayer(player)
@@ -1228,6 +1231,9 @@ function sendUpdatedStoreBalances(playerId)
 		return false
 	end
 
+	local transferableCoins = player:getTransferableCoins()
+	local regularCoins = player:getTibiaCoins()
+	local totalCoins = regularCoins + transferableCoins
 	local msg = NetworkMessage()
 	msg:addByte(GameStore.SendingPackets.S_CoinBalanceUpdating)
 	msg:addByte(0x01)
@@ -1235,9 +1241,10 @@ function sendUpdatedStoreBalances(playerId)
 	msg:addByte(GameStore.SendingPackets.S_CoinBalance)
 	msg:addByte(0x01)
 
-	-- Send total of coins (transferable and normal coin)
-	msg:addU32(player:getTibiaCoins())
-	msg:addU32(player:getTransferableCoins()) -- How many are Transferable
+	-- Send total of coins that can be used in store purchases.
+	msg:addU32(totalCoins)
+	-- Send transferable subset (used in market/gift and transferable-only checks).
+	msg:addU32(transferableCoins)
 
 	local oldProtocol = player:getClient().version < 1200
 	if not oldProtocol then
@@ -2023,8 +2030,7 @@ end
 function Player.removeCoinsBalance(self, coins)
 	if self:canRemoveCoins(coins) then
 		sendStoreBalanceUpdating(self:getId(), true)
-		self:removeTibiaCoins(coins)
-		return true
+		return self:removeTibiaCoins(coins) == true
 	end
 
 	return false
@@ -2046,8 +2052,7 @@ end
 function Player.removeTransferableCoinsBalance(self, coins)
 	if self:canRemoveTransferableCoins(coins) then
 		sendStoreBalanceUpdating(self:getId(), true)
-		self:removeTransferableCoins(coins)
-		return true
+		return self:removeTransferableCoins(coins) == true
 	end
 
 	return false
@@ -2062,6 +2067,14 @@ function Player.addTransferableCoinsBalance(self, coins, update)
 end
 
 --- Support Functions
+local function removeCombinedCoinsBalance(self, coins)
+	local removed = self:removeTransferableAndTibiaCoins(coins) == true
+	if removed then
+		sendStoreBalanceUpdating(self:getId(), true)
+	end
+	return removed
+end
+
 function Player.makeCoinTransaction(self, offer, desc)
 	local op = false
 
@@ -2087,8 +2100,8 @@ function Player.makeCoinTransaction(self, offer, desc)
 
 	if offer.coinType == GameStore.CoinType.Coin and self:canRemoveCoins(offer.price) then
 		op = self:removeCoinsBalance(offer.price)
-	elseif offer.coinType == GameStore.CoinType.Transferable and self:canRemoveTransferableCoins(offer.price) then
-		op = self:removeTransferableCoinsBalance(offer.price)
+	elseif offer.coinType == GameStore.CoinType.Transferable and self:canPayForOffer(offer.price, offer.coinType) then
+		op = removeCombinedCoinsBalance(self, offer.price)
 	end
 
 	-- When the transaction is successful add to the history
@@ -2111,7 +2124,8 @@ function Player.canPayForOffer(self, coinsToRemove, coinType)
 
 	-- Check if the player has the required amount of transferable coins and the offer type is transferable.
 	if coinType == GameStore.CoinType.Transferable then
-		return self:canRemoveTransferableCoins(coinsToRemove)
+		-- Transferable coin offers can be paid using transferable and regular coins combined
+		return ((self:getTransferableCoins() or 0) + (self:getTibiaCoins() or 0)) >= coinsToRemove
 	end
 
 	return false

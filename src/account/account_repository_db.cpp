@@ -20,8 +20,10 @@
 #include "database/database.hpp"
 #include "utils/definitions.hpp"
 #include "utils/tools.hpp"
+#include <algorithm>
 #include "enums/account_type.hpp"
 #include "enums/account_coins.hpp"
+#include "enums/account_errors.hpp"
 #include "account/account_info.hpp"
 
 AccountRepositoryDB::AccountRepositoryDB() :
@@ -130,6 +132,96 @@ bool AccountRepositoryDB::setCoins(const uint32_t &id, const uint8_t &type, cons
 	}
 
 	return successful;
+};
+
+uint8_t AccountRepositoryDB::removeCoins(
+	const uint32_t &id,
+	const uint8_t &primaryType,
+	const uint8_t &secondaryType,
+	const uint32_t &amount,
+	const std::string &detail,
+	uint32_t &primaryCoinsRemoved,
+	uint32_t &secondaryCoinsRemoved
+) {
+	if (primaryType == secondaryType) {
+		g_logger().error("[{}]: primary and secondary coin types must be distinct. type:[{}]", __FUNCTION__, primaryType);
+		return enumToValue(AccountErrors_t::Storage);
+	}
+
+	const auto primaryColumn = coinTypeToColumn.find(primaryType);
+	const auto secondaryColumn = coinTypeToColumn.find(secondaryType);
+
+	if (primaryColumn == coinTypeToColumn.end() || secondaryColumn == coinTypeToColumn.end()) {
+		g_logger().error("[{}]: invalid coin types primary:[{}], secondary:[{}]", __FUNCTION__, primaryType, secondaryType);
+		return enumToValue(AccountErrors_t::Storage);
+	}
+
+	uint8_t result = enumToValue(AccountErrors_t::Storage);
+	const bool success = DBTransaction::executeWithinTransactionRollbackOnFailure([&]() {
+		auto accountCoins = g_database().storeQuery(fmt::format(
+			"SELECT `{}`, `{}` FROM `accounts` WHERE `id` = {} FOR UPDATE",
+			primaryColumn->second,
+			secondaryColumn->second,
+			id
+		));
+
+		if (!accountCoins) {
+			result = enumToValue(AccountErrors_t::Storage);
+			return false;
+		}
+
+		const auto primaryCoins = accountCoins->getNumber<uint32_t>(primaryColumn->second);
+		const auto secondaryCoins = accountCoins->getNumber<uint32_t>(secondaryColumn->second);
+
+		if (static_cast<uint64_t>(primaryCoins) + static_cast<uint64_t>(secondaryCoins) < amount) {
+			result = enumToValue(AccountErrors_t::RemoveCoins);
+			return false;
+		}
+
+		primaryCoinsRemoved = std::min(primaryCoins, amount);
+		secondaryCoinsRemoved = amount - primaryCoinsRemoved;
+
+		const bool updated = g_database().executeQuery(fmt::format(
+			"UPDATE `accounts` SET `{}` = {}, `{}` = {} WHERE `id` = {}",
+			primaryColumn->second,
+			primaryCoins - primaryCoinsRemoved,
+			secondaryColumn->second,
+			secondaryCoins - secondaryCoinsRemoved,
+			id
+		));
+
+		if (!updated) {
+			result = enumToValue(AccountErrors_t::Storage);
+			return false;
+		}
+
+		if (!detail.empty() && primaryCoinsRemoved > 0) {
+			if (!registerCoinsTransaction(id, enumToValue(CoinTransactionType::Remove), primaryCoinsRemoved, primaryType, detail)) {
+				result = enumToValue(AccountErrors_t::Storage);
+				return false;
+			}
+		}
+
+		if (!detail.empty() && secondaryCoinsRemoved > 0) {
+			if (!registerCoinsTransaction(id, enumToValue(CoinTransactionType::Remove), secondaryCoinsRemoved, secondaryType, detail)) {
+				result = enumToValue(AccountErrors_t::Storage);
+				return false;
+			}
+		}
+
+		result = enumToValue(AccountErrors_t::Ok);
+		return true;
+	});
+
+	if (!success) {
+		primaryCoinsRemoved = 0;
+		secondaryCoinsRemoved = 0;
+		if (result == enumToValue(AccountErrors_t::Ok)) {
+			return enumToValue(AccountErrors_t::Storage);
+		}
+	}
+
+	return result;
 };
 
 bool AccountRepositoryDB::registerCoinsTransaction(
