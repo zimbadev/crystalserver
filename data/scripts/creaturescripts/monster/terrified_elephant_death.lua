@@ -1,6 +1,6 @@
 local stampede = 283226
 
-local terrifiedElephantDeath = CreatureEvent("TerrifiedterrifiedElephantDeath")
+local terrifiedElephantDeath = CreatureEvent("TerrifiedElephantDeath")
 
 function terrifiedElephantDeath.onDeath(creature, corpse, killer, mostDamageKiller, lastHitUnjustified, mostDamageUnjustified)
 	local player = mostDamageKiller or killer

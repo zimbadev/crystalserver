@@ -484,101 +484,33 @@ bool Map::checkSightLine(Position start, Position destination) {
 		return true;
 	}
 
-	int32_t distanceX = Position::getDistanceX(start, destination);
-	int32_t distanceY = Position::getDistanceY(start, destination);
+	const int8_t stepX = start.x < destination.x ? 1 : (start.x == destination.x ? 0 : -1);
+	const int8_t stepY = start.y < destination.y ? 1 : (start.y == destination.y ? 0 : -1);
 
-	if (start.y == destination.y) {
-		// Horizontal line
-		const uint16_t delta = start.x < destination.x ? 0x0001 : 0xFFFF;
-		while (--distanceX > 0) {
-			start.x += delta;
+	const int32_t a = Position::getOffsetY(destination, start);
+	const int32_t b = Position::getOffsetX(start, destination);
+	const int32_t c = -(a * destination.x + b * destination.y);
 
-			const auto &tile = getTile(start.x, start.y, start.z);
-			if (tile && tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
-				return false;
-			}
+	while (start.x != destination.x || start.y != destination.y) {
+		const int32_t moveHorizontal = std::abs(a * (start.x + stepX) + b * start.y + c);
+		const int32_t moveVertical = std::abs(a * start.x + b * (start.y + stepY) + c);
+		const int32_t moveDiagonal = std::abs(a * (start.x + stepX) + b * (start.y + stepY) + c);
+
+		if (start.y != destination.y && (start.x == destination.x || moveHorizontal > moveVertical || moveHorizontal > moveDiagonal)) {
+			start.y += stepY;
 		}
-	} else if (start.x == destination.x) {
-		// Vertical line
-		const uint16_t delta = start.y < destination.y ? 0x0001 : 0xFFFF;
-		while (--distanceY > 0) {
-			start.y += delta;
 
-			const auto &tile = getTile(start.x, start.y, start.z);
-			if (tile && tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
-				return false;
-			}
+		if (start.x != destination.x && (start.y == destination.y || moveVertical > moveHorizontal || moveVertical > moveDiagonal)) {
+			start.x += stepX;
 		}
-	} else {
-		// Xiaolin Wu's line algorithm - https://en.wikipedia.org/wiki/Xiaolin_Wu%27s_line_algorithm
-		// based on Michael Abrash's implementation - https://www.amazon.com/gp/product/1576101746/102-5103244-8168911
-		uint16_t eAdj;
-		uint16_t eAcc = 0;
-		uint16_t deltaX = 0x0001;
-		uint16_t deltaY = 0x0001;
 
-		if (distanceY > distanceX) {
-			eAdj = (static_cast<uint32_t>(distanceX) << 16) / static_cast<uint32_t>(distanceY);
+		if (start.x == destination.x && start.y == destination.y) {
+			break;
+		}
 
-			if (start.y > destination.y) {
-				std::swap(start.x, destination.x);
-				std::swap(start.y, destination.y);
-			}
-			if (start.x > destination.x) {
-				deltaX = 0xFFFF;
-				eAcc -= eAdj;
-			}
-
-			while (--distanceY > 0) {
-				uint16_t xIncrease = 0;
-				const uint16_t eAccTemp = eAcc;
-				eAcc += eAdj;
-				if (eAcc <= eAccTemp) {
-					xIncrease = deltaX;
-				}
-
-				const auto &tile = getTile(start.x + xIncrease, start.y + deltaY, start.z);
-				if (tile && tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
-					if (Position::areInRange<1, 1>(start, destination)) {
-						return true;
-					}
-					return false;
-				}
-
-				start.x += xIncrease;
-				start.y += deltaY;
-			}
-		} else {
-			eAdj = (static_cast<uint32_t>(distanceY) << 16) / static_cast<uint32_t>(distanceX);
-
-			if (start.x > destination.x) {
-				std::swap(start.x, destination.x);
-				std::swap(start.y, destination.y);
-			}
-			if (start.y > destination.y) {
-				deltaY = 0xFFFF;
-				eAcc -= eAdj;
-			}
-
-			while (--distanceX > 0) {
-				uint16_t yIncrease = 0;
-				const uint16_t eAccTemp = eAcc;
-				eAcc += eAdj;
-				if (eAcc <= eAccTemp) {
-					yIncrease = deltaY;
-				}
-
-				const auto &tile = getTile(start.x + deltaX, start.y + yIncrease, start.z);
-				if (tile && tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
-					if (Position::areInRange<1, 1>(start, destination)) {
-						return true;
-					}
-					return false;
-				}
-
-				start.x += deltaX;
-				start.y += yIncrease;
-			}
+		const auto &tile = getTile(start.x, start.y, start.z);
+		if (tile && tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
+			return false;
 		}
 	}
 	return true;
@@ -601,7 +533,11 @@ bool Map::isSightClear(const Position &fromPos, const Position &toPos, bool floo
 	}
 
 	// Perform check for current floor
-	const bool sightClear = checkSightLine(fromPos, toPos);
+	bool sightClear = checkSightLine(fromPos, toPos);
+	if (fromPos.z == toPos.z && !sightClear) {
+		// Corner cases around solid tiles can be asymmetric, so test the reverse ray too.
+		sightClear = checkSightLine(toPos, fromPos);
+	}
 	if (floorCheck || (fromPos.z == toPos.z && sightClear)) {
 		return sightClear;
 	}

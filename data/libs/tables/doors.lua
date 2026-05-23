@@ -71,6 +71,8 @@ KeyDoorTable = {
 	{ lockedDoor = 30774, closedDoor = 30775, openDoor = 30777 },
 	{ lockedDoor = 37982, closedDoor = 37981, openDoor = 37985 },
 	{ lockedDoor = 37984, closedDoor = 37983, openDoor = 37986 },
+	{ lockedDoor = 39935, closedDoor = 39934, openDoor = 39938 },
+	{ lockedDoor = 39937, closedDoor = 39936, openDoor = 39939 },
 	{ lockedDoor = 44914, closedDoor = 44913, openDoor = 44917 },
 	{ lockedDoor = 44916, closedDoor = 44915, openDoor = 44918 },
 	{ lockedDoor = 49731, closedDoor = 49732, openDoor = 49735 },
