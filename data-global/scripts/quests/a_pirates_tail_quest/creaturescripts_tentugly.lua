@@ -29,11 +29,6 @@ local config = {
 			itemId = 35126,
 		},
 		{
-			from = Position(33731, 31180, 7),
-			to = Position(33735, 31180, 7),
-			itemId = 35126,
-		},
-		{
 			from = Position(33736, 31180, 7),
 			to = Position(33736, 31180, 7),
 			itemId = 35119,

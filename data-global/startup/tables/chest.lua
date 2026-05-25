@@ -2328,6 +2328,13 @@ ChestUnique = {
 		storage = Storage.Quest.U8_1.WhatAFoolishQuest.BagBookKnife,
 	},
 	-- The Inquisition Quest
+	[6500] = {
+		itemId = 2472,
+		itemPos = { x = 32316, y = 32260, z = 8 },
+		reward = { { 2821, 1 } },
+		weight = 13.00,
+		storage = Storage.Quest.U8_2.TheInquisitionQuest.RewardRoomText,
+	},
 	[6270] = {
 		itemId = 2472,
 		itemPos = { x = 32649, y = 31932, z = 1 },
