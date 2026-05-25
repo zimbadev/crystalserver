@@ -2067,6 +2067,10 @@ function Player.addTransferableCoinsBalance(self, coins, update)
 end
 
 --- Support Functions
+function Player.getTotalStoreCoins(self)
+	return (self:getTransferableCoins() or 0) + (self:getTibiaCoins() or 0)
+end
+
 local function removeCombinedCoinsBalance(self, coins)
 	local removed = self:removeTransferableAndTibiaCoins(coins) == true
 	if removed then
@@ -2076,15 +2080,13 @@ local function removeCombinedCoinsBalance(self, coins)
 end
 
 function Player.makeCoinTransaction(self, offer, desc)
-	local op = false
-
 	if desc then
 		desc = offer.name .. " (" .. desc .. ")"
 	else
 		desc = offer.name
 	end
 
-	if offer.Type == GameStore.OfferTypes.OFFER_TYPE_EXPBOOST then
+	if offer.type == GameStore.OfferTypes.OFFER_TYPE_EXPBOOST then
 		local expBoostCount = self:getStorageValue(GameStore.Storages.expBoostCount)
 
 		if expBoostCount == -1 or expBoostCount == 0 or expBoostCount > 5 then
@@ -2092,43 +2094,41 @@ function Player.makeCoinTransaction(self, offer, desc)
 		end
 		if GameStore.ExpBoostValues[expBoostCount] then
 			offer.price = GameStore.ExpBoostValues[expBoostCount]
-		else
-			offer.price = offer.price
 		end
 		self:setStorageValue(GameStore.Storages.expBoostCount, expBoostCount + 1)
 	end
 
-	if offer.coinType == GameStore.CoinType.Coin and self:canRemoveCoins(offer.price) then
-		op = self:removeCoinsBalance(offer.price)
-	elseif offer.coinType == GameStore.CoinType.Transferable and self:canPayForOffer(offer.price, offer.coinType) then
-		op = removeCombinedCoinsBalance(self, offer.price)
+	if offer.price <= 0 then
+		return true
 	end
+
+	if not self:canPayForOffer(offer.price) then
+		return false
+	end
+
+	local op = removeCombinedCoinsBalance(self, offer.price)
 
 	-- When the transaction is successful add to the history
 	if op then
-		GameStore.insertHistory(self:getAccountId(), GameStore.HistoryTypes.HISTORY_TYPE_NONE, desc, offer.price * -1, offer.coinType)
+		GameStore.insertHistory(
+			self:getAccountId(),
+			GameStore.HistoryTypes.HISTORY_TYPE_NONE,
+			desc,
+			offer.price * -1,
+			offer.coinType or GameStore.CoinType.Coin
+		)
 	end
 
 	return op
 end
 
--- Verifies if the player has enough resources to afford a given offer.
+-- Verifies if the player has enough resources to afford a store offer.
+-- Store purchases use transferable coins first, then regular coins (combined balance).
+-- Player-to-player coin transfers use only transferable coins (see parseTransferableCoins).
 -- @param coinsToRemove (number) - The amount of coins required for the offer.
--- @param coinType (string) - The type of the offer.
 -- @return (boolean) - Returns true if the player can pay for the offer, false otherwise.
-function Player.canPayForOffer(self, coinsToRemove, coinType)
-	-- Check if the player has the required amount of regular coins and the offer type is regular.
-	if coinType == GameStore.CoinType.Coin then
-		return self:canRemoveCoins(coinsToRemove)
-	end
-
-	-- Check if the player has the required amount of transferable coins and the offer type is transferable.
-	if coinType == GameStore.CoinType.Transferable then
-		-- Transferable coin offers can be paid using transferable and regular coins combined
-		return ((self:getTransferableCoins() or 0) + (self:getTibiaCoins() or 0)) >= coinsToRemove
-	end
-
-	return false
+function Player.canPayForOffer(self, coinsToRemove)
+	return self:getTotalStoreCoins() >= coinsToRemove
 end
 
 --- Other players functions

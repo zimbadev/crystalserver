@@ -5584,7 +5584,7 @@ void ProtocolGame::updateCoinBalance() {
 				const auto [coins, errCoin] = threadPlayer->getAccount()->getCoins(enumToValue(CoinType::Normal));
 				const auto [transferCoins, errTCoin] = threadPlayer->getAccount()->getCoins(enumToValue(CoinType::Transferable));
 
-				threadPlayer->coinBalance = coins;
+				threadPlayer->coinBalance = coins + transferCoins;
 				threadPlayer->coinTransferableBalance = transferCoins;
 				threadPlayer->sendCoinBalance();
 			}
