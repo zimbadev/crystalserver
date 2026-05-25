@@ -2110,13 +2110,7 @@ function Player.makeCoinTransaction(self, offer, desc)
 
 	-- When the transaction is successful add to the history
 	if op then
-		GameStore.insertHistory(
-			self:getAccountId(),
-			GameStore.HistoryTypes.HISTORY_TYPE_NONE,
-			desc,
-			offer.price * -1,
-			offer.coinType or GameStore.CoinType.Coin
-		)
+		GameStore.insertHistory(self:getAccountId(), GameStore.HistoryTypes.HISTORY_TYPE_NONE, desc, offer.price * -1, offer.coinType or GameStore.CoinType.Coin)
 	end
 
 	return op
