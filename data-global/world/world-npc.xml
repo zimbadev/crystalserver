@@ -74,7 +74,7 @@
 	</npc>
 	<npc centerx="32952" centery="31440" centerz="3" radius="1">
 		<npc name="A Fading Memory" x="0" y="0" z="3" spawntime="60" />
-	</npc>	
+	</npc>
 	<npc centerx="32992" centery="31471" centerz="3" radius="1">
 		<npc name="Lazaran" x="0" y="0" z="3" spawntime="60" />
 	</npc>
@@ -192,6 +192,9 @@
 	<npc centerx="33027" centery="32417" centerz="4" radius="1">
 		<npc name="Samir" x="0" y="0" z="4" spawntime="60" />
 	</npc>
+	<npc centerx="32393" centery="32470" centerz="4" radius="1">
+		<npc name="Augustin" x="0" y="0" z="4" spawntime="60" />
+	</npc>
 	<npc centerx="32400" centery="32481" centerz="4" radius="1">
 		<npc name="Bounac Guard" x="0" y="0" z="4" spawntime="60" />
 	</npc>
@@ -203,9 +206,6 @@
 	</npc>
 	<npc centerx="32434" centery="32494" centerz="4" radius="1">
 		<npc name="Dal the Huntress" x="0" y="0" z="4" spawntime="60" />
-	</npc>
-	<npc centerx="32393" centery="32470" centerz="4" radius="1">
-		<npc name="Augustin" x="0" y="0" z="4" spawntime="60" />
 	</npc>
 	<npc centerx="33109" centery="32525" centerz="4" radius="1">
 		<npc name="Haroun" x="0" y="0" z="4" spawntime="60" />
@@ -377,9 +377,6 @@
 	</npc>
 	<npc centerx="32422" centery="32481" centerz="5" radius="1">
 		<npc name="Wes the Blacksmith" x="0" y="0" z="5" spawntime="60" />
-	</npc>
-	<npc centerx="32411" centery="32486" centerz="7" radius="1">
-		<npc name="Fitzmaurice" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="32435" centery="32492" centerz="5" radius="1">
 		<npc name="Dal the Huntress" x="0" y="0" z="5" spawntime="60" />
@@ -1249,7 +1246,7 @@
 		<npc name="Guide Meruka" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="32914" centery="31490" centerz="7" radius="1">
-		<npc name="A Wandering Soul" x="0" y="0" z="0" spawntime="60" />
+		<npc name="A Wandering Soul" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="33919" centery="31492" centerz="7" radius="1">
 		<npc name="Guard Saros" x="0" y="0" z="7" spawntime="60" />
@@ -2004,11 +2001,22 @@
 	<npc centerx="33238" centery="32482" centerz="7" radius="1">
 		<npc name="Miraia" x="0" y="0" z="7" spawntime="60" />
 	</npc>
-	<npc centerx="32411" centery="32486" centerz="7" radius="0">
+	<npc centerx="32411" centery="32486" centerz="7" radius="1">
 		<npc name="Fitzmaurice" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="32559" centery="32490" centerz="7" radius="7">
+		<npc name="Gustavo, The Guard" x="1" y="-2" z="7" spawntime="60" />
+		<npc name="Flavius" x="7" y="-1" z="7" spawntime="60" direction="2" />
+		<npc name="Anna" x="-7" y="7" z="7" spawntime="60" direction="2" />
 	</npc>
 	<npc centerx="32417" centery="32501" centerz="7" radius="1">
 		<npc name="Innkeeper Alphonse" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="32554" centery="32505" centerz="7" radius="1">
+		<npc name="Avriel" x="0" y="0" z="7" spawntime="60" direction="2" />
+	</npc>
+	<npc centerx="32571" centery="32507" centerz="7" radius="1">
+		<npc name="Viola" x="0" y="0" z="7" spawntime="60" direction="2" />
 	</npc>
 	<npc centerx="32398" centery="32509" centerz="7" radius="1">
 		<npc name="An Idol" x="0" y="0" z="7" spawntime="60" />
@@ -3114,16 +3122,5 @@
 	</npc>
 	<npc centerx="33587" centery="32966" centerz="15" radius="1">
 		<npc name="Gnomish Operative (Raiders)" x="0" y="0" z="15" spawntime="60" />
-	</npc>
-	<npc centerx="32559" centery="32490" centerz="7" radius="7">
-		<npc name="Gustavo, The Guard" x="1" y="-2" z="7" spawntime="60" />
-		<npc name="Flavius" x="7" y="-1" z="7" spawntime="60" direction="2" />
-		<npc name="Anna" x="-7" y="7" z="7" spawntime="60" direction="2" />
-	</npc>
-	<npc centerx="32554" centery="32505" centerz="7" radius="1">
-		<npc name="Avriel" x="0" y="0" z="7" spawntime="60" direction="2" />
-	</npc>
-	<npc centerx="32571" centery="32507" centerz="7" radius="1">
-		<npc name="Viola" x="0" y="0" z="7" spawntime="60" direction="2" />
 	</npc>
 </npcs>

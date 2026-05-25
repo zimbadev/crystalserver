@@ -44,6 +44,7 @@ function onUpdateDatabase()
 			`reward_soulseals` int NOT NULL DEFAULT 0,
 			`soulseals_points` int NOT NULL DEFAULT 0,
 			`needs_reward` tinyint NOT NULL DEFAULT 0,
+			`weekly_progress_finished` tinyint NOT NULL DEFAULT 0,
 			`kill_tasks` BLOB NULL,
 			`delivery_tasks` BLOB NULL,
 			CONSTRAINT `player_weekly_tasks_pk` PRIMARY KEY (`player_id`),
