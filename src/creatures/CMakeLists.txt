@@ -18,8 +18,9 @@ target_sources(${PROJECT_NAME}_lib PRIVATE
     players/grouping/groups.cpp
     players/grouping/guild.cpp
     players/grouping/party.cpp
-    players/imbuements/imbuements.cpp
-    players/management/ban.cpp
+            players/imbuements/imbuements.cpp
+            players/livestream/livestream.cpp
+            players/management/ban.cpp
     players/management/waitlist.cpp
     players/storages/storages.cpp
     players/player.cpp

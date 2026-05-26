@@ -50,6 +50,7 @@ class Container;
 class Tile;
 class Connection;
 class ProtocolGame;
+class LivestreamManager;
 class PreySlot;
 class TaskHuntingSlot;
 class TaskHuntingOption;
@@ -551,10 +552,18 @@ private:
 	void sendWeaponProficiencyExperience(const uint16_t itemId, const uint32_t experience);
 	void sendWeaponProficiencyInfo(const uint16_t itemId);
 
+	void sendClientLoginPreamble(OperatingSystem_t operatingSystem);
+	void castViewerLogin(const std::string &name, const std::string &password, OperatingSystem_t operatingSystem);
+	void sendLivestreamViewerAppear(const std::shared_ptr<Player> &foundPlayer);
+	void syncLivestreamViewerOpenContainers(const std::shared_ptr<Player> &foundPlayer);
+	void resendLivestreamViewerContainer(NetworkMessage &msg);
+	bool canWatchLivestream(const std::shared_ptr<Player> &foundPlayer, const std::string &password);
+
 	friend class Player;
 	friend class PlayerWheel;
 	friend class PlayerVIP;
 	friend class PlayerAttachedEffects;
+	friend class LivestreamManager;
 
 	std::unordered_set<uint32_t> knownCreatureSet;
 	std::shared_ptr<Player> player = nullptr;
@@ -577,6 +586,10 @@ private:
 	bool oldProtocol = false;
 
 	uint16_t otclientV8 = 0;
+	bool m_isLivestreamBroadcaster = false;
+	bool m_isLivestreamViewer = false;
+	int64_t m_livestreamMessageCooldownTime = 0;
+	uint32_t m_livestreamMessageCount = 0;
 	bool isOTC = false;
 	bool isOTCR = false;
 

@@ -433,5 +433,10 @@ class PlayerFunctions {
 
 	static int luaPlayerDropConnection(lua_State* L);
 
+	static int luaPlayerGetLivestreamViewersCount(lua_State* L);
+	static int luaPlayerGetLivestreamViewers(lua_State* L);
+	static int luaPlayerSetLivestreamViewers(lua_State* L);
+	static int luaPlayerIsLivestreamViewer(lua_State* L);
+
 	friend class CreatureFunctions;
 };

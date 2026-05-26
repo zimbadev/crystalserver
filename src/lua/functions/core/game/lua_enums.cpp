@@ -24,6 +24,7 @@
 #include "game/functions/game_reload.hpp"
 #include "io/io_bosstiary.hpp"
 #include "lua/functions/lua_functions_loader.hpp"
+#include "utils/const.hpp"
 
 constexpr const char* soundNamespace = "SOUND_EFFECT_TYPE_";
 

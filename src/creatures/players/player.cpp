@@ -78,6 +78,7 @@
 #include "creatures/players/wheel/wheel_definitions.hpp"
 #include "creatures/players/proficiencies/proficiencies.hpp"
 #include "creatures/players/proficiencies/proficiencies_definitions.hpp"
+#include "creatures/players/livestream/livestream.hpp"
 #include "utils/tools.hpp"
 
 MuteCountMap Player::muteCountMap;
@@ -882,6 +883,10 @@ uint32_t Player::getProtocolVersion() const {
 	}
 
 	return client->getVersion();
+}
+
+std::shared_ptr<ProtocolGame> Player::getClient() const {
+	return client;
 }
 
 bool Player::hasSecureMode() const {
@@ -11271,6 +11276,25 @@ void Player::onCreatureAppear(const std::shared_ptr<Creature> &creature, bool is
 		storedConditionList.clear();
 
 		updateRegeneration();
+
+		std::string livestreamPassword;
+		if (auto passwordValue = kv()->scoped("livestream-system")->get("password")) {
+			livestreamPassword = passwordValue->get<std::string>();
+		}
+
+		std::string livestreamDescription;
+		if (auto descriptionValue = kv()->scoped("livestream-system")->get("description")) {
+			livestreamDescription = descriptionValue->get<std::string>();
+		}
+
+		uint32_t livestreamRecord = 0;
+		if (auto recordValue = kv()->scoped("livestream-system")->get("live-record")) {
+			const auto rawRecord = recordValue->getNumber();
+			if (rawRecord > 0) {
+				livestreamRecord = static_cast<uint32_t>(std::min<double>(rawRecord, std::numeric_limits<uint32_t>::max()));
+			}
+		}
+		g_livestream().setInitialState(static_self_cast<Player>(), livestreamPassword, livestreamDescription, livestreamRecord);
 
 		const auto &bed = g_game().getBedBySleeper(guid);
 		if (bed) {
