@@ -34,6 +34,17 @@ Weapons &Weapons::getInstance() {
 	return inject<Weapons>();
 }
 
+namespace {
+/** 15.12+ weapon swing: same as Tibia Global — effect anchored on the target tile; client picks direction. */
+void sendWeaponAttackEffect(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &target, uint16_t effect) {
+	if (!player || !target || effect == CONST_ME_NONE) {
+		return;
+	}
+
+	g_game().addMagicEffect(target->getPosition(), effect, player);
+}
+} // namespace
+
 WeaponShared_ptr Weapons::getWeapon(const std::shared_ptr<Item> &item) const {
 	if (!item) {
 		return nullptr;
@@ -230,13 +241,14 @@ bool Weapon::useFist(const std::shared_ptr<Player> &player, const std::shared_pt
 	params.blockedByArmor = true;
 	params.blockedByShield = true;
 	params.soundImpactEffect = SoundEffect_t::HUMAN_CLOSE_ATK_FIST;
-	params.impactEffect = CONST_ME_FIST_ATTACK; // 15.12+ weapon attack effect
+	params.impactEffect = CONST_ME_NONE;
 
 	CombatDamage damage;
 	damage.origin = ORIGIN_MELEE;
 	damage.primary.type = params.combatType;
 	damage.primary.value = -normal_random(0, maxDamage);
 
+	sendWeaponAttackEffect(player, target, CONST_ME_FIST_ATTACK);
 	Combat::doCombatHealth(player, target, damage, params);
 	if (!player->hasFlag(PlayerFlags_t::NotGainSkill) && player->getAddAttackSkill()) {
 		player->addSkillAdvance(SKILL_FIST, 1);
@@ -290,12 +302,9 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		}
 	}
 
-	// Native client weapon swing (15.x): effect on attacker tile, not on target
+	// Native client weapon swing (15.x): effect on target tile (Tibia Global behavior)
 	if (cleavePercent == 0) {
-		const uint16_t attackEffect = getWeaponAttackEffect(item, player);
-		if (attackEffect != CONST_ME_NONE) {
-			g_game().addMagicEffect(player->getPosition(), attackEffect, player);
-		}
+		sendWeaponAttackEffect(player, target, getWeaponAttackEffect(item, player));
 	}
 
 	if (isLoadedScriptId()) {
