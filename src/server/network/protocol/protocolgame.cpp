@@ -1074,7 +1074,7 @@ void ProtocolGame::disconnectClient(const std::string &message) const {
 }
 
 void ProtocolGame::writeToOutputBuffer(NetworkMessage &msg) {
-	g_dispatcher().safeCall([self = getThis(), msg = std::move(msg)] {
+	g_dispatcher().safeCall([self = getThis(), msg = std::move(msg)]() mutable {
 		self->getOutputBuffer(msg.getLength())->append(msg);
 		if (self->m_isLivestreamBroadcaster && self->player && !self->m_isLivestreamViewer) {
 			g_livestream().broadcastPacket(self->player, self, msg);
