@@ -483,7 +483,7 @@ void LivestreamManager::handleChat(const ProtocolGame_ptr &client, const std::st
 	handleViewerMessage(client, session, viewerIt->second, text);
 }
 
-void LivestreamManager::broadcastPacket(const std::shared_ptr<Player> &caster, const ProtocolGame_ptr &owner, const NetworkMessage &message) {
+void LivestreamManager::broadcastPacket(const std::shared_ptr<Player> &caster, const ProtocolGame_ptr &owner, NetworkMessage &message) {
 	if (!caster || !owner || message.getLength() == 0) {
 		return;
 	}

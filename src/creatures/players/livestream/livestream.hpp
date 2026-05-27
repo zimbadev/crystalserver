@@ -53,7 +53,7 @@ public:
 	void addViewer(const std::shared_ptr<Player> &caster, const ProtocolGame_ptr &viewer, bool spy = false);
 	void removeViewer(const ProtocolGame_ptr &viewer, bool spy = false);
 	void handleChat(const ProtocolGame_ptr &client, const std::string &text);
-	void broadcastPacket(const std::shared_ptr<Player> &caster, const ProtocolGame_ptr &owner, const NetworkMessage &message);
+	void broadcastPacket(const std::shared_ptr<Player> &caster, const ProtocolGame_ptr &owner, NetworkMessage &message);
 	void updateViewerStorage(const std::shared_ptr<Player> &caster) const;
 
 private:
