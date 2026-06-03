@@ -3595,7 +3595,7 @@ ItemUnique = {
 	},
 	-- The Order of the Lion Quest
 	[47404] = {
-		itemId = 635,
+		itemId = 2824,
 		itemPos = { x = 32469, y = 32503, z = 7 },
 	},
 	[47405] = {
