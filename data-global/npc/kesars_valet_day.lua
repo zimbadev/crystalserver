@@ -1,5 +1,5 @@
-local internalNpcName = "Fitzmaurice"
-local npcType = Game.createNpcType(internalNpcName)
+local internalNpcName = "Kesar's Valet"
+local npcType = Game.createNpcType("Kesar's Valet (Day)")
 local npcConfig = {}
 
 npcConfig.name = internalNpcName
@@ -12,15 +12,15 @@ npcConfig.walkRadius = 2
 
 npcConfig.outfit = {
 	lookType = 1071,
-	lookHead = 57,
-	lookBody = 57,
-	lookLegs = 57,
-	lookFeet = 57,
-	lookAddons = 0,
+	lookHead = 38,
+	lookBody = 19,
+	lookLegs = 38,
+	lookFeet = 19,
+	lookAddons = 1,
 }
 
 npcConfig.respawnType = {
-	period = RESPAWNPERIOD_NIGHT,
+	period = RESPAWNPERIOD_DAY,
 	underground = false,
 }
 
@@ -58,5 +58,4 @@ end
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
 npcType:register(npcConfig)

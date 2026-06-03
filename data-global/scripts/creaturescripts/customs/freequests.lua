@@ -356,7 +356,7 @@ local questTable = {
 	{ storageName = "TheNewFrontier.Mission05.Telas", storage = Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, storageValue = 1 },
 	{ storageName = "TheNewFrontier.Mission05.Humgolf", storage = Storage.Quest.U8_54.TheNewFrontier.Mission05.Humgolf, storageValue = 1 },
 	{ storageName = "TheOrderOfTheLion.QuestLine", storage = Storage.Quest.U12_40.TheOrderOfTheLion.QuestLine, storageValue = 1 },
-	{ storageName = "TheOrderOfTheLion.AccessEastSide", storage = Storage.Quest.U12_40.TheOrderOfTheLion.AccessEastSide, storageValue = 1 },
+	{ storageName = "TheOrderOfTheLion.AccessEasternSide", storage = Storage.Quest.U12_40.TheOrderOfTheLion.AccessEasternSide, storageValue = 1 },
 	{ storageName = "TheOrderOfTheLion.AccessSouthernSide", storage = Storage.Quest.U12_40.TheOrderOfTheLion.AccessSouthernSide, storageValue = 1 },
 	{ storageName = "ThreatenedDreams.QuestLine", storage = Storage.Quest.U11_40.ThreatenedDreams.QuestLine, storageValue = 1 },
 	{ storageName = "ThreatenedDreams.Mission01[1]", storage = Storage.Quest.U11_40.ThreatenedDreams.Mission01[1], storageValue = 16 },

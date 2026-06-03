@@ -1,5 +1,5 @@
-local internalNpcName = "Fitzmaurice"
-local npcType = Game.createNpcType(internalNpcName)
+local internalNpcName = "Kesar the Younger"
+local npcType = Game.createNpcType("Kesar the Younger (Night)")
 local npcConfig = {}
 
 npcConfig.name = internalNpcName
@@ -11,12 +11,12 @@ npcConfig.walkInterval = 2000
 npcConfig.walkRadius = 2
 
 npcConfig.outfit = {
-	lookType = 1071,
-	lookHead = 57,
-	lookBody = 57,
-	lookLegs = 57,
-	lookFeet = 57,
-	lookAddons = 0,
+	lookType = 128,
+	lookHead = 0,
+	lookBody = 0,
+	lookLegs = 0,
+	lookFeet = 0,
+	lookAddons = 2,
 }
 
 npcConfig.respawnType = {
@@ -27,6 +27,8 @@ npcConfig.respawnType = {
 npcConfig.flags = {
 	floorchange = false,
 }
+
+npcConfig.voices = {}
 
 local keywordHandler = KeywordHandler:new()
 local npcHandler = NpcHandler:new(keywordHandler)
@@ -55,8 +57,29 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
+local function creatureSayCallback(npc, creature, type, message)
+	local player = Player(creature)
+	local playerId = player:getId()
+
+	if MsgContains(message, "siege") then
+		local mission = player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission)
+
+		if mission == 4 then
+			npcHandler:say("Will you escort me to the camp of the usurpers?", npc, creature)
+			npcHandler:setTopic(playerId, 1)
+		else
+			npcHandler:say("The night is restless, traveller. Let us speak of this when the sun rises.", npc, creature)
+		end
+	elseif message:lower() == "yes" and npcHandler:getTopic(playerId) == 1 then
+		if player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission) == 4 then
+			npcHandler:say("Alright, let us go then. And thank you.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		end
+	end
+end
+
+npcHandler:setMessage(MESSAGE_GREET, "Hail, traveller. The night holds many dangers. Stay close.")
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
 npcType:register(npcConfig)

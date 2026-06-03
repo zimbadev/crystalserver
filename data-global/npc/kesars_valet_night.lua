@@ -1,5 +1,5 @@
-local internalNpcName = "Innkeeper Alphonse"
-local npcType = Game.createNpcType(internalNpcName)
+local internalNpcName = "Kesar's Valet"
+local npcType = Game.createNpcType("Kesar's Valet (Night)")
 local npcConfig = {}
 
 npcConfig.name = internalNpcName
@@ -11,12 +11,12 @@ npcConfig.walkInterval = 2000
 npcConfig.walkRadius = 2
 
 npcConfig.outfit = {
-	lookType = 128,
-	lookHead = 77,
-	lookBody = 40,
-	lookLegs = 25,
-	lookFeet = 95,
-	lookAddons = 0,
+	lookType = 1071,
+	lookHead = 38,
+	lookBody = 19,
+	lookLegs = 38,
+	lookFeet = 19,
+	lookAddons = 1,
 }
 
 npcConfig.respawnType = {
@@ -27,8 +27,6 @@ npcConfig.respawnType = {
 npcConfig.flags = {
 	floorchange = false,
 }
-
-npcConfig.voices = {}
 
 local keywordHandler = KeywordHandler:new()
 local npcHandler = NpcHandler:new(keywordHandler)
@@ -59,25 +57,5 @@ end
 
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
-
-npcConfig.shop = {
-	{ itemName = "ice cube", clientId = 7441, sell = 250 },
-	{ itemName = "cheese", clientId = 3607, buy = 12 },
-	{ itemName = "fish", clientId = 3578, buy = 6 },
-	{ itemName = "mug of lemonade", clientId = 2880, buy = 2, count = 12 },
-	{ itemName = "mug of beer", clientId = 2880, buy = 2, count = 3 },
-	{ itemName = "mug of water", clientId = 2880, buy = 1, count = 1 },
-	{ itemName = "mug of wine", clientId = 2880, buy = 3, count = 2 },
-}
--- On buy npc shop message
-npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
-	npc:sellItem(player, itemId, amount, subType, 0, ignore, inBackpacks)
-end
--- On sell npc shop message
-npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name, totalCost)
-	player:sendTextMessage(MESSAGE_TRADE, string.format("Sold %ix %s for %i gold.", amount, name, totalCost))
-end
--- On check npc shop message (look item)
-npcType.onCheckItem = function(npc, player, clientId, subType) end
 
 npcType:register(npcConfig)

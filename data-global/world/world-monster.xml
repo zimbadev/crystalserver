@@ -43365,7 +43365,7 @@
 	<monster centerx="32454" centery="32478" centerz="7" radius="1">
 		<monster name="Usurper Knight" x="0" y="0" z="7" spawntime="60" />
 	</monster>
-	<monster centerx="32456" centery="32479" centerz="7" radius="1">
+	<monster centerx="32439" centery="32470" centerz="6" radius="1">
 		<monster name="Ancient Lion Knight" x="0" y="1" z="7" spawntime="860" />
 	</monster>
 	<monster centerx="33503" centery="32479" centerz="7" radius="1">

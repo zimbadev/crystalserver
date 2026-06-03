@@ -2806,10 +2806,12 @@ Storage = {
 					KingZelosKilled = 46877,
 					InquisitionOutfitReceived = 46878,
 				},
-				Cobra = 46864,
+				CobraBastion = {
+					Access = 46864,
+				},
+				HandOfTheInquisitionOutfits = {},
+				-- Kilmaresh = {}, done earlier in the file
 			},
-			HandOfTheInquisitionOutfits = {},
-			-- Kilmaresh = {}, done earlier in the file
 		},
 		U12_30 = { -- update 12.30 - Reserved Storages 47001 - 47200
 			FalconerOutfits = {},
@@ -2829,9 +2831,24 @@ Storage = {
 		U12_40 = { -- update 12.40 - Reserved Storages 47201 - 47500
 			RevenantOutfits = {},
 			TheOrderOfTheLion = {
-				QuestLine = 47401,
-				AccessEastSide = 47402,
+				Evrard = 47401,
+				AccessEasternSide = 47402,
 				AccessSouthernSide = 47403,
+				Parchment = 47404,
+				MapStorage = 47405,
+				BounacTrust = 47406,
+				WesTask = 47407,
+				JehanTask = 47408,
+				OnfroiKills = 47409,
+				OnfroiTask = 47410,
+				DalTask = 47411,
+				DalKills = 47412,
+				FralTask = 47413,
+				KesarSiegeTimer = 47414,
+				KesarMission = 47415,
+				FugueSpawnTime = 47416,
+				FugueSpawned = 47417,
+				AugustinDoor = 47418,
 			},
 			SoulWar = {
 				GoshnarMaliceKilled = 47211,
