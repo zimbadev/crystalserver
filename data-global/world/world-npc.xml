@@ -1,11 +1,5 @@
 <?xml version="1.0"?>
 <npcs>
-	<npc centerx="32401" centery="32479" centerz="4" radius="1">
-		<npc name="Bounac Guard" x="0" y="0" z="0" spawntime="60" />
-	</npc>
-	<npc centerx="32417" centery="32500" centerz="7" radius="1">
-		<npc name="Innkeeper Alphonse" x="0" y="0" z="0" spawntime="60" />
-	</npc>
 	<npc centerx="33957" centery="31513" centerz="0" radius="1">
 		<npc name="Tanyt" x="0" y="0" z="0" spawntime="60" />
 	</npc>
@@ -2026,6 +2020,9 @@
 	</npc>
 	<npc centerx="32398" centery="32509" centerz="7" radius="1">
 		<npc name="An Idol" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="32535" centery="32512" centerz="7" radius="1">
+		<npc name="A Seagull" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="32329" centery="32528" centerz="7" radius="1">
 		<npc name="Marina" x="0" y="0" z="7" spawntime="60" />

@@ -18757,6 +18757,9 @@
 	<monster centerx="33057" centery="32469" centerz="6" radius="3">
 		<monster name="Skeleton" x="-2" y="0" z="6" spawntime="90" />
 	</monster>
+	<monster centerx="32439" centery="32470" centerz="6" radius="1">
+		<monster name="Ancient Lion Knight" x="0" y="1" z="6" spawntime="860" />
+	</monster>
 	<monster centerx="32369" centery="32472" centerz="6" radius="10">
 		<monster name="Usurper Knight" x="1" y="-6" z="6" spawntime="60" />
 		<monster name="Usurper Archer" x="0" y="-5" z="6" spawntime="60" />
@@ -43364,9 +43367,6 @@
 	</monster>
 	<monster centerx="32454" centery="32478" centerz="7" radius="1">
 		<monster name="Usurper Knight" x="0" y="0" z="7" spawntime="60" />
-	</monster>
-	<monster centerx="32439" centery="32470" centerz="6" radius="1">
-		<monster name="Ancient Lion Knight" x="0" y="1" z="7" spawntime="860" />
 	</monster>
 	<monster centerx="33503" centery="32479" centerz="7" radius="1">
 		<monster name="Silencer" x="0" y="0" z="7" spawntime="90" />
