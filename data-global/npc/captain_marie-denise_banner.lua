@@ -12,12 +12,7 @@ npcConfig.walkRadius = 0
 
 -- TODO: Confirmar outfit na wiki (lookType, cores, addons)
 npcConfig.outfit = {
-	lookType = 963, -- 1691, -- TODO: Confirmar lookType (Female Retro Warrior?)
-	lookHead = 78, -- TODO: Confirmar cor
-	lookBody = 57, -- TODO: Confirmar cor
-	lookLegs = 76, -- TODO: Confirmar cor
-	lookFeet = 95, -- TODO: Confirmar cor
-	lookAddons = 0, -- TODO: Confirmar addons
+	lookTypeEx = 52733,
 }
 
 npcConfig.flags = {
