@@ -35,14 +35,14 @@ Weapons &Weapons::getInstance() {
 }
 
 namespace {
-/** 15.12+ weapon swing: same as Tibia Global — effect anchored on the target tile; client picks direction. */
-void sendWeaponAttackEffect(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &target, uint16_t effect) {
-	if (!player || !target || effect == CONST_ME_NONE) {
-		return;
-	}
+	/** 15.12+ weapon swing: same as Tibia Global — effect anchored on the target tile; client picks direction. */
+	void sendWeaponAttackEffect(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &target, uint16_t effect) {
+		if (!player || !target || effect == CONST_ME_NONE) {
+			return;
+		}
 
-	g_game().addMagicEffect(target->getPosition(), effect, player);
-}
+		g_game().addMagicEffect(target->getPosition(), effect, player);
+	}
 } // namespace
 
 WeaponShared_ptr Weapons::getWeapon(const std::shared_ptr<Item> &item) const {
