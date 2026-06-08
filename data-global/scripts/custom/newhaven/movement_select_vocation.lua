@@ -1,5 +1,23 @@
 local selectVocationNewhaven = MoveEvent()
 
+local function scheduleStarterItems(playerId, attemptsLeft)
+	local player = Player(playerId)
+	if not player or player:getStorageValue(Storage.Quest.U15_12.newhavenStarterItems) > 0 then
+		return
+	end
+
+	if player:getVocation():getId() ~= VOCATION_NONE then
+		Newhaven.giveStarterItems(player)
+		return
+	end
+
+	if attemptsLeft <= 0 then
+		return
+	end
+
+	addEvent(scheduleStarterItems, 1000, playerId, attemptsLeft - 1)
+end
+
 function selectVocationNewhaven.onStepIn(creature, item, position, fromPosition)
 	local player = creature:getPlayer()
 	if not player then
@@ -10,6 +28,9 @@ function selectVocationNewhaven.onStepIn(creature, item, position, fromPosition)
 
 	if player:getVocation():getId() == VOCATION_NONE then
 		player:sendTutorial(2)
+		scheduleStarterItems(player:getId(), 60)
+	else
+		Newhaven.giveStarterItems(player)
 	end
 
 	player:addMapMark(Position(32554, 32507, 7), 11, "Avriel's Shop")

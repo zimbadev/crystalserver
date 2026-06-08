@@ -12,6 +12,10 @@ function newhavenOnLogin.onLogin(player)
 
 	if player:getStorageValue(Storage.Quest.U15_12.newhavenCitizen) == 1 then
 		player:registerEvent("onDeathNewhaven")
+
+		if player:getVocation():getId() ~= VOCATION_NONE then
+			Newhaven.giveStarterItems(player)
+		end
 	end
 
 	return true
