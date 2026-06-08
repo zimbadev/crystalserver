@@ -623,6 +623,7 @@ private:
 	void sendDisableLoginMusic();
 
 	uint8_t m_playerDeathTime = 0;
+	uint32_t m_lastForgeOpenTime = 0;
 
 	void resetPlayerDeathTime() {
 		m_playerDeathTime = 0;

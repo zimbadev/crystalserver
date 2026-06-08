@@ -3535,7 +3535,31 @@ void ProtocolGame::parseSendResourceBalance() {
 }
 
 void ProtocolGame::parseSendResourceBalance(NetworkMessage &msg) {
-	sendResourceBalance(static_cast<Resource_t>(msg.getByte()));
+	// Portable forge open (client UI): empty 0xED requests the forge item list (0x87).
+	if (!msg.canRead(1)) {
+		m_lastForgeOpenTime = OTSYS_TIME();
+		sendOpenForge();
+		return;
+	}
+
+	const auto resourceType = static_cast<Resource_t>(msg.getByte());
+	switch (resourceType) {
+		case RESOURCE_FORGE_DUST:
+		case RESOURCE_FORGE_SLIVER:
+		case RESOURCE_FORGE_CORES: {
+			const uint32_t now = OTSYS_TIME();
+			if (now - m_lastForgeOpenTime > 1000) {
+				m_lastForgeOpenTime = now;
+				sendOpenForge();
+			} else {
+				sendResourceBalance(resourceType);
+			}
+			break;
+		}
+		default:
+			sendResourceBalance(resourceType);
+			break;
+	}
 }
 
 void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
@@ -6695,7 +6719,17 @@ void ProtocolGame::parseForgeBrowseHistory(NetworkMessage &msg) {
 		return;
 	}
 
-	g_game().playerBrowseForgeHistory(player->getID(), msg.getByte());
+	uint8_t page = 0;
+	if (msg.canRead(1)) {
+		page = msg.getByte();
+	}
+
+	const uint32_t now = OTSYS_TIME();
+	if (now - m_lastForgeOpenTime > 1000) {
+		m_lastForgeOpenTime = now;
+		sendOpenForge();
+	}
+	g_game().playerBrowseForgeHistory(player->getID(), page);
 }
 
 void ProtocolGame::sendForgeResult(ForgeAction_t actionType, uint16_t leftItemId, uint8_t leftTier, uint16_t rightItemId, uint8_t rightTier, bool success, uint8_t bonus, uint8_t coreCount, bool convergence) {
