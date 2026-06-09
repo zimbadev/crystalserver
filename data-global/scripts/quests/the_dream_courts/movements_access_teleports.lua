@@ -18,8 +18,7 @@ local default = {
 		toPosition = Position(33619, 32528, 15),
 		neededStorage = Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Questline,
 		value = 2,
-		msg =
-		"You traverse the rubble with ease but more of it falls down behind you, essentially blocking your path once again.",
+		msg = "You traverse the rubble with ease but more of it falls down behind you, essentially blocking your path once again.",
 	},
 }
 
@@ -103,8 +102,7 @@ function movements_acessTeleports.onStepIn(creature, item, position, fromPositio
 		for i = 1, #dreamScar do
 			if os.date("%A") == dreamScar[i].day then
 				if player:getStorageValue(dreamScar[i].storageTimer) > os.time() then
-					player:sendTextMessage(MESSAGE_EVENT_ADVANCE,
-						"You have to wait to challenge " .. dreamScar[i].bossName .. " again!")
+					player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have to wait to challenge " .. dreamScar[i].bossName .. " again!")
 					player:teleportTo(fromPosition)
 				else
 					player:teleportTo(Position(32208, 32026, 13))
