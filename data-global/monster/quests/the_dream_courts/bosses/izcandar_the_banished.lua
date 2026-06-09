@@ -15,6 +15,7 @@ monster.outfit = {
 
 monster.events = {
 	"dreamCourtsDeath",
+	"izcandarThink",
 }
 
 monster.bosstiary = {

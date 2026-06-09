@@ -233,7 +233,6 @@ local setting = {
 	28830, -- energized demonbone
 	28831, -- unliving demonbone
 	28832, -- sulphurous demonbone
-	29286, -- golden axe
 	29419, -- resizer
 	29421, -- summerblade
 	29422, -- winterblade

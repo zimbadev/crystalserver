@@ -22,7 +22,7 @@ monster.manaCost = 0
 
 monster.events = {
 	"dreamCourtsDeath",
-	"facelessBaneImmunity",
+	"facelessThink",
 }
 
 monster.changeTarget = {
@@ -152,9 +152,9 @@ monster.immunities = {
 
 mType.onSpawn = function(monster, spawnPosition)
 	if monster:getType():isRewardBoss() then
-		Game.setStorageValue(GlobalStorage.TheDreamCourts.FacelessBane.Deaths, -1)
-		Game.setStorageValue(GlobalStorage.TheDreamCourts.FacelessBane.StepsOn, -1)
-		Game.setStorageValue(GlobalStorage.TheDreamCourts.FacelessBane.ResetSteps, 1)
+		Game.setStorageValue(Storage.Quest.U12_00.TheDreamCourts.BurriedCatedralGlobal.FacelessTiles, -1)
+		Game.setStorageValue(Storage.Quest.U12_00.TheDreamCourts.BurriedCatedral.FacelessLifes, 0)
+		monster:setStorageValue(Storage.Quest.U12_00.TheDreamCourts.BurriedCatedral.FacelessLifes, -1)
 		monster:setReward(true)
 	end
 end

@@ -24,6 +24,18 @@ local questlog = {
 		maxValue = 5,
 	},
 	{
+		bossName = "Izcandar Champion of Winter",
+		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.DreamScar.BossCount,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.IzcandarTimer,
+		maxValue = 5,
+	},
+	{
+		bossName = "Izcandar Champion of Summer",
+		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.DreamScar.BossCount,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.IzcandarTimer,
+		maxValue = 5,
+	},
+	{
 		bossName = "Plagueroot",
 		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.DreamScar.BossCount,
 		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.PlagueRootTimer,
@@ -38,7 +50,7 @@ local questlog = {
 	{
 		bossName = "The Nightmare Beast",
 		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.WardStones.Questline,
-		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.NightmareTimer,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScar.NightmareTimer,
 		maxValue = 2,
 	},
 }

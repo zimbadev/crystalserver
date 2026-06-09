@@ -15,6 +15,7 @@ monster.outfit = {
 
 monster.events = {
 	"dreamCourtsDeath",
+	"facelessHealth",
 }
 
 monster.health = 320000
