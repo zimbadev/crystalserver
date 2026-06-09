@@ -74,7 +74,7 @@ local function hasAddon(player, addon)
 end
 
 local function hasKllledTheNightmareBeast(player)
-	return player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.NightmareBeastKilled) == 1
+	return player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.WardStones.Questline) >= 2
 end
 
 local function checkAchievement(player)

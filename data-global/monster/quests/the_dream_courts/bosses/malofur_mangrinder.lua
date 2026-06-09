@@ -32,7 +32,7 @@ monster.changeTarget = {
 monster.bosstiary = {
 	bossRaceId = 1696,
 	bossRace = RARITY_NEMESIS,
-	storage = Storage.Quest.U12_00.TheDreamCourts.ArenaTimer,
+	storage = Storage.Quest.U12_00.TheDreamCourts.DreamScar.MalofurTimer,
 }
 
 monster.strategiesTarget = {

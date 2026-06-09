@@ -1,27 +1,45 @@
-local bossStorages = {
-	["plagueroot"] = {
-		storage = Storage.Quest.U12_00.TheDreamCourts.PlaguerootKilled,
-		timer = Storage.Quest.U12_00.TheDreamCourts.ArenaTimer,
+local questlog = {
+	{
+		bossName = "Faceless Bane",
+		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Questline,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.BurriedCatedralGlobal.FacelessTimer,
+		maxValue = 4,
 	},
-	["malofur mangrinder"] = {
-		storage = Storage.Quest.U12_00.TheDreamCourts.MalofurKilled,
-		timer = Storage.Quest.U12_00.TheDreamCourts.ArenaTimer,
+	{
+		bossName = "Maxxenius",
+		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.DreamScar.BossCount,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.MaxxeniusTimer,
+		maxValue = 5,
 	},
-	["maxxenius"] = {
-		storage = Storage.Quest.U12_00.TheDreamCourts.MaxxeniusKilled,
-		timer = Storage.Quest.U12_00.TheDreamCourts.ArenaTimer,
+	{
+		bossName = "Alptramun",
+		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.DreamScar.BossCount,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.AlptramunTimer,
+		maxValue = 5,
 	},
-	["alptramun"] = {
-		storage = Storage.Quest.U12_00.TheDreamCourts.AlptramunKilled,
-		timer = Storage.Quest.U12_00.TheDreamCourts.ArenaTimer,
+	{
+		bossName = "Izcandar the Banished",
+		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.DreamScar.BossCount,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.IzcandarTimer,
+		maxValue = 5,
 	},
-	["izcandar the banished"] = {
-		storage = Storage.Quest.U12_00.TheDreamCourts.IzcandarKilled,
-		timer = Storage.Quest.U12_00.TheDreamCourts.ArenaTimer,
+	{
+		bossName = "Plagueroot",
+		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.DreamScar.BossCount,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.PlagueRootTimer,
+		maxValue = 5,
 	},
-	["the nightmare beast"] = {
-		storage = Storage.Quest.U12_00.TheDreamCourts.NightmareBeastKilled,
-		timer = Storage.Quest.U12_00.TheDreamCourts.NightmareBeastTimer,
+	{
+		bossName = "Malofur Mangrinder",
+		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.DreamScar.BossCount,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.MalofurTimer,
+		maxValue = 5,
+	},
+	{
+		bossName = "The Nightmare Beast",
+		storageQuestline = Storage.Quest.U12_00.TheDreamCourts.WardStones.Questline,
+		storageTimer = Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.NightmareTimer,
+		maxValue = 2,
 	},
 }
 
@@ -39,10 +57,10 @@ function dreamCourtsDeath.onDeath(creature, corpse, killer, mostDamageKiller, la
 		return true
 	end
 
-	local cName = creature:getName():lower()
+	local cName = creature:getName()
 
 	onDeathForDamagingPlayers(creature, function(_, player)
-		if cName == "the nightmare beast" then
+		if cName:lower() == "the nightmare beast" then
 			if not player:hasOutfit(1146) or not player:hasOutfit(1147) then
 				player:addOutfit(1146)
 				player:addOutfit(1147)
@@ -51,29 +69,32 @@ function dreamCourtsDeath.onDeath(creature, corpse, killer, mostDamageKiller, la
 		end
 	end)
 
-	if cName == "plant abomination" then
+	if cName:lower() == "plant abomination" then
 		Game.createMonster("Plant Attendant", creature:getPosition())
 	end
 
-	local bossConfig = bossStorages[cName]
-	if bossConfig then
-		onDeathForDamagingPlayers(creature, function(_, player)
-			if bossConfig.storage then
-				player:setStorageValue(bossConfig.storage, 1)
+	for _, boss in ipairs(questlog) do
+		if cName == boss.bossName then
+			for pid, _ in pairs(creature:getDamageMap()) do
+				local attackerPlayer = Player(pid)
+				if attackerPlayer then
+					local questlineValue = attackerPlayer:getStorageValue(boss.storageQuestline)
+					if questlineValue <= boss.maxValue then
+						attackerPlayer:setStorageValue(boss.storageQuestline, questlineValue + 1)
+					end
+					attackerPlayer:setStorageValue(boss.storageTimer, os.time() + 20 * 60 * 60)
+				end
 			end
-			if bossConfig.timer then
-				player:setStorageValue(bossConfig.timer, os.time() + 20 * 60 * 60)
-			end
-		end)
 
-		if cName == "alptramun" then
-			Game.setStorageValue(Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.AlptramunSummonsKilled, 0)
+			if cName:lower() == "alptramun" then
+				Game.setStorageValue(Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.AlptramunSummonsKilled, 0)
+			end
 		end
 	end
 
 	local summonsKilled = Game.getStorageValue(Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.AlptramunSummonsKilled)
 	for _, summon in ipairs(alptramunSummons) do
-		if cName == summon.name then
+		if cName:lower() == summon.name then
 			if summonsKilled >= summon.minValue and summonsKilled <= summon.maxValue then
 				Game.setStorageValue(Storage.Quest.U12_00.TheDreamCourts.DreamScarGlobal.AlptramunSummonsKilled, summonsKilled + 1)
 			end

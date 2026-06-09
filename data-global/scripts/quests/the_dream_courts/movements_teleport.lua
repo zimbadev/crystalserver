@@ -1,11 +1,13 @@
 local teleports = {
 	{
-		access = Storage.Quest.U12_00.TheDreamCourts.BuriedCathedralAccess,
+		access = Storage.Quest.U12_00.TheDreamCourts.BurriedCatedral.WordCount,
+		accessValue = 4,
 		from = { x = 32720, y = 32270, z = 8 }, -- Haunted house cellar
 		to = { x = 33618, y = 32545, z = 13 }, -- Buried Cathedral
 	},
 	{
-		access = Storage.Quest.U12_00.TheDreamCourts.BuriedCathedralAccess,
+		access = Storage.Quest.U12_00.TheDreamCourts.BurriedCatedral.WordCount,
+		accessValue = 4,
 		from = { x = 33618, y = 32546, z = 13 }, -- Buried Cathedral
 		to = { x = 32720, y = 32269, z = 8 }, -- Haunted house cellar
 	},
@@ -20,7 +22,7 @@ function teleport.onStepIn(creature, item, position, fromPosition)
 
 	local teleportTo = fromPosition
 	for index, teleportItem in pairs(teleports) do
-		if creature:getStorageValue(teleportItem.access) == 1 then
+		if creature:getStorageValue(teleportItem.access) >= (teleportItem.accessValue or 1) then
 			if creature:getPosition() == Position(teleportItem.from) then
 				teleportTo = teleportItem.to
 				break

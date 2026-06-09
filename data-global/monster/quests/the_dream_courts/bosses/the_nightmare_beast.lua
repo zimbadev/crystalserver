@@ -32,7 +32,7 @@ monster.changeTarget = {
 monster.bosstiary = {
 	bossRaceId = 1718,
 	bossRace = RARITY_ARCHFOE,
-	storage = Storage.Quest.U12_00.TheDreamCourts.NightmareBeastTimer,
+	storage = Storage.Quest.U12_00.TheDreamCourts.DreamScar.NightmareTimer,
 }
 
 monster.strategiesTarget = {

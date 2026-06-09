@@ -20,7 +20,7 @@ monster.events = {
 monster.bosstiary = {
 	bossRaceId = 1699,
 	bossRace = RARITY_NEMESIS,
-	storage = Storage.Quest.U12_00.TheDreamCourts.ArenaTimer,
+	storage = Storage.Quest.U12_00.TheDreamCourts.DreamScar.IzcandarTimer,
 }
 
 monster.health = 320000
