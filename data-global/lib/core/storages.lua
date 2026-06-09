@@ -2792,6 +2792,14 @@ Storage = {
 				IzcandarKilled = 46315,
 				NightmareBeastTimer = 46316,
 				NightmareBeastKilled = 46317,
+				DreamScar = {
+					Permission = 46318,
+					LastBossCurse = 46319,
+				},
+				DreamScarGlobal = {
+					AlptramunSummonsKilled = 46320,
+					LastBossCurse = 46321,
+				},
 			},
 		},
 		U12_02 = { -- update 12.02 - Reserved Storages 46601 - 46800
