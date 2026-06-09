@@ -93,8 +93,14 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, AUTOBANK, "autoBank", false);
 	loadBoolConfig(L, AUTOLOOT, "autoLoot", false);
 	loadBoolConfig(L, BEDS_ONLY_PREMIUM, "bedsOnlyPremium", true);
-	loadBoolConfig(L, BOOSTED_BOSS_SLOT, "boostedBossSlot", true);
 	loadBoolConfig(L, BLOCK_RESPAWN, "blockRespawn", true);
+	loadBoolConfig(L, BOOSTED_BOSS_SLOT, "boostedBossSlot", true);
+	loadBoolConfig(L, BOUNTY_TASKS_ENABLED, "bountyTasksEnabled", true);
+	loadIntConfig(L, BOUNTY_TASKS_EXP_MULTIPLIER, "bountyTasksExpMultiplier", 1);
+	loadIntConfig(L, BOUNTY_TASKS_FREE_REROLL_TIME, "bountyTasksFreeRerollTime", 72000);
+	loadIntConfig(L, BOUNTY_TASKS_KILL_MULTIPLIER, "bountyTasksKillMultiplier", 1);
+	loadIntConfig(L, BOUNTY_TASKS_POINTS_MULTIPLIER, "bountyTasksPointsMultiplier", 1);
+	loadIntConfig(L, BOUNTY_TASKS_REROLL_MULTIPLIER, "bountyTasksRerollMultiplier", 1);
 	loadBoolConfig(L, CHAIN_SYSTEM_VIP_ONLY, "chainSystemVipOnly", false);
 	loadBoolConfig(L, CLASSIC_ATTACK_SPEED, "classicAttackSpeed", false);
 	loadBoolConfig(L, CLEAN_PROTECTION_ZONES, "cleanProtectionZones", false);
@@ -107,7 +113,6 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, ENABLE_MARKET, "enableMarket", true);
 	loadBoolConfig(L, ENABLE_OFFLINE_TRAINING, "enableOfflineTraining", true);
 	loadBoolConfig(L, ENABLE_PLAYER_PUT_ITEM_IN_AMMO_SLOT, "enablePlayerPutItemInAmmoSlot", false);
-	loadBoolConfig(L, ENABLE_SCREENSHOTS, "enableScreenshots", true);
 	loadBoolConfig(L, ENABLE_SUPPORT_OUTFIT, "enableSupportOutfit", true);
 	loadBoolConfig(L, EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS, "exivaRestrictionsOnlyOptionalWorlds", true);
 	loadBoolConfig(L, EXPERIENCE_FROM_PLAYERS, "experienceByKillingPlayers", false);
@@ -148,7 +153,6 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, REMOVE_WEAPON_CHARGES, "removeWeaponCharges", true);
 	loadBoolConfig(L, REPLACE_KICK_ON_LOGIN, "replaceKickOnLogin", true);
 	loadBoolConfig(L, REWARD_CHEST_COLLECT_ENABLED, "rewardChestCollectEnabled", true);
-	loadBoolConfig(L, ROOK_SYSTEM, "toggleRookSystem", false);
 	loadBoolConfig(L, SCRIPTS_CONSOLE_LOGS, "showScriptsLogInConsole", true);
 	loadBoolConfig(L, SHOW_LOOTS_IN_BESTIARY, "showLootsInBestiary", false);
 	loadBoolConfig(L, SKULLED_DEATH_LOSE_STORE_ITEM, "skulledDeathLoseStoreItem", false);
@@ -164,7 +168,6 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TELEPORT_PLAYER_TO_VOCATION_ROOM, "teleportPlayerToVocationRoom", true);
 	loadBoolConfig(L, TELEPORT_SUMMONS, "teleportSummons", false);
 	loadBoolConfig(L, TOGGLE_CHAIN_SYSTEM, "toggleChainSystem", true);
-	loadBoolConfig(L, TOGGLE_ADD_ROOK_ITEMS, "toggleAddRookItems", false);
 	loadBoolConfig(L, TOGGLE_FREE_QUEST, "toggleFreeQuest", true);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_ALLOW_ANYTHING, "toggleGoldPouchAllowAnything", false);
 	loadBoolConfig(L, TOGGLE_GOLD_POUCH_QUICKLOOT_ONLY, "toggleGoldPouchQuickLootOnly", false);
@@ -193,6 +196,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, VIP_SYSTEM_ENABLED, "vipSystemEnabled", false);
 	loadBoolConfig(L, WALK_THROUGH_PLAYERS, "walkThroughPlayers", true);
 	loadBoolConfig(L, WARN_UNSAFE_SCRIPTS, "warnUnsafeScripts", true);
+	loadBoolConfig(L, WEEKLY_TASKS_ENABLED, "weeklyTasksEnabled", true);
 	loadBoolConfig(L, XP_DISPLAY_MODE, "experienceDisplayRates", true);
 
 	loadFloatConfig(L, ANIMUS_MASTERY_MAX_MONSTER_XP_MULTIPLIER, "animusMasteryMaxMonsterXpMultiplier", 4.0);
@@ -325,7 +329,6 @@ bool ConfigManager::load() {
 	loadIntConfig(L, IMBUEMENT_ACTIONS_DELAY_INTERVAL, "imbueActionsDelay", 1000);
 	loadIntConfig(L, KICK_AFTER_MINUTES, "kickIdlePlayerAfterMinutes", 15);
 	loadIntConfig(L, LEVEL_TO_FORM_GUILD, "levelToFormGuild", 8);
-	loadIntConfig(L, LEVEL_TO_ROOK, "levelToRook", 5);
 	loadIntConfig(L, LOGIN_PROTECTION, "loginProtectionPeriod", 10 * 1000);
 	loadIntConfig(L, LOOTPOUCH_MAXLIMIT, "lootPouchMaxLimit", 2000);
 	loadIntConfig(L, LOW_LEVEL_BONUS_EXP, "lowLevelBonusExp", 50);
@@ -333,7 +336,6 @@ bool ConfigManager::load() {
 	loadIntConfig(L, LOYALTY_POINTS_PER_PREMIUM_DAY_PURCHASED, "loyaltyPointsPerPremiumDayPurchased", 0);
 	loadIntConfig(L, LOYALTY_POINTS_PER_PREMIUM_DAY_SPENT, "loyaltyPointsPerPremiumDaySpent", 0);
 	loadIntConfig(L, MARKET_ACTIONS_DELAY_INTERVAL, "marketActionsDelay", 1000);
-	loadIntConfig(L, MAX_LEVEL_LEAVE_ROOK, "maxLevelToLeaveRook", 10);
 	loadIntConfig(L, MAX_ALLOWED_ON_A_DUMMY, "maxAllowedOnADummy", 1);
 	loadIntConfig(L, MAX_CONTAINER_ITEM, "maxItem", 5000);
 	loadIntConfig(L, MAX_CONTAINER, "maxContainer", 500);
@@ -352,7 +354,6 @@ bool ConfigManager::load() {
 	loadIntConfig(L, METRICS_OSTREAM_INTERVAL, "metricsOstreamInterval", 1000);
 	loadIntConfig(L, MIN_DELAY_BETWEEN_CONDITIONS, "minDelayBetweenConditions", 0);
 	loadIntConfig(L, MIN_ELEMENTAL_RESISTANCE, "minElementalResistance", -200);
-	loadIntConfig(L, MIN_LEVEL_LEAVE_ROOK, "minLevelToLeaveRook", 8);
 	loadIntConfig(L, MIN_TOWN_ID_TO_BANK_TRANSFER_FROM_MAIN, "minTownIdToBankTransferFromMain", 4);
 	loadIntConfig(L, MONTH_KILLS_TO_RED, "monthKillsToRedSkull", 10);
 	loadIntConfig(L, ORANGE_SKULL_DURATION, "orangeSkullDuration", 7);
@@ -376,16 +377,6 @@ bool ConfigManager::load() {
 	loadIntConfig(L, RATE_SPAWN, "rateSpawn", 1);
 	loadIntConfig(L, RED_SKULL_DURATION, "redSkullDuration", 30);
 	loadIntConfig(L, REWARD_CHEST_MAX_COLLECT_ITEMS, "rewardChestMaxCollectItems", 200);
-	loadIntConfig(L, ROOKED_LEVEL, "rookedLevel", 2);
-	loadIntConfig(L, ROOK_SLOT_BACKPACK, "rookSlotBackpack", ITEM_BAG);
-	loadIntConfig(L, ROOK_SLOT_HEAD, "rookSlotHead", 0);
-	loadIntConfig(L, ROOK_SLOT_ARMOR, "rookSlotArmor", 0);
-	loadIntConfig(L, ROOK_SLOT_LEGS, "rookSlotLegs", 0);
-	loadIntConfig(L, ROOK_SLOT_FEET, "rookSlotFeet", 0);
-	loadIntConfig(L, ROOK_SLOT_RIGHT, "rookSlotRight", 0);
-	loadIntConfig(L, ROOK_SLOT_LEFT, "rookSlotLeft", 0);
-	loadIntConfig(L, ROOK_SLOT_AMMO, "rookSlotAmmo", 0);
-	loadIntConfig(L, ROOK_TOWN, "rookTownId", 1);
 	loadIntConfig(L, SAVE_INTERVAL_TIME, "saveIntervalTime", 1);
 	loadIntConfig(L, STAIRHOP_DELAY, "stairJumpExhaustion", 2000);
 	loadIntConfig(L, STAMINA_GREEN_DELAY, "staminaGreenDelay", 5);
@@ -445,6 +436,7 @@ bool ConfigManager::load() {
 	loadStringConfig(L, STORE_IMAGES_URL, "coinImagesURL", "");
 	loadStringConfig(L, TIBIADROME_CONCOCTION_TICK_TYPE, "tibiadromeConcoctionTickType", "online");
 	loadStringConfig(L, URL, "url", "");
+	loadStringConfig(L, WEEKLY_TASKS_RESET_DAY, "weeklyTasksResetDay", "monday");
 	loadStringConfig(L, WORLD_TYPE, "worldType", "pvp");
 
 	loadLuaOTCFeatures(L);
