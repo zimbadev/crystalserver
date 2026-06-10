@@ -125,7 +125,6 @@ npcConfig.shop = {
 	{ itemName = "stone skin amulet", clientId = 3081, sell = 500 },
 	{ itemName = "wand of vortex", clientId = 3074, sell = 100 },
 	{ itemName = "white mushroom", clientId = 3723, sell = 2 },
-
 }
 
 -- On buy npc shop message

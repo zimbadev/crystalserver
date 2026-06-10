@@ -8,9 +8,9 @@ Newhaven.starterItems = {
 			{ 3559, 1, CONST_SLOT_LEGS }, -- leather legs
 			{ 3552, 1, CONST_SLOT_FEET }, -- leather boots
 			{ 34017, 1, CONST_SLOT_AMMO }, -- lit torch
-			
+
 			{ 21400, 1, CONST_SLOT_RIGHT }, -- spellbook of the novice
-			{ 21348, 1, CONST_SLOT_LEFT }, -- the scorcher	
+			{ 21348, 1, CONST_SLOT_LEFT }, -- the scorcher
 		},
 		container = {
 			{ 268, 10 }, -- mana potion
@@ -27,7 +27,7 @@ Newhaven.starterItems = {
 			{ 3559, 1, CONST_SLOT_LEGS }, -- leather legs
 			{ 3552, 1, CONST_SLOT_FEET }, -- leather boots
 			{ 34017, 1, CONST_SLOT_AMMO }, -- lit torch
-			
+
 			{ 21400, 1, CONST_SLOT_RIGHT }, -- spellbook of the novice
 			{ 21350, 1, CONST_SLOT_LEFT }, -- the chiller
 		},
@@ -46,7 +46,7 @@ Newhaven.starterItems = {
 			{ 3559, 1, CONST_SLOT_LEGS }, -- leather legs
 			{ 3552, 1, CONST_SLOT_FEET }, -- leather boots
 			{ 34017, 1, CONST_SLOT_AMMO }, -- lit torch
-			
+
 			{ 3350, 1, CONST_SLOT_LEFT }, -- bow
 			{ 35562, 1, CONST_SLOT_RIGHT }, -- quiver
 		},
@@ -64,7 +64,7 @@ Newhaven.starterItems = {
 			{ 3559, 1, CONST_SLOT_LEGS }, -- leather legs
 			{ 3552, 1, CONST_SLOT_FEET }, -- leather boots
 			{ 34017, 1, CONST_SLOT_AMMO }, -- lit torch
-			
+
 			{ 3272, 1, CONST_SLOT_LEFT }, -- rapier
 			{ 3412, 1, CONST_SLOT_RIGHT }, -- wooden shield
 		},
@@ -82,7 +82,7 @@ Newhaven.starterItems = {
 			{ 3559, 1, CONST_SLOT_LEGS }, -- leather legs
 			{ 3552, 1, CONST_SLOT_FEET }, -- leather boots
 			{ 34017, 1, CONST_SLOT_AMMO }, -- lit torch
-			
+
 			{ 50166, 1, CONST_SLOT_LEFT }, -- light jo staff
 		},
 		container = {
@@ -143,4 +143,3 @@ function Newhaven.giveStarterItems(player)
 	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You received your starter equipment.")
 	return true
 end
-
