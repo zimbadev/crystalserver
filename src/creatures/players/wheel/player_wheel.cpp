@@ -1933,7 +1933,6 @@ uint16_t PlayerWheel::getExtraPoints() const {
 		totalBonus += 10;
 	}
 
-	// totalBonus += m_extraPointsFromHuntingTaskShop;
 	totalBonus += getExtraPointsFromHuntingTaskShop();
 	return totalBonus;
 }
