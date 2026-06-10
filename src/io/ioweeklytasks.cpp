@@ -674,6 +674,7 @@ void IOWeeklyTasks::buyShopOffer(const std::shared_ptr<Player> &player, uint8_t 
 		}
 		case HUNTING_SHOP_OFFER_BONUS_PROMOTION: {
 			player->wheel()->addExtraPointsFromHuntingTaskShop(1);
+			player->wheel()->saveKVHuntingTaskShopExtraPoints();
 			player->sendTextMessage(MESSAGE_STATUS, "You have purchased an extra Wheel of Destiny promotion point.");
 			break;
 		}

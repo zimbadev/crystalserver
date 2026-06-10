@@ -1933,6 +1933,8 @@ uint16_t PlayerWheel::getExtraPoints() const {
 		totalBonus += 10;
 	}
 
+	// totalBonus += m_extraPointsFromHuntingTaskShop;
+	totalBonus += getExtraPointsFromHuntingTaskShop();
 	return totalBonus;
 }
 
@@ -1959,7 +1961,6 @@ uint16_t PlayerWheel::getWheelPoints(bool includeExtraPoints /* = true*/) const 
 
 	if (includeExtraPoints) {
 		totalPoints += getExtraPoints();
-		totalPoints += getExtraPointsFromHuntingTaskShop();
 	}
 
 	return totalPoints;
@@ -4114,13 +4115,18 @@ PlayerWheelGem PlayerWheelGem::deserialize(const std::string &uuid, const ValueW
 }
 
 bool PlayerWheel::hasMonkQuest() const {
-	const auto &kvScoped = m_player.kv()->scoped("the_way_of_the_monk_quest");
+	const auto &kvScoped = m_player.kv()->scoped("quests")->scoped("the_way_of_the_monk_quest");
 	if (!kvScoped) {
 		return false;
 	}
 
 	const auto boolPointsWheel = kvScoped->get("boolPointsWheel");
-	return boolPointsWheel ? boolPointsWheel->get<bool>() : false;
+	if (boolPointsWheel && boolPointsWheel->get<bool>()) {
+		return true;
+	}
+
+	const auto questline = kvScoped->get("questline");
+	return questline && questline->getNumber() >= 4;
 }
 
 int32_t PlayerWheel::checkRevelationPerkAscetic() const {

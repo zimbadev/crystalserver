@@ -80,6 +80,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:say("You have honored our legacy! On behalf of all Merudri, I thank you, venerable traveler.", npc, creature)
 				kv:set("questline", 4)
 				kv:set("questlog", 4)
+				kv:set("boolPointsWheel", true)
 				player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questline, 4)
 				player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questlog, 4)
 				local title = Game.getTitleByName("Pensive Wanderer")
@@ -88,6 +89,9 @@ local function creatureSayCallback(npc, creature, type, message)
 				end
 				player:addAchievement("Hope of the Merudri")
 			else
+				if not kv:get("boolPointsWheel") then
+					kv:set("boolPointsWheel", true)
+				end
 				npcHandler:say("You have already completed the pilgrimage and honored our legacy.", npc, creature)
 			end
 		else
