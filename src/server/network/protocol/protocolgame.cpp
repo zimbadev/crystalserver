@@ -8826,9 +8826,6 @@ void ProtocolGame::parseStartOfflineTraining(NetworkMessage &msg) {
 
 	skills_t skill;
 	switch (skillType) {
-		case 0:
-			skill = SKILL_FIST;
-			break;
 		case 1:
 			skill = SKILL_CLUB;
 			break;
@@ -8844,8 +8841,12 @@ void ProtocolGame::parseStartOfflineTraining(NetworkMessage &msg) {
 		case 5:
 			skill = SKILL_MAGLEVEL;
 			break;
+		case 6: // Client checks for this as skill fist
+			skill = SKILL_FIST;
+			break;
 		default:
-			return;
+			g_logger().error("[ProtocolGame::parseStartOfflineTraining] - Unknown skill type: {}", skillType);
+			break;
 	}
 
 	g_game().playerStartOfflineTraining(player->getID(), skill);
