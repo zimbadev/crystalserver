@@ -15,7 +15,7 @@ function multiSkillTrainer.onUse(player, item, fromPosition, target, toPosition,
 		return false
 	end
 
-	player:sendOfflineTrainingDialog()
+	player:sendMultiOfflineTrainingDialog()
 	return true
 end
 
