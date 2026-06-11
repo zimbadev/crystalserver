@@ -933,38 +933,63 @@ void PlayerWheel::reclaimExcessPoints() {
 	}
 
 	if (excess > 0) {
-		std::vector<std::pair<int8_t, WheelSlots_t>> slotsByPriority;
-		for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
-			const auto order = g_game().getIOWheel()->getSlotPrioritaryOrder(slot);
-			if (order >= 0) {
-				slotsByPriority.emplace_back(order, slot);
-			}
-		}
-
-		std::ranges::sort(slotsByPriority, [](const auto &a, const auto &b) {
-			return a.first > b.first;
-		});
-
 		while (excess > 0) {
-			bool removedAny = false;
-			for (const auto &[order, slot] : slotsByPriority) {
+			WheelSlots_t targetSlot {};
+			int8_t bestOrder = -1;
+			bool bestIsPartial = false;
+			uint16_t bestPoints = 0;
+			bool found = false;
+
+			for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
 				const auto points = getPointsBySlotType(slot);
 				if (points == 0) {
 					continue;
 				}
 
-				setPointsBySlotType(static_cast<uint8_t>(slot), points - 1);
-				--excess;
-				removedAny = true;
-				changed = true;
-				if (excess == 0) {
-					break;
+				const auto order = g_game().getIOWheel()->getSlotPrioritaryOrder(slot);
+				if (order < 0) {
+					continue;
+				}
+
+				const bool isPartial = points < getMaxPointsPerSlot(slot);
+
+				auto isBetter = !found;
+				if (!isBetter && order != bestOrder) {
+					isBetter = order > bestOrder;
+				} else if (!isBetter && order == bestOrder) {
+					if (isPartial != bestIsPartial) {
+						isBetter = isPartial > bestIsPartial;
+					} else if (points != bestPoints) {
+						isBetter = points > bestPoints;
+					}
+				}
+
+				if (isBetter) {
+					found = true;
+					targetSlot = slot;
+					bestOrder = order;
+					bestIsPartial = isPartial;
+					bestPoints = points;
 				}
 			}
 
-			if (!removedAny) {
+			if (!found) {
 				break;
 			}
+
+			const auto points = getPointsBySlotType(targetSlot);
+			const auto toRemove = std::min<uint16_t>(excess, points);
+			setPointsBySlotType(static_cast<uint8_t>(targetSlot), points - toRemove);
+			excess -= toRemove;
+			changed = true;
+		}
+	}
+
+	for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+		const auto points = getPointsBySlotType(slot);
+		if (points > 0 && !canPlayerSelectPointOnSlot(slot, false)) {
+			setPointsBySlotType(static_cast<uint8_t>(slot), 0);
+			changed = true;
 		}
 	}
 
