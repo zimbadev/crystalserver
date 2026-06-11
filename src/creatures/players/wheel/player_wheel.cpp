@@ -894,6 +894,88 @@ uint16_t PlayerWheel::getUnusedPoints() const {
 	return totalPoints;
 }
 
+void PlayerWheel::reclaimExcessPoints() {
+	if (!canOpenWheel()) {
+		return;
+	}
+
+	auto getTotalUsedPoints = [this]() -> uint16_t {
+		uint16_t used = 0;
+		for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+			used += getPointsBySlotType(slot);
+		}
+		return used;
+	};
+
+	const auto getTotalAvailablePoints = [this]() -> uint16_t {
+		return static_cast<uint16_t>(getWheelPoints() + m_modsMaxGrade);
+	};
+
+	bool changed = false;
+
+	for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+		const auto points = getPointsBySlotType(slot);
+		if (points > 0 && !canPlayerSelectPointOnSlot(slot, false)) {
+			setPointsBySlotType(static_cast<uint8_t>(slot), 0);
+			changed = true;
+		}
+	}
+
+	uint16_t excess = 0;
+	const uint16_t totalUsed = getTotalUsedPoints();
+	const uint16_t totalAvailable = getTotalAvailablePoints();
+	if (totalUsed > totalAvailable) {
+		excess = totalUsed - totalAvailable;
+	}
+
+	if (excess == 0 && !changed) {
+		return;
+	}
+
+	if (excess > 0) {
+		std::vector<std::pair<int8_t, WheelSlots_t>> slotsByPriority;
+		for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+			const auto order = g_game().getIOWheel()->getSlotPrioritaryOrder(slot);
+			if (order >= 0) {
+				slotsByPriority.emplace_back(order, slot);
+			}
+		}
+
+		std::ranges::sort(slotsByPriority, [](const auto &a, const auto &b) {
+			return a.first > b.first;
+		});
+
+		while (excess > 0) {
+			bool removedAny = false;
+			for (const auto &[order, slot] : slotsByPriority) {
+				const auto points = getPointsBySlotType(slot);
+				if (points == 0) {
+					continue;
+				}
+
+				setPointsBySlotType(static_cast<uint8_t>(slot), points - 1);
+				--excess;
+				removedAny = true;
+				changed = true;
+				if (excess == 0) {
+					break;
+				}
+			}
+
+			if (!removedAny) {
+				break;
+			}
+		}
+	}
+
+	if (!changed) {
+		return;
+	}
+
+	loadPlayerBonusData();
+	saveDBPlayerSlotPointsOnLogout();
+}
+
 bool PlayerWheel::getSpellAdditionalArea(const std::string &spellName) const {
 	const auto stage = static_cast<uint8_t>(getSpellUpgrade(spellName));
 	if (stage == 0) {

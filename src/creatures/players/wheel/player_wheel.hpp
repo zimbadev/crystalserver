@@ -172,6 +172,8 @@ public:
 	uint8_t getMaxPointsPerSlot(WheelSlots_t slot) const;
 	uint16_t getUnusedPoints() const;
 
+	void reclaimExcessPoints();
+
 	void setPlayerCombatStats(CombatType_t type, int32_t leechAmount);
 
 	void reloadPlayerData() const;

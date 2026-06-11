@@ -3766,6 +3766,10 @@ void Player::removeExperience(uint64_t exp, bool sendText /* = false*/) {
 			m_party->updateSharedExperience();
 		}
 
+		if (level < oldLevel && g_configManager().getBoolean(TOGGLE_WHEELSYSTEM)) {
+			wheel()->reclaimExcessPoints();
+		}
+
 		std::ostringstream ss;
 		ss << "You were downgraded from Level " << oldLevel << " to Level " << level << '.';
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
@@ -4147,6 +4151,10 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			}
 
 			if (oldLevel != level) {
+				if (level < oldLevel && g_configManager().getBoolean(TOGGLE_WHEELSYSTEM)) {
+					wheel()->reclaimExcessPoints();
+				}
+
 				std::ostringstream ss;
 				ss << "You were downgraded from Level " << oldLevel << " to Level " << level << '.';
 				sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
