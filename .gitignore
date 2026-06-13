@@ -396,3 +396,4 @@ database_backup
 
 # CLION
 cmake-build-*
+/data/logs

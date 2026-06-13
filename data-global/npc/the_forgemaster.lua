@@ -244,4 +244,7 @@ npcHandler:setMessage(MESSAGE_GREET, "What brings you here this time, do you wan
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
+
 npcType:register(npcConfig)

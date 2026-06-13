@@ -743,6 +743,29 @@ bool EventCallback::playerOnTurn(const std::shared_ptr<Player> &player, Directio
 	return getScriptInterface()->callFunction(2);
 }
 
+bool EventCallback::playerOnSoulSealsFight(const std::shared_ptr<Player> &player, const std::string &monsterName) const {
+	if (!LuaScriptInterface::reserveScriptEnv()) {
+		g_logger().error("[EventCallback::playerOnSoulSealsFight - "
+		                 "Player {}] "
+		                 "Call stack overflow. Too many lua script calls being nested.",
+		                 player->getName());
+		return false;
+	}
+
+	ScriptEnvironment* scriptEnvironment = LuaScriptInterface::getScriptEnv();
+	scriptEnvironment->setScriptId(getScriptId(), getScriptInterface());
+
+	lua_State* L = getScriptInterface()->getLuaState();
+	getScriptInterface()->pushFunction(getScriptId());
+
+	LuaScriptInterface::pushUserdata<Player>(L, player);
+	LuaScriptInterface::setMetatable(L, -1, "Player");
+
+	LuaScriptInterface::pushString(L, monsterName);
+
+	return getScriptInterface()->callFunction(2);
+}
+
 bool EventCallback::playerOnTradeRequest(const std::shared_ptr<Player> &player, const std::shared_ptr<Player> &target, const std::shared_ptr<Item> &item) const {
 	if (!LuaScriptInterface::reserveScriptEnv()) {
 		g_logger().error("[EventCallback::playerOnTradeRequest - "

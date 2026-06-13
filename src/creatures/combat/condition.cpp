@@ -1286,6 +1286,11 @@ void ConditionRegeneration::addCondition(std::shared_ptr<Creature> creature, con
 
 		healthGain = conditionRegen->healthGain;
 		manaGain = conditionRegen->manaGain;
+
+		foodTicks += conditionRegen->foodTicks;
+		if (foodTicks > 1200000) {
+			foodTicks = 1200000; // max foodTicks
+		}
 	}
 
 	if (const auto &player = creature->getPlayer()) {
@@ -1302,6 +1307,8 @@ bool ConditionRegeneration::unserializeProp(ConditionAttr_t attr, PropStream &pr
 		return propStream.read<uint32_t>(manaTicks);
 	} else if (attr == CONDITIONATTR_MANAGAIN) {
 		return propStream.read<uint32_t>(manaGain);
+	} else if (attr == CONDITIONATTR_FOODTICKS) {
+		return propStream.read<uint32_t>(foodTicks);
 	}
 	return Condition::unserializeProp(attr, propStream);
 }
@@ -1320,11 +1327,23 @@ void ConditionRegeneration::serialize(PropWriteStream &propWriteStream) {
 
 	propWriteStream.write<uint8_t>(CONDITIONATTR_MANAGAIN);
 	propWriteStream.write<uint32_t>(manaGain);
+
+	propWriteStream.write<uint8_t>(CONDITIONATTR_FOODTICKS);
+	propWriteStream.write<uint32_t>(foodTicks);
 }
 
 bool ConditionRegeneration::executeCondition(const std::shared_ptr<Creature> &creature, int32_t interval) {
 	internalHealthTicks += interval;
 	internalManaTicks += interval;
+
+	if (foodTicks > 0) {
+		internalFoodTicks += interval;
+		if (internalFoodTicks >= foodTicks) {
+			foodTicks = 0;
+			internalFoodTicks = 0;
+		}
+	}
+
 	const auto &player = creature->getPlayer();
 	int32_t dailyStreak = 0;
 	if (player) {
@@ -1333,16 +1352,19 @@ bool ConditionRegeneration::executeCondition(const std::shared_ptr<Creature> &cr
 			dailyStreak = static_cast<int32_t>(optStreak->getNumber());
 		}
 	}
-	if (creature->getZoneType() != ZONE_PROTECTION || dailyStreak >= DAILY_REWARD_HP_REGENERATION) {
+
+	bool inProtectionZone = creature->getZoneType() == ZONE_PROTECTION;
+	if (!inProtectionZone || dailyStreak >= DAILY_REWARD_HP_REGENERATION) {
 		if (internalHealthTicks >= getHealthTicks(creature)) {
 			internalHealthTicks = 0;
 
 			int32_t realHealthGain = creature->getHealth();
-			if (creature->getZoneType() == ZONE_PROTECTION && dailyStreak >= DAILY_REWARD_DOUBLE_HP_REGENERATION) {
+			if (inProtectionZone && dailyStreak >= DAILY_REWARD_DOUBLE_HP_REGENERATION) {
 				creature->changeHealth(healthGain * 2); // Double regen from daily reward
 			} else {
 				creature->changeHealth(healthGain);
 			}
+
 			realHealthGain = creature->getHealth() - realHealthGain;
 
 			if (isBuff && realHealthGain > 0) {
@@ -1403,29 +1425,34 @@ bool ConditionRegeneration::setParam(ConditionParam_t param, int32_t value) {
 			manaTicks = value;
 			return true;
 
+		case CONDITION_PARAM_FOODTICKS:
+			foodTicks = value;
+			internalFoodTicks = 0;
+			return true;
+
 		default:
 			return ret;
 	}
 }
 
 uint32_t ConditionRegeneration::getHealthTicks(const std::shared_ptr<Creature> &creature) const {
-	const auto &player = creature->getPlayer();
-
-	if (player != nullptr && isBuff) {
-		return healthTicks / g_configManager().getFloat(RATE_SPELL_COOLDOWN);
+	if (isBuff) {
+		return static_cast<uint32_t>(static_cast<double>(healthTicks) / g_configManager().getFloat(RATE_SPELL_COOLDOWN));
 	}
 
 	return healthTicks;
 }
 
 uint32_t ConditionRegeneration::getManaTicks(const std::shared_ptr<Creature> &creature) const {
-	const auto &player = creature->getPlayer();
-
-	if (player != nullptr && isBuff) {
-		return manaTicks / g_configManager().getFloat(RATE_SPELL_COOLDOWN);
+	if (isBuff) {
+		return static_cast<uint32_t>(static_cast<double>(manaTicks) / g_configManager().getFloat(RATE_SPELL_COOLDOWN));
 	}
 
 	return manaTicks;
+}
+
+uint32_t ConditionRegeneration::getFoodTicks() const {
+	return foodTicks;
 }
 
 std::shared_ptr<Condition> ConditionRegeneration::clone() const {

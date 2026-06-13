@@ -398,4 +398,8 @@ end
 npcType.onCheckItem = function(npc, player, clientId, subType) end
 
 -- npcType registering the npcConfig table
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
+
 npcType:register(npcConfig)

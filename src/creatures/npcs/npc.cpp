@@ -870,9 +870,15 @@ void Npc::setPlayerInteraction(uint32_t playerId, uint16_t topicId /*= 0*/) {
 		return;
 	}
 
-	if (playerInteractionsOrder.empty() || std::ranges::find(playerInteractionsOrder, playerId) == playerInteractionsOrder.end()) {
+	const bool isNewInteraction = playerInteractionsOrder.empty() || std::ranges::find(playerInteractionsOrder, playerId) == playerInteractionsOrder.end();
+	if (isNewInteraction) {
 		playerInteractionsOrder.emplace_back(playerId);
 		turnToCreature(creature);
+
+		// Send dialog options when player starts a new conversation with the NPC
+		if (const auto &player = creature->getPlayer()) {
+			sendDialogOptions(player);
+		}
 	}
 
 	playerInteractions[playerId] = topicId;
@@ -884,6 +890,7 @@ void Npc::removePlayerInteraction(const std::shared_ptr<Player> &player) {
 	if (playerInteractions.contains(player->getID())) {
 		playerInteractions.erase(player->getID());
 		player->closeShopWindow();
+		sendDialogOptions(player, 0);
 	}
 
 	if (!playerInteractionsOrder.empty()) {
@@ -986,6 +993,106 @@ void Npc::closeAllShopWindows() {
 	if (!shopPlayers.empty()) {
 		shopPlayers.clear();
 	}
+}
+
+void Npc::sendDialogOptions(const std::shared_ptr<Player> &player, uint8_t conversationId) const {
+	if (!player) {
+		return;
+	}
+
+	/*
+	    0 = "trade"
+	    1 = "trade potions" // ??
+	    2 = "trade equips" // ??
+	    3 = "passage"
+	    4 = "deposit all"
+	    5 = "withdraw"
+	    6 = "balance"
+	    7 = "yes"
+	    8 = "no"
+	    9 = "bye"
+	*/
+
+	NpcDialogOptions dialogOptions;
+	dialogOptions.conversationId = conversationId;
+	dialogOptions.npcId = id;
+
+	if (conversationId == 0) {
+		player->sendNpcDialogOptions(dialogOptions);
+		return;
+	}
+
+	const auto &sourceOptions = npcType->info.dialogOptions;
+
+	bool hasYes = false, hasNo = false, hasBye = false, hasTrade = false;
+	bool hasBankOptions = false, hasPassage = false;
+
+	for (const auto &opt : sourceOptions) {
+		if (opt.optionId == 7 || opt.optionText == "yes") {
+			hasYes = true;
+		}
+
+		if (opt.optionId == 8 || opt.optionText == "no") {
+			hasNo = true;
+		}
+
+		if (opt.optionId == 9 || opt.optionText == "bye") {
+			hasBye = true;
+		}
+
+		if (opt.optionId == 0 || opt.optionText == "trade") {
+			hasTrade = true;
+		}
+
+		if (opt.optionId == 3 || opt.optionText == "passage") {
+			hasPassage = true;
+		}
+
+		if (opt.optionText == "withdraw" || opt.optionText == "deposit all" || opt.optionText == "balance") {
+			hasBankOptions = true;
+		}
+	}
+
+	size_t extraOptions = !hasYes + !hasNo + !hasBye;
+
+	const bool needsTrade = !hasTrade && !hasBankOptions && (npcType->info.speechBubble == SPEECHBUBBLE_TRADE || npcType->info.speechBubble == SPEECHBUBBLE_QUESTTRADER);
+	if (needsTrade) {
+		extraOptions++;
+	}
+
+	const bool needsPassage = !hasPassage && npcType->info.speechBubble == SPEECHBUBBLE_TRAVELER;
+	if (needsPassage) {
+		extraOptions++;
+	}
+
+	dialogOptions.options.reserve(sourceOptions.size() + extraOptions);
+
+	if (!hasYes) {
+		dialogOptions.options.push_back({ 7, "yes" });
+	}
+
+	if (!hasNo) {
+		dialogOptions.options.push_back({ 8, "no" });
+	}
+
+	if (!hasBye) {
+		dialogOptions.options.push_back({ 9, "bye" });
+	}
+
+	if (needsTrade) {
+		dialogOptions.options.push_back({ 0, "trade" });
+	}
+
+	if (needsPassage) {
+		dialogOptions.options.push_back({ 3, "passage" });
+	}
+
+	// Add the rest of the source options
+	for (const auto &opt : sourceOptions) {
+		dialogOptions.options.push_back(opt);
+	}
+
+	player->sendNpcDialogOptions(dialogOptions);
 }
 
 void Npc::handlePlayerMove(const std::shared_ptr<Player> &player, const Position &newPos) {

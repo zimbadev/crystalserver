@@ -89,6 +89,8 @@ void MonsterFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Monster", "addAttackSpell", MonsterFunctions::luaMonsterAddAttackSpell);
 	Lua::registerMethod(L, "Monster", "addDefenseSpell", MonsterFunctions::luaMonsterAddDefenseSpell);
 
+	Lua::registerMethod(L, "Monster", "walkTo", MonsterFunctions::luaMonsterWalkTo);
+
 	CharmFunctions::init(L);
 	LootFunctions::init(L);
 	MonsterSpellFunctions::init(L);
@@ -894,5 +896,21 @@ int MonsterFunctions::luaMonsterAddDefenseSpell(lua_State* L) {
 	} else {
 		lua_pushnil(L);
 	}
+	return 1;
+}
+
+int MonsterFunctions::luaMonsterWalkTo(lua_State* L) {
+	// monster:walkTo(position)
+	const auto &monster = Lua::getUserdataShared<Monster>(L, 1);
+	if (!monster) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_MONSTER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 0;
+	}
+
+	const Position &position = Lua::getPosition(L, 2);
+
+	monster->walkTo(position);
+	Lua::pushBoolean(L, true);
 	return 1;
 }

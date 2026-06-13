@@ -154,6 +154,7 @@ npcConfig.shop = {
 	{ itemName = "wedding ring", clientId = 3004, buy = 990 },
 	{ itemName = "white pearl", clientId = 3026, buy = 320, sell = 160 },
 	{ itemName = "white silk flower", clientId = 34008, sell = 9000 },
+	{ itemName = "bounty talisman", clientId = 51978, buy = 5000 },
 }
 
 -- On buy npc shop message
@@ -166,5 +167,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("deposit all", "withdraw", "balance", "bye")
 
 npcType:register(npcConfig)

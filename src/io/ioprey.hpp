@@ -236,8 +236,6 @@ public:
 	void checkPlayerPreys(const std::shared_ptr<Player> &player, uint8_t amount) const;
 	void parsePreyAction(const std::shared_ptr<Player> &player, PreySlot_t slotId, PreyAction_t action, PreyOption_t option, int8_t index, uint16_t raceId) const;
 
-	void parseTaskHuntingAction(const std::shared_ptr<Player> &player, PreySlot_t slotId, PreyTaskAction_t action, bool upgrade, uint16_t raceId) const;
-
 	void initializeTaskHuntOptions();
 	const std::unique_ptr<TaskHuntingOption> &getTaskRewardOption(const std::unique_ptr<TaskHuntingSlot> &slot) const;
 

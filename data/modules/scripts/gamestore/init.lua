@@ -35,13 +35,14 @@ GameStore.OfferTypes = {
 	OFFER_TYPE_HUNTINGSLOT = 25,
 	OFFER_TYPE_ITEM_BED = 26,
 	OFFER_TYPE_ITEM_UNIQUE = 27,
+	OFFER_TYPE_WEEKLYTASKEXPANSION = 28,
 }
 
 GameStore.SubActions = {
 	PREY_THIRDSLOT_REAL = 0,
 	PREY_WILDCARD = 1,
 	INSTANT_REWARD = 2,
-	BLESSING_TWIST = 3,
+	CHARM_EXPANSION = 3,
 	BLESSING_SOLITUDE = 4,
 	BLESSING_PHOENIX = 5,
 	BLESSING_SUNS = 6,
@@ -50,10 +51,11 @@ GameStore.SubActions = {
 	BLESSING_BLOOD = 9,
 	BLESSING_HEART = 10,
 	BLESSING_ALL_PVE = 11,
-	BLESSING_ALL_PVP = 12,
-	CHARM_EXPANSION = 13,
-	TASKHUNTING_THIRDSLOT = 14,
+	BLESSING_TWIST = 12,
+	TASKHUNTING_THIRDSLOT = 13,
+	BLESSING_ALL_PVP = 14,
 	PREY_THIRDSLOT_REDIRECT = 15,
+	WEEKLY_TASK_EXPANSION = 16,
 }
 
 GameStore.ActionType = {
@@ -367,14 +369,18 @@ function parseRequestStoreOffers(playerId, msg)
 		local subAction = msg:getByte()
 		local offerId = subAction
 		local category = nil
-		if subAction >= GameStore.SubActions.BLESSING_TWIST and subAction <= GameStore.SubActions.BLESSING_ALL_PVP then
+		if subAction == GameStore.SubActions.PREY_THIRDSLOT_REAL then
+			offerId = GameStore.SubActions.PREY_THIRDSLOT_REDIRECT
+		elseif subAction == GameStore.SubActions.TASKHUNTING_THIRDSLOT then
+			offerId = GameStore.SubActions.WEEKLY_TASK_EXPANSION
+		elseif subAction == GameStore.SubActions.WEEKLY_TASK_EXPANSION then
+			offerId = GameStore.SubActions.WEEKLY_TASK_EXPANSION
+		end
+
+		if offerId >= GameStore.SubActions.BLESSING_TWIST and offerId <= GameStore.SubActions.BLESSING_ALL_PVP then
 			category = GameStore.getCategoryByName("Blessings")
 		else
 			category = GameStore.getCategoryByName("Useful Things")
-		end
-
-		if subAction == GameStore.SubActions.PREY_THIRDSLOT_REAL then
-			offerId = GameStore.SubActions.PREY_THIRDSLOT_REDIRECT
 		end
 		if category then
 			addPlayerEvent(sendShowStoreOffers, 50, playerId, category, offerId)
@@ -436,6 +442,7 @@ function parseBuyStoreOffer(playerId, msg)
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_PREYBONUS
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_PREYSLOT
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_HUNTINGSLOT
+			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_WEEKLYTASKEXPANSION
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_TEMPLE
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_SEXCHANGE
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_INSTANT_REWARD_ACCESS
@@ -494,6 +501,8 @@ function parseBuyStoreOffer(playerId, msg)
 			GameStore.processExpBoostPurchase(player)
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_HUNTINGSLOT then
 			GameStore.processTaskHuntingThirdSlot(player)
+		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_WEEKLYTASKEXPANSION then
+			GameStore.processWeeklyTaskExpansion(player)
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_PREYSLOT then
 			GameStore.processPreyThirdSlot(player)
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_PREYBONUS then
@@ -751,6 +760,11 @@ function Player.canBuyOffer(self, offer)
 			if self:taskHuntingThirdSlot() then
 				disabled = 1
 				disabledReason = "You already have 3 slots released."
+			end
+		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_WEEKLYTASKEXPANSION then
+			if self:weeklyTaskExpansion() then
+				disabled = 1
+				disabledReason = "You already have the Permanent Weekly Task Expansion."
 			end
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_PREYSLOT then
 			if self:preyThirdSlot() then
@@ -1811,6 +1825,13 @@ function GameStore.processTaskHuntingThirdSlot(player)
 		return error({ code = 1, message = "You already have unlocked all task hunting slots." })
 	end
 	player:taskHuntingThirdSlot(true)
+end
+
+function GameStore.processWeeklyTaskExpansion(player)
+	if player:weeklyTaskExpansion() then
+		return error({ code = 1, message = "You already have the Permanent Weekly Task Expansion." })
+	end
+	player:weeklyTaskExpansion(true)
 end
 
 function GameStore.processPreyBonusReroll(player, offerCount)

@@ -140,4 +140,7 @@ npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye. Come back soon.")
 npcHandler:setMessage(MESSAGE_SENDTRADE, "Of course, just browse through my wares.")
 npcHandler:setMessage(MESSAGE_GREET, "Welcome to the finest weapon shop in the land, |PLAYERNAME|! Tell me if you're looking for a good trade.")
 
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
+
 npcType:register(npcConfig)

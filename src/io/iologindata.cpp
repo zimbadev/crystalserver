@@ -271,6 +271,14 @@ bool IOLoginData::savePlayerGuard(const std::shared_ptr<Player> &player) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerTaskHuntingClass] - Failed to save player task hunting class: " + player->getName());
 	}
 
+	if (!IOLoginDataSave::savePlayerBountyTasks(player)) {
+		throw DatabaseException("[IOLoginDataSave::savePlayerBountyTasks] - Failed to save player bounty tasks: " + player->getName());
+	}
+
+	if (!IOLoginDataSave::savePlayerWeeklyTasks(player)) {
+		throw DatabaseException("[IOLoginDataSave::savePlayerWeeklyTasks] - Failed to save player weekly tasks: " + player->getName());
+	}
+
 	if (!IOLoginDataSave::savePlayerForgeHistory(player)) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerForgeHistory] - Failed to save player forge history: " + player->getName());
 	}
@@ -287,6 +295,7 @@ bool IOLoginData::savePlayerGuard(const std::shared_ptr<Player> &player) {
 	player->wheel()->saveActiveGems();
 	player->wheel()->saveKVModGrades();
 	player->wheel()->saveKVScrolls();
+	player->wheel()->saveKVHuntingTaskShopExtraPoints();
 
 	if (!IOLoginDataSave::savePlayerStorage(player)) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerStorage] - Failed to save player storage: " + player->getName());

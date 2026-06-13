@@ -272,4 +272,8 @@
 	<mount id="243" clientid="1866" name="White Gloom Maw" speed="10" premium="yes" type="quest" />
 	<mount id="244" clientid="1867" name="Gloom Maw" speed="10" premium="yes" type="quest" />
 	<mount id="245" clientid="1873" name="Battle Werewolf" speed="10" premium="no" type="store" />
+	<mount id="246" clientid="1882" name="Battlefrazzle" speed="10" premium="yes" type="quest" />
+	<mount id="247" clientid="1908" name="Tidal Seawater Predator" speed="10" premium="yes" type="quest" />
+	<mount id="248" clientid="1909" name="Ashen Coast Predator" speed="10" premium="yes" type="quest" />
+	<mount id="249" clientid="1910" name="Crimson Bay Predator" speed="10" premium="yes" type="quest" />
 </mounts>

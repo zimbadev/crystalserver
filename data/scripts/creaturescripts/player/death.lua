@@ -44,10 +44,10 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 		mostDamageName = "field item"
 	end
 
-	player:takeScreenshot(byPlayer and SCREENSHOT_TYPE_DEATHPVP or SCREENSHOT_TYPE_DEATHPVE)
+	player:sendBannerType(byPlayer and BANNER_TYPE_DEATHPVP or BANNER_TYPE_DEATHPVE)
 
 	if mostDamageKiller and mostDamageKiller:isPlayer() then
-		mostDamageKiller:takeScreenshot(SCREENSHOT_TYPE_PLAYERKILL)
+		mostDamageKiller:sendBannerType(BANNER_TYPE_PLAYERKILL)
 	end
 
 	local playerGuid = player:getGuid()
@@ -87,7 +87,7 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 	end
 
 	if byPlayer == 1 then
-		killer:takeScreenshot(SCREENSHOT_TYPE_PLAYERKILL)
+		killer:sendBannerType(BANNER_TYPE_PLAYERKILL)
 		local toggleGuildWars = configManager.getBoolean(configKeys.TOGGLE_GUILD_WARS)
 		if toggleGuildWars then
 			local targetGuild = player:getGuild()

@@ -103,6 +103,8 @@ std::string getFirstLine(const std::string &str);
 std::string formatDate(time_t time);
 std::string formatDateShort(time_t time);
 std::string formatTime(time_t time);
+std::string formatTimeUntilReset(uint32_t now, uint32_t targetTimestamp);
+int parseDayOfWeek(const std::string &dayStr);
 /**
  * @brief Format the enum name by replacing underscores with spaces and converting to lowercase.
  * @param name The enum name to format.

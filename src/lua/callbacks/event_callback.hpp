@@ -162,6 +162,7 @@ public:
 	bool playerOnRotateItem(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, const Position &position) const;
 	void playerOnWalk(const std::shared_ptr<Player> &player, const Direction &dir) const;
 	void playerOnThink(std::shared_ptr<Player> player, uint32_t interval) const;
+	bool playerOnSoulSealsFight(const std::shared_ptr<Player> &player, const std::string &monsterName) const;
 
 	// Monster
 	void monsterOnDropLoot(const std::shared_ptr<Monster> &monster, const std::shared_ptr<Container> &corpse) const;

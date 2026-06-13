@@ -77,6 +77,8 @@
     <ClInclude Include="..\src\io\filestream.hpp" />
     <ClInclude Include="..\src\io\functions\iologindata_load_player.hpp" />
     <ClInclude Include="..\src\io\functions\iologindata_save_player.hpp" />
+    <ClInclude Include="..\src\io\iobountytasks.hpp" />
+    <ClInclude Include="..\src\io\ioweeklytasks.hpp" />
     <ClInclude Include="..\src\io\io_wheel.hpp" />
     <ClInclude Include="..\src\io\iobestiary.hpp" />
     <ClInclude Include="..\src\io\ioguild.hpp" />
@@ -291,6 +293,8 @@
     <ClCompile Include="..\src\io\filestream.cpp" />
     <ClCompile Include="..\src\io\functions\iologindata_load_player.cpp" />
     <ClCompile Include="..\src\io\functions\iologindata_save_player.cpp" />
+    <ClCompile Include="..\src\io\iobountytasks.cpp" />
+    <ClCompile Include="..\src\io\ioweeklytasks.cpp" />
     <ClCompile Include="..\src\io\io_wheel.cpp" />
     <ClCompile Include="..\src\io\iobestiary.cpp" />
     <ClCompile Include="..\src\io\ioguild.cpp" />

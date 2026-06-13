@@ -60,11 +60,10 @@ local function creatureSayCallback(npc, creature, type, message)
 	if not npcHandler:checkInteraction(npc, creature) then
 		return false
 	end
-	local grumpyStoneStorage = 2033032
-	local tiredTreeStorage = 2033031
+
 	if MsgContains(message, "mission") then
-		if player:getStorageValue(grumpyStoneStorage) < 1 then
-			if player:getStorageValue(tiredTreeStorage) == 2 then
+		if player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.GrumpyStone) < 1 then
+			if player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.TiredTree) == 2 then
 				npcHandler:say({
 					"As much as I dislike admiting it. I need help. WE need help. See, when we arrived in this part of the world, we quickly realised that we can't linger here while keeping our true forms. We need to take over animals, plants or stones. ...",
 					"And we had to hurry. Some of my siblings were luckier than us and had the chance to take over animals like deer, birds or squirrels. We had to choose stones and now we are stuck here. ...",
@@ -73,14 +72,20 @@ local function creatureSayCallback(npc, creature, type, message)
 				}, npc, creature)
 				npcHandler:setTopic(playerId, 1)
 			end
-		elseif player:getStorageValue(grumpyStoneStorage) == 1 then
-			if player:getStorageValue(2033033) == 1 and player:getStorageValue(2033034) == 1 and player:getStorageValue(2033035) == 1 and player:getStorageValue(2033036) == 1 and player:getStorageValue(2033037) == 1 then
+		elseif player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.GrumpyStone) == 1 then
+			if
+				player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.Stone1) == 1
+				and player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.Stone2) == 1
+				and player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.Stone3) == 1
+				and player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.Stone4) == 1
+				and player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.Stone5) == 1
+			then
 				npcHandler:say({
 					"Thank You! Their lamentation lapsed into silence. Thus, I assume you brought them some relief. Here, take this map part in return. I'm not interested in this treasure anymore. I just want to return to our hidden realm. ...",
 					"Search for the last part somewhere in the Fields of Glory. It's hidden in a big fly agaric.",
 				}, npc, creature)
 				player:addItem(24945, 1)
-				player:setStorageValue(grumpyStoneStorage, 2)
+				player:setStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.GrumpyStone, 2)
 				npcHandler:setTopic(playerId, 0)
 			else
 				npcHandler:say("You haven't tended to all the suffering stones yet.", npc, creature)
@@ -88,7 +93,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		end
 	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 1 then
 		npcHandler:say("No, this won't work. Your hands are too smooth. I guess you have to search for an apropiate tool. But no metal please! The sound of metal on stone is gruesome!", npc, creature)
-		player:setStorageValue(grumpyStoneStorage, 1)
+		player:setStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.GrumpyStone, 1)
 		npcHandler:setTopic(playerId, 0)
 	end
 	return true
@@ -111,5 +116,4 @@ npcHandler:setMessage(MESSAGE_FAREWELL, "Nature's blessing!")
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
 npcType:register(npcConfig)

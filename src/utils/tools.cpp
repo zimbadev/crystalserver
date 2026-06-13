@@ -490,6 +490,48 @@ std::string formatTime(time_t time) {
 	return formatTimeString(time, "%H:%M:%S");
 }
 
+std::string formatTimeUntilReset(uint32_t now, uint32_t targetTimestamp) {
+	if (targetTimestamp <= now) {
+		return "0d 0h 0m";
+	}
+
+	uint32_t remainingSeconds = targetTimestamp - now;
+	const uint32_t days = remainingSeconds / 86400;
+	remainingSeconds %= 86400;
+	const uint32_t hours = remainingSeconds / 3600;
+	remainingSeconds %= 3600;
+	const uint32_t minutes = remainingSeconds / 60;
+
+	return fmt::format("{} days {} hours {} minutes", days, hours, minutes);
+}
+
+int parseDayOfWeek(const std::string &dayStr) {
+	const std::string day = asLowerCaseString(dayStr);
+	if (day == "sunday") {
+		return 0;
+	}
+	if (day == "monday") {
+		return 1;
+	}
+	if (day == "tuesday") {
+		return 2;
+	}
+	if (day == "wednesday") {
+		return 3;
+	}
+	if (day == "thursday") {
+		return 4;
+	}
+	if (day == "friday") {
+		return 5;
+	}
+	if (day == "saturday") {
+		return 6;
+	}
+	g_logger().warn("Invalid weekly day '{}', defaulting to monday", dayStr);
+	return 1;
+}
+
 std::string formatEnumName(std::string_view name) {
 	std::string result { name.begin(), name.end() };
 	std::ranges::replace(result, '_', ' ');

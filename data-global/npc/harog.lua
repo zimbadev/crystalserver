@@ -73,4 +73,8 @@ npcHandler:setMessage(MESSAGE_SENDTRADE, "Keep in mind you won't find better off
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 -- npcType registering the npcConfig table
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
+
 npcType:register(npcConfig)

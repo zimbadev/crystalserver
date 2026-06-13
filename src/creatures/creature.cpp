@@ -906,6 +906,17 @@ BlockType_t Creature::blockHit(const std::shared_ptr<Creature> &attacker, const 
 
 		if (checkArmor) {
 			int32_t armor = getArmor();
+			// Proficiency Perk: Armor Penetration
+			if (attacker) {
+				const auto &attackerPlayer = attacker->getPlayer();
+				if (attackerPlayer) {
+					const float armorPen = attackerPlayer->getEquippedWeaponProficiency().armorPenetration;
+					if (armorPen > 0) {
+						armor = std::max<int32_t>(0, armor - static_cast<int32_t>(armor * armorPen));
+					}
+				}
+			}
+
 			if (armor > 3) {
 				damage -= uniform_random(armor / 2, armor - (armor % 2 + 1));
 			} else if (armor > 0) {

@@ -19,6 +19,7 @@
 
 #include "server/network/protocol/protocol.hpp"
 #include <unordered_map>
+#include "creatures/creatures_definitions.hpp"
 #include "game/movement/position.hpp"
 #include "utils/utils_definitions.hpp"
 
@@ -38,7 +39,6 @@ enum Slots_t : uint8_t;
 enum skills_t : int8_t;
 enum CombatType_t : uint8_t;
 enum SoundEffect_t : uint16_t;
-enum class SourceEffect_t : uint8_t;
 enum class HouseAuctionType : uint8_t;
 
 class NetworkMessage;
@@ -53,6 +53,8 @@ class ProtocolGame;
 class PreySlot;
 class TaskHuntingSlot;
 class TaskHuntingOption;
+class BountyTaskData;
+class WeeklyTaskData;
 class Item;
 class Party;
 class Creature;
@@ -70,6 +72,7 @@ struct ShopBlock;
 struct MarketOfferEx;
 struct HistoryMarketOffer;
 struct LightInfo;
+struct NpcDialogOptions;
 
 using ProtocolGame_ptr = std::shared_ptr<ProtocolGame>;
 using ItemVector = std::vector<std::shared_ptr<Item>>;
@@ -183,7 +186,7 @@ private:
 	void parseCyclopediaCharacterInfo(NetworkMessage &msg);
 
 	void parseHighscores(NetworkMessage &msg);
-	void parseTaskHuntingAction(NetworkMessage &msg);
+	void parseSoulSeals(NetworkMessage &msg);
 	void sendHighscoresNoData();
 	void sendHighscores(const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationBaseId, uint16_t page, uint16_t pages, uint32_t updateTimer);
 
@@ -191,7 +194,10 @@ private:
 	void parseBugReport(NetworkMessage &msg);
 	void parseOfferDescription(NetworkMessage &msg);
 	void parsePreyAction(NetworkMessage &msg);
+
+	void parseBountyTaskAction(NetworkMessage &msg);
 	void parseSendResourceBalance();
+	void parseSendResourceBalance(NetworkMessage &msg);
 	void parseRuleViolationReport(NetworkMessage &msg);
 
 	void parseBestiarySendRaces();
@@ -209,7 +215,9 @@ private:
 	void parseBestiarysendMonsterData(NetworkMessage &msg);
 	void parseCyclopediaMonsterTracker(NetworkMessage &msg);
 
+	void parseTutorialChangeVocation(NetworkMessage &msg);
 	void parseTeleport(NetworkMessage &msg);
+	void parseStartOfflineTraining(NetworkMessage &msg);
 	void parseThrow(NetworkMessage &msg);
 	void parseUseItemEx(NetworkMessage &msg);
 	void parseUseWithCreature(NetworkMessage &msg);
@@ -317,11 +325,12 @@ private:
 	void sendMonsterPodiumWindow(const std::shared_ptr<Item> &podium, const Position &position, uint16_t itemId, uint8_t stackPos);
 	void parseSetMonsterPodium(NetworkMessage &msg) const;
 	void sendBosstiaryCooldownTimer();
+
 	void sendBosstiaryEntryChanged(uint32_t bossid);
 
 	void sendAllowBugReport();
-	void sendDistanceShoot(const Position &from, const Position &to, uint16_t type);
-	void sendMagicEffect(const Position &pos, uint16_t type);
+	void sendDistanceShoot(const Position &from, const Position &to, uint16_t type, SourceEffect_t source = SourceEffect_t::GLOBAL);
+	void sendMagicEffect(const Position &pos, uint16_t type, SourceEffect_t source = SourceEffect_t::GLOBAL);
 	void removeMagicEffect(const Position &pos, uint16_t type);
 	void sendRestingStatus(uint8_t protection);
 	void sendCreatureHealth(const std::shared_ptr<Creature> &creature);
@@ -383,10 +392,18 @@ private:
 
 	void sendShop(const std::shared_ptr<Npc> &npc);
 	void sendCloseShop();
+	void sendNpcDialogOptions(const NpcDialogOptions &dialogOptions);
 	void sendClientCheck();
 	void sendGameNews();
-	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);
+	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t soulsealsPoints = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);
+	void sendResourceBalance(Resource_t resourceType);
 	void sendResourceBalance(Resource_t resourceType, uint64_t value);
+	void sendSoulSealsWindow();
+
+	void sendBountyTaskData(const BountyTaskData &bountyData);
+	void sendWeeklyTaskData(const WeeklyTaskData &weeklyData);
+	void sendHuntingTaskShopData();
+
 	void sendCharmResourcesBalance(uint32_t charm = 0, uint32_t minorCharm = 0, uint32_t maxCharm = 0, uint32_t maxMinorCharm = 0);
 	void sendCharmResourceBalance(CharmResource_t resourceType, uint32_t value);
 	void sendSaleItemList(const std::vector<ShopBlock> &shopVector, const std::map<uint16_t, uint16_t> &inventoryMap);
@@ -467,6 +484,7 @@ private:
 
 	// messages
 	void sendModalWindow(const ModalWindow &modalWindow);
+	void sendMultiOfflineTrainingDialog();
 
 	// analyzers
 	void sendKillTrackerUpdate(const std::shared_ptr<Container> &corpse, const std::string &name, Outfit_t creatureOutfit);
@@ -589,11 +607,23 @@ private:
 
 	void sendSingleSoundEffect(const Position &pos, SoundEffect_t id, SourceEffect_t source);
 	void sendDoubleSoundEffect(const Position &pos, SoundEffect_t mainSoundId, SourceEffect_t mainSource, SoundEffect_t secondarySoundId, SourceEffect_t secondarySource);
+	void sendAmbientSoundEffect(const SoundAmbientEffect_t id);
+	void sendMusicSoundEffect(const SoundMusicEffect_t id);
 
-	void sendTakeScreenshot(Screenshot_t screenshotType);
+	void sendBannerType(Banner_t bannerType);
+	void sendScreenshotAndBannerUnlockedAchievement(const uint16_t achievementId);
+	void sendScreenshotAndBannerUnlockedTitle(const uint8_t titleId);
+	void sendScreenshotAndBannerUnlockedCosmetic(const std::string &skinName, uint16_t lookType, uint8_t skinType);
+	void sendScreenshotAndBannerUpLevel(const uint16_t levelUp);
+	void sendScreenshotAndBannerUpSkill(skills_t skill, const uint16_t skillLevel);
+	void sendScreenshotAndBannerProgressRace(uint16_t raceId, uint8_t progressLevel, bool isBoss);
+	void sendScreenshotAndBannerProgressQuest(const std::string &questName, bool isCompleted);
+	void sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message);
+
 	void sendDisableLoginMusic();
 
 	uint8_t m_playerDeathTime = 0;
+	uint32_t m_lastForgeOpenTime = 0;
 
 	void resetPlayerDeathTime() {
 		m_playerDeathTime = 0;

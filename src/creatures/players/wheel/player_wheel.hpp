@@ -86,6 +86,11 @@ public:
 	bool unlockScroll(const std::string &scrollName);
 	void loadKVScrolls();
 	void saveKVScrolls() const;
+	void loadKVHuntingTaskShopExtraPoints();
+	void saveKVHuntingTaskShopExtraPoints() const;
+
+	uint16_t getExtraPointsFromHuntingTaskShop() const;
+	void addExtraPointsFromHuntingTaskShop(uint16_t amount);
 
 	void loadKVModGrades();
 	void saveKVModGrades() const;
@@ -163,8 +168,11 @@ public:
 	 */
 	uint16_t getWheelPoints(bool includeExtraPoints = true) const;
 	uint16_t getExtraPoints() const;
+
 	uint8_t getMaxPointsPerSlot(WheelSlots_t slot) const;
 	uint16_t getUnusedPoints() const;
+
+	void reclaimExcessPoints();
 
 	void setPlayerCombatStats(CombatType_t type, int32_t leechAmount);
 
@@ -476,6 +484,7 @@ private:
 	std::unordered_set<std::string> m_beamMasterySpells;
 
 	std::vector<PromotionScroll> m_unlockedScrolls;
+	uint16_t m_extraPointsFromHuntingTaskShop = 0;
 
 	std::array<PlayerWheelGem, 4> m_activeGems;
 	std::vector<PlayerWheelGem> m_revealedGems;

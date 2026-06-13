@@ -5,6 +5,7 @@ local TYPE_GLOOTH_GLIDER = 7
 
 local config = {
 	[5907] = { NAME = "Bear", ID = 3, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 20, FAIL_MSG = { { 1, "The bear ran away." }, { 2, "Oh no! The slingshot broke." }, { 3, "The bear is trying to hit you with its claws." } }, SUCCESS_MSG = "You have tamed the war bear.", ACHIEV = "Bearbaiting" },
+	[52638] = { NAME = "Battlefrazzle", ID = 246, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 40, FAIL_MSG = { { 2, "The tamed frazzlemaw devours the rare fish but otherwise takes no notice of your advancement." } }, SUCCESS_MSG = "The tamed frazzlemaw hungers for fish and this one is a particular rare treat. You command this one now, take good care of it!" },
 	[12308] = { NAME = "Black Sheep", ID = 4, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 25, FAIL_MSG = { { 1, "The black sheep ran away." }, { 2, "Oh no! The reins were torn." }, { 3, "The black sheep is trying to run away." } }, SUCCESS_MSG = "You have tamed the sheep.", ACHIEV = "Little Ball of Wool" },
 	[12260] = { NAME = "Boar", ID = 10, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 40, FAIL_MSG = { { 1, "The boar has run away" }, { 3, "The boar attacks you." } }, SUCCESS_MSG = "You have tamed the boar.", ACHIEV = "Pig-Headed" },
 	[12318] = { NAME = "Crustacea Gigantica", ID = 7, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 40, FAIL_MSG = { { 1, "The crustacea has run away." }, { 2, "The crustacea ate the shrimp." } }, SUCCESS_MSG = "You have tamed the crustacea.", ACHIEV = "Fried Shrimp" },

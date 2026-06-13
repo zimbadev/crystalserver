@@ -174,7 +174,7 @@ void DatabaseManager::registerDatabaseConfig(const std::string &config, int32_t 
 	int32_t tmp;
 
 	if (!getDatabaseConfig(config, tmp)) {
-		query << "INSERT INTO `server_config` VALUES (" << db.escapeString(config) << ", '" << value << "')";
+		query << "INSERT INTO `server_config` (`config`, `value`) VALUES (" << db.escapeString(config) << ", '" << value << "')";
 	} else {
 		query << "UPDATE `server_config` SET `value` = '" << value << "' WHERE `config` = " << db.escapeString(config);
 	}

@@ -66,15 +66,12 @@ local function creatureSayCallback(npc, creature, type, message)
 		return false
 	end
 
-	local toothFairyStorage = 2033025
-	local teethCollectionStorage = 2033027
-
 	if MsgContains(message, "mission") then
 		if player:getLevel() < 30 then
 			npcHandler:say("Oh! You need to be a little more grown in order I can seek your help.", npc, creature)
 			return true
 		end
-		if player:getStorageValue(toothFairyStorage) < 1 then
+		if player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.ToothFairy) < 1 then
 			npcHandler:say({
 				"You've got me, I really have a little problem here. What gave it away? My sorrowful expression? Yes, I thought so. This is what troubles me: I'm the tooth fairy. Well, this wouldn't be a problem at all under normal circumstances. ...",
 				"I love gathering children's milk teeth and bringing presents for them. Until now, I did so by using a spell. This spell teleported me into the children's bedrooms and - after carrying out my duty - back to my secret realm. ...",
@@ -85,14 +82,14 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:setTopic(playerId, 1)
 		end
 
-		if player:getStorageValue(toothFairyStorage) == 1 then
+		if player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.ToothFairy) == 1 then
 			if player:removeItem(25303, 3) then
 				npcHandler:say({
 					"You're bringing the milk teeth! Thank you, human being; you were of great assistance to me! Please take this in return. It's the part of a map. If you find the other parts, it will show you the way to a hidden fairy treasure. ...",
 					"Oh, and if you're interested, there's still another {cause} you could help me with.",
 				}, npc, creature)
 				player:addItem(24943, 1)
-				player:setStorageValue(toothFairyStorage, 2)
+				player:setStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.ToothFairy, 2)
 			else
 				npcHandler:say("You need to bring me 3 milk teeth.", npc, creature)
 			end
@@ -103,19 +100,19 @@ local function creatureSayCallback(npc, creature, type, message)
 			"Usually they put them on their bed stands. Then you have to put the gifts on their beds. Please take these presents and go to Thais, Carlin and Venore. Come back with the milk teeth.",
 		}, npc, creature)
 		player:addItem(25302, 3)
-		player:setStorageValue(toothFairyStorage, 1)
+		player:setStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.ToothFairy, 1)
 		npcHandler:setTopic(playerId, 0)
 	end
 
-	if (MsgContains(message, "cause") or MsgContains(message, "tooth") or MsgContains(message, "teeth") or MsgContains(message, "fang")) and player:getStorageValue(toothFairyStorage) == 2 then
-		if player:getStorageValue(teethCollectionStorage) < 1 then
+	if (MsgContains(message, "cause") or MsgContains(message, "tooth") or MsgContains(message, "teeth") or MsgContains(message, "fang")) and player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.ToothFairy) == 2 then
+		if player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.TeethCollection) < 1 then
 			npcHandler:say({
 				"As I'm the tooth fairy it should not surprise you to hear that I have a small collection. Yes, a tooth collection, of course. But I'm still lacking some special specimens. ...",
 				"I would give you a little reward if you bring me all of the following: an orc tooth, a shark tooth, a vampire tooth, a behemoth fang, a carrion worm fang or a werewolf fangs.",
 			}, npc, creature)
-			player:setStorageValue(teethCollectionStorage, 1)
+			player:setStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.TeethCollection, 1)
 		end
-		if player:getStorageValue(teethCollectionStorage) == 1 then
+		if player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.TeethCollection) == 1 then
 			npcHandler:say("Did you brought all the teeth for my collection?", npc, creature)
 			npcHandler:setTopic(playerId, 2)
 		end
@@ -123,7 +120,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		if player:removeItem(10196, 1) and player:removeItem(22649, 1) and player:removeItem(9685, 1) and player:removeItem(5893, 1) and player:removeItem(10275, 1) and player:removeItem(22052, 1) then
 			npcHandler:say("Oh, I see! You really found all the teeth for me! Thank you, human being! Please take this in return.", npc, creature)
 			player:addItem(3026, 6)
-			player:setStorageValue(teethCollectionStorage, 2)
+			player:setStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.TeethCollection, 2)
 			if not player:hasAchievement("Toothfairy Assistant") then
 				player:addAchievement("Toothfairy Assistant")
 			end

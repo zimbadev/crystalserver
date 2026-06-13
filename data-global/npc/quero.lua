@@ -85,4 +85,7 @@ npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye.")
 npcHandler:setMessage(MESSAGE_SENDTRADE, "Of course, just take a look at my instruments.")
 npcHandler:setMessage(MESSAGE_GREET, "Welcome |PLAYERNAME|! Can I help you? I'm selling {instruments}.")
 
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
+
 npcType:register(npcConfig)

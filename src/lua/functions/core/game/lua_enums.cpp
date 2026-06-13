@@ -141,8 +141,8 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 	registerEnum(L, CHARM_PASSIVE);
 	registerEnum(L, CHARM_MAJOR);
 	registerEnum(L, CHARM_MINOR);
-	registerEnum(L, CHARM_GUT);
-	registerEnum(L, CHARM_SCAVENGE);
+	registerEnum(L, CHARM_MINOR_GUT);
+	registerEnum(L, CHARM_MINOR_SCAVENGE);
 
 	// Use with container:addItem, container:addItemEx and possibly other functions.
 	registerEnum(L, FLAG_NOLIMIT);
@@ -227,20 +227,34 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 	registerEnum(L, WEAPON_MISSILE);
 	registerEnum(L, WEAPON_FIST);
 
-	registerEnum(L, SCREENSHOT_TYPE_NONE);
-	registerEnum(L, SCREENSHOT_TYPE_ACHIEVEMENT);
-	registerEnum(L, SCREENSHOT_TYPE_BESTIARYENTRYCOMPLETED);
-	registerEnum(L, SCREENSHOT_TYPE_BESTIARYENTRYUNLOCKED);
-	registerEnum(L, SCREENSHOT_TYPE_BOSSDEFEATED);
-	registerEnum(L, SCREENSHOT_TYPE_DEATHPVE);
-	registerEnum(L, SCREENSHOT_TYPE_DEATHPVP);
-	registerEnum(L, SCREENSHOT_TYPE_LEVELUP);
-	registerEnum(L, SCREENSHOT_TYPE_PLAYERKILLASSIST);
-	registerEnum(L, SCREENSHOT_TYPE_PLAYERKILL);
-	registerEnum(L, SCREENSHOT_TYPE_PLAYERATTACKING);
-	registerEnum(L, SCREENSHOT_TYPE_TREASUREFOUND);
-	registerEnum(L, SCREENSHOT_TYPE_SKILLUP);
-	registerEnum(L, SCREENSHOT_TYPE_GIFTOFLIFE);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_NONE);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_BANNER_INFO);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_ACHIEVEMENT);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_TITLE);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_LEVEL);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_SKILL);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_BESTIARY_PROGRESS);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_BOSSTIARY_PROGRESS);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_QUEST);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_COSMETIC);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_PROFICIENCY);
+
+	registerEnum(L, BANNER_TYPE_NONE);
+	registerEnum(L, BANNER_TYPE_BOSSDEFEATED);
+	registerEnum(L, BANNER_TYPE_DEATHPVE);
+	registerEnum(L, BANNER_TYPE_DEATHPVP);
+	registerEnum(L, BANNER_TYPE_PLAYERKILLASSIST);
+	registerEnum(L, BANNER_TYPE_PLAYERKILL);
+	registerEnum(L, BANNER_TYPE_PLAYERATTACKING);
+	registerEnum(L, BANNER_TYPE_TREASUREFOUND);
+	registerEnum(L, BANNER_TYPE_GIFTOFLIFE);
+
+	registerEnum(L, BANNER_TYPE_ATTACKSTOPPED);
+	registerEnum(L, BANNER_TYPE_CAPACITYLIMIT);
+	registerEnum(L, BANNER_TYPE_OUTOFAMMO);
+	registerEnum(L, BANNER_TYPE_TARGETTOOCLOSE);
+	registerEnum(L, BANNER_TYPE_OUTOFSOULPOINTS);
+	registerEnum(L, BANNER_TYPE_TUTORIALCOMPLETE);
 }
 
 void LuaEnums::initWorldTypeEnums(lua_State* L) {
@@ -450,6 +464,7 @@ void LuaEnums::initConditionParamEnums(lua_State* L) {
 	registerEnum(L, CONDITION_PARAM_INCREASE_MANADRAINPERCENT);
 	registerEnum(L, CONDITION_PARAM_INCREASE_DROWNPERCENT);
 	registerEnum(L, CONDITION_PARAM_CHARM_CHANCE_MODIFIER);
+	registerEnum(L, CONDITION_PARAM_FOODTICKS);
 }
 
 void LuaEnums::initAttributeConditionSubIdEnums(lua_State* L) {
@@ -679,6 +694,14 @@ void LuaEnums::initConstMeEnums(lua_State* L) {
 	registerEnum(L, CONST_ME_SMALLWHITE_ENERGY_SPARK);
 	registerEnum(L, CONST_ME_SMALLGREEN_ENERGY_SPARK);
 	registerEnum(L, CONST_ME_SMALLPINK_ENERGY_SPARK);
+
+	// 15.12 - Weapon Attack Effects
+	registerEnum(L, CONST_ME_SWORD_ATTACK);
+	registerEnum(L, CONST_ME_CLUB_ATTACK);
+	registerEnum(L, CONST_ME_AXE_ATTACK);
+	registerEnum(L, CONST_ME_MONK_STAFF_ATTACK);
+	registerEnum(L, CONST_ME_MONK_DAGGERS_ATTACK);
+	registerEnum(L, CONST_ME_FIST_ATTACK);
 }
 
 void LuaEnums::initConstAniEnums(lua_State* L) {
@@ -1167,6 +1190,7 @@ void LuaEnums::initSpeechBubbleEnums(lua_State* L) {
 	registerEnum(L, SPEECHBUBBLE_TRADE);
 	registerEnum(L, SPEECHBUBBLE_QUEST);
 	registerEnum(L, SPEECHBUBBLE_QUESTTRADER);
+	registerEnum(L, SPEECHBUBBLE_TRAVELER);
 	registerEnum(L, SPEECHBUBBLE_HIRELING);
 }
 

@@ -75,4 +75,7 @@ npcHandler:setMessage(MESSAGE_SENDTRADE, "Chchch. Chh! <you're not sure, but it 
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
+
 npcType:register(npcConfig)
