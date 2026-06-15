@@ -20,10 +20,14 @@
 #include "lib/di/container.hpp"
 #include "utils/tools.hpp"
 
+#ifndef USE_PRECOMPILED_HEADERS
+	#include <ctime>
+#endif
+
 struct EventScheduler {
 	std::string name;
-	int startDays;
-	int endDays;
+	std::time_t startTime {};
+	std::time_t endTime {};
 };
 
 struct EventRates {
@@ -34,6 +38,11 @@ struct EventRates {
 	uint16_t skillrate = 100;
 	uint16_t fiendishrate = 100;
 	uint16_t influencedrate = 100;
+	uint8_t forgeChance = 100;
+	uint8_t bosscooldown = 100;
+	bool doubleBestiary {};
+	bool doubleBossTiary {};
+	bool fastExercise {};
 };
 
 class EventsScheduler {
@@ -48,7 +57,7 @@ public:
 		return inject<EventsScheduler>();
 	}
 
-	// Event schedule xml load
+	bool loadScheduleEventFromJson();
 	bool loadScheduleEventFromXml();
 
 	// Event schedule
@@ -100,6 +109,10 @@ public:
 	void setSkillSchedule(uint16_t skillrate) {
 		skillSchedule = (skillSchedule * skillrate) / 100;
 	}
+
+	void reset();
+
+	[[nodiscard]] std::vector<std::string> getActiveEvents() const;
 
 private:
 	// Event schedule

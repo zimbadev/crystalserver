@@ -50,6 +50,24 @@ void Scripts::clearAllScripts() const {
 	g_monsters().clear();
 }
 
+bool Scripts::loadEventSchedulerScripts(const std::filesystem::path &filePath) {
+	if (!std::filesystem::exists(filePath) || !std::filesystem::is_regular_file(filePath)) {
+		g_logger().warn("{} - Cannot load file '{}'", __FUNCTION__, filePath.string());
+		return false;
+	}
+
+	if (filePath.extension() == ".lua") {
+		if (scriptInterface.loadFile(filePath.string(), filePath.filename().string()) == -1) {
+			g_logger().error(filePath.string());
+			g_logger().error(scriptInterface.getLastLuaError());
+			return false;
+		}
+		return true;
+	}
+
+	return false;
+}
+
 bool Scripts::loadEventSchedulerScripts(const std::string &fileName) {
 	auto coreFolder = g_configManager().getString(CORE_DIRECTORY);
 	const auto dir = std::filesystem::current_path() / coreFolder / "events" / "scripts" / "scheduler";

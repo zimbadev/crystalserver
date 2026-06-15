@@ -352,6 +352,7 @@ void CrystalServer::loadModules() {
 	// Load XML folder dependencies (order matters)
 	modulesLoadHelper(g_vocations().loadFromXml(), "XML/vocations.xml");
 	modulesLoadHelper(g_eventsScheduler().loadScheduleEventFromXml(), "XML/events.xml");
+	modulesLoadHelper(g_eventsScheduler().loadScheduleEventFromJson(), "json/eventscheduler/events.json");
 	modulesLoadHelper(Outfits::getInstance().loadFromXml(), "XML/outfits.xml");
 	modulesLoadHelper(Familiars::getInstance().loadFromXml(), "XML/familiars.xml");
 	modulesLoadHelper(g_imbuements().loadFromXml(), "XML/imbuements.xml");
