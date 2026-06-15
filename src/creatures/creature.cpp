@@ -555,7 +555,12 @@ void Creature::onDeath() {
 				const uint64_t gainExp = getGainedExperience(attacker);
 				const auto &attackerMaster = attacker->getMaster() ? attacker->getMaster() : attacker;
 				if (auto attackerPlayer = attackerMaster->getPlayer()) {
-					attackerPlayer->removeAttacked(getPlayer());
+					if (auto thisPlayer = getPlayer()) {
+						attackerPlayer->removeAttacked(thisPlayer);
+						thisPlayer->removeAttackedBy(attackerPlayer);
+					}
+
+					g_game().updateCreatureSquare(attackerPlayer);
 
 					const auto &party = attackerPlayer->getParty();
 					killers.insert(attackerPlayer);

@@ -54,6 +54,12 @@ blackSkulledDeathMana = 0
 fieldOwnershipDuration = 5 * 1000
 loginProtectionPeriod = 10 * 1000
 
+-- Expert PvP
+-- NOTE: toggleExpertPvp enables the PvP frames, similar to Tibia RL.
+toggleExpertPvp = true
+canWalkThroughOtherPlayers = false
+canWalkThroughMagicWalls = false
+
 -- Guilds
 -- ingameGuildManagement: set true to enable in-game guild commands.
 -- guildWarsDefaultFrags: Default frags for guild war invitations if not specified.

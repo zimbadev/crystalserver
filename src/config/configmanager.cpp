@@ -188,6 +188,9 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_GUILDHALL_NEED_GUILD, "toggleGuildHallNeedGuild", true);
 	loadBoolConfig(L, TOGGLE_MAX_CONNECTIONS_BY_IP, "toggleMaxConnectionsByIP", false);
 	loadBoolConfig(L, TOGGLE_GUILD_WARS, "toggleGuildWars", false);
+	loadBoolConfig(L, TOGGLE_EXPERT_PVP, "toggleExpertPvp", false);
+	loadBoolConfig(L, EXPERT_PVP_CANWALKTHROUGHOTHERPLAYERS, "canWalkThroughOtherPlayers", false);
+	loadBoolConfig(L, EXPERT_PVP_CANWALKTHROUGHMAGICWALLS, "canWalkThroughMagicWalls", false);
 	loadBoolConfig(L, INGAME_GUILD_MANAGEMENT, "ingameGuildManagement", true);
 	loadBoolConfig(L, CREATE_GUILD_ONLY_PREMIUM, "createGuildOnlyPremium", true);
 	loadBoolConfig(L, EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS, "exivaRestrictionsOnlyOptionalWorlds", true);

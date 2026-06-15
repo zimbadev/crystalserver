@@ -1082,6 +1082,22 @@ std::shared_ptr<Player> Game::getMarketPlayerByGUID(uint32_t &guid) {
 	return tmpPlayer;
 }
 
+std::shared_ptr<Player> Game::getOwnerPlayer(const std::shared_ptr<Creature> &creature) {
+	if (!creature) {
+		return nullptr;
+	}
+
+	if (creature->isSummon()) {
+		return getOwnerPlayer(creature->getMaster());
+	}
+
+	return creature->getPlayer();
+}
+
+std::shared_ptr<Player> Game::getOwnerPlayer(uint32_t creatureId) {
+	return getOwnerPlayer(getCreatureByID(creatureId));
+}
+
 std::shared_ptr<Creature> Game::getCreatureByName(const std::string &s) {
 	if (s.empty()) {
 		return nullptr;
@@ -6261,7 +6277,7 @@ void Game::playerFollowCreature(uint32_t playerId, uint32_t creatureId) {
 	player->setFollowCreature(getCreatureByID(creatureId));
 }
 
-void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode) {
+void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, PvpMode_t pvpMode, bool chaseMode, bool secureMode) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
@@ -6269,7 +6285,43 @@ void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool ch
 
 	player->setFightMode(fightMode);
 	player->setChaseMode(chaseMode);
-	player->setSecureMode(secureMode);
+
+	bool expertPvpActive = g_configManager().getBoolean(TOGGLE_EXPERT_PVP) || (worldType == WORLDTYPE_HARDCORE);
+	if (expertPvpActive) {
+		auto oldPvpMode = player->pvpMode;
+
+		// In Hardcore worlds, force Red Fist mode and disable secure mode
+		if (worldType == WORLDTYPE_HARDCORE) {
+			player->setPvpMode(PVP_MODE_RED_FIST);
+			player->setSecureMode(false);
+		} else {
+			// Black skull cannot activate Red Fist
+			if (player->getSkull() == SKULL_BLACK && pvpMode == PVP_MODE_RED_FIST) {
+				player->setPvpMode(oldPvpMode);
+			} else if (worldType == WORLDTYPE_OPTIONAL && pvpMode == PVP_MODE_RED_FIST) {
+				player->setPvpMode(player->pvpMode);
+			} else {
+				player->setPvpMode(pvpMode);
+			}
+
+			if (worldType == WORLDTYPE_OPTIONAL && !secureMode) {
+				player->setSecureMode(!secureMode);
+			} else {
+				if (player->getPvPMode() == PVP_MODE_RED_FIST && oldPvpMode != PVP_MODE_RED_FIST) {
+					player->setSecureMode(false);
+				} else if (player->pvpMode != PVP_MODE_RED_FIST && oldPvpMode == PVP_MODE_RED_FIST) {
+					player->setSecureMode(true);
+				} else {
+					player->setSecureMode(secureMode);
+				}
+			}
+		}
+
+		player->sendFightModes();
+	} else {
+		player->setPvpMode(pvpMode);
+		player->setSecureMode(secureMode);
+	}
 }
 
 void Game::playerRequestAddVip(uint32_t playerId, const std::string &name) {
@@ -9054,6 +9106,16 @@ void Game::playerInviteToParty(uint32_t playerId, uint32_t invitedId) {
 		return;
 	}
 
+	if (player->isInPvpSituation()) {
+		player->sendTextMessage(MESSAGE_PARTY_MANAGEMENT, "You can't invite players while you are in an aggression.");
+		return;
+	}
+
+	if (invitedPlayer->isInPvpSituation()) {
+		player->sendTextMessage(MESSAGE_PARTY_MANAGEMENT, "This player can't be invited while he is in an aggression.");
+		return;
+	}
+
 	std::shared_ptr<Party> party = player->getParty();
 	if (!party) {
 		party = Party::create(player);
@@ -9075,6 +9137,16 @@ void Game::updatePlayerHelpers(const std::shared_ptr<Player> &player) {
 	}
 }
 
+void Game::updateCreatureSquare(const std::shared_ptr<Creature> &creature) {
+	if (!g_configManager().getBoolean(TOGGLE_EXPERT_PVP)) {
+		return;
+	}
+
+	for (const auto &spectator : Spectators().find<Player>(creature->getPosition(), true)) {
+		spectator->getPlayer()->sendCreatureSquare(creature, spectator->getPlayer()->getCreatureSquare(creature), SQUARE_STAY);
+	}
+}
+
 void Game::playerJoinParty(uint32_t playerId, uint32_t leaderId) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
@@ -9088,6 +9160,11 @@ void Game::playerJoinParty(uint32_t playerId, uint32_t leaderId) {
 
 	auto party = leader->getParty();
 	if (!party || party->getLeader() != leader) {
+		return;
+	}
+
+	if (player->isInPvpSituation()) {
+		player->sendTextMessage(MESSAGE_PARTY_MANAGEMENT, "You can't join while you are in an aggression.");
 		return;
 	}
 

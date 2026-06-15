@@ -1617,6 +1617,15 @@ const char* getReturnMessage(ReturnValue value) {
 		case RETURNVALUE_NOTENOUGHHARMONY:
 			return "You do not have enough harmony.";
 
+		case RETURNVALUE_YOUCANNOTPASSTHROUGHAGGRESSIVECREATURES:
+			return "You cannot pass creatures that are aggressive against.";
+
+		case RETURNVALUE_YOUCANNOTPASSTHROUGHAGGRESSIVEPLAYERS:
+			return "You cannot pass players that are aggressive against.";
+
+		case RETURNVALUE_ADJUSTYOURCOMBAT:
+			return "You need to adjust your PvP Mode.";
+
 		// Any unhandled ReturnValue will go enter here
 		default:
 			return "Unknown error.";
