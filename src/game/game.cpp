@@ -9959,6 +9959,107 @@ namespace {
 		}
 		return true;
 	}
+
+	bool canDeliverMarketItemsToInbox(const std::shared_ptr<Cylinder> &inbox, const ItemType &it, uint16_t amount, uint8_t tier) {
+		if (!inbox || it.id == ITEM_STORE_COIN) {
+			return inbox != nullptr;
+		}
+
+		if (it.stackable) {
+			uint16_t tmpAmount = amount;
+			while (tmpAmount > 0) {
+				const uint16_t stackCount = std::min<uint16_t>(it.stackSize, tmpAmount);
+				const auto &item = Item::CreateItem(it.id, stackCount);
+				if (tier > 0) {
+					item->setAttribute(ItemAttribute_t::TIER, tier);
+				}
+
+				if (g_game().internalAddItem(inbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
+					return false;
+				}
+
+				g_game().internalRemoveItem(item, -1, false, FLAG_NOLIMIT, true);
+				tmpAmount -= stackCount;
+			}
+			return true;
+		}
+
+		const int32_t subType = it.charges != 0 ? it.charges : -1;
+		for (uint16_t i = 0; i < amount; ++i) {
+			const auto &item = Item::CreateItem(it.id, subType);
+			if (tier > 0) {
+				item->setAttribute(ItemAttribute_t::TIER, tier);
+			}
+
+			if (g_game().internalAddItem(inbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
+				return false;
+			}
+
+			g_game().internalRemoveItem(item, -1, false, FLAG_NOLIMIT, true);
+		}
+
+		return true;
+	}
+
+	bool deliverMarketItemsToInbox(const std::shared_ptr<Cylinder> &inbox, const ItemType &it, uint16_t amount, uint8_t tier) {
+		if (!inbox || it.id == ITEM_STORE_COIN) {
+			return inbox != nullptr;
+		}
+
+		std::vector<std::shared_ptr<Item>> deliveredItems;
+		const auto rollback = [&]() {
+			for (const auto &deliveredItem : deliveredItems) {
+				g_game().internalRemoveItem(deliveredItem, -1, false, FLAG_NOLIMIT, true);
+			}
+			deliveredItems.clear();
+		};
+
+		if (it.stackable) {
+			uint16_t tmpAmount = amount;
+			while (tmpAmount > 0) {
+				const uint16_t stackCount = std::min<uint16_t>(it.stackSize, tmpAmount);
+				const auto &item = Item::CreateItem(it.id, stackCount);
+				if (tier > 0) {
+					item->setAttribute(ItemAttribute_t::TIER, tier);
+				}
+
+				if (g_game().internalAddItem(inbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
+					rollback();
+					return false;
+				}
+
+				deliveredItems.emplace_back(item);
+				tmpAmount -= stackCount;
+			}
+			return true;
+		}
+
+		const int32_t subType = it.charges != 0 ? it.charges : -1;
+		for (uint16_t i = 0; i < amount; ++i) {
+			const auto &item = Item::CreateItem(it.id, subType);
+			if (tier > 0) {
+				item->setAttribute(ItemAttribute_t::TIER, tier);
+			}
+
+			if (g_game().internalAddItem(inbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
+				rollback();
+				return false;
+			}
+
+			deliveredItems.emplace_back(item);
+		}
+
+		return true;
+	}
+
+	void refundMarketPurchase(const std::shared_ptr<Player> &player, uint64_t totalPrice) {
+		if (!player || totalPrice == 0) {
+			return;
+		}
+
+		player->setBankBalance(player->getBankBalance() + totalPrice);
+		g_metrics().addCounter("balance_increase", totalPrice, { { "player", player->getName() }, { "context", "market_refund" } });
+	}
 } // namespace
 
 bool checkCanInitCreateMarketOffer(const std::shared_ptr<Player> &player, uint8_t type, const ItemType &it, uint16_t amount, uint64_t price, std::ostringstream &offerStatus) {
@@ -10268,6 +10369,13 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 
 		const auto &buyerPlayerInbox = buyerPlayer->getInbox();
 
+		if (it.id != ITEM_STORE_COIN && !canDeliverMarketItemsToInbox(buyerPlayerInbox, it, amount, offer.tier)) {
+			player->sendTextMessage(MESSAGE_MARKET, "The buyer's inbox is full. This offer cannot be accepted.");
+			offerStatus << "Buyer inbox is full for buy offer";
+			player->sendMarketEnter(player->getLastDepotId());
+			return;
+		}
+
 		if (it.id == ITEM_STORE_COIN) {
 			auto [transferableCoins, result] = player->getAccount()->getCoins(enumToValue(CoinType::Transferable));
 
@@ -10301,49 +10409,25 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 			return;
 		}
 
-		player->setBankBalance(player->getBankBalance() + totalPrice);
-		g_metrics().addCounter("balance_increase", totalPrice, { { "player", player->getName() }, { "context", "market_sale" } });
-
+		bool delivered = true;
 		if (it.id == ITEM_STORE_COIN) {
 			buyerPlayer->getAccount()->addCoins(enumToValue(CoinType::Transferable), amount, "Purchased on Market");
-		} else if (it.stackable) {
-			uint16_t tmpAmount = amount;
-			while (tmpAmount > 0) {
-				uint16_t stackCount = std::min<uint16_t>(it.stackSize, tmpAmount);
-				const auto &item = Item::CreateItem(it.id, stackCount);
-				if (internalAddItem(buyerPlayerInbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
-					offerStatus << "Failed to add player inbox stackable item for buy offer for player " << player->getName();
-
-					break;
-				}
-
-				if (offer.tier > 0) {
-					item->setAttribute(ItemAttribute_t::TIER, offer.tier);
-				}
-
-				tmpAmount -= stackCount;
-			}
 		} else {
-			int32_t subType;
-			if (it.charges != 0) {
-				subType = it.charges;
-			} else {
-				subType = -1;
-			}
-
-			for (uint16_t i = 0; i < amount; ++i) {
-				const auto &item = Item::CreateItem(it.id, subType);
-				if (internalAddItem(buyerPlayerInbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
-					offerStatus << "Failed to add player inbox item for buy offer for player " << player->getName();
-
-					break;
-				}
-
-				if (offer.tier > 0) {
-					item->setAttribute(ItemAttribute_t::TIER, offer.tier);
-				}
+			delivered = deliverMarketItemsToInbox(buyerPlayerInbox, it, amount, offer.tier);
+			if (!delivered) {
+				offerStatus << "Failed to deliver items to buyer inbox for buy offer from player " << player->getName();
 			}
 		}
+
+		if (!delivered) {
+			player->sendTextMessage(MESSAGE_MARKET, "There was an error delivering the item to the buyer's inbox. Please contact the administrator.");
+			player->sendMarketEnter(player->getLastDepotId());
+			g_logger().error("{} - Player {} failed to deliver buy offer items to buyer inbox", __FUNCTION__, player->getName());
+			return;
+		}
+
+		player->setBankBalance(player->getBankBalance() + totalPrice);
+		g_metrics().addCounter("balance_increase", totalPrice, { { "player", player->getName() }, { "context", "market_sale" } });
 
 		if (buyerPlayer->isOffline()) {
 			g_saveManager().savePlayer(buyerPlayer);
@@ -10364,6 +10448,13 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 			return;
 		}
 
+		if (it.id != ITEM_STORE_COIN && !canDeliverMarketItemsToInbox(playerInbox, it, amount, offer.tier)) {
+			player->sendTextMessage(MESSAGE_MARKET, "Your inbox is full. Make room in your store inbox before accepting this offer.");
+			offerStatus << "Buyer inbox is full for sell offer";
+			player->sendMarketEnter(player->getLastDepotId());
+			return;
+		}
+
 		// Have enough money on the bank
 		if (totalPrice <= player->getBankBalance()) {
 			player->setBankBalance(player->getBankBalance() - totalPrice);
@@ -10375,56 +10466,22 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		}
 		g_metrics().addCounter("balance_decrease", totalPrice, { { "player", player->getName() }, { "context", "market_purchase" } });
 
+		bool delivered = true;
 		if (it.id == ITEM_STORE_COIN) {
 			player->getAccount()->addCoins(enumToValue(CoinType::Transferable), amount, "Purchased on Market");
-		} else if (it.stackable) {
-			uint16_t tmpAmount = amount;
-			while (tmpAmount > 0) {
-				uint16_t stackCount = std::min<uint16_t>(it.stackSize, tmpAmount);
-				const auto &item = Item::CreateItem(it.id, stackCount);
-				if (
-					// Init-statement
-					auto ret = internalAddItem(playerInbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT);
-					// Condition
-					ret != RETURNVALUE_NOERROR
-				) {
-					g_logger().error("{} - Create offer internal add item error code: {}", __FUNCTION__, getReturnMessage(ret));
-					offerStatus << "Failed to add inbox stackable item for sell offer for player " << player->getName();
-
-					break;
-				}
-
-				if (offer.tier > 0) {
-					item->setAttribute(ItemAttribute_t::TIER, offer.tier);
-				}
-
-				tmpAmount -= stackCount;
-			}
 		} else {
-			int32_t subType;
-			if (it.charges != 0) {
-				subType = it.charges;
-			} else {
-				subType = -1;
+			delivered = deliverMarketItemsToInbox(playerInbox, it, amount, offer.tier);
+			if (!delivered) {
+				offerStatus << "Failed to add inbox item for sell offer for player " << player->getName();
 			}
+		}
 
-			for (uint16_t i = 0; i < amount; ++i) {
-				const auto &item = Item::CreateItem(it.id, subType);
-				if (
-					// Init-statement
-					auto ret = internalAddItem(playerInbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT);
-					// Condition
-					ret != RETURNVALUE_NOERROR
-				) {
-					offerStatus << "Failed to add inbox item for sell offer for player " << player->getName();
-
-					break;
-				}
-
-				if (offer.tier > 0) {
-					item->setAttribute(ItemAttribute_t::TIER, offer.tier);
-				}
-			}
+		if (!delivered) {
+			refundMarketPurchase(player, totalPrice);
+			player->sendTextMessage(MESSAGE_MARKET, "There was an error delivering the item to your inbox. Your money has been refunded.");
+			player->sendMarketEnter(player->getLastDepotId());
+			g_logger().error("{} - Player {} failed to receive sell offer items, purchase refunded", __FUNCTION__, player->getName());
+			return;
 		}
 
 		sellerPlayer->setBankBalance(sellerPlayer->getBankBalance() + totalPrice);
