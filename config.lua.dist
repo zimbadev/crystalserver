@@ -317,7 +317,6 @@ onlyPremiumAccount = false
 -- NOTE: allowLureCreatures if true monsters can be lured far from spawn, if false they will despawn
 -- NOTE: blockRespawn if true players block monster respawns on their spot
 -- NOTE: enableOfflineTraining if false will disable offline training from beds only, set false at skill_trainer.lua if you want to completly disable the system
--- NOTE: walkThroughPlayers if true players can pass through other players, if false they cannot, set allowWalkthrough same as you do here to avoid override or bug
 autoLoot = false
 autoBank = false
 toggleGoldPouchAllowAnything = false
@@ -516,7 +515,6 @@ allowChangeOutfit = true
 freePremium = false
 kickIdlePlayerAfterMinutes = 15
 maxMessageBuffer = 4
-allowWalkthrough = true
 coinPacketSize = 25
 coinImagesURL = "http://127.0.0.1/images/store/"
 classicAttackSpeed = false

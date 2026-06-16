@@ -6,6 +6,17 @@ local itemsGrinder = {
 local holes = { 593, 606, 608, 867, 21341 }
 local jungleGrass = { 3696, 3702, 17153 }
 local wildGrowth = { 2130, 3635, 30224 }
+local dreamCourtsOldTable = {
+	Position(32005, 32002, 14),
+	Position(32005, 32003, 14),
+	Position(32006, 32002, 14),
+	Position(32006, 32003, 14),
+}
+local dreamCourtsFoundItems = {
+	{ id = 29992, quantity = 1 },
+	{ id = 953, quantity = 4 },
+}
+local dreamCourtsLockStorage = Storage.Quest.U12_00.TheDreamCourts.TheSevenKeys.Lock
 local fruits = { 3584, 3585, 3586, 3587, 3588, 3589, 3590, 3591, 3592, 3593, 3595, 3596, 5096, 8011, 8012, 8013 }
 local lava = {
 	Position(32808, 32336, 11),
@@ -530,6 +541,23 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 
 	-- The Secret Library Quest
 	local tPos = toPosition
+
+	-- The Dream Courts Quest - Seven Keys lock
+	for i = 1, #dreamCourtsOldTable do
+		if tPos == dreamCourtsOldTable[i] then
+			if player:getStorageValue(dreamCourtsLockStorage) < 1 then
+				for j = 1, #dreamCourtsFoundItems do
+					player:addItem(dreamCourtsFoundItems[j].id, dreamCourtsFoundItems[j].quantity)
+				end
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "This table is made of several old doors. One of them has a noticeable ornate lock. Perhaps you could lever it out with a tool.")
+				player:setStorageValue(dreamCourtsLockStorage, 1)
+			else
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You already removed the old lock.")
+			end
+			return true
+		end
+	end
+
 	for _, j in pairs(secret_library.crystals) do
 		if tPos == j.position then
 			if player:getStorageValue(j.storage) < os.time() then
@@ -1030,6 +1058,23 @@ function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHot
 
 	-- The Secret Library Quest
 	local tPos = toPosition
+
+	-- The Dream Courts Quest - Seven Keys lock
+	for i = 1, #dreamCourtsOldTable do
+		if tPos == dreamCourtsOldTable[i] then
+			if player:getStorageValue(dreamCourtsLockStorage) < 1 then
+				for j = 1, #dreamCourtsFoundItems do
+					player:addItem(dreamCourtsFoundItems[j].id, dreamCourtsFoundItems[j].quantity)
+				end
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "This table is made of several old doors. One of them has a noticeable ornate lock. Perhaps you could lever it out with a tool.")
+				player:setStorageValue(dreamCourtsLockStorage, 1)
+			else
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You already removed the old lock.")
+			end
+			return true
+		end
+	end
+
 	for _, j in pairs(secret_library.crystals) do
 		if tPos == j.position then
 			if player:getStorageValue(j.storage) < os.time() then

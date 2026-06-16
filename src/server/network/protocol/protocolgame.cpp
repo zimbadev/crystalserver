@@ -964,7 +964,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage &msg) {
 			message = fmt::format("You are already logged in using protocol '{}'. Please log out from the other session to connect here.", foundPlayer->getProtocolVersion());
 		}
 
-		foundPlayer->client->disconnectClient(message);
+		foundPlayer->client->disconnectClient(message, DisconnectClient_t::Notice);
 	}
 
 	auto timeStamp = msg.get<uint32_t>();
@@ -987,7 +987,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage &msg) {
 			ss << " or 11.00";
 		}
 		ss << " allowed!";
-		disconnectClient(ss.str());
+		disconnectClient(ss.str(), DisconnectClient_t::Outdated);
 		return;
 	}
 
@@ -1023,13 +1023,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage &msg) {
 			ss << "Your " << (oldProtocol ? "username" : "email") << " or password is not correct.";
 		}
 
-		auto output = OutputMessagePool::getOutputMessage();
-		output->addByte(0x14);
-		output->addString(ss.str());
-		send(output);
-		g_dispatcher().scheduleEvent(
-			1000, [self = getThis()] { self->disconnect(); }, "ProtocolGame::disconnect"
-		);
+		disconnectClient(ss.str(), DisconnectClient_t::Default);
 		return;
 	}
 
@@ -1064,10 +1058,11 @@ void ProtocolGame::sendLoginChallenge() {
 	send(output);
 }
 
-void ProtocolGame::disconnectClient(const std::string &message) const {
+void ProtocolGame::disconnectClient(const std::string &message, DisconnectClient_t reason) const {
 	auto output = OutputMessagePool::getOutputMessage();
 	output->addByte(0x14);
 	output->addString(message);
+	output->addByte(static_cast<uint8_t>(reason));
 	send(output);
 	disconnect();
 }
