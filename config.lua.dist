@@ -515,8 +515,6 @@ allowChangeOutfit = true
 freePremium = false
 kickIdlePlayerAfterMinutes = 15
 maxMessageBuffer = 4
-coinPacketSize = 25
-coinImagesURL = "http://127.0.0.1/images/store/"
 classicAttackSpeed = false
 showScriptsLogInConsole = false
 -- time to suppress negative conditions after being affected by them (ms)
@@ -531,6 +529,14 @@ minElementalResistance = -200
 maxElementalResistance = 200
 maxDamageReflection = 200
 logPlayersStatements = false
+
+-- Store
+-- NOTE: storeCombinedCoins = true uses transferable coins first, then regular coins for store purchases.
+-- NOTE: When storeCombinedCoins = false, storeCoinType selects which coin type is used (0 = regular, 1 = transferable).
+coinPacketSize = 25
+coinImagesURL = "http://127.0.0.1/images/store/"
+storeCombinedCoins = true
+storeCoinType = 0
 
 -- Chain system
 -- NOTE: combatChainDelay: set to minimum 50 miliseconds
