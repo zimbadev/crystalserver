@@ -33,8 +33,11 @@ void Map::load(const std::string &identifier, const Position &pos) {
 	try {
 		path = identifier;
 		IOMap::loadMap(this, pos);
+	} catch (const IOMapException &e) {
+		g_logger().error("[Map::load] - Failed to load map {}: {}", identifier, e.what());
+		throw;
 	} catch (const std::exception &e) {
-		g_logger().warn("[Map::load] - The map in folder {} is missing or corrupted", identifier);
+		g_logger().warn("[Map::load] - The map in folder {} is missing or corrupted: {}", identifier, e.what());
 	}
 }
 

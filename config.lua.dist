@@ -284,6 +284,7 @@ familiarTime = 30
 -- Party
 -- NOTE: partyShareRangeMultiplier: the range of the party share experience, default 3/2 (1.5)
 -- NOTE: advancedPartyProtection will nullfy the damage along your party members and their summons
+-- NOTE partyListMaxDistance set to 0 means no limit
 leavePartyOnDeath = false
 partyAutoShareExperience = true
 partyShareRangeMultiplier = 1.5
@@ -291,6 +292,7 @@ partyShareLootBoosts = false
 partyShareLootBoostsDimishingFactor = 0.7
 experienceShareActivity = 2 * 60 * 1000
 advancedPartyProtection = false
+partyListMaxDistance = 30
 
 -- Tibiadrome concoctions
 tibiadromeConcoctionCooldown = 24 * 60 * 60 -- 24 hours
@@ -463,14 +465,13 @@ imbueActionsDelay = 1500
 mapName = "world"
 mapAuthor = ""
 
--- Party List limitations
--- max distance in which players in party list are visible
--- NOTE partyListMaxDistance set to 0 means no limit
-partyListMaxDistance = 30
-
 -- Custom Map
 -- NOTE: toggleMapCustom set to true will load all maps in custom map folder
 toggleMapCustom = false
+
+-- Compressed Map
+-- NOTE: toggleCompressedMap must be true to load compressed .otbm maps (RME "Optimized map save")
+toggleCompressedMap = true
 
 -- Market
 -- NOTE: marketRefreshPricesInterval (in minutes, minimum is 1 minute)
