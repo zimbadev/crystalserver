@@ -27292,6 +27292,7 @@
 	<item id="10389" article="a" name="traditional sai">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="physical" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="28" />
@@ -27334,6 +27335,7 @@
 	<item id="10391" article="a" name="drachaku">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="energy" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="41" />
@@ -83337,6 +83339,7 @@
 	<item id="50159" article="a" name="soulkamas">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="energy" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="criticalhitchance" value="1000" />
@@ -83362,6 +83365,7 @@
 	<item id="50160" article="a" name="naga katar">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="earth" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="44" />
@@ -83385,6 +83389,7 @@
 	<item id="50161" article="a" name="falcon sai">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="physical" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="lifeleechamount" value="1400" />
@@ -83431,6 +83436,7 @@
 	<item id="50163" article="a" name="crude umbral katar">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="physical" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="41" />
@@ -83447,6 +83453,7 @@
 	<item id="50164" article="an" name="umbral katar">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="physical" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="42" />
@@ -83469,6 +83476,7 @@
 	<item id="50165" article="an" name="umbral master katar">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="physical" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="43" />
@@ -83491,6 +83499,7 @@
 	<item id="50166" article="a" name="light jo staff">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="energy" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="10" />
@@ -83505,6 +83514,7 @@
 	<item id="50167" article="a" name="cobra bo">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="earth" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="44" />
@@ -83529,6 +83539,7 @@
 	<item id="50168" article="a" name="nunchaku of destruction">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="physical" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="42" />
@@ -83550,6 +83561,7 @@
 	<item id="50169" article="an" name="eldritch crescent moon spade">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="energy" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="44" />
@@ -83575,6 +83587,7 @@
 		<attribute key="description" value="Refined by the legendary artisan Gnomaurum" />
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="energy" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="44" />
@@ -83599,6 +83612,7 @@
 	<item id="50171" article="a" name="jo staff">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="energy" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="18" />
@@ -83657,6 +83671,7 @@
 	<item id="50182" article="a" name="nunchaku">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="earth" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="32" />
@@ -83673,6 +83688,7 @@
 	<item id="50183" article="a" name="sai">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="energy" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="38" />
@@ -83900,6 +83916,7 @@
 	<item id="50239" article="a" name="amber kusarigama">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="physical" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="46" />
@@ -84349,6 +84366,7 @@
 	<item id="50270" article="a" name="bambus jo">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="earth" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="42" />
@@ -84400,6 +84418,7 @@
 		<attribute key="description" value="Traditional sai worn by pilgrims of the Three-Fold Path. Its design features elements of the natural appearance of moths" />
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkdaggers" />
 		<attribute key="elementalbond" value="earth" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="42" />
@@ -84423,6 +84442,7 @@
 		<attribute key="description" value="Traditional nunchaku used by pilgrims of the Three-Fold Path. Its design features elements of the natural appearance of moths" />
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="physical" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="34" />
@@ -84717,6 +84737,7 @@
 	<item id="51119" article="a" name="simple jo staff">
 		<attribute key="primarytype" value="fist weapons" />
 		<attribute key="weaponType" value="fist" />
+		<attribute key="meleeAttackEffect" value="monkstaff" />
 		<attribute key="elementalbond" value="earth" />
 		<attribute key="slotType" value="two-handed" />
 		<attribute key="attack" value="12" />
@@ -86188,6 +86209,7 @@
 		<attribute key="description" value="Referred to as Wailing Wrecker in ancient scriptures, this bone-forged staff channels both agony and focus into devastating echoing strikes. One of the creations of the mysterious soul-smith."/>
 		<attribute key="primarytype" value="fist weapons"/>
 		<attribute key="weaponType" value="fist"/>
+		<attribute key="meleeAttackEffect" value="monkstaff"/>
 		<attribute key="slotType" value="two-handed"/>
 		<attribute key="skillfist" value="4"/>
 		<attribute key="magiclevelpoints" value="2"/>

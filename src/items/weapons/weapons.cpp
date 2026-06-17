@@ -35,13 +35,19 @@ Weapons &Weapons::getInstance() {
 }
 
 namespace {
-	/** 15.12+ weapon swing: same as Tibia Global — effect anchored on the target tile; client picks direction. */
-	void sendWeaponAttackEffect(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &target, uint16_t effect) {
-		if (!player || !target || effect == CONST_ME_NONE) {
-			return;
+	// Map the weapon attack effect (CONST_ME_*_ATTACK 304-309) to the client's CreatureMark
+	// weaponType (1-6). The client jump-table is NOT contiguous: sword 304->1, club 305->2,
+	// axe 306->3, fist 309->4, monk staff 307->5, monk daggers 308->6.
+	uint8_t markWeaponType(uint16_t attackEffect) {
+		switch (attackEffect) {
+			case CONST_ME_SWORD_ATTACK: return 1;
+			case CONST_ME_CLUB_ATTACK: return 2;
+			case CONST_ME_AXE_ATTACK: return 3;
+			case CONST_ME_FIST_ATTACK: return 4;
+			case CONST_ME_MONK_STAFF_ATTACK: return 5;
+			case CONST_ME_MONK_DAGGERS_ATTACK: return 6;
+			default: return 4;
 		}
-
-		g_game().addMagicEffect(target->getPosition(), effect, player);
 	}
 } // namespace
 
@@ -248,7 +254,7 @@ bool Weapon::useFist(const std::shared_ptr<Player> &player, const std::shared_pt
 	damage.primary.type = params.combatType;
 	damage.primary.value = -normal_random(0, maxDamage);
 
-	sendWeaponAttackEffect(player, target, CONST_ME_FIST_ATTACK);
+	player->sendCreatureSquare(target, SQ_PLAYER_ATTACK, SQ_FIST);
 	Combat::doCombatHealth(player, target, damage, params);
 	if (!player->hasFlag(PlayerFlags_t::NotGainSkill) && player->getAddAttackSkill()) {
 		player->addSkillAdvance(SKILL_FIST, 1);
@@ -262,27 +268,19 @@ uint16_t Weapon::getWeaponAttackEffect(const std::shared_ptr<Item> &item, const 
 		return CONST_ME_FIST_ATTACK; // Fist attack when no weapon
 	}
 
-	const WeaponType_t weaponType = item->getWeaponType();
-	const int32_t slotPosition = item->getSlotPosition();
-	const bool isTwoHanded = (slotPosition & SLOTP_TWO_HAND) != 0;
+	const ItemType &it = Item::items[item->getID()];
+	if (it.meleeAttackEffect != CONST_ME_NONE) {
+		return it.meleeAttackEffect;
+	}
 
-	// Determine attack effect based on weapon type
-	switch (weaponType) {
+	switch (item->getWeaponType()) {
 		case WEAPON_SWORD:
 			return CONST_ME_SWORD_ATTACK;
 
 		case WEAPON_CLUB:
-			// Two-handed clubs can be monk staves
-			if (isTwoHanded) {
-				return CONST_ME_MONK_STAFF_ATTACK;
-			}
 			return CONST_ME_CLUB_ATTACK;
 
 		case WEAPON_AXE:
-			// One-handed axes can be monk daggers/kamas
-			if (!isTwoHanded) {
-				return CONST_ME_MONK_DAGGERS_ATTACK;
-			}
 			return CONST_ME_AXE_ATTACK;
 
 		case WEAPON_FIST:
@@ -302,9 +300,10 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		}
 	}
 
-	// Native client weapon swing (15.x): effect on target tile (Tibia Global behavior)
+	// 15.x: directional melee swing for weapons (CreatureMark IsAttacked + per-weapon weaponType,
+	// preserving the monk staff/daggers distinction via getWeaponAttackEffect).
 	if (cleavePercent == 0) {
-		sendWeaponAttackEffect(player, target, getWeaponAttackEffect(item, player));
+		player->sendCreatureSquare(target, SQ_PLAYER_ATTACK, static_cast<SquareColor_t>(markWeaponType(getWeaponAttackEffect(item, player))));
 	}
 
 	if (isLoadedScriptId()) {

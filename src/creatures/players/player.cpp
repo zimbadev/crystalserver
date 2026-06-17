@@ -8721,9 +8721,9 @@ void Player::sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakCla
 	}
 }
 
-void Player::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color) const {
+void Player::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t markType, SquareColor_t weaponType) const {
 	if (client) {
-		client->sendCreatureSquare(creature, color);
+		client->sendCreatureSquare(creature, markType, weaponType);
 	}
 }
 

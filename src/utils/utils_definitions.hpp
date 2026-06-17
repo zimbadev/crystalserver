@@ -439,6 +439,9 @@ enum Fluids_t : uint8_t {
 
 enum SquareColor_t : uint8_t {
 	SQ_COLOR_BLACK = 0,
+	SQ_PLAYER_ATTACK = 3, // CreatureMark markType = IsAttacked (the swing)
+	SQ_FIST = 4, // weaponType = fist (client jump-table: wt4 -> effect 309)
+	SQ_CREATURE_SQUARE_LEGACY = 255, // omit weaponType to send legacy border mark (opcode 0x93 + 0x01 + color)
 };
 
 enum TextColor_t : uint8_t {

@@ -940,7 +940,7 @@ public:
 	void sendCreatureSay(const std::shared_ptr<Creature> &creature, SpeakClasses type, const std::string &text, const Position* pos = nullptr) const;
 	void sendCreatureReload(const std::shared_ptr<Creature> &creature) const;
 	void sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakClasses type, const std::string &text) const;
-	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color) const;
+	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t markType, SquareColor_t weaponType = SQ_CREATURE_SQUARE_LEGACY) const;
 	void sendCreatureChangeOutfit(const std::shared_ptr<Creature> &creature, const Outfit_t &outfit) const;
 	void sendCreatureChangeVisible(const std::shared_ptr<Creature> &creature, bool visible);
 	void sendCreatureLight(const std::shared_ptr<Creature> &creature) const;

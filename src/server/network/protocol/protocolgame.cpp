@@ -3952,7 +3952,7 @@ void ProtocolGame::sendCreatureType(const std::shared_ptr<Creature> &creature, u
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color) {
+void ProtocolGame::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t markType, SquareColor_t weaponType) {
 	if (!canSee(creature)) {
 		return;
 	}
@@ -3960,8 +3960,16 @@ void ProtocolGame::sendCreatureSquare(const std::shared_ptr<Creature> &creature,
 	NetworkMessage msg;
 	msg.addByte(0x93);
 	msg.add<uint32_t>(creature->getID());
-	msg.addByte(0x01);
-	msg.addByte(color);
+	if (weaponType == SQ_CREATURE_SQUARE_LEGACY) {
+		// Legacy border mark (e.g. SQ_COLOR_BLACK on attacker).
+		msg.addByte(0x01);
+		msg.addByte(markType);
+	} else {
+		// 15.x CreatureMark "IsAttacked" (markType 3) = directional melee swing.
+		// [u32 creatureId][u8 markType][u8 weaponType] — weaponType maps to effect 304-309.
+		msg.addByte(markType);
+		msg.addByte(weaponType);
+	}
 	writeToOutputBuffer(msg);
 }
 
