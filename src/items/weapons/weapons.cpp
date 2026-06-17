@@ -40,13 +40,20 @@ namespace {
 	// axe 306->3, fist 309->4, monk staff 307->5, monk daggers 308->6.
 	uint8_t markWeaponType(uint16_t attackEffect) {
 		switch (attackEffect) {
-			case CONST_ME_SWORD_ATTACK: return 1;
-			case CONST_ME_CLUB_ATTACK: return 2;
-			case CONST_ME_AXE_ATTACK: return 3;
-			case CONST_ME_FIST_ATTACK: return 4;
-			case CONST_ME_MONK_STAFF_ATTACK: return 5;
-			case CONST_ME_MONK_DAGGERS_ATTACK: return 6;
-			default: return 4;
+			case CONST_ME_SWORD_ATTACK:
+				return 1;
+			case CONST_ME_CLUB_ATTACK:
+				return 2;
+			case CONST_ME_AXE_ATTACK:
+				return 3;
+			case CONST_ME_FIST_ATTACK:
+				return 4;
+			case CONST_ME_MONK_STAFF_ATTACK:
+				return 5;
+			case CONST_ME_MONK_DAGGERS_ATTACK:
+				return 6;
+			default:
+				return 4;
 		}
 	}
 } // namespace
