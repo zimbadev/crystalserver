@@ -467,7 +467,7 @@ mapAuthor = ""
 
 -- Custom Map
 -- NOTE: toggleMapCustom set to true will load all maps in custom map folder
-toggleMapCustom = true
+toggleMapCustom = false
 
 -- Compressed Map
 -- NOTE: toggleCompressedMap must be true to load compressed .otbm maps (RME "Optimized map save")
