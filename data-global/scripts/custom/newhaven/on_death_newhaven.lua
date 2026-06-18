@@ -2,7 +2,7 @@ local onDeathNewhaven = CreatureEvent("onDeathNewhaven")
 
 function onDeathNewhaven.onDeath(creature, corpse, killer, mostDamage, unjustified, mostDamageUnjustified)
 	if creature and creature:isPlayer() then
-		if creature:getVocation():getId() == VOCATION_NONE then
+		if creature:getVocation():getId() == VOCATION_NONE and not creature:getGroup():getAccess() then
 			creature:teleportTo(Position(32534, 32513, 7))
 			creature:setStorageValue(Storage.Quest.U15_12.newhavenCitizen, 1)
 			return true

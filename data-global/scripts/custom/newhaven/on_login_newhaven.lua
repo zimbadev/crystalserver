@@ -5,9 +5,11 @@ function newhavenOnLogin.onLogin(player)
 		return false
 	end
 
-	if player:getVocation():getId() == VOCATION_NONE then
-		player:teleportTo(Position(32534, 32513, 7))
-		player:setStorageValue(Storage.Quest.U15_12.newhavenCitizen, 1)
+	if player:getVocation():getId() == VOCATION_NONE and not player:getGroup():getAccess() then
+		if player:getStorageValue(Storage.Quest.U15_12.newhavenCitizen) <= 0 then
+			player:teleportTo(Position(32534, 32513, 7))
+			player:setStorageValue(Storage.Quest.U15_12.newhavenCitizen, 1)
+		end
 	end
 
 	if player:getStorageValue(Storage.Quest.U15_12.newhavenCitizen) == 1 then
