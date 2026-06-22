@@ -39,4 +39,4 @@ jobs:
           author_email: github-actions[bot]@users.noreply.github.com
           message: "Lua code format - (Stylua)"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
