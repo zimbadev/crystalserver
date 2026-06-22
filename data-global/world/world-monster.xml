@@ -47943,6 +47943,9 @@
 	<monster centerx="33000" centery="32732" centerz="7" radius="1">
 		<monster name="Scarab" x="1" y="0" z="7" spawntime="90" />
 	</monster>
+	<monster centerx="33492" centery="32732" centerz="7" radius="1">
+		<monster name="Freshwater Turtle" x="0" y="0" z="7" spawntime="60" />
+	</monster>
 	<monster centerx="32716" centery="32733" centerz="7" radius="4">
 		<monster name="Centipede" x="-4" y="0" z="7" spawntime="90" />
 		<monster name="Centipede" x="2" y="0" z="7" spawntime="90" />
