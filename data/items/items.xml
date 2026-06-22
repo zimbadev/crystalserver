@@ -87389,4 +87389,110 @@
 	<item id="52963" article="a" name="skill trainer">
 		<attribute key="description" value="Use this statue to train your shielding skill and your melee or distance fighting or your magic level offline." />
 	</item>
+	<!-- Targuna (15.24): itens de loot novos. Tipo/nome vem do appearances.dat; aqui controlamos atributos. -->
+	<item id="52964" article="a" name="charred mask">
+		<attribute key="slotType" value="head" />
+		<attribute key="weight" value="800" />
+		<attribute key="description" value="A mask scorched by infernal flames." />
+	</item>
+	<item id="53002" article="a" name="gold tooth">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="10" />
+	</item>
+	<item id="53003" article="a" name="lizard tail">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="55" />
+	</item>
+	<item id="53004" article="an" name="infernoid ember">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="description" value="A glowing ember pulsing with infernal heat." />
+		<attribute key="weight" value="80" />
+	</item>
+	<item id="53005" article="a" name="sailor's burn cure">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="description" value="An ointment sailors use to soothe burns." />
+		<attribute key="weight" value="90" />
+	</item>
+	<item id="53167" article="a" name="sail pass">
+		<attribute key="weight" value="10" />
+		<attribute key="description" value="A pass that grants passage by sail." />
+	</item>
+	<!-- Targuna Quest (15.24) - quest items -->
+	<item id="53073" article="a" name="bunch of turnips">
+		<attribute key="description" value="A bunch of fresh turnips. A certain lonely ram might enjoy these." />
+		<attribute key="weight" value="200" />
+	</item>
+	<item id="53074" article="an" name="adventurer backpack">
+		<attribute key="primarytype" value="containers" />
+		<attribute key="containersize" value="20" />
+		<attribute key="weight" value="1800" />
+		<attribute key="script" value="moveevent">
+			<attribute key="slot" value="backpack" />
+		</attribute>
+	</item>
+	<item id="53158" article="an" name="old treasure map">
+		<attribute key="description" value="It shows encrypted coordinates, someone related to Aragonia should take a look at it." />
+		<attribute key="weight" value="400" />
+	</item>
+	<item id="54266" article="a" name="lesser proficiency catalyst">
+		<attribute key="primarytype" value="valuables" />
+		<attribute key="description" value="A catalyst used to enhance proficiencies." />
+		<attribute key="weight" value="100" />
+	</item>
+	<!-- Targuna (15.24): creature corpses (fresh body referenced in monster.corpse). Name/fluidsource/container for control; decay not added (chains need validation). -->
+	<item id="53078" article="a" name="dead lizard henchman">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53082" article="a" name="dead lizard magician">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53086" article="a" name="dead lizard swordmaster">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53090" article="a" name="dead lizard commander">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53094" article="a" name="dead lizard executioner">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53098" article="a" name="dead pirate navigator">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53103" article="a" name="dead pirate quartermaster">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53110" article="a" name="dead pirate gunner">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53113" article="a" name="dead pirate cook">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53119" article="a" name="dead sea captain">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53108" article="a" name="dead herald of fire">
+		<attribute key="containersize" value="30" />
+	</item>
+	<item id="53122" article="a" name="dead infernoid hound">
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53125" article="a" name="dead infernoid soul">
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53128" article="a" name="dead infernoid spiritual">
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53132" article="a" name="dead infernoid blob">
+		<attribute key="containersize" value="20" />
+	</item>
 </items>

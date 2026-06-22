@@ -3102,4 +3102,35 @@
 	<npc centerx="33587" centery="32966" centerz="15" radius="1">
 		<npc name="Gnomish Operative (Raiders)" x="0" y="0" z="15" spawntime="60" />
 	</npc>
+	<!-- Targuna Quest (15.24) NPC spawns -->
+	<npc centerx="31973" centery="31892" centerz="6" radius="1">
+		<npc name="Captain Indigo" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="31960" centery="31901" centerz="6" radius="1">
+		<npc name="Emiliana" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="31942" centery="31902" centerz="6" radius="1">
+		<npc name="Camilla" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="31951" centery="31888" centerz="7" radius="1">
+		<npc name="Leonora" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="31928" centery="31903" centerz="7" radius="1">
+		<npc name="Sterling" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="31934" centery="31913" centerz="7" radius="1">
+		<npc name="Adrian" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="31955" centery="31916" centerz="7" radius="1">
+		<npc name="Aurelia" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="31941" centery="31920" centerz="7" radius="1">
+		<npc name="Lizzie" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="33514" centery="32748" centerz="8" radius="1">
+		<npc name="Morla" x="0" y="0" z="8" spawntime="60" />
+	</npc>
+	<npc centerx="32412" centery="32687" centerz="12" radius="1">
+		<npc name="Emiliana" x="0" y="0" z="12" spawntime="60" />
+	</npc>
 </npcs>

@@ -5105,6 +5105,8 @@ void Game::playerStashWithdraw(uint32_t playerId, uint16_t itemId, uint32_t coun
 	if (ret != RETURNVALUE_NOERROR) {
 		g_logger().warn("[{}] failed to retrieve item: {}, to player: {}, from the stash", __FUNCTION__, itemId, player->getName());
 		player->sendCancelMessage(ret);
+	} else {
+		g_callbacks().executeCallback(EventCallback_t::playerOnStashWithdraw, &EventCallback::playerOnStashWithdraw, player, itemId, count);
 	}
 
 	// Refresh depot search window if necessary

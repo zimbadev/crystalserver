@@ -617,6 +617,56 @@ void EventCallback::playerOnItemMoved(const std::shared_ptr<Player> &player, con
 	getScriptInterface()->callVoidFunction(7);
 }
 
+void EventCallback::playerOnStowItem(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, uint32_t count) const {
+	if (!LuaScriptInterface::reserveScriptEnv()) {
+		g_logger().error("[EventCallback::playerOnStowItem - "
+		                 "Player {} item {}] "
+		                 "Call stack overflow. Too many lua script calls being nested.",
+		                 player->getName(), item ? item->getName() : "nil");
+		return;
+	}
+
+	ScriptEnvironment* scriptEnvironment = LuaScriptInterface::getScriptEnv();
+	scriptEnvironment->setScriptId(getScriptId(), getScriptInterface());
+
+	lua_State* L = getScriptInterface()->getLuaState();
+	getScriptInterface()->pushFunction(getScriptId());
+
+	LuaScriptInterface::pushUserdata<Player>(L, player);
+	LuaScriptInterface::setMetatable(L, -1, "Player");
+
+	LuaScriptInterface::pushUserdata<Item>(L, item);
+	LuaScriptInterface::setItemMetatable(L, -1, item);
+
+	lua_pushnumber(L, count);
+
+	getScriptInterface()->callVoidFunction(3);
+}
+
+void EventCallback::playerOnStashWithdraw(const std::shared_ptr<Player> &player, uint16_t itemId, uint32_t count) const {
+	if (!LuaScriptInterface::reserveScriptEnv()) {
+		g_logger().error("[EventCallback::playerOnStashWithdraw - "
+		                 "Player {} itemId {}] "
+		                 "Call stack overflow. Too many lua script calls being nested.",
+		                 player->getName(), itemId);
+		return;
+	}
+
+	ScriptEnvironment* scriptEnvironment = LuaScriptInterface::getScriptEnv();
+	scriptEnvironment->setScriptId(getScriptId(), getScriptInterface());
+
+	lua_State* L = getScriptInterface()->getLuaState();
+	getScriptInterface()->pushFunction(getScriptId());
+
+	LuaScriptInterface::pushUserdata<Player>(L, player);
+	LuaScriptInterface::setMetatable(L, -1, "Player");
+
+	lua_pushnumber(L, itemId);
+	lua_pushnumber(L, count);
+
+	getScriptInterface()->callVoidFunction(3);
+}
+
 void EventCallback::playerOnChangeZone(const std::shared_ptr<Player> &player, ZoneType_t zone) const {
 	if (!LuaScriptInterface::reserveScriptEnv()) {
 		g_logger().error("[EventCallback::playerOnChangeZone - "

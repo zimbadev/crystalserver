@@ -9478,6 +9478,10 @@ void Player::stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool al
 	}
 
 	stashContainer(itemDict);
+
+	if (totalItemsToStow > 0) {
+		g_callbacks().executeCallback(EventCallback_t::playerOnStowItem, &EventCallback::playerOnStowItem, getPlayer(), item, totalItemsToStow);
+	}
 }
 
 void Player::sendPreyData() const {
