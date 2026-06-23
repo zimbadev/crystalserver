@@ -3108,6 +3108,9 @@ Storage = {
 				},
 				-- Welcome to the Main Continent hint (sendTutorial 7), once after ferry from Newhaven
 				MainContinentHint = 48070,
+				-- Reward chests
+				ManaPotionsChest = 48071,
+				SilverAmuletChest = 48072,
 			},
 		},
 	},
