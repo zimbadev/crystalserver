@@ -27,11 +27,8 @@ function mainContinentHint.onStepIn(creature, item, position, fromPosition)
 		return true
 	end
 
-	-- FIXME(targuna): sendTutorial(7) opens the legacy TutorialHintDialog ("Arrival in Thais"),
-	-- which is NOT the desired "Welcome to the Main Continent" window. The correct screen (4 panels +
-	-- "You are here" map + "Journey on" button) uses a different client mechanism (worldmap tutorial
-	-- marker / scripted tutorial). Disabled until we discover the correct trigger via RE (Ghidra). 
-	-- player:sendTutorial(7)
+
+	player:sendTutorial(13)
 	player:setStorageValue(MAIN_CONTINENT_HINT, 1)
 
 	-- Starts the Targuna Quest and shows its secondary tasks in the quest log.
