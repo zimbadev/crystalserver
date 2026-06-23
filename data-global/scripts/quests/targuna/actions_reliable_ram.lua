@@ -2,6 +2,7 @@
 -- Reward: Reliable Ram mount + "A reliable Friend" achievement, and the quest completes.
 local RELIABLE_RAM_STORAGE = Storage.Quest.U15_24.Targuna.ReliableRam
 local BURNING_HEART_MISSION = Storage.Quest.U15_24.Targuna.BurningHeart.Mission
+local TURNIPS_REWARD = Storage.Quest.U15_24.Targuna.BurningHeart.TurnipsReward
 
 -- The ram is a map item (not a creature) standing behind the bakery.
 local RAM_ITEM_ID = 53439
@@ -29,6 +30,13 @@ if BUNCH_OF_TURNIPS_ID > 0 and RELIABLE_RAM_MOUNT_ID > 0 then
 
 		if player:hasMount(RELIABLE_RAM_MOUNT_ID) then
 			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have already tamed the Reliable Ram.")
+			return true
+		end
+
+		-- The turnips only work for the player who actually earned them from Emiliana;
+		-- this stops traded/duped items from granting the mount to non-questers.
+		if player:getStorageValue(TURNIPS_REWARD) ~= 1 then
+			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The ram doesn't seem to trust you with these turnips.")
 			return true
 		end
 
