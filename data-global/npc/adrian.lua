@@ -61,6 +61,11 @@ end
 npcType:addDialogOptions("withdraw", "deposit all", "balance")
 npcType:speechBubble(SPEECHBUBBLE_TRADE)
 
+-- Targuna secondary tasks: Deposit/Withdraw gold are completed here by comparing
+-- the bank balance before and after parseBank runs (no dedicated engine event exists for them).
+local DEPOSIT_GOLD_TASK = Storage.Quest.U15_24.Targuna.SecondaryTasks.DepositGold
+local WITHDRAW_GOLD_TASK = Storage.Quest.U15_24.Targuna.SecondaryTasks.WithdrawGold
+
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
 	local playerId = player:getId()
@@ -69,9 +74,19 @@ local function creatureSayCallback(npc, creature, type, message)
 		return false
 	end
 
+	local balanceBefore = player:getBankBalance()
+
 	npc:parseBank(message, npc, creature, npcHandler)
 	npc:parseGuildBank(message, npc, creature, playerId, npcHandler)
 	npc:parseBankMessages(message, npc, creature, npcHandler)
+
+	local balanceAfter = player:getBankBalance()
+	if balanceAfter > balanceBefore and player:getStorageValue(DEPOSIT_GOLD_TASK) == 1 then
+		player:setStorageValue(DEPOSIT_GOLD_TASK, 2)
+	elseif balanceAfter < balanceBefore and player:getStorageValue(WITHDRAW_GOLD_TASK) == 1 then
+		player:setStorageValue(WITHDRAW_GOLD_TASK, 2)
+	end
+
 	return true
 end
 
