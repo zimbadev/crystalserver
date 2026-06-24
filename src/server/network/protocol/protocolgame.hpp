@@ -621,6 +621,7 @@ private:
 	void sendScreenshotAndBannerProgressRace(uint16_t raceId, uint8_t progressLevel, bool isBoss);
 	void sendScreenshotAndBannerProgressQuest(const std::string &questName, bool isCompleted);
 	void sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message);
+	void sendScreenshotAndBannerUnlockedSpell(uint16_t spellId);
 
 	void sendDisableLoginMusic();
 

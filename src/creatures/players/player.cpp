@@ -3553,6 +3553,7 @@ void Player::addManaSpent(uint64_t amount) {
 
 		g_creatureEvents().playerAdvance(static_self_cast<Player>(), SKILL_MAGLEVEL, magLevel - 1, magLevel);
 		sendScreenshotAndBannerUpSkill(SKILL_MAGLEVEL, magLevel);
+		checkSpellUnlocksOnAdvance(level, level, magLevel - 1, magLevel);
 
 		sendUpdateStats = true;
 		currReqMana = nextReqMana;
@@ -3696,6 +3697,7 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 		ss << "You advanced from Level " << prevLevel << " to Level " << level << '.';
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
 		sendScreenshotAndBannerUpLevel(level);
+		checkSpellUnlocksOnAdvance(prevLevel, level, magLevel, magLevel);
 	}
 
 	if (nextLevelExp > currLevelExp) {
@@ -8479,6 +8481,37 @@ void Player::sendScreenshotAndBannerProgressQuest(const std::string &questName, 
 void Player::sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message) const {
 	if (client) {
 		client->sendScreenshotAndBannerProficiencyProgress(itemId, message);
+	}
+}
+
+void Player::sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) const {
+	if (client) {
+		client->sendScreenshotAndBannerUnlockedSpell(spellId);
+	}
+}
+
+void Player::checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, uint32_t oldMagLevel, uint32_t newMagLevel) const {
+	if (!client) {
+		return;
+	}
+
+	// Vocation spells that auto-unlock (needLearn == false) show the "New Spell
+	// Unlocked" banner the moment the player meets their level / magic level
+	// requirement. Learnable spells are taught explicitly (NPC/quest) and are
+	// handled through Player::learnInstantSpell / player:learnSpell instead.
+	for (const uint16_t spellId : g_spells().getSpellsByVocation(getVocationId())) {
+		const auto &spell = g_spells().getInstantSpellById(spellId);
+		if (!spell || spell->getSpellId() == 0 || spell->isLearnable()) {
+			continue;
+		}
+
+		const uint32_t reqLevel = spell->getLevel();
+		const uint32_t reqMagLevel = spell->getMagicLevel();
+		const bool wasAvailable = oldLevel >= reqLevel && oldMagLevel >= reqMagLevel;
+		const bool isAvailable = newLevel >= reqLevel && newMagLevel >= reqMagLevel;
+		if (!wasAvailable && isAvailable) {
+			sendScreenshotAndBannerUnlockedSpell(spell->getSpellId());
+		}
 	}
 }
 

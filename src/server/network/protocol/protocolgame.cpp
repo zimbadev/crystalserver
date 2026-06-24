@@ -10809,6 +10809,20 @@ void ProtocolGame::sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, c
 	writeToOutputBuffer(msg);
 }
 
+void ProtocolGame::sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) {
+	if (oldProtocol) {
+		return;
+	}
+
+	// Client GameEventTypeSpellUnlocked: the spell id is sent as a uint32 and the
+	// client resolves it to the spell name, showing the "New Spell Unlocked" banner.
+	NetworkMessage msg;
+	msg.addByte(0x75);
+	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_SPELL);
+	msg.add<uint32_t>(spellId);
+	writeToOutputBuffer(msg);
+}
+
 void ProtocolGame::sendOutfitWindowCustomOTCR(NetworkMessage &msg) {
 	if (!isOTCR) {
 		return;

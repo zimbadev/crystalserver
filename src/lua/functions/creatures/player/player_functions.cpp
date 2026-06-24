@@ -3676,11 +3676,20 @@ int PlayerFunctions::luaPlayerCanLearnSpell(lua_State* L) {
 }
 
 int PlayerFunctions::luaPlayerLearnSpell(lua_State* L) {
-	// player:learnSpell(spellName)
+	// player:learnSpell(spellName[, showBanner = true])
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (player) {
 		const std::string &spellName = Lua::getString(L, 2);
+		const bool showBanner = Lua::getBoolean(L, 3, true);
+		const bool alreadyLearned = player->hasLearnedInstantSpell(spellName);
 		player->learnInstantSpell(spellName);
+		// Show the "New Spell Unlocked" banner only when the spell is genuinely new.
+		if (showBanner && !alreadyLearned) {
+			const auto &spell = g_spells().getInstantSpellByName(spellName);
+			if (spell && spell->getSpellId() > 0) {
+				player->sendScreenshotAndBannerUnlockedSpell(spell->getSpellId());
+			}
+		}
 		Lua::pushBoolean(L, true);
 	} else {
 		lua_pushnil(L);
