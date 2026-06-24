@@ -6,9 +6,9 @@ combat:setArea(createCombatArea(AREA_CIRCLE3X3))
 -- LIVE rebalance: base 140 -> 160.
 local DAMAGE_SCALE = 160 / 140
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 4)
-	local max = (level / 5) + (maglevel * 6)
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 6)
 	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
 end
 
@@ -33,4 +33,5 @@ spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("paladin;true", "royal paladin;true")
+spell:basePower(160)
 spell:register()

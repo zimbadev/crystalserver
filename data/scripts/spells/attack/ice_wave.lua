@@ -3,9 +3,9 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ICEAREA)
 combat:setArea(createCombatArea(AREA_WAVE4, AREADIAGONAL_WAVE4))
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 0.81) + 4
-	local max = (level / 5) + (maglevel * 2) + 12
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 0.81) + 4
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 2) + 12
 	return -min, -max
 end
 
@@ -30,4 +30,5 @@ spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("druid;true", "elder druid;true")
+spell:basePower(35)
 spell:register()

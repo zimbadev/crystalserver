@@ -32,6 +32,7 @@ private:
 	static int luaSpellCooldown(lua_State* L);
 	static int luaSpellGroupCooldown(lua_State* L);
 	static int luaSpellLevel(lua_State* L);
+	static int luaSpellBasePower(lua_State* L);
 	static int luaSpellMagicLevel(lua_State* L);
 	static int luaSpellMana(lua_State* L);
 	static int luaSpellManaPercent(lua_State* L);

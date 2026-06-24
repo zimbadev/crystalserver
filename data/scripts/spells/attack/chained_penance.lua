@@ -109,22 +109,16 @@ local config = {
 	["physical"] = { effect = CONST_ME_WHITE_ENERGYSHOCK, combat = COMBAT_PHYSICALDAMAGE },
 }
 
-local function onGetFormulaValues(player, weaponDamage)
-	local basePower = 70
-
+local function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)	local skill = player:getSkillLevel(SKILL_FIRST)
 	--[[
 	local helmetItem = player:getSlotItem(CONST_SLOT_HEAD)
 	if helmetItem and helmetItem:getId() == 50274 then -- coned hat of enlightenment
 		basePower = math.floor(basePower * 1.06) -- 6%
 	end
 	]]
-	--
-
-	local skill = player:getSkillLevel(SKILL_FIRST)
-	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 
 	local spellFactor = 2.0
-	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 
 	local minDamage = -total * 0.9
 	local maxDamage = -total * 1.1
@@ -168,7 +162,7 @@ function spell.onCastSpell(creature, var)
 		end
 	end
 
-	local min, max = onGetFormulaValues(creature, weaponDamage)
+	local min, max = onGetFormulaValues(creature, creature:getSkillLevel(SKILL_FIRST), weaponDamage, 1.0, spell:getBasePower())
 	executeChain(creature, min, max, effectData)
 	creature:addHarmony(1)
 	return true
@@ -188,4 +182,5 @@ spell:groupCooldown(2 * 1000)
 spell:cooldown(4 * 1000)
 
 spell:vocation("monk;true", "exalted monk;true")
+spell:basePower(70)
 spell:register()

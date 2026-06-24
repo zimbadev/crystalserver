@@ -24,11 +24,10 @@ combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_FLURRYOFBLOWS)
 combatEarth:setArea(createCombatArea(AREA))
 
-function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 62 -- client id 301 mean: 62
-	local attackValue = calculateAttackValue(player, skill, weaponDamage)
+function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
+		local attackValue = calculateAttackValue(player, skill, weaponDamage)
 	local spellFactor = 0.8
-	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 	return -total * 0.9, -total * 1.1
 end
 
@@ -84,4 +83,5 @@ spell:cooldown(12 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("monk;true", "exalted monk;true")
+spell:basePower(62)
 spell:register()

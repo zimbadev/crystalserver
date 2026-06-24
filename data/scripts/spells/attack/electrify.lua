@@ -55,4 +55,5 @@ spell:cooldown(30 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("sorcerer;true", "master sorcerer;true")
+spell:basePower(120)
 spell:register()

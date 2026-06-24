@@ -3,9 +3,9 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_SMALLHOLY)
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 1.79) + 11
-	local max = (level / 5) + (maglevel * 3) + 18
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 1.79) + 11
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 3) + 18
 	return -min, -max
 end
 
@@ -33,4 +33,5 @@ spell:cooldown(2 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("paladin;true", "royal paladin;true")
+spell:basePower(60)
 spell:register()

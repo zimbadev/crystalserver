@@ -3,9 +3,9 @@ combatGrenade:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combatGrenade:setArea(createCombatArea(AREA_CIRCLE2X2))
 combatGrenade:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYDAMAGE)
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 4)
-	local max = (level / 5) + (maglevel * 6)
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 6)
 
 	local grade = player:upgradeSpellsWOD("Divine Grenade")
 
@@ -110,4 +110,5 @@ spell:cooldown(26 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("paladin;true", "royal paladin;true")
+spell:basePower(190)
 spell:register()

@@ -4,7 +4,7 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_MAGIC_BLUE)
 combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
-function onGetFormulaValues(player, level, magicLevel)
+function onGetFormulaValues(player, level, magicLevel, basePower)
 	local min = ((level * 0.3 + magicLevel * 7) + 3)
 	local max = ((level * 0.3 + magicLevel * 11) + 5)
 	return min, max
@@ -36,4 +36,5 @@ spell:allowOnSelf(false)
 spell:isAggressive(false)
 
 spell:isPremium(true)
+spell:basePower(425)
 spell:register()

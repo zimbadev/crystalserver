@@ -8495,10 +8495,6 @@ void Player::checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, ui
 		return;
 	}
 
-	// Vocation spells that auto-unlock (needLearn == false) show the "New Spell
-	// Unlocked" banner the moment the player meets their level / magic level
-	// requirement. Learnable spells are taught explicitly (NPC/quest) and are
-	// handled through Player::learnInstantSpell / player:learnSpell instead.
 	for (const uint16_t spellId : g_spells().getSpellsByVocation(getVocationId())) {
 		const auto &spell = g_spells().getInstantSpellById(spellId);
 		if (!spell || spell->getSpellId() == 0 || spell->isLearnable()) {

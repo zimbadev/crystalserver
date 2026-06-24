@@ -6,9 +6,9 @@ combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_SMALLICE)
 combat:setParameter(COMBAT_PARAM_CHAIN_EFFECT, CONST_ME_ICEATTACK)
 
 -- Base damage 97 (ML-scaled). Modeled on strong_ice_strike's formula curve.
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 2.4) + 14
-	local max = (level / 5) + (maglevel * 3.8) + 24
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 2.4) + 14
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 3.8) + 24
 	return -math.floor(min), -math.floor(max)
 end
 
@@ -49,4 +49,5 @@ spell:groupCooldown(2 * 1000, 6 * 1000)
 spell:needLearn(false)
 
 spell:vocation("druid;true", "elder druid;true")
+spell:basePower(97)
 spell:register()

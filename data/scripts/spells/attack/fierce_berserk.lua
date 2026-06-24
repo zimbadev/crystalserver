@@ -8,8 +8,8 @@ combat:setArea(createCombatArea(AREA_SQUARE1X1))
 function onGetFormulaValues(player, skill, attack, factor)
 	local level = player:getLevel()
 
-	local min = (level / 5) + (skill + 2 * attack) * 1.1
-	local max = (level / 5) + (skill + 2 * attack) * 3
+	local min = (calculateBaseDamageHealing(level)) + (skill + 2 * attack) * 1.1
+	local max = (calculateBaseDamageHealing(level)) + (skill + 2 * attack) * 3
 
 	return -min * 1.1, -max * 1.1 -- TODO : Use New Real Formula instead of an %
 end
@@ -35,4 +35,5 @@ spell:cooldown(6 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("knight;true", "elite knight;true")
+spell:basePower(92)
 spell:register()

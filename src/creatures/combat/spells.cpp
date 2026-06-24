@@ -922,6 +922,14 @@ void Spell::setLevel(uint32_t lvl) {
 	level = lvl;
 }
 
+uint16_t Spell::getBasePower() const {
+	return basePower;
+}
+
+void Spell::setBasePower(uint16_t power) {
+	basePower = power;
+}
+
 uint32_t Spell::getMagicLevel() const {
 	return magLevel;
 }

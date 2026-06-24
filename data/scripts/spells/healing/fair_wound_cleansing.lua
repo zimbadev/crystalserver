@@ -5,12 +5,8 @@ combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 
 -- Vocation Adjustment: base power 225, scales with magic level + shielding.
-function onGetFormulaValues(player, level, magicLevel)
-	local shielding = (player and player:getEffectiveSkillLevel(SKILL_SHIELD)) or 0
-	-- TUNABLE
-	local BASE, ML_MIN, ML_MAX, SHIELD_COEFF, LEVEL_COEFF = 225, 8.0, 15.9, 2.5, 0.40
-	local common = level * LEVEL_COEFF + shielding * SHIELD_COEFF + BASE
-	return common + magicLevel * ML_MIN, common + magicLevel * ML_MAX
+function onGetFormulaValues(player, level, magicLevel, basePower)
+	return calculateKnightHealing(player, magicLevel, basePower, 8.0, 15.9, 2.5, 2)
 end
 
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
@@ -34,5 +30,7 @@ spell:cooldown(1000)
 spell:groupCooldown(2 * 1000) -- Phase A rebalance: 1s -> 2s
 spell:isAggressive(false)
 spell:vocation("knight;true", "elite knight;true")
+
+spell:basePower(225)
 
 spell:register()

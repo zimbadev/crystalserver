@@ -32,4 +32,5 @@ spell:cooldown(30 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("knight;true", "elite knight;true")
+spell:basePower(90)
 spell:register()

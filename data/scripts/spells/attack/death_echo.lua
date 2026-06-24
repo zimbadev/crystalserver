@@ -19,15 +19,15 @@ local DEATH_ECHO_AREA = {
 -- Base power 85. Formula mirrors the project's death-AoE idioms (great_death_beam
 -- / death_strike) scaled to an 85 base spell.
 function onGetDeathEchoValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 2.4)
-	local max = (level / 5) + (maglevel * 3.6)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 2.4)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 3.6)
 	return -min, -max
 end
 
 -- Echo hit deals 50% of the initial damage (halved formula).
 function onGetDeathEchoEchoValues(player, level, maglevel)
-	local min = ((level / 5) + (maglevel * 2.4)) * 0.5
-	local max = ((level / 5) + (maglevel * 3.6)) * 0.5
+	local min = ((calculateBaseDamageHealing(level)) + (maglevel * 2.4)) * 0.5
+	local max = ((calculateBaseDamageHealing(level)) + (maglevel * 3.6)) * 0.5
 	return -min, -max
 end
 
@@ -114,4 +114,5 @@ spell:groupCooldown(2 * 1000)
 spell:needLearn(false)
 
 spell:vocation("sorcerer;true", "master sorcerer;true")
+spell:basePower(85)
 spell:register()

@@ -55,7 +55,7 @@ int32_t Combat::getLevelFormula(const std::shared_ptr<Player> &player, const std
 		}
 	}
 
-	int32_t levelFormula = player->getLevel() * 2 + (player->getMagicLevel() + player->getSpecializedMagicLevel(damage.primary.type, true)) * 3;
+	int32_t levelFormula = getBaseDamageHealing(player->getLevel()) * 2 + (magicLevelSkill + player->getSpecializedMagicLevel(damage.primary.type, true)) * 3;
 	return levelFormula;
 }
 
@@ -1996,6 +1996,22 @@ uint32_t ValueCallback::getMagicLevelSkill(const std::shared_ptr<Player> &player
 	return magicLevelSkill + player->getSpecializedMagicLevel(damage.primary.type, true);
 }
 
+static uint16_t getSpellBasePowerFromDamage(const CombatDamage &damage) {
+	if (!damage.instantSpellName.empty()) {
+		if (const auto &instantSpell = g_spells().getInstantSpellByName(damage.instantSpellName)) {
+			return instantSpell->getBasePower();
+		}
+	}
+
+	if (!damage.runeSpellName.empty()) {
+		if (const auto &runeSpell = g_spells().getRuneSpellByName(damage.runeSpellName)) {
+			return runeSpell->getBasePower();
+		}
+	}
+
+	return 0;
+}
+
 void ValueCallback::getMinMaxValues(const std::shared_ptr<Player> &player, CombatDamage &damage, bool useCharges) const {
 	// onGetPlayerMinMaxValues(...)
 	if (!LuaScriptInterface::reserveScriptEnv()) {
@@ -2025,15 +2041,16 @@ void ValueCallback::getMinMaxValues(const std::shared_ptr<Player> &player, Comba
 
 	switch (type) {
 		case COMBAT_FORMULA_LEVELMAGIC: {
-			// onGetPlayerMinMaxValues(player, level, maglevel)
+			// onGetPlayerMinMaxValues(player, level, maglevel, basePower)
 			lua_pushnumber(L, player->getLevel());
 			lua_pushnumber(L, getMagicLevelSkill(player, damage));
-			parameters += 2;
+			lua_pushnumber(L, getSpellBasePowerFromDamage(damage));
+			parameters += 3;
 			break;
 		}
 
 		case COMBAT_FORMULA_SKILL: {
-			// onGetPlayerMinMaxValues(player, attackSkill, attackValue, attackFactor)
+			// onGetPlayerMinMaxValues(player, attackSkill, attackValue, attackFactor, basePower)
 			const auto &tool = player->getWeapon();
 			const auto &weapon = g_weapons().getWeapon(tool);
 			int32_t attackSkill = 0;
@@ -2045,7 +2062,8 @@ void ValueCallback::getMinMaxValues(const std::shared_ptr<Player> &player, Comba
 			lua_pushnumber(L, attackSkill);
 			lua_pushnumber(L, attackValue);
 			lua_pushnumber(L, attackFactor);
-			parameters += 3;
+			lua_pushnumber(L, getSpellBasePowerFromDamage(damage));
+			parameters += 4;
 			break;
 		}
 

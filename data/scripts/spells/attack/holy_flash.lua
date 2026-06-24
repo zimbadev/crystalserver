@@ -29,4 +29,5 @@ spell:cooldown(40 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("paladin;true", "royal paladin;true")
+spell:basePower(200)
 spell:register()

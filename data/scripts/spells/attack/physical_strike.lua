@@ -4,9 +4,9 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_EXPLOSIONAREA)
 combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_EXPLOSION)
 combat:setParameter(COMBAT_PARAM_BLOCKARMOR, 1)
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 1.403) + 8
-	local max = (level / 5) + (maglevel * 2.203) + 13
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 1.403) + 8
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 2.203) + 13
 	return -min, -max
 end
 
@@ -34,4 +34,5 @@ spell:cooldown(2 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("druid;true", "elder druid;true")
+spell:basePower(50)
 spell:register()

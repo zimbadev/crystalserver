@@ -5,7 +5,7 @@ combat:setParameter(COMBAT_PARAM_BLOCKARMOR, 1)
 
 function onGetFormulaValues(player, skill, attack, factor)
 	local skillTotal = skill * attack
-	local levelTotal = player:getLevel() / 5
+	local levelTotal = calculateBaseDamageHealing(player:getLevel())
 	return -(((skillTotal * 0.17) + 17) + levelTotal) * 1.28, -(((skillTotal * 0.20) + 40) + levelTotal) * 1.28
 end
 
@@ -62,4 +62,5 @@ spell:cooldown(18 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("knight;true", "elite knight;true")
+spell:basePower(60)
 spell:register()

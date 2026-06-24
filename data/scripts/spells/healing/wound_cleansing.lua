@@ -5,12 +5,8 @@ combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
 -- Vocation Adjustment: base power 70, scales with magic level + shielding.
-function onGetFormulaValues(player, level, magicLevel)
-	local shielding = (player and player:getEffectiveSkillLevel(SKILL_SHIELD)) or 0
-	-- TUNABLE
-	local BASE, ML_MIN, ML_MAX, SHIELD_COEFF, LEVEL_COEFF = 70, 4.0, 7.95, 1.0, 0.20
-	local common = level * LEVEL_COEFF + shielding * SHIELD_COEFF + BASE
-	return common + magicLevel * ML_MIN, common + magicLevel * ML_MAX
+function onGetFormulaValues(player, level, magicLevel, basePower)
+	return calculateKnightHealing(player, magicLevel, basePower, 4.0, 7.95, 1.0)
 end
 
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
@@ -33,5 +29,7 @@ spell:level(8)
 spell:mana(40)
 spell:isSelfTarget(true)
 spell:isAggressive(false)
+
+spell:basePower(70)
 
 spell:register()

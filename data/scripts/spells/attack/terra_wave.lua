@@ -3,9 +3,9 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_SMALLPLANTS)
 combat:setArea(createCombatArea(AREA_SQUAREWAVE5, AREADIAGONAL_SQUAREWAVE5))
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 3.5)
-	local max = (level / 5) + (maglevel * 7)
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 3.5)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 7)
 	return -min, -max
 end
 
@@ -30,4 +30,5 @@ spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("druid;true", "elder druid;true")
+spell:basePower(120)
 spell:register()

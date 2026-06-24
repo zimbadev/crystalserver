@@ -847,9 +847,9 @@ enum ScreenshotAndBanner_t : uint8_t {
 	SCREENSHOT_AND_BANNER_TYPE_QUEST = 8,
 	SCREENSHOT_AND_BANNER_TYPE_COSMETIC = 9,
 	SCREENSHOT_AND_BANNER_TYPE_PROFICIENCY = 10,
-	SCREENSHOT_AND_BANNER_TYPE_BOUNTY_TASK = 11, // client GameEventTypeBountyTaskFinished (payload: uint16)
-	SCREENSHOT_AND_BANNER_TYPE_WEEKLY_TASK_SPECIFIC = 12, // client GameEventTypeWeeklyTaskSpecificCreatureFinished (payload: uint16)
-	SCREENSHOT_AND_BANNER_TYPE_SPELL = 13 // client GameEventTypeSpellUnlocked (payload: uint32 spellId) -> banner "New Spell Unlocked"
+	SCREENSHOT_AND_BANNER_TYPE_BOUNTY_TASK = 11,
+	SCREENSHOT_AND_BANNER_TYPE_WEEKLY_TASK_SPECIFIC = 12,
+	SCREENSHOT_AND_BANNER_TYPE_SPELL = 13
 };
 
 enum Banner_t : uint8_t {
@@ -870,6 +870,8 @@ enum Banner_t : uint8_t {
 	BANNER_TYPE_TARGETTOOCLOSE = 12,
 	BANNER_TYPE_OUTOFSOULPOINTS = 13,
 	BANNER_TYPE_TUTORIALCOMPLETE = 14, // new tutorial finish popup "off to new shores"
+
+	// All vocations?
 	BANNER_TYPE_WEEKLY_TASK_ANY_CREATURE = 15,
 	BANNER_TYPE_PROMOTION_GRANTED = 16,
 };

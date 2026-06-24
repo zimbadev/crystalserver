@@ -7,7 +7,7 @@ combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 -- Phase I rebalance (kept through Phase II/III): base healing 650 -> 2000.
 local HEAL_SCALE = 2000 / 650
 
-function onGetFormulaValues(player, level, maglevel)
+function onGetFormulaValues(player, level, maglevel, basePower)
 	-- Vocation Adjustment: heal more consistently (lower highs, higher lows) -- 20/28 -> 22/26.
 	local min = (level / 2.5) + (maglevel * 22)
 	local max = (level / 2.5) + (maglevel * 26)
@@ -94,5 +94,7 @@ spell:isBlockingWalls(true)
 spell:hasParams(true)
 spell:hasPlayerNameParam(true)
 spell:vocation("druid;true", "elder druid;true")
+
+spell:basePower(2000)
 
 spell:register()

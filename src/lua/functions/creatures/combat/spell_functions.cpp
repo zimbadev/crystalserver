@@ -35,6 +35,7 @@ void SpellFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Spell", "cooldown", SpellFunctions::luaSpellCooldown);
 	Lua::registerMethod(L, "Spell", "groupCooldown", SpellFunctions::luaSpellGroupCooldown);
 	Lua::registerMethod(L, "Spell", "level", SpellFunctions::luaSpellLevel);
+	Lua::registerMethod(L, "Spell", "basePower", SpellFunctions::luaSpellBasePower);
 	Lua::registerMethod(L, "Spell", "magicLevel", SpellFunctions::luaSpellMagicLevel);
 	Lua::registerMethod(L, "Spell", "removeOnUse", SpellFunctions::luaSpellRemoveOnUse);
 	Lua::registerMethod(L, "Spell", "mana", SpellFunctions::luaSpellMana);
@@ -401,6 +402,22 @@ int SpellFunctions::luaSpellLevel(lua_State* L) {
 			lua_pushnumber(L, spell->getLevel());
 		} else {
 			spell->setLevel(Lua::getNumber<uint32_t>(L, 2));
+			Lua::pushBoolean(L, true);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int SpellFunctions::luaSpellBasePower(lua_State* L) {
+	// spell:basePower(power)
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	if (spell) {
+		if (lua_gettop(L) == 1) {
+			lua_pushnumber(L, spell->getBasePower());
+		} else {
+			spell->setBasePower(Lua::getNumber<uint16_t>(L, 2));
 			Lua::pushBoolean(L, true);
 		}
 	} else {

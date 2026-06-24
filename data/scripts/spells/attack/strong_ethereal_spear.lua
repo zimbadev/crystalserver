@@ -5,7 +5,7 @@ combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_ETHEREALSPEAR)
 combat:setParameter(COMBAT_PARAM_BLOCKARMOR, 1)
 
 function onGetFormulaValues(player, skill, attack, factor)
-	local levelTotal = player:getLevel() / 5
+	local levelTotal = calculateBaseDamageHealing(player:getLevel())
 	return -(((2 * skill + attack / 2500) * 2.30) + levelTotal + 7), -(((2 * skill + attack / 1875) * 3.30) + levelTotal + 13)
 end
 
@@ -33,4 +33,5 @@ spell:cooldown(8 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("paladin;true", "royal paladin;true")
+spell:basePower(38)
 spell:register()

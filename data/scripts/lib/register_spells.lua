@@ -599,23 +599,36 @@ function Player:conjureItem(reagentId, conjureId, conjureCount, effect)
 	return true
 end
 
+function calculateBaseDamageHealing(level)
+	local step = math.floor((math.sqrt(2 * level + 2025) + 5) / 10)
+	return math.floor((level + 1000) / step) + 50 * step - 450
+end
+
 function calculateAttackValue(player, attackSkill, weaponDamage)
-	local level = player:getLevel()
-	local flatBonus
-	if level < 500 then
-		flatBonus = level * 0.2
-	elseif level <= 1100 then
-		flatBonus = 100 + (level - 500) * 0.1667
-	elseif level <= 1800 then
-		flatBonus = 200 + (level - 1101) * 0.1429
-	elseif level <= 2600 then
-		flatBonus = 300 + (level - 1800) * 0.125
-	else
-		flatBonus = 400 + (level - 2600) * 0.111
-	end
+	local flatBonus = calculateBaseDamageHealing(player:getLevel())
 
 	local fightModeMultiplier = 1.2
 	local fightFactor = math.floor(fightModeMultiplier * weaponDamage)
 	local skillFactor = (attackSkill + 4) / 28
 	return flatBonus + (fightFactor * skillFactor)
+end
+
+function calculateMonkSpellDamage(player, attackSkill, weaponDamage, basePower, spellFactor)
+	local attackValue = calculateAttackValue(player, attackSkill, weaponDamage)
+	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	return total
+end
+
+function calculateKnightHealing(player, magicLevel, basePower, mlMin, mlMax, shieldCoeff, levelMultiplier)
+	levelMultiplier = levelMultiplier or 1
+	local shielding = player:getEffectiveSkillLevel(SKILL_SHIELD) or 0
+	local common = calculateBaseDamageHealing(player:getLevel()) * levelMultiplier + shielding * shieldCoeff + basePower
+	return common + magicLevel * mlMin, common + magicLevel * mlMax
+end
+
+function calculateLevelMagicDamage(level, magicLevel, minMlCoeff, maxMlCoeff, minOffset, maxOffset)
+	local levelBonus = calculateBaseDamageHealing(level)
+	local min = levelBonus + magicLevel * minMlCoeff + minOffset
+	local max = levelBonus + magicLevel * maxMlCoeff + maxOffset
+	return min, max
 end

@@ -30,4 +30,5 @@ spell:cooldown(40 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("druid;true", "elder druid;true")
+spell:basePower(350)
 spell:register()

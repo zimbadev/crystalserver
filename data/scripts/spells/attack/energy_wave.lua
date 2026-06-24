@@ -4,14 +4,14 @@
 --   Master of Decay  -> death, effect 330, missile 11
 --   Master of Thunder / no stance -> base energy (CONST_ME_ENERGYAREA / CONST_ANI_ENERGY)
 local function formulaFunction(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 4.5)
-	local max = (level / 5) + (maglevel * 9)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4.5)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 9)
 	return -min, -max
 end
 
 -- Each combat needs its OWN callback name (Canary won't let two combats share a callback name); all
 -- delegate to the same formula.
-function onGetFormulaValues(player, level, maglevel)
+function onGetFormulaValues(player, level, maglevel, basePower)
 	return formulaFunction(player, level, maglevel)
 end
 
@@ -88,4 +88,5 @@ spell:cooldown(8 * 1000)
 spell:groupCooldown(2 * 1000)
 
 spell:vocation("sorcerer;true", "master sorcerer;true")
+spell:basePower(150)
 spell:register()

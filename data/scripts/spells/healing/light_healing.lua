@@ -4,9 +4,9 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_MAGIC_BLUE)
 combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
-function onGetFormulaValues(player, level, magicLevel) -- already compared to the official tibia | compared date: 05/07/19(m/d/y)
-	local min = (level * 0.2 + magicLevel * 1.4) + 8
-	local max = (level * 0.2 + magicLevel * 1.795) + 11
+function onGetFormulaValues(player, level, magicLevel, basePower) -- already compared to the official tibia | compared date: 05/07/19(m/d/y)
+	local min = (calculateBaseDamageHealing(level) + magicLevel * 1.4) + 8
+	local max = (calculateBaseDamageHealing(level) + magicLevel * 1.795) + 11
 	return min, max
 end
 
@@ -30,5 +30,7 @@ spell:level(8)
 spell:mana(20)
 spell:isSelfTarget(true)
 spell:isAggressive(false)
+
+spell:basePower(40)
 
 spell:register()

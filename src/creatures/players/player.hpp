@@ -1186,8 +1186,7 @@ public:
 	void sendScreenshotAndBannerProgressQuest(const std::string &questName, bool isCompleted) const;
 	void sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message) const;
 	void sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) const;
-	// Shows the "New Spell Unlocked" banner for vocation spells that auto-unlock
-	// when the player crosses their required level / magic level on advance.
+
 	void checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, uint32_t oldMagLevel, uint32_t newMagLevel) const;
 
 	void onThink(uint32_t interval) override;
