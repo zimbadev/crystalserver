@@ -8490,6 +8490,18 @@ void Player::sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) const {
 	}
 }
 
+void Player::sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId) const {
+	if (client) {
+		client->sendScreenshotAndBannerBountyTaskFinished(raceId);
+	}
+}
+
+void Player::sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId) const {
+	if (client) {
+		client->sendScreenshotAndBannerWeeklyTaskSpecificFinished(raceId);
+	}
+}
+
 void Player::checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, uint32_t oldMagLevel, uint32_t newMagLevel) const {
 	if (!client) {
 		return;

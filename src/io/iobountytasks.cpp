@@ -526,6 +526,7 @@ void IOBountyTasks::onCreatureKill(const std::shared_ptr<Player> &player, uint16
 	if (bountyData.activeTask.currentKills >= bountyData.activeTask.requiredKills) {
 		bountyData.state = BOUNTY_STATE_COMPLETED;
 		player->sendTextMessage(MESSAGE_STATUS, "You have completed your bounty task! Claim your reward.");
+		player->sendScreenshotAndBannerBountyTaskFinished(bountyData.activeTask.raceId);
 	}
 
 	player->sendBountyTaskData();

@@ -10823,6 +10823,34 @@ void ProtocolGame::sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) {
 	writeToOutputBuffer(msg);
 }
 
+void ProtocolGame::sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId) {
+	if (oldProtocol) {
+		return;
+	}
+
+	// Client GameEventTypeBountyTaskFinished: the creature race id is sent as a
+	// uint16; the client resolves it to the creature name ("Completed task: ...").
+	NetworkMessage msg;
+	msg.addByte(0x75);
+	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_BOUNTY_TASK);
+	msg.add<uint16_t>(raceId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId) {
+	if (oldProtocol) {
+		return;
+	}
+
+	// Client GameEventTypeWeeklyTaskSpecificCreatureFinished: the creature race id
+	// is sent as a uint16; the client resolves it to the creature name.
+	NetworkMessage msg;
+	msg.addByte(0x75);
+	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_WEEKLY_TASK_SPECIFIC);
+	msg.add<uint16_t>(raceId);
+	writeToOutputBuffer(msg);
+}
+
 void ProtocolGame::sendOutfitWindowCustomOTCR(NetworkMessage &msg) {
 	if (!isOTCR) {
 		return;

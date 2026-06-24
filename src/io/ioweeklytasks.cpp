@@ -262,6 +262,7 @@ void IOWeeklyTasks::onCreatureKill(const std::shared_ptr<Player> &player, uint16
 				player->addExperience(nullptr, weeklyData.killTaskRewardExp, false);
 
 				player->sendTextMessage(MESSAGE_STATUS, "You have completed a weekly kill task!");
+				player->sendScreenshotAndBannerWeeklyTaskSpecificFinished(task.raceId);
 				recalculateWeeklyRewardValues(player);
 				player->refreshTaskIcons();
 			}

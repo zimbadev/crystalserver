@@ -622,6 +622,8 @@ private:
 	void sendScreenshotAndBannerProgressQuest(const std::string &questName, bool isCompleted);
 	void sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message);
 	void sendScreenshotAndBannerUnlockedSpell(uint16_t spellId);
+	void sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId);
+	void sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId);
 
 	void sendDisableLoginMusic();
 
