@@ -13,7 +13,7 @@ combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_ENERGYPULSE)
 
 function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
-		local attackValue = calculateAttackValue(player, skill, weaponDamage)
+	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 	local spellFactor = 0.7
 	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 	return -total * 0.9, -total * 1.1
