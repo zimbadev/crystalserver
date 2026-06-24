@@ -28,10 +28,8 @@ spell:cooldown(1000)
 spell:groupCooldown(1000)
 spell:level(35)
 spell:mana(160)
+spell:basePower(250)
 spell:isSelfTarget(true)
 spell:isAggressive(false)
 spell:isPremium(false)
-
-spell:basePower(250)
-
 spell:register()

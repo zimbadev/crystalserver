@@ -29,11 +29,10 @@ spell:words("exori gran")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_FIERCE_BERSERK)
 spell:level(90)
 spell:mana(360) -- Phase A rebalance: 340 -> 360
+spell:basePower(92)
 spell:isPremium(true)
 spell:needWeapon(true)
 spell:cooldown(6 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("knight;true", "elite knight;true")
-spell:basePower(92)
 spell:register()

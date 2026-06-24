@@ -24,13 +24,11 @@ spell:words("exura med ico")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_FAIR_WOUND_CLEANSING)
 spell:level(300)
 spell:mana(90)
+spell:basePower(225)
 spell:isPremium(true)
 spell:isSelfTarget(true)
 spell:cooldown(1000)
 spell:groupCooldown(2 * 1000) -- Phase A rebalance: 1s -> 2s
 spell:isAggressive(false)
 spell:vocation("knight;true", "elite knight;true")
-
-spell:basePower(225)
-
 spell:register()

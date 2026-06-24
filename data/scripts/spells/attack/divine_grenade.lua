@@ -101,6 +101,7 @@ spell:name("Divine Grenade")
 spell:words("exevo tempo mas san")
 spell:level(300)
 spell:mana(160)
+spell:basePower(190)
 spell:isPremium(true)
 spell:range(7)
 spell:needPosition(true) -- cast at the clicked tile (cursor/crosshair); var is VARIANT_POSITION
@@ -108,7 +109,5 @@ spell:blockWalls(true)
 spell:isAggressive(true) -- attack grenade: applies in-fight and is blocked in protection zones
 spell:cooldown(26 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("paladin;true", "royal paladin;true")
-spell:basePower(190)
 spell:register()

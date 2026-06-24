@@ -27,11 +27,10 @@ spell:words("exori mas")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_GROUNDSHAKER)
 spell:level(33)
 spell:mana(200) -- Phase A rebalance: 160 -> 200
+spell:basePower(32)
 spell:isPremium(true)
 spell:needWeapon(true)
 spell:cooldown(8 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("knight;true", "elite knight;true")
-spell:basePower(32)
 spell:register()

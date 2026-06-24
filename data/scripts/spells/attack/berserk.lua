@@ -29,11 +29,10 @@ spell:words("exori")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_BERSERK)
 spell:level(35)
 spell:mana(125) -- Phase A rebalance: 115 -> 125
+spell:basePower(44)
 spell:isPremium(true)
 spell:needWeapon(true)
 spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("knight;true", "elite knight;true")
-spell:basePower(44)
 spell:register()
