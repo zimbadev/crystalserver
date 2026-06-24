@@ -109,7 +109,8 @@ local config = {
 	["physical"] = { effect = CONST_ME_WHITE_ENERGYSHOCK, combat = COMBAT_PHYSICALDAMAGE },
 }
 
-local function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)	local skill = player:getSkillLevel(SKILL_FIRST)
+local function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
+	local skill = player:getSkillLevel(SKILL_FIRST)
 	--[[
 	local helmetItem = player:getSlotItem(CONST_SLOT_HEAD)
 	if helmetItem and helmetItem:getId() == 50274 then -- coned hat of enlightenment
