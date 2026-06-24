@@ -283,7 +283,7 @@ npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 -- Dialog options (interactive icons in the NPC conversation window)
-npcType:addDialogOptions("mission", "help", "bye")
+npcType:addDialogOptions("bye")
 
 -- npcType registering the npcConfig table
 npcType:register(npcConfig)
