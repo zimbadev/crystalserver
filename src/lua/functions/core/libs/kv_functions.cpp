@@ -31,7 +31,7 @@ void KVFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "kv", "keys", KVFunctions::luaKVKeys);
 	Lua::registerMethod(L, "kv", "remove", KVFunctions::luaKVRemove);
 
-	Lua::registerClass(L, "KV", "");
+	Lua::registerSharedClass(L, "KV", "");
 	Lua::registerMethod(L, "KV", "scoped", KVFunctions::luaKVScoped);
 	Lua::registerMethod(L, "KV", "set", KVFunctions::luaKVSet);
 	Lua::registerMethod(L, "KV", "get", KVFunctions::luaKVGet);
