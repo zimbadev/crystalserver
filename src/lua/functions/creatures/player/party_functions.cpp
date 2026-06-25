@@ -115,6 +115,10 @@ int PartyFunctions::luaPartySetLeader(lua_State* L) {
 	return 1;
 }
 
+/***
+ * @function Party:getMembers
+ * @return Player[]|nil
+ */
 int PartyFunctions::luaPartyGetMembers(lua_State* L) {
 	// party:getMembers()
 	const auto &party = Lua::getUserdataShared<Party>(L, 1);
@@ -144,6 +148,10 @@ int PartyFunctions::luaPartyGetMemberCount(lua_State* L) {
 	return 1;
 }
 
+/***
+ * @function Party:getInvitees
+ * @return Player[]|nil
+ */
 int PartyFunctions::luaPartyGetInvitees(lua_State* L) {
 	// party:getInvitees()
 	const auto &party = Lua::getUserdataShared<Party>(L, 1);

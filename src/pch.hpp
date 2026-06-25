@@ -33,13 +33,24 @@
 // STL Includes
 // --------------------
 
+#include <array>
+#include <atomic>
+#include <bit>
 #include <bitset>
 #include <charconv>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <forward_list>
+#include <limits>
 #include <list>
 #include <map>
+#include <memory>
+#include <new>
+#include <optional>
+#include <stdexcept>
+#include <string_view>
+#include <unordered_map>
 #include <unordered_set>
 #include <queue>
 #include <random>
@@ -48,6 +59,7 @@
 #include <regex>
 #include <set>
 #include <thread>
+#include <utility>
 #include <vector>
 #include <variant>
 #include <numeric>

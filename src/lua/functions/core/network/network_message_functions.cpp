@@ -54,6 +54,10 @@ void NetworkMessageFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "NetworkMessage", "sendToPlayer", NetworkMessageFunctions::luaNetworkMessageSendToPlayer);
 }
 
+/***
+ * @class NetworkMessage
+ * @overload fun(): NetworkMessage
+ */
 int NetworkMessageFunctions::luaNetworkMessageCreate(lua_State* L) {
 	// NetworkMessage()
 	Lua::pushUserdata<NetworkMessage>(L, std::make_shared<NetworkMessage>());

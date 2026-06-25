@@ -221,5 +221,24 @@ function(setup_target TARGET_NAME)
     if (MSVC AND BUILD_STATIC_LIBRARY)
         set_property(TARGET ${TARGET_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     endif()
+
+    # RelWithDebInfo profiling symbols for release builds.
+    # Note: Crystalserver compiles with /Z7 (see foreach above) for /MP-friendly debug info,
+    # so we only add the linker-side options here (no /Zi compile flag, which would conflict with /Z7).
+    if (MSVC)
+        get_target_property(target_type ${TARGET_NAME} TYPE)
+        if (target_type STREQUAL "EXECUTABLE"
+            OR target_type STREQUAL "SHARED_LIBRARY"
+            OR target_type STREQUAL "MODULE_LIBRARY")
+            target_link_options(
+                ${TARGET_NAME}
+                PRIVATE
+                $<$<CONFIG:RelWithDebInfo>:/DEBUG:FULL>
+                $<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>>:/OPT:REF>
+                $<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>>:/OPT:ICF>
+            )
+        endif()
+    endif()
+
     target_link_libraries(${TARGET_NAME} PUBLIC project_options)
 endfunction()

@@ -18,6 +18,30 @@
 #include "crystalserver.hpp"
 #include "lib/di/container.hpp"
 
-int main() {
-	return inject<CrystalServer>().run();
+#ifndef USE_PRECOMPILED_HEADERS
+	#include <span>
+	#include <string_view>
+#endif
+
+namespace {
+	constexpr std::string_view GenerateLuaApiDocsOnlyArgument = "--generate-lua-api-docs-only";
+
+	bool hasArgument(const std::span<char*> arguments, const std::string_view expectedArgument) {
+		for (std::size_t index = 1; index < arguments.size(); ++index) {
+			if (std::string_view(arguments[index]) == expectedArgument) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+int main(int argc, char* argv[]) {
+	auto &server = inject<CrystalServer>();
+	const std::span<char*> arguments(argv, static_cast<std::size_t>(argc));
+	if (hasArgument(arguments, GenerateLuaApiDocsOnlyArgument)) {
+		return server.generateLuaApiDocsOnly();
+	}
+
+	return server.run();
 }

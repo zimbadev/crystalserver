@@ -198,6 +198,7 @@
     <ClInclude Include="..\src\lua\lua_definitions.hpp" />
     <ClInclude Include="..\src\lua\modules\modules.hpp" />
     <ClInclude Include="..\src\lua\scripts\luajit_sync.hpp" />
+    <ClInclude Include="..\src\lua\docgen\lua_api_doc_generator.hpp" />
     <ClInclude Include="..\src\lua\scripts\luascript.hpp" />
     <ClInclude Include="..\src\lua\scripts\lua_environment.hpp" />
     <ClInclude Include="..\src\lua\scripts\scripts.hpp" />
@@ -396,6 +397,7 @@
     <ClCompile Include="..\src\lua\global\baseevents.cpp" />
     <ClCompile Include="..\src\lua\global\globalevent.cpp" />
     <ClCompile Include="..\src\lua\modules\modules.cpp" />
+    <ClCompile Include="..\src\lua\docgen\lua_api_doc_generator.cpp" />
     <ClCompile Include="..\src\lua\scripts\luascript.cpp" />
     <ClCompile Include="..\src\lua\scripts\lua_environment.cpp" />
     <ClCompile Include="..\src\lua\scripts\scripts.cpp" />

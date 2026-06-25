@@ -39,6 +39,12 @@ int DBFunctions::luaDatabaseExecute(lua_State* L) {
 	return 1;
 }
 
+/***
+ * @function db.asyncQuery
+ * @param query string
+ * @param callback? fun(success: boolean)
+ * @return nil
+ */
 int DBFunctions::luaDatabaseAsyncExecute(lua_State* L) {
 	std::function<void(DBResult_ptr, bool)> callback;
 	if (lua_gettop(L) > 1) {
@@ -77,6 +83,12 @@ int DBFunctions::luaDatabaseStoreQuery(lua_State* L) {
 	return 1;
 }
 
+/***
+ * @function db.asyncStoreQuery
+ * @param query string
+ * @param callback? fun(resultId: number|false)
+ * @return nil
+ */
 int DBFunctions::luaDatabaseAsyncStoreQuery(lua_State* L) {
 	std::function<void(DBResult_ptr, bool)> callback;
 	if (lua_gettop(L) > 1) {

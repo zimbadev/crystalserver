@@ -37,6 +37,7 @@
 #include "io/ioweeklytasks.hpp"
 #include "lib/thread/thread_pool.hpp"
 #include "lua/creature/events.hpp"
+#include "lua/docgen/lua_api_doc_generator.hpp"
 #include "lua/modules/modules.hpp"
 #include "lua/scripts/lua_environment.hpp"
 #include "lua/scripts/scripts.hpp"
@@ -44,6 +45,7 @@
 #include "server/network/protocol/protocolstatus.hpp"
 #include "server/network/webhook/webhook.hpp"
 #include "creatures/players/vocations/vocation.hpp"
+#include "utils/benchmark.hpp"
 
 CrystalServer::CrystalServer(
 	Logger &logger,
@@ -66,11 +68,51 @@ CrystalServer::CrystalServer(
 #endif
 }
 
+bool CrystalServer::generateLuaApiDocs(const bool force) const {
+	if (!force && !g_configManager().getBoolean(GENERATE_LUA_API_DOCS)) {
+		logger.debug("Lua API documentation generation is disabled.");
+		return true;
+	}
+
+	LuaApiDocGenerator apiDocGenerator(std::filesystem::current_path(), g_configManager().getString(LUA_API_DOCS_OUTPUT_DIRECTORY), logger);
+	if (apiDocGenerator.generate()) {
+		logger.info("Lua API documentation generated successfully.");
+		return true;
+	}
+	return false;
+}
+
+int CrystalServer::generateLuaApiDocsOnly() {
+	const auto shutdownDocgenRuntime = [] {
+		g_dispatcher().shutdown();
+		g_threadPool().shutdown();
+	};
+
+	try {
+		loadConfigLua();
+		const auto generated = generateLuaApiDocs(true);
+		shutdownDocgenRuntime();
+		return generated ? EXIT_SUCCESS : EXIT_FAILURE;
+	} catch (const FailedToInitializeCrystalServer &err) {
+		logger.error(err.what());
+		shutdownDocgenRuntime();
+		return EXIT_FAILURE;
+	} catch (const std::exception &err) {
+		logger.error("Failed to generate Lua API documentation: {}", err.what());
+		shutdownDocgenRuntime();
+		return EXIT_FAILURE;
+	}
+}
+
 int CrystalServer::run() {
 	g_dispatcher().addEvent(
 		[this] {
 			try {
 				loadConfigLua();
+
+				if (!generateLuaApiDocs()) {
+					logger.warn("Lua API documentation generation failed; continuing startup.");
+				}
 
 				logger.info("Server protocol: {}.{:02d}{}", CLIENT_VERSION_UPPER, CLIENT_VERSION_LOWER, g_configManager().getBoolean(OLD_PROTOCOL) ? " and 10x allowed!" : "");
 #ifdef FEATURE_METRICS
@@ -340,53 +382,117 @@ void CrystalServer::initializeDatabase() {
 }
 
 void CrystalServer::loadModules() {
+	Benchmark modulesBenchmark;
 	logger.debug("Initializing lua environment...");
 	if (!g_luaEnvironment().getLuaState()) {
 		g_luaEnvironment().initState();
 	}
 
+	const auto startupLoadTelemetry = g_configManager().getBoolean(LUA_STARTUP_LOAD_TELEMETRY);
+	const auto timedLoad = [this, startupLoadTelemetry](std::string moduleName, const auto &loader) {
+		if (!startupLoadTelemetry) {
+			if (!loader()) {
+				modulesLoadHelper(false, std::move(moduleName));
+			}
+			return;
+		}
+
+		Benchmark benchmark;
+		const bool loaded = loader();
+		const auto duration = benchmark.duration();
+		if (!loaded) {
+			modulesLoadHelper(false, moduleName);
+		}
+
+		logger.info("Loaded {} in {:.3f} ms", moduleName, duration);
+	};
+
 	auto coreFolder = g_configManager().getString(CORE_DIRECTORY);
 	// Load appearances.dat first
-	modulesLoadHelper((g_game().loadAppearanceProtobuf(coreFolder + "/items/appearances.dat") == ERROR_NONE), "appearances.dat");
+	timedLoad("appearances.dat", [&coreFolder] {
+		return g_game().loadAppearanceProtobuf(coreFolder + "/items/appearances.dat") == ERROR_NONE;
+	});
 
 	// Load XML folder dependencies (order matters)
-	modulesLoadHelper(g_vocations().loadFromXml(), "XML/vocations.xml");
-	modulesLoadHelper(g_eventsScheduler().loadScheduleEventFromXml(), "XML/events.xml");
-	modulesLoadHelper(g_eventsScheduler().loadScheduleEventFromJson(), "json/eventscheduler/events.json");
-	modulesLoadHelper(Outfits::getInstance().loadFromXml(), "XML/outfits.xml");
-	modulesLoadHelper(Familiars::getInstance().loadFromXml(), "XML/familiars.xml");
-	modulesLoadHelper(g_imbuements().loadFromXml(), "XML/imbuements.xml");
-	modulesLoadHelper(g_proficiencies().loadFromJson(), "items/proficiencies.json");
-	modulesLoadHelper(g_storages().loadFromXML(), "XML/storages.xml");
+	timedLoad("XML/vocations.xml", [] {
+		return g_vocations().loadFromXml();
+	});
+	timedLoad("XML/events.xml", [] {
+		return g_eventsScheduler().loadScheduleEventFromXml();
+	});
+	timedLoad("json/eventscheduler/events.json", [] {
+		return g_eventsScheduler().loadScheduleEventFromJson();
+	});
+	timedLoad("XML/outfits.xml", [] {
+		return Outfits::getInstance().loadFromXml();
+	});
+	timedLoad("XML/familiars.xml", [] {
+		return Familiars::getInstance().loadFromXml();
+	});
+	timedLoad("XML/imbuements.xml", [] {
+		return g_imbuements().loadFromXml();
+	});
+	timedLoad("items/proficiencies.json", [] {
+		return g_proficiencies().loadFromJson();
+	});
+	timedLoad("XML/storages.xml", [] {
+		return g_storages().loadFromXML();
+	});
 
-	modulesLoadHelper(Item::items.loadFromXml(), "items.xml");
+	timedLoad("items.xml", [] {
+		return Item::items.loadFromXml();
+	});
 
 	const auto datapackFolder = g_configManager().getString(DATA_DIRECTORY);
 	logger.debug("Loading core scripts on folder: {}/", coreFolder);
 	// Load first core Lua libs
-	modulesLoadHelper((g_luaEnvironment().loadFile(coreFolder + "/core.lua", "core.lua") == 0), "core.lua");
-	modulesLoadHelper(g_scripts().loadScripts(coreFolder + "/scripts/lib", true, false), coreFolder + "/scripts/libs");
-	modulesLoadHelper(g_scripts().loadScripts(coreFolder + "/scripts", false, false), coreFolder + "/scripts");
-	modulesLoadHelper((g_npcs().load(true, false)), "npclib");
+	timedLoad("core.lua", [&coreFolder] {
+		return g_luaEnvironment().loadFile(coreFolder + "/core.lua", "core.lua") == 0;
+	});
+	timedLoad(coreFolder + "/scripts/libs", [&coreFolder] {
+		return g_scripts().loadScripts(coreFolder + "/scripts/lib", true, false);
+	});
+	timedLoad(coreFolder + "/scripts", [&coreFolder] {
+		return g_scripts().loadScripts(coreFolder + "/scripts", false, false);
+	});
+	timedLoad("npclib", [] {
+		return g_npcs().load(true, false);
+	});
 
-	modulesLoadHelper(g_events().loadFromXml(), "events/events.xml");
-	modulesLoadHelper(g_modules().loadFromXml(), "modules/modules.xml");
+	timedLoad("events/events.xml", [] {
+		return g_events().loadFromXml();
+	});
+	timedLoad("modules/modules.xml", [] {
+		return g_modules().loadFromXml();
+	});
 
 	logger.info("Using datapack folder in: {}/", datapackFolder);
-	modulesLoadHelper(g_scripts().loadScripts(datapackFolder + "/scripts/lib", true, false), datapackFolder + "/scripts/libs");
+	timedLoad(datapackFolder + "/scripts/libs", [&datapackFolder] {
+		return g_scripts().loadScripts(datapackFolder + "/scripts/lib", true, false);
+	});
 
 	// Load scripts
-	modulesLoadHelper(g_scripts().loadScripts(datapackFolder + "/scripts", false, false), datapackFolder + "/scripts");
+	timedLoad(datapackFolder + "/scripts", [&datapackFolder] {
+		return g_scripts().loadScripts(datapackFolder + "/scripts", false, false);
+	});
 
 	// Load monsters
-	modulesLoadHelper(g_scripts().loadScripts(datapackFolder + "/monster", false, false), datapackFolder + "/monster");
-	modulesLoadHelper((g_npcs().load(false, true)), "npc");
+	timedLoad(datapackFolder + "/monster", [&datapackFolder] {
+		return g_scripts().loadScripts(datapackFolder + "/monster", false, false);
+	});
+	timedLoad("npc", [] {
+		return g_npcs().load(false, true);
+	});
 
 	g_game().loadBoostedCreature();
 	g_ioBosstiary().loadBoostedBoss();
 	g_ioprey().initializeTaskHuntOptions();
 	g_game().logCyclopediaStats();
 	g_game().loadSpecialTiles();
+
+	if (startupLoadTelemetry) {
+		logger.info("Loaded modules and scripts in {:.3f} seconds.", modulesBenchmark.duration() / 1000.0);
+	}
 }
 
 void CrystalServer::modulesLoadHelper(bool loaded, std::string moduleName) {

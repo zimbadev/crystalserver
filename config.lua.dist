@@ -6,6 +6,11 @@
 dataPackDirectory = "data-global"
 -- Don't change this unless you know what you're doing
 coreDirectory = "data"
+-- Lua API documentation generator (developer tooling)
+-- generateLuaApiDocs: regenerate docs/lua-api on startup. Disabled by default; run
+-- "crystalserver --generate-lua-api-docs-only" to regenerate on demand instead.
+generateLuaApiDocs = false
+luaApiDocsOutputDirectory = "docs/lua-api"
 
 -- Set log level
 -- It can be trace, debug, info, warning, error, critical, off (default: info).
@@ -518,6 +523,17 @@ kickIdlePlayerAfterMinutes = 15
 maxMessageBuffer = 4
 classicAttackSpeed = false
 showScriptsLogInConsole = false
+-- Lua startup performance
+-- luaStartupLoadTelemetry: log detailed timing/cache stats while loading modules and scripts
+-- luaScriptBytecodeCache: cache compiled Lua bytecode to speed up subsequent startups
+-- luaScriptBytecodeCachePath: directory where the bytecode cache is stored
+-- luaScriptDebugHook: install the debug hook that warns about long-running Lua scripts
+-- luaScriptDebugHookInterval: instruction sampling interval for the debug hook
+luaStartupLoadTelemetry = false
+luaScriptBytecodeCache = true
+luaScriptBytecodeCachePath = "cache/lua-bytecode"
+luaScriptDebugHook = false
+luaScriptDebugHookInterval = 30000
 -- time to suppress negative conditions after being affected by them (ms)
 minDelayBetweenConditions = 0
 -- configure maximum value of critical imbuement

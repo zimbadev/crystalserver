@@ -27,6 +27,12 @@ void ResultFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Result", "free", ResultFunctions::luaResultFree);
 }
 
+/***
+ * @function Result.getNumber
+ * @param resultId number
+ * @param column string
+ * @return number|false
+ */
 int ResultFunctions::luaResultGetNumber(lua_State* L) {
 	const auto &res = ScriptEnvironment::getResultByID(Lua::getNumber<uint32_t>(L, 1));
 	if (!res) {
@@ -39,6 +45,12 @@ int ResultFunctions::luaResultGetNumber(lua_State* L) {
 	return 1;
 }
 
+/***
+ * @function Result.getString
+ * @param resultId number
+ * @param column string
+ * @return string|false
+ */
 int ResultFunctions::luaResultGetString(lua_State* L) {
 	const auto &res = ScriptEnvironment::getResultByID(Lua::getNumber<uint32_t>(L, 1));
 	if (!res) {
@@ -51,6 +63,13 @@ int ResultFunctions::luaResultGetString(lua_State* L) {
 	return 1;
 }
 
+/***
+ * @function Result.getStream
+ * @param resultId number
+ * @param column string
+ * @return string|false stream
+ * @return number? length
+ */
 int ResultFunctions::luaResultGetStream(lua_State* L) {
 	const auto &res = ScriptEnvironment::getResultByID(Lua::getNumber<uint32_t>(L, 1));
 	if (!res) {
