@@ -33,6 +33,10 @@ endif()
 # *****************************************************************************
 if (CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(${PROJECT_NAME}_lib PRIVATE -Wno-deprecated-declarations)
+elseif (MSVC)
+    # Legacy Lua userdata helpers are intentionally kept and marked [[deprecated]];
+    # suppress C4996 so the still-valid core-type bindings do not flood the build.
+    target_compile_options(${PROJECT_NAME}_lib PRIVATE /wd4996)
 endif()
 
 # Sets the NDEBUG macro for Release and RelWithDebInfo configurations.

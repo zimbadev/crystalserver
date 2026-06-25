@@ -81,7 +81,7 @@ bool Spectators::checkCache(const SpectatorsCache::FloorData &specData, bool onl
 
 			// Check type if needed
 			if (needsTypeCheck) {
-				if ((onlyPlayers && !creature->getPlayer()) || (onlyMonsters && !creature->getMonster()) || (onlyNpcs && !creature->getNpc())) {
+				if ((onlyPlayers && !creature->getPlayerRaw()) || (onlyMonsters && !creature->getMonsterRaw()) || (onlyNpcs && !creature->getNpcRaw())) {
 					continue;
 				}
 			}
@@ -258,7 +258,7 @@ Spectators Spectators::excludeMaster() const {
 	specs.creatures.reserve(creatures.size());
 
 	for (const auto &c : creatures) {
-		if (c->getMonster() != nullptr && !c->getMaster()) {
+		if (c->getMonsterRaw() != nullptr && !c->getMaster()) {
 			specs.creatures.emplace_back(c);
 		}
 	}
@@ -275,7 +275,8 @@ Spectators Spectators::excludePlayerMaster() const {
 	specs.creatures.reserve(creatures.size());
 
 	for (const auto &c : creatures) {
-		if ((c->getMonster() != nullptr && !c->getMaster()) || (!c->getMaster() || !c->getMaster()->getPlayer())) {
+		const auto &master = c->getMaster();
+		if ((c->getMonsterRaw() != nullptr && !master) || (!master || !master->getPlayerRaw())) {
 			specs.creatures.emplace_back(c);
 		}
 	}
@@ -288,7 +289,7 @@ Spectators Spectators::filter(bool onlyPlayers, bool onlyMonsters, bool onlyNpcs
 	specs.creatures.reserve(creatures.size());
 
 	for (const auto &c : creatures) {
-		if ((onlyPlayers && c->getPlayer() != nullptr) || (onlyMonsters && c->getMonster() != nullptr) || (onlyNpcs && c->getNpc() != nullptr)) {
+		if ((onlyPlayers && c->getPlayerRaw() != nullptr) || (onlyMonsters && c->getMonsterRaw() != nullptr) || (onlyNpcs && c->getNpcRaw() != nullptr)) {
 			specs.creatures.emplace_back(c);
 		}
 	}

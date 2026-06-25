@@ -40,6 +40,7 @@
 #include <forward_list>
 #include <list>
 #include <map>
+#include <memory>
 #include <unordered_set>
 #include <queue>
 #include <random>
@@ -48,6 +49,7 @@
 #include <regex>
 #include <set>
 #include <thread>
+#include <type_traits>
 #include <vector>
 #include <variant>
 #include <numeric>

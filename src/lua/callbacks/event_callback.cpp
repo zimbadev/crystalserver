@@ -1208,8 +1208,7 @@ bool EventCallback::zoneBeforeCreatureEnter(const std::shared_ptr<Zone> &zone, c
 	lua_State* L = getScriptInterface()->getLuaState();
 	getScriptInterface()->pushFunction(getScriptId());
 
-	LuaScriptInterface::pushUserdata<Zone>(L, zone);
-	LuaScriptInterface::setMetatable(L, -1, "Zone");
+	LuaScriptInterface::pushSharedUserdata<Zone>(L, zone);
 
 	LuaScriptInterface::pushUserdata<Creature>(L, creature);
 	LuaScriptInterface::setCreatureMetatable(L, -1, creature);
@@ -1232,8 +1231,7 @@ bool EventCallback::zoneBeforeCreatureLeave(const std::shared_ptr<Zone> &zone, c
 	lua_State* L = getScriptInterface()->getLuaState();
 	getScriptInterface()->pushFunction(getScriptId());
 
-	LuaScriptInterface::pushUserdata<Zone>(L, zone);
-	LuaScriptInterface::setMetatable(L, -1, "Zone");
+	LuaScriptInterface::pushSharedUserdata<Zone>(L, zone);
 
 	LuaScriptInterface::pushUserdata<Creature>(L, creature);
 	LuaScriptInterface::setCreatureMetatable(L, -1, creature);
@@ -1256,8 +1254,7 @@ void EventCallback::zoneAfterCreatureEnter(const std::shared_ptr<Zone> &zone, co
 	lua_State* L = getScriptInterface()->getLuaState();
 	getScriptInterface()->pushFunction(getScriptId());
 
-	LuaScriptInterface::pushUserdata<Zone>(L, zone);
-	LuaScriptInterface::setMetatable(L, -1, "Zone");
+	LuaScriptInterface::pushSharedUserdata<Zone>(L, zone);
 
 	LuaScriptInterface::pushUserdata<Creature>(L, creature);
 	LuaScriptInterface::setCreatureMetatable(L, -1, creature);
@@ -1280,8 +1277,7 @@ void EventCallback::zoneAfterCreatureLeave(const std::shared_ptr<Zone> &zone, co
 	lua_State* L = getScriptInterface()->getLuaState();
 	getScriptInterface()->pushFunction(getScriptId());
 
-	LuaScriptInterface::pushUserdata<Zone>(L, zone);
-	LuaScriptInterface::setMetatable(L, -1, "Zone");
+	LuaScriptInterface::pushSharedUserdata<Zone>(L, zone);
 
 	LuaScriptInterface::pushUserdata<Creature>(L, creature);
 	LuaScriptInterface::setCreatureMetatable(L, -1, creature);

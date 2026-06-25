@@ -24,7 +24,7 @@
 #include "lua/functions/lua_functions_loader.hpp"
 
 void SpellFunctions::init(lua_State* L) {
-	Lua::registerSharedClass(L, "Spell", "", SpellFunctions::luaSpellCreate);
+	Lua::registerSharedClass<Spell>(L, "", SpellFunctions::luaSpellCreate);
 	Lua::registerMetaMethod(L, "Spell", "__eq", Lua::luaUserdataCompare);
 
 	Lua::registerMethod(L, "Spell", "onCastSpell", SpellFunctions::luaSpellOnCastSpell);
@@ -91,8 +91,7 @@ int SpellFunctions::luaSpellCreate(lua_State* L) {
 		const auto &rune = g_spells().getRuneSpell(id);
 
 		if (rune) {
-			Lua::pushUserdata<Spell>(L, rune);
-			Lua::setMetatable(L, -1, "Spell");
+			Lua::pushSharedUserdata<Spell>(L, rune);
 			return 1;
 		}
 
@@ -101,20 +100,17 @@ int SpellFunctions::luaSpellCreate(lua_State* L) {
 		const std::string arg = Lua::getString(L, 2);
 		auto instant = g_spells().getInstantSpellByName(arg);
 		if (instant) {
-			Lua::pushUserdata<Spell>(L, instant);
-			Lua::setMetatable(L, -1, "Spell");
+			Lua::pushSharedUserdata<Spell>(L, instant);
 			return 1;
 		}
 		instant = g_spells().getInstantSpell(arg);
 		if (instant) {
-			Lua::pushUserdata<Spell>(L, instant);
-			Lua::setMetatable(L, -1, "Spell");
+			Lua::pushSharedUserdata<Spell>(L, instant);
 			return 1;
 		}
 		const auto &rune = g_spells().getRuneSpellByName(arg);
 		if (rune) {
-			Lua::pushUserdata<Spell>(L, rune);
-			Lua::setMetatable(L, -1, "Spell");
+			Lua::pushSharedUserdata<Spell>(L, rune);
 			return 1;
 		}
 
@@ -128,14 +124,12 @@ int SpellFunctions::luaSpellCreate(lua_State* L) {
 
 	if (spellType == SPELL_INSTANT) {
 		const auto &spell = std::make_shared<InstantSpell>();
-		Lua::pushUserdata<Spell>(L, spell);
-		Lua::setMetatable(L, -1, "Spell");
+		Lua::pushSharedUserdata<Spell>(L, spell);
 		spell->spellType = SPELL_INSTANT;
 		return 1;
 	} else if (spellType == SPELL_RUNE) {
 		const auto &runeSpell = std::make_shared<RuneSpell>();
-		Lua::pushUserdata<Spell>(L, runeSpell);
-		Lua::setMetatable(L, -1, "Spell");
+		Lua::pushSharedUserdata<Spell>(L, runeSpell);
 		runeSpell->spellType = SPELL_RUNE;
 		return 1;
 	}

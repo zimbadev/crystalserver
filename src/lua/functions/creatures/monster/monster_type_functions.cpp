@@ -29,7 +29,7 @@
 #include "lua/functions/lua_functions_loader.hpp"
 
 void MonsterTypeFunctions::init(lua_State* L) {
-	Lua::registerSharedClass(L, "MonsterType", "", MonsterTypeFunctions::luaMonsterTypeCreate);
+	Lua::registerSharedClass<MonsterType>(L, "", MonsterTypeFunctions::luaMonsterTypeCreate);
 	Lua::registerMetaMethod(L, "MonsterType", "__eq", Lua::luaUserdataCompare);
 
 	Lua::registerMethod(L, "MonsterType", "isAttackable", MonsterTypeFunctions::luaMonsterTypeIsAttackable);
@@ -203,8 +203,7 @@ int MonsterTypeFunctions::luaMonsterTypeCreate(lua_State* L) {
 	}
 
 	if (monsterType) {
-		Lua::pushUserdata<MonsterType>(L, monsterType);
-		Lua::setMetatable(L, -1, "MonsterType");
+		Lua::pushSharedUserdata<MonsterType>(L, monsterType);
 	} else {
 		lua_pushnil(L);
 	}
@@ -1938,8 +1937,7 @@ int MonsterTypeFunctions::luaMonsterTypeGetMonstersByRace(lua_State* L) {
 	lua_createtable(L, monstersByRace.size(), 0);
 	int index = 0;
 	for (const auto &monsterType : monstersByRace) {
-		Lua::pushUserdata<MonsterType>(L, monsterType);
-		Lua::setMetatable(L, -1, "MonsterType");
+		Lua::pushSharedUserdata<MonsterType>(L, monsterType);
 		lua_rawseti(L, -2, ++index);
 	}
 	return 1;
@@ -1952,8 +1950,7 @@ int MonsterTypeFunctions::luaMonsterTypeGetMonstersByBestiaryStars(lua_State* L)
 	lua_createtable(L, monstersByStars.size(), 0);
 	int index = 0;
 	for (const auto &monsterType : monstersByStars) {
-		Lua::pushUserdata<MonsterType>(L, monsterType);
-		Lua::setMetatable(L, -1, "MonsterType");
+		Lua::pushSharedUserdata<MonsterType>(L, monsterType);
 		lua_rawseti(L, -2, ++index);
 	}
 	return 1;
