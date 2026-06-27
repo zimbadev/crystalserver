@@ -3271,10 +3271,11 @@ int32_t PlayerWheel::checkDrainBodyLeech(const std::shared_ptr<Creature> &, skil
 
 int32_t PlayerWheel::checkBattleHealingAmount() const {
 	double amount = static_cast<double>(m_player.getSkillLevel(SKILL_SHIELD)) * 0.2;
-	// Vocation Adjustment: Battle Healing is tripled while a real shield is equipped (was keyed to
-	// missing-health %, which is not the intended condition).
-	if (m_player.hasRealShield()) {
+	const uint8_t healthPercent = (m_player.getHealth() * 100) / m_player.getMaxHealth();
+	if (healthPercent <= 30) {
 		amount *= 3;
+	} else if (healthPercent <= 60) {
+		amount *= 2;
 	}
 	return static_cast<int32_t>(amount);
 }
@@ -3357,14 +3358,6 @@ void PlayerWheel::onThink(bool force /* = false*/) {
 
 	if (getInstant("Sanctuary") && (getOnThinkTimer(WheelOnThink_t::SANCTUARY) > OTSYS_TIME())) {
 		m_player.sendMagicEffect(m_player.getPosition(), 260);
-	}
-
-	// Vocation Adjustment: Battle Healing (Knight) -- periodic heal scaled by shielding, tripled with a
-	// real shield. Hooked here (before the in-fight early-return below) so it heals on its own throttle;
-	// previously healIfBattleHealingActive() was never called anywhere, so the perk did nothing at all.
-	if (getInstant("Battle Healing") && OTSYS_TIME() >= m_battleHealingTime) {
-		healIfBattleHealingActive();
-		m_battleHealingTime = OTSYS_TIME() + 2000;
 	}
 
 	if (!m_player.hasCondition(CONDITION_INFIGHT) || m_player.getZoneType() == ZONE_PROTECTION || (!getInstant(WheelInstant_t::BATTLE_INSTINCT) && !getInstant(WheelInstant_t::POSITIONAL_TACTICS) && !getInstant(WheelInstant_t::BALLISTIC_MASTERY) && !getInstant("Gift of Life") && !getInstant("Combat Mastery") && !getInstant("Divine Empowerment") && getGiftOfCooldown() == 0 && !getInstant("Ascetic"))) {

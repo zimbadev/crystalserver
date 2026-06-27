@@ -478,8 +478,6 @@ private:
 	std::array<int32_t, COMBAT_COUNT> m_specializedMagic = { 0 };
 
 	int32_t m_creaturesNearby = 0;
-	// Vocation Adjustment: throttle timestamp for the Battle Healing periodic heal (see onThink).
-	int64_t m_battleHealingTime = 0;
 	std::map<std::string, WheelSpellGrade_t> m_spellsSelected;
 	std::vector<std::string> m_learnedSpellsSelected;
 	std::unordered_map<std::string, WheelSpells::Bonus> m_spellsBonuses;

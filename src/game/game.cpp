@@ -7524,14 +7524,17 @@ void Game::applyWheelOfDestinyHealing(CombatDamage &damage, const std::shared_pt
 		}
 
 		// Vocation Adjustment: Battle Healing now boosts the player's own spell/rune healing by +10%,
-		// tripled to +30% while wearing a shield (gated to real heals via ORIGIN_SPELL so the x8
-		// Mana-Buffer / Gift-of-Life survive-heals and the healingLink echo are not boosted).
-		if (damage.origin == ORIGIN_SPELL && attackerPlayer->wheel()->getInstant("Battle Healing")) {
+		// tripled to +30% while wearing a shield. Gated to spell/rune heals via instantSpellName
+		// so potions, Mana-Buffer / Gift-of-Life survive-heals and the healingLink echo are not boosted.
+		if ((!damage.instantSpellName.empty() || !damage.runeSpellName.empty()) && attackerPlayer->wheel()->getInstant("Battle Healing")) {
 			const double battleHealingFactor = attackerPlayer->hasRealShield() ? 1.30 : 1.10;
+			const int32_t primaryBeforeBattleHeal = damage.primary.value;
 			damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * battleHealingFactor));
+			const int32_t secondaryBeforeBattleHeal = damage.secondary.value;
 			if (damage.secondary.value != 0) {
 				damage.secondary.value = static_cast<int32_t>(std::round(damage.secondary.value * battleHealingFactor));
 			}
+			g_logger().debug("[Battle Healing] Player: {}, Factor: {}, Primary: {} -> {}, Secondary: {} -> {}", attackerPlayer->getName(), battleHealingFactor, primaryBeforeBattleHeal, damage.primary.value, secondaryBeforeBattleHeal, damage.secondary.value);
 		}
 
 		if (damage.healingLink > 0) {
