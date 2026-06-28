@@ -3,22 +3,21 @@
 --   Master of Thunder -> energy, effects 331+333, missile 5
 --   Master of Decay   -> death,  effects 332+336, missile 11
 --   Master of Flames / no stance -> base fire (CONST_ME_FIREATTACK, CONST_ANI_FIRE)
-local function flameFormula(level, maglevel)
-	local min = (calculateBaseDamageHealing(level)) + (maglevel * 1.403) + 8
-	local max = (calculateBaseDamageHealing(level)) + (maglevel * 2.203) + 13
-	return -min, -max
+local function flameFormula(level, maglevel, basePower)
+	local avg = spellMagicDamage(basePower, level, maglevel)
+	return -math.floor(avg * 0.9), -math.ceil(avg * 1.1)
 end
 
 -- Each combat needs its OWN callback name (Canary won't let two combats share a callback name); all
 -- three delegate to the same formula.
 function onGetFormulaValues(player, level, maglevel, basePower)
-	return flameFormula(level, maglevel)
+	return flameFormula(level, maglevel, basePower)
 end
-function onGetFormulaValuesThunder(player, level, maglevel)
-	return flameFormula(level, maglevel)
+function onGetFormulaValuesThunder(player, level, maglevel, basePower)
+	return flameFormula(level, maglevel, basePower)
 end
-function onGetFormulaValuesDecay(player, level, maglevel)
-	return flameFormula(level, maglevel)
+function onGetFormulaValuesDecay(player, level, maglevel, basePower)
+	return flameFormula(level, maglevel, basePower)
 end
 
 -- Second impact effect for two-effect variants, registered per-variant via TARGETCREATURE callback.

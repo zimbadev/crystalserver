@@ -649,3 +649,15 @@ function calculateHealingSpellDamage(level, magicLevel, basePower)
 	local max = levelBonus + magicLevel * (basePower * 12.4 / 250) + 90
 	return math.floor(min), math.ceil(max)
 end
+
+function spellSkillDamage(basePower, level, skill, atk)
+	local levelBonus = calculateBaseDamageHealing(level)
+	local avg = levelBonus + (basePower / 1000) * skill * atk + basePower / 6
+	return avg
+end
+
+function spellMagicDamage(basePower, level, maglevel)
+	local levelBonus = calculateBaseDamageHealing(level)
+	local avg = levelBonus + (basePower / 25) * maglevel + basePower / 6
+	return avg
+end

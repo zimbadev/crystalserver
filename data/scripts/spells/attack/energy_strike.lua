@@ -4,9 +4,8 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ENERGYAREA)
 combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_ENERGY)
 
 function onGetFormulaValues(player, level, maglevel, basePower)
-	local min = (calculateBaseDamageHealing(level)) + (maglevel * 1.403) + 8
-	local max = (calculateBaseDamageHealing(level)) + (maglevel * 2.203) + 13
-	return -min, -max
+	local avg = spellMagicDamage(basePower, level, maglevel)
+	return -math.floor(avg * 0.9), -math.ceil(avg * 1.1)
 end
 
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
