@@ -766,6 +766,19 @@ void Game::loadItemsPrice() {
 	for (const auto &offer : offers) {
 		itemsPriceMap[offer.itemId][offer.tier] = std::max(itemsPriceMap[offer.itemId][offer.tier], offer.price);
 	}
+
+	// Fallback: seed NPC sell prices for items the market has no data for, so loot-value
+	// coloring works without market activity. The OTClient (unlike the Cipsoft client) has
+	// no built-in item values and relies entirely on these 0xCD ItemsPrice entries; with an
+	// empty market it received nothing and could not colour anything.
+	const size_t totalItems = Item::items.size();
+	for (size_t id = 100; id < totalItems && id <= 0xFFFF; ++id) {
+		const uint16_t id16 = static_cast<uint16_t>(id);
+		const ItemType &it = Item::items[id16];
+		if (it.sellPrice > 0 && itemsPriceMap.find(id16) == itemsPriceMap.end()) {
+			itemsPriceMap[id16][0] = it.sellPrice;
+		}
+	}
 }
 
 void Game::loadMainMap(const std::string &filename) {
