@@ -34,7 +34,7 @@ Proficiencies &Proficiencies::getInstance() {
 }
 
 bool Proficiencies::loadFromJson(bool /* reloading */) {
-	const auto &jsonFile = g_configManager().getString(CORE_DIRECTORY) + "/items/proficiencies.json";
+	const auto &jsonFile = g_configManager().getString(CORE_DIRECTORY) + "/json/proficiencies.json";
 	std::ifstream ifs(jsonFile);
 	if (!ifs.is_open()) {
 		g_logger().error("[Proficiencies] Failed to open {}", jsonFile);
