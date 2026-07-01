@@ -16,7 +16,7 @@ local MARBLE_CONFIG = {
 local config = {
 	[5908] = {
 
-		-- rabbit
+		-- rabbits
 		[4173] = { value = CREATURE_SKINNING_CHANCE, newItem = 12172, after = 4302 },
 		[6017] = { value = CREATURE_SKINNING_CHANCE, newItem = 12172, after = 4302 }, -- after being killed
 
@@ -62,23 +62,23 @@ local config = {
 		[10356] = { value = CREATURE_SKINNING_CHANCE, newItem = 5876, after = 10357 }, -- lizard legionnaire
 		[10359] = { value = CREATURE_SKINNING_CHANCE, newItem = 5876, after = 10357 }, -- lizard legionnaire, after being killed
 
-		-- dragon
+		-- dragons
 		[4025] = { value = CREATURE_SKINNING_CHANCE, newItem = 5877, after = 4026 }, -- Dragon
 		[5973] = { value = CREATURE_SKINNING_CHANCE, newItem = 5877, after = 4026 }, -- Dragon, after being killed
 
-		-- dragon lord
+		-- dragon lords
 		[4062] = { value = CREATURE_SKINNING_CHANCE, newItem = 5948, after = 4063 },
 		[5984] = { value = CREATURE_SKINNING_CHANCE, newItem = 5948, after = 4063 }, -- after being killed
 
-		-- behemoth
+		-- behemoths
 		[4112] = { value = CREATURE_SKINNING_CHANCE, newItem = 5893, after = 4113 },
 		[5999] = { value = CREATURE_SKINNING_CHANCE, newItem = 5893, after = 4113 }, -- after being killed
 
-		-- bone beast
+		-- bone beasts
 		[4212] = { value = CREATURE_SKINNING_CHANCE, newItem = 5925, after = 4213 },
 		[6030] = { value = CREATURE_SKINNING_CHANCE, newItem = 5925, after = 4213 }, -- after being killed
 
-		-- clomp - raw meat
+		-- clomp
 		[22743] = { value = CREATURE_SKINNING_CHANCE, newItem = 22186, after = 22744 },
 		[22742] = { value = CREATURE_SKINNING_CHANCE, newItem = 22186, after = 22744 }, -- after being killed
 
@@ -119,6 +119,10 @@ local config = {
 local skinning = Action()
 
 function skinning.onUse(player, item, fromPosition, target, toPosition, isHotkey)
+	if not target or not target:isItem() then
+		return true
+	end
+
 	if ICE_CONFIG[target.itemid] then -- ice blocks
 		local ice = ICE_CONFIG[target.itemid]
 		if math.random(1, 100000) <= ice.chance then

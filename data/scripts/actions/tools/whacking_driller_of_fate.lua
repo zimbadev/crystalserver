@@ -73,14 +73,14 @@ local function onUseHammer(player, item, fromPosition, target, toPosition, isHot
 
 	-- Rottin wood and married quest
 	if player:getStorageValue(Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.RottinStart) < 6 then
-		local setting = settingTable[target:getActionId()]
+		local setting = settingTable[targetActionId]
 		if setting then
 			local woodenPosition = Position(setting.position)
 			local woodenItem = Tile(woodenPosition):getItemById(setting.removeItem)
 			if woodenItem then
 				woodenItem:remove()
 				Game.createItem(setting.createItem, 1, setting.position)
-				addEvent(createWooden, 2 * 60 * 1000, setting.position, setting.removeItem, setting.createItem, target:getActionId())
+				addEvent(createWooden, 2 * 60 * 1000, setting.position, setting.removeItem, setting.createItem, targetActionId)
 				player:setStorageValue(Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.RottinStart, player:getStorageValue(Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.RottinStart) + 1)
 				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You fixed this broken wall.")
 				return true
@@ -97,24 +97,24 @@ end
 local toolGear = Action()
 
 function toolGear.onUse(player, item, fromPosition, target, toPosition, isHotkey)
-	if not target or not target.itemid or target.itemid == 0 then
-		return false
+	if not target or not target:isItem() then
+		return true
 	end
 
 	if math.random(1000) > 10 then
 		if onUseCrowbar(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseKitchenKnife and onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseHammer(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseHammer and onUseHammer(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseRope(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseRope and onUseRope(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseShovel(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseShovel and onUseShovel(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUsePick(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUsePick and onUsePick(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseMachete(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseMachete and onUseMachete(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
 		end
 	else

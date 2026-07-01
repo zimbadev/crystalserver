@@ -75152,7 +75152,6 @@
 	<item id="43134" name="stairs">
 		<attribute key="floorchange" value="south" />
 	</item>
-	<item fromid="43786" toid="43790" name="spore reservoir"/>
 	<item id="43294" article="a" name="spore tracks" >
 		<attribute key="primarytype" value="magicfield"/>
 		<attribute key="duration" value="3"/>
@@ -75181,6 +75180,18 @@
 	</item>
 	<item id="43374" name="vine">
 		<attribute key="type" value="ladder" />
+	</item>
+	<item id="43501" article="a" name="the essence of Murcion">
+		<attribute key="description" value="This is the rotten essence of Murcion. It can be consumed to imbue yourself with it." />
+	</item>
+	<item id="43502" article="a" name="the essence of Ichgahal">
+		<attribute key="description" value="This is the rotten essence of Ichgahal. It can be consumed to imbue yourself with it." />
+	</item>
+	<item id="43503" article="a" name="the essence of Vemiath">
+		<attribute key="description" value="This is the rotten essence of Vemiath. It can be consumed to imbue yourself with it." />
+	</item>
+	<item id="43504" article="a" name="the essence of Chagorz">
+		<attribute key="description" value="This is the rotten essence of Chagorz. It can be consumed to imbue yourself with it." />
 	</item>
 	<item id="43510" name="tibiora's box">
 		<attribute key="description" value="Souvenir from Thais Museum." />
@@ -75451,6 +75462,10 @@
 			<attribute key="slot" value="ammo" />
 		</attribute>
 	</item>
+	<item id="43744" article="a" name="rotten mushroom">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
 	<item id="43751" article="a" name="dead werecrocodile">
 		<attribute key="decayTo" value="0" />
 		<attribute key="duration" value="60" />
@@ -75519,6 +75534,77 @@
 		<attribute key="decayTo" value="43766" />
 		<attribute key="duration" value="10" />
 		<attribute key="fluidSource" value="blood" />
+	</item>
+	<item id="43786" article="a" name="rotten mushroom">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43787" article="a" name="rotten mushroom">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43788" article="a" name="rotten mushroom">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43789" article="a" name="rotten mushroom">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43790" article="a" name="rotten mushroom">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<!-- Rotten Blood Crystals -->
+	<item id="43792" article="a" name="rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43793" article="a" name="broken rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+		<attribute key="decayTo" value="43792" />
+		<attribute key="duration" value="3" />
+	</item>
+	<item id="43794" article="a" name="rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43795" article="a" name="broken rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+		<attribute key="decayTo" value="43794" />
+		<attribute key="duration" value="3" />
+	</item>
+	<item id="43796" article="a" name="rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43797" article="a" name="broken rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+		<attribute key="decayTo" value="43796" />
+		<attribute key="duration" value="3" />
+	</item>
+	<item id="43798" article="a" name="rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43799" article="a" name="broken rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+		<attribute key="decayTo" value="43798" />
+		<attribute key="duration" value="3" />
+	</item>
+	<item id="43800" article="a" name="rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43801" article="a" name="broken rotten crystal">
+		<attribute key="primarytype" value="quest items" />
+		<attribute key="weight" value="100" />
+		<attribute key="decayTo" value="43800" />
+		<attribute key="duration" value="3" />
 	</item>
 	<item id="43810" article="a" name="large seashell" />
 	<item id="43811" article="a" name="large seashell">
@@ -75733,6 +75819,14 @@
 	</item>
 	<item id="43853" article="a" name="darklight core">
 		<attribute key="loottype" value="creature products" />
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43854" article="a" name="tainted heart" plural="tainted hearts">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="100" />
+	</item>
+	<item id="43855" article="a" name="darklight heart" plural="darklight hearts">
 		<attribute key="primarytype" value="creature products" />
 		<attribute key="weight" value="100" />
 	</item>
@@ -87476,5 +87570,109 @@
 		<attribute key="maxhitchance" value="100"/>
 		<attribute key="attack" value="21"/>
 		<attribute key="weight" value="80"/>
+	</item>
+	<item id="52964" article="a" name="charred mask">
+		<attribute key="slotType" value="head" />
+		<attribute key="weight" value="800" />
+		<attribute key="description" value="A mask scorched by infernal flames." />
+	</item>
+	<item id="53002" article="a" name="gold tooth">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="10" />
+	</item>
+	<item id="53003" article="a" name="lizard tail">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="weight" value="55" />
+	</item>
+	<item id="53004" article="an" name="infernoid ember">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="description" value="A glowing ember pulsing with infernal heat." />
+		<attribute key="weight" value="80" />
+	</item>
+	<item id="53005" article="a" name="sailor's burn cure">
+		<attribute key="primarytype" value="creature products" />
+		<attribute key="description" value="An ointment sailors use to soothe burns." />
+		<attribute key="weight" value="90" />
+	</item>
+	<item id="53167" article="a" name="sail pass">
+		<attribute key="weight" value="10" />
+		<attribute key="description" value="A pass that grants passage by sail." />
+	</item>
+	<item id="53073" article="a" name="bunch of turnips">
+		<attribute key="description" value="A bunch of fresh turnips. A certain lonely ram might enjoy these." />
+		<attribute key="weight" value="200" />
+	</item>
+	<item id="53074" article="an" name="adventurer backpack">
+		<attribute key="primarytype" value="containers" />
+		<attribute key="containersize" value="20" />
+		<attribute key="weight" value="1800" />
+		<attribute key="script" value="moveevent">
+			<attribute key="slot" value="backpack" />
+		</attribute>
+	</item>
+	<item id="53158" article="an" name="old treasure map">
+		<attribute key="description" value="It shows encrypted coordinates, someone related to Aragonia should take a look at it." />
+		<attribute key="weight" value="400" />
+	</item>
+	<item id="54266" article="a" name="lesser proficiency catalyst">
+		<attribute key="primarytype" value="valuables" />
+		<attribute key="description" value="A catalyst used to enhance proficiencies." />
+		<attribute key="weight" value="100" />
+	</item>
+	<!-- Targuna (15.24): creature corpses (fresh body referenced in monster.corpse). Name/fluidsource/container for control; decay not added (chains need validation). -->
+	<item id="53078" article="a" name="dead lizard henchman">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53082" article="a" name="dead lizard magician">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53086" article="a" name="dead lizard swordmaster">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53090" article="a" name="dead lizard commander">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53094" article="a" name="dead lizard executioner">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53098" article="a" name="dead pirate navigator">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53103" article="a" name="dead pirate quartermaster">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53110" article="a" name="dead pirate gunner">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53113" article="a" name="dead pirate cook">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53119" article="a" name="dead sea captain">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53108" article="a" name="dead herald of fire">
+		<attribute key="containersize" value="30" />
+	</item>
+	<item id="53122" article="a" name="dead infernoid hound">
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53125" article="a" name="dead infernoid soul">
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53128" article="a" name="dead infernoid spiritual">
+		<attribute key="containersize" value="20" />
+	</item>
+	<item id="53132" article="a" name="dead infernoid blob">
+		<attribute key="containersize" value="20" />
 	</item>
 </items>

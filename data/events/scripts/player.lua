@@ -556,6 +556,71 @@ function Player:onGainExperience(target, exp, rawExp)
 		end
 	end
 
+	-- Rotten Blood Taint System: Experience Bonus ONLY in Rotten Areas
+	local function isInRottenBloodArea(player)
+		local pos = player:getPosition()
+		-- Upper left area: (33800, 31653) to (33941, 31771) floors 14 and 15
+		local upperLeft = (pos.x >= 33800 and pos.x <= 33941 and pos.y >= 31653 and pos.y <= 31771 and (pos.z == 14 or pos.z == 15))
+		-- Lower left area: (33800, 31809) to (33937, 31931) floors 14 and 15
+		local lowerLeft = (pos.x >= 33800 and pos.x <= 33937 and pos.y >= 31809 and pos.y <= 31931 and (pos.z == 14 or pos.z == 15))
+		return upperLeft or lowerLeft
+	end
+
+	local taintExperienceBoostMap = {
+		[1] = { boost = 0 },
+		[2] = { boost = 0 },
+		[3] = { boost = 0 },
+		[4] = { boost = 0 },
+		[5] = { boost = 5 },
+		[6] = { boost = 10 },
+		[7] = { boost = 15 },
+		[8] = { boost = 20 },
+		[9] = { boost = 25 },
+	}
+
+	local bakragoreMonsters = {
+		"sopping corpus",
+		"oozing corpus",
+		"mycobiontic beetle",
+		"bloated man-maggot",
+		"murcion",
+		"walking pillar",
+		"darklight matter",
+		"darklight source",
+		"darklight striker",
+		"vemiath",
+		"darklight emitter",
+		"darklight construct",
+		"wandering pillar",
+		"converter",
+		"chagorz",
+		"oozing carcass",
+		"sopping carcass",
+		"rotten man-maggot",
+		"meandering mushroom",
+		"ichgahal",
+		"bakragore",
+	}
+
+	local monsterName = target:getName():lower()
+	-- ONLY apply taint bonus if player is IN Rotten Blood areas AND killing Rotten monsters
+	if table.contains(bakragoreMonsters, monsterName) and isInRottenBloodArea(self) then
+		-- Get taint from BOTH sources (KV and Condition) and use the highest
+		local kv = self:kv():scoped("rotten-blood-quest")
+		local taintKV = kv:get("taints") or 0
+		local taintCondition = 0
+		local condition = self:getCondition(CONDITION_BAKRAGORE, CONDITIONID_DEFAULT)
+		if condition then
+			taintCondition = condition:getParameter(CONDITION_PARAM_SUBID) or 0
+		end
+		local taints = math.max(taintKV, taintCondition)
+
+		if taints and taints >= 1 and taints <= 9 then
+			local boost = taintExperienceBoostMap[taints] and taintExperienceBoostMap[taints].boost or 0
+			exp = exp * (1 + boost / 100)
+		end
+	end
+
 	-- Final Adjustments: Low Level Bonus and Base Rate
 	local lowLevelBonusExp = self:getFinalLowLevelBonus()
 	local baseRateExp = self:getFinalBaseRateExperience()

@@ -3071,6 +3071,48 @@ Storage = {
 			newhavenViolaBookQuestDone = 48038,
 			newhavenStarterItems = 48039,
 		},
+		U15_24 = { -- update 15.24 - Reserved Storages 48049 - 48090 (Targuna Quest)
+			Targuna = {
+				Questline = 48049,
+				Questlog = 48050,
+				-- An Ancient Enemy (Lizzie / Camilla)
+				AncientEnemy = {
+					Mission = 48051, -- 1 = started, 2 = commander killed / reported to Lizzie
+					LizardCommanderKilled = 48052,
+					CamillaReward = 48053,
+				},
+				-- A long lost treasure (Sterling / Morla)
+				LongLostTreasure = {
+					Mission = 48054, -- 1 = traveled to Aragonia, 2 = Morla done, 3 = Sterling marked spot, 4 = treasure looted
+					PirateKillCount = 48055,
+					TortoiseEggCount = 48056,
+					MorlaDone = 48057,
+					TreasureMarked = 48058,
+					TreasureChest = 48059,
+					SandcastleCount = 48060,
+				},
+				-- Burning Heart (Emiliana / Herald of Fire)
+				BurningHeart = {
+					Mission = 48061, -- 1 = portal opened (Targuna), 2 = briefed in Crimson Court, 3 = Herald defeated, 4 = rewarded
+					HeraldKilled = 48062,
+					TurnipsReward = 48063,
+				},
+				ReliableRam = 48064,
+				-- Secondary tasks (basic game mechanics shown in the quest log) - 1 = to do, 2 = done
+				SecondaryTasks = {
+					DailyReward = 48065,
+					DepositGold = 48066,
+					StashItem = 48067,
+					TakeFromStash = 48068,
+					WithdrawGold = 48069,
+				},
+				-- Welcome to the Main Continent hint (sendTutorial 7), once after ferry from Newhaven
+				MainContinentHint = 48070,
+				-- Reward chests
+				ManaPotionsChest = 48071,
+				SilverAmuletChest = 48072,
+			},
+		},
 	},
 
 	-- Reserved storage from 63951 - 63999

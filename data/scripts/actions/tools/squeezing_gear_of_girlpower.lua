@@ -7,25 +7,26 @@ local function onUseSickle(player, item, fromPosition, target, toPosition, isHot
 		Game.createItem(5466, 1, toPosition)
 		return true
 	end
+	return false
 end
 
 function toolGear.onUse(player, item, fromPosition, target, toPosition, isHotkey)
-	if not target or not target.itemid or target.itemid == 0 then
-		return false
+	if not target or not target:isItem() then
+		return true
 	end
 
 	if math.random(1000) > 10 then
-		if onUseScythe(player, item, fromPosition, target, toPosition, isHotkey) then
+		if onUseScythe and onUseScythe(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseSickle(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseSickle and onUseSickle(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseRope(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseRope and onUseRope(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseShovel(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseShovel and onUseShovel(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUsePick(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUsePick and onUsePick(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseMachete(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseMachete and onUseMachete(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
 		end
 	else

@@ -1436,7 +1436,7 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 	}
 }
 
-bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, bool aggressive) const {
+bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, bool aggressive, bool disableFirstTarget /* = false */) const {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (!params.chainCallback) {
 		return false;
@@ -1457,6 +1457,10 @@ bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::s
 	int i = 0;
 	auto combat = this;
 	for (const auto &[from, toVector] : targets) {
+		if (disableFirstTarget) {
+			disableFirstTarget = false;
+			continue;
+		}
 		auto delay = i * std::max<int32_t>(50, g_configManager().getNumber(COMBAT_CHAIN_DELAY));
 		++i;
 		for (const auto &to : toVector) {
@@ -1465,10 +1469,14 @@ bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::s
 				continue;
 			}
 			g_dispatcher().scheduleEvent(
-				delay, [combat, caster, nextTarget, from, affected]() {
+				delay, [combat, caster, nextTarget, affected]() {
 					if (combat && caster && nextTarget) {
-						Combat::doChainEffect(from, nextTarget->getPosition(), combat->params.chainEffect);
-						combat->doCombat(caster, nextTarget, from, affected);
+						CombatDamage damage = combat->getCombatDamage(caster, nextTarget);
+						damage.affected = affected;
+						Combat::CombatHealthFunc(caster, nextTarget, combat->params, &damage);
+						if (combat->params.targetCallback) {
+							combat->params.targetCallback->onTargetCombat(caster, nextTarget);
+						}
 					}
 				},
 				"Combat::doCombatChain"

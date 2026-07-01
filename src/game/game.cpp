@@ -5105,6 +5105,8 @@ void Game::playerStashWithdraw(uint32_t playerId, uint16_t itemId, uint32_t coun
 	if (ret != RETURNVALUE_NOERROR) {
 		g_logger().warn("[{}] failed to retrieve item: {}, to player: {}, from the stash", __FUNCTION__, itemId, player->getName());
 		player->sendCancelMessage(ret);
+	} else {
+		g_callbacks().executeCallback(EventCallback_t::playerOnStashWithdraw, &EventCallback::playerOnStashWithdraw, player, itemId, count);
 	}
 
 	// Refresh depot search window if necessary
@@ -10322,6 +10324,22 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 	// Make sure everything is ok before the create market offer starts
 	if (!checkCanInitCreateMarketOffer(player, type, it, amount, price, offerStatus)) {
 		g_logger().error("{} - Player {} had an error on init offer on the market, error code: {}", __FUNCTION__, player->getName(), offerStatus.str());
+		return;
+	}
+
+	// Check limit of own offers per side (buy/sell)
+	const uint32_t playerOfferCountPerSide = IOMarket::getPlayerOfferCountPerSide(player->getGUID(), static_cast<MarketAction_t>(type));
+	if (playerOfferCountPerSide >= IOMarket::MAX_MARKET_OWN_OFFERS_PER_SIDE) {
+		player->sendTextMessage(MESSAGE_MARKET, "You have reached the maximum number of offers per side. Cancel some offers before creating new ones.");
+		g_logger().warn("{} - Player {} reached own offers per side limit ({})", __FUNCTION__, player->getName(), IOMarket::MAX_MARKET_OWN_OFFERS_PER_SIDE);
+		return;
+	}
+
+	// Check limit of offers per item per side (buy/sell)
+	const uint32_t itemOfferCountPerSide = IOMarket::getItemOfferCountPerSide(it.id, tier, static_cast<MarketAction_t>(type));
+	if (itemOfferCountPerSide >= IOMarket::MAX_MARKET_OFFERS_PER_SIDE) {
+		player->sendTextMessage(MESSAGE_MARKET, "There are too many offers for this item. Try again later or choose a different item.");
+		g_logger().warn("{} - Player {} reached item offers per side limit ({}) for item {}", __FUNCTION__, player->getName(), IOMarket::MAX_MARKET_OFFERS_PER_SIDE, it.id);
 		return;
 	}
 

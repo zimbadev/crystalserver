@@ -195,6 +195,8 @@ function playerLoginGlobal.onLogin(player)
 	player:registerEvent("DropLoot")
 	player:registerEvent("BossParticipation")
 	player:registerEvent("UpdatePlayerOnAdvancedLevel")
+	player:registerEvent("RottenTaintGain")
+	player:registerEvent("BakragorePlayerDeath")
 
 	-- Vocation Adjustment: re-frame the monk's active virtue. It was restored early in IOLoginData
 	-- (before the client's action bar existed), so the highlight did not stick; re-apply it here,

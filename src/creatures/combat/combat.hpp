@@ -253,7 +253,7 @@ public:
 	void setRuneSpellName(const std::string &value);
 
 	void setupChain(const std::shared_ptr<Weapon> &weapon);
-	bool doCombatChain(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, bool aggressive) const;
+	bool doCombatChain(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, bool aggressive, bool disableFirstTarget = false) const;
 
 private:
 	static void doChainEffect(const Position &origin, const Position &pos, uint8_t effect);

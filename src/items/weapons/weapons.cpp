@@ -373,11 +373,8 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 			if (selfWeapon) {
 				m_combat->setupChain(selfWeapon);
 			}
-			if (!m_combat->doCombatChain(player, target, params.aggressive)) {
-				Combat::doCombatHealth(player, target, damage, params);
-			} else {
-				g_logger().debug("Weapon::internalUseWeapon - Chain executed with distance effects.");
-			}
+			Combat::doCombatHealth(player, target, damage, params);
+			m_combat->doCombatChain(player, target, params.aggressive, true);
 		} else {
 			Combat::doCombatHealth(player, target, damage, params);
 		}
