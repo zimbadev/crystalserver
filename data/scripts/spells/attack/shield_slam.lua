@@ -8,7 +8,6 @@
 -- Self-targeted area spell (like Berserk / Groundshaker): it strikes everything
 -- around the caster, so no client target position is needed.
 
-local BASE_POWER = 52
 local DEBUFF_DURATION = 10000 -- 10s
 local DEBUFF_DAMAGEDEALT = 50 -- enemy deals 50% damage (= -50%) while debuffed
 
@@ -41,15 +40,15 @@ combat:setParameter(COMBAT_PARAM_EFFECT, 318)
 combat:setParameter(COMBAT_PARAM_BLOCKARMOR, 1)
 combat:setArea(createCombatArea(AREA_SQUARE1X1))
 
-function onGetFormulaValues(player, skill, attack, factor)
+function onGetFormulaValues(player, skill, attack, factor, basePower)
 	-- skill here is the shielding skill (SKILL_SHIELD), attack is unused for a shield slam.
 	local shieldingSkill = player:getSkillLevel(SKILL_SHIELD)
 	local level = player:getLevel()
 	local defense = castShieldDefense
 
 	-- Damage scales with shield defense + shielding skill, on top of the base power.
-	local min = (level / 5) + BASE_POWER + (defense * 1.4) + (shieldingSkill * 0.55)
-	local max = (level / 5) + BASE_POWER + (defense * 2.3) + (shieldingSkill * 0.95)
+	local min = calculateBaseDamageHealing(level) + basePower + (defense * 1.4) + (shieldingSkill * 0.55)
+	local max = calculateBaseDamageHealing(level) + basePower + (defense * 2.3) + (shieldingSkill * 0.95)
 	return -min, -max
 end
 
@@ -105,11 +104,11 @@ spell:words("exori scu")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_GROUNDSHAKER)
 spell:level(30)
 spell:mana(110)
+spell:basePower(52)
 spell:isPremium(false)
 spell:needWeapon(false)
 spell:cooldown(6 * 1000)
 spell:groupCooldown(2 * 1000)
 spell:needLearn(false)
-
 spell:vocation("knight;true", "elite knight;true")
 spell:register()

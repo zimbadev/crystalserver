@@ -12,11 +12,10 @@ local combatEarth = Combat()
 combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_TIGERCLASH)
 
-function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 44
+function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 	local spellFactor = 0.9
-	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 	return -total * 0.9, -total * 1.1
 end
 
@@ -58,13 +57,13 @@ spell:words("exori nia")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_GREATER_TIGER_CLASH)
 spell:level(18)
 spell:mana(50)
+spell:basePower(44)
 spell:range(1)
 spell:harmony(true)
 spell:isPremium(true)
 spell:needTarget(true)
 spell:blockWalls(true)
 spell:needWeapon(false)
-
 spell:cooldown(8 * 1000)
 spell:groupCooldown(2 * 1000)
 spell:vocation("monk;true", "exalted monk;true")

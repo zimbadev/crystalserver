@@ -1,6 +1,6 @@
 local function formulaFunction(level, maglevel)
-	local min = (level / 5) + (maglevel * 5.5)
-	local max = (level / 5) + (maglevel * 9)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 5.5)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 9)
 	return -min, -max
 end
 
@@ -21,8 +21,8 @@ end
 local function flankFormula(player, level, maglevel)
 	local stage = player:revelationStageWOD("Beam Mastery")
 	local factor = (stage >= 3 and 0.80) or (stage >= 2 and 0.60) or (stage >= 1 and 0.40) or 0
-	local min = ((level / 5) + (maglevel * 5.5)) * factor
-	local max = ((level / 5) + (maglevel * 9)) * factor
+	local min = ((calculateBaseDamageHealing(level)) + (maglevel * 5.5)) * factor
+	local max = ((calculateBaseDamageHealing(level)) + (maglevel * 9)) * factor
 	return -min, -max
 end
 function onGetFormulaValuesBeamFlank1(player, level, maglevel)
@@ -106,6 +106,7 @@ spell:name("Great Death Beam")
 spell:words("exevo max mort")
 spell:level(66)
 spell:mana(140)
+spell:basePower(170)
 spell:isPremium(false)
 spell:needDirection(true)
 spell:blockWalls(true)

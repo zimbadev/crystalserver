@@ -6,9 +6,9 @@ combat:setArea(createCombatArea(AREA_CIRCLE6X6))
 -- Phase III LIVE rebalance: base 150 -> 175 (factor 1.1667).
 local DAMAGE_SCALE = 175 / 150
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 5)
-	local max = (level / 5) + (maglevel * 10)
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 5)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 10)
 	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
 end
 
@@ -27,10 +27,10 @@ spell:words("exevo gran mas tera")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_WRATH_OF_NATURE)
 spell:level(55)
 spell:mana(700)
+spell:basePower(175)
 spell:isPremium(true)
 spell:isSelfTarget(true)
 spell:cooldown(40 * 1000)
 spell:groupCooldown(4 * 1000, 40 * 1000)
-
 spell:vocation("druid;true", "elder druid;true")
 spell:register()

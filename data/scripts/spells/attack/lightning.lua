@@ -8,9 +8,9 @@ combat:setParameter(COMBAT_PARAM_CHAIN_EFFECT, CONST_ME_PINK_ENERGY_SPARK)
 -- Phase III LIVE rebalance: base 70 -> 110.
 local DAMAGE_SCALE = 110 / 70
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 2.2) + 12
-	local max = (level / 5) + (maglevel * 3.4) + 21
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 2.2) + 12
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 3.4) + 21
 	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
 end
 
@@ -36,6 +36,7 @@ spell:words("exori amp vis")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_LIGHTNING)
 spell:level(55)
 spell:mana(60)
+spell:basePower(110)
 spell:isPremium(true)
 spell:range(7)
 spell:needCasterTargetOrDirection(true)

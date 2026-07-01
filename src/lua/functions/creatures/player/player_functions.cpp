@@ -3683,7 +3683,6 @@ int PlayerFunctions::luaPlayerLearnSpell(lua_State* L) {
 		const bool showBanner = Lua::getBoolean(L, 3, true);
 		const bool alreadyLearned = player->hasLearnedInstantSpell(spellName);
 		player->learnInstantSpell(spellName);
-		// Show the "New Spell Unlocked" banner only when the spell is genuinely new.
 		if (showBanner && !alreadyLearned) {
 			const auto &spell = g_spells().getInstantSpellByName(spellName);
 			if (spell && spell->getSpellId() > 0) {

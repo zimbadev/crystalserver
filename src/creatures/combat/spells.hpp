@@ -145,6 +145,8 @@ public:
 	void setSoulCost(uint32_t s);
 	[[nodiscard]] uint32_t getLevel() const;
 	void setLevel(uint32_t lvl);
+	[[nodiscard]] uint16_t getBasePower() const;
+	void setBasePower(uint16_t power);
 	[[nodiscard]] uint32_t getMagicLevel() const;
 	void setMagicLevel(uint32_t lvl);
 	[[nodiscard]] uint32_t getMana() const;
@@ -258,6 +260,7 @@ protected:
 	uint32_t secondaryGroupCooldown = 0;
 	uint32_t level = 0;
 	uint32_t magLevel = 0;
+	uint16_t basePower = 0;
 	int32_t range = -1;
 
 	uint16_t m_spellId = 0;

@@ -11,7 +11,7 @@ local BASE_SCALE = 80 / 72
 
 local function getFrontSweepFormula(player, skill, attack, factor)
 	local skillTotal = skill * attack
-	local levelTotal = player:getLevel() / 5
+	local levelTotal = calculateBaseDamageHealing(player:getLevel())
 	return -(((skillTotal * 0.04) + 31) + levelTotal) * 1.1 * BASE_SCALE, -(((skillTotal * 0.08) + 45) + levelTotal) * 1.1 * BASE_SCALE -- TODO : Use New Real Formula instead of an %
 end
 
@@ -50,11 +50,11 @@ spell:words("exori min")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_FRONT_SWEEP)
 spell:level(70)
 spell:mana(200)
+spell:basePower(80)
 spell:isPremium(true)
 spell:needDirection(true)
 spell:needWeapon(true)
 spell:cooldown(6 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("knight;true", "elite knight;true")
 spell:register()

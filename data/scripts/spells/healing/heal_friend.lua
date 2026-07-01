@@ -4,10 +4,10 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_MAGIC_GREEN)
 combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
-function onGetFormulaValues(player, level, magicLevel)
+function onGetFormulaValues(player, level, magicLevel, basePower)
 	-- Vocation Adjustment: heal more consistently (lower highs, higher lows) -- 10/14 -> 11/13.
-	local min = (level * 0.2 + magicLevel * 11) + 4
-	local max = (level * 0.2 + magicLevel * 13) + 5
+	local min = (calculateBaseDamageHealing(level) + magicLevel * 11) + 4
+	local max = (calculateBaseDamageHealing(level) + magicLevel * 13) + 5
 	return min, max
 end
 
@@ -23,8 +23,8 @@ sharedConservationCombat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_MAGIC_GREEN)
 sharedConservationCombat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
 function onGetFormulaValuesSharedConservation(player, level, magicLevel)
-	local min = (level * 0.2 + magicLevel * 11) + 4
-	local max = (level * 0.2 + magicLevel * 13) + 5
+	local min = (calculateBaseDamageHealing(level) + magicLevel * 11) + 4
+	local max = (calculateBaseDamageHealing(level) + magicLevel * 13) + 5
 	return min * SHARED_CONSERVATION_RATIO, max * SHARED_CONSERVATION_RATIO
 end
 
@@ -80,11 +80,11 @@ spell:cooldown(1000)
 spell:groupCooldown(1000)
 spell:level(18)
 spell:mana(120)
+spell:basePower(260)
 spell:needTarget(true)
 spell:hasParams(true)
 spell:hasPlayerNameParam(true)
 spell:allowOnSelf(false)
 spell:isAggressive(false)
-
 spell:isPremium(true)
 spell:register()

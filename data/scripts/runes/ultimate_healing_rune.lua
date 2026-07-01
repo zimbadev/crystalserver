@@ -5,9 +5,8 @@ healingCombat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 healingCombat:setParameter(COMBAT_PARAM_TARGETCASTERORTOPMOST, true)
 healingCombat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 
-function onGetHealingValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 7.3) + 42
-	local max = (level / 5) + (maglevel * 12.4) + 90
+function onGetHealingValues(player, level, maglevel, basePower)
+	local min, max = calculateHealingSpellDamage(level, maglevel, basePower)
 	return min, max
 end
 healingCombat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetHealingValues")
@@ -39,7 +38,7 @@ function rune.onCastSpell(creature, var, isHotkey)
 		return false
 	end
 
-	return healingCombat:execute(creature, Variant(target:getId()))
+	return healingCombat:execute(creature, var)
 end
 
 rune:id(5)
@@ -52,6 +51,7 @@ rune:allowFarUse(true)
 rune:charges(1)
 rune:level(24)
 rune:magicLevel(4)
+rune:basePower(250)
 rune:cooldown(1 * 1000)
 rune:groupCooldown(1 * 1000)
 rune:isAggressive(false)

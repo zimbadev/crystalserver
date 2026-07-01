@@ -14,9 +14,9 @@ combat:setArea(createCombatArea(AREA_CIRCLE2X2))
 local BASE = 140
 local DAMAGE_SCALE = BASE / 140
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 4)
-	local max = (level / 5) + (maglevel * 6)
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 6)
 	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
 end
 
@@ -36,6 +36,7 @@ spell:words("exori dir san")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_DIVINE_CALDERA)
 spell:level(70)
 spell:mana(175)
+spell:basePower(140)
 spell:isPremium(true)
 spell:isAggressive(true)
 spell:range(7)
@@ -44,6 +45,5 @@ spell:blockWalls(true)
 spell:needLearn(false)
 spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("paladin;true", "royal paladin;true")
 spell:register()

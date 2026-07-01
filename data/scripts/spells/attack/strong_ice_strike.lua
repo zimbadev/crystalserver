@@ -6,9 +6,9 @@ combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_SMALLICE)
 -- Phase III LIVE rebalance: base 90 -> 115 (factor 1.278).
 local DAMAGE_SCALE = 115 / 90
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 2.8) + 16
-	local max = (level / 5) + (maglevel * 4.4) + 28
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 2.8) + 16
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 4.4) + 28
 	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
 end
 
@@ -28,12 +28,12 @@ spell:castSound(SOUND_EFFECT_TYPE_SPELL_OR_RUNE)
 spell:impactSound(SOUND_EFFECT_TYPE_SPELL_STRONG_ICE_STRIKE)
 spell:level(80)
 spell:mana(60)
+spell:basePower(115)
 spell:isPremium(true)
 spell:range(7)
 spell:needCasterTargetOrDirection(true)
 spell:blockWalls(true)
 spell:cooldown(8 * 1000)
 spell:groupCooldown(2 * 1000, 8 * 1000)
-
 spell:vocation("druid;true", "elder druid;true")
 spell:register()

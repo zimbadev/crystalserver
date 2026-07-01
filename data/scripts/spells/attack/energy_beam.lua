@@ -1,10 +1,10 @@
 local function formulaFunction(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 1.8) + 11
-	local max = (level / 5) + (maglevel * 3) + 19
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 1.8) + 11
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 3) + 19
 	return -min, -max
 end
 
-function onGetFormulaValues(player, level, maglevel)
+function onGetFormulaValues(player, level, maglevel, basePower)
 	return formulaFunction(player, level, maglevel)
 end
 
@@ -30,8 +30,8 @@ local combatWOD = createCombat(AREA_BEAM7, AREADIAGONAL_BEAM7, "onGetFormulaValu
 function onGetFormulaValuesBeamFlank(player, level, maglevel)
 	local stage = player:revelationStageWOD("Beam Mastery")
 	local factor = (stage >= 3 and 0.80) or (stage >= 2 and 0.60) or (stage >= 1 and 0.40) or 0
-	local min = ((level / 5) + (maglevel * 1.8) + 11) * factor
-	local max = ((level / 5) + (maglevel * 3) + 19) * factor
+	local min = ((calculateBaseDamageHealing(level)) + (maglevel * 1.8) + 11) * factor
+	local max = ((calculateBaseDamageHealing(level)) + (maglevel * 3) + 19) * factor
 	return -min, -max
 end
 
@@ -81,11 +81,11 @@ spell:words("exevo vis lux")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_ENERGY_BEAM)
 spell:level(23)
 spell:mana(40)
+spell:basePower(60)
 spell:isPremium(false)
 spell:needDirection(true)
 spell:blockWalls(true)
 spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("sorcerer;true", "master sorcerer;true")
 spell:register()

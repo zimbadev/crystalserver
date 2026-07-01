@@ -10814,8 +10814,6 @@ void ProtocolGame::sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) {
 		return;
 	}
 
-	// Client GameEventTypeSpellUnlocked: the spell id is sent as a uint32 and the
-	// client resolves it to the spell name, showing the "New Spell Unlocked" banner.
 	NetworkMessage msg;
 	msg.addByte(0x75);
 	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_SPELL);
@@ -11206,12 +11204,6 @@ void ProtocolGame::sendSereneProtocol(const bool isSerene) {
 }
 
 void ProtocolGame::sendStanceProtocol(const std::vector<uint16_t> &spellIds) {
-	// 0xC1 sub-channel 0x02 = active-stance highlight list. The 15.25 client reads a u8 count
-	// then that many little-endian u16 spell ids and WHOLE-REPLACES its active-spell set, framing
-	// every action-bar slot whose spell id is in the set. So we must send the COMPLETE set of
-	// currently-active stances every time — e.g. a sorcerer with an elemental stance AND a
-	// crippling stance sends both ids (count 2) so BOTH slots get framed. An empty list (count 0)
-	// clears all frames; never send id 0 (id 0 matches every empty slot -> frames them all).
 	NetworkMessage msg;
 	msg.addByte(0xC1);
 	msg.addByte(0x02);

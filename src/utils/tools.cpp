@@ -17,6 +17,8 @@
 
 #include "utils/tools.hpp"
 
+#include <cmath>
+
 #include "core.hpp"
 #include "enums/object_category.hpp"
 #include "items/item.hpp"
@@ -419,6 +421,11 @@ std::mt19937 &getRandomGenerator() {
 	static std::random_device rd;
 	static std::mt19937 generator(rd());
 	return generator;
+}
+
+int32_t getBaseDamageHealing(uint32_t level) {
+	const auto step = static_cast<int32_t>(std::floor((std::sqrt(2.0 * static_cast<double>(level) + 2025.0) + 5.0) / 10.0));
+	return static_cast<int32_t>(std::floor(static_cast<double>(level + 1000) / step)) + 50 * step - 450;
 }
 
 int32_t uniform_random(int32_t minNumber, int32_t maxNumber) {

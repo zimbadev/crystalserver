@@ -5,12 +5,10 @@ combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
 -- Vocation Adjustment: base power 15, scales with magic level + shielding.
-function onGetFormulaValues(player, level, magicLevel)
-	local shielding = (player and player:getEffectiveSkillLevel(SKILL_SHIELD)) or 0
-	-- TUNABLE
-	local BASE, ML_COEFF, SHIELD_COEFF, LEVEL_COEFF, SPREAD = 15, 0.90, 0.30, 0.20, 5
-	local base = level * LEVEL_COEFF + magicLevel * ML_COEFF + shielding * SHIELD_COEFF + BASE
-	return base, base + SPREAD
+function onGetFormulaValues(player, level, magicLevel, basePower)
+	local shielding = player:getEffectiveSkillLevel(SKILL_SHIELD) or 0
+	local common = calculateBaseDamageHealing(level) + magicLevel * 0.9 + shielding * 0.3 + basePower
+	return common, common + 5
 end
 
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
@@ -35,4 +33,5 @@ spell:isSelfTarget(true)
 spell:isAggressive(false)
 
 spell:isPremium(false)
+spell:basePower(15)
 spell:register()

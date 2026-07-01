@@ -1,10 +1,10 @@
 local function formulaFunction(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 4)
-	local max = (level / 5) + (maglevel * 7)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 7)
 	return -min, -max
 end
 
-function onGetFormulaValues(player, level, maglevel)
+function onGetFormulaValues(player, level, maglevel, basePower)
 	return formulaFunction(player, level, maglevel)
 end
 
@@ -17,8 +17,8 @@ end
 function onGetFormulaValuesBeamFlank(player, level, maglevel)
 	local stage = player:revelationStageWOD("Beam Mastery")
 	local factor = (stage >= 3 and 0.80) or (stage >= 2 and 0.60) or (stage >= 1 and 0.40) or 0
-	local min = ((level / 5) + (maglevel * 4)) * factor
-	local max = ((level / 5) + (maglevel * 7)) * factor
+	local min = ((calculateBaseDamageHealing(level)) + (maglevel * 4)) * factor
+	local max = ((calculateBaseDamageHealing(level)) + (maglevel * 7)) * factor
 	return -min, -max
 end
 
@@ -79,11 +79,11 @@ spell:words("exevo gran vis lux")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_GREAT_ENERGY_BEAM)
 spell:level(29)
 spell:mana(110)
+spell:basePower(170)
 spell:isPremium(false)
 spell:needDirection(true)
 spell:blockWalls(true)
 spell:cooldown(6 * 1000)
 spell:groupCooldown(2 * 1000, 6 * 1000)
-
 spell:vocation("sorcerer;true", "master sorcerer;true")
 spell:register()

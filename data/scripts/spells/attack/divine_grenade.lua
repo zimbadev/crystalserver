@@ -3,9 +3,9 @@ combatGrenade:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combatGrenade:setArea(createCombatArea(AREA_CIRCLE2X2))
 combatGrenade:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYDAMAGE)
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 4)
-	local max = (level / 5) + (maglevel * 6)
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 6)
 
 	local grade = player:upgradeSpellsWOD("Divine Grenade")
 
@@ -101,6 +101,7 @@ spell:name("Divine Grenade")
 spell:words("exevo tempo mas san")
 spell:level(300)
 spell:mana(160)
+spell:basePower(190)
 spell:isPremium(true)
 spell:range(7)
 spell:needPosition(true) -- cast at the clicked tile (cursor/crosshair); var is VARIANT_POSITION
@@ -108,6 +109,5 @@ spell:blockWalls(true)
 spell:isAggressive(true) -- attack grenade: applies in-fight and is blocked in protection zones
 spell:cooldown(26 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("paladin;true", "royal paladin;true")
 spell:register()

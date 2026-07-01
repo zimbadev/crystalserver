@@ -6,9 +6,9 @@ combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_SMALLICE)
 combat:setParameter(COMBAT_PARAM_CHAIN_EFFECT, CONST_ME_ICEATTACK)
 
 -- Base damage 97 (ML-scaled). Modeled on strong_ice_strike's formula curve.
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 2.4) + 14
-	local max = (level / 5) + (maglevel * 3.8) + 24
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 2.4) + 14
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 3.8) + 24
 	return -math.floor(min), -math.floor(max)
 end
 
@@ -40,6 +40,7 @@ spell:castSound(SOUND_EFFECT_TYPE_SPELL_OR_RUNE)
 spell:impactSound(SOUND_EFFECT_TYPE_SPELL_STRONG_ICE_STRIKE)
 spell:level(90)
 spell:mana(180)
+spell:basePower(97)
 spell:isPremium(true)
 spell:range(7)
 spell:needTarget(false)
@@ -47,6 +48,5 @@ spell:blockWalls(true)
 spell:cooldown(6 * 1000)
 spell:groupCooldown(2 * 1000, 2 * 1000)
 spell:needLearn(false)
-
 spell:vocation("druid;true", "elder druid;true")
 spell:register()

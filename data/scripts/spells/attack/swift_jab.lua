@@ -12,11 +12,9 @@ local combatEarth = Combat()
 combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_TIGERCLASH)
 
-function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 12
-	local attackValue = calculateAttackValue(player, skill, weaponDamage)
+function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
 	local spellFactor = 0.7
-	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 	return -total * 0.9, -total * 1.1
 end
 
@@ -61,12 +59,12 @@ spell:words("exori infir pug")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_SWIFT_JAB)
 spell:level(1)
 spell:mana(3)
+spell:basePower(12)
 spell:range(1)
 spell:isPremium(false)
 spell:needTarget(true)
 spell:blockWalls(true)
 spell:cooldown(2 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("monk;true", "exalted monk;true")
 spell:register()

@@ -4,14 +4,14 @@
 --   Master of Decay  -> death, effect 330, missile 11
 --   Master of Thunder / no stance -> base energy (CONST_ME_ENERGYAREA / CONST_ANI_ENERGY)
 local function buzzFormula(level, maglevel)
-	local min = (level / 5) + (maglevel * 0.4) + 3
-	local max = (level / 5) + (maglevel * 0.7) + 5
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 0.4) + 3
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 0.7) + 5
 	return -min, -max
 end
 
 -- Each combat needs its OWN callback name (Canary won't let two combats share a callback name); all
 -- three delegate to the same formula.
-function onGetFormulaValues(player, level, maglevel)
+function onGetFormulaValues(player, level, maglevel, basePower)
 	return buzzFormula(level, maglevel)
 end
 function onGetFormulaValuesFlames(player, level, maglevel)
@@ -57,6 +57,7 @@ spell:castSound(SOUND_EFFECT_TYPE_SPELL_OR_RUNE)
 spell:impactSound(SOUND_EFFECT_TYPE_SPELL_BUZZ)
 spell:level(1)
 spell:mana(6)
+spell:basePower(15)
 spell:isAggressive(true)
 spell:isPremium(false)
 spell:range(3)
@@ -64,6 +65,5 @@ spell:needCasterTargetOrDirection(true)
 spell:blockWalls(true)
 spell:cooldown(2 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("sorcerer;true", "master sorcerer;true")
 spell:register()

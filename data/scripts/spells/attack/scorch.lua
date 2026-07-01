@@ -3,14 +3,14 @@
 --   Master of Decay   -> death,  effect 331
 --   Master of Flames / no stance -> base fire (CONST_ME_HITBYFIRE)
 local function scorchFormula(level, maglevel)
-	local min = (level / 5) + (maglevel * 0.3) + 2
-	local max = (level / 5) + (maglevel * 0.6) + 4
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 0.3) + 2
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 0.6) + 4
 	return -min, -max
 end
 
 -- Each combat needs its OWN callback name (Canary won't let two combats share a callback name); all
 -- three delegate to the same formula.
-function onGetFormulaValues(player, level, maglevel)
+function onGetFormulaValues(player, level, maglevel, basePower)
 	return scorchFormula(level, maglevel)
 end
 function onGetFormulaValuesThunder(player, level, maglevel)
@@ -55,11 +55,11 @@ spell:words("exevo infir flam hur")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_SCORCH)
 spell:level(1)
 spell:mana(8)
+spell:basePower(10)
 spell:isAggressive(true)
 spell:isPremium(false)
 spell:needDirection(true)
 spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("sorcerer;true", "master sorcerer;true")
 spell:register()

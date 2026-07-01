@@ -4,14 +4,14 @@
 --   Master of Decay   -> death,  effect 338
 --   Master of Flames / no stance -> base fire (CONST_ME_FIREAREA)
 local function hellsCoreFormula(level, maglevel)
-	local min = (level / 5) + (maglevel * 10)
-	local max = (level / 5) + (maglevel * 14)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 10)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 14)
 	return -min, -max
 end
 
 -- Each combat needs its OWN callback name (Canary won't let two combats share a callback name); all
 -- delegate to the same formula.
-function onGetFormulaValues(player, level, maglevel)
+function onGetFormulaValues(player, level, maglevel, basePower)
 	return hellsCoreFormula(level, maglevel)
 end
 function onGetFormulaValuesThunder(player, level, maglevel)
@@ -56,10 +56,10 @@ spell:words("exevo gran mas flam")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_HELL_SCORE)
 spell:level(60)
 spell:mana(1100)
+spell:basePower(250)
 spell:isSelfTarget(true)
 spell:isPremium(true)
 spell:cooldown(40 * 1000)
 spell:groupCooldown(4 * 1000, 40 * 1000)
-
 spell:vocation("sorcerer;true", "master sorcerer;true")
 spell:register()

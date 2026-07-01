@@ -4,9 +4,9 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ICEAREA)
 -- Vocation Adjustment: size increased (AREA_SHORTWAVE3 -> AREA_SQUAREWAVE5)
 combat:setArea(createCombatArea(AREA_SQUAREWAVE5, AREADIAGONAL_SQUAREWAVE5))
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 4.5) + 20
-	local max = (level / 5) + (maglevel * 7.6) + 48
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4.5) + 20
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 7.6) + 48
 	return -min, -max
 end
 
@@ -39,9 +39,9 @@ spell:words("exevo gran frigo hur")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_STRONG_ICE_WAVE)
 spell:level(40)
 spell:mana(170)
+spell:basePower(150)
 spell:needDirection(true)
 spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("druid;true", "elder druid;true")
 spell:register()

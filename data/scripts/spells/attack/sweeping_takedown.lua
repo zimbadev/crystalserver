@@ -44,11 +44,10 @@ combatEarth2:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth2:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_EXPLOSIONHIT)
 combatEarth2:setArea(createCombatArea(AREA_WAVE_2))
 
-function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 48
+function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 	local spellFactor = 1.0
-	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 	return -total * 0.9, -total * 1.1
 end
 
@@ -108,9 +107,9 @@ spell:words("exori mas nia")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_SWEEPING_TAKEDOWN)
 spell:level(60)
 spell:mana(195)
+spell:basePower(48)
 spell:isPremium(true)
 spell:blockWalls(true)
-
 spell:needDirection(true)
 spell:harmony(true)
 spell:groupCooldown(2 * 1000)

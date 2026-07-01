@@ -102,14 +102,9 @@ local config = {
 	["physical"] = { effect = CONST_ME_WHITE_ENERGYSHOCK, combat = COMBAT_PHYSICALDAMAGE },
 }
 
-local function onGetFormulaValues(player, weaponDamage)
-	local basePower = 42
-
-	local skill = player:getSkillLevel(SKILL_FIRST)
-	local attackValue = calculateAttackValue(player, skill, weaponDamage)
-
+local function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
 	local spellFactor = 2.5
-	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 
 	local minDamage = -total * 0.9
 	local maxDamage = -total * 1.1
@@ -154,14 +149,14 @@ function spell.onCastSpell(creature, var)
 		end
 	end
 
-	local min, max = onGetFormulaValues(creature, weaponDamage)
+	local min, max = onGetFormulaValues(creature, creature:getSkillLevel(SKILL_FIRST), weaponDamage, 1.0, spell:getBasePower())
 	executeChain(creature, min, max, effectData, 0)
 
 	if creature:getHarmony() == 5 then
 		addEvent(function()
 			creatureArrayListChain(creature, maxTargets)
 			if #creaturesArray > 0 then
-				local min, max = onGetFormulaValues(creature, weaponDamage)
+				local min, max = onGetFormulaValues(creature, creature:getSkillLevel(SKILL_FIRST), weaponDamage, 1.0, spell:getBasePower())
 				executeChain(creature, min, max, effectData, grade)
 			end
 		end, 1500)
@@ -182,9 +177,9 @@ spell:name("Spiritual Outburst")
 spell:words("exori gran mas nia")
 spell:level(300)
 spell:mana(425)
+spell:basePower(42)
 spell:harmony(true)
 spell:isPremium(true)
-
 spell:groupCooldown(2 * 1000)
 spell:cooldown(60 * 1000)
 spell:vocation("monk;true", "exalted monk;true")

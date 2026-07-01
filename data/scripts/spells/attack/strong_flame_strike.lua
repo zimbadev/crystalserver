@@ -10,12 +10,12 @@ local DAMAGE_SCALE = 125 / 90
 -- Shared formula; each combat needs its OWN callback name (Canary won't let two combats share a
 -- callback name), so the variants delegate to this.
 local function strikeFormula(level, maglevel)
-	local min = (level / 5) + (maglevel * 2.8) + 16
-	local max = (level / 5) + (maglevel * 4.4) + 28
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 2.8) + 16
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 4.4) + 28
 	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
 end
 
-function onGetFormulaValues(player, level, maglevel)
+function onGetFormulaValues(player, level, maglevel, basePower)
 	return strikeFormula(level, maglevel)
 end
 function onGetFormulaValuesThunder(player, level, maglevel)
@@ -79,12 +79,12 @@ spell:castSound(SOUND_EFFECT_TYPE_SPELL_OR_RUNE)
 spell:impactSound(SOUND_EFFECT_TYPE_SPELL_STRONG_FLAME_STRIKE)
 spell:level(70)
 spell:mana(60)
+spell:basePower(125)
 spell:isPremium(true)
 spell:range(7)
 spell:needCasterTargetOrDirection(true)
 spell:blockWalls(true)
 spell:cooldown(8 * 1000)
 spell:groupCooldown(2 * 1000, 8 * 1000)
-
 spell:vocation("sorcerer;true", "master sorcerer;true")
 spell:register()

@@ -8,14 +8,14 @@ local function targetFunction(creature, target)
 	local magicLevel = player:getMagicLevel()
 
 	-- Vocation Adjustment: Mass Spirit Mend is no longer a spender, so harmony no longer amplifies it.
-	local min = math.floor((level / 5) + (magicLevel * 5.7) + 26)
-	local max = math.floor((level / 5) + (magicLevel * 10.43) + 62)
+	local min = math.floor((calculateBaseDamageHealing(level)) + (magicLevel * 5.7) + 26)
+	local max = math.floor((calculateBaseDamageHealing(level)) + (magicLevel * 10.43) + 62)
 	local healAmount = math.random(min, max)
 
 	-- The caster receives only a lesser effect (~ a regular Spirit Mend).
 	if target:getId() == creature:getId() then
-		local sMin = math.floor((level * 0.2) + (magicLevel * 12) + 75)
-		local sMax = math.floor((level * 0.2) + (magicLevel * 20) + 125)
+		local sMin = math.floor((calculateBaseDamageHealing(level)) + (magicLevel * 12) + 75)
+		local sMax = math.floor((calculateBaseDamageHealing(level)) + (magicLevel * 20) + 125)
 		healAmount = math.random(sMin, sMax)
 	end
 
@@ -75,8 +75,8 @@ spell:cooldown(12 * 1000)
 spell:groupCooldown(2 * 1000)
 spell:level(150)
 spell:mana(250)
+spell:basePower(90)
 spell:isPremium(true)
 spell:isAggressive(false)
-
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_MASS_SPIRIT_MEND)
 spell:register()

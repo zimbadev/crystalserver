@@ -7,7 +7,6 @@
 -- Implemented in crosshair/target mode (needTarget + range 1): the server resolves
 -- the engaged target, matching how other knight melee spells (Brutal Strike) work.
 
-local BASE_POWER = 55
 local DEBUFF_DURATION = 10000 -- 10s
 local DEBUFF_DAMAGEDEALT = 50 -- target deals 50% damage (= -50%) while debuffed
 
@@ -40,15 +39,15 @@ combat:setParameter(COMBAT_PARAM_EFFECT, 318)
 combat:setParameter(COMBAT_PARAM_BLOCKARMOR, 1)
 combat:setArea(createCombatArea(AREA_SQUARE1X1))
 
-function onGetFormulaValues(player, skill, attack, factor)
+function onGetFormulaValues(player, skill, attack, factor, basePower)
 	-- skill here is the shielding skill (SKILL_SHIELD), attack is unused for a shield bash.
 	local shieldingSkill = player:getSkillLevel(SKILL_SHIELD)
 	local level = player:getLevel()
 	local defense = castShieldDefense
 
 	-- Damage scales with shield defense + shielding skill, on top of the base power.
-	local min = (level / 5) + BASE_POWER + (defense * 1.5) + (shieldingSkill * 0.6)
-	local max = (level / 5) + BASE_POWER + (defense * 2.5) + (shieldingSkill * 1.0)
+	local min = calculateBaseDamageHealing(level) + basePower + (defense * 1.5) + (shieldingSkill * 0.6)
+	local max = calculateBaseDamageHealing(level) + basePower + (defense * 2.5) + (shieldingSkill * 1.0)
 	return -min, -max
 end
 
@@ -97,6 +96,7 @@ spell:words("exori ico scu")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_BRUTAL_STRIKE)
 spell:level(18)
 spell:mana(30)
+spell:basePower(55)
 spell:isPremium(false)
 spell:range(1)
 spell:needTarget(true)
@@ -104,6 +104,5 @@ spell:blockWalls(true)
 spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
 spell:needLearn(false)
-
 spell:vocation("knight;true", "elite knight;true")
 spell:register()

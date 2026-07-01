@@ -23,11 +23,10 @@ combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_FLURRYOFBLOWS)
 combatEarth:setArea(createCombatArea(AREA_WAVE))
 
-function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 86
+function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 	local spellFactor = 3
-	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 	return -total * 0.9, -total * 1.1
 end
 
@@ -72,9 +71,9 @@ spell:words("exori gran mas pug")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_FLURRY_OF_BLOWS)
 spell:level(90)
 spell:mana(300)
+spell:basePower(86)
 spell:isPremium(true)
 spell:blockWalls(true)
-
 spell:needDirection(true)
 spell:cooldown(10 * 1000)
 spell:groupCooldown(2 * 1000)
