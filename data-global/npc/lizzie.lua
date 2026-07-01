@@ -60,7 +60,6 @@ local TARGUNA_QUESTLINE = Storage.Quest.U15_24.Targuna.Questline
 -- Dialog topics
 local TOPIC_START_CONFIRM = 1
 
-
 -- Mission storage values: 1 = informed by the arrival hint (not yet talked to Lizzie),
 -- 2 = accepted and hunting the Lizard Commander, 3 = reported back (completed).
 local function greetCallback(npc, creature)

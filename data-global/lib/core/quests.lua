@@ -7240,7 +7240,7 @@ if not Quests then
 					startValue = 1,
 					endValue = 2,
 					states = {
-						[1] = "Task: Deposit gold into your bank account\nYou can deposit gold from your backpack into your bank account by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and deposit gold by using the according icon or typing \"deposit\".",
+						[1] = 'Task: Deposit gold into your bank account\nYou can deposit gold from your backpack into your bank account by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and deposit gold by using the according icon or typing "deposit".',
 						[2] = "You successfully deposited gold into your bank account.",
 					},
 				},
@@ -7273,7 +7273,7 @@ if not Quests then
 					startValue = 1,
 					endValue = 2,
 					states = {
-						[1] = "Task: Withdraw gold from your bank account\nYou can withdraw gold from your bank account into your backpack by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and withdraw gold by using the according icon or typing \"withdraw\".",
+						[1] = 'Task: Withdraw gold from your bank account\nYou can withdraw gold from your bank account into your backpack by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and withdraw gold by using the according icon or typing "withdraw".',
 						[2] = "You successfully withdrew gold from your bank account.",
 					},
 				},

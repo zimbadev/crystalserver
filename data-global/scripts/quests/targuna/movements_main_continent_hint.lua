@@ -27,7 +27,6 @@ function mainContinentHint.onStepIn(creature, item, position, fromPosition)
 		return true
 	end
 
-
 	player:sendTutorial(13)
 	player:setStorageValue(MAIN_CONTINENT_HINT, 1)
 

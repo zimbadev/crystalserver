@@ -99,15 +99,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			local pirates = math.max(player:getStorageValue(PIRATE_KILL_COUNT), 0)
 			local eggs = math.max(player:getStorageValue(TORTOISE_EGG_COUNT), 0)
 			if pirates < PIRATES_REQUIRED or eggs < EGGS_REQUIRED then
-				npcHandler:say(
-					string.format(
-						"Not quite yet! You still need to defeat %d more pirates and rescue %d more eggs around the island.",
-						math.max(PIRATES_REQUIRED - pirates, 0),
-						math.max(EGGS_REQUIRED - eggs, 0)
-					),
-					npc,
-					creature
-				)
+				npcHandler:say(string.format("Not quite yet! You still need to defeat %d more pirates and rescue %d more eggs around the island.", math.max(PIRATES_REQUIRED - pirates, 0), math.max(EGGS_REQUIRED - eggs, 0)), npc, creature)
 				return true
 			end
 
