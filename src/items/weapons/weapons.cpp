@@ -53,7 +53,7 @@ namespace {
 			case CONST_ME_MONK_DAGGERS_ATTACK:
 				return 6;
 			default:
-				return 4;
+				return 0;
 		}
 	}
 } // namespace
@@ -307,10 +307,13 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		}
 	}
 
-	// 15.x: directional melee swing for weapons (CreatureMark IsAttacked + per-weapon weaponType,
-	// preserving the monk staff/daggers distinction via getWeaponAttackEffect).
+	// 15.x: directional melee swing for melee weapons (CreatureMark IsAttacked + per-weapon weaponType).
+	// Non-melee weapons (distance, wands) have no melee swing — skip.
 	if (cleavePercent == 0) {
-		player->sendCreatureSquare(target, SQ_PLAYER_ATTACK, static_cast<SquareColor_t>(markWeaponType(getWeaponAttackEffect(item, player))));
+		const uint16_t attackEffect = getWeaponAttackEffect(item, player);
+		if (attackEffect != CONST_ME_NONE) {
+			player->sendCreatureSquare(target, SQ_PLAYER_ATTACK, static_cast<SquareColor_t>(markWeaponType(attackEffect)));
+		}
 	}
 
 	if (isLoadedScriptId()) {
