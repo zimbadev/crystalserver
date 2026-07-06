@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "items/item.hpp"
 #include "lua/global/baseevents.hpp"
 #include "creatures/monsters/monster.hpp"
@@ -152,7 +154,7 @@ private:
 
 	uint32_t rows;
 	uint32_t cols;
-	bool** data_;
+	std::vector<std::vector<char>> data_;
 };
 
 class AreaCombat {
