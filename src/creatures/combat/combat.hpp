@@ -136,7 +136,7 @@ public:
 	// non-assignable
 	MatrixArea &operator=(const MatrixArea &) = delete;
 
-	void setValue(uint32_t row, uint32_t col, bool value) const;
+	void setValue(uint32_t row, uint32_t col, bool value);
 	bool getValue(uint32_t row, uint32_t col) const;
 
 	void setCenter(uint32_t y, uint32_t x);

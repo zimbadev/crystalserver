@@ -2901,7 +2901,7 @@ std::unique_ptr<MatrixArea> MatrixArea::clone() const {
 	return std::make_unique<MatrixArea>(*this);
 }
 
-void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) const {
+void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) {
 	if (row < rows && col < cols) {
 		data_[row][col] = value ? 1 : 0;
 	} else {
