@@ -298,7 +298,6 @@ private:
 	void sendToChannel(const std::shared_ptr<Creature> &creature, SpeakClasses type, const std::string &text, uint16_t channelId);
 	void sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakClasses type, const std::string &text);
 	void sendIcons(const std::unordered_set<PlayerIcon> &iconSet, const IconBakragore iconBakragore);
-	void sendIconBakragore(const IconBakragore icon);
 	void sendFYIBox(const std::string &message);
 
 	void openImbuementWindow(const Imbuement_Window_t type, const std::shared_ptr<Item> &item = nullptr);
