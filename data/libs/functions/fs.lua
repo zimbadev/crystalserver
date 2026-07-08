@@ -18,7 +18,7 @@ function FS.isPathSafe(path)
 	end
 	-- reject quotes, semicolons, pipes, ampersands, backticks, parentheses,
 	-- dollar, greater/less-than, newlines and other shell metacharacters.
-	if path:find('[%"%\';|&`$()<>%c]') then
+	if path:find("[%\"%';|&`$()<>%c]") then
 		return false
 	end
 	return true

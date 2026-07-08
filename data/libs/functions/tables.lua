@@ -185,7 +185,7 @@ function table.unserialize(str)
 						return nil, i
 					end
 					local keyStr = s:sub(i + 1, closeIdx - 1)
-					local parsedKey = keyStr:match("^%d+$") and tonumber(keyStr) or keyStr:match("^\"(.*)\"$") or keyStr:match("^'(.*)'$")
+					local parsedKey = keyStr:match("^%d+$") and tonumber(keyStr) or keyStr:match('^"(.*)"$') or keyStr:match("^'(.*)'$")
 					if not parsedKey then
 						return nil, i
 					end
