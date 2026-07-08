@@ -145,6 +145,9 @@ public:
 	uint32_t getRows() const;
 	uint32_t getCols() const;
 
+	const bool* operator[](uint32_t i) const;
+	bool* operator[](uint32_t i);
+
 private:
 	uint32_t centerX;
 	uint32_t centerY;

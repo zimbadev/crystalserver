@@ -2905,7 +2905,7 @@ void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) {
 	if (row < rows && col < cols) {
 		data_[row][col] = value ? 1 : 0;
 	} else {
-		g_logger().error("[MatrixArea::setValue] Access exceeds the upper limit of memory block");
+		g_logger().error("[{}] Access exceeds the upper limit of memory block");
 		throw std::out_of_range("Access exceeds the upper limit of memory block");
 	}
 }
@@ -2930,6 +2930,13 @@ uint32_t MatrixArea::getRows() const {
 
 uint32_t MatrixArea::getCols() const {
 	return cols;
+}
+const bool* MatrixArea::operator[](uint32_t i) const {
+	return reinterpret_cast<const bool*>(data_[i].data());
+}
+
+bool* MatrixArea::operator[](uint32_t i) {
+	return reinterpret_cast<bool*>(data_[i].data());
 }
 
 CombatDamage Combat::applyWeaponProficiencyDamage(const std::shared_ptr<Player> &attackerPlayer, std::shared_ptr<Item> item, std::shared_ptr<Monster> &targetMonster, CombatDamage damage) {
