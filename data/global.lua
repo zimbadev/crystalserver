@@ -32,7 +32,7 @@ function getWorldTypeName()
 	end
 end
 
-function IsRetroPVP()
+function isRetroPVP()
 	return table.contains({ WORLDTYPE_RETRO_PVP, WORLDTYPE_RETRO_HARDCORE }, Game.getWorldType())
 end
 

@@ -437,8 +437,10 @@ bool ConfigManager::load() {
 	loadStringConfig(L, STORE_IMAGES_URL, "coinImagesURL", "");
 	loadStringConfig(L, TIBIADROME_CONCOCTION_TICK_TYPE, "tibiadromeConcoctionTickType", "online");
 	loadStringConfig(L, URL, "url", "");
+	loadStringConfig(L, WEEKLY_TASKS_RESET_DAY, "weeklyTasksResetDay", "monday");
 	loadStringConfig(L, WORLD_LOCATION, "worldLocation", "South America");
 	loadStringConfig(L, WORLD_TYPE, "worldType", "pvp");
+	loadStringConfig(L, LOGLEVEL, "logLevel", "info");
 
 	loadLuaOTCFeatures(L);
 
