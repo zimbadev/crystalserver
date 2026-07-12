@@ -182,4 +182,7 @@
 	<raid name="venore.waterbuffaloes" file="venore/water_buffaloes.xml" interval2="1440" margin="180" />
 	<raid name="venore.xenia" file="venore/xenia.xml" interval2="1440" margin="360" />
 	<raid name="venore.yagathecrone" file="venore/yaga_the_crone.xml" interval2="1440" margin="360" />
+
+	<!-- Yalahar -->
+	<raid name="yalahar.vampires" file="yalahar/vampires.xml" interval2="1440" margin="360" />
 </raids>

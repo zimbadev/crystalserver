@@ -73,8 +73,8 @@ node3:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler
 local node4 = keywordHandler:addKeyword({ "chained penance" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {chained penance} magic spell for 8000 gold?" })
 node4:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "chained penance", vocation = { 9, 10 }, price = 8000, level = 70 })
 
-local node5 = keywordHandler:addKeyword({ "spirit mend" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {spirit mend} magic spell for 9000 gold?" })
-node5:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "spirit mend", vocation = { 9, 10 }, price = 9000, level = 80 })
+local node5 = keywordHandler:addKeyword({ "mass spirit mend" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {mass spirit mend} magic spell for 20000 gold?" })
+node5:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "mass spirit mend", vocation = { 9, 10 }, price = 20000, level = 150 })
 
 local node6 = keywordHandler:addKeyword({ "flurry of blows" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {flurry of blows} magic spell for 1500 gold?" })
 node6:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "flurry of blows", vocation = { 9, 10 }, price = 1500, level = 35 })
@@ -82,8 +82,8 @@ node6:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler
 local node7 = keywordHandler:addKeyword({ "devastating knockout" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {devastating knockout} magic spell for 20000 gold?" })
 node7:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "devastating knockout", vocation = { 9, 10 }, price = 20000, level = 125 })
 
-local node8 = keywordHandler:addKeyword({ "mass spirit mend" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {mass spirit mend} magic spell for 20000 gold?" })
-node8:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "mass spirit mend", vocation = { 9, 10 }, price = 20000, level = 150 })
+local node8 = keywordHandler:addKeyword({ "spirit mend" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {spirit mend} magic spell for 9000 gold?" })
+node8:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "spirit mend", vocation = { 9, 10 }, price = 9000, level = 80 })
 
 local node9 = keywordHandler:addKeyword({ "focus serenity" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "Would you like to learn {focus serenity} magic spell for 125000 gold?" })
 node9:addChildKeyword({ "yes" }, StdModule.learnSpell, { npcHandler = npcHandler, premium = false, spellName = "focus serenity", vocation = { 9, 10 }, price = 125000, level = 150 })

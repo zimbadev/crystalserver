@@ -894,6 +894,113 @@ uint16_t PlayerWheel::getUnusedPoints() const {
 	return totalPoints;
 }
 
+void PlayerWheel::reclaimExcessPoints() {
+	if (!canOpenWheel()) {
+		return;
+	}
+
+	auto getTotalUsedPoints = [this]() -> uint16_t {
+		uint16_t used = 0;
+		for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+			used += getPointsBySlotType(slot);
+		}
+		return used;
+	};
+
+	const auto getTotalAvailablePoints = [this]() -> uint16_t {
+		return static_cast<uint16_t>(getWheelPoints() + m_modsMaxGrade);
+	};
+
+	bool changed = false;
+
+	for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+		const auto points = getPointsBySlotType(slot);
+		if (points > 0 && !canPlayerSelectPointOnSlot(slot, false)) {
+			setPointsBySlotType(static_cast<uint8_t>(slot), 0);
+			changed = true;
+		}
+	}
+
+	uint16_t excess = 0;
+	const uint16_t totalUsed = getTotalUsedPoints();
+	const uint16_t totalAvailable = getTotalAvailablePoints();
+	if (totalUsed > totalAvailable) {
+		excess = totalUsed - totalAvailable;
+	}
+
+	if (excess == 0 && !changed) {
+		return;
+	}
+
+	if (excess > 0) {
+		while (excess > 0) {
+			WheelSlots_t targetSlot {};
+			int8_t bestOrder = -1;
+			bool bestIsPartial = false;
+			uint16_t bestPoints = 0;
+			bool found = false;
+
+			for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+				const auto points = getPointsBySlotType(slot);
+				if (points == 0) {
+					continue;
+				}
+
+				const auto order = g_game().getIOWheel()->getSlotPrioritaryOrder(slot);
+				if (order < 0) {
+					continue;
+				}
+
+				const bool isPartial = points < getMaxPointsPerSlot(slot);
+
+				auto isBetter = !found;
+				if (!isBetter && order != bestOrder) {
+					isBetter = order > bestOrder;
+				} else if (!isBetter && order == bestOrder) {
+					if (isPartial != bestIsPartial) {
+						isBetter = isPartial > bestIsPartial;
+					} else if (points != bestPoints) {
+						isBetter = points > bestPoints;
+					}
+				}
+
+				if (isBetter) {
+					found = true;
+					targetSlot = slot;
+					bestOrder = order;
+					bestIsPartial = isPartial;
+					bestPoints = points;
+				}
+			}
+
+			if (!found) {
+				break;
+			}
+
+			const auto points = getPointsBySlotType(targetSlot);
+			const auto toRemove = std::min<uint16_t>(excess, points);
+			setPointsBySlotType(static_cast<uint8_t>(targetSlot), points - toRemove);
+			excess -= toRemove;
+			changed = true;
+		}
+	}
+
+	for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+		const auto points = getPointsBySlotType(slot);
+		if (points > 0 && !canPlayerSelectPointOnSlot(slot, false)) {
+			setPointsBySlotType(static_cast<uint8_t>(slot), 0);
+			changed = true;
+		}
+	}
+
+	if (!changed) {
+		return;
+	}
+
+	loadPlayerBonusData();
+	saveDBPlayerSlotPointsOnLogout();
+}
+
 bool PlayerWheel::getSpellAdditionalArea(const std::string &spellName) const {
 	const auto stage = static_cast<uint8_t>(getSpellUpgrade(spellName));
 	if (stage == 0) {
@@ -1163,9 +1270,9 @@ PlayerWheelGem &PlayerWheel::getGem(const std::string &uuid) {
 }
 
 uint16_t PlayerWheel::getGemIndex(const std::string &uuid) const {
-	for (uint16_t i = 0; i < m_revealedGems.size(); ++i) {
+	for (size_t i = 0; i < m_revealedGems.size(); ++i) {
 		if (m_revealedGems[i].uuid == uuid) {
-			return i;
+			return static_cast<uint16_t>(i);
 		}
 	}
 	g_logger().error("[{}] Failed to find gem with uuid {}", __FUNCTION__, uuid);
@@ -1369,7 +1476,7 @@ void PlayerWheel::addGems(NetworkMessage &msg) const {
 }
 
 void PlayerWheel::addGradeModifiers(NetworkMessage &msg) const {
-	msg.addByte(0x2E); // Modifiers for all Vocations
+	msg.addByte(46); // Modifiers for all Vocations
 
 	for (const auto &modPosition : modsBasicPosition) {
 		const auto pos = static_cast<uint8_t>(modPosition);
@@ -1377,7 +1484,7 @@ void PlayerWheel::addGradeModifiers(NetworkMessage &msg) const {
 		msg.addByte(m_basicGrades[pos]);
 	}
 
-	msg.addByte(0x17); // Modifiers for specific per Vocations
+	msg.addByte(23); // Modifiers for specific per Vocations
 
 	const auto vocationBaseId = m_player.getVocation()->getBaseId();
 	const auto modsSupremeIt = modsSupremePositionByVocation.find(vocationBaseId);
@@ -1503,6 +1610,7 @@ void PlayerWheel::sendOpenWheelWindow(NetworkMessage &msg, uint32_t ownerId) {
 	}
 	addPromotionScrolls(msg);
 	msg.addByte(hasMonkQuest() ? 10 : 0); // The Way of The Monk Quest
+	msg.add<uint16_t>(getExtraPointsFromHuntingTaskShop());
 	addGems(msg);
 	addGradeModifiers(msg);
 
@@ -1785,6 +1893,28 @@ void PlayerWheel::saveKVScrolls() const {
 	}
 }
 
+void PlayerWheel::loadKVHuntingTaskShopExtraPoints() {
+	const auto &pointsKv = m_player.kv()->scoped("wheel-of-destiny");
+	if (!pointsKv) {
+		return;
+	}
+
+	const auto value = pointsKv->get("hunting-task-shop-extra-points");
+	if (value && value.has_value()) {
+		auto extraPoints = value->getNumber();
+		m_extraPointsFromHuntingTaskShop = extraPoints > 0 ? static_cast<uint16_t>(extraPoints) : 0;
+	}
+}
+
+void PlayerWheel::saveKVHuntingTaskShopExtraPoints() const {
+	const auto &pointsKv = m_player.kv()->scoped("wheel-of-destiny");
+	if (!pointsKv) {
+		return;
+	}
+
+	pointsKv->set("hunting-task-shop-extra-points", m_extraPointsFromHuntingTaskShop);
+}
+
 void PlayerWheel::loadKVModGrades() {
 	for (const auto &modPosition : modsBasicPosition) {
 		const auto pos = static_cast<uint8_t>(modPosition);
@@ -1910,7 +2040,25 @@ uint16_t PlayerWheel::getExtraPoints() const {
 		totalBonus += 10;
 	}
 
+	totalBonus += getExtraPointsFromHuntingTaskShop();
 	return totalBonus;
+}
+
+uint16_t PlayerWheel::getExtraPointsFromHuntingTaskShop() const {
+	if (m_player.getLevel() < 51) {
+		return 0;
+	}
+
+	return m_extraPointsFromHuntingTaskShop;
+}
+
+void PlayerWheel::addExtraPointsFromHuntingTaskShop(uint16_t amount) {
+	if (amount == 0) {
+		return;
+	}
+
+	const uint32_t total = static_cast<uint32_t>(m_extraPointsFromHuntingTaskShop) + amount;
+	m_extraPointsFromHuntingTaskShop = static_cast<uint16_t>(std::min<uint32_t>(total, std::numeric_limits<uint16_t>::max()));
 }
 
 uint16_t PlayerWheel::getWheelPoints(bool includeExtraPoints /* = true*/) const {
@@ -1918,8 +2066,7 @@ uint16_t PlayerWheel::getWheelPoints(bool includeExtraPoints /* = true*/) const 
 	auto totalPoints = std::max(0u, (level - m_minLevelToStartCountPoints)) * m_pointsPerLevel;
 
 	if (includeExtraPoints) {
-		const auto extraPoints = getExtraPoints();
-		totalPoints += extraPoints;
+		totalPoints += getExtraPoints();
 	}
 
 	return totalPoints;
@@ -2928,47 +3075,18 @@ bool PlayerWheel::checkBallisticMastery() {
 
 bool PlayerWheel::checkCombatMastery() {
 	setOnThinkTimer(WheelOnThink_t::COMBAT_MASTERY, OTSYS_TIME() + 2000);
+	// Vocation Adjustment: Combat Mastery was reworked into a missing-HP damage/reduction effect
+	// applied at hit time in Game::combatChangeHealth. Its old two-handed-crit / shield-defense major
+	// stats (exclusive to this perk) are cleared here so the rework does not stack with the old bonus.
 	bool updateClient = false;
-	const uint8_t stage = getStage(WheelStage_t::COMBAT_MASTERY);
-
-	const auto &item = m_player.getWeapon();
-	if (item && item->getSlotPosition() & SLOTP_TWO_HAND) {
-		int32_t criticalSkill = 0;
-		if (stage >= 3) {
-			criticalSkill = 1200;
-		} else if (stage >= 2) {
-			criticalSkill = 800;
-		} else if (stage >= 1) {
-			criticalSkill = 400;
-		}
-
-		if (getMajorStat(WheelMajor_t::CRITICAL_DMG_2) != criticalSkill) {
-			setMajorStat(WheelMajor_t::CRITICAL_DMG_2, criticalSkill);
-			updateClient = true;
-		}
-		if (getMajorStat(WheelMajor_t::DEFENSE) != 0) {
-			setMajorStat(WheelMajor_t::DEFENSE, 0);
-			updateClient = true;
-		}
-	} else {
-		if (getMajorStat(WheelMajor_t::CRITICAL_DMG_2) != 0) {
-			setMajorStat(WheelMajor_t::CRITICAL_DMG_2, 0);
-			updateClient = true;
-		}
-		if (getMajorStat(WheelMajor_t::DEFENSE) == 0) {
-			int32_t shieldSkill = 0;
-			if (stage >= 3) {
-				shieldSkill = 30;
-			} else if (stage >= 2) {
-				shieldSkill = 20;
-			} else if (stage >= 1) {
-				shieldSkill = 10;
-			}
-			setMajorStat(WheelMajor_t::DEFENSE, shieldSkill);
-			updateClient = true;
-		}
+	if (getMajorStat(WheelMajor_t::CRITICAL_DMG_2) != 0) {
+		setMajorStat(WheelMajor_t::CRITICAL_DMG_2, 0);
+		updateClient = true;
 	}
-
+	if (getMajorStat(WheelMajor_t::DEFENSE) != 0) {
+		setMajorStat(WheelMajor_t::DEFENSE, 0);
+		updateClient = true;
+	}
 	return updateClient;
 }
 
@@ -3041,6 +3159,13 @@ void PlayerWheel::checkGiftOfLife() {
 	m_player.sendTextMessage(MESSAGE_EVENT_ADVANCE, "That was close! Fortunately, your were saved by the Gift of Life.");
 	g_game().addMagicEffect(m_player.getPosition(), CONST_ME_WATER_DROP);
 	g_game().combatChangeHealth(m_player.getPlayer(), m_player.getPlayer(), giftDamage);
+	// Vocation Adjustment: also restore 20/25/30% of max mana (same stage scaling as the HP heal).
+	if (m_player.getMaxMana() > 0) {
+		CombatDamage giftMana;
+		giftMana.primary.value = (m_player.getMaxMana() * getGiftOfLifeValue()) / 100;
+		giftMana.primary.type = COMBAT_MANADRAIN;
+		g_game().combatChangeMana(m_player.getPlayer(), m_player.getPlayer(), giftMana);
+	}
 	// Condition cooldown reduction
 	constexpr uint16_t reductionTimer = 60000;
 	reduceAllSpellsCooldownTimer(reductionTimer);
@@ -3050,29 +3175,31 @@ void PlayerWheel::checkGiftOfLife() {
 	sendGiftOfLifeCooldown();
 }
 
-int32_t PlayerWheel::checkBlessingGroveHealingByTarget(const std::shared_ptr<Creature> &target) const {
+double PlayerWheel::checkBlessingGroveHealingByTarget(const std::shared_ptr<Creature> &target) const {
 	if (!target || target == m_player.getPlayer()) {
 		return 0;
 	}
 
-	int32_t healingBonus = 0;
+	// Vocation Adjustment: extra healing 5/7.5/10% vs targets below 60% HP, DOUBLED to 10/15/20%
+	// vs targets below 30% HP (by stage 1/2/3).
+	double healingBonus = 0;
 	const uint8_t stage = getStage(WheelStage_t::BLESSING_OF_THE_GROVE);
 	const int32_t healthPercent = std::round((static_cast<double>(target->getHealth()) * 100) / static_cast<double>(target->getMaxHealth()));
 	if (healthPercent <= 30) {
 		if (stage >= 3) {
-			healingBonus = 24;
+			healingBonus = 20;
 		} else if (stage >= 2) {
-			healingBonus = 18;
+			healingBonus = 15;
 		} else if (stage >= 1) {
-			healingBonus = 12;
+			healingBonus = 10;
 		}
 	} else if (healthPercent <= 60) {
 		if (stage >= 3) {
-			healingBonus = 12;
+			healingBonus = 10;
 		} else if (stage >= 2) {
-			healingBonus = 9;
+			healingBonus = 7.5;
 		} else if (stage >= 1) {
-			healingBonus = 6;
+			healingBonus = 5;
 		}
 	}
 
@@ -3135,36 +3262,10 @@ int32_t PlayerWheel::checkBeamMasteryDamage() const {
 	return damageBoost;
 }
 
-int32_t PlayerWheel::checkDrainBodyLeech(const std::shared_ptr<Creature> &target, skills_t skill) const {
-	if (!target || !target->getMonster() || target->getWheelOfDestinyDrainBodyDebuff() == 0) {
-		return 0;
-	}
-
-	const uint8_t stage = target->getWheelOfDestinyDrainBodyDebuff();
-	if (target->getBuff(BUFF_DAMAGERECEIVED) > 100 && skill == SKILL_MANA_LEECH_AMOUNT) {
-		int32_t manaLeechSkill = 0;
-		if (stage >= 3) {
-			manaLeechSkill = 400;
-		} else if (stage >= 2) {
-			manaLeechSkill = 300;
-		} else if (stage >= 1) {
-			manaLeechSkill = 200;
-		}
-		return manaLeechSkill;
-	}
-
-	if (target->getBuff(BUFF_DAMAGEDEALT) < 100 && skill == SKILL_LIFE_LEECH_AMOUNT) {
-		int32_t lifeLeechSkill = 0;
-		if (stage >= 3) {
-			lifeLeechSkill = 500;
-		} else if (stage >= 2) {
-			lifeLeechSkill = 400;
-		} else if (stage >= 1) {
-			lifeLeechSkill = 300;
-		}
-		return lifeLeechSkill;
-	}
-
+int32_t PlayerWheel::checkDrainBodyLeech(const std::shared_ptr<Creature> &, skills_t) const {
+	// Vocation Adjustment: Lord of Destruction REPLACES Drain Body. The Drain Body stage now only
+	// scales the Sorcerer elemental stances (combat.cpp applyElementalStance via getStage(DRAIN_BODY));
+	// its old life/mana leech is removed per user decision. (The drainBody debuff condition is now inert.)
 	return 0;
 }
 
@@ -3396,7 +3497,7 @@ std::shared_ptr<Spell> PlayerWheel::getCombatDataSpell(CombatDamage &damage) {
 
 		damage.damageMultiplier += checkFocusMasteryDamage();
 		if (getHealingLinkUpgrade(spellName)) {
-			damage.healingLink += 10;
+			damage.healingLink += 25; // Vocation Adjustment: Healing Link 10% -> 25%
 		}
 
 		if (getInstant("Sanctuary")) {
@@ -3969,22 +4070,10 @@ float PlayerWheel::calculateMitigation() const {
 	float fightFactor = 1.0f;
 	float shieldFactor = 1.0f;
 	float distanceFactor = 1.0f;
-	switch (m_player.fightMode) {
-		case FIGHTMODE_ATTACK: {
-			fightFactor = 0.8f;
-			break;
-		}
-		case FIGHTMODE_BALANCED: {
-			fightFactor = 1.0f;
-			break;
-		}
-		case FIGHTMODE_DEFENSE: {
-			fightFactor = 1.2f;
-			break;
-		}
-		default:
-			break;
-	}
+	// Vocation Adjustment: combat modes removed. Mitigation no longer depends on the fight
+	// mode (was 0.8 attack / 1.0 balanced / 1.2 defense); use a fixed neutral 1.0 so players
+	// are no longer permanently locked to the attack-mode mitigation penalty.
+	fightFactor = 1.0f;
 
 	const auto &shield = m_player.inventory[CONST_SLOT_RIGHT];
 	if (shield) {
@@ -4008,7 +4097,9 @@ float PlayerWheel::calculateMitigation() const {
 			defenseValue = (weapon->getDefense() + m_player.getEquippedWeaponProficiency().defense) + (weapon->getExtraDefense() + m_player.getEquippedWeaponProficiency().weaponShieldMod);
 			shieldFactor = m_player.vocation->mitigationSecondaryShield;
 		} else {
-			defenseValue += weapon->getExtraDefense() + m_player.getEquippedWeaponProficiency().weaponShieldMod;
+			// Vocation Adjustment: weapon type has a much larger impact on mitigation -- a one-handed
+			// weapon now contributes its full defense (not just extra defense), like two-handed weapons.
+			defenseValue += weapon->getDefense() + weapon->getExtraDefense() + m_player.getEquippedWeaponProficiency().weaponShieldMod;
 			shieldFactor = m_player.vocation->mitigationPrimaryShield;
 		}
 	}
@@ -4074,13 +4165,18 @@ PlayerWheelGem PlayerWheelGem::deserialize(const std::string &uuid, const ValueW
 }
 
 bool PlayerWheel::hasMonkQuest() const {
-	const auto &kvScoped = m_player.kv()->scoped("the_way_of_the_monk_quest");
+	const auto &kvScoped = m_player.kv()->scoped("quests")->scoped("the_way_of_the_monk_quest");
 	if (!kvScoped) {
 		return false;
 	}
 
 	const auto boolPointsWheel = kvScoped->get("boolPointsWheel");
-	return boolPointsWheel ? boolPointsWheel->get<bool>() : false;
+	if (boolPointsWheel && boolPointsWheel->get<bool>()) {
+		return true;
+	}
+
+	const auto questline = kvScoped->get("questline");
+	return questline && questline->getNumber() >= 4;
 }
 
 int32_t PlayerWheel::checkRevelationPerkAscetic() const {

@@ -80,7 +80,7 @@ monster.loot = {
 	{ name = "platinum coin", chance = 100000, maxCount = 3 },
 	{ name = "ogre ear stud", chance = 17270 },
 	{ name = "ogre nose ring", chance = 15830 },
-	{ name = "pair of iron fists", chance = 2160 },
+	{ name = "pair of iron fists", chance = 2200 },
 	{ name = "meat", chance = 8630, maxCount = 5 },
 	{ name = "diamond sceptre", chance = 5760 },
 	{ name = "war hammer", chance = 2160 },

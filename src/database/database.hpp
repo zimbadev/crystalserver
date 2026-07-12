@@ -252,6 +252,29 @@ public:
 		}
 	}
 
+	template <typename Func>
+	static bool executeWithinTransactionRollbackOnFailure(const Func &callback) {
+		DBTransaction transaction;
+		try {
+			if (!transaction.begin()) {
+				g_logger().error("[{}] Failed to begin transaction", __FUNCTION__);
+				return false;
+			}
+
+			if (!callback()) {
+				transaction.rollback();
+				return false;
+			}
+
+			transaction.commit();
+			return true;
+		} catch (const std::exception &exception) {
+			transaction.rollback();
+			g_logger().error("[{}] Error occurred during transaction, error: {}", __FUNCTION__, exception.what());
+			return false;
+		}
+	}
+
 private:
 	bool begin() {
 		// Ensure that the transaction has not already been started

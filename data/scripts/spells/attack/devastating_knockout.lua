@@ -12,17 +12,16 @@ local combatEarth = Combat()
 combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_TIGERCLASH)
 
-function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 62
+function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 	local spellFactor = 1.0
-	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 	return -total * 0.9, -total * 1.1
 end
 
-onGetFormulaValuesEnergy = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesEarth = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesPhysical = loadstring(string.dump(onGetFormulaValues))
+onGetFormulaValuesEnergy = onGetFormulaValues
+onGetFormulaValuesEarth = onGetFormulaValues
+onGetFormulaValuesPhysical = onGetFormulaValues
 
 combatPhysical:setCallback(CALLBACK_PARAM_SKILLVALUE, "onGetFormulaValuesPhysical")
 combatEnergy:setCallback(CALLBACK_PARAM_SKILLVALUE, "onGetFormulaValuesEnergy")
@@ -92,6 +91,7 @@ spell:words("exori gran nia")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_DEVASTATING_KNOCKOUT)
 spell:level(125)
 spell:mana(210)
+spell:basePower(62)
 spell:range(1)
 spell:harmony(true)
 spell:isPremium(true)
@@ -100,6 +100,5 @@ spell:blockWalls(true)
 spell:needWeapon(false)
 spell:cooldown(24 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("monk;true", "exalted monk;true")
 spell:register()

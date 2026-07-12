@@ -41,6 +41,7 @@ class PlayerFunctions {
 	static int luaPlayerIsPlayer(lua_State* L);
 
 	static int luaPlayerGetGuid(lua_State* L);
+	static int luaPlayerGetSpellAimPosition(lua_State* L);
 	static int luaPlayerGetIp(lua_State* L);
 	static int luaPlayerGetAccountId(lua_State* L);
 	static int luaPlayerGetLastLoginSaved(lua_State* L);
@@ -53,6 +54,9 @@ class PlayerFunctions {
 	static int luaPlayerIsMonsterBestiaryUnlocked(lua_State* L);
 	static int luaPlayercharmExpansion(lua_State* L);
 	static int luaPlayergetCharmMonsterType(lua_State* L);
+	static int luaPlayerWeeklyTaskExpansion(lua_State* L);
+	static int luaPlayerResetWeeklyTasks(lua_State* L);
+	static int luaPlayerPerformWeeklyReset(lua_State* L);
 
 	static int luaPlayerisMonsterPrey(lua_State* L);
 	static int luaPlayerGetPreyCards(lua_State* L);
@@ -65,6 +69,50 @@ class PlayerFunctions {
 	static int luaPlayerRemoveTaskHuntingPoints(lua_State* L);
 	static int luaPlayerGetTaskHuntingPoints(lua_State* L);
 	static int luaPlayerAddTaskHuntingPoints(lua_State* L);
+
+	static int luaPlayerGetBountyPoints(lua_State* L);
+	static int luaPlayerAddBountyPoints(lua_State* L);
+	static int luaPlayerRemoveBountyPoints(lua_State* L);
+	static int luaPlayerGetRerollTasks(lua_State* L);
+	static int luaPlayerAddRerollTasks(lua_State* L);
+	static int luaPlayerRemoveRerollTasks(lua_State* L);
+	static int luaPlayerGetSoulsealsPoints(lua_State* L);
+	static int luaPlayerAddSoulsealsPoints(lua_State* L);
+	static int luaPlayerRemoveSoulsealsPoints(lua_State* L);
+
+	// Task Board send functions (Lua → protocol)
+	static int luaPlayersendBountyTaskData(lua_State* L);
+	static int luaPlayersendWeeklyTaskData(lua_State* L);
+	static int luaPlayerSendHuntingTaskShop(lua_State* L);
+	static int luaPlayerSendTaskBoardResourceBalance(lua_State* L);
+
+	// Bounty Task data setters
+	static int luaPlayerSetBountyTaskState(lua_State* L);
+	static int luaPlayerSetBountyTaskDifficulty(lua_State* L);
+	static int luaPlayerSetBountyActiveTask(lua_State* L);
+	static int luaPlayerClearBountyCreatureList(lua_State* L);
+	static int luaPlayerAddBountyCreature(lua_State* L);
+	static int luaPlayerSetBountyTalismanLevel(lua_State* L);
+	static int luaPlayerGetBountyTalismanLevel(lua_State* L);
+	static int luaPlayerSetBountyRerollTimestamp(lua_State* L);
+	static int luaPlayerSetBountyRerollTokens(lua_State* L);
+	static int luaPlayerGenerateBountyCreatureList(lua_State* L);
+	static int luaPlayerIsBountyTalismanEquipped(lua_State* L);
+
+	// Weekly Task data setters
+	static int luaPlayerSetWeeklyDifficulty(lua_State* L);
+	static int luaPlayerSetWeeklyKillTaskProgress(lua_State* L);
+	static int luaPlayerSetWeeklyDeliveryTaskProgress(lua_State* L);
+	static int luaPlayerSetWeeklyAnyCreatureProgress(lua_State* L);
+	static int luaPlayerSetWeeklyCompletedTasks(lua_State* L);
+	static int luaPlayerGenerateWeeklyTasks(lua_State* L);
+	static int luaPlayerSetWeeklyProgressFinished(lua_State* L);
+	static int luaPlayerSetWeeklyResetTimestamp(lua_State* L);
+	static int luaPlayerSetWeeklyUnknownByte(lua_State* L);
+	static int luaPlayerSetWeeklyRewards(lua_State* L);
+	static int luaPlayerSetWeeklyRewardExp(lua_State* L);
+	static int luaPlayerSetWeeklyDifficultyMultiplier(lua_State* L);
+	static int luaPlayerSetWeeklyDeliveryUnknowns(lua_State* L);
 
 	static int luaPlayerGetCapacity(lua_State* L);
 	static int luaPlayerSetCapacity(lua_State* L);
@@ -137,6 +185,8 @@ class PlayerFunctions {
 
 	static int luaPlayerGetOfflineTrainingSkill(lua_State* L);
 	static int luaPlayerSetOfflineTrainingSkill(lua_State* L);
+	static int luaPlayerSendOfflineTrainingDialog(lua_State* L);
+	static int luaPlayerSendMultiOfflineTrainingDialog(lua_State* L);
 
 	static int luaPlayerGetItemCount(lua_State* L);
 	static int luaPlayerGetStashItemCount(lua_State* L);
@@ -246,6 +296,7 @@ class PlayerFunctions {
 	static int luaPlayerGetTransferableCoins(lua_State* L);
 	static int luaPlayerAddTransferableCoins(lua_State* L);
 	static int luaPlayerRemoveTransferableCoins(lua_State* L);
+	static int luaPlayerRemoveTransferableAndTibiaCoins(lua_State* L);
 
 	static int luaPlayerSendBlessStatus(lua_State* L);
 	static int luaPlayerHasBlessing(lua_State* L);
@@ -344,6 +395,7 @@ class PlayerFunctions {
 	static int luaPlayerGetFaction(lua_State* L);
 
 	static int luaPlayerGetBosstiaryLevel(lua_State* L);
+	static int luaPlayerSendSoulSealsWindow(lua_State* L);
 	static int luaPlayerGetBosstiaryKills(lua_State* L);
 	static int luaPlayerAddBosstiaryKill(lua_State* L);
 	static int luaPlayerSetBossPoints(lua_State* L);
@@ -354,6 +406,8 @@ class PlayerFunctions {
 
 	static int luaPlayerSendSingleSoundEffect(lua_State* L);
 	static int luaPlayerSendDoubleSoundEffect(lua_State* L);
+	static int luaPlayerSendAmbientSoundEffect(lua_State* L);
+	static int luaPlayerSendMusicSoundEffect(lua_State* L);
 
 	static int luaPlayerGetName(lua_State* L);
 	static int luaPlayerChangeName(lua_State* L);
@@ -403,7 +457,9 @@ class PlayerFunctions {
 
 	static int luaPlayerCreateTransactionSummary(lua_State* L);
 
-	static int luaPlayerTakeScreenshot(lua_State* L);
+	static int luaPlayersendBannerType(lua_State* L);
+	static int luaPlayerSendQuestStatusUpdate(lua_State* L);
+
 	static int luaPlayerSendIconBakragore(lua_State* L);
 	static int luaPlayerRemoveIconBakragore(lua_State* L);
 
@@ -421,6 +477,10 @@ class PlayerFunctions {
 	static int luaPlayerSetSereneCooldown(lua_State* L);
 	static int luaPlayerGetVirtue(lua_State* L);
 	static int luaPlayerSetVirtue(lua_State* L);
+	static int luaPlayerGetStance(lua_State* L);
+	static int luaPlayerSetStance(lua_State* L);
+	static int luaPlayerGetElementalStance(lua_State* L);
+	static int luaPlayerSetElementalStance(lua_State* L);
 
 	static int luaPlayerApplyImbuementScrollToItem(lua_State* L);
 	static int luaPlayerOnClearAllImbuementsOnEtcher(lua_State* L);

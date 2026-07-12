@@ -21,7 +21,8 @@ monster.speed = 115
 monster.manaCost = 0
 
 monster.events = {
-	"RatmiralBlackwhiskersDeath",
+	"ratmiralDeath",
+	"ratmiralHealth",
 }
 
 monster.changeTarget = {
@@ -64,9 +65,9 @@ monster.light = {
 }
 
 monster.summon = {
-	maxSummons = 4,
+	maxSummons = 1,
 	summons = {
-		{ name = "elite pirat", chance = 30, interval = 1000 },
+		{ name = "tibianus", chance = 100, interval = 2000, count = 1 },
 	},
 }
 
@@ -112,10 +113,9 @@ monster.loot = {
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = -270, maxDamage = -500 },
-	{ name = "combat", interval = 2000, chance = 40, type = COMBAT_PHYSICALDAMAGE, minDamage = -300, maxDamage = -600, range = 7, shootEffect = CONST_ANI_WHIRLWINDCLUB, target = true },
-	{ name = "combat", interval = 2000, chance = 40, type = COMBAT_LIFEDRAIN, minDamage = -300, maxDamage = -600, radius = 4, effect = CONST_ME_MAGIC_RED, target = false },
-	{ name = "combat", interval = 2000, chance = 30, type = COMBAT_LIFEDRAIN, minDamage = -600, maxDamage = -1000, length = 4, spread = 0, effect = CONST_ME_SOUND_PURPLE, target = false },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = -400, maxDamage = -1000 },
+	{ name = "ratmiral fire wave", interval = 2000, chance = 35 },
+	{ name = "ratmiral ball", interval = 2000, chance = 20 },
 }
 
 monster.defenses = {

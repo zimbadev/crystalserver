@@ -14,7 +14,7 @@ monster.outfit = {
 }
 
 monster.events = {
-	"DreamCourtsBossDeath",
+	"dreamCourtsDeath",
 }
 
 monster.health = 320000
@@ -32,7 +32,7 @@ monster.changeTarget = {
 monster.bosstiary = {
 	bossRaceId = 1697,
 	bossRace = RARITY_NEMESIS,
-	storage = Storage.Quest.U12_00.TheDreamCourts.ArenaTimer,
+	storage = Storage.Quest.U12_00.TheDreamCourts.DreamScar.MaxxeniusTimer,
 }
 
 monster.strategiesTarget = {

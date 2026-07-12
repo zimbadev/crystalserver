@@ -60,20 +60,19 @@ local function creatureSayCallback(npc, creature, type, message)
 	if not npcHandler:checkInteraction(npc, creature) then
 		return false
 	end
-	local tiredTreeStorage = 2033031
-	local toothFairyStorage = 2033025
+
 	if MsgContains(message, "mission") then
-		if player:getStorageValue(tiredTreeStorage) < 1 and player:getStorageValue(toothFairyStorage) == 2 then
+		if player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.TiredTree) < 1 and player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.ToothFairy) == 2 then
 			npcHandler:say("My siblings and I, we are so tired. We'd love to sleep and dream but there are strange and wicked disturbances that trouble nature itself. Thus, it is very hard to fall asleep. Would you help us?", npc, creature)
 			npcHandler:setTopic(playerId, 1)
 		end
-		if player:getStorageValue(tiredTreeStorage) == 1 then
+		if player:getStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.TiredTree) == 1 then
 			npcHandler:say("Have you found a story that could help us to drit off to sleep?", npc, creature)
 			npcHandler:setTopic(playerId, 2)
 		end
 	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 1 then
 		npcHandler:say("Thank you very much, human being! Perhaps a bedtime story would help. We'd like to hear something about the dryads.", npc, creature)
-		player:setStorageValue(tiredTreeStorage, 1)
+		player:setStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.TiredTree, 1)
 		npcHandler:setTopic(playerId, 0)
 	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 2 then
 		npcHandler:say("I'm listening.", npc, creature)
@@ -84,7 +83,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			"There are ... dwarves I guess. ... Zzzzzz ...",
 		}, npc, creature)
 		player:addItem(24944, 1)
-		player:setStorageValue(tiredTreeStorage, 2)
+		player:setStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission04.TiredTree, 2)
 		npcHandler:setTopic(playerId, 0)
 	end
 	return true
@@ -97,5 +96,4 @@ npcHandler:setMessage(MESSAGE_FAREWELL, "*yawn* Nature's blessings.")
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
 npcType:register(npcConfig)

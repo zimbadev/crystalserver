@@ -1,5 +1,3 @@
--- Theodore Loveless' key
-
 local theThievesKey = Action()
 function theThievesKey.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	if player:getStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Mission06) == 2 then

@@ -32,6 +32,7 @@ private:
 	static int luaSpellCooldown(lua_State* L);
 	static int luaSpellGroupCooldown(lua_State* L);
 	static int luaSpellLevel(lua_State* L);
+	static int luaSpellBasePower(lua_State* L);
 	static int luaSpellMagicLevel(lua_State* L);
 	static int luaSpellMana(lua_State* L);
 	static int luaSpellManaPercent(lua_State* L);
@@ -55,6 +56,7 @@ private:
 	// Only for InstantSpells.
 	static int luaSpellWords(lua_State* L);
 	static int luaSpellNeedDirection(lua_State* L);
+	static int luaSpellNeedPosition(lua_State* L);
 	static int luaSpellRemoveOnUse(lua_State* L);
 	static int luaSpellHasParams(lua_State* L);
 	static int luaSpellHasPlayerNameParam(lua_State* L);

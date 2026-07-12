@@ -47,7 +47,7 @@ function enchanting.onUse(player, item, fromPosition, target, toPosition, isHotk
 	if table.contains({ 33268, 33269 }, toPosition.x) and toPosition.y == 31830 and toPosition.z == 10 and player:getStorageValue(Storage.Quest.U8_2.ElementalSpheres.QuestLine) > 0 then
 		if not table.contains(spheres[item.itemid], player:getVocation():getBaseId()) then
 			return false
-		elseif table.contains({ 842, 843 }, target.itemid) then
+		elseif table.contains({ 846, 847 }, target.itemid) then
 			player:say("Turn off the machine first.", TALKTYPE_MONSTER_SAY)
 			return true
 		else
@@ -99,7 +99,7 @@ function enchanting.onUse(player, item, fromPosition, target, toPosition, isHotk
 		player:addMana(-mana)
 		player:addSoul(-soul)
 		item:transform(enchantedGems[targetId])
-		player:addManaSpent(items.valuables.mana)
+		player:addManaSpent(mana)
 		player:getPosition():sendMagicEffect(CONST_ME_HOLYDAMAGE)
 		return true
 	end
@@ -136,5 +136,5 @@ function enchanting.onUse(player, item, fromPosition, target, toPosition, isHotk
 	return false
 end
 
-enchanting:id(675, 676, 677, 678)
+enchanting:id(675, 676, 677, 678, 3029, 3030, 3032, 3033)
 enchanting:register()

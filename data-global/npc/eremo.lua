@@ -285,4 +285,7 @@ nodeLevels:addChildKeyword({ "41" }, StdModule.say, { npcHandler = npcHandler, o
 nodeLevels:addChildKeyword({ "27" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "For level 27 I have {Wild Growth} Rune for 2000 gold." })
 nodeLevels:addChildKeyword({ "20" }, StdModule.say, { npcHandler = npcHandler, onlyFocus = true, text = "For level 20 I have {Challenge} for 2000 gold." })
 
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("passage", "bye")
+
 npcType:register(npcConfig)

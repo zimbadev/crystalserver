@@ -13,8 +13,6 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.events = {}
-
 monster.raceId = 2535
 monster.Bestiary = {
 	class = "Magical",
@@ -24,20 +22,20 @@ monster.Bestiary = {
 	SecondUnlock = 1000,
 	CharmsPoints = 50,
 	Stars = 4,
-	Occurrence = 0,
+	Occurrence = 1,
 	Locations = "Chocolate Mines.",
 }
 
 monster.health = 3100
 monster.maxHealth = 3100
-monster.race = "blood"
-monster.corpse = 48267
+monster.race = "chocolate"
+monster.corpse = 48268
 monster.speed = 115
 monster.manaCost = 0
 
 monster.changeTarget = {
-	interval = 4000,
-	chance = 10,
+	interval = 5000,
+	chance = 8,
 }
 
 monster.strategiesTarget = {
@@ -55,7 +53,7 @@ monster.flags = {
 	pushable = false,
 	rewardBoss = false,
 	illusionable = false,
-	canPushItems = true,
+	canPushItems = false,
 	canPushCreatures = true,
 	staticAttackChance = 90,
 	targetDistance = 1,
@@ -77,36 +75,39 @@ monster.voices = {
 	chance = 10,
 	{ text = "We will devour you ...", yell = false },
 	{ text = "Wait for us, little treat ...", yell = false },
-	{ text = "*Horrraa!", yell = false },
+	{ text = "Horrraa!", yell = false },
 }
 
 monster.loot = {
-	{ name = "gold coin", chance = 100000, maxCount = 30 },
-	{ name = "platinum coin", chance = 82000, maxCount = 6 },
-	{ id = 281, chance = 6510 }, -- giant shimmering pearl (green)
-	{ id = 3591, chance = 1400, maxCount = 2 }, -- stawberries
-	{ id = 48250, chance = 440, maxCount = 11 }, -- dark chocolate coin
-	{ id = 48116, chance = 2490, maxCount = 2 }, -- gummy rotworm
-	{ id = 3036, chance = 1550 }, -- violet gem
-	{ id = 48252, chance = 1250 }, -- brigadeiro
-	{ id = 23535, chance = 5550 }, -- energy bar
-	{ id = 8012, chance = 1240, maxCount = 2 }, -- raspberry
-	{ id = 7419, chance = 502 }, -- dreaded cleaver
-	{ id = 3072, chance = 1840 }, -- wand of decay
-	{ id = 3429, chance = 2830 }, -- black shield
+	{ name = "Gold Coin", chance = 100000, maxCount = 30 },
+	{ name = "Platinum Coin", chance = 81910, maxCount = 6 },
+	{ id = 281, chance = 6419, maxCount = 1 },
+	{ id = 3039, chance = 5510, maxCount = 1 },
+	{ name = "Energy Bar", chance = 5309, maxCount = 1 },
+	{ name = "Black Shield", chance = 2730, maxCount = 1 },
+	{ name = "Gummy Rotworm", chance = 2530, maxCount = 2 },
+	{ name = "Wand of Decay", chance = 1620, maxCount = 1 },
+	{ id = 3591, chance = 1310, maxCount = 4 },
+	{ name = "Brigadeiro", chance = 1160, maxCount = 1 },
+	{ name = "Violet Gem", chance = 810, maxCount = 1 },
+	{ name = "Dark Chocolate Coin", chance = 510, maxCount = 11 },
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -200 },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_EARTHDAMAGE, minDamage = -120, maxDamage = -300, range = 6, radius = 3, effect = CONST_ME_CAKE, target = true },
-	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_DEATHDAMAGE, minDamage = -120, maxDamage = -350, radius = 6, effect = CONST_ME_CACAO, target = false },
-	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_PHYSICALDAMAGE, minDamage = -120, maxDamage = -350, effect = CONST_ME_BIG_SCRATCH, target = false },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -352 },
+	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_DEATHDAMAGE, minDamage = 0, maxDamage = -170, range = 1, effect = 215, target = false },
+	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_EARTHDAMAGE, minDamage = 0, maxDamage = -400, radius = 4, effect = 270, target = false },
+	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_EARTHDAMAGE, minDamage = 0, maxDamage = -252, range = 7, radius = 3, effect = 52, shootEffect = CONST_ANI_EARTH, target = true },
+	{ name = "candy horror wave", interval = 2000, chance = 20, minDamage = 0, maxDamage = -352, target = false },
 }
 
 monster.defenses = {
-	defense = 24,
+	defense = 43,
 	armor = 43,
 	mitigation = 1.21,
+	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_HEALING, minDamage = 30, maxDamage = 80, effect = CONST_ME_MAGIC_BLUE, target = false },
+	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_HEALING, effect = CONST_ME_PIXIE_EXPLOSION, target = false },
+	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_HEALING, effect = CONST_ME_SOUND_WHITE, target = false },
 }
 
 monster.elements = {
@@ -123,7 +124,7 @@ monster.elements = {
 }
 
 monster.immunities = {
-	{ type = "paralyze", condition = true },
+	{ type = "paralyze", condition = false },
 	{ type = "outfit", condition = false },
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },

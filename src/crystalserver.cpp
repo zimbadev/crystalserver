@@ -33,6 +33,8 @@
 #include "io/io_bosstiary.hpp"
 #include "io/iomarket.hpp"
 #include "io/ioprey.hpp"
+#include "io/iobountytasks.hpp"
+#include "io/ioweeklytasks.hpp"
 #include "lib/thread/thread_pool.hpp"
 #include "lua/creature/events.hpp"
 #include "lua/modules/modules.hpp"
@@ -99,6 +101,11 @@ int CrystalServer::run() {
 				IOMarket::checkExpiredOffers();
 				IOMarket::getInstance().updateStatistics();
 
+				g_ioweeklytasks().initializeShopOffers(); // Winter Update 2025 - Task Board Shop (after mounts/outfits are loaded)
+				g_ioweeklytasks().initializeDeliveryItems(); // Winter Update 2025 - Load delivery items from Lua
+				g_ioweeklytasks().initializeResetTimestamp(); // Winter Update 2025 - Calculate global weekly reset timestamp
+				g_ioweeklytasks().checkWeeklyResetOnStartup(); // Winter Update 2025 - Mark players for reward distribution if reset day
+
 				logger.info("Loaded all modules, server starting up...");
 
 #ifndef _WIN32
@@ -108,6 +115,7 @@ int CrystalServer::run() {
 #endif
 
 				g_game().start(&serviceManager);
+
 				if (g_configManager().getBoolean(TOGGLE_MAINTAIN_MODE)) {
 					g_game().setGameState(GAME_STATE_CLOSED);
 					g_logger().warn("Initialized in maintain mode!");
@@ -350,10 +358,11 @@ void CrystalServer::loadModules() {
 	// Load XML folder dependencies (order matters)
 	modulesLoadHelper(g_vocations().loadFromXml(), "XML/vocations.xml");
 	modulesLoadHelper(g_eventsScheduler().loadScheduleEventFromXml(), "XML/events.xml");
+	modulesLoadHelper(g_eventsScheduler().loadScheduleEventFromJson(), "json/eventscheduler/events.json");
 	modulesLoadHelper(Outfits::getInstance().loadFromXml(), "XML/outfits.xml");
 	modulesLoadHelper(Familiars::getInstance().loadFromXml(), "XML/familiars.xml");
 	modulesLoadHelper(g_imbuements().loadFromXml(), "XML/imbuements.xml");
-	modulesLoadHelper(g_proficiencies().loadFromJson(), "items/proficiencies.json");
+	modulesLoadHelper(g_proficiencies().loadFromJson(), "json/proficiencies.json");
 	modulesLoadHelper(g_storages().loadFromXML(), "XML/storages.xml");
 
 	modulesLoadHelper(Item::items.loadFromXml(), "items.xml");

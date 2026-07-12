@@ -119,7 +119,7 @@ npcConfig.shop = {
 	{ itemName = "golden goblet", clientId = 5805, buy = 5000 },
 	{ itemName = "great fireball rune", clientId = 3191, buy = 64 },
 	{ itemName = "great health potion", clientId = 239, buy = 225 },
-	{ itemName = "great mana potion", clientId = 238, buy = 158 },
+	{ itemid = 238, clientId = 238, buy = 158 },
 	{ itemName = "great spirit potion", clientId = 7642, buy = 254 },
 	{ itemName = "greater guardian gem", clientId = 44604, sell = 10000 },
 	{ itemName = "greater marksman gem", clientId = 44607, sell = 10000 },
@@ -208,6 +208,7 @@ npcConfig.shop = {
 	{ itemName = "wild growth rune", clientId = 3156, buy = 160 },
 	{ itemName = "wood cape", clientId = 3575, sell = 5000 },
 	{ itemName = "wooden spellbook", clientId = 25699, sell = 12000 },
+	{ itemName = "bounty talisman", clientId = 51978, buy = 5000 },
 }
 
 -- On buy npc shop message
@@ -220,5 +221,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

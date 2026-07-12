@@ -24,32 +24,6 @@ toggleMaintainMode = false
 -- @field [parent=#global] #string maintainModeMessage an empty string by default, set a custom message if needed.
 maintainModeMessage = ""
 
--- Rook system
--- NOTE: Town ids: Dawnport = 2, Rookgaard = 3
-toggleRookSystem = false
-rookTownId = 3
-rookedLevel = 2
-levelToRook = 5
-minLevelToLeaveRook = 8
-maxLevelToLeaveRook = 10
-toggleAddRookItems = true
-rookSlotBackpack = 2853
-rookSlotHead = 0
-rookSlotArmor = 0
-rookSlotLegs = 0
-rookSlotFeet = 0
-rookSlotRight = 3270
-rookSlotLeft = 0
-rookSlotAmmo = 0
-
--- World settings (This information will be loaded from the 'worlds' database table as well)
--- NOTE: World id is 1 as default, new worlds must have different ids always greater than 1
--- NOTE: valid values for worldType are: "pvp", "no-pvp", "pvp-enforced", "retro-pvp" and "retro-hardcore"
--- NOTE: valid values for worldLocation are: "Europe", "North America", "South America" and "Oceania"
-worldId = 1
-worldType = "pvp"
-worldLocation = "South America"
-
 -- Combat settings
 -- NOTE: removeBeginningWeaponAmmunition: spears, arrows, bolt have endless ammo (allows training for paladins)
 -- NOTE: refundManaOnBeginningWeapons: wand of vortex and snakebite refund mana used (allows training for mages)
@@ -180,6 +154,20 @@ taskHuntingSelectListPrice = 5
 taskHuntingBonusRerollPrice = 1
 taskHuntingFreeRerollTime = 20 * 60 * 60
 
+-- Bounty Tasks system
+-- NOTE: bountyTasksFreeRerollTime: Time in seconds that players will have to wait to get a free bounty tasks reroll.
+bountyTasksEnabled = true
+bountyTasksExpMultiplier = 1
+bountyTasksPointsMultiplier = 1
+bountyTasksRerollMultiplier = 1
+bountyTasksKillMultiplier = 1
+bountyTasksFreeRerollTime = 20 * 60 * 60
+
+-- Wweekly Tasks system
+-- Day of week for weekly tasks reset (monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+weeklyTasksEnabled = true
+weeklyTasksResetDay = "monday"
+
 -- Forge system
 -- NOTE: forgeAmountMultiplier, amount dusts multiplies of influenced monsters, default 3
 -- NOTE: forgeMinSlivers, min slivers from influenced monsters
@@ -294,6 +282,7 @@ familiarTime = 30
 -- Party
 -- NOTE: partyShareRangeMultiplier: the range of the party share experience, default 3/2 (1.5)
 -- NOTE: advancedPartyProtection will nullfy the damage along your party members and their summons
+-- NOTE partyListMaxDistance set to 0 means no limit
 leavePartyOnDeath = false
 partyAutoShareExperience = true
 partyShareRangeMultiplier = 1.5
@@ -301,6 +290,7 @@ partyShareLootBoosts = false
 partyShareLootBoostsDimishingFactor = 0.7
 experienceShareActivity = 2 * 60 * 1000
 advancedPartyProtection = false
+partyListMaxDistance = 30
 
 -- Tibiadrome concoctions
 tibiadromeConcoctionCooldown = 24 * 60 * 60 -- 24 hours
@@ -326,7 +316,6 @@ onlyPremiumAccount = false
 -- NOTE: allowLureCreatures if true monsters can be lured far from spawn, if false they will despawn
 -- NOTE: blockRespawn if true players block monster respawns on their spot
 -- NOTE: enableOfflineTraining if false will disable offline training from beds only, set false at skill_trainer.lua if you want to completly disable the system
--- NOTE: walkThroughPlayers if true players can pass through other players, if false they cannot, set allowWalkthrough same as you do here to avoid override or bug
 autoLoot = false
 autoBank = false
 toggleGoldPouchAllowAnything = false
@@ -472,14 +461,13 @@ imbueActionsDelay = 1500
 mapName = "world"
 mapAuthor = ""
 
--- Party List limitations
--- max distance in which players in party list are visible
--- NOTE partyListMaxDistance set to 0 means no limit
-partyListMaxDistance = 30
-
 -- Custom Map
 -- NOTE: toggleMapCustom set to true will load all maps in custom map folder
 toggleMapCustom = false
+
+-- Compressed Map
+-- NOTE: toggleCompressedMap must be true to load compressed .otbm maps (RME "Optimized map save")
+toggleCompressedMap = true
 
 -- Market
 -- NOTE: marketRefreshPricesInterval (in minutes, minimum is 1 minute)
@@ -524,9 +512,6 @@ allowChangeOutfit = true
 freePremium = false
 kickIdlePlayerAfterMinutes = 15
 maxMessageBuffer = 4
-allowWalkthrough = true
-coinPacketSize = 25
-coinImagesURL = "http://127.0.0.1/images/store/"
 classicAttackSpeed = false
 showScriptsLogInConsole = false
 -- time to suppress negative conditions after being affected by them (ms)
@@ -541,6 +526,14 @@ minElementalResistance = -200
 maxElementalResistance = 200
 maxDamageReflection = 200
 logPlayersStatements = false
+
+-- Store
+-- NOTE: storeCombinedCoins = true uses transferable coins first, then regular coins for store purchases.
+-- NOTE: When storeCombinedCoins = false, storeCoinType selects which coin type is used (0 = regular, 1 = transferable).
+coinPacketSize = 25
+coinImagesURL = "http://127.0.0.1/images/store/"
+storeCombinedCoins = true
+storeCoinType = 0
 
 -- Chain system
 -- NOTE: combatChainDelay: set to minimum 50 miliseconds
@@ -557,7 +550,7 @@ combatChainSkillFormulaMissile = 0.9
 combatChainSkillFormulaWandsAndRods = 1.0
 
 -- Spells
-toggleLearnSpells = true
+toggleLearnSpells = false
 emoteSpells = false
 spellNameInsteadOfWords = false
 
@@ -582,10 +575,6 @@ globalServerSaveTime = "06:00:00"
 -- the corpse size is less than the total of loots
 -- the monster can drop
 sortLootByChance = false
-
--- Screenshots
--- Set enableScreenshots to true to anable game screenshots.
-enableScreenshots = false
 
 -- Rates
 -- NOTE: rateExp, rateSkill and rateMagic is used when 'rateUseStages = false' - or a fallback only
@@ -614,6 +603,7 @@ rateSoulRegen = 1.0
 rateSoulRegenSpeed = 1.0
 
 rateSpellCooldown = 1.0
+
 rateAttackSpeed = 1.0
 rateOfflineTrainingSpeed = rateAttackSpeed
 rateExerciseTrainingSpeed = rateAttackSpeed

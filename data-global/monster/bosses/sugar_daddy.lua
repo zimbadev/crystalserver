@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Sugar Daddy")
 local monster = {}
 
 monster.description = "Sugar Daddy"
-monster.experience = 45000
+monster.experience = 15550
 monster.outfit = {
 	lookType = 1764,
 	lookHead = 0,
@@ -18,9 +18,9 @@ monster.bosstiary = {
 	bossRace = RARITY_BANE,
 }
 
-monster.health = 45000
-monster.maxHealth = 45000
-monster.race = "blood"
+monster.health = 9500
+monster.maxHealth = 9500
+monster.race = "candy"
 monster.corpse = 48416
 monster.speed = 150
 monster.manaCost = 0
@@ -62,6 +62,15 @@ monster.light = {
 	color = 0,
 }
 
+--monster.summon = {
+--maxSummons = 5,
+--summons = {
+--{ name = "cheeky sugar cube", chance = 18, interval = 2000, count = 5 },
+--{ name = "mint drop", chance = 18, interval = 2000, count = 5 },
+--{ name = "truffle worker", chance = 18, interval = 2000, count = 5 },
+--},
+--}
+
 monster.voices = {
 	interval = 5000,
 	chance = 10,
@@ -74,41 +83,42 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "gold coin", chance = 100000, maxCount = 95 },
-	{ name = "platinum coin", chance = 100000, maxCount = 11 },
-	{ name = "small enchanted sapphire", chance = 8900 },
-	{ id = 3039, chance = 94465, maxCount = 1 }, -- red gem
-	{ name = "white gem", chance = 5600, maxCount = 1 },
-	{ id = 48114, chance = 1000 }, -- peppermint backpack
-	{ id = 45643, chance = 1000 }, -- biscuit barrier
-	{ id = 45644, chance = 1000 }, -- candy-coated quiver
-	{ id = 45639, chance = 1000 }, -- cocoa grimoire
-	{ id = 45640, chance = 1000 }, -- creamy grimoire
-	{ id = 45641, chance = 2300 }, -- candy necklace
-	{ id = 45642, chance = 7650 }, -- ring of temptation
-	{ id = 48254, chance = 11655, maxCount = 1 }, -- churro heart
-	{ id = 48250, chance = 46555, maxCount = 1 }, -- dark chocolate coin
+	{ name = "gold coin", chance = 100000, minCount = 6, maxCount = 99 },
+	{ name = "platinum coin", chance = 100000, minCount = 1, maxCount = 11 },
+	{ name = "small enchanted sapphire", chance = 100000 },
+	{ id = 3039, chance = 95000, maxCount = 1 }, -- red gem
+	{ id = 48249, chance = 49465, maxCount = 20 }, -- milk chocolate coin
+	{ id = 48250, chance = 51000, maxCount = 20 }, -- dark chocolate coin
+	{ id = 48251, chance = 34000, maxCount = 1 }, -- wafer paper flower
+	{ id = 48255, chance = 34000, maxCount = 1 }, -- lime tart
 	{ id = 48252, chance = 15300, maxCount = 1 }, -- beijinho
 	{ id = 45642, chance = 14650, maxCount = 1 }, -- brigadeiro
-	{ id = 48249, chance = 54465, maxCount = 1 }, -- milk chocolate coin
-	{ id = 48256, chance = 2367, maxCount = 1 }, -- pastry dragon
+	{ id = 48254, chance = 14000, maxCount = 1 }, -- churro heart
+	{ id = 45642, chance = 6800 }, -- ring of temptation
+	{ name = "white gem", chance = 4700, maxCount = 1 },
+	{ id = 48256, chance = 2700, maxCount = 1 }, -- pastry dragon
+	{ id = 48114, chance = 380 }, -- peppermint backpack
+	{ id = 45643, chance = 190 }, -- biscuit barrier
+	{ id = 45639, chance = 190 }, -- cocoa grimoire
+	{ id = 45641, chance = 175 }, -- candy necklace
+	{ id = 45644, chance = 175 }, -- candy-coated quiver
+	{ id = 45640, chance = 180 }, -- creamy grimoire
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 20, minDamage = 0, maxDamage = -1550 },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_DEATHDAMAGE, minDamage = -1300, maxDamage = -1500, range = 6, effect = CONST_ME_MORTAREA, target = true },
-	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_ENERGYDAMAGE, minDamage = -1200, maxDamage = -1300, radius = 12, effect = CONST_ME_PIXIE_EXPLOSION, target = false },
-	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_EARTHDAMAGE, minDamage = -1050, maxDamage = -1110, radius = 12, effect = CONST_ME_HEARTS, target = false },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -300 },
+	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_EARTHDAMAGE, minDamage = -0, maxDamage = -350, range = 7, shootEffect = CONST_ANI_POISON, target = false },
+	{ name = "combat", interval = 6000, chance = 18, type = COMBAT_DEATHDAMAGE, minDamage = -0, maxDamage = -350, range = 6, effect = CONST_ME_MORTAREA, target = true },
+	{ name = "drunk", interval = 2000, chance = 10, length = 3, spread = 2, effect = CONST_ME_POFF, target = false, duration = 5000 },
 	{ name = "root area", interval = 20000, chance = 100, target = false },
 	{ name = "sugar daddy cake", interval = 10000, chance = 50, target = true },
 }
 
 monster.defenses = {
-	defense = 65,
-	armor = 55,
+	defense = 15,
+	armor = 25,
 	--	mitigation = ???,
-	{ name = "combat", interval = 3000, chance = 25, type = COMBAT_HEALING, minDamage = 400, maxDamage = 1500, effect = CONST_ME_MAGIC_BLUE, target = false },
-	{ name = "speed", interval = 2000, chance = 15, speedChange = 320, effect = CONST_ME_MAGIC_RED, target = false, duration = 5000 },
+	{ name = "combat", interval = 3000, chance = 25, type = COMBAT_HEALING, minDamage = 1, maxDamage = 600, effect = CONST_ME_MAGIC_BLUE, target = false },
 }
 
 monster.elements = {

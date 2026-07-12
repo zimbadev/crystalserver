@@ -90,7 +90,8 @@ TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player,
 		return TALKACTION_FAILED;
 	}
 
-	if (instantSpell->playerCastInstant(player, param)) {
+	const Position spellAimPos = player->hasSpellAimPosition() ? player->getSpellAimPosition() : Position();
+	if (instantSpell->playerCastInstant(player, param, spellAimPos)) {
 		if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
 			words = instantSpell->getWords();
 		} else {
@@ -808,6 +809,10 @@ void Spell::applyCooldownConditions(const std::shared_ptr<Player> &player) const
 			spellSecondaryGroupCooldown -= getWheelOfDestinyBoost(WheelSpellBoost_t::SECONDARY_GROUP_COOLDOWN, spellGrade);
 		}
 		spellSecondaryGroupCooldown -= player->wheel()->getSpellBonus(name, WheelSpellBoost_t::SECONDARY_GROUP_COOLDOWN);
+		// Vocation Adjustment: Focus Mastery additionally reduces the focus-spell group cooldown by 2s.
+		if (secondaryGroup == SPELLGROUP_FOCUS && player->wheel()->getInstant("Focus Mastery")) {
+			spellSecondaryGroupCooldown -= 2000;
+		}
 		if (spellSecondaryGroupCooldown > 0) {
 			player->wheel()->handleBeamMasteryCooldown(player, name, spellSecondaryGroupCooldown, rateCooldown);
 			const auto &condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_SPELLGROUPCOOLDOWN, spellSecondaryGroupCooldown / rateCooldown, 0, false, secondaryGroup);
@@ -915,6 +920,14 @@ uint32_t Spell::getLevel() const {
 
 void Spell::setLevel(uint32_t lvl) {
 	level = lvl;
+}
+
+uint16_t Spell::getBasePower() const {
+	return basePower;
+}
+
+void Spell::setBasePower(uint16_t power) {
+	basePower = power;
 }
 
 uint32_t Spell::getMagicLevel() const {
@@ -1126,7 +1139,7 @@ static Direction getStraightDirectionTo(const Position &from, const Position &to
 	return DIRECTION_NONE;
 }
 
-bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std::string &param) const {
+bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std::string &param, const Position &to) const {
 	if (!playerSpellCheck(player)) {
 		return false;
 	}
@@ -1235,6 +1248,11 @@ bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std:
 			} else {
 				var.pos = Spells::getCasterPosition(player, player->getDirection());
 			}
+		}
+		// Vocation Adjustment 15.25: crossHairTarget spells cast at the clicked tile (cursor/crosshair).
+		// The client sends the aimed tile in the say packet tail; parseSay forwards it here as `to`.
+		else if (needPosition && to.x != 0) {
+			var.pos = to;
 		} else {
 			var.pos = player->getPosition();
 		}
@@ -1361,6 +1379,14 @@ bool InstantSpell::getNeedDirection() const {
 
 void InstantSpell::setNeedDirection(bool n) {
 	needDirection = n;
+}
+
+bool InstantSpell::getNeedPosition() const {
+	return needPosition;
+}
+
+void InstantSpell::setNeedPosition(bool n) {
+	needPosition = n;
 }
 
 bool InstantSpell::getNeedCasterTargetOrDirection() const {

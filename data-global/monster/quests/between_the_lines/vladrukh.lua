@@ -74,7 +74,7 @@ monster.loot = {
 	{ name = "blood preservation", chance = 5500 },
 	{ name = "supreme health potion", chance = 5000, maxCount = 5 },
 	{ name = "ultimate mana potion", chance = 4800, maxCount = 29 },
-	{ name = "great mana potion", chance = 4000, maxCount = 6 },
+	{ id = 238, chance = 4000, maxCount = 6 }, -- great mana potion
 	{ name = "strong mana potion", chance = 3800, maxCount = 14 },
 	{ name = "ultimate spirit potion", chance = 3800, maxCount = 4 },
 	{ name = "great spirit potion", chance = 3800, maxCount = 15 },

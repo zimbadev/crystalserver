@@ -234,6 +234,12 @@ registerMonsterType.flags = function(mtype, mask)
 		if mask.flags.isForgeCreature ~= nil then
 			mtype:isForgeCreature(mask.flags.isForgeCreature)
 		end
+		if mask.flags.canTarget ~= nil then
+			mtype:canTarget(mask.flags.canTarget)
+		end
+		if mask.flags.canWalk ~= nil then
+			mtype:canWalk(mask.flags.canWalk)
+		end
 	end
 end
 registerMonsterType.light = function(mtype, mask)

@@ -266,6 +266,25 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.Questline, 50)
 			player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.SideDecision, 2)
 			player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.Mission09, 2) -- StorageValue for Questlog "Mission 09: Decision"
+
+			-- achievement
+			local goodSide = player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.GoodSide)
+			local badSide = player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.BadSide)
+
+			if goodSide < 0 then
+				goodSide = 0
+			end
+
+			if badSide < 0 then
+				badSide = 0
+			end
+
+			if badSide > 0 and goodSide == 0 then
+				player:addAchievement("Follower of Azerus")
+			elseif goodSide > 0 and badSide > 0 then
+				player:addAchievement("Turncoat")
+			end
+
 			npcHandler:say("I knew that you were smart enough to make the right decision! Your next mission will be a special one! ", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		end

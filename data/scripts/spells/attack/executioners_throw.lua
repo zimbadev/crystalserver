@@ -5,7 +5,7 @@ combat:setParameter(COMBAT_PARAM_BLOCKARMOR, 1)
 
 function onGetFormulaValues(player, skill, attack, factor)
 	local skillTotal = skill * attack
-	local levelTotal = player:getLevel() / 5
+	local levelTotal = calculateBaseDamageHealing(player:getLevel())
 	return -(((skillTotal * 0.17) + 17) + levelTotal) * 1.28, -(((skillTotal * 0.20) + 40) + levelTotal) * 1.28
 end
 
@@ -53,6 +53,7 @@ spell:name("Executioner's Throw")
 spell:words("exori amp kor")
 spell:level(300)
 spell:mana(225)
+spell:basePower(60)
 spell:isPremium(true)
 spell:range(5)
 spell:needTarget(true)
@@ -60,6 +61,5 @@ spell:blockWalls(true)
 spell:needWeapon(true)
 spell:cooldown(18 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("knight;true", "elite knight;true")
 spell:register()

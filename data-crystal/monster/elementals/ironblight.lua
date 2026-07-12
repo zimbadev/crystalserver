@@ -87,7 +87,7 @@ monster.loot = {
 	{ name = "epee", chance = 480 },
 	{ name = "magic sulphur", chance = 830 },
 	{ name = "sapphire hammer", chance = 480 },
-	{ name = "great mana potion", chance = 17640 },
+	{ id = 238, chance = 17640 }, -- great mana potion
 	{ name = "terra legs", chance = 1110 },
 	{ name = "ultimate health potion", chance = 18330 },
 	{ name = "composite hornbow", chance = 210 },

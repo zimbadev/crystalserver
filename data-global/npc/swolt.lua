@@ -111,4 +111,7 @@ keywordHandler:addAliasKeyword({ "ware" })
 npcHandler:setMessage(MESSAGE_SENDTRADE, "Take a look, but not a sip before you've paid. And I hope it stays like this and you don't get any strange ideas about {rice}.")
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
+
 npcType:register(npcConfig)

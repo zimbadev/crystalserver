@@ -371,7 +371,6 @@ tasks.json
 config.lua
 client_assertions.txt
 .env
-data-global/world/world.otbm
 
 # Extensions
 *.ini
@@ -396,3 +395,4 @@ database_backup
 
 # CLION
 cmake-build-*
+/data/logs

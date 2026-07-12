@@ -94,7 +94,7 @@ monster.loot = {
 	{ name = "magic sulphur", chance = 720 },
 	{ name = "chaos mace", chance = 550 },
 	{ name = "spiked squelcher", chance = 810 },
-	{ name = "great mana potion", chance = 13650 },
+	{ id = 238, chance = 13650 }, -- great mana potion
 	{ name = "great health potion", chance = 13650 },
 	{ name = "terra boots", chance = 640 },
 	{ name = "small topaz", chance = 7970, maxCount = 2 },

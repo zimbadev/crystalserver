@@ -35,13 +35,14 @@ GameStore.OfferTypes = {
 	OFFER_TYPE_HUNTINGSLOT = 25,
 	OFFER_TYPE_ITEM_BED = 26,
 	OFFER_TYPE_ITEM_UNIQUE = 27,
+	OFFER_TYPE_WEEKLYTASKEXPANSION = 28,
 }
 
 GameStore.SubActions = {
 	PREY_THIRDSLOT_REAL = 0,
 	PREY_WILDCARD = 1,
 	INSTANT_REWARD = 2,
-	BLESSING_TWIST = 3,
+	CHARM_EXPANSION = 3,
 	BLESSING_SOLITUDE = 4,
 	BLESSING_PHOENIX = 5,
 	BLESSING_SUNS = 6,
@@ -50,10 +51,11 @@ GameStore.SubActions = {
 	BLESSING_BLOOD = 9,
 	BLESSING_HEART = 10,
 	BLESSING_ALL_PVE = 11,
-	BLESSING_ALL_PVP = 12,
-	CHARM_EXPANSION = 13,
-	TASKHUNTING_THIRDSLOT = 14,
+	BLESSING_TWIST = 12,
+	TASKHUNTING_THIRDSLOT = 13,
+	BLESSING_ALL_PVP = 14,
 	PREY_THIRDSLOT_REDIRECT = 15,
+	WEEKLY_TASK_EXPANSION = 16,
 }
 
 GameStore.ActionType = {
@@ -367,14 +369,18 @@ function parseRequestStoreOffers(playerId, msg)
 		local subAction = msg:getByte()
 		local offerId = subAction
 		local category = nil
-		if subAction >= GameStore.SubActions.BLESSING_TWIST and subAction <= GameStore.SubActions.BLESSING_ALL_PVP then
+		if subAction == GameStore.SubActions.PREY_THIRDSLOT_REAL then
+			offerId = GameStore.SubActions.PREY_THIRDSLOT_REDIRECT
+		elseif subAction == GameStore.SubActions.TASKHUNTING_THIRDSLOT then
+			offerId = GameStore.SubActions.WEEKLY_TASK_EXPANSION
+		elseif subAction == GameStore.SubActions.WEEKLY_TASK_EXPANSION then
+			offerId = GameStore.SubActions.WEEKLY_TASK_EXPANSION
+		end
+
+		if offerId >= GameStore.SubActions.BLESSING_TWIST and offerId <= GameStore.SubActions.BLESSING_ALL_PVP then
 			category = GameStore.getCategoryByName("Blessings")
 		else
 			category = GameStore.getCategoryByName("Useful Things")
-		end
-
-		if subAction == GameStore.SubActions.PREY_THIRDSLOT_REAL then
-			offerId = GameStore.SubActions.PREY_THIRDSLOT_REDIRECT
 		end
 		if category then
 			addPlayerEvent(sendShowStoreOffers, 50, playerId, category, offerId)
@@ -436,6 +442,7 @@ function parseBuyStoreOffer(playerId, msg)
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_PREYBONUS
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_PREYSLOT
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_HUNTINGSLOT
+			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_WEEKLYTASKEXPANSION
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_TEMPLE
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_SEXCHANGE
 			and offer.type ~= GameStore.OfferTypes.OFFER_TYPE_INSTANT_REWARD_ACCESS
@@ -494,6 +501,8 @@ function parseBuyStoreOffer(playerId, msg)
 			GameStore.processExpBoostPurchase(player)
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_HUNTINGSLOT then
 			GameStore.processTaskHuntingThirdSlot(player)
+		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_WEEKLYTASKEXPANSION then
+			GameStore.processWeeklyTaskExpansion(player)
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_PREYSLOT then
 			GameStore.processPreyThirdSlot(player)
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_PREYBONUS then
@@ -751,6 +760,11 @@ function Player.canBuyOffer(self, offer)
 			if self:taskHuntingThirdSlot() then
 				disabled = 1
 				disabledReason = "You already have 3 slots released."
+			end
+		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_WEEKLYTASKEXPANSION then
+			if self:weeklyTaskExpansion() then
+				disabled = 1
+				disabledReason = "You already have the Permanent Weekly Task Expansion."
 			end
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_PREYSLOT then
 			if self:preyThirdSlot() then
@@ -1179,15 +1193,18 @@ function sendStorePurchaseSuccessful(playerId, message)
 	end
 
 	local oldProtocol = player:getClient().version < 1200
+	local transferableCoins = player:getTransferableCoins()
+	local regularCoins = player:getTibiaCoins()
+	local totalCoins = GameStore.getStorePurchasableCoins(player)
 	local msg = NetworkMessage()
 	msg:addByte(GameStore.SendingPackets.S_CompletePurchase)
 	msg:addByte(0x00)
 	msg:addString(message, "sendStorePurchaseSuccessful - message")
 	if oldProtocol then
 		-- Send all coins can be used for buy store offers
-		msg:addU32(player:getTibiaCoins())
+		msg:addU32(totalCoins)
 		-- Send transferable coins can be used on transfer
-		msg:addU32(player:getTransferableCoins())
+		msg:addU32(transferableCoins)
 	end
 
 	msg:sendToPlayer(player)
@@ -1228,6 +1245,9 @@ function sendUpdatedStoreBalances(playerId)
 		return false
 	end
 
+	local transferableCoins = player:getTransferableCoins()
+	local regularCoins = player:getTibiaCoins()
+	local totalCoins = GameStore.getStorePurchasableCoins(player)
 	local msg = NetworkMessage()
 	msg:addByte(GameStore.SendingPackets.S_CoinBalanceUpdating)
 	msg:addByte(0x01)
@@ -1235,9 +1255,10 @@ function sendUpdatedStoreBalances(playerId)
 	msg:addByte(GameStore.SendingPackets.S_CoinBalance)
 	msg:addByte(0x01)
 
-	-- Send total of coins (transferable and normal coin)
-	msg:addU32(player:getTibiaCoins())
-	msg:addU32(player:getTransferableCoins()) -- How many are Transferable
+	-- Send total of coins that can be used in store purchases.
+	msg:addU32(totalCoins)
+	-- Send transferable subset (used in market/gift and transferable-only checks).
+	msg:addU32(transferableCoins)
 
 	local oldProtocol = player:getClient().version < 1200
 	if not oldProtocol then
@@ -1806,6 +1827,13 @@ function GameStore.processTaskHuntingThirdSlot(player)
 	player:taskHuntingThirdSlot(true)
 end
 
+function GameStore.processWeeklyTaskExpansion(player)
+	if player:weeklyTaskExpansion() then
+		return error({ code = 1, message = "You already have the Permanent Weekly Task Expansion." })
+	end
+	player:weeklyTaskExpansion(true)
+end
+
 function GameStore.processPreyBonusReroll(player, offerCount)
 	local limit = GameStore.ItemLimit.PREY_WILDCARD
 	if player:getPreyCards() + offerCount >= limit + 1 then
@@ -2023,8 +2051,7 @@ end
 function Player.removeCoinsBalance(self, coins)
 	if self:canRemoveCoins(coins) then
 		sendStoreBalanceUpdating(self:getId(), true)
-		self:removeTibiaCoins(coins)
-		return true
+		return self:removeTibiaCoins(coins) == true
 	end
 
 	return false
@@ -2046,8 +2073,7 @@ end
 function Player.removeTransferableCoinsBalance(self, coins)
 	if self:canRemoveTransferableCoins(coins) then
 		sendStoreBalanceUpdating(self:getId(), true)
-		self:removeTransferableCoins(coins)
-		return true
+		return self:removeTransferableCoins(coins) == true
 	end
 
 	return false
@@ -2062,16 +2088,66 @@ function Player.addTransferableCoinsBalance(self, coins, update)
 end
 
 --- Support Functions
-function Player.makeCoinTransaction(self, offer, desc)
-	local op = false
+function GameStore.getStorePurchasableCoins(player)
+	if configManager.getBoolean(configKeys.STORE_COMBINED_COINS) then
+		return player:getTotalStoreCoins()
+	end
 
+	if configManager.getNumber(configKeys.STORE_COIN_TYPE) == GameStore.CoinType.Transferable then
+		return player:getTransferableCoins()
+	end
+
+	return player:getTibiaCoins()
+end
+
+function Player.getTotalStoreCoins(self)
+	return (self:getTransferableCoins() or 0) + (self:getTibiaCoins() or 0)
+end
+
+local function removeCombinedCoinsBalance(self, coins)
+	local removed = self:removeTransferableAndTibiaCoins(coins) == true
+	if removed then
+		sendStoreBalanceUpdating(self:getId(), true)
+	end
+	return removed
+end
+
+local function removeStoreCoinsBalance(self, coins, offerCoinType)
+	if offerCoinType == GameStore.CoinType.Transferable then
+		return self:removeTransferableCoinsBalance(coins)
+	end
+
+	if configManager.getBoolean(configKeys.STORE_COMBINED_COINS) then
+		return removeCombinedCoinsBalance(self, coins)
+	end
+
+	if configManager.getNumber(configKeys.STORE_COIN_TYPE) == GameStore.CoinType.Transferable then
+		return self:removeTransferableCoinsBalance(coins)
+	end
+
+	return self:removeCoinsBalance(coins)
+end
+
+local function getStoreHistoryCoinType(offer)
+	if offer.coinType == GameStore.CoinType.Transferable then
+		return GameStore.CoinType.Transferable
+	end
+
+	if configManager.getBoolean(configKeys.STORE_COMBINED_COINS) then
+		return offer.coinType or GameStore.CoinType.Coin
+	end
+
+	return configManager.getNumber(configKeys.STORE_COIN_TYPE)
+end
+
+function Player.makeCoinTransaction(self, offer, desc)
 	if desc then
 		desc = offer.name .. " (" .. desc .. ")"
 	else
 		desc = offer.name
 	end
 
-	if offer.Type == GameStore.OfferTypes.OFFER_TYPE_EXPBOOST then
+	if offer.type == GameStore.OfferTypes.OFFER_TYPE_EXPBOOST then
 		local expBoostCount = self:getStorageValue(GameStore.Storages.expBoostCount)
 
 		if expBoostCount == -1 or expBoostCount == 0 or expBoostCount > 5 then
@@ -2079,42 +2155,49 @@ function Player.makeCoinTransaction(self, offer, desc)
 		end
 		if GameStore.ExpBoostValues[expBoostCount] then
 			offer.price = GameStore.ExpBoostValues[expBoostCount]
-		else
-			offer.price = offer.price
 		end
 		self:setStorageValue(GameStore.Storages.expBoostCount, expBoostCount + 1)
 	end
 
-	if offer.coinType == GameStore.CoinType.Coin and self:canRemoveCoins(offer.price) then
-		op = self:removeCoinsBalance(offer.price)
-	elseif offer.coinType == GameStore.CoinType.Transferable and self:canRemoveTransferableCoins(offer.price) then
-		op = self:removeTransferableCoinsBalance(offer.price)
+	if offer.price <= 0 then
+		return true
 	end
+
+	if not self:canPayForOffer(offer.price, offer.coinType) then
+		return false
+	end
+
+	local op = removeStoreCoinsBalance(self, offer.price, offer.coinType)
 
 	-- When the transaction is successful add to the history
 	if op then
-		GameStore.insertHistory(self:getAccountId(), GameStore.HistoryTypes.HISTORY_TYPE_NONE, desc, offer.price * -1, offer.coinType)
+		GameStore.insertHistory(self:getAccountId(), GameStore.HistoryTypes.HISTORY_TYPE_NONE, desc, offer.price * -1, getStoreHistoryCoinType(offer))
 	end
 
 	return op
 end
 
--- Verifies if the player has enough resources to afford a given offer.
+-- Verifies if the player has enough resources to afford a store offer.
+-- When storeCombinedCoins is enabled, store purchases use transferable coins first, then regular coins.
+-- When storeCombinedCoins is disabled, only the configured storeCoinType is used (unless the offer requires transferable coins).
+-- Player-to-player coin transfers use only transferable coins (see parseTransferableCoins).
 -- @param coinsToRemove (number) - The amount of coins required for the offer.
--- @param coinType (string) - The type of the offer.
+-- @param offerCoinType (number|nil) - The coin type required by the offer.
 -- @return (boolean) - Returns true if the player can pay for the offer, false otherwise.
-function Player.canPayForOffer(self, coinsToRemove, coinType)
-	-- Check if the player has the required amount of regular coins and the offer type is regular.
-	if coinType == GameStore.CoinType.Coin then
-		return self:canRemoveCoins(coinsToRemove)
+function Player.canPayForOffer(self, coinsToRemove, offerCoinType)
+	if offerCoinType == GameStore.CoinType.Transferable then
+		return self:getTransferableCoins() >= coinsToRemove
 	end
 
-	-- Check if the player has the required amount of transferable coins and the offer type is transferable.
-	if coinType == GameStore.CoinType.Transferable then
-		return self:canRemoveTransferableCoins(coinsToRemove)
+	if configManager.getBoolean(configKeys.STORE_COMBINED_COINS) then
+		return self:getTotalStoreCoins() >= coinsToRemove
 	end
 
-	return false
+	if configManager.getNumber(configKeys.STORE_COIN_TYPE) == GameStore.CoinType.Transferable then
+		return self:getTransferableCoins() >= coinsToRemove
+	end
+
+	return self:getTibiaCoins() >= coinsToRemove
 end
 
 --- Other players functions

@@ -298,6 +298,25 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.Mission09, 2) -- StorageValue for Questlog "Mission 09: Decision"
 			player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.Mission10, 1) -- StorageValue for Questlog "Mission 10: The Final Battle"
 			player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.SideDecision, 1)
+
+			-- achievement
+			local goodSide = player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.GoodSide)
+			local badSide = player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.BadSide)
+
+			if goodSide < 0 then
+				goodSide = 0
+			end
+
+			if badSide < 0 then
+				badSide = 0
+			end
+
+			if goodSide > 0 and badSide == 0 then
+				player:addAchievement("Follower of Palimuth")
+			elseif goodSide > 0 and badSide > 0 then
+				player:addAchievement("Turncoat")
+			end
+
 			npcHandler:say("You have no idea how much I hoped to hear that, my friend! But I have an urgent mission for you!", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 6 then
@@ -316,6 +335,10 @@ local function creatureSayCallback(npc, creature, type, message)
 	end
 	return true
 end
+
+keywordHandler:addKeyword({ "blood crystal" }, StdModule.say, { npcHandler = npcHandler, text = "What would you need a blood crystal for? Maybe a magician knows where to find one." }, function(player)
+	return player:getStorageValue(Storage.Quest.U8_4.BloodBrothers.Mission05) == 1
+end)
 
 npcHandler:setMessage(MESSAGE_GREET, "Greetings.")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye, |PLAYERNAME|.")

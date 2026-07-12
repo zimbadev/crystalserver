@@ -19,6 +19,8 @@
 
 #include "account/account.hpp"
 #include "config/configmanager.hpp"
+#include "io/iobountytasks.hpp"
+#include "io/ioweeklytasks.hpp"
 #include "core.hpp"
 #include "creatures/appearance/mounts/mounts.hpp"
 #include "creatures/appearance/attached_effects/attached_effects.hpp"
@@ -78,6 +80,7 @@
 #include "creatures/players/wheel/wheel_definitions.hpp"
 #include "creatures/players/proficiencies/proficiencies.hpp"
 #include "creatures/players/proficiencies/proficiencies_definitions.hpp"
+#include "creatures/combat/spells.hpp"
 #include "utils/tools.hpp"
 
 MuteCountMap Player::muteCountMap;
@@ -653,9 +656,15 @@ int32_t Player::getDefense(bool sendToClient /* = false*/) const {
 	}
 
 	if (shield) {
+		// Vocation Adjustment: combat-mode removal compensation. getShieldAndWeapon() classifies
+		// both real shields and spellbooks as WEAPON_SHIELD; split via isSpellBook():
+		// spellbook defense +60%, real shield defense +30%.
+		const int32_t baseShieldDefense = shield->isSpellBook()
+			? (shield->getDefense() * 160) / 100
+			: (shield->getDefense() * 130) / 100;
 		defenseValue = (weapon != nullptr)
-			? shield->getDefense() + (weapon->getExtraDefense() + equippedWeaponProficiency.weaponShieldMod)
-			: shield->getDefense();
+			? baseShieldDefense + (weapon->getExtraDefense() + equippedWeaponProficiency.weaponShieldMod)
+			: baseShieldDefense;
 		// Wheel of destiny - Combat Mastery
 		if (shield->getDefense() > 0) {
 			defenseValue += wheel()->getMajorStatConditional("Combat Mastery", WheelMajor_t::DEFENSE);
@@ -689,7 +698,11 @@ uint16_t Player::getDefenseEquipment() const {
 	}
 
 	if (shield) {
-		defenseValue = weapon != nullptr ? (shield->getDefense() + equippedWeaponProficiency.defense) + (weapon->getExtraDefense() + equippedWeaponProficiency.weaponShieldMod) : shield->getDefense();
+		// Vocation Adjustment: keep displayed defense in sync with getDefense() (+30% shield / +60% spellbook).
+		const int32_t baseShieldDefense = shield->isSpellBook()
+			? (shield->getDefense() * 160) / 100
+			: (shield->getDefense() * 130) / 100;
+		defenseValue = weapon != nullptr ? (baseShieldDefense + equippedWeaponProficiency.defense) + (weapon->getExtraDefense() + equippedWeaponProficiency.weaponShieldMod) : baseShieldDefense;
 		if (shield->getDefense() > 0) {
 			defenseValue += wheel()->getMajorStatConditional("Combat Mastery", WheelMajor_t::DEFENSE);
 		}
@@ -699,16 +712,11 @@ uint16_t Player::getDefenseEquipment() const {
 }
 
 float Player::getAttackFactor() const {
-	switch (fightMode) {
-		case FIGHTMODE_ATTACK:
-			return 1.0f;
-		case FIGHTMODE_BALANCED:
-			return 0.75f;
-		case FIGHTMODE_DEFENSE:
-			return 0.5f;
-		default:
-			return 1.0f;
-	}
+	// Vocation Adjustment: combat-mode removal compensation. Fight modes are gone
+	// (parseFightModes hardcodes FIGHTMODE_ATTACK), so apply a flat +20% here -- this
+	// factor multiplies into every weapon getWeaponDamage (melee, distance, ammo, fist).
+	// Wands ignore attackFactor and spells use magic level, so neither is affected.
+	return 1.2f;
 }
 
 float Player::getDefenseFactor(bool sendToClient /* = false*/) const {
@@ -778,6 +786,12 @@ std::unordered_set<PlayerIcon> Player::getClientIcons() {
 				return icons;
 			}
 		}
+	}
+
+	// Vocation Adjustment: show the "Monk's Virtue bonus" special-condition icon while this player carries
+	// an active monk virtue aura (a member near a serene monk, or the serene monk itself).
+	if (getMonkAuraVocMask() != 0 && icons.size() < 9) {
+		icons.insert(PlayerIcon::MonksVirtueBonus);
 	}
 
 	if (pzLocked && icons.size() < 9) {
@@ -858,6 +872,10 @@ void Player::refreshCyclopediaMonsterTracker(const std::unordered_set<std::share
 
 bool Player::isBossOnBosstiaryTracker(const std::shared_ptr<MonsterType> &monsterType) const {
 	return monsterType ? m_bosstiaryMonsterTracker.contains(monsterType) : false;
+}
+
+bool Player::isMonsterOnBestiaryTracker(const std::shared_ptr<MonsterType> &monsterType) const {
+	return monsterType ? m_bestiaryMonsterTracker.contains(monsterType) : false;
 }
 
 std::shared_ptr<Vocation> Player::getVocation() const {
@@ -1117,9 +1135,9 @@ void Player::addSkillAdvance(skills_t skill, uint64_t count) {
 		ss << "You advanced to " << getSkillName(skill) << " level " << skills[skill].level << '.';
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
 		if (skill == SKILL_LEVEL) {
-			sendTakeScreenshot(SCREENSHOT_TYPE_LEVELUP);
+			sendScreenshotAndBannerUpLevel(skills[skill].level);
 		} else {
-			sendTakeScreenshot(SCREENSHOT_TYPE_SKILLUP);
+			sendScreenshotAndBannerUpSkill(skill, skills[skill].level);
 		}
 
 		g_creatureEvents().playerAdvance(static_self_cast<Player>(), skill, (skills[skill].level - 1), skills[skill].level);
@@ -1763,6 +1781,10 @@ void Player::setItemCustomPrice(uint16_t itemId, uint64_t price) {
 	itemPriceMap[itemId] = price;
 }
 
+/*******************************************************************************
+ * Charms
+ ******************************************************************************/
+
 uint32_t Player::getCharmPoints() const {
 	return charmPoints;
 }
@@ -1795,14 +1817,14 @@ void Player::setMaxMinorCharmEchoes(uint32_t points) {
 	maxMinorCharmEchoes = points;
 }
 
-uint8_t Player::getCharmTier(charmRune_t charmId) const {
+uint8_t Player::getTierByCharmsArray(charmRune_t charmId) const {
 	if (charmId == CHARM_NONE || charmId > charmsArray.size()) {
 		return 0;
 	}
 	return charmsArray[charmId].tier;
 }
 
-void Player::setCharmTier(charmRune_t charmId, uint8_t newTier) {
+void Player::setTierByCharmsArray(charmRune_t charmId, uint8_t newTier) {
 	charmsArray[charmId].tier = newTier;
 }
 
@@ -1883,45 +1905,32 @@ bool Player::isImmuneRoot() const {
 	return (m_rootCondition.first == CONDITION_ROOTED) && (timenow <= m_rootCondition.second);
 }
 
-uint16_t Player::parseRacebyCharm(charmRune_t charmId, bool set /*= false*/, uint16_t newRaceid /*= 0*/) {
-	uint16_t raceid = 0;
-	switch (charmId) {
-		case CHARM_WOUND:
-		case CHARM_ENFLAME:
-		case CHARM_POISON:
-		case CHARM_FREEZE:
-		case CHARM_ZAP:
-		case CHARM_CURSE:
-		case CHARM_CRIPPLE:
-		case CHARM_PARRY:
-		case CHARM_DODGE:
-		case CHARM_ADRENALINE:
-		case CHARM_NUMB:
-		case CHARM_CLEANSE:
-		case CHARM_BLESS:
-		case CHARM_SCAVENGE:
-		case CHARM_GUT:
-		case CHARM_LOW:
-		case CHARM_DIVINE:
-		case CHARM_VAMP:
-		case CHARM_VOID:
-		case CHARM_SAVAGE:
-		case CHARM_FATAL:
-		case CHARM_VOIDINVERSION:
-		case CHARM_CARNAGE:
-		case CHARM_OVERPOWER:
-		case CHARM_OVERFLUX:
-			if (set) {
-				charmsArray[charmId].raceId = newRaceid;
-			} else {
-				raceid = charmsArray[charmId].raceId;
-			}
-			break;
-		default:
-			raceid = 0;
-			break;
+void Player::setRaceIdByCharmsArray(charmRune_t charmId, uint16_t newRaceId) {
+	charmsArray[charmId].raceId = newRaceId;
+}
+
+uint16_t Player::getRaceIdByCharmsArray(charmRune_t charmId) const {
+	if (charmId == CHARM_NONE || charmId > charmsArray.size()) {
+		return 0;
 	}
-	return raceid;
+	return charmsArray[charmId].raceId;
+}
+
+std::shared_ptr<Charm> Player::isApplyCharm(charmRune_t charmId, const std::string &monsterName) {
+	const uint16_t playerCharmRaceId = getRaceIdByCharmsArray(charmId);
+	if (playerCharmRaceId != 0) {
+		const auto &mType = g_monsters().getMonsterType(monsterName);
+		if (mType && playerCharmRaceId == mType->info.raceid) {
+			if (const auto &charm = g_iobestiary().getBestiaryCharm(charmId)) {
+				const auto charmTier = getTierByCharmsArray(charmId);
+				if (charm->chance[charmTier] >= (uniform_random(1, 100) / 1.0)) {
+					return charm;
+				}
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 bool Player::isNearDepotBox() {
@@ -2136,9 +2145,9 @@ void Player::sendPlayerVocation(const std::shared_ptr<Player> &player) const {
 	}
 }
 
-void Player::sendDistanceShoot(const Position &from, const Position &to, uint16_t type) const {
+void Player::sendDistanceShoot(const Position &from, const Position &to, uint16_t type, SourceEffect_t source) const {
 	if (client) {
-		client->sendDistanceShoot(from, to, type);
+		client->sendDistanceShoot(from, to, type, source);
 	}
 }
 
@@ -2199,10 +2208,10 @@ void Player::sendIcons() {
 	client->sendIcons(iconSet, iconBakragore);
 }
 
-void Player::sendIconBakragore(IconBakragore icon) const {
-	if (client) {
-		client->sendIconBakragore(icon);
-	}
+void Player::sendIconBakragore(IconBakragore icon) {
+	// sendIcons() reads both normal conditions and Bakragore
+	// condition to send the correct combined 0xA2 packet.
+	sendIcons();
 }
 
 void Player::removeBakragoreIcons() {
@@ -2214,8 +2223,9 @@ void Player::removeBakragoreIcons() {
 }
 
 void Player::removeBakragoreIcon(const IconBakragore icon) {
-	if (hasCondition(CONDITION_BAKRAGORE, enumToValue(icon))) {
-		removeCondition(CONDITION_BAKRAGORE, CONDITIONID_DEFAULT, true);
+	const auto &condition = getCondition(CONDITION_BAKRAGORE, CONDITIONID_DEFAULT, enumToValue(icon));
+	if (condition) {
+		removeCondition(condition);
 	}
 }
 
@@ -2231,9 +2241,9 @@ void Player::sendGameNews() const {
 	}
 }
 
-void Player::sendMagicEffect(const Position &pos, uint16_t type) const {
+void Player::sendMagicEffect(const Position &pos, uint16_t type, SourceEffect_t source) const {
 	if (client) {
-		client->sendMagicEffect(pos, type);
+		client->sendMagicEffect(pos, type, source);
 	}
 }
 
@@ -2381,6 +2391,12 @@ bool Player::hasBlessing(uint8_t index) const {
 void Player::sendCloseShop() const {
 	if (client) {
 		client->sendCloseShop();
+	}
+}
+
+void Player::sendNpcDialogOptions(const NpcDialogOptions &dialogOptions) const {
+	if (client) {
+		client->sendNpcDialogOptions(dialogOptions);
 	}
 }
 
@@ -3535,10 +3551,10 @@ void Player::addManaSpent(uint64_t amount) {
 		std::ostringstream ss;
 		ss << "You advanced to magic level " << magLevel << '.';
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
-		sendTakeScreenshot(SCREENSHOT_TYPE_SKILLUP);
 
 		g_creatureEvents().playerAdvance(static_self_cast<Player>(), SKILL_MAGLEVEL, magLevel - 1, magLevel);
-		sendTakeScreenshot(SCREENSHOT_TYPE_SKILLUP);
+		sendScreenshotAndBannerUpSkill(SKILL_MAGLEVEL, magLevel);
+		checkSpellUnlocksOnAdvance(level, level, magLevel - 1, magLevel);
 
 		sendUpdateStats = true;
 		currReqMana = nextReqMana;
@@ -3645,19 +3661,11 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 	const uint32_t prevLevel = level;
 	while (experience >= nextLevelExp) {
 		++level;
-		auto currentVocation = vocation;
-		if (currentVocation->getId() != VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level <= (uint32_t)g_configManager().getNumber(MIN_LEVEL_LEAVE_ROOK)) {
-			const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
-			if (rookVocation) {
-				currentVocation = rookVocation;
-			}
-		}
-
-		healthMax += currentVocation->getHPGain();
-		health += currentVocation->getHPGain();
-		manaMax += currentVocation->getManaGain();
-		mana += currentVocation->getManaGain();
-		capacity += currentVocation->getCapGain();
+		healthMax += vocation->getHPGain();
+		health += vocation->getHPGain();
+		manaMax += vocation->getManaGain();
+		mana += vocation->getManaGain();
+		capacity += vocation->getCapGain();
 
 		currLevelExp = nextLevelExp;
 		nextLevelExp = getExpForLevel(level + 1);
@@ -3683,10 +3691,14 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 
 		g_creatureEvents().playerAdvance(static_self_cast<Player>(), SKILL_LEVEL, prevLevel, level);
 
+		// Recalculate weekly task XP rewards when player levels up
+		g_ioweeklytasks().recalculateWeeklyTaskRewards(static_self_cast<Player>());
+
 		std::ostringstream ss;
 		ss << "You advanced from Level " << prevLevel << " to Level " << level << '.';
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
-		sendTakeScreenshot(SCREENSHOT_TYPE_LEVELUP);
+		sendScreenshotAndBannerUpLevel(level);
+		checkSpellUnlocksOnAdvance(prevLevel, level, magLevel, magLevel);
 	}
 
 	if (nextLevelExp > currLevelExp) {
@@ -3768,6 +3780,10 @@ void Player::removeExperience(uint64_t exp, bool sendText /* = false*/) {
 			m_party->updateSharedExperience();
 		}
 
+		if (level < oldLevel && g_configManager().getBoolean(TOGGLE_WHEELSYSTEM)) {
+			wheel()->reclaimExcessPoints();
+		}
+
 		std::ostringstream ss;
 		ss << "You were downgraded from Level " << oldLevel << " to Level " << level << '.';
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
@@ -3847,6 +3863,20 @@ bool Player::hasShield() const {
 
 	const auto &itemRight = inventory[CONST_SLOT_RIGHT];
 	if (itemRight && itemRight->getWeaponType() == WEAPON_SHIELD) {
+		return true;
+	}
+	return false;
+}
+
+bool Player::hasRealShield() const {
+	// Like hasShield() but excludes spellbooks, which this engine types as WEAPON_SHIELD too.
+	const auto &itemLeft = inventory[CONST_SLOT_LEFT];
+	if (itemLeft && itemLeft->getWeaponType() == WEAPON_SHIELD && !itemLeft->isSpellBook()) {
+		return true;
+	}
+
+	const auto &itemRight = inventory[CONST_SLOT_RIGHT];
+	if (itemRight && itemRight->getWeaponType() == WEAPON_SHIELD && !itemRight->isSpellBook()) {
 		return true;
 	}
 	return false;
@@ -4049,14 +4079,15 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		double deathLossPercent = getLostPercent() * (unfairFightReduction / 100.);
 
 		// Charm bless bestiary
-		const auto charmBless = charmsArray[CHARM_BLESS];
-		const auto charmBlessRaceId = charmBless.raceId;
-		const auto &charm = g_iobestiary().getBestiaryCharm(CHARM_BLESS);
-		if (charm && lastHitCreature && lastHitCreature->getMonster() && charmBlessRaceId != 0) {
+		const auto charmBlessRaceId = getRaceIdByCharmsArray(CHARM_MINOR_BLESS);
+		if (lastHitCreature && lastHitCreature->getMonster() && charmBlessRaceId != 0) {
 			const auto &mType = g_monsters().getMonsterType(lastHitCreature->getName());
 			if (mType && mType->info.raceid == charmBlessRaceId) {
-				const auto percentReduction = charm->chance[charmBless.tier] / 100;
-				deathLossPercent -= deathLossPercent * percentReduction;
+				if (const auto &charmBless = g_iobestiary().getBestiaryCharm(CHARM_MINOR_BLESS)) {
+					const auto charmTier = getTierByCharmsArray(CHARM_MINOR_BLESS);
+					const auto percentReduction = charmBless->chance[charmTier] / 100;
+					deathLossPercent -= deathLossPercent * percentReduction;
+				}
 			}
 		}
 
@@ -4142,20 +4173,16 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 
 			while (level > 1 && experience < Player::getExpForLevel(level)) {
 				--level;
-				auto currentVocation = vocation;
-				if (currentVocation->getId() != VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level < static_cast<uint32_t>(g_configManager().getNumber(MIN_LEVEL_LEAVE_ROOK))) {
-					const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
-					if (rookVocation) {
-						currentVocation = rookVocation;
-					}
-				}
-
-				healthMax = std::max<int32_t>(0, healthMax - currentVocation->getHPGain());
-				manaMax = std::max<int32_t>(0, manaMax - currentVocation->getManaGain());
-				capacity = std::max<int32_t>(0, capacity - currentVocation->getCapGain());
+				healthMax = std::max<int32_t>(0, healthMax - vocation->getHPGain());
+				manaMax = std::max<int32_t>(0, manaMax - vocation->getManaGain());
+				capacity = std::max<int32_t>(0, capacity - vocation->getCapGain());
 			}
 
 			if (oldLevel != level) {
+				if (level < oldLevel && g_configManager().getBoolean(TOGGLE_WHEELSYSTEM)) {
+					wheel()->reclaimExcessPoints();
+				}
+
 				std::ostringstream ss;
 				ss << "You were downgraded from Level " << oldLevel << " to Level " << level << '.';
 				sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
@@ -4232,9 +4259,6 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		}
 		sendTextMessage(MESSAGE_EVENT_ADVANCE, blessOutput.str());
 
-		// rook system
-		sendToRook();
-
 		sendStats();
 		sendSkills();
 		sendReLoginWindow(unfairFightReduction);
@@ -4285,154 +4309,6 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 		onThink(EVENT_CREATURE_THINK_INTERVAL);
 		onIdleStatus();
 		sendStats();
-	}
-}
-
-void Player::sendToRook() {
-	if (vocation->getId() > VOCATION_NONE && g_configManager().getBoolean(ROOK_SYSTEM) && level <= static_cast<uint32_t>(g_configManager().getNumber(LEVEL_TO_ROOK))) {
-		const auto rookTownId = g_configManager().getNumber(ROOK_TOWN);
-		const auto &rookTown = g_game().map.towns.getTown(rookTownId);
-
-		if (rookTown) {
-			// Reset player
-			level = static_cast<uint32_t>(g_configManager().getNumber(ROOKED_LEVEL));
-			soul = 100;
-			capacity = 400;
-			staminaMinutes = 2520;
-			offlineTrainingTime = 43200;
-			health = healthMax = 150;
-			experience = levelPercent = magLevel = magLevelPercent = manaSpent = mana = manaMax = bankBalance = 0;
-
-			// default outfit (citizen)
-			defaultOutfit.lookType = (getSex() == 0) ? 136 : 128;
-			defaultOutfit.lookAddons = 0;
-			defaultOutfit.lookMount = 0;
-
-			g_game().playerChangeOutfit(getID(), defaultOutfit, 0);
-
-			// Clear player outfits
-			const auto playerOutfits = Outfits::getInstance().getOutfits(getSex());
-			for (auto it = outfitsMap.begin(); it != outfitsMap.end();) {
-				const auto &entry = *it;
-				const auto playerOutfit = std::find_if(playerOutfits.begin(), playerOutfits.end(), [&entry](const std::shared_ptr<Outfit> &outfit) {
-					return outfit->lookType == entry.lookType;
-				});
-
-				if (playerOutfit != playerOutfits.end()) {
-					const std::string from = (*playerOutfit)->from;
-					if (from == "store" || entry.lookType == 329 || entry.lookType == 328 || entry.lookType == 745 || entry.lookType == 746) {
-						++it;
-					} else {
-						removeOutfitAddon(entry.lookType, 3);
-						it = outfitsMap.erase(it);
-					}
-				} else {
-					++it;
-				}
-			}
-
-			// Clear mounts
-			std::vector<uint8_t> storeMounts;
-			const auto playerMounts = g_game().mounts->getMounts();
-			for (const auto &mount : playerMounts) {
-				if (mount->type == "store" && hasMount(mount)) {
-					storeMounts.push_back(mount->id);
-					continue;
-				}
-
-				if (hasMount(mount)) {
-					untameMount(mount->id);
-				}
-			}
-
-			// Clear storages
-			storageMap.clear();
-
-			// Add player store mounts again
-			for (const auto &storeMountId : storeMounts) {
-				tameMount(storeMountId);
-			}
-
-			if (level > 1) {
-				experience = Player::getExpForLevel(level);
-			}
-
-			loginPosition = rookTown->getTemplePosition();
-			setTown(rookTown);
-
-			const auto &rookVocation = g_vocations().getVocation(VOCATION_NONE);
-			if (rookVocation) {
-				setVocation(rookVocation->getId());
-			}
-
-			if (m_party) {
-				m_party->leaveParty(getPlayer(), true);
-			}
-
-			// Reset player skills
-			for (uint32_t i = SKILL_FIRST; i <= SKILL_LAST; ++i) {
-				skills[i].level = 10;
-				skills[i].tries = 0;
-				skills[i].percent = Player::getPercentLevel(0, rookVocation->getReqSkillTries(i, 10));
-			}
-
-			// Remove items from inventory
-			for (uint32_t slotId = CONST_SLOT_FIRST; slotId < CONST_SLOT_LAST; ++slotId) {
-				const auto &item = inventory[slotId];
-				if (item) {
-					g_game().internalRemoveItem(item);
-				}
-			}
-
-			// Add items to rooked player
-			if (g_configManager().getBoolean(TOGGLE_ADD_ROOK_ITEMS)) {
-				const uint32_t backpackId = g_configManager().getNumber(ROOK_SLOT_BACKPACK);
-				if (backpackId != 0) {
-					internalAddThing(CONST_SLOT_BACKPACK, Item::CreateItem(backpackId));
-				}
-
-				const uint32_t headId = g_configManager().getNumber(ROOK_SLOT_HEAD);
-				if (headId != 0) {
-					internalAddThing(CONST_SLOT_HEAD, Item::CreateItem(headId));
-				}
-
-				const uint32_t armorId = g_configManager().getNumber(ROOK_SLOT_ARMOR);
-				if (armorId != 0) {
-					internalAddThing(CONST_SLOT_ARMOR, Item::CreateItem(armorId));
-				}
-
-				const uint32_t legsId = g_configManager().getNumber(ROOK_SLOT_LEGS);
-				if (legsId != 0) {
-					internalAddThing(CONST_SLOT_LEGS, Item::CreateItem(legsId));
-				}
-
-				const uint32_t feetId = g_configManager().getNumber(ROOK_SLOT_FEET);
-				if (feetId != 0) {
-					internalAddThing(CONST_SLOT_FEET, Item::CreateItem(feetId));
-				}
-
-				const uint32_t rightId = g_configManager().getNumber(ROOK_SLOT_RIGHT);
-				if (rightId != 0) {
-					internalAddThing(CONST_SLOT_RIGHT, Item::CreateItem(rightId));
-				}
-
-				const uint32_t leftId = g_configManager().getNumber(ROOK_SLOT_LEFT);
-				if (leftId != 0) {
-					internalAddThing(CONST_SLOT_LEFT, Item::CreateItem(leftId));
-				}
-
-				const uint32_t ammoId = g_configManager().getNumber(ROOK_SLOT_AMMO);
-				if (ammoId != 0) {
-					internalAddThing(CONST_SLOT_AMMO, Item::CreateItem(ammoId));
-				}
-			}
-
-			updateBaseSpeed();
-			sendSkills();
-			sendStats();
-			g_saveManager().savePlayer(getPlayer());
-			g_logger().info("{} has been rooked", getName());
-		}
 	}
 }
 
@@ -6624,9 +6500,25 @@ void Player::addBestiaryKill(const std::shared_ptr<MonsterType> &mType) {
 		return;
 	}
 	uint32_t kills = g_configManager().getNumber(BESTIARY_KILL_MULTIPLIER);
+
+	auto scopedDoubleBestiary = g_kv().scoped("eventscheduler")->get("double-bestiary");
+	bool doubleBestiaryEnabled = scopedDoubleBestiary && scopedDoubleBestiary->get<bool>();
+	if (doubleBestiaryEnabled) {
+		kills *= 2;
+		g_logger().debug("[{}] double bestiary is enabled.", __FUNCTION__);
+	}
+
 	if (isConcoctionActive(Concoction_t::BestiaryBetterment)) {
 		kills *= 2;
 	}
+
+	// Bounty Talisman bestiary bonus (chance to double bestiary kills)
+	// Value is in hundredths of percent (e.g. 100 = 1%, 2050 = 20.50%)
+	uint16_t bountyBestiaryBonus = g_iobountytasks().getBountyTalismanBonus(getPlayer(), mType->info.raceid, BOUNTY_TALISMAN_BESTIARY);
+	if (bountyBestiaryBonus > 0 && uniform_random(1, 10000) <= bountyBestiaryBonus) {
+		kills *= 2;
+	}
+
 	g_iobestiary().addBestiaryKill(getPlayer(), mType, kills);
 }
 
@@ -6635,6 +6527,14 @@ void Player::addBosstiaryKill(const std::shared_ptr<MonsterType> &mType) {
 		return;
 	}
 	uint32_t kills = g_configManager().getNumber(BOSSTIARY_KILL_MULTIPLIER);
+
+	auto scopedDoubleBosstiary = g_kv().scoped("eventscheduler")->get("double-bosstiary");
+	bool doubleBosstiaryEnabled = scopedDoubleBosstiary && scopedDoubleBosstiary->get<bool>();
+	if (doubleBosstiaryEnabled) {
+		kills *= 2;
+		g_logger().debug("[{}] double bosstiary is enabled.", __FUNCTION__);
+	}
+
 	if (g_ioBosstiary().getBoostedBossId() == mType->info.raceid) {
 		kills *= g_configManager().getNumber(BOOSTED_BOSS_KILL_BONUS);
 	}
@@ -6661,6 +6561,9 @@ bool Player::onKilledMonster(const std::shared_ptr<Monster> &monster) {
 		addBestiaryKill(mType);
 		addBosstiaryKill(mType);
 		addWeaponProficiencyExperience(mType, monster->getMonsterForgeClassification(), false);
+
+		g_iobountytasks().onCreatureKill(getPlayer(), mType->info.raceid);
+		g_ioweeklytasks().onCreatureKill(getPlayer(), mType->info.raceid);
 	} else if (monster->getForgeStack() == 40) {
 		addWeaponProficiencyExperience(mType, monster->getMonsterForgeClassification(), true);
 	}
@@ -6907,6 +6810,10 @@ void Player::addOutfit(uint16_t lookType, uint8_t addons) {
 
 	setOutfitsModified(true);
 	outfitsMap.emplace_back(lookType, addons);
+
+	if (const auto &outfit = Outfits::getInstance().getOutfitByLookType(getPlayer(), lookType)) {
+		sendScreenshotAndBannerUnlockedCosmetic(outfit->name, lookType, std::clamp<uint8_t>(addons, 0, 2));
+	}
 }
 
 bool Player::removeOutfit(uint16_t lookType) {
@@ -7498,16 +7405,14 @@ uint16_t Player::getSkillLevel(skills_t skill) const {
 		skillLevel += m_wheelPlayer->getMajorStatConditional("Ballistic Mastery", WheelMajor_t::CRITICAL_DMG);
 		skillLevel += m_wheelPlayer->checkAvatarSkill(WheelAvatarSkill_t::CRITICAL_DAMAGE);
 		skillLevel += equippedWeaponProficiency.critExtraDamage; // Proficiency Perk: critExtraDamage
-	}
+	} else if (skill == SKILL_CRITICAL_HIT_CHANCE) {
+		skillLevel += 500; // Vocation Adjustment - Flag Bonus
+		skillLevel += equippedWeaponProficiency.critHitChance; // Vocation Adjustment - Proficiency Perk: critHitChance
 
-	if (skill == SKILL_CRITICAL_HIT_CHANCE) {
-		skillLevel += 500; // Flag Bonus
-		skillLevel += equippedWeaponProficiency.critHitChance; // Proficiency Perk: critHitChance
-	}
-
-	const int32_t avatarCritChance = m_wheelPlayer->checkAvatarSkill(WheelAvatarSkill_t::CRITICAL_CHANCE);
-	if (skill == SKILL_CRITICAL_HIT_CHANCE && avatarCritChance > 0) {
-		skillLevel = avatarCritChance; // 100%
+		const int32_t avatarCritChance = m_wheelPlayer->checkAvatarSkill(WheelAvatarSkill_t::CRITICAL_CHANCE);
+		if (avatarCritChance > 0) {
+			skillLevel += avatarCritChance; // 100%
+		}
 	}
 
 	if (skill == SKILL_FIST && getVirtue() == VIRTUE_JUSTICE) {
@@ -7628,6 +7533,19 @@ int32_t Player::getSpecializedMagicLevel(CombatType_t combat, bool useCharges) c
 
 	// Proficiency Perk: specialMagicLevel
 	result += equippedWeaponProficiency.specialMagicLevel[combatTypeToIndex(combat)];
+
+	// Vocation Adjustment: Paladin Divine Defiance grants 7.5% of distance fighting as bonus
+	// holy AND healing magic level (one hook feeds both the native formula and the Lua callback).
+	if (getStance() == STANCE_DIVINE_DEFIANCE && (combat == COMBAT_HOLYDAMAGE || combat == COMBAT_HEALING)) {
+		result += static_cast<int32_t>(getSkillLevel(SKILL_DISTANCE) * 0.075);
+	}
+
+	// Vocation Adjustment: Druid Elemental Synthesis grants 10% of magic level as bonus ice
+	// and earth magic level.
+	if (getStance() == STANCE_ELEMENTAL_SYNTHESIS && (combat == COMBAT_ICEDAMAGE || combat == COMBAT_EARTHDAMAGE)) {
+		result += static_cast<int32_t>(getMagicLevel() * 0.10);
+	}
+
 	return result;
 }
 
@@ -8036,6 +7954,7 @@ bool Player::tameMount(uint16_t mountId) {
 
 	setMountsModified(true);
 	mountsMap.emplace(mountId);
+	sendScreenshotAndBannerUnlockedCosmetic(mount->name, mount->clientId, 3);
 	return true;
 }
 
@@ -8140,7 +8059,7 @@ bool Player::addOfflineTrainingTries(skills_t skill, uint64_t tries) {
 			std::ostringstream ss;
 			ss << "You advanced to magic level " << magLevel << '.';
 			sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
-			sendTakeScreenshot(SCREENSHOT_TYPE_SKILLUP);
+			sendScreenshotAndBannerUpSkill(SKILL_MAGLEVEL, magLevel);
 		}
 
 		uint8_t newPercent;
@@ -8198,9 +8117,9 @@ bool Player::addOfflineTrainingTries(skills_t skill, uint64_t tries) {
 			ss << "You advanced to " << getSkillName(skill) << " level " << skills[skill].level << '.';
 			sendTextMessage(MESSAGE_EVENT_ADVANCE, ss.str());
 			if (skill == SKILL_LEVEL) {
-				sendTakeScreenshot(SCREENSHOT_TYPE_LEVELUP);
+				sendScreenshotAndBannerUpLevel(skills[skill].level);
 			} else {
-				sendTakeScreenshot(SCREENSHOT_TYPE_SKILLUP);
+				sendScreenshotAndBannerUpSkill(skill, skills[skill].level);
 			}
 		}
 
@@ -8512,9 +8431,96 @@ void Player::sendOpenStash(bool isNpc) const {
 	}
 }
 
-void Player::sendTakeScreenshot(Screenshot_t screenshotType) const {
+void Player::sendBannerType(Banner_t bannerType) const {
 	if (client) {
-		client->sendTakeScreenshot(screenshotType);
+		client->sendBannerType(bannerType);
+	}
+}
+
+void Player::sendScreenshotAndBannerUnlockedAchievement(const uint16_t achievementId) const {
+	if (client) {
+		client->sendScreenshotAndBannerUnlockedAchievement(achievementId);
+	}
+}
+
+void Player::sendScreenshotAndBannerUnlockedTitle(const uint8_t titleId) const {
+	if (client) {
+		client->sendScreenshotAndBannerUnlockedTitle(titleId);
+	}
+}
+
+void Player::sendScreenshotAndBannerUnlockedCosmetic(const std::string &skinName, uint16_t lookType, uint8_t skinType) const {
+	if (client) {
+		client->sendScreenshotAndBannerUnlockedCosmetic(skinName, lookType, skinType);
+	}
+}
+
+void Player::sendScreenshotAndBannerUpLevel(const uint16_t levelUp) const {
+	if (client) {
+		client->sendScreenshotAndBannerUpLevel(levelUp);
+	}
+}
+
+void Player::sendScreenshotAndBannerUpSkill(skills_t skill, const uint16_t skillLevel) const {
+	if (client) {
+		client->sendScreenshotAndBannerUpSkill(skill, skillLevel);
+	}
+}
+
+void Player::sendScreenshotAndBannerProgressRace(uint16_t raceId, uint8_t progressLevel, bool isBoss) const {
+	if (client) {
+		client->sendScreenshotAndBannerProgressRace(raceId, progressLevel, isBoss);
+	}
+}
+
+void Player::sendScreenshotAndBannerProgressQuest(const std::string &questName, bool isCompleted) const {
+	if (client) {
+		client->sendScreenshotAndBannerProgressQuest(questName, isCompleted);
+	}
+}
+
+void Player::sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message) const {
+	if (client) {
+		client->sendScreenshotAndBannerProficiencyProgress(itemId, message);
+	}
+}
+
+void Player::sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) const {
+	if (client) {
+		client->sendScreenshotAndBannerUnlockedSpell(spellId);
+	}
+}
+
+void Player::sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId) const {
+	if (client) {
+		client->sendScreenshotAndBannerBountyTaskFinished(raceId);
+	}
+}
+
+void Player::sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId) const {
+	if (client) {
+		client->sendScreenshotAndBannerWeeklyTaskSpecificFinished(raceId);
+	}
+}
+
+void Player::checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, uint32_t oldMagLevel, uint32_t newMagLevel) const {
+	if (!client) {
+		return;
+	}
+
+	for (const uint16_t spellId : g_spells().getSpellsByVocation(getVocationId())) {
+		const auto &spell = g_spells().getInstantSpellById(spellId);
+		if (!spell || spell->getSpellId() == 0 || spell->isLearnable()) {
+			continue;
+		}
+
+		const uint32_t reqLevel = spell->getLevel();
+		const uint32_t reqMagLevel = spell->getMagicLevel();
+		const bool wasAvailable = oldLevel >= reqLevel && oldMagLevel >= reqMagLevel;
+		const bool isAvailable = newLevel >= reqLevel && newMagLevel >= reqMagLevel;
+		if (!wasAvailable && isAvailable) {
+			sendScreenshotAndBannerUnlockedSpell(spell->getSpellId());
+		}
 	}
 }
 
@@ -8591,6 +8597,21 @@ void Player::postAddNotification(const std::shared_ptr<Thing> &thing, const std:
 
 		if (shopOwner && !scheduledSaleUpdate && requireListUpdate) {
 			updateSaleShopList(item);
+		}
+
+		// Update weekly delivery tasks display if the moved item is a pending delivery item
+		if (requireListUpdate) {
+			auto &weeklyData = getWeeklyTaskData();
+			auto now = OTSYS_TIME();
+			if (now - weeklyData.lastItemNotifySend >= 1000) {
+				for (const auto &task : weeklyData.deliveryTasks) {
+					if (task.delivered == 0 && task.itemId == item->getID()) {
+						weeklyData.lastItemNotifySend = now;
+						sendWeeklyTaskData();
+						break;
+					}
+				}
+			}
 		}
 	} else if (const auto &creature = thing->getCreature()) {
 		if (creature == getPlayer()) {
@@ -8687,6 +8708,21 @@ void Player::postRemoveNotification(const std::shared_ptr<Thing> &thing, const s
 		if (shopOwner && !scheduledSaleUpdate && requireListUpdate) {
 			updateSaleShopList(item);
 		}
+
+		// Update weekly delivery tasks display if the moved item is a pending delivery item
+		if (requireListUpdate) {
+			auto &weeklyData = getWeeklyTaskData();
+			auto now = OTSYS_TIME();
+			if (now - weeklyData.lastItemNotifySend >= 1000) {
+				for (const auto &task : weeklyData.deliveryTasks) {
+					if (task.delivered == 0 && task.itemId == item->getID()) {
+						weeklyData.lastItemNotifySend = now;
+						sendWeeklyTaskData();
+						break;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -8765,9 +8801,9 @@ void Player::sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakCla
 	}
 }
 
-void Player::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color) const {
+void Player::sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t markType, SquareColor_t weaponType) const {
 	if (client) {
-		client->sendCreatureSquare(creature, color);
+		client->sendCreatureSquare(creature, markType, weaponType);
 	}
 }
 
@@ -8876,6 +8912,14 @@ void Player::sendModalWindow(const ModalWindow &modalWindow) {
 
 	modalWindows.emplace_back(modalWindow.id);
 	client->sendModalWindow(modalWindow);
+}
+
+void Player::sendMultiOfflineTrainingDialog() {
+	if (!client) {
+		return;
+	}
+
+	client->sendMultiOfflineTrainingDialog();
 }
 
 // container
@@ -9514,6 +9558,10 @@ void Player::stowItem(const std::shared_ptr<Item> &item, uint32_t count, bool al
 	}
 
 	stashContainer(itemDict);
+
+	if (totalItemsToStow > 0) {
+		g_callbacks().executeCallback(EventCallback_t::playerOnStowItem, &EventCallback::playerOnStowItem, getPlayer(), item, totalItemsToStow);
+	}
 }
 
 void Player::sendPreyData() const {
@@ -9535,7 +9583,7 @@ void Player::sendPreyTimeLeft(const std::unique_ptr<PreySlot> &slot) const {
 void Player::reloadPreySlot(PreySlot_t slotid) {
 	if (g_configManager().getBoolean(PREY_ENABLED) && client) {
 		client->sendPreyData(getPreySlotById(slotid));
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints());
 	}
 }
 
@@ -9566,7 +9614,7 @@ bool Player::usePreyCards(uint16_t amount) {
 
 	preyCards -= amount;
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints());
 	}
 	return true;
 }
@@ -9574,7 +9622,7 @@ bool Player::usePreyCards(uint16_t amount) {
 void Player::addPreyCards(uint64_t amount) {
 	preyCards += amount;
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints());
 	}
 }
 
@@ -9636,11 +9684,6 @@ void Player::initializeTaskHunting() {
 
 			setTaskHuntingSlotClass(slot);
 		}
-	}
-
-	if (client && g_configManager().getBoolean(TASK_HUNTING_ENABLED) && !client->oldProtocol) {
-		auto buffer = g_ioprey().getTaskHuntingBaseDate();
-		client->writeToOutputBuffer(buffer);
 	}
 }
 
@@ -9711,7 +9754,7 @@ uint32_t Player::getIP() const {
 void Player::reloadTaskSlot(PreySlot_t slotid) {
 	if (g_configManager().getBoolean(TASK_HUNTING_ENABLED) && client) {
 		client->sendTaskHuntingData(getTaskHuntingSlotById(slotid));
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints());
 	}
 }
 
@@ -9744,7 +9787,7 @@ std::vector<uint16_t> Player::getTaskHuntingBlackList() const {
 
 void Player::sendTaskHuntingData() const {
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints());
 		for (const std::unique_ptr<TaskHuntingSlot> &slot : taskHunting) {
 			if (slot) {
 				client->sendTaskHuntingData(slot);
@@ -9756,7 +9799,7 @@ void Player::sendTaskHuntingData() const {
 void Player::addTaskHuntingPoints(uint64_t amount) {
 	taskHuntingPoints += amount;
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints());
 	}
 }
 
@@ -9767,13 +9810,150 @@ bool Player::useTaskHuntingPoints(uint64_t amount) {
 
 	taskHuntingPoints -= amount;
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints());
 	}
 	return true;
 }
 
 uint64_t Player::getTaskHuntingPoints() const {
 	return taskHuntingPoints;
+}
+
+void Player::sendTaskBoardResourceBalance() const {
+	if (client) {
+		client->sendResourceBalance(RESOURCE_BOUNTY_POINTS, bountyTaskData.bountyPoints);
+		client->sendResourceBalance(RESOURCE_TASK_HUNTING, getTaskHuntingPoints());
+		client->sendResourceBalance(RESOURCE_SOULSEALS_POINTS, getSoulsealsPoints());
+	}
+}
+
+/*******************************************************************************
+ * Bounty Tasks
+ ******************************************************************************/
+
+BountyTaskData &Player::getBountyTaskData() {
+	return bountyTaskData;
+}
+
+const BountyTaskData &Player::getBountyTaskData() const {
+	return bountyTaskData;
+}
+
+bool Player::isBountyTalismanEquipped() const {
+	const auto ammoItem = getInventoryItem(CONST_SLOT_AMMO);
+	return ammoItem && ammoItem->getID() == ITEM_BOUNTY_TALISMAN;
+}
+
+void Player::sendBountyTaskData() const {
+	if (client) {
+		client->sendBountyTaskData(bountyTaskData);
+	}
+}
+
+void Player::refreshTaskIcons() {
+	if (!client) {
+		return;
+	}
+	for (const auto &spectator : Spectators().find<Monster>(getPosition(), true)) {
+		client->sendCreatureIcon(spectator);
+	}
+}
+
+void Player::addBountyPoints(uint32_t amount) {
+	bountyTaskData.bountyPoints += amount;
+	sendBountyTaskData();
+	sendTaskBoardResourceBalance();
+}
+
+void Player::removeBountyPoints(uint32_t amount) {
+	if (bountyTaskData.bountyPoints >= amount) {
+		bountyTaskData.bountyPoints -= amount;
+	} else {
+		bountyTaskData.bountyPoints = 0;
+	}
+	sendBountyTaskData();
+	sendTaskBoardResourceBalance();
+}
+
+uint32_t Player::getBountyPoints() const {
+	return bountyTaskData.bountyPoints;
+}
+
+void Player::addRerollTasks(uint32_t amount) {
+	bountyTaskData.rerollTasks = static_cast<uint8_t>(bountyTaskData.rerollTasks + amount);
+	sendBountyTaskData();
+	sendTaskBoardResourceBalance();
+}
+
+void Player::removeRerollTasks(uint32_t amount) {
+	if (bountyTaskData.rerollTasks >= amount) {
+		bountyTaskData.rerollTasks -= static_cast<uint8_t>(amount);
+	} else {
+		bountyTaskData.rerollTasks = 0;
+	}
+	sendBountyTaskData();
+	sendTaskBoardResourceBalance();
+}
+
+uint32_t Player::getRerollTasks() const {
+	return bountyTaskData.rerollTasks;
+}
+
+void Player::sendWeeklyTaskData() {
+	if (!client) {
+		return;
+	}
+
+	g_ioweeklytasks().ensureWeeklyTaskCount(getPlayer());
+
+	client->sendWeeklyTaskData(weeklyTaskData);
+}
+
+void Player::sendHuntingTaskShopData() const {
+	if (client) {
+		client->sendHuntingTaskShopData();
+	}
+}
+
+/*******************************************************************************
+ * Weekly Tasks
+ ******************************************************************************/
+
+WeeklyTaskData &Player::getWeeklyTaskData() {
+	return weeklyTaskData;
+}
+
+const WeeklyTaskData &Player::getWeeklyTaskData() const {
+	return weeklyTaskData;
+}
+
+bool Player::hasWeeklyTaskExpansion() const {
+	return weeklyTaskExpansion;
+}
+
+void Player::setWeeklyTaskExpansion(bool onOff) {
+	weeklyTaskExpansion = onOff;
+}
+
+uint32_t Player::getSoulsealsPoints() const {
+	return weeklyTaskData.soulsealsPoints;
+}
+
+void Player::addSoulsealsPoints(uint32_t amount) {
+	weeklyTaskData.soulsealsPoints += amount;
+	if (client) {
+		client->sendResourceBalance(RESOURCE_SOULSEALS_POINTS, getSoulsealsPoints());
+	}
+}
+
+void Player::removeSoulsealsPoints(uint32_t amount) {
+	if (weeklyTaskData.soulsealsPoints < amount) {
+		return;
+	}
+	weeklyTaskData.soulsealsPoints -= amount;
+	if (client) {
+		client->sendResourceBalance(RESOURCE_SOULSEALS_POINTS, getSoulsealsPoints());
+	}
 }
 
 uint32_t Player::getTaskHuntingRerollPrice() const {
@@ -9786,7 +9966,7 @@ const std::unique_ptr<TaskHuntingSlot> &Player::getTaskHuntingWithCreature(uint1
 	}
 
 	if (auto it = std::ranges::find_if(taskHunting, [raceId](const std::unique_ptr<TaskHuntingSlot> &itTask) {
-			return itTask->selectedRaceId == raceId;
+			return itTask->selectedRaceId == raceId && itTask->state == PreyTaskDataState_Active;
 		});
 	    it != taskHunting.end()) {
 		return *it;
@@ -10809,21 +10989,21 @@ void Player::closeForgeWindow() const {
 void Player::setForgeDusts(uint64_t amount) {
 	forgeDusts = amount;
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getForgeDusts());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints(), getForgeDusts());
 	}
 }
 
 void Player::addForgeDusts(uint64_t amount) {
 	forgeDusts += amount;
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getForgeDusts());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints(), getForgeDusts());
 	}
 }
 
 void Player::removeForgeDusts(uint64_t amount) {
 	forgeDusts = std::max<uint64_t>(0, forgeDusts - amount);
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getForgeDusts());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints(), getForgeDusts());
 	}
 }
 
@@ -10834,14 +11014,14 @@ uint64_t Player::getForgeDusts() const {
 void Player::addForgeDustLevel(uint64_t amount) {
 	forgeDustLevel += amount;
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getForgeDusts());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints(), getForgeDusts());
 	}
 }
 
 void Player::removeForgeDustLevel(uint64_t amount) {
 	forgeDustLevel = std::max<uint64_t>(0, forgeDustLevel - amount);
 	if (client) {
-		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getForgeDusts());
+		client->sendResourcesBalance(getMoney(), getBankBalance(), getPreyCards(), getTaskHuntingPoints(), getSoulsealsPoints(), getForgeDusts());
 	}
 }
 
@@ -11078,6 +11258,40 @@ void Player::sendLootContainers() const {
 	}
 }
 
+void Player::sendSpellCooldowns() {
+	constexpr auto maxu16 = std::numeric_limits<uint16_t>::max();
+
+	for (const auto &condItem : conditions) {
+		if (!condItem) {
+			continue;
+		}
+
+		const ConditionType_t type = condItem->getType();
+		const uint32_t subId = condItem->getSubId();
+
+		if (type != CONDITION_SPELLCOOLDOWN && type != CONDITION_SPELLGROUPCOOLDOWN) {
+			continue;
+		}
+
+		uint16_t spellId = subId > maxu16 ? 0u : static_cast<uint16_t>(subId);
+		const auto &spell = g_spells().getInstantSpellById(spellId);
+		if (!spell) {
+			continue;
+		}
+
+		const uint32_t ticks = std::max<int32_t>(0, condItem->getTicks());
+		if (ticks == 0) {
+			continue;
+		}
+
+		if (type == CONDITION_SPELLGROUPCOOLDOWN) {
+			sendSpellGroupCooldown(static_cast<SpellGroup_t>(spellId), ticks);
+		} else {
+			sendSpellCooldown(spellId, ticks);
+		}
+	}
+}
+
 void Player::sendPlayerTyping(const std::shared_ptr<Creature> &creature, uint8_t typing) const {
 	if (!client) {
 		return;
@@ -11095,6 +11309,18 @@ void Player::sendSingleSoundEffect(const Position &pos, SoundEffect_t id, Source
 void Player::sendDoubleSoundEffect(const Position &pos, SoundEffect_t mainSoundId, SourceEffect_t mainSource, SoundEffect_t secondarySoundId, SourceEffect_t secondarySource) const {
 	if (client) {
 		client->sendDoubleSoundEffect(pos, mainSoundId, mainSource, secondarySoundId, secondarySource);
+	}
+}
+
+void Player::sendAmbientSoundEffect(const SoundAmbientEffect_t id) const {
+	if (client) {
+		client->sendAmbientSoundEffect(id);
+	}
+}
+
+void Player::sendMusicSoundEffect(const SoundMusicEffect_t id) const {
+	if (client) {
+		client->sendMusicSoundEffect(id);
 	}
 }
 
@@ -11677,6 +11903,13 @@ void Player::sendBosstiaryCooldownTimer() const {
 	}
 }
 
+void Player::sendSoulSealsWindow() const {
+	if (client) {
+		client->sendResourceBalance(RESOURCE_SOULSEALS_POINTS, getSoulsealsPoints());
+		client->sendSoulSealsWindow();
+	}
+}
+
 void Player::setSlotBossId(uint8_t slotId, uint32_t bossId) {
 	if (slotId == 1) {
 		bossIdSlotOne = bossId;
@@ -12249,12 +12482,6 @@ void Player::resyncSpellCooldowns() const {
 	}
 }
 
-void Player::sendVirtueProtocol() const {
-	if (client && m_virtue != VIRTUE_NONE) {
-		client->sendVirtueProtocol(static_cast<uint8_t>(m_virtue));
-	}
-}
-
 VirtueMonk_t Player::getVirtue() const {
 	return m_virtue;
 }
@@ -12271,11 +12498,204 @@ void Player::setVirtue(const VirtueMonk_t virtueEnum) {
 			break;
 	}
 
-	sendVirtueProtocol();
+	sendStanceProtocol();
 
 	if (m_virtue != VIRTUE_NONE) {
 		sendSkills();
 	}
+}
+
+bool Player::isElementalStance(Stance_t stance) {
+	return stance == STANCE_MASTER_OF_FLAMES || stance == STANCE_MASTER_OF_THUNDER || stance == STANCE_MASTER_OF_DECAY;
+}
+
+uint16_t Player::getStanceSpellId(Stance_t stance) {
+	switch (stance) {
+		case STANCE_PROTECTOR:
+			return 132;
+		case STANCE_BLOOD_RAGE:
+			return 133;
+		case STANCE_SHARPSHOOTER:
+			return 313;
+		case STANCE_DIVINE_DEFIANCE:
+			return 314;
+		case STANCE_MASTER_OF_FLAMES:
+			return 304;
+		case STANCE_MASTER_OF_THUNDER:
+			return 305;
+		case STANCE_MASTER_OF_DECAY:
+			return 306;
+		case STANCE_SAP_STRENGTH:
+			return 311;
+		case STANCE_EXPOSE_WEAKNESS:
+			return 312;
+		case STANCE_SHARED_CONSERVATION:
+			return 309;
+		case STANCE_ELEMENTAL_SYNTHESIS:
+			return 319;
+		default:
+			return 0;
+	}
+}
+
+bool Player::isStanceCompatibleWithVocation(Stance_t stance, uint16_t vocationBaseId) {
+	switch (stance) {
+		case STANCE_NONE:
+			return true;
+		case STANCE_PROTECTOR:
+		case STANCE_BLOOD_RAGE:
+			return vocationBaseId == VOCATION_KNIGHT;
+		case STANCE_DIVINE_DEFIANCE:
+		case STANCE_SHARPSHOOTER:
+			return vocationBaseId == VOCATION_PALADIN;
+		case STANCE_EXPOSE_WEAKNESS:
+		case STANCE_SAP_STRENGTH:
+		case STANCE_MASTER_OF_FLAMES:
+		case STANCE_MASTER_OF_THUNDER:
+		case STANCE_MASTER_OF_DECAY:
+			return vocationBaseId == VOCATION_SORCERER;
+		case STANCE_SHARED_CONSERVATION:
+		case STANCE_ELEMENTAL_SYNTHESIS:
+			return vocationBaseId == VOCATION_DRUID;
+		default:
+			return false;
+	}
+}
+
+std::vector<uint16_t> Player::buildActiveStanceSpellIds() const {
+	std::vector<uint16_t> ids;
+	// Two independent groups for a sorcerer: m_stancePrimary holds the crippling stance
+	// (Sap Strength / Expose Weakness), m_stanceElemental holds the elemental stance
+	// (Master of Flames / Thunder / Decay). Both can be active at once -> both framed.
+	if (m_stancePrimary != STANCE_NONE) {
+		const uint16_t id = getStanceSpellId(m_stancePrimary);
+		if (id != 0) {
+			ids.push_back(id);
+		}
+	}
+	if (m_stanceElemental != STANCE_NONE) {
+		const uint16_t id = getStanceSpellId(m_stanceElemental);
+		if (id != 0) {
+			ids.push_back(id);
+		}
+	}
+
+	// Monk virtue (Harmony 274 / Justice 275 / Sustain 276) is a stance too: frame its action-bar
+	// slot through the same active-stance highlight. The dedicated 0xC1 virtue packet is disabled
+	// (it crashes the 15.25 client), so this frame is the virtue indicator.
+	switch (m_virtue) {
+		case VIRTUE_HARMONY:
+			ids.push_back(274);
+			break;
+		case VIRTUE_JUSTICE:
+			ids.push_back(275);
+			break;
+		case VIRTUE_SUSTAIN:
+			ids.push_back(276);
+			break;
+		default:
+			break;
+	}
+	return ids;
+}
+
+void Player::sendStanceProtocol() const {
+	if (!client) {
+		return;
+	}
+
+	// Always resend the COMPLETE active-stance set. The client whole-replaces its highlight
+	// set, so this frames every currently-active stance (1 or 2 for a sorcerer) and, when the
+	// set is empty, sends count 0 to clear all frames WITHOUT ever putting id 0 on the wire
+	// (which would otherwise frame every empty action-bar slot).
+	client->sendStanceProtocol(buildActiveStanceSpellIds());
+}
+
+bool Player::setStance(Stance_t stance) {
+	if (isElementalStance(stance)) {
+		return false; // elemental stances go through setElementalStance
+	}
+	// toggle-off when re-selecting the same stance
+	if (stance == m_stancePrimary) {
+		if (m_stancePrimary == STANCE_NONE) {
+			return false;
+		}
+		m_stancePrimary = STANCE_NONE;
+		sendStanceProtocol(); // resend full active set (count 0 if nothing left -> clean clear, never id 0)
+		sendSkills();
+		return true;
+	}
+	if (stance != STANCE_NONE) {
+		if (!vocation || !isStanceCompatibleWithVocation(stance, vocation->getBaseId())) {
+			return false;
+		}
+	}
+	m_stancePrimary = stance;
+	sendStanceProtocol(); // resend full active set (primary + elemental)
+	sendSkills();
+	return true;
+}
+
+bool Player::setElementalStance(Stance_t stance) {
+	if (stance != STANCE_NONE) {
+		if (!vocation || vocation->getBaseId() != VOCATION_SORCERER || !isElementalStance(stance)) {
+			return false;
+		}
+	}
+	// Vocation Adjustment: changing or toggling the elemental stance clears any armed conversion.
+	m_pendingElementConversion = COMBAT_NONE;
+	// toggle-off
+	if (stance == m_stanceElemental) {
+		if (m_stanceElemental == STANCE_NONE) {
+			return false;
+		}
+		m_stanceElemental = STANCE_NONE;
+		sendStanceProtocol(); // resend full active set (count 0 if nothing left -> clean clear, never id 0)
+		sendSkills();
+		return true;
+	}
+	m_stanceElemental = stance;
+	sendStanceProtocol(); // resend full active set (elemental + crippling)
+	sendSkills();
+	return true;
+}
+
+void Player::persistStances() {
+	// Vocation Adjustment: persist the active stances so they are restored on the next login.
+	kv()->scoped("stance")->set("primary", static_cast<int>(m_stancePrimary));
+	kv()->scoped("stance")->set("elemental", static_cast<int>(m_stanceElemental));
+}
+
+uint8_t Player::getMonkAuraVocMask() const {
+	// Monk virtue aura projected by Game::projectMonkVirtueAura on the 1s serene tick; lapses if not refreshed.
+	return (m_monkAuraExpiry >= OTSYS_TIME()) ? m_monkAuraVocMask : 0;
+}
+
+void Player::setMonkAuraVocMask(uint8_t mask) {
+	const bool wasActive = (m_monkAuraVocMask != 0) && (m_monkAuraExpiry >= OTSYS_TIME());
+	m_monkAuraVocMask = mask;
+	m_monkAuraExpiry = OTSYS_TIME() + 2500;
+	if (wasActive != (mask != 0)) {
+		// Refresh the Monk's Virtue bonus special-condition icon when the aura flips on/off.
+		sendIcons();
+	}
+}
+
+uint8_t Player::getMonkShrineCount() const {
+	// Way of the Monk stores honoured shrines at quests/the_way_of_the_monk_quest/shrineCounter
+	// (written from Lua via Player:questKV = kv():scoped("quests"):scoped(questName)).
+	const auto &questsScope = kv()->scoped("quests");
+	if (!questsScope) {
+		return 0;
+	}
+	const auto &monkScope = questsScope->scoped("the_way_of_the_monk_quest");
+	if (!monkScope) {
+		return 0;
+	}
+	const auto shrineCounter = monkScope->get("shrineCounter");
+	// Lua stores every number as a double KV value, so read via getNumber() (get<int>() would never
+	// match the double alternative and silently return 0). Mirrors Player::getBlessingCount.
+	return shrineCounter ? static_cast<uint8_t>(std::min<int>(static_cast<int>(shrineCounter->getNumber()), 255)) : 0;
 }
 
 uint16_t Player::getMantraTotal() const {
@@ -12487,9 +12907,13 @@ void Player::applyEquippedWeaponProficiency(const uint16_t itemId) {
 				continue;
 			}
 
-			int32_t damageTypeIndex = 0;
+			int32_t damageTypeIndex = -1;
 			if (perk.damageType > 0) {
 				switch (perk.damageType) {
+					case PROFICIENCY_DAMAGETYPE_PHYSICAL: {
+						damageTypeIndex = static_cast<int32_t>(COMBAT_PHYSICALDAMAGE); // 0
+						break;
+					}
 					case PROFICIENCY_DAMAGETYPE_FIRE: {
 						damageTypeIndex = static_cast<int32_t>(COMBAT_FIREDAMAGE);
 						break;
@@ -12700,6 +13124,24 @@ void Player::applyEquippedWeaponProficiency(const uint16_t itemId) {
 				case PROFICIENCY_PERK_SKILLID_PERCENTAGE_AS_EXTRA_HEALING_FOR_SPELLS: {
 					if (skillTypeIndex != SKILL_NONE) {
 						equippedWeaponProficiency.skillPercentageAsExtraHealingForSpells[skillTypeIndex] = std::max(0.0f, equippedWeaponProficiency.skillPercentageAsExtraHealingForSpells[skillTypeIndex] + perk.perkValue);
+					}
+					break;
+				}
+				case PROFICIENCY_PERK_ALPHA_STRIKE_EXTRA_DAMAGE: {
+					equippedWeaponProficiency.alphaStrikeExtraDamage += perk.perkValue;
+					break;
+				}
+				case PROFICIENCY_PERK_OMEGA_STRIKE_EXTRA_DAMAGE: {
+					equippedWeaponProficiency.omegaStrikeExtraDamage += perk.perkValue;
+					break;
+				}
+				case PROFICIENCY_PERK_ARMOR_PENETRATION: {
+					equippedWeaponProficiency.armorPenetration += perk.perkValue;
+					break;
+				}
+				case PROFICIENCY_PERK_ELEMENTAL_PIERCE: {
+					if (damageTypeIndex >= 0 && damageTypeIndex < COMBAT_COUNT) {
+						equippedWeaponProficiency.elementalPierce[damageTypeIndex] += perk.perkValue;
 					}
 					break;
 				}

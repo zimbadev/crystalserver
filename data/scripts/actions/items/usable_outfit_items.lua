@@ -46,6 +46,10 @@ local outfitConfig = {
 	-- illuminator
 	[51656] = { female = 1861, male = 1860, addon = 1, achievement = "Illuminator", whiteText = "Your illuminator robes look more impressive now." },
 	[51657] = { female = 1861, male = 1860, addon = 2, achievement = "Illuminator", whiteText = "Your illuminator robes look more impressive now." },
+
+	-- Lord Retro
+	[37605] = { female = 1461, male = 1460, addon = 1, effect = CONST_ME_GREEN_HITAREA },
+	[37604] = { female = 1461, male = 1460, addon = 2, effect = CONST_ME_GREEN_HITAREA },
 }
 
 local usableOutfitItems = Action()

@@ -18,6 +18,9 @@
 #include "lua/functions/creatures/combat/condition_functions.hpp"
 
 #include "creatures/combat/condition.hpp"
+
+#include <memory>
+
 #include "enums/player_icons.hpp"
 #include "game/game.hpp"
 #include "lua/functions/lua_functions_loader.hpp"
@@ -33,6 +36,7 @@ void ConditionFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Condition", "getType", ConditionFunctions::luaConditionGetType);
 	Lua::registerMethod(L, "Condition", "getIcons", ConditionFunctions::luaConditionGetIcons);
 	Lua::registerMethod(L, "Condition", "getEndTime", ConditionFunctions::luaConditionGetEndTime);
+	Lua::registerMethod(L, "Condition", "getFoodTicks", ConditionFunctions::luaConditionGetFoodTicks);
 
 	Lua::registerMethod(L, "Condition", "clone", ConditionFunctions::luaConditionClone);
 
@@ -132,6 +136,22 @@ int ConditionFunctions::luaConditionGetEndTime(lua_State* L) {
 	const auto &condition = Lua::getUserdataShared<Condition>(L, 1);
 	if (condition) {
 		lua_pushnumber(L, condition->getEndTime());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int ConditionFunctions::luaConditionGetFoodTicks(lua_State* L) {
+	// condition:getFoodTicks()
+	const auto &condition = Lua::getUserdataShared<Condition>(L, 1);
+	if (condition) {
+		const auto &conditionRegen = std::dynamic_pointer_cast<ConditionRegeneration>(condition);
+		if (conditionRegen) {
+			lua_pushnumber(L, conditionRegen->getFoodTicks());
+		} else {
+			lua_pushnumber(L, 0);
+		}
 	} else {
 		lua_pushnil(L);
 	}

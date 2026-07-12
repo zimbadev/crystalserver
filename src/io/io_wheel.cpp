@@ -24,9 +24,9 @@
 #include "creatures/combat/spells.hpp"
 #include "utils/tools.hpp"
 
-#define MITIGATION_INCREASE 0.03
+#define MITIGATION_INCREASE 0.075 // Vocation Adjustment: Dedication mitigation 0.03 -> 0.075 per promotion point
 #define MANA_LEECH_INCREASE 0.25
-#define HEALTH_LEECH_INCREASE 0.75
+#define LIFE_LEECH_INCREASE 0.75
 
 /**
  * @brief This namespace groups together variables, functions, and class definitions within a specific scope.
@@ -42,6 +42,24 @@ namespace InternalPlayerWheel {
 		"Hell's Core",
 		"Rage of the Skies",
 		"Wrath of Nature"
+	};
+
+	// Vocation Adjustment: Special Spells augment (sorcerer) applies to the strike spells.
+	std::vector<std::string> m_specialSpells {
+		"Strong Energy Strike",
+		"Strong Flame Strike",
+		"Strong Ice Strike",
+		"Strong Terra Strike",
+		"Ultimate Energy Strike",
+		"Ultimate Flame Strike",
+		"Ultimate Ice Strike",
+		"Ultimate Terra Strike"
+	};
+
+	// Vocation Adjustment: Forked Spells augment (druid) applies to both Forked spells.
+	std::vector<std::string> m_forkedSpells {
+		"Forked Glacier",
+		"Forked Thorns"
 	};
 
 	/**
@@ -62,6 +80,22 @@ namespace InternalPlayerWheel {
 			for (const std::string &focusSpellName : m_focusSpells) {
 				g_logger().trace("[{}] registered any spell: {}", __FUNCTION__, focusSpellName);
 				registerWheelSpellTable(spellData, focusSpellName, gradeType);
+			}
+			return;
+		}
+
+		// Vocation Adjustment: Special Spells augment expands to every sorcerer strike spell.
+		if (name == "Any_Special_Mage_Spell") {
+			for (const std::string &specialSpellName : m_specialSpells) {
+				registerWheelSpellTable(spellData, specialSpellName, gradeType);
+			}
+			return;
+		}
+
+		// Vocation Adjustment: Forked Spells augment expands to both Forked spells.
+		if (name == "Any_Forked_Spell") {
+			for (const std::string &forkedSpellName : m_forkedSpells) {
+				registerWheelSpellTable(spellData, forkedSpellName, gradeType);
 			}
 			return;
 		}
@@ -238,38 +272,38 @@ void IOWheel::initializeMapData() {
 
 void IOWheel::initializeDruidSpells() {
 	m_wheelBonusData.spells.druid[0].name = "Strong Ice Wave";
-	m_wheelBonusData.spells.druid[0].grade[1].leech.mana = 3;
-	m_wheelBonusData.spells.druid[0].grade[2].increase.damage = 10;
+	m_wheelBonusData.spells.druid[0].grade[1].increase.damage = 6; // Vocation Adjustment: I +6% base damage (was mana leech)
+	m_wheelBonusData.spells.druid[0].grade[2].increase.area = true; // II area enlarged
 
 	m_wheelBonusData.spells.druid[1].name = "Mass Healing";
 	m_wheelBonusData.spells.druid[1].grade[1].increase.heal = 4;
 	m_wheelBonusData.spells.druid[1].grade[2].increase.area = true;
 
-	m_wheelBonusData.spells.druid[2].name = "Nature's Embrace";
-	m_wheelBonusData.spells.druid[2].grade[1].increase.heal = 11;
-	m_wheelBonusData.spells.druid[2].grade[2].decrease.cooldown = 10;
+	m_wheelBonusData.spells.druid[2].name = "Any_Forked_Spell"; // Vocation Adjustment: Forked Spells (replaces Nature's Embrace, not in the new wheel)
+	m_wheelBonusData.spells.druid[2].grade[1].decrease.cooldown = 2; // I -2s cd
+	m_wheelBonusData.spells.druid[2].grade[2].increase.aditionalTarget = 1; // II +1 target (forked_*.lua reads getWheelSpellAdditionalTarget)
 
 	m_wheelBonusData.spells.druid[3].name = "Terra Wave";
 	m_wheelBonusData.spells.druid[3].grade[1].increase.damage = static_cast<int>(std::round(6.5));
-	m_wheelBonusData.spells.druid[3].grade[2].leech.life = 5;
+	m_wheelBonusData.spells.druid[3].grade[2].leech.life = 10; // Vocation Adjustment: II 10% life leech (was 5%)
 
 	m_wheelBonusData.spells.druid[4].name = "Heal Friend";
-	m_wheelBonusData.spells.druid[4].grade[1].decrease.manaCost = 10;
-	m_wheelBonusData.spells.druid[4].grade[2].increase.heal = static_cast<int>(std::round(5.5));
+	m_wheelBonusData.spells.druid[4].grade[1].increase.heal = 4; // Vocation Adjustment: I +4% base heal (was mana cost)
+	m_wheelBonusData.spells.druid[4].grade[2].increase.heal = 6; // II +6% base heal
 }
 
 void IOWheel::initializeKnightSpells() {
 	m_wheelBonusData.spells.knight[0].name = "Front Sweep";
-	m_wheelBonusData.spells.knight[0].grade[1].leech.life = 5;
-	m_wheelBonusData.spells.knight[0].grade[2].increase.damage = 14;
+	m_wheelBonusData.spells.knight[0].grade[1].increase.damage = 40; // Vocation Adjustment: I +40% base power
+	m_wheelBonusData.spells.knight[0].grade[2].increase.area = true; // II shape +2 squares (front_sweep.lua must widen area)
 
 	m_wheelBonusData.spells.knight[1].name = "Groundshaker";
-	m_wheelBonusData.spells.knight[1].grade[1].increase.damage = static_cast<int>(std::round(12.5));
-	m_wheelBonusData.spells.knight[1].grade[2].decrease.cooldown = 2;
+	m_wheelBonusData.spells.knight[1].grade[1].decrease.cooldown = 2; // Vocation Adjustment: swapped I<->II
+	m_wheelBonusData.spells.knight[1].grade[2].increase.damage = static_cast<int>(std::round(12.5));
 
-	m_wheelBonusData.spells.knight[2].name = "Chivalrous Challenge";
-	m_wheelBonusData.spells.knight[2].grade[1].decrease.manaCost = 20;
-	m_wheelBonusData.spells.knight[2].grade[2].increase.aditionalTarget = 1;
+	m_wheelBonusData.spells.knight[2].name = "Shield Slam"; // Vocation Adjustment: replaces Chivalrous Challenge
+	m_wheelBonusData.spells.knight[2].grade[1].leech.life = 15; // I +15% life leech
+	m_wheelBonusData.spells.knight[2].grade[2].increase.damageReduction = 25; // II +25% dmg reduction (TODO effect via shield_slam.lua; field inert)
 
 	m_wheelBonusData.spells.knight[3].name = "Intense Wound Cleansing";
 	m_wheelBonusData.spells.knight[3].grade[1].increase.heal = 125;
@@ -281,22 +315,22 @@ void IOWheel::initializeKnightSpells() {
 }
 
 void IOWheel::initializePaladinSpells() {
-	m_wheelBonusData.spells.paladin[0].name = "Sharpshooter";
-	m_wheelBonusData.spells.paladin[0].grade[1].decrease.secondaryGroupCooldown = 8;
-	m_wheelBonusData.spells.paladin[0].grade[2].decrease.cooldown = 6;
+	m_wheelBonusData.spells.paladin[0].name = "Ethereal Barrage"; // Vocation Adjustment: replaces Sharpshooter
+	m_wheelBonusData.spells.paladin[0].grade[1].leech.life = 10; // I +10% life leech
+	m_wheelBonusData.spells.paladin[0].grade[2].increase.criticalChance = 10; // II +10% crit chance
 
 	m_wheelBonusData.spells.paladin[1].name = "Strong Ethereal Spear";
 	m_wheelBonusData.spells.paladin[1].grade[1].decrease.cooldown = 2;
 	m_wheelBonusData.spells.paladin[1].grade[2].increase.damage = 380;
 
 	m_wheelBonusData.spells.paladin[2].name = "Divine Dazzle";
-	m_wheelBonusData.spells.paladin[2].grade[1].increase.aditionalTarget = 1;
+	m_wheelBonusData.spells.paladin[2].grade[1].increase.aditionalTarget = 2; // Vocation Adjustment: I +2 targets (was +1)
 	m_wheelBonusData.spells.paladin[2].grade[2].increase.duration = 4;
-	m_wheelBonusData.spells.paladin[2].grade[2].decrease.cooldown = 4;
+	m_wheelBonusData.spells.paladin[2].grade[2].decrease.cooldown = 8; // II -8s cd (was -4s)
 
-	m_wheelBonusData.spells.paladin[3].name = "Swift Foot";
-	m_wheelBonusData.spells.paladin[3].grade[1].decrease.secondaryGroupCooldown = 8;
-	m_wheelBonusData.spells.paladin[3].grade[2].decrease.cooldown = 6;
+	m_wheelBonusData.spells.paladin[3].name = "Divine Barrage"; // Vocation Adjustment: replaces Swift Foot
+	m_wheelBonusData.spells.paladin[3].grade[1].increase.damage = 10; // I +10% base damage
+	m_wheelBonusData.spells.paladin[3].grade[2].increase.damage = 15; // II +15% base damage
 
 	m_wheelBonusData.spells.paladin[4].name = "Divine Caldera";
 	m_wheelBonusData.spells.paladin[4].grade[1].decrease.manaCost = 20;
@@ -304,16 +338,17 @@ void IOWheel::initializePaladinSpells() {
 }
 
 void IOWheel::initializeSorcererSpells() {
-	m_wheelBonusData.spells.sorcerer[0].name = "Magic Shield";
-	m_wheelBonusData.spells.sorcerer[0].grade[2].decrease.cooldown = 6;
+	m_wheelBonusData.spells.sorcerer[0].name = "Any_Special_Mage_Spell"; // Vocation Adjustment: Special Spells (replaces Magic Shield)
+	m_wheelBonusData.spells.sorcerer[0].grade[1].decrease.cooldown = 4; // I -4s cd
+	m_wheelBonusData.spells.sorcerer[0].grade[2].increase.damage = 50; // II +50% base damage
 
-	m_wheelBonusData.spells.sorcerer[1].name = "Sap Strength";
-	m_wheelBonusData.spells.sorcerer[1].grade[1].increase.area = true;
-	m_wheelBonusData.spells.sorcerer[1].grade[2].increase.damageReduction = 1;
+	m_wheelBonusData.spells.sorcerer[1].name = "Death Echo"; // Vocation Adjustment: replaces Sap Strength
+	m_wheelBonusData.spells.sorcerer[1].grade[1].decrease.cooldown = 2; // I -2s cd
+	m_wheelBonusData.spells.sorcerer[1].grade[2].increase.damage = 8; // II +8% base damage
 
 	m_wheelBonusData.spells.sorcerer[2].name = "Energy Wave";
-	m_wheelBonusData.spells.sorcerer[2].grade[1].increase.damage = 5;
-	m_wheelBonusData.spells.sorcerer[2].grade[2].increase.area = true;
+	m_wheelBonusData.spells.sorcerer[2].grade[1].increase.area = true; // Vocation Adjustment: I area enlarged (swapped)
+	m_wheelBonusData.spells.sorcerer[2].grade[2].increase.damage = 10; // II +10% base damage (was 5%)
 
 	m_wheelBonusData.spells.sorcerer[3].name = "Great Fire Wave";
 	m_wheelBonusData.spells.sorcerer[3].grade[1].increase.criticalDamage = 15;
@@ -329,10 +364,10 @@ void IOWheel::initializeSorcererSpells() {
 void IOWheel::initializeMonkSpells() {
 	m_wheelBonusData.spells.monk[0].name = "Mass Spirit Mend";
 	m_wheelBonusData.spells.monk[0].grade[1].increase.heal = 8;
-	m_wheelBonusData.spells.monk[0].grade[2].increase.area = true;
+	m_wheelBonusData.spells.monk[0].grade[2].decrease.cooldown = 4; // Vocation Adjustment: II -4s cd (was area enlarge)
 
 	m_wheelBonusData.spells.monk[1].name = "Mystic Repulse";
-	m_wheelBonusData.spells.monk[1].grade[1].decrease.cooldown = 4;
+	m_wheelBonusData.spells.monk[1].grade[1].decrease.cooldown = 6; // Vocation Adjustment: I -6s cd (was -4s)
 	m_wheelBonusData.spells.monk[1].grade[2].increase.damage = 40;
 
 	m_wheelBonusData.spells.monk[2].name = "Chained Penance";
@@ -340,12 +375,12 @@ void IOWheel::initializeMonkSpells() {
 	m_wheelBonusData.spells.monk[2].grade[2].increase.aditionalTarget = 1;
 
 	m_wheelBonusData.spells.monk[3].name = "Flurry of Blows";
-	m_wheelBonusData.spells.monk[3].grade[1].leech.life = 5;
+	m_wheelBonusData.spells.monk[3].grade[1].increase.area = true; // Vocation Adjustment: I enlarges area (was +5% life leech)
 	m_wheelBonusData.spells.monk[3].grade[2].increase.damage = 15;
 
-	m_wheelBonusData.spells.monk[4].name = "Sweeping Takedown";
-	m_wheelBonusData.spells.monk[4].grade[1].leech.mana = 3;
-	m_wheelBonusData.spells.monk[4].grade[2].increase.criticalDamage = 25;
+	m_wheelBonusData.spells.monk[4].name = "Thousand Fist Blows"; // Vocation Adjustment: replaces Sweeping Takedown
+	m_wheelBonusData.spells.monk[4].grade[1].increase.criticalDamage = 40; // I +40% crit extra damage
+	m_wheelBonusData.spells.monk[4].grade[2].decrease.cooldown = 6; // II -6s cd
 }
 
 bool IOWheel::isMaxPointAddedToSlot(const std::shared_ptr<Player> &player, uint16_t points, WheelSlots_t slotType) const {
@@ -372,7 +407,7 @@ bool IOWheel::isMonk(uint8_t vocationId) const {
 	return vocationId == Vocation_t::VOCATION_MONK_CIP;
 }
 
-void IOWheel::addSpell(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, uint16_t points, const std::string &spellName) const {
+void IOWheel::addSpellAugmented(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, uint16_t points, const std::string &spellName) const {
 	if (isMaxPointAddedToSlot(player, points, slotType)) {
 		bonusData.spells.push_back(spellName);
 	}
@@ -522,24 +557,24 @@ void IOWheel::slotRedTop150(const std::shared_ptr<Player> &player, uint16_t poin
 // SLOT_RED_200 = 6
 void IOWheel::slotRed200(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_200, points, "Front Sweep");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_200, points, "Front Sweep");
 		bonusData.stats.health += 3 * points;
 		bonusData.stats.mana += 1 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_200, points, "Sharpshooter");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_200, points, "Ethereal Barrage");
 		bonusData.stats.health += 2 * points;
 		bonusData.stats.mana += 3 * points;
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_200, points, "Sweeping Takedown");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_200, points, "Thousand Fist Blows");
 		bonusData.stats.health += 2 * points;
 		bonusData.stats.mana += 2 * points;
 	} else {
 		if (isSorcerer(vocationCipId)) {
 			for (const std::string &focusSpellName : getFocusSpells()) {
-				addSpell(player, bonusData, WheelSlots_t::SLOT_RED_200, points, focusSpellName);
+				addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_200, points, focusSpellName);
 			}
 		} else {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_RED_200, points, "Strong Ice Wave");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_200, points, "Strong Ice Wave");
 		}
 		bonusData.stats.health += 1 * points;
 		bonusData.stats.mana += 6 * points;
@@ -555,19 +590,19 @@ void IOWheel::slotGreenBottom150(const std::shared_ptr<Player> &player, uint16_t
 // SLOT_GREEN_MIDDLE_100 = 8
 void IOWheel::slotGreenMiddle100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Groundshaker");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Groundshaker");
 		bonusData.stats.health += 3 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Strong Ethereal Spear");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Strong Ethereal Spear");
 		bonusData.stats.health += 2 * points;
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Mass Spirit Mend");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Mass Spirit Mend");
 		bonusData.stats.health += 2 * points;
 	} else {
 		if (isSorcerer(vocationCipId)) {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Magic Shield");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Any_Special_Mage_Spell");
 		} else {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Mass Healing");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Mass Healing");
 		}
 		bonusData.stats.health += 1 * points;
 	}
@@ -585,7 +620,7 @@ void IOWheel::slotGreenTop75(const std::shared_ptr<Player> &player, uint16_t poi
 		bonusData.stats.mana += 6 * points;
 	}
 	if (isMaxPointAddedToSlot(player, points, WheelSlots_t::SLOT_GREEN_TOP_75)) {
-		bonusData.leech.lifeLeech += HEALTH_LEECH_INCREASE;
+		bonusData.leech.lifeLeech += LIFE_LEECH_INCREASE;
 	}
 }
 
@@ -604,19 +639,19 @@ void IOWheel::slotRedTop75(const std::shared_ptr<Player> &player, uint16_t point
 // SLOT_RED_MIDDLE_100 = 11
 void IOWheel::slotRedMiddle100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Chivalrous Challenge");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Shield Slam");
 		bonusData.stats.mana += 1 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Divine Dazzle");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Divine Dazzle");
 		bonusData.stats.mana += 3 * points;
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Mystic Repulse");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Mystic Repulse");
 		bonusData.stats.mana += 2 * points;
 	} else {
 		if (isSorcerer(vocationCipId)) {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Sap Strength");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Death Echo");
 		} else {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Nature's Embrace");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Any_Forked_Spell");
 		}
 		bonusData.stats.mana += 6 * points;
 	}
@@ -639,19 +674,19 @@ void IOWheel::slotRedBottom150(const std::shared_ptr<Player> &player, uint16_t p
 // SLOT_GREEN_BOTTOM_100 = 13
 void IOWheel::slotGreenBottom100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Intense Wound Cleansing");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Intense Wound Cleansing");
 		bonusData.stats.health += 3 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Swift Foot");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Divine Barrage");
 		bonusData.stats.health += 2 * points;
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Chained Penance");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Chained Penance");
 		bonusData.stats.health += 2 * points;
 	} else {
 		if (isSorcerer(vocationCipId)) {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Energy Wave");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Energy Wave");
 		} else {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Terra Wave");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_100, points, "Terra Wave");
 		}
 		bonusData.stats.health += 1 * points;
 	}
@@ -699,15 +734,15 @@ void IOWheel::slotGreen50(const std::shared_ptr<Player> &player, uint16_t points
 void IOWheel::slotRed50(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	bonusData.mitigation += MITIGATION_INCREASE * points;
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Fierce Berserk");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Fierce Berserk");
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Divine Caldera");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Divine Caldera");
 	} else if (isSorcerer(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Great Fire Wave");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Great Fire Wave");
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Flurry of Blows");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Flurry of Blows");
 	} else {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Heal Friend");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_50, points, "Heal Friend");
 	}
 }
 
@@ -721,7 +756,7 @@ void IOWheel::slotRedBottom75(const std::shared_ptr<Player> &player, uint16_t po
 		bonusData.stats.capacity += 2 * points;
 	}
 	if (isMaxPointAddedToSlot(player, points, WheelSlots_t::SLOT_RED_BOTTOM_75)) {
-		bonusData.leech.lifeLeech += HEALTH_LEECH_INCREASE;
+		bonusData.leech.lifeLeech += LIFE_LEECH_INCREASE;
 	}
 }
 
@@ -762,21 +797,21 @@ void IOWheel::slotBlueTop75(const std::shared_ptr<Player> &player, uint16_t poin
 // SLOT_BLUE_50 = 21
 void IOWheel::slotBlue50(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, "Front Sweep");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, "Front Sweep");
 		bonusData.stats.mana += 1 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, "Sharpshooter");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, "Ethereal Barrage");
 		bonusData.stats.mana += 3 * points;
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, "Sweeping Takedown");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, "Thousand Fist Blows");
 		bonusData.stats.mana += 2 * points;
 	} else {
 		if (isSorcerer(vocationCipId)) {
 			for (const std::string &focusSpellName : getFocusSpells()) {
-				addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, focusSpellName);
+				addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, focusSpellName);
 			}
 		} else {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, "Strong Ice Wave");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_50, points, "Strong Ice Wave");
 		}
 		bonusData.stats.mana += 6 * points;
 	}
@@ -820,19 +855,19 @@ void IOWheel::slotPurpleTop75(const std::shared_ptr<Player> &player, uint16_t po
 // SLOT_PURPLE_TOP_100 = 24
 void IOWheel::slotPurpleTop100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Groundshaker");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Groundshaker");
 		bonusData.stats.capacity += 5 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Strong Ethereal Spear");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Strong Ethereal Spear");
 		bonusData.stats.capacity += 4 * points;
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Mass Spirit Mend");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Mass Spirit Mend");
 		bonusData.stats.capacity += 5 * points;
 	} else {
 		if (isSorcerer(vocationCipId)) {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Magic Shield");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Any_Special_Mage_Spell");
 		} else {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Mass Healing");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_100, points, "Mass Healing");
 		}
 		bonusData.stats.capacity += 2 * points;
 	}
@@ -848,7 +883,7 @@ void IOWheel::slotBlueTop150(const std::shared_ptr<Player> &player, uint16_t poi
 		bonusData.stats.capacity += 2 * points;
 	}
 	if (isMaxPointAddedToSlot(player, points, WheelSlots_t::SLOT_BLUE_TOP_150)) {
-		bonusData.leech.lifeLeech += HEALTH_LEECH_INCREASE;
+		bonusData.leech.lifeLeech += LIFE_LEECH_INCREASE;
 	}
 }
 
@@ -856,16 +891,16 @@ void IOWheel::slotBlueTop150(const std::shared_ptr<Player> &player, uint16_t poi
 void IOWheel::slotBlueMiddle100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	bonusData.mitigation += MITIGATION_INCREASE * points;
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Chivalrous Challenge");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Shield Slam");
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Divine Dazzle");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Divine Dazzle");
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Mystic Repulse");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Mystic Repulse");
 	} else {
 		if (isSorcerer(vocationCipId)) {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Sap Strength");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Death Echo");
 		} else {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Nature's Embrace");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Any_Forked_Spell");
 		}
 	}
 }
@@ -893,19 +928,19 @@ void IOWheel::slotPurpleBottom75(const std::shared_ptr<Player> &player, uint16_t
 // SLOT_PURPLE_MIDDLE_100 = 29
 void IOWheel::slotPurpleMiddle100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Intense Wound Cleansing");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Intense Wound Cleansing");
 		bonusData.stats.capacity += 5 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Swift Foot");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Divine Barrage");
 		bonusData.stats.capacity += 4 * points;
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Chained Penance");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Chained Penance");
 		bonusData.stats.capacity += 5 * points;
 	} else {
 		if (isSorcerer(vocationCipId)) {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Energy Wave");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Energy Wave");
 		} else {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Terra Wave");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Terra Wave");
 		}
 		bonusData.stats.capacity += 2 * points;
 	}
@@ -928,22 +963,22 @@ void IOWheel::slotPurpleTop150(const std::shared_ptr<Player> &player, uint16_t p
 // SLOT_BLUE_200 = 31
 void IOWheel::slotBlue200(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Fierce Berserk");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Fierce Berserk");
 		bonusData.stats.health += 3 * points;
 		bonusData.stats.mana += 1 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Divine Caldera");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Divine Caldera");
 		bonusData.stats.health += 2 * points;
 		bonusData.stats.mana += 3 * points;
 	} else if (isMonk(vocationCipId)) {
-		addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Flurry of Blows");
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Flurry of Blows");
 		bonusData.stats.health += 2 * points;
 		bonusData.stats.mana += 2 * points;
 	} else {
 		if (isSorcerer(vocationCipId)) {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Great Fire Wave");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Great Fire Wave");
 		} else {
-			addSpell(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Heal Friend");
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_200, points, "Heal Friend");
 		}
 		bonusData.stats.health += 1 * points;
 		bonusData.stats.mana += 6 * points;
@@ -1001,7 +1036,7 @@ void IOWheel::slotPurpleBottom150(const std::shared_ptr<Player> &player, uint16_
 		bonusData.stats.mana += 6 * points;
 	}
 	if (isMaxPointAddedToSlot(player, points, WheelSlots_t::SLOT_PURPLE_BOTTOM_150)) {
-		bonusData.leech.lifeLeech += HEALTH_LEECH_INCREASE;
+		bonusData.leech.lifeLeech += LIFE_LEECH_INCREASE;
 	}
 }
 

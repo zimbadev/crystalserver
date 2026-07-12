@@ -235,6 +235,14 @@ bool Monster::isAttackable() const {
 	return mType->info.isAttackable;
 }
 
+bool Monster::canWalk() const {
+	return mType->info.canWalk;
+}
+
+bool Monster::canTarget() const {
+	return mType->info.canTarget;
+}
+
 bool Monster::canPushItems() const {
 	return mType->info.canPushItems;
 }
@@ -910,11 +918,13 @@ RaceType_t Monster::getRace() const {
 }
 
 float Monster::getMitigation() const {
-	float mitigation = mType->info.mitigation * getDefenseMultiplier();
+	// Vocation Adjustment: monster mitigation increased ~50% (x1.5) with a higher ceiling (30 -> 45)
+	// to compensate for the player mitigation rework.
+	float mitigation = mType->info.mitigation * getDefenseMultiplier() * 1.5f;
 	if (g_configManager().getBoolean(DISABLE_MONSTER_ARMOR)) {
 		mitigation += std::ceil(static_cast<float>(getDefense() + getArmor()) / 100.f) * getDefenseMultiplier() * 2.f;
 	}
-	return std::min<float>(mitigation, 30.f);
+	return std::min<float>(mitigation, 45.f);
 }
 
 int32_t Monster::getArmor() const {
@@ -935,6 +945,14 @@ BlockType_t Monster::blockHit(const std::shared_ptr<Creature> &attacker, const C
 		const auto &player = attacker ? attacker->getPlayer() : nullptr;
 		if (player && player->wheel()->getInstant("Ballistic Mastery")) {
 			elementMod -= player->wheel()->checkElementSensitiveReduction(combatType);
+		}
+
+		// Proficiency Perk: Elemental Pierce
+		if (player && elementMod > 0 && combatType < COMBAT_COUNT) {
+			const float elePierce = player->getEquippedWeaponProficiency().elementalPierce[combatType];
+			if (elePierce > 0) {
+				elementMod = std::max<int32_t>(0, elementMod - static_cast<int32_t>(elementMod * elePierce));
+			}
 		}
 
 		if (elementMod != 0) {
@@ -984,6 +1002,9 @@ bool Monster::selectTarget(const std::shared_ptr<Creature> &creature) {
 		return false;
 	}
 
+	if (!canTarget()) {
+		return false;
+	}
 	auto player = std::dynamic_pointer_cast<Player>(creature);
 	if (player && player->checkLoginDelay(player->getID())) {
 		return false;
@@ -1528,6 +1549,8 @@ bool Monster::getNextStep(Direction &nextDirection, uint32_t &flags) {
 		doFollowCreature(flags, nextDirection, result);
 	} else if (isWalkingBack) {
 		doWalkBack(flags, nextDirection, result);
+	} else if (isWalkingTo && !randomStepping) {
+		doWalkTo(flags, nextDirection, result);
 	} else {
 		doRandomStep(nextDirection, result);
 	}
@@ -1556,10 +1579,20 @@ bool Monster::getNextStep(Direction &nextDirection, uint32_t &flags) {
 }
 
 void Monster::doRandomStep(Direction &nextDirection, bool &result) {
-	if (getTimeSinceLastMove() >= 1000) {
+	if (getTimeSinceLastMove() >= 1000 && canWalk()) {
 		randomStepping = true;
 		result = getRandomStep(getPosition(), nextDirection);
 	}
+}
+
+void Monster::walkTo(const Position &walkToPosition) {
+	randomStepping = false;
+	isWalkingTo = true;
+	std::vector<Direction> listDir;
+	if (!getPathTo(walkToPosition, listDir, 0, 0, true, true, 25)) {
+		return;
+	}
+	startAutoWalk(listDir, true);
 }
 
 void Monster::doWalkBack(uint32_t &flags, Direction &nextDirection, bool &result) {
@@ -1610,6 +1643,20 @@ void Monster::doFollowCreature(uint32_t &flags, Direction &nextDirection, bool &
 				result = getDanceStep(getPosition(), nextDirection);
 			}
 		}
+	}
+}
+
+void Monster::doWalkTo(uint32_t &flags, Direction &nextDirection, bool &result) {
+	result = Creature::getNextStep(nextDirection, flags);
+	if (result) {
+		flags |= FLAG_PATHFINDING;
+	} else {
+		if (ignoreFieldDamage) {
+			ignoreFieldDamage = false;
+		}
+
+		randomStepping = true;
+		isWalkingTo = false;
 	}
 }
 
@@ -2351,13 +2398,8 @@ void Monster::death(const std::shared_ptr<Creature> &) {
 		return;
 	}
 
-	auto [activeCharm, _] = g_iobestiary().getCharmFromTarget(targetPlayer, mType);
-	if (activeCharm == CHARM_CARNAGE) {
-		const auto &charm = g_iobestiary().getBestiaryCharm(activeCharm);
-		const auto charmTier = targetPlayer->getCharmTier(activeCharm);
-		if (charm && charm->chance[charmTier] >= normal_random(1, 10000) / 100.0) {
-			g_iobestiary().parseCharmCombat(charm, targetPlayer, getMonster());
-		}
+	if (const auto &carnageCharm = targetPlayer->isApplyCharm(CHARM_MAJOR_CARNAGE, getName())) {
+		g_iobestiary().parseCharmCombat(carnageCharm, targetPlayer, getMonster());
 	}
 }
 
@@ -2559,11 +2601,8 @@ bool Monster::challengeCreature(const std::shared_ptr<Creature> &creature, int t
 	if (result) {
 		challengeFocusDuration = targetChangeCooldown;
 		targetChangeTicks = 0;
-		// Wheel of destiny
-		const auto &player = creature ? creature->getPlayer() : nullptr;
-		if (player && !player->isRemoved()) {
-			player->wheel()->healIfBattleHealingActive();
-		}
+		// Vocation Adjustment: Battle Healing no longer heals on challenge (reworked into a healing
+		// multiplier in Game::applyWheelOfDestinyHealing).
 	}
 	return result;
 }
@@ -2813,13 +2852,14 @@ bool Monster::checkCanApplyCharm(const std::shared_ptr<Player> &player, charmRun
 		return false;
 	}
 
-	uint16_t playerCharmRaceid = player->parseRacebyCharm(charmRune, false, 0);
-	if (playerCharmRaceid != 0) {
-		const auto &mType = g_monsters().getMonsterType(getName());
-		if (mType && playerCharmRaceid == mType->info.raceid) {
-			const auto &charm = g_iobestiary().getBestiaryCharm(charmRune);
-			if (charm) {
-				return true;
+	const uint16_t playerCharmRaceId = player->getRaceIdByCharmsArray(charmRune);
+	if (playerCharmRaceId != 0) {
+		if (mType && playerCharmRaceId == mType->info.raceid) {
+			if (const auto &charm = g_iobestiary().getBestiaryCharm(charmRune)) {
+				const auto charmTier = player->getTierByCharmsArray(charmRune);
+				if (charm->chance[charmTier] > (uniform_random(0, 100) / 1.0)) {
+					return true;
+				}
 			}
 		}
 	}

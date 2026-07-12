@@ -299,7 +299,7 @@ private:
 	 * @param points The number of points required to add the spell.
 	 * @param spellName The name of the spell to add.
 	 */
-	void addSpell(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, uint16_t points, const std::string &spellName) const;
+	void addSpellAugmented(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, uint16_t points, const std::string &spellName) const;
 
 	/**
 	 * @brief Unlock a vessel resonance if the number of points is equal to the player's points in the specified slot type.

@@ -35,6 +35,7 @@ void SpellFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Spell", "cooldown", SpellFunctions::luaSpellCooldown);
 	Lua::registerMethod(L, "Spell", "groupCooldown", SpellFunctions::luaSpellGroupCooldown);
 	Lua::registerMethod(L, "Spell", "level", SpellFunctions::luaSpellLevel);
+	Lua::registerMethod(L, "Spell", "basePower", SpellFunctions::luaSpellBasePower);
 	Lua::registerMethod(L, "Spell", "magicLevel", SpellFunctions::luaSpellMagicLevel);
 	Lua::registerMethod(L, "Spell", "removeOnUse", SpellFunctions::luaSpellRemoveOnUse);
 	Lua::registerMethod(L, "Spell", "mana", SpellFunctions::luaSpellMana);
@@ -59,6 +60,7 @@ void SpellFunctions::init(lua_State* L) {
 	// Only for InstantSpell.
 	Lua::registerMethod(L, "Spell", "words", SpellFunctions::luaSpellWords);
 	Lua::registerMethod(L, "Spell", "needDirection", SpellFunctions::luaSpellNeedDirection);
+	Lua::registerMethod(L, "Spell", "needPosition", SpellFunctions::luaSpellNeedPosition);
 	Lua::registerMethod(L, "Spell", "hasParams", SpellFunctions::luaSpellHasParams);
 	Lua::registerMethod(L, "Spell", "hasPlayerNameParam", SpellFunctions::luaSpellHasPlayerNameParam);
 	Lua::registerMethod(L, "Spell", "needCasterTargetOrDirection", SpellFunctions::luaSpellNeedCasterTargetOrDirection);
@@ -408,6 +410,22 @@ int SpellFunctions::luaSpellLevel(lua_State* L) {
 	return 1;
 }
 
+int SpellFunctions::luaSpellBasePower(lua_State* L) {
+	// spell:basePower(power)
+	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
+	if (spell) {
+		if (lua_gettop(L) == 1) {
+			lua_pushnumber(L, spell->getBasePower());
+		} else {
+			spell->setBasePower(Lua::getNumber<uint16_t>(L, 2));
+			Lua::pushBoolean(L, true);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
 int SpellFunctions::luaSpellMagicLevel(lua_State* L) {
 	// spell:magicLevel(lvl)
 	const auto &spell = Lua::getUserdataShared<Spell>(L, 1);
@@ -737,6 +755,29 @@ int SpellFunctions::luaSpellNeedDirection(lua_State* L) {
 			Lua::pushBoolean(L, spell->getNeedDirection());
 		} else {
 			spell->setNeedDirection(Lua::getBoolean(L, 2));
+			Lua::pushBoolean(L, true);
+		}
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int SpellFunctions::luaSpellNeedPosition(lua_State* L) {
+	// spell:needPosition(bool)  -- crossHairTarget spells: cast at the clicked tile (cursor/crosshair)
+	const auto &spellBase = Lua::getUserdataShared<Spell>(L, 1);
+	const auto &spell = std::static_pointer_cast<InstantSpell>(spellBase);
+	if (spell) {
+		// if spell != SPELL_INSTANT, it means that this actually is no InstantSpell, so we return nil
+		if (spell->spellType != SPELL_INSTANT) {
+			lua_pushnil(L);
+			return 1;
+		}
+
+		if (lua_gettop(L) == 1) {
+			Lua::pushBoolean(L, spell->getNeedPosition());
+		} else {
+			spell->setNeedPosition(Lua::getBoolean(L, 2));
 			Lua::pushBoolean(L, true);
 		}
 	} else {

@@ -44,10 +44,10 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 		mostDamageName = "field item"
 	end
 
-	player:takeScreenshot(byPlayer and SCREENSHOT_TYPE_DEATHPVP or SCREENSHOT_TYPE_DEATHPVE)
+	player:sendBannerType(byPlayer and BANNER_TYPE_DEATHPVP or BANNER_TYPE_DEATHPVE)
 
 	if mostDamageKiller and mostDamageKiller:isPlayer() then
-		mostDamageKiller:takeScreenshot(SCREENSHOT_TYPE_PLAYERKILL)
+		mostDamageKiller:sendBannerType(BANNER_TYPE_PLAYERKILL)
 	end
 
 	local playerGuid = player:getGuid()
@@ -75,6 +75,51 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 	local resultId = db.storeQuery("SELECT `player_id` FROM `player_deaths` WHERE `player_id` = " .. playerGuid)
 	Webhook.sendMessage(":skull_crossbones: " .. player:getMarkdownLink() .. " has died. Killed at level _" .. player:getLevel() .. "_ by **" .. killerName .. "**.", announcementChannels["player-kills"])
 
+	local function removeAllPlayerIcons(player)
+		local iconMap = {
+			"whitecross",
+			"redcross",
+			"redball",
+			"greenball",
+			"redgreenball",
+			"greenshield",
+			"yellowshield",
+			"blueshield",
+			"purpleshield",
+			"redshield",
+			"dove",
+			"energy",
+			"earth",
+			"water",
+			"fire",
+			"ice",
+			"arrowup",
+			"arrowdown",
+			"exclamationmark",
+			"questionmark",
+			"cancelmark",
+			"hazard",
+			"brownskull",
+			"higherdamagereceived",
+			"lowerdamagedealt",
+			"turnedmelee",
+			"influenced",
+			"fiendish",
+			"reducedhealth",
+			"reducedhealthexclamation",
+			"rotten-area",
+			"rotten-hazard",
+			"white-cross",
+		}
+		if player.removeIconBakragore then
+			player:removeIconBakragore()
+		end
+		for _, iconKey in ipairs(iconMap) do
+			player:removeIcon(iconKey)
+		end
+	end
+	removeAllPlayerIcons(player)
+
 	local deathRecords = 0
 	local tmpResultId = resultId
 	while tmpResultId ~= false do
@@ -87,7 +132,7 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 	end
 
 	if byPlayer == 1 then
-		killer:takeScreenshot(SCREENSHOT_TYPE_PLAYERKILL)
+		killer:sendBannerType(BANNER_TYPE_PLAYERKILL)
 		local toggleGuildWars = configManager.getBoolean(configKeys.TOGGLE_GUILD_WARS)
 		if toggleGuildWars then
 			local targetGuild = player:getGuild()

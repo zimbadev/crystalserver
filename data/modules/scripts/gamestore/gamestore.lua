@@ -6568,11 +6568,11 @@ GameStore.Categories = {
 			},
 			{
 				icons = { "Permanent_Hunting_Task_Slot.png" },
-				name = "Permanent Hunting Task Slot",
-				price = 900,
-				id = GameStore.SubActions.TASKHUNTING_THIRDSLOT,
-				description = "<i>Get an additional hunting tasks slot to activate additional hunting task!</i>\n\n{character}\n{info} maximum amount that can be owned by character: 3\n{info} added directly to Hunting Task dialog",
-				type = GameStore.OfferTypes.OFFER_TYPE_HUNTINGSLOT,
+				name = "Permanent Weekly Task Expansion",
+				price = 450,
+				id = GameStore.SubActions.WEEKLY_TASK_EXPANSION,
+				description = "<i>Permanently expands your weekly tasks from 6 to 9 task slots for both kill and delivery tasks!</i>\n\n{character}\n{once}\n{info} added directly to Task Board",
+				type = GameStore.OfferTypes.OFFER_TYPE_WEEKLYTASKEXPANSION,
 			},
 			{
 				icons = { "Gold_Converter.png" },
@@ -6936,7 +6936,13 @@ for k, category in ipairs(GameStore.Categories) do
 				offer.type = GameStore.OfferTypes.OFFER_TYPE_NONE
 			end
 			if not offer.coinType then
-				offer.coinType = GameStore.CoinType.Transferable
+				-- Coin (0): client checks combined store balance (transferable + regular).
+				-- Transferable (1): client only checks transferable balance (e.g. casks with {transferableprice}).
+				if offer.description and offer.description:find("{transferableprice}") then
+					offer.coinType = GameStore.CoinType.Transferable
+				else
+					offer.coinType = GameStore.CoinType.Coin
+				end
 			end
 		end
 	end

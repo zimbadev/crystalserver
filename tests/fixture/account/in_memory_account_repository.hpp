@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <utility>
@@ -24,6 +25,7 @@
 #include "lib/di/container.hpp"
 
 #include "enums/account_coins.hpp"
+#include "enums/account_errors.hpp"
 #include "account/account_info.hpp"
 #include "account/account_repository.hpp"
 
@@ -109,6 +111,57 @@ namespace tests {
 
 			coins_[id][type] = amount;
 			return !failAddCoins;
+		}
+
+		uint8_t removeCoins(
+			const uint32_t &id,
+			const uint8_t &primaryType,
+			const uint8_t &secondaryType,
+			const uint32_t &amount,
+			const std::string &detail,
+			uint32_t &primaryCoinsRemoved,
+			uint32_t &secondaryCoinsRemoved
+		) final {
+			if (primaryType == secondaryType) {
+				return enumToValue(AccountErrors_t::Storage);
+			}
+
+			if (failAddCoins) {
+				primaryCoinsRemoved = 0;
+				secondaryCoinsRemoved = 0;
+				return enumToValue(AccountErrors_t::Storage);
+			}
+
+			auto accountCoins = coins_.find(id);
+			if (accountCoins == coins_.end()) {
+				return enumToValue(AccountErrors_t::RemoveCoins);
+			}
+
+			const auto primaryIt = accountCoins->second.find(primaryType);
+			const auto secondaryIt = accountCoins->second.find(secondaryType);
+			const uint32_t primaryCoins = primaryIt == accountCoins->second.end() ? 0 : primaryIt->second;
+			const uint32_t secondaryCoins = secondaryIt == accountCoins->second.end() ? 0 : secondaryIt->second;
+
+			if (static_cast<uint64_t>(primaryCoins) + static_cast<uint64_t>(secondaryCoins) < amount) {
+				return enumToValue(AccountErrors_t::RemoveCoins);
+			}
+
+			primaryCoinsRemoved = std::min(primaryCoins, amount);
+			secondaryCoinsRemoved = amount - primaryCoinsRemoved;
+
+			coins_[id][primaryType] = primaryCoins - primaryCoinsRemoved;
+			coins_[id][secondaryType] = secondaryCoins - secondaryCoinsRemoved;
+
+			if (!detail.empty()) {
+				if (primaryCoinsRemoved > 0) {
+					registerCoinsTransaction(id, enumToValue(CoinTransactionType::Remove), primaryCoinsRemoved, primaryType, detail);
+				}
+				if (secondaryCoinsRemoved > 0) {
+					registerCoinsTransaction(id, enumToValue(CoinTransactionType::Remove), secondaryCoinsRemoved, secondaryType, detail);
+				}
+			}
+
+			return enumToValue(AccountErrors_t::Ok);
 		}
 
 		bool registerCoinsTransaction(

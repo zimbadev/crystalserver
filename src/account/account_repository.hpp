@@ -41,6 +41,15 @@ public:
 
 	virtual bool getCoins(const uint32_t &id, const uint8_t &type, uint32_t &coins) = 0;
 	virtual bool setCoins(const uint32_t &id, const uint8_t &type, const uint32_t &amount) = 0;
+	virtual uint8_t removeCoins(
+		const uint32_t &id,
+		const uint8_t &primaryType,
+		const uint8_t &secondaryType,
+		const uint32_t &amount,
+		const std::string &detail,
+		uint32_t &primaryCoinsRemoved,
+		uint32_t &secondaryCoinsRemoved
+	) = 0;
 	virtual bool registerCoinsTransaction(
 		const uint32_t &id,
 		uint8_t type,

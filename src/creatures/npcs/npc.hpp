@@ -113,6 +113,8 @@ public:
 	void removeShopPlayer(uint32_t playerGUID);
 	void closeAllShopWindows();
 
+	void sendDialogOptions(const std::shared_ptr<Player> &player, uint8_t conversationId = 1) const;
+
 	static uint32_t npcAutoID;
 
 	void onCreatureWalk() override;

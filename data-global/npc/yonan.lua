@@ -90,6 +90,7 @@ npcConfig.shop = {
 	{ itemName = "wedding ring", clientId = 3004, buy = 990 },
 	{ itemName = "white pearl", clientId = 3026, buy = 320, sell = 160 },
 	{ itemName = "white silk flower", clientId = 34008, sell = 9000 },
+	{ itemName = "bounty talisman", clientId = 51978, buy = 5000 },
 }
 
 -- On buy npc shop message
@@ -222,5 +223,8 @@ npcHandler:setCallback(CALLBACK_GREET, greetCallback)
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

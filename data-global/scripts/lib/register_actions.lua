@@ -6,6 +6,17 @@ local itemsGrinder = {
 local holes = { 593, 606, 608, 867, 21341 }
 local jungleGrass = { 3696, 3702, 17153 }
 local wildGrowth = { 2130, 3635, 30224 }
+local dreamCourtsOldTable = {
+	Position(32005, 32002, 14),
+	Position(32005, 32003, 14),
+	Position(32006, 32002, 14),
+	Position(32006, 32003, 14),
+}
+local dreamCourtsFoundItems = {
+	{ id = 29992, quantity = 1 },
+	{ id = 953, quantity = 4 },
+}
+local dreamCourtsLockStorage = Storage.Quest.U12_00.TheDreamCourts.TheSevenKeys.Lock
 local fruits = { 3584, 3585, 3586, 3587, 3588, 3589, 3590, 3591, 3592, 3593, 3595, 3596, 5096, 8011, 8012, 8013 }
 local lava = {
 	Position(32808, 32336, 11),
@@ -313,7 +324,6 @@ function onUseRope(player, item, fromPosition, target, toPosition, isHotkey)
 	if toPosition.x == CONTAINER_POSITION then
 		return false
 	end
-
 	local tile = Tile(toPosition)
 	if tile and tile:isRopeSpot() then
 		player:teleportTo(toPosition:moveUpstairs())
@@ -322,22 +332,31 @@ function onUseRope(player, item, fromPosition, target, toPosition, isHotkey)
 				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You have successfully used your rope to climb out of the hole. Congratulations! Now continue to the east.")
 			end
 		end
-	elseif table.contains(holeId, target.itemid) then
-		toPosition.z = toPosition.z + 1
-		tile = Tile(toPosition)
-		if tile then
-			local thing = tile:getTopVisibleThing()
-			if thing:isItem() and thing:getType():isMovable() then
-				return thing:moveTo(toPosition:moveUpstairs())
-			elseif thing:isCreature() and thing:isPlayer() then
-				return thing:teleportTo(toPosition:moveUpstairs())
-			end
-		end
-
-		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
-	else
+		return true
+	end
+	if not table.contains(holeId, target.itemid) then
 		return false
 	end
+	toPosition.z = toPosition.z + 1
+	tile = Tile(toPosition)
+	if not tile then
+		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
+		return true
+	end
+	local thing = tile:getTopVisibleThing()
+	if not thing then
+		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
+		return true
+	end
+	local upPos = toPosition:moveUpstairs()
+	if thing:isItem() and thing:getType():isMovable() then
+		return thing:moveTo(upPos)
+	end
+	if thing:isCreature() and not thing:isNpc() then
+		thing:teleportTo(upPos)
+		return true
+	end
+	player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
 	return true
 end
 
@@ -522,6 +541,23 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 
 	-- The Secret Library Quest
 	local tPos = toPosition
+
+	-- The Dream Courts Quest - Seven Keys lock
+	for i = 1, #dreamCourtsOldTable do
+		if tPos == dreamCourtsOldTable[i] then
+			if player:getStorageValue(dreamCourtsLockStorage) < 1 then
+				for j = 1, #dreamCourtsFoundItems do
+					player:addItem(dreamCourtsFoundItems[j].id, dreamCourtsFoundItems[j].quantity)
+				end
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "This table is made of several old doors. One of them has a noticeable ornate lock. Perhaps you could lever it out with a tool.")
+				player:setStorageValue(dreamCourtsLockStorage, 1)
+			else
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You already removed the old lock.")
+			end
+			return true
+		end
+	end
+
 	for _, j in pairs(secret_library.crystals) do
 		if tPos == j.position then
 			if player:getStorageValue(j.storage) < os.time() then
@@ -647,7 +683,7 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 		--The Ice Islands Quest, Nibelor 1: Breaking the Ice
 		local missionProgress = player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Mission02)
 		local pickAmount = player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.PickAmount)
-		if (missionProgress < 0 or missionProgress >= 3) and pickAmount >= 3 then
+		if (missionProgress < 1 or missionProgress >= 3) and pickAmount >= 3 then
 			return false
 		end
 
@@ -888,6 +924,8 @@ function onUseCrowbar(player, item, fromPosition, target, toPosition, isHotkey)
 				player:setStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Mission02, 2)
 				toPosition:sendMagicEffect(CONST_ME_MAGIC_BLUE)
 			end
+		else
+			return false
 		end
 	elseif target:getActionId() == 40041 and target.itemid == 4848 then
 		-- The ape city - mission 7
@@ -916,38 +954,47 @@ function onUseCrowbar(player, item, fromPosition, target, toPosition, isHotkey)
 end
 
 function onUseSpoon(player, item, fromPosition, target, toPosition, isHotkey)
-	local targetId = target:getId()
+	if not target or not target.getId then
+		return false
+	end
 
+	local targetId = target:getId()
 	if targetId == 3920 then
 		if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.SporesMushroom) < 1 then
 			player:addItem(7251, 1)
 			player:setStorageValue(Storage.Quest.U8_0.TheIceIslands.SporesMushroom, 1)
 			toPosition:sendMagicEffect(CONST_ME_MAGIC_RED)
 			player:say("You retrieve spores from a mushroom.", TALKTYPE_MONSTER_SAY)
-			return true
 		end
-	elseif targetId == 390 then
-		-- The Ice Islands Quest - Cure the Dogs
-		if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Questline) >= 21 then
-			if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava) < 1 then
-				player:addItem(7247, 1) -- fine sulphur
-				player:setStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava, 1)
-				toPosition:sendMagicEffect(CONST_ME_MAGIC_RED)
-				player:say("You retrieve a fine sulphur from a lava hole.", TALKTYPE_MONSTER_SAY)
-			end
-		-- What a Foolish Quest - Mission 8 (sulphur)
-		elseif player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Questline) == 21 then
-			if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur) < 1 then
-				player:addItem(124, 1) -- Easily inflammable sulphur
-				player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur, 1)
-				toPosition:sendMagicEffect(CONST_ME_YELLOW_RINGS)
-			end
-		else
-			return false
-		end
+		return true
 	end
 
-	return true
+	if targetId ~= 390 then
+		return false
+	end
+
+	-- The Ice Islands Quest - Cure the Dogs
+	if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Questline) >= 21 then
+		if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava) < 1 then
+			player:addItem(7247, 1) -- fine sulphur
+			player:setStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava, 1)
+			toPosition:sendMagicEffect(CONST_ME_MAGIC_RED)
+			player:say("You retrieve a fine sulphur from a lava hole.", TALKTYPE_MONSTER_SAY)
+		end
+		return true
+	end
+
+	-- What a Foolish Quest - Mission 8 (sulphur)
+	if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Questline) == 21 then
+		if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur) < 1 then
+			player:addItem(124, 1) -- Easily inflammable sulphur
+			player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur, 1)
+			toPosition:sendMagicEffect(CONST_ME_YELLOW_RINGS)
+		end
+		return true
+	end
+
+	return false
 end
 
 function onUseSpikedSquelcher(player, item, fromPosition, target, toPosition, isHotkey)
@@ -1011,6 +1058,23 @@ function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHot
 
 	-- The Secret Library Quest
 	local tPos = toPosition
+
+	-- The Dream Courts Quest - Seven Keys lock
+	for i = 1, #dreamCourtsOldTable do
+		if tPos == dreamCourtsOldTable[i] then
+			if player:getStorageValue(dreamCourtsLockStorage) < 1 then
+				for j = 1, #dreamCourtsFoundItems do
+					player:addItem(dreamCourtsFoundItems[j].id, dreamCourtsFoundItems[j].quantity)
+				end
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "This table is made of several old doors. One of them has a noticeable ornate lock. Perhaps you could lever it out with a tool.")
+				player:setStorageValue(dreamCourtsLockStorage, 1)
+			else
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You already removed the old lock.")
+			end
+			return true
+		end
+	end
+
 	for _, j in pairs(secret_library.crystals) do
 		if tPos == j.position then
 			if player:getStorageValue(j.storage) < os.time() then

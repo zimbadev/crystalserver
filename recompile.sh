@@ -18,8 +18,8 @@
 # 
 # Examples:
 #   ./recompile.sh
-#   ./recompile.sh /home/shadowborn
-#   ./recompile.sh /home/shadowborn linux-debug
+#   ./recompile.sh /home/crystalserver
+#   ./recompile.sh /home/crystalserver linux-debug
 #
 # Features:
 #   ✓ Real-time progress bar with percentage
@@ -193,7 +193,7 @@ main() {
 		echo -e "\033[31m[ERROR]\033[0m vcpkg toolchain file not found at: $VCPKG_PATH"
 		echo -e "\033[33m[INFO]\033[0m Please install vcpkg or specify the correct path."
 		echo -e "\033[33m[INFO]\033[0m Usage: $0 [vcpkg_base_path] [build_type]"
-		echo -e "\033[33m[INFO]\033[0m Example: $0 /home/shadowborn linux-release"
+		echo -e "\033[33m[INFO]\033[0m Example: $0 /home/crystalserver linux-release"
 		exit 1
 	fi
 	

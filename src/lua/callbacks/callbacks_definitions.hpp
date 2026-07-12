@@ -46,6 +46,8 @@ enum class EventCallback_t : uint16_t {
 	playerOnLookInShop,
 	playerOnMoveItem,
 	playerOnItemMoved,
+	playerOnStowItem,
+	playerOnStashWithdraw,
 	playerOnChangeZone,
 	playerOnChangeHazard,
 	playerOnMoveCreature,
@@ -66,6 +68,7 @@ enum class EventCallback_t : uint16_t {
 	playerOnRotateItem,
 	playerOnWalk,
 	playerOnThink,
+	playerOnSoulSealsFight,
 	// Monster
 	monsterOnDropLoot,
 	monsterPostDropLoot,

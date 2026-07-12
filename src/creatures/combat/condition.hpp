@@ -174,6 +174,7 @@ public:
 
 	uint32_t getHealthTicks(const std::shared_ptr<Creature> &creature) const;
 	uint32_t getManaTicks(const std::shared_ptr<Creature> &creature) const;
+	uint32_t getFoodTicks() const;
 
 	std::shared_ptr<Condition> clone() const override;
 
@@ -184,11 +185,13 @@ public:
 private:
 	uint32_t internalHealthTicks = 0;
 	uint32_t internalManaTicks = 0;
+	uint32_t internalFoodTicks = 0;
 
 	uint32_t healthTicks = 1000;
 	uint32_t manaTicks = 1000;
 	uint32_t healthGain = 0;
 	uint32_t manaGain = 0;
+	uint32_t foodTicks = 0;
 };
 
 class ConditionManaShield final : public Condition {
