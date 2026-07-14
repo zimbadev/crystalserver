@@ -1087,7 +1087,7 @@ public:
 	void sendCreatePrivateChannel(uint16_t channelId, const std::string &channelName) const;
 	void sendClosePrivate(uint16_t channelId);
 	void sendIcons();
-	void sendIconBakragore(IconBakragore icon) const;
+	void sendIconBakragore(IconBakragore icon);
 	void removeBakragoreIcons();
 	void removeBakragoreIcon(const IconBakragore icon);
 	void sendClientCheck() const;

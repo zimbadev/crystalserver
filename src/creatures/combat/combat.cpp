@@ -2886,50 +2886,24 @@ int32_t MagicField::getDamage() const {
 }
 
 MatrixArea::MatrixArea(uint32_t initRows, uint32_t initCols) :
-	centerX(0), centerY(0), rows(initRows), cols(initCols) {
-	data_ = new bool*[rows];
-
-	for (uint32_t row = 0; row < rows; ++row) {
-		data_[row] = new bool[cols];
-
-		for (uint32_t col = 0; col < cols; ++col) {
-			data_[row][col] = false;
-		}
-	}
+	centerX(0), centerY(0), rows(initRows), cols(initCols),
+	data_(initRows, std::vector<char>(initCols, 0)) {
 }
 
-MatrixArea::MatrixArea(const MatrixArea &rhs) {
-	centerX = rhs.centerX;
-	centerY = rhs.centerY;
-	rows = rhs.rows;
-	cols = rhs.cols;
-
-	data_ = new bool*[rows];
-
-	for (uint32_t row = 0; row < rows; ++row) {
-		data_[row] = new bool[cols];
-
-		for (uint32_t col = 0; col < cols; ++col) {
-			data_[row][col] = rhs.data_[row][col];
-		}
-	}
+MatrixArea::MatrixArea(const MatrixArea &rhs) :
+	centerX(rhs.centerX), centerY(rhs.centerY), rows(rhs.rows), cols(rhs.cols),
+	data_(rhs.data_) {
 }
 
-MatrixArea::~MatrixArea() {
-	for (uint32_t row = 0; row < rows; ++row) {
-		delete[] data_[row];
-	}
-
-	delete[] data_;
-}
+MatrixArea::~MatrixArea() = default;
 
 std::unique_ptr<MatrixArea> MatrixArea::clone() const {
 	return std::make_unique<MatrixArea>(*this);
 }
 
-void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) const {
+void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) {
 	if (row < rows && col < cols) {
-		data_[row][col] = value;
+		data_[row][col] = value ? 1 : 0;
 	} else {
 		g_logger().error("[{}] Access exceeds the upper limit of memory block");
 		throw std::out_of_range("Access exceeds the upper limit of memory block");
@@ -2937,7 +2911,7 @@ void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) const {
 }
 
 bool MatrixArea::getValue(uint32_t row, uint32_t col) const {
-	return data_[row][col];
+	return data_[row][col] != 0;
 }
 
 void MatrixArea::setCenter(uint32_t y, uint32_t x) {
@@ -2958,11 +2932,11 @@ uint32_t MatrixArea::getCols() const {
 	return cols;
 }
 const bool* MatrixArea::operator[](uint32_t i) const {
-	return data_[i];
+	return reinterpret_cast<const bool*>(data_[i].data());
 }
 
 bool* MatrixArea::operator[](uint32_t i) {
-	return data_[i];
+	return reinterpret_cast<bool*>(data_[i].data());
 }
 
 CombatDamage Combat::applyWeaponProficiencyDamage(const std::shared_ptr<Player> &attackerPlayer, std::shared_ptr<Item> item, std::shared_ptr<Monster> &targetMonster, CombatDamage damage) {

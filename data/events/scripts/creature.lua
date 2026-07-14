@@ -21,7 +21,6 @@ local function removeCombatProtection(playerUid)
 		end
 
 		playerEvent:kv():remove("combat-protection")
-		playerEvent:remove()
 	end, time * 1000, playerUid)
 end
 

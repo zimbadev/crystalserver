@@ -904,6 +904,7 @@ private:
 
 	std::unordered_map<std::string, std::weak_ptr<Player>> m_deadPlayers;
 	phmap::parallel_flat_hash_map<uint32_t, std::shared_ptr<Player>> players;
+	phmap::parallel_flat_hash_map<uint32_t, std::shared_ptr<Player>> playersByGUID;
 	phmap::flat_hash_map<std::string, std::weak_ptr<Player>> mappedPlayerNames;
 	phmap::parallel_flat_hash_map<uint32_t, std::shared_ptr<Guild>> guilds;
 	phmap::flat_hash_map<uint16_t, std::shared_ptr<Item>> uniqueItems;

@@ -50,7 +50,6 @@ local pushDelay = {}
 
 local function antiPush(player, item, count, fromPosition, toPosition, fromCylinder, toCylinder)
 	if not player then
-		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
 		return false
 	end
 

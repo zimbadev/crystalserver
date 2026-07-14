@@ -303,7 +303,10 @@ function skinning.onUse(player, item, fromPosition, target, toPosition, isHotkey
 	end
 
 	if transform then
-		topItem:transform(skin.after or topItem:getType():getDecayId() or topItem.itemid + 1)
+		local corpse = topItem or target
+		if corpse then
+			corpse:transform(skin.after or corpse:getType():getDecayId() or (corpse.itemid + 1))
+		end
 	else
 		target:remove()
 	end

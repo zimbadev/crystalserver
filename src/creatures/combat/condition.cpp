@@ -2653,7 +2653,7 @@ bool ConditionLight::startCondition(std::shared_ptr<Creature> creature) {
 	}
 
 	internalLightTicks = 0;
-	lightChangeInterval = ticks / lightInfo.level;
+	lightChangeInterval = ticks / std::max<uint8_t>(1, lightInfo.level);
 	creature->setCreatureLight(lightInfo);
 	g_game().changeLight(creature);
 	return true;
@@ -2738,7 +2738,7 @@ bool ConditionLight::unserializeProp(ConditionAttr_t attr, PropStream &propStrea
 			return false;
 		}
 
-		lightInfo.level = value;
+		lightInfo.level = std::max<uint32_t>(1, value);
 		return true;
 	} else if (attr == CONDITIONATTR_LIGHTTICKS) {
 		return propStream.read<uint32_t>(internalLightTicks);

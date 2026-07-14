@@ -5683,14 +5683,6 @@ void ProtocolGame::sendIcons(const std::unordered_set<PlayerIcon> &iconSet, cons
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::sendIconBakragore(const IconBakragore icon) {
-	NetworkMessage msg;
-	msg.addByte(0xA2);
-	msg.add<uint64_t>(0); // Send empty normal icons
-	msg.addByte(enumToValue(icon));
-	writeToOutputBuffer(msg);
-}
-
 void ProtocolGame::sendUnjustifiedPoints(const uint8_t &dayProgress, const uint8_t &dayLeft, const uint8_t &weekProgress, const uint8_t &weekLeft, const uint8_t &monthProgress, const uint8_t &monthLeft, const uint8_t &skullDuration) {
 	NetworkMessage msg;
 	msg.addByte(0xB7);

@@ -3,13 +3,9 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_SMALLPLANTS)
 combat:setArea(createCombatArea(AREA_CIRCLE6X6))
 
--- Phase III LIVE rebalance: base 150 -> 175 (factor 1.1667).
-local DAMAGE_SCALE = 175 / 150
-
 function onGetFormulaValues(player, level, maglevel, basePower)
-	local min = (calculateBaseDamageHealing(level)) + (maglevel * 5)
-	local max = (calculateBaseDamageHealing(level)) + (maglevel * 10)
-	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
+	local min, max = calculateMagicSpellDamage(level, maglevel, basePower)
+	return -min, -max
 end
 
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

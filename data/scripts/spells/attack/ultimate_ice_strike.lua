@@ -3,13 +3,9 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_ICEDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_ICEATTACK)
 combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_SMALLICE)
 
--- Phase III LIVE rebalance: base 150 -> 195 (factor 1.30).
-local DAMAGE_SCALE = 195 / 150
-
 function onGetFormulaValues(player, level, maglevel, basePower)
-	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4.5) + 35
-	local max = (calculateBaseDamageHealing(level)) + (maglevel * 7.3) + 55
-	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
+	local min, max = calculateMagicSpellDamage(level, maglevel, basePower)
+	return -min, -max
 end
 
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")

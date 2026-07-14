@@ -28,7 +28,7 @@ function loadLuaMapAction(tablename)
 			-- Checks if the position is valid
 			if tile then
 				-- Checks that you have no items created
-				if not value.itemId == false and tile:getItemCountById(value.itemId) == 0 then
+				if value.itemId ~= false and tile:getItemCountById(value.itemId) == 0 then
 					logger.error("[loadLuaMapAction] - Wrong item id {} found", value.itemId)
 					logger.warn("Action id: {}, position {}", index, tile:getPosition():toString())
 					goto continue
@@ -65,7 +65,7 @@ function loadLuaMapUnique(tablename)
 		-- Checks if the position is valid
 		if tile then
 			-- Checks that you have no items created
-			if not value.itemId == false and tile:getItemCountById(value.itemId) == 0 then
+			if value.itemId ~= false and tile:getItemCountById(value.itemId) == 0 then
 				logger.error("[loadLuaMapUnique] - Wrong item id {} found", value.itemId)
 				logger.warn("Unique id: {}, position {}", index, tile:getPosition():toString())
 				goto continue
