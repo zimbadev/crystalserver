@@ -13,7 +13,7 @@ local function strikeFormula(level, maglevel)
 	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
 end
 
--- Each combat needs its OWN callback name (Canary won't let two combats share a callback name); all
+-- Each combat needs its OWN callback name (won't let two combats share a callback name); all
 -- three delegate to the same formula.
 function onGetFormulaValues(player, level, maglevel, basePower)
 	return strikeFormula(level, maglevel)

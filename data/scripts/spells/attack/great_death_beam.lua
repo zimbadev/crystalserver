@@ -4,7 +4,7 @@ local function formulaFunction(level, maglevel)
 	return -min, -max
 end
 
--- One uniquely-named formula callback per grade Combat (Canary won't load the same callback name onto
+-- One uniquely-named formula callback per grade Combat (won't load the same callback name onto
 -- two different Combat objects -> the duplicates silently lose their formula). All delegate to formulaFunction.
 function onGetFormulaValuesGrade1(player, level, maglevel)
 	return formulaFunction(level, maglevel)

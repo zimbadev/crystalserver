@@ -27164,8 +27164,8 @@
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.08
           }
         ]
       },
@@ -27173,12 +27173,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 6,
@@ -27193,15 +27194,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
             "ElementId": 16,
             "MissileId": 71,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -27233,11 +27233,11 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "AugmentType": 17,
@@ -27254,13 +27254,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 16,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -27268,22 +27268,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 1H Axe",
     "ProficiencyId": 475,
-    "Version": 4
+    "Version": 7
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.08
           }
         ]
       },
@@ -27291,12 +27291,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 6,
@@ -27311,15 +27312,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
             "ElementId": 16,
             "MissileId": 71,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -27351,11 +27351,11 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "AugmentType": 17,
@@ -27372,13 +27372,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 16,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -27386,22 +27386,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 1H Club",
     "ProficiencyId": 476,
-    "Version": 4
+    "Version": 7
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 16,
-            "Value": 0.025
+            "Type": 12,
+            "Value": 0.08
           }
         ]
       },
@@ -27409,6 +27409,7 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
@@ -27419,7 +27420,7 @@
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       },
@@ -27429,15 +27430,14 @@
             "AugmentType": 2,
             "SpellId": 43,
             "Type": 5,
-            "Value": 0.06
+            "Value": 0.05
           },
           {
             "ElementId": 64,
             "MissileId": 73,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -27450,8 +27450,9 @@
       {
         "Perks": [
           {
-            "Type": 16,
-            "Value": 0.025
+            "ElementId": 64,
+            "Type": 13,
+            "Value": 0.125
           },
           {
             "SkillId": 1,
@@ -27459,8 +27460,9 @@
             "Value": 2
           },
           {
-            "Type": 8,
-            "Value": 0.01
+            "ElementId": 16,
+            "Type": 13,
+            "Value": 0.125
           }
         ]
       },
@@ -27470,19 +27472,18 @@
             "AugmentType": 17,
             "SpellId": 43,
             "Type": 5,
-            "Value": 0.015
+            "Value": 0.025
           },
           {
-            "AugmentType": 3,
-            "SpellId": 5,
-            "Type": 5,
-            "Value": 0.06
+            "SkillId": 1,
+            "Type": 27,
+            "Value": 0.32
           },
           {
             "AugmentType": 17,
             "SpellId": 318,
             "Type": 5,
-            "Value": 0.01
+            "Value": 0.025
           }
         ]
       },
@@ -27508,22 +27509,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 1H Rod",
     "ProficiencyId": 477,
-    "Version": 4
+    "Version": 7
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.08
           }
         ]
       },
@@ -27531,12 +27532,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 6,
@@ -27551,15 +27553,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
             "ElementId": 16,
             "MissileId": 73,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -27591,11 +27592,11 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "AugmentType": 17,
@@ -27612,13 +27613,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 16,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -27626,14 +27627,14 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 1H Sword",
     "ProficiencyId": 478,
-    "Version": 6
+    "Version": 9
   },
   {
     "Levels": [
@@ -27641,7 +27642,7 @@
         "Perks": [
           {
             "Type": 12,
-            "Value": 0.1
+            "Value": 0.08
           }
         ]
       },
@@ -27649,6 +27650,7 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
@@ -27658,8 +27660,8 @@
             "Value": 1
           },
           {
-            "Type": 17,
-            "Value": 0.03
+            "Type": 12,
+            "Value": 0.06
           }
         ]
       },
@@ -27669,15 +27671,14 @@
             "AugmentType": 2,
             "SpellId": 240,
             "Type": 5,
-            "Value": 0.04
+            "Value": 0.05
           },
           {
             "ElementId": 256,
             "MissileId": 75,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -27690,8 +27691,9 @@
       {
         "Perks": [
           {
-            "Type": 16,
-            "Value": 0.025
+            "ElementId": 8,
+            "Type": 13,
+            "Value": 0.125
           },
           {
             "SkillId": 1,
@@ -27699,8 +27701,9 @@
             "Value": 2
           },
           {
-            "Type": 8,
-            "Value": 0.01
+            "ElementId": 256,
+            "Type": 13,
+            "Value": 0.125
           }
         ]
       },
@@ -27710,7 +27713,7 @@
             "AugmentType": 17,
             "SpellId": 240,
             "Type": 5,
-            "Value": 0.01
+            "Value": 0.025
           },
           {
             "AugmentType": 17,
@@ -27722,7 +27725,7 @@
             "AugmentType": 17,
             "SpellId": 310,
             "Type": 5,
-            "Value": 0.015
+            "Value": 0.025
           }
         ]
       },
@@ -27748,22 +27751,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 1H Wand",
     "ProficiencyId": 479,
-    "Version": 4
+    "Version": 7
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.08
           }
         ]
       },
@@ -27771,12 +27774,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 10,
@@ -27791,15 +27795,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
-            "ElementId": 8,
+            "ElementId": 32,
             "MissileId": 71,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "Type": 11,
@@ -27829,15 +27832,15 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "SkillId": 10,
-            "Type": 25,
+            "Type": 26,
             "Value": 0.1
           }
         ]
@@ -27849,13 +27852,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 32,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -27863,14 +27866,14 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 2H Axe",
     "ProficiencyId": 480,
-    "Version": 4
+    "Version": 7
   },
   {
     "Levels": [
@@ -27886,6 +27889,7 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
@@ -27895,8 +27899,8 @@
             "Value": 1
           },
           {
-            "Type": 17,
-            "Value": 0.03
+            "Type": 12,
+            "Value": 0.06
           }
         ]
       },
@@ -27913,8 +27917,7 @@
             "MissileId": 74,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -27928,15 +27931,16 @@
         "Perks": [
           {
             "Type": 30,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
             "Type": 0,
             "Value": 2
           },
           {
-            "Type": 16,
-            "Value": 0.02
+            "ElementId": 128,
+            "Type": 31,
+            "Value": 0.04
           }
         ]
       },
@@ -27946,7 +27950,7 @@
             "AugmentType": 17,
             "SpellId": 303,
             "Type": 5,
-            "Value": 0.01
+            "Value": 0.03
           },
           {
             "SkillId": 7,
@@ -27957,7 +27961,7 @@
             "AugmentType": 17,
             "SpellId": 302,
             "Type": 5,
-            "Value": 0.01
+            "Value": 0.03
           }
         ]
       },
@@ -27970,7 +27974,7 @@
           },
           {
             "Type": 12,
-            "Value": 0.1
+            "Value": 0.12
           },
           {
             "ElementId": 128,
@@ -27983,22 +27987,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 2H Bow",
     "ProficiencyId": 481,
-    "Version": 7
+    "Version": 9
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.08
           }
         ]
       },
@@ -28006,12 +28010,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 9,
@@ -28026,15 +28031,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
             "ElementId": 64,
             "MissileId": 73,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "Type": 11,
@@ -28064,15 +28068,15 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "SkillId": 9,
-            "Type": 25,
+            "Type": 26,
             "Value": 0.1
           }
         ]
@@ -28084,13 +28088,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 64,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -28098,14 +28102,14 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 2H Club",
     "ProficiencyId": 482,
-    "Version": 3
+    "Version": 6
   },
   {
     "Levels": [
@@ -28129,8 +28133,8 @@
             "Value": 1
           },
           {
-            "Type": 17,
-            "Value": 0.03
+            "Type": 12,
+            "Value": 0.06
           }
         ]
       },
@@ -28146,8 +28150,7 @@
             "MissileId": 74,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "ElementId": 128,
@@ -28160,7 +28163,7 @@
         "Perks": [
           {
             "Type": 30,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
             "Type": 0,
@@ -28213,14 +28216,14 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 2H Crossbow",
     "ProficiencyId": 483,
-    "Version": 5
+    "Version": 7
   },
   {
     "Levels": [
@@ -28228,7 +28231,7 @@
         "Perks": [
           {
             "Type": 12,
-            "Value": 0.1
+            "Value": 0.08
           }
         ]
       },
@@ -28236,17 +28239,18 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
-            "SkillId": 1,
+            "SkillId": 11,
             "Type": 3,
-            "Value": 2
+            "Value": 1
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       },
@@ -28263,14 +28267,13 @@
             "MissileId": 72,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
             "SpellId": 301,
             "Type": 5,
-            "Value": 0.075
+            "Value": 0.09
           }
         ]
       },
@@ -28299,14 +28302,14 @@
             "Value": 0.075
           },
           {
-            "Type": 12,
-            "Value": 0.08
+            "Type": 0,
+            "Value": 1
           },
           {
             "AugmentType": 17,
             "SpellId": 301,
             "Type": 5,
-            "Value": 0.035
+            "Value": 0.05
           }
         ]
       },
@@ -28317,34 +28320,12 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "Type": 17,
-            "Value": 0.06
-          }
-        ]
-      },
-      {
-        "Perks": [
-          {
-            "Type": 29,
-            "Value": 0.05
-          }
-        ]
-      }
-    ],
-    "Name": "Moonsilver 2H Fist",
-    "ProficiencyId": 484,
-    "Version": 5
-  },
-  {
-    "Levels": [
-      {
-        "Perks": [
-          {
-            "Type": 17,
+            "ElementId": 32,
+            "Type": 31,
             "Value": 0.04
           }
         ]
@@ -28352,13 +28333,37 @@
       {
         "Perks": [
           {
+            "Type": 29,
+            "Value": 0.06
+          }
+        ]
+      }
+    ],
+    "Name": "Moonsilver 2H Fist",
+    "ProficiencyId": 484,
+    "Version": 7
+  },
+  {
+    "Levels": [
+      {
+        "Perks": [
+          {
+            "Type": 12,
+            "Value": 0.08
+          }
+        ]
+      },
+      {
+        "Perks": [
+          {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 8,
@@ -28373,15 +28378,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
             "ElementId": 8,
             "MissileId": 71,
             "Multiplier": 2.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "Type": 11,
@@ -28411,15 +28415,15 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "SkillId": 8,
-            "Type": 25,
+            "Type": 26,
             "Value": 0.1
           }
         ]
@@ -28431,13 +28435,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 8,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -28445,22 +28449,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       }
     ],
     "Name": "Moonsilver 2H Sword",
     "ProficiencyId": 485,
-    "Version": 4
+    "Version": 7
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.12
           }
         ]
       },
@@ -28468,12 +28472,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 6,
@@ -28488,15 +28493,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.09
+            "Value": 0.18
           },
           {
             "ElementId": 16,
             "MissileId": 71,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -28528,11 +28532,11 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "AugmentType": 17,
@@ -28549,13 +28553,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 16,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -28563,22 +28567,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 1H Axe",
     "ProficiencyId": 486,
-    "Version": 5
+    "Version": 8
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.12
           }
         ]
       },
@@ -28586,12 +28590,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 6,
@@ -28606,15 +28611,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.09
+            "Value": 0.18
           },
           {
             "ElementId": 16,
             "MissileId": 71,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -28646,11 +28650,11 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "AugmentType": 17,
@@ -28667,13 +28671,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 16,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -28681,22 +28685,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 1H Club",
     "ProficiencyId": 487,
-    "Version": 5
+    "Version": 8
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 16,
-            "Value": 0.025
+            "Type": 12,
+            "Value": 0.12
           }
         ]
       },
@@ -28704,6 +28708,7 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
@@ -28714,7 +28719,7 @@
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       },
@@ -28724,15 +28729,14 @@
             "AugmentType": 2,
             "SpellId": 43,
             "Type": 5,
-            "Value": 0.09
+            "Value": 0.075
           },
           {
             "ElementId": 64,
             "MissileId": 80,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -28745,8 +28749,9 @@
       {
         "Perks": [
           {
-            "Type": 16,
-            "Value": 0.025
+            "ElementId": 64,
+            "Type": 13,
+            "Value": 0.125
           },
           {
             "SkillId": 1,
@@ -28754,8 +28759,9 @@
             "Value": 2
           },
           {
-            "Type": 8,
-            "Value": 0.01
+            "ElementId": 16,
+            "Type": 13,
+            "Value": 0.125
           }
         ]
       },
@@ -28765,19 +28771,18 @@
             "AugmentType": 17,
             "SpellId": 43,
             "Type": 5,
-            "Value": 0.015
+            "Value": 0.025
           },
           {
-            "AugmentType": 3,
-            "SpellId": 5,
-            "Type": 5,
-            "Value": 0.06
+            "SkillId": 1,
+            "Type": 27,
+            "Value": 0.32
           },
           {
             "AugmentType": 17,
             "SpellId": 318,
             "Type": 5,
-            "Value": 0.01
+            "Value": 0.025
           }
         ]
       },
@@ -28803,22 +28808,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.1125
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 1H Rod",
     "ProficiencyId": 488,
-    "Version": 5
+    "Version": 8
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.12
           }
         ]
       },
@@ -28826,12 +28831,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 6,
@@ -28846,15 +28852,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.09
+            "Value": 0.18
           },
           {
             "ElementId": 16,
             "MissileId": 71,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -28886,11 +28891,11 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "AugmentType": 17,
@@ -28907,13 +28912,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 16,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -28921,14 +28926,14 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 1H Sword",
     "ProficiencyId": 489,
-    "Version": 6
+    "Version": 9
   },
   {
     "Levels": [
@@ -28936,7 +28941,7 @@
         "Perks": [
           {
             "Type": 12,
-            "Value": 0.1
+            "Value": 0.12
           }
         ]
       },
@@ -28944,6 +28949,7 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
@@ -28953,8 +28959,8 @@
             "Value": 1
           },
           {
-            "Type": 17,
-            "Value": 0.03
+            "Type": 12,
+            "Value": 0.06
           }
         ]
       },
@@ -28964,15 +28970,14 @@
             "AugmentType": 2,
             "SpellId": 240,
             "Type": 5,
-            "Value": 0.06
+            "Value": 0.075
           },
           {
             "ElementId": 256,
             "MissileId": 82,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -28985,8 +28990,9 @@
       {
         "Perks": [
           {
-            "Type": 16,
-            "Value": 0.025
+            "ElementId": 8,
+            "Type": 13,
+            "Value": 0.125
           },
           {
             "SkillId": 1,
@@ -28994,8 +29000,9 @@
             "Value": 2
           },
           {
-            "Type": 8,
-            "Value": 0.01
+            "ElementId": 256,
+            "Type": 13,
+            "Value": 0.125
           }
         ]
       },
@@ -29005,7 +29012,7 @@
             "AugmentType": 17,
             "SpellId": 240,
             "Type": 5,
-            "Value": 0.01
+            "Value": 0.025
           },
           {
             "AugmentType": 17,
@@ -29017,7 +29024,7 @@
             "AugmentType": 17,
             "SpellId": 310,
             "Type": 5,
-            "Value": 0.015
+            "Value": 0.025
           }
         ]
       },
@@ -29043,22 +29050,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.1125
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 1H Wand",
     "ProficiencyId": 490,
-    "Version": 5
+    "Version": 8
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.12
           }
         ]
       },
@@ -29066,12 +29073,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 10,
@@ -29086,15 +29094,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.09
+            "Value": 0.18
           },
           {
-            "ElementId": 8,
+            "ElementId": 32,
             "MissileId": 79,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "Type": 11,
@@ -29124,15 +29131,15 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "SkillId": 10,
-            "Type": 25,
+            "Type": 26,
             "Value": 0.1
           }
         ]
@@ -29144,13 +29151,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 32,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -29158,14 +29165,14 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 2H Axe",
     "ProficiencyId": 491,
-    "Version": 5
+    "Version": 8
   },
   {
     "Levels": [
@@ -29173,7 +29180,7 @@
         "Perks": [
           {
             "Type": 12,
-            "Value": 0.08
+            "Value": 0.12
           }
         ]
       },
@@ -29181,6 +29188,7 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
@@ -29190,8 +29198,8 @@
             "Value": 1
           },
           {
-            "Type": 17,
-            "Value": 0.03
+            "Type": 12,
+            "Value": 0.06
           }
         ]
       },
@@ -29208,8 +29216,7 @@
             "MissileId": 81,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
@@ -29223,15 +29230,16 @@
         "Perks": [
           {
             "Type": 30,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
             "Type": 0,
             "Value": 2
           },
           {
-            "Type": 16,
-            "Value": 0.02
+            "ElementId": 128,
+            "Type": 31,
+            "Value": 0.04
           }
         ]
       },
@@ -29241,7 +29249,7 @@
             "AugmentType": 17,
             "SpellId": 303,
             "Type": 5,
-            "Value": 0.01
+            "Value": 0.03
           },
           {
             "SkillId": 7,
@@ -29252,7 +29260,7 @@
             "AugmentType": 17,
             "SpellId": 302,
             "Type": 5,
-            "Value": 0.01
+            "Value": 0.03
           }
         ]
       },
@@ -29265,7 +29273,7 @@
           },
           {
             "Type": 12,
-            "Value": 0.1
+            "Value": 0.12
           },
           {
             "ElementId": 128,
@@ -29278,22 +29286,22 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 2H Bow",
     "ProficiencyId": 492,
-    "Version": 8
+    "Version": 10
   },
   {
     "Levels": [
       {
         "Perks": [
           {
-            "Type": 17,
-            "Value": 0.04
+            "Type": 12,
+            "Value": 0.12
           }
         ]
       },
@@ -29301,12 +29309,13 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 9,
@@ -29321,15 +29330,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.09
+            "Value": 0.18
           },
           {
             "ElementId": 64,
             "MissileId": 73,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "Type": 11,
@@ -29359,15 +29367,15 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "SkillId": 9,
-            "Type": 25,
+            "Type": 26,
             "Value": 0.1
           }
         ]
@@ -29379,13 +29387,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 64,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -29393,14 +29401,14 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 2H Club",
     "ProficiencyId": 493,
-    "Version": 4
+    "Version": 7
   },
   {
     "Levels": [
@@ -29424,8 +29432,8 @@
             "Value": 1
           },
           {
-            "Type": 17,
-            "Value": 0.03
+            "Type": 12,
+            "Value": 0.06
           }
         ]
       },
@@ -29441,8 +29449,7 @@
             "MissileId": 81,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "ElementId": 128,
@@ -29455,7 +29462,7 @@
         "Perks": [
           {
             "Type": 30,
-            "Value": 0.06
+            "Value": 0.12
           },
           {
             "Type": 0,
@@ -29508,14 +29515,14 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 2H Crossbow",
     "ProficiencyId": 494,
-    "Version": 6
+    "Version": 8
   },
   {
     "Levels": [
@@ -29523,7 +29530,7 @@
         "Perks": [
           {
             "Type": 12,
-            "Value": 0.1
+            "Value": 0.12
           }
         ]
       },
@@ -29531,17 +29538,18 @@
         "Perks": [
           {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
-            "SkillId": 1,
+            "SkillId": 11,
             "Type": 3,
-            "Value": 2
+            "Value": 1
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           }
         ]
       },
@@ -29558,14 +29566,13 @@
             "MissileId": 79,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "AugmentType": 2,
             "SpellId": 301,
             "Type": 5,
-            "Value": 0.1125
+            "Value": 0.135
           }
         ]
       },
@@ -29594,14 +29601,14 @@
             "Value": 0.075
           },
           {
-            "Type": 12,
-            "Value": 0.08
+            "Type": 0,
+            "Value": 1
           },
           {
             "AugmentType": 17,
             "SpellId": 301,
             "Type": 5,
-            "Value": 0.035
+            "Value": 0.05
           }
         ]
       },
@@ -29612,34 +29619,12 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "Type": 17,
-            "Value": 0.06
-          }
-        ]
-      },
-      {
-        "Perks": [
-          {
-            "Type": 29,
-            "Value": 0.075
-          }
-        ]
-      }
-    ],
-    "Name": "Stellar Moonsilver 2H Fist",
-    "ProficiencyId": 495,
-    "Version": 6
-  },
-  {
-    "Levels": [
-      {
-        "Perks": [
-          {
-            "Type": 17,
+            "ElementId": 32,
+            "Type": 31,
             "Value": 0.04
           }
         ]
@@ -29647,13 +29632,37 @@
       {
         "Perks": [
           {
+            "Type": 29,
+            "Value": 0.09
+          }
+        ]
+      }
+    ],
+    "Name": "Stellar Moonsilver 2H Fist",
+    "ProficiencyId": 495,
+    "Version": 8
+  },
+  {
+    "Levels": [
+      {
+        "Perks": [
+          {
+            "Type": 12,
+            "Value": 0.12
+          }
+        ]
+      },
+      {
+        "Perks": [
+          {
             "BestiaryId": 10,
+            "BestiaryName": "Human",
             "Type": 6,
             "Value": 0.03
           },
           {
             "Type": 12,
-            "Value": 0.05
+            "Value": 0.06
           },
           {
             "SkillId": 8,
@@ -29668,15 +29677,14 @@
             "AugmentType": 2,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.09
+            "Value": 0.18
           },
           {
             "ElementId": 8,
             "MissileId": 77,
             "Multiplier": 3.0,
             "Probability": 0.01,
-            "Type": 32,
-            "Value": 0
+            "Type": 32
           },
           {
             "Type": 11,
@@ -29706,15 +29714,15 @@
             "AugmentType": 17,
             "SpellId": 106,
             "Type": 5,
-            "Value": 0.03
+            "Value": 0.09
           },
           {
-            "Type": 12,
-            "Value": 0.12
+            "Type": 0,
+            "Value": 1
           },
           {
             "SkillId": 8,
-            "Type": 25,
+            "Type": 26,
             "Value": 0.1
           }
         ]
@@ -29726,13 +29734,13 @@
             "Value": 0.02
           },
           {
-            "Type": 0,
-            "Value": 1
+            "Type": 12,
+            "Value": 0.12
           },
           {
-            "ElementId": 1,
+            "ElementId": 8,
             "Type": 31,
-            "Value": 0.09
+            "Value": 0.05
           }
         ]
       },
@@ -29740,13 +29748,13 @@
         "Perks": [
           {
             "Type": 29,
-            "Value": 0.075
+            "Value": 0.09
           }
         ]
       }
     ],
     "Name": "Stellar Moonsilver 2H Sword",
     "ProficiencyId": 496,
-    "Version": 4
+    "Version": 7
   }
 ]

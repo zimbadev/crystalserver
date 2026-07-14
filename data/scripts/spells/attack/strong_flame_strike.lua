@@ -7,7 +7,7 @@
 -- Phase III LIVE rebalance: base 90 -> 125.
 local DAMAGE_SCALE = 125 / 90
 
--- Shared formula; each combat needs its OWN callback name (Canary won't let two combats share a
+-- Shared formula; each combat needs its OWN callback name (won't let two combats share a
 -- callback name), so the variants delegate to this.
 local function strikeFormula(level, maglevel)
 	local min = (calculateBaseDamageHealing(level)) + (maglevel * 2.8) + 16

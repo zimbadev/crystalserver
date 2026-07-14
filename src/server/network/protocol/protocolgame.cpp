@@ -4125,7 +4125,7 @@ void ProtocolGame::parseCyclopediaMapAction(NetworkMessage &msg, uint8_t recvbyt
 			// confirmed wire: u16 areaId, u32 amount, u8 trailing (ignored)
 			const uint16_t areaId = msg.get<uint16_t>();
 			const uint32_t amount = msg.get<uint32_t>();
-			g_logger().info("[CyclopediaMapAction] 0xDB donate: areaId {} amount {}", areaId, amount);
+			g_logger().debug("[CyclopediaMapAction] 0xDB donate: areaId {} amount {}", areaId, amount);
 			if (areaId > 0 && areaId < 1000 && amount > 0) {
 				handleDiscoveryDonation(areaId, amount);
 			}
@@ -4134,7 +4134,7 @@ void ProtocolGame::parseCyclopediaMapAction(NetworkMessage &msg, uint8_t recvbyt
 			while (msg.canRead(1)) {
 				hex += fmt::format("{:02x} ", msg.getByte());
 			}
-			g_logger().info("[CyclopediaMapAction] 0xDB unknown action {}: [{}]", mapAction, hex);
+			g_logger().debug("[CyclopediaMapAction] 0xDB unknown action {}: [{}]", mapAction, hex);
 		}
 		// intentionally never replied to
 		return;
@@ -6715,10 +6715,8 @@ void ProtocolGame::sendForgingData() {
 		msg.add<uint64_t>(price);
 	}
 
-	// 15.25 (sommerrelease26): the 13.30 forge-config block (slot costs, dust limits,
-	// success rates) was dropped by the new client, which reads a single trailing byte
-	// here instead. Send 0 to keep alignment (forge config UI may show defaults).
-	msg.addByte(0);
+	const auto dustLevelByte = static_cast<uint8_t>(std::min<uint64_t>(player->getForgeDustLevel() > 100 ? player->getForgeDustLevel() - 100 : 0, 225));
+	msg.addByte(dustLevelByte);
 
 	// Update player resources
 	parseSendResourceBalance();
