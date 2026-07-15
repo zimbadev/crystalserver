@@ -9,27 +9,23 @@ local BROKEN_MOUNTS = { -- add future incoming color mounts in the future until 
 	[1866] = true,
 }
 
-local mountColorFix = GlobalEvent("MountColorFix")
-
-function mountColorFix.onThink(interval)
-	for _, player in ipairs(Game.getPlayers()) do
-		local outfit = player:getOutfit()
-		local mountId = outfit.lookMount
-
-		if mountId and mountId > 0 and BROKEN_MOUNTS[mountId] then
-			local hasColor = outfit.lookMountHead > 0 or outfit.lookMountBody > 0 or outfit.lookMountLegs > 0 or outfit.lookMountFeet > 0
-
-			if hasColor then
-				outfit.lookMountHead = 0
-				outfit.lookMountBody = 0
-				outfit.lookMountLegs = 0
-				outfit.lookMountFeet = 0
-				player:setOutfit(outfit)
-			end
+local function sanitizeMountColor(player)
+	local outfit = player:getOutfit()
+	if outfit.lookMount and outfit.lookMount > 0 and BROKEN_MOUNTS[outfit.lookMount] then
+		if outfit.lookMountHead > 0 or outfit.lookMountBody > 0 or outfit.lookMountLegs > 0 or outfit.lookMountFeet > 0 then
+			outfit.lookMountHead = 0
+			outfit.lookMountBody = 0
+			outfit.lookMountLegs = 0
+			outfit.lookMountFeet = 0
+			player:setOutfit(outfit)
 		end
 	end
-	return true
 end
 
-mountColorFix:interval(250)
-mountColorFix:register()
+local think = CreatureEvent("StripBrokenMountColorThink")
+function think.onThink(player, interval)
+	sanitizeMountColor(player)
+	return true
+end
+think:type("think")
+think:register()
