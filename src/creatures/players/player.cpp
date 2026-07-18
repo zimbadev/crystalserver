@@ -12903,7 +12903,7 @@ void Player::applyEquippedWeaponProficiency(const uint16_t itemId) {
 				continue;
 			}
 
-			if (perk.perkValue < 0.0f) {
+			if (perk.perkValue < 0.0f && perk.perkType != PROFICIENCY_PERK_AUGMENT_TYPE) {
 				continue;
 			}
 
