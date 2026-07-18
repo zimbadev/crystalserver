@@ -11467,6 +11467,20 @@ void Game::sendUpdateCreature(const std::shared_ptr<Creature> &creature) {
 	}
 }
 
+void Game::refreshPvpSituationMarks() {
+	if (!isExpertPvp()) {
+		return;
+	}
+	// A party/guild change alters how the changing player sees the situation boxes of players who are
+	// currently fighting (an ally's opponent becomes ORANGE, an unrelated one BROWN). Re-send those
+	// players' creature blocks once so every viewer in range recomputes its color — event-driven, no flicker.
+	for (const auto &[playerId, player] : players) {
+		if (player && player->hasActivePvpSituation()) {
+			sendUpdateCreature(player);
+		}
+	}
+}
+
 uint32_t Game::makeInfluencedMonster() {
 	if (auto influencedLimit = g_configManager().getNumber(FORGE_INFLUENCED_CREATURES_LIMIT);
 	    // Condition

@@ -149,6 +149,16 @@ public:
 		return worldType;
 	}
 
+	// Open PvP (2014 rules): the full "Expert PvP" ruleset (character pass-through, situation boxes,
+	// first-in-stack initiate rule, expert client controls, field ownership) is gated on this.
+	// Selected via config worldType: "expert-pvp" enables it, "retro-pvp" keeps plain Open PvP.
+	bool isExpertPvp() const {
+		return worldType == WORLDTYPE_OPEN && expertPvp;
+	}
+	void setExpertPvp(bool enabled) {
+		expertPvp = enabled;
+	}
+
 	const std::map<uint32_t, std::unique_ptr<TeamFinder>> &getTeamFinderList() const {
 		return teamFinderMap;
 	}
@@ -731,6 +741,9 @@ public:
 
 	bool addInfluencedMonster(const std::shared_ptr<Monster> &monster);
 	void sendUpdateCreature(const std::shared_ptr<Creature> &creature);
+	// Open PvP (2014 rules): re-send situation-box marks for every player currently in a fight, so
+	// viewers recompute yellow/orange/brown after a party/guild membership change alters their alliances.
+	void refreshPvpSituationMarks();
 	std::shared_ptr<Item> wrapItem(const std::shared_ptr<Item> &item, const std::shared_ptr<House> &house);
 
 	void playerCheckActivity(const std::string &playerName, int interval);
@@ -951,6 +964,7 @@ private:
 
 	GameState_t gameState = GAME_STATE_NORMAL;
 	WorldType_t worldType = WORLDTYPE_OPEN;
+	bool expertPvp = false; // Open PvP (2014 rules): true only for config worldType "expert-pvp"
 
 	LightState_t lightState = LIGHT_STATE_DAY;
 	LightState_t currentLightState = lightState;

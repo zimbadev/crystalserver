@@ -2231,8 +2231,9 @@ void ProtocolGame::parseFightModes(NetworkMessage &msg) {
 
 	// 15.25 tail (RE 2026-07-02): [pvpMode:u8][junk:u8] — 0 dove, 1 white hand, 2 yellow hand, 3 red fist.
 	uint8_t rawPvpMode = PVP_MODE_DOVE;
-	const int32_t tailRemaining = static_cast<int32_t>(msg.getLength()) - (static_cast<int32_t>(msg.getBufferPosition()) - 7);
-	if (tailRemaining > 0) {
+	// Deterministic version gate: modern (non-oldProtocol) clients always send [pvpMode:u8][junk:u8];
+	// oldProtocol (<=1100) clients omit the tail and keep the PVP_MODE_DOVE default.
+	if (!oldProtocol) {
 		rawPvpMode = msg.getByte();
 	}
 	const auto pvpMode = rawPvpMode <= PVP_MODE_RED_FIST ? static_cast<PvpMode_t>(rawPvpMode) : PVP_MODE_DOVE;
@@ -7951,7 +7952,7 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 	}
 
 	// Open PvP: unlock the client's expert PvP controls (the "E" button + dove/white/yellow/red modes)
-	const bool expertPvpControls = g_game().getWorldType() == WORLDTYPE_OPEN;
+	const bool expertPvpControls = g_game().isExpertPvp();
 	msg.addByte(expertPvpControls ? 0x01 : 0x00); // can change pvp framing option
 	msg.addByte(expertPvpControls ? 0x01 : 0x00); // expert mode button enabled
 

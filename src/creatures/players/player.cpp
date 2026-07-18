@@ -908,6 +908,8 @@ bool Player::hasSecureMode() const {
 
 void Player::setParty(std::shared_ptr<Party> newParty) {
 	m_party = std::move(newParty);
+	// Open PvP (2014 rules): party membership affects the situation-box colors this player sees.
+	g_game().refreshPvpSituationMarks();
 }
 
 std::shared_ptr<Party> Player::getParty() const {
@@ -1432,7 +1434,7 @@ bool Player::canWalkthrough(const std::shared_ptr<Creature> &creature) {
 
 		// Open PvP (2014 rules): characters never block each other — pass through freely,
 		// without the PZ/level restrictions or the double-step confirmation.
-		if (g_game().getWorldType() == WORLDTYPE_OPEN) {
+		if (g_game().isExpertPvp()) {
 			return true;
 		}
 
@@ -1480,7 +1482,7 @@ bool Player::canWalkthroughEx(const std::shared_ptr<Creature> &creature) const {
 	if (player) {
 		const auto &playerTile = player->getTile();
 		// Open PvP (2014 rules): characters never block each other.
-		if (g_game().getWorldType() == WORLDTYPE_OPEN) {
+		if (g_game().isExpertPvp()) {
 			const auto &playerTileGround = playerTile ? playerTile->getGround() : nullptr;
 			return playerTileGround && playerTileGround->hasWalkStack();
 		}
@@ -7190,7 +7192,7 @@ bool Player::hasActivePvpSituation() const {
 }
 
 PvPBox_t Player::getPvpSituationMarkFor(const std::shared_ptr<Player> &viewer) const {
-	if (g_game().getWorldType() != WORLDTYPE_OPEN || !viewer) {
+	if (!g_game().isExpertPvp() || !viewer) {
 		return PvPBox_t::PVP_BOX_NONE;
 	}
 
@@ -7224,7 +7226,7 @@ PvPBox_t Player::getPvpSituationMarkFor(const std::shared_ptr<Player> &viewer) c
 }
 
 void Player::updatePvpSituationMarks() {
-	if (g_game().getWorldType() != WORLDTYPE_OPEN) {
+	if (!g_game().isExpertPvp()) {
 		return;
 	}
 
@@ -9301,6 +9303,9 @@ void Player::setGuild(const std::shared_ptr<Guild> &newGuild) {
 		guildRank = rank;
 		newGuild->addMember(static_self_cast<Player>());
 	}
+
+	// Open PvP (2014 rules): guild membership affects the situation-box colors this player sees.
+	g_game().refreshPvpSituationMarks();
 }
 
 [[nodiscard]] GuildRank_ptr Player::getGuildRank() const {

@@ -23,11 +23,13 @@ function onCreateWildGrowth(creature, position)
 	if item then
 		item:setDuration(30)
 		item:setAttribute(ITEM_ATTRIBUTE_DESCRIPTION, string.format("Casted by: %s", creature:getName()))
-		-- Open PvP (2014 rules): ownership decides who the growth blocks, who passes and who may cut it
-		item:setOwner(creature)
+		-- Open PvP (2014 rules): ownership decides who the growth blocks, who passes and who may cut it.
+		-- Normalize summon casts to the master so the owner is always a stable player GUID.
+		local fieldOwner = creature:getMaster() or creature
+		item:setOwner(fieldOwner)
 		-- Cast outside a PvP situation -> PvE growth: blocks only monsters, every player
 		-- (including the caster) walks through it
-		if creature:isPlayer() and not creature:hasActivePvpSituation() then
+		if fieldOwner:isPlayer() and not fieldOwner:hasActivePvpSituation() then
 			item:setCustomAttribute("pveWall", true)
 		end
 	end

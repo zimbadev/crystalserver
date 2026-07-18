@@ -404,7 +404,7 @@ ReturnValue Combat::canTargetCreature(const std::shared_ptr<Player> &player, con
 			return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
 		}
 
-		if (g_game().getWorldType() == WORLDTYPE_OPEN) {
+		if (g_game().isExpertPvp()) {
 			// Open PvP: the expert PvP mode governs who may be targeted (supersedes secure mode)
 			const ReturnValue modeRet = checkExpertPvpMode(player, target->getPlayer());
 			if (modeRet != RETURNVALUE_NOERROR) {
@@ -473,48 +473,73 @@ bool Combat::isProtected(const std::shared_ptr<Player> &attacker, const std::sha
 	return false;
 }
 
+bool pvpModeAllows(PvpMode_t mode, const PvpFacts &facts) {
+	if (mode == PVP_MODE_RED_FIST) {
+		// red fist: attack anyone EXCEPT party/guild members
+		return !facts.partner && !facts.guildMate;
+	}
+
+	// every remaining mode allows self-defense: the target attacked us or we are already in a mutual PvP situation
+	if (facts.targetAttackedMe || facts.inSituation) {
+		return true;
+	}
+
+	// white/yellow hand: defend party/guild by allowing attacks on someone who hit one of our members
+	if ((mode == PVP_MODE_WHITE_HAND || mode == PVP_MODE_YELLOW_HAND) && facts.attackedAllyOfMe) {
+		return true;
+	}
+
+	// yellow hand: skulled players are fair game
+	if (mode == PVP_MODE_YELLOW_HAND && facts.targetSkulled) {
+		return true;
+	}
+
+	return false;
+}
+
 ReturnValue Combat::checkExpertPvpMode(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target) {
 	if (!attacker || !target || attacker == target || attacker->isAccessPlayer()) {
 		return RETURNVALUE_NOERROR;
 	}
 
-	if (g_game().getWorldType() != WORLDTYPE_OPEN || Combat::isInPvpZone(attacker, target) || attacker->isInWar(target)) {
+	if (!g_game().isExpertPvp() || Combat::isInPvpZone(attacker, target) || attacker->isInWar(target)) {
 		return RETURNVALUE_NOERROR;
 	}
 
 	const PvpMode_t mode = attacker->getPvpMode();
-	if (mode == PVP_MODE_RED_FIST) {
-		// red fist: attack anyone EXCEPT party/guild members
-		if (attacker->isPartner(target) || attacker->isGuildMate(target)) {
-			return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
+
+	// gather the decision facts from the live players, then defer to the pure decision matrix. All of
+	// these accessors are side-effect-free reads, so evaluating them eagerly does not change behavior.
+	PvpFacts facts;
+	facts.targetAttackedMe = target->hasAttacked(attacker);
+	facts.inSituation = attacker->isInPvpSituationWith(target);
+	facts.targetSkulled = attacker->getSkullClient(target) != SKULL_NONE;
+	facts.attackedAllyOfMe = target->hasAttackedAllyOf(attacker);
+	facts.partner = attacker->isPartner(target);
+	facts.guildMate = attacker->isGuildMate(target);
+
+	return pvpModeAllows(mode, facts) ? RETURNVALUE_NOERROR : RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
+}
+
+std::shared_ptr<Player> Combat::resolveFieldOwnerPlayer(uint32_t ownerId) {
+	// A field's ownerId is a stable player GUID (setOwner normalises players/summons to their master GUID).
+	// Resolve it to the owning player, falling back to a live summon's master for safety.
+	if (ownerId == 0) {
+		return nullptr;
+	}
+	if (const auto &ownerPlayer = g_game().getPlayerByGUID(ownerId)) {
+		return ownerPlayer;
+	}
+	if (const auto &ownerCreature = g_game().getCreatureByID(ownerId)) {
+		if (ownerCreature->isSummon() && ownerCreature->getMaster()) {
+			return ownerCreature->getMaster()->getPlayer();
 		}
-		return RETURNVALUE_NOERROR;
 	}
-
-	// every mode allows self-defense: the target attacked us or we are already in a mutual PvP situation
-	if (target->hasAttacked(attacker) || attacker->isInPvpSituationWith(target)) {
-		return RETURNVALUE_NOERROR;
-	}
-
-	if (mode == PVP_MODE_WHITE_HAND || mode == PVP_MODE_YELLOW_HAND) {
-		// white hand: defend party/guild — the target has attacked one of our party/guild members
-		if (target->hasAttackedAllyOf(attacker)) {
-			return RETURNVALUE_NOERROR;
-		}
-	}
-
-	if (mode == PVP_MODE_YELLOW_HAND) {
-		// yellow hand: skulled players are fair game
-		if (attacker->getSkullClient(target) != SKULL_NONE) {
-			return RETURNVALUE_NOERROR;
-		}
-	}
-
-	return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
+	return nullptr;
 }
 
 bool Combat::isOwnedFieldBystander(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &field) {
-	if (!player || !field || g_game().getWorldType() != WORLDTYPE_OPEN) {
+	if (!player || !field || !g_game().isExpertPvp()) {
 		return false;
 	}
 
@@ -523,16 +548,8 @@ bool Combat::isOwnedFieldBystander(const std::shared_ptr<Player> &player, const 
 		return false; // map/GM/monster fields concern everyone
 	}
 
-	auto ownerPlayer = g_game().getPlayerByGUID(ownerId);
-	if (!ownerPlayer) {
-		if (const auto &ownerCreature = g_game().getCreatureByID(ownerId)) {
-			if (ownerCreature->isSummon() && ownerCreature->getMaster()) {
-				ownerPlayer = ownerCreature->getMaster()->getPlayer();
-			}
-		}
-	}
-
 	// owner and everyone in a PvP situation with him are involved; the rest are bystanders
+	const auto &ownerPlayer = resolveFieldOwnerPlayer(ownerId);
 	return ownerPlayer && ownerPlayer != player && !ownerPlayer->isInPvpSituationWith(player);
 }
 
@@ -572,6 +589,15 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 			}
 
 			const auto &targetPlayerTile = targetPlayer->getTile();
+			// Open PvP (2014 rules): a summon's aggression is attributed to its master, so the owner's
+			// expert PvP mode (dove/white hand) governs whether the summon may hit this player. Without
+			// this a dove/white-hand player could freely damage neutrals through their summon.
+			if (!attackerPlayer && masterAttackerPlayer) {
+				const ReturnValue summonExpertRet = checkExpertPvpMode(masterAttackerPlayer, targetPlayer);
+				if (summonExpertRet != RETURNVALUE_NOERROR) {
+					return summonExpertRet;
+				}
+			}
 			if (attackerPlayer) {
 				if (attackerPlayer->hasFlag(PlayerFlags_t::CannotAttackPlayer)) {
 					return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
@@ -583,7 +609,7 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 
 				// Open PvP (2014 rules): a player hidden under another player in the tile stack
 				// cannot INITIATE PvP — defending inside an existing situation stays allowed.
-				if (g_game().getWorldType() == WORLDTYPE_OPEN && !attackerPlayer->isFirstInStack()
+				if (g_game().isExpertPvp() && !attackerPlayer->isFirstInStack()
 				    && !attackerPlayer->isInPvpSituationWith(targetPlayer) && !targetPlayer->hasAttacked(attackerPlayer)) {
 					return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
 				}
@@ -2734,19 +2760,9 @@ void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 		if (ownerId) {
 			// Open PvP (2014 rules): a player-made field harms only its caster and players in a
 			// PvP situation with him — bystanders walk through unharmed.
-			if (g_game().getWorldType() == WORLDTYPE_OPEN) {
-				if (const auto &steppingPlayer = creature->getPlayer()) {
-					auto fieldOwnerPlayer = g_game().getPlayerByGUID(ownerId);
-					if (!fieldOwnerPlayer) {
-						if (const auto &ownerCreature = g_game().getCreatureByID(ownerId)) {
-							if (ownerCreature->isSummon() && ownerCreature->getMaster()) {
-								fieldOwnerPlayer = ownerCreature->getMaster()->getPlayer();
-							}
-						}
-					}
-					if (fieldOwnerPlayer && fieldOwnerPlayer != steppingPlayer && !fieldOwnerPlayer->isInPvpSituationWith(steppingPlayer)) {
-						return;
-					}
+			if (const auto &steppingPlayer = creature->getPlayer()) {
+				if (Combat::isOwnedFieldBystander(steppingPlayer, static_self_cast<Item>())) {
+					return;
 				}
 			}
 
@@ -2767,7 +2783,9 @@ void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 
 			const auto &targetPlayer = creature->getPlayer();
 			if (targetPlayer) {
-				const auto &attackerPlayer = g_game().getPlayerByID(ownerId);
+				// ownerId is a player GUID, not a runtime creature id — resolve it correctly so the
+				// isProtected() gate is not silently skipped for player-owned fields.
+				const auto &attackerPlayer = Combat::resolveFieldOwnerPlayer(ownerId);
 				if (attackerPlayer) {
 					if (Combat::isProtected(attackerPlayer, targetPlayer)) {
 						harmfulField = false;

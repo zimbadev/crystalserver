@@ -160,7 +160,13 @@ int CrystalServer::run() {
 
 void CrystalServer::setWorldType() {
 	const std::string worldType = asLowerCaseString(g_configManager().getString(WORLD_TYPE));
-	if (worldType == "open" || worldType == "2" || worldType == "openpvp" || worldType == "pvp" || worldType == "normal") {
+	bool expertPvp = false;
+	// "expert-pvp" (and legacy open aliases) -> full 2014 Expert Open PvP; "retro-pvp" -> plain Open PvP.
+	if (worldType == "expert-pvp" || worldType == "expertpvp" || worldType == "expert"
+	    || worldType == "open" || worldType == "2" || worldType == "openpvp" || worldType == "pvp" || worldType == "normal") {
+		g_game().setWorldType(WORLDTYPE_OPEN);
+		expertPvp = true;
+	} else if (worldType == "retro-pvp" || worldType == "retropvp" || worldType == "retro") {
 		g_game().setWorldType(WORLDTYPE_OPEN);
 	} else if (worldType == "optional" || worldType == "1" || worldType == "optionalpvp" || worldType == "safe" || worldType == "nopvp" || worldType == "no-pvp" || worldType == "secure") {
 		g_game().setWorldType(WORLDTYPE_OPTIONAL);
@@ -169,13 +175,14 @@ void CrystalServer::setWorldType() {
 	} else {
 		throw FailedToInitializeCrystalServer(
 			fmt::format(
-				"Unknown world type: {}, valid world types are: open, optional and hardcore",
+				"Unknown world type: {}, valid world types are: expert-pvp, retro-pvp, optional (no-pvp) and hardcore (pvp-enforced)",
 				g_configManager().getString(WORLD_TYPE)
 			)
 		);
 	}
+	g_game().setExpertPvp(expertPvp);
 
-	logger.info("World type set as {}", asUpperCaseString(worldType));
+	logger.info("World type set as {}{}", asUpperCaseString(worldType), expertPvp ? " (Expert PvP)" : "");
 }
 
 void CrystalServer::loadMaps() const {

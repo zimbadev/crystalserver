@@ -452,10 +452,9 @@ enum SquareColor_t : uint8_t {
 };
 
 enum PvPBox_t : uint8_t {
-	// Open PvP situation boxes — classic 6x6x6 palette indices (tune after in-game verification)
-	PVP_BOX_YELLOW = 210,
-	PVP_BOX_ORANGE = 198,
 	PVP_BOX_BROWN = 114,
+	PVP_BOX_ORANGE = 198,
+	PVP_BOX_YELLOW = 210,
 	PVP_BOX_NONE = 0xFF, // MARK_UNMARKED
 };
 

@@ -25,10 +25,12 @@ toggleMaintainMode = false
 maintainModeMessage = ""
 
 -- Combat settings
--- NOTE: valid values for worldType are: "pvp", "no-pvp" and "pvp-enforced"
+-- NOTE: valid values for worldType are: "expert-pvp", "retro-pvp", "no-pvp" and "pvp-enforced"
+-- NOTE: "expert-pvp" = full 2014 Open PvP (pass-through, situation boxes, dove/white/yellow/red hand modes, first-in-stack)
+-- NOTE: "retro-pvp" (aliases "pvp"/"open") = plain Open PvP without the 2014 Expert extras
 -- NOTE: removeBeginningWeaponAmmunition: spears, arrows, bolt have endless ammo (allows training for paladins)
 -- NOTE: refundManaOnBeginningWeapons: wand of vortex and snakebite refund mana used (allows training for mages)
-worldType = "pvp"
+worldType = "expert-pvp"
 hotkeyAimbotEnabled = true
 protectionLevel = 7
 pzLocked = 60 * 1000
