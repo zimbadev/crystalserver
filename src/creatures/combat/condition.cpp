@@ -1337,10 +1337,9 @@ bool ConditionRegeneration::executeCondition(const std::shared_ptr<Creature> &cr
 	internalManaTicks += interval;
 
 	if (foodTicks > 0) {
-		internalFoodTicks += interval;
-		if (internalFoodTicks >= foodTicks) {
-			foodTicks = 0;
-			internalFoodTicks = 0;
+		foodTicks = std::max<int32_t>(0, static_cast<int32_t>(foodTicks) - interval);
+		if (auto player = creature->getPlayer()) {
+			player->sendStats();
 		}
 	}
 
@@ -1427,7 +1426,6 @@ bool ConditionRegeneration::setParam(ConditionParam_t param, int32_t value) {
 
 		case CONDITION_PARAM_FOODTICKS:
 			foodTicks = value;
-			internalFoodTicks = 0;
 			return true;
 
 		default:

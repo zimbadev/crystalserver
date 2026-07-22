@@ -185,7 +185,6 @@ public:
 private:
 	uint32_t internalHealthTicks = 0;
 	uint32_t internalManaTicks = 0;
-	uint32_t internalFoodTicks = 0;
 
 	uint32_t healthTicks = 1000;
 	uint32_t manaTicks = 1000;

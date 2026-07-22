@@ -272,6 +272,9 @@ void BedItem::regeneratePlayer(const std::shared_ptr<Player> &player) const {
 				player->removeCondition(condition);
 			} else {
 				condition->setTicks(newRegenTicks);
+				if (const auto &regenCondition = std::dynamic_pointer_cast<ConditionRegeneration>(condition)) {
+					regenCondition->setParam(CONDITION_PARAM_FOODTICKS, std::max<int32_t>(0, newRegenTicks));
+				}
 			}
 		} else {
 			regen = sleptTime / 30;
