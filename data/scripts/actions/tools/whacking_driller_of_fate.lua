@@ -72,9 +72,9 @@ local function onUseHammer(player, item, fromPosition, target, toPosition, isHot
 	end
 
 	-- Rottin wood and married quest
-	if player:getStorageValue(Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.RottinStart) < 6 then
-		local setting = settingTable[targetActionId]
-		if setting then
+	local setting = settingTable[targetActionId]
+	if setting then
+		if player:getStorageValue(Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.RottinStart) < 6 then
 			local woodenPosition = Position(setting.position)
 			local woodenItem = Tile(woodenPosition):getItemById(setting.removeItem)
 			if woodenItem then
@@ -85,10 +85,10 @@ local function onUseHammer(player, item, fromPosition, target, toPosition, isHot
 				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You fixed this broken wall.")
 				return true
 			end
+		else
+			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You already fixed many broken walls today.")
+			return true
 		end
-	else
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You already fixed many broken walls today.")
-		return true
 	end
 
 	return false
