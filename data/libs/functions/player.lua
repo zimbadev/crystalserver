@@ -1,18 +1,17 @@
+-- Functions from The Forgotten Server
+local foodCondition = Condition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
+
 function Player.feed(self, food)
 	local condition = self:getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
 	if condition then
-		local newTicks = math.min(condition:getFoodTicks() + (food * 1000), 1200000)
-		condition:setTicks(newTicks)
-		condition:setParameter(CONDITION_PARAM_FOODTICKS, newTicks)
+		condition:setTicks(condition:getTicks() + (food * 1000))
 	else
 		local vocation = self:getVocation()
 		if not vocation then
 			return nil
 		end
 
-		local foodCondition = Condition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
 		foodCondition:setTicks(food * 1000)
-		foodCondition:setParameter(CONDITION_PARAM_FOODTICKS, food * 1000)
 		foodCondition:setParameter(CONDITION_PARAM_HEALTHGAIN, vocation:getHealthGainAmount())
 		foodCondition:setParameter(CONDITION_PARAM_HEALTHTICKS, vocation:getHealthGainTicks())
 		foodCondition:setParameter(CONDITION_PARAM_MANAGAIN, vocation:getManaGainAmount())
