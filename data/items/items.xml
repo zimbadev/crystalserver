@@ -71944,6 +71944,7 @@
 	<item id="39168" article="a" name="heated crystal" />
 	<item id="39169" article="a" name="cooled crystal" />
 	<item fromid="39173" toid="39175" article="a" name="blessed pound" />
+	<item id="39176" article="a" name="primal pod" />
 	<item id="39177" article="a" name="charged spiritthorn ring">
 		<attribute key="primarytype" value="rings" />
 		<attribute key="transformEquipTo" value="39178" />
