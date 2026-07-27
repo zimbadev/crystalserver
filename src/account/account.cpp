@@ -149,6 +149,37 @@ uint8_t Account::removeCoins(const uint8_t &type, const uint32_t &amount, const 
 	return enumToValue(AccountErrors_t::Ok);
 }
 
+uint8_t Account::removeCoins(const uint8_t &primaryType, const uint8_t &secondaryType, const uint32_t &amount, const std::string &detail) {
+	if (!m_accLoaded) {
+		return enumToValue(AccountErrors_t::NotInitialized);
+	}
+
+	if (amount == 0) {
+		return enumToValue(AccountErrors_t::Ok);
+	}
+
+	if (primaryType == secondaryType) {
+		return removeCoins(primaryType, amount, detail);
+	}
+
+	uint32_t primaryCoinsRemoved = 0;
+	uint32_t secondaryCoinsRemoved = 0;
+	auto result = g_accountRepository().removeCoins(
+		m_account.id,
+		primaryType,
+		secondaryType,
+		amount,
+		detail,
+		primaryCoinsRemoved,
+		secondaryCoinsRemoved
+	);
+
+	if (result != enumToValue(AccountErrors_t::Ok)) {
+		return result;
+	}
+	return enumToValue(AccountErrors_t::Ok);
+}
+
 void Account::registerCoinTransaction(const uint8_t &transactionType, const uint8_t &type, const uint32_t &amount, const std::string &detail) {
 	if (!m_accLoaded) {
 		return;

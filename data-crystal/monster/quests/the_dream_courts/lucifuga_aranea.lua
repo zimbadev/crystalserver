@@ -66,7 +66,7 @@ monster.loot = {
 	{ name = "platinum coin", chance = 100000 },
 	{ name = "cyan crystal fragment", chance = 55000 },
 	{ name = "poison gland", chance = 54500 },
-	{ name = "great mana potion", chance = 80000 },
+	{ id = 238, chance = 80000 }, -- great mana potion
 	{ name = "plate armor", chance = 64000 },
 	{ name = "green gem", chance = 35000 },
 }

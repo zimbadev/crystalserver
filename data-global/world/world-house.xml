@@ -993,4 +993,6 @@
 	<house name="House of the Rising Moon" houseid="3694" entryx="33812" entryy="32805" entryz="6" rent="1000000" guildhall="true" townid="31" size="340" clientid="53002" beds="12" />
 	<house name="Marketplace 3" houseid="3695" entryx="33953" entryy="31513" entryz="7" rent="400000" townid="22" size="130" clientid="48008" beds="3" />
 	<house name="Hanging Gardens 1" houseid="3696" entryx="33933" entryy="31479" entryz="4" rent="400000" townid="22" size="178" clientid="48009" beds="5" />
+	<house name="Targuna Cottage 1" houseid="3701" entryx="31962" entryy="31911" entryz="7" rent="300000" townid="8" size="118" clientid="101" beds="3" />
+	<house name="Targuna Cottage 2" houseid="3702" entryx="31940" entryy="31890" entryz="7" rent="250000" townid="8" size="89" clientid="102" beds="2" />
 </houses>

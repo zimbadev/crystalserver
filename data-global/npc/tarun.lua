@@ -128,7 +128,7 @@ npcConfig.shop = {
 	{ itemName = "empty potion flask", clientId = 285, sell = 5 },
 	{ itemName = "golden lotus brooch", clientId = 21974, sell = 270 },
 	{ itemName = "great health potion", clientId = 239, buy = 225 },
-	{ itemName = "great mana potion", clientId = 238, buy = 158 },
+	{ itemid = 238, clientId = 238, buy = 158 },
 	{ itemName = "great spirit potion", clientId = 7642, buy = 254 },
 	{ itemName = "health potion", clientId = 266, buy = 50 },
 	{ itemName = "hellspawn tail", clientId = 10304, sell = 475 },

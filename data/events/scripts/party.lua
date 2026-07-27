@@ -72,8 +72,8 @@ end
 
 local partyVocationBonus = {
 	[1] = 1.20, -- same vocation: +20%
-	[2] = 1.30, -- 2 different vocations: +30%
-	[3] = 1.60, -- 3 different vocations: +60%
+	[2] = 1.35, -- 2 different vocations: +35%
+	[3] = 1.70, -- 3 different vocations: +70%
 	[4] = 2.00, -- 4 different vocations: +100%
 }
 

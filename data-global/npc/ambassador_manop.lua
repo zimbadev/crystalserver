@@ -127,7 +127,7 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 	end
 
 	if msg == "monk" then
-		npcHandler:say("Look for one of our shrines around the outpost and return to me after you have honoured the Merudri.", npc, creature)
+		npcHandler:say("Look for the four shrines around the outpost and return to me after you have honoured the Merudri.", npc, creature)
 		return true
 	end
 
@@ -172,13 +172,25 @@ local function creatureSayCallback(npc, creature, msgType, msg)
 		return true
 	end
 
-	if msg == "seeker" and npcHandler:getTopic(playerId) == 3 then
-		npcHandler:say({
-			"Like an orphan, fate has put your soul gently on the doorstep of a new world. You will view this reality with different eyes.",
-			"You will change your ways to adapt as you follow the Three-Fold Path. It has guided the most powerful warriors across countless planes of existence to a higher state of consciousness.",
-			"If you accept, I will send you to our temple in the Blue Valley as a MONK.",
-		}, npc, creature)
-		npcHandler:setTopic(playerId, 4)
+	if msg == "seeker" then
+		local kv = player:questKV(MONK_QUEST)
+		local count = kv:get("shrineCounter") or 0
+		if hasAllShrines(player) then
+			npcHandler:say({
+				"Like an orphan, fate has put your soul gently on the doorstep of a new world. You will view this reality with different eyes.",
+				"You will change your ways to adapt as you follow the Three-Fold Path. It has guided the most powerful warriors across countless planes of existence to a higher state of consciousness.",
+				"If you accept, I will send you to our temple in the Blue Valley as a MONK.",
+			}, npc, creature)
+			npcHandler:setTopic(playerId, 4)
+		elseif count == 0 then
+			npcHandler:say("Look for one of our shrines around the outpost and return to me after you have honoured the Merudri.", npc, creature)
+		elseif count == 1 then
+			npcHandler:say("You have honoured one shrine, seeker. There are three more waiting for you around the outpost. Keep walking the path.", npc, creature)
+		elseif count == 2 then
+			npcHandler:say("Two shrines honoured, seeker. You are halfway there. Do not stop now.", npc, creature)
+		elseif count == 3 then
+			npcHandler:say("Three shrines honoured, seeker. One remains. Find it and return to me.", npc, creature)
+		end
 		return true
 	end
 

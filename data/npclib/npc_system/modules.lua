@@ -113,6 +113,7 @@ if Modules == nil then
 				player:setVocation(promotion)
 				player:addMinorCharmEchoes(100)
 				player:kv():set("promoted", true)
+				player:sendBannerType(BANNER_TYPE_PROMOTION_GRANTED)
 			end
 		else
 			npcHandler:say("You need a premium account in order to get promoted.", npc, player)

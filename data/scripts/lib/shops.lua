@@ -29,6 +29,11 @@ SupplyShopConfigTable = {
 	["distance equipments"] = {
 		{ itemName = "envenomed arrow", clientId = 16143, buy = 12 },
 		{ itemName = "diamond arrow", clientId = 35901, buy = 130 },
+		{ itemName = "shatterstorm arrow", clientId = 53168, buy = 45 },
+		{ itemName = "firestorm arrow", clientId = 53169, buy = 75 },
+		{ itemName = "terrastorm arrow", clientId = 53170, buy = 75 },
+		{ itemName = "froststorm arrow", clientId = 53171, buy = 75 },
+		{ itemName = "thunderstorm arrow", clientId = 53172, buy = 75 },
 		{ itemName = "drill bolt", clientId = 16142, buy = 12 },
 		{ itemName = "crystalline arrow", clientId = 15793, buy = 20 },
 		{ itemName = "blue quiver", clientId = 35848, buy = 400 },
@@ -142,6 +147,9 @@ SupplyShopConfigTable = {
 		{ itemName = "supreme health potion", clientId = 23375, buy = 650 },
 		{ itemName = "strong health potion", clientId = 236, buy = 115 },
 		{ itemName = "strong mana potion", clientId = 237, buy = 108 },
+		{ itemName = "superior mana potion", clientId = 53162, buy = 254 },
+		{ itemName = "distilled superior mana potion", clientId = 53163, buy = 381 },
+		{ itemName = "distilled ultimate mana potion", clientId = 53164, buy = 732 },
 	},
 }
 

@@ -143,6 +143,8 @@ public:
 	bool playerOnLookInShop(const std::shared_ptr<Player> &player, const ItemType* itemType, uint8_t count) const;
 	bool playerOnMoveItem(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, uint16_t count, const Position &fromPosition, const Position &toPosition, const std::shared_ptr<Cylinder> &fromCylinder, const std::shared_ptr<Cylinder> &toCylinder) const;
 	void playerOnItemMoved(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, uint16_t count, const Position &fromPosition, const Position &toPosition, const std::shared_ptr<Cylinder> &fromCylinder, const std::shared_ptr<Cylinder> &toCylinder) const;
+	void playerOnStowItem(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, uint32_t count) const;
+	void playerOnStashWithdraw(const std::shared_ptr<Player> &player, uint16_t itemId, uint32_t count) const;
 	void playerOnChangeZone(const std::shared_ptr<Player> &player, ZoneType_t zone) const;
 	bool playerOnMoveCreature(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &creature, const Position &fromPosition, const Position &toPosition) const;
 	void playerOnReportRuleViolation(const std::shared_ptr<Player> &player, const std::string &targetName, uint8_t reportType, uint8_t reportReason, const std::string &comment, const std::string &translation) const;

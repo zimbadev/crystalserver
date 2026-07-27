@@ -90,7 +90,7 @@ monster.loot = {
 	{ name = "demonic essence", chance = 10600 },
 	{ name = "flask of demonic blood", chance = 35000 },
 	{ name = "nightmare blade", chance = 880 },
-	{ name = "great mana potion", chance = 10000 },
+	{ id = 238, chance = 10000 }, -- great mana potion
 	{ name = "glacier kilt", chance = 330 },
 	{ name = "ultimate health potion", chance = 9600 },
 	{ name = "skullcracker armor", chance = 270 },

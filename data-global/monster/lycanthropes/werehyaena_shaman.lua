@@ -74,7 +74,7 @@ monster.voices = {
 
 monster.loot = {
 	{ name = "platinum coin", chance = 100000 },
-	{ name = "great mana potion", chance = 20070 },
+	{ id = 238, chance = 20070 }, -- great mana potion
 	{ name = "werehyaena nose", chance = 15550 },
 	{ name = "small amethyst", chance = 10840 },
 	{ name = "green crystal splinter", chance = 9120 },

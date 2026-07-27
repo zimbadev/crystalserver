@@ -582,6 +582,8 @@ ACHIEVEMENTS = {
 	[579] = { name = "ID 579", grade = 1, points = 0, secret = true, description = "???" },
 	[580] = { name = "ID 580", grade = 1, points = 0, secret = true, description = "???" },
 	[581] = { name = "Workhorse", grade = 2, points = 4, description = "Whether it's clearing cellars from rats or delivering quara eyes, you do the job regardless of the task type. Your dedication to work is unmatched." },
+	[582] = { name = "Castle Crasher", grade = 1, points = 1, description = "While saving turtle eggs on Aragonia you couldn't resist trampling every sandcastle in your path. The beach will never be the same." },
+	[583] = { name = "A reliable Friend", grade = 1, points = 1, description = "With a bunch of turnips you won over the lonely ram of Targuna and earned yourself a most reliable companion." },
 }
 
 --[[

@@ -82,7 +82,7 @@ monster.loot = {
 	{ name = "glacier mask", chance = 250 },
 	{ name = "hailstorm rod", chance = 250 },
 	{ name = "life crystal", chance = 8700 },
-	{ name = "great mana potion", chance = 900, maxCount = 6 },
+	{ id = 238, chance = 900, maxCount = 6 }, -- great mana potion
 	{ name = "golden mug", chance = 500 },
 	{ name = "glowing rune", chance = 500, maxCount = 10 },
 	{ id = 3051, chance = 8700 }, -- energy ring

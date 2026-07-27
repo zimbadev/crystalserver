@@ -17,9 +17,11 @@
 
 #pragma once
 
-#include "server/network/protocol/protocol.hpp"
 #include <unordered_map>
+
+#include "server/network/protocol/protocol.hpp"
 #include "creatures/creatures_definitions.hpp"
+#include "enums/disconnect_client.hpp"
 #include "game/movement/position.hpp"
 #include "utils/utils_definitions.hpp"
 
@@ -131,7 +133,7 @@ private:
 		return std::static_pointer_cast<ProtocolGame>(shared_from_this());
 	}
 	void connect(const std::string &playerName, OperatingSystem_t operatingSystem);
-	void disconnectClient(const std::string &message) const;
+	void disconnectClient(const std::string &message, DisconnectClient_t reason = DisconnectClient_t::Default) const;
 	void writeToOutputBuffer(NetworkMessage &msg);
 
 	void release() override;
@@ -296,7 +298,6 @@ private:
 	void sendToChannel(const std::shared_ptr<Creature> &creature, SpeakClasses type, const std::string &text, uint16_t channelId);
 	void sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakClasses type, const std::string &text);
 	void sendIcons(const std::unordered_set<PlayerIcon> &iconSet, const IconBakragore iconBakragore);
-	void sendIconBakragore(const IconBakragore icon);
 	void sendFYIBox(const std::string &message);
 
 	void openImbuementWindow(const Imbuement_Window_t type, const std::shared_ptr<Item> &item = nullptr);
@@ -441,7 +442,7 @@ private:
 	void sendWorldLight(const LightInfo &lightInfo);
 	void sendTibiaTime(int32_t time);
 
-	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color);
+	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t markType, SquareColor_t weaponType = SQ_CREATURE_SQUARE_LEGACY);
 
 	void sendSpellCooldown(uint16_t spellId, uint32_t time);
 	void sendSpellGroupCooldown(SpellGroup_t groupId, uint32_t time);
@@ -561,7 +562,7 @@ private:
 
 	void sendHarmonyProtocol(const uint8_t harmonyValue);
 	void sendSereneProtocol(const bool isSerene = true);
-	void sendVirtueProtocol(const uint8_t virtueValue);
+	void sendStanceProtocol(const std::vector<uint16_t> &spellIds);
 	void parseSelectSpellAimProtocol(NetworkMessage &msg);
 
 	void parseImbuementWindow(NetworkMessage &msg);
@@ -629,6 +630,9 @@ private:
 	void sendScreenshotAndBannerProgressRace(uint16_t raceId, uint8_t progressLevel, bool isBoss);
 	void sendScreenshotAndBannerProgressQuest(const std::string &questName, bool isCompleted);
 	void sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message);
+	void sendScreenshotAndBannerUnlockedSpell(uint16_t spellId);
+	void sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId);
+	void sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId);
 
 	void sendDisableLoginMusic();
 

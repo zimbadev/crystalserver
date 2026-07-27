@@ -4,9 +4,8 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYAREA)
 combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_HOLY)
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 1.79) + 11
-	local max = (level / 5) + (maglevel * 3.75) + 24
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min, max = calculateMagicSpellDamage(level, maglevel, basePower)
 	return -min, -max
 end
 
@@ -28,6 +27,7 @@ rune:allowFarUse(true)
 rune:charges(5)
 rune:level(27)
 rune:magicLevel(4)
+rune:basePower(70)
 rune:cooldown(2 * 1000)
 rune:groupCooldown(2 * 1000)
 rune:needTarget(true)

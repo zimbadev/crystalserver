@@ -118,7 +118,7 @@ void IOBountyTasks::generateCreatureList(const std::shared_ptr<Player> &player, 
 				validForDifficulty = (mtype->info.bestiaryStars <= 3);
 				break;
 			case BOUNTY_DIFFICULTY_EXPERT:
-				validForDifficulty = (mtype->info.bestiaryStars >= 2 && mtype->info.bestiaryStars <= 5);
+				validForDifficulty = (mtype->info.bestiaryStars >= 3 && mtype->info.bestiaryStars <= 4);
 				break;
 			case BOUNTY_DIFFICULTY_MASTER:
 				validForDifficulty = (mtype->info.bestiaryStars >= 4);
@@ -526,6 +526,7 @@ void IOBountyTasks::onCreatureKill(const std::shared_ptr<Player> &player, uint16
 	if (bountyData.activeTask.currentKills >= bountyData.activeTask.requiredKills) {
 		bountyData.state = BOUNTY_STATE_COMPLETED;
 		player->sendTextMessage(MESSAGE_STATUS, "You have completed your bounty task! Claim your reward.");
+		player->sendScreenshotAndBannerBountyTaskFinished(bountyData.activeTask.raceId);
 	}
 
 	player->sendBountyTaskData();

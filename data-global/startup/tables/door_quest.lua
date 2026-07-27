@@ -452,10 +452,55 @@ QuestDoorAction = {
 			{ x = 32780, y = 31208, z = 7 },
 		},
 	},
-	-- Blood Brothers door
+	-- Blood Brothers Quest
 	[Storage.Quest.U8_4.BloodBrothers.BloodCrystalDoor] = {
 		itemId = false,
 		itemPos = { { x = 32776, y = 31107, z = 10 } },
+	},
+	[Storage.Quest.U8_4.BloodBrothers.LibraryDoor] = {
+		itemId = 8259,
+		itemPos = {
+			{ x = 32956, y = 31481, z = 6 },
+			{ x = 32948, y = 31465, z = 7 },
+		},
+	},
+	[Storage.Quest.U8_4.BloodBrothers.BorethDoor] = {
+		itemId = 8259,
+		itemPos = {
+			{ x = 32950, y = 31474, z = 6 },
+			{ x = 32958, y = 31465, z = 7 },
+		},
+	},
+	[Storage.Quest.U8_4.BloodBrothers.LersatioDoor] = {
+		itemId = 8259,
+		itemPos = {
+			{ x = 32956, y = 31468, z = 6 },
+		},
+	},
+	[Storage.Quest.U8_4.BloodBrothers.LersatioDoor] = {
+		itemId = 8261,
+		itemPos = {
+			{ x = 32953, y = 31460, z = 7 },
+		},
+	},
+	[Storage.Quest.U8_4.BloodBrothers.Arthei_Marziel_Door] = {
+		itemId = 8259,
+		itemPos = {
+			{ x = 32950, y = 31464, z = 6 },
+			{ x = 32956, y = 31446, z = 8 },
+		},
+	},
+	[Storage.Quest.U8_4.BloodBrothers.Arthei_Marziel_Door] = {
+		itemId = 8261,
+		itemPos = {
+			{ x = 32953, y = 31451, z = 4 },
+		},
+	},
+	[Storage.Quest.U8_4.BloodBrothers.CastleHiddenEntrance] = {
+		itemId = 8261,
+		itemPos = {
+			{ x = 32953, y = 31469, z = 7 },
+		},
 	},
 	-- Children of the revolution door
 	[Storage.Quest.U8_54.ChildrenOfTheRevolution.Mission03] = {
@@ -673,7 +718,7 @@ QuestDoorAction = {
 		},
 	},
 	-- The dream courts door (Andrew Lyze npc)
-	[Storage.Quest.U12_00.TheDreamCourts.AndrewDoor] = {
+	[Storage.Quest.U12_00.TheDreamCourts.UnsafeRelease.Questline] = {
 		itemId = 20450,
 		itemPos = { { x = 32761, y = 32630, z = 7 } },
 	},
@@ -823,7 +868,7 @@ QuestDoorAction = {
 		itemId = false,
 		itemPos = { { x = 33793, y = 31388, z = 6 } },
 	},
-	[Storage.Quest.U12_00.TheDreamCourts.HauntedHouseAccess] = {
+	[Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Questline] = {
 		itemId = false,
 		itemPos = {
 			{ x = 32700, y = 32244, z = 9 },
@@ -834,14 +879,19 @@ QuestDoorAction = {
 			{ x = 32606, y = 32629, z = 9 },
 		},
 	},
-	[Storage.Quest.U12_00.TheDreamCourts.BuriedCathedralAccess] = {
+	[Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Cellar] = {
 		itemId = false,
 		itemPos = {
 			{ x = 32719, y = 32264, z = 8 },
+		},
+	},
+	[Storage.Quest.U12_00.TheDreamCourts.BurriedCatedral.WordCount] = {
+		itemId = false,
+		itemPos = {
 			{ x = 32728, y = 32280, z = 8 },
 		},
 	},
-	[Storage.Quest.U12_00.TheDreamCourts.DreamScarAccess] = {
+	[Storage.Quest.U12_00.TheDreamCourts.TheSevenKeys.Questline] = {
 		itemId = false,
 		itemPos = {
 			{ x = 31983, y = 32000, z = 14 },

@@ -270,7 +270,7 @@ function createHirelingType(HirelingName)
 		},
 		["potions"] = {
 			{ itemName = "great health potion", clientId = 239, buy = 225 },
-			{ itemName = "great mana potion", clientId = 238, buy = 158 },
+			{ itemid = 238, clientId = 238, buy = 158 },
 			{ itemName = "great spirit potion", clientId = 7642, buy = 254 },
 			{ itemName = "health potion", clientId = 266, buy = 50 },
 			{ itemName = "mana potion", clientId = 268, buy = 56 },
@@ -1717,7 +1717,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "gold nugget", clientId = 3040, sell = 850 },
 			{ itemName = "golden figurine", clientId = 5799, sell = 3000 },
 			{ itemName = "great health potion", clientId = 239, buy = 225 },
-			{ itemName = "great mana potion", clientId = 238, buy = 144 },
+			{ itemid = 238, clientId = 238, buy = 144 },
 			{ itemName = "great spirit potion", clientId = 7642, buy = 228 },
 			{ itemName = "green crystal fragment", clientId = 16127, sell = 800 },
 			{ itemName = "green crystal shard", clientId = 16121, sell = 1500 },

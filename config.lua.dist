@@ -284,6 +284,7 @@ familiarTime = 30
 -- Party
 -- NOTE: partyShareRangeMultiplier: the range of the party share experience, default 3/2 (1.5)
 -- NOTE: advancedPartyProtection will nullfy the damage along your party members and their summons
+-- NOTE partyListMaxDistance set to 0 means no limit
 leavePartyOnDeath = false
 partyAutoShareExperience = true
 partyShareRangeMultiplier = 1.5
@@ -291,6 +292,7 @@ partyShareLootBoosts = false
 partyShareLootBoostsDimishingFactor = 0.7
 experienceShareActivity = 2 * 60 * 1000
 advancedPartyProtection = false
+partyListMaxDistance = 30
 
 -- Tibiadrome concoctions
 tibiadromeConcoctionCooldown = 24 * 60 * 60 -- 24 hours
@@ -317,7 +319,6 @@ onlyPremiumAccount = false
 -- NOTE: allowLureCreatures if true monsters can be lured far from spawn, if false they will despawn
 -- NOTE: blockRespawn if true players block monster respawns on their spot
 -- NOTE: enableOfflineTraining if false will disable offline training from beds only, set false at skill_trainer.lua if you want to completly disable the system
--- NOTE: walkThroughPlayers if true players can pass through other players, if false they cannot, set allowWalkthrough same as you do here to avoid override or bug
 autoLoot = false
 autoBank = false
 toggleGoldPouchAllowAnything = false
@@ -464,14 +465,13 @@ imbueActionsDelay = 1500
 mapName = "world"
 mapAuthor = ""
 
--- Party List limitations
--- max distance in which players in party list are visible
--- NOTE partyListMaxDistance set to 0 means no limit
-partyListMaxDistance = 30
-
 -- Custom Map
 -- NOTE: toggleMapCustom set to true will load all maps in custom map folder
 toggleMapCustom = false
+
+-- Compressed Map
+-- NOTE: toggleCompressedMap must be true to load compressed .otbm maps (RME "Optimized map save")
+toggleCompressedMap = true
 
 -- Market
 -- NOTE: marketRefreshPricesInterval (in minutes, minimum is 1 minute)
@@ -516,9 +516,6 @@ allowChangeOutfit = true
 freePremium = false
 kickIdlePlayerAfterMinutes = 15
 maxMessageBuffer = 4
-allowWalkthrough = true
-coinPacketSize = 25
-coinImagesURL = "http://127.0.0.1/images/store/"
 classicAttackSpeed = false
 showScriptsLogInConsole = false
 -- time to suppress negative conditions after being affected by them (ms)
@@ -533,6 +530,14 @@ minElementalResistance = -200
 maxElementalResistance = 200
 maxDamageReflection = 200
 logPlayersStatements = false
+
+-- Store
+-- NOTE: storeCombinedCoins = true uses transferable coins first, then regular coins for store purchases.
+-- NOTE: When storeCombinedCoins = false, storeCoinType selects which coin type is used (0 = regular, 1 = transferable).
+coinPacketSize = 25
+coinImagesURL = "http://127.0.0.1/images/store/"
+storeCombinedCoins = true
+storeCoinType = 0
 
 -- Chain system
 -- NOTE: combatChainDelay: set to minimum 50 miliseconds

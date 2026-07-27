@@ -86,7 +86,7 @@ monster.loot = {
 	{ name = "knight armor", chance = 1840 },
 	{ name = "medusa shield", chance = 3040 },
 	{ name = "titan axe", chance = 1160 },
-	{ name = "great mana potion", chance = 10000, maxCount = 2 },
+	{ id = 238, chance = 10000, maxCount = 2 }, -- great mana potion
 	{ name = "terra mantle", chance = 870 },
 	{ name = "terra legs", chance = 420 },
 	{ name = "terra amulet", chance = 4060 },

@@ -201,15 +201,6 @@
 	<npc centerx="32400" centery="32481" centerz="4" radius="1">
 		<npc name="Bounac Guard" x="0" y="0" z="4" spawntime="60" />
 	</npc>
-	<npc centerx="32421" centery="32481" centerz="4" radius="1">
-		<npc name="Jehan the Baker" x="0" y="0" z="4" spawntime="60" />
-	</npc>
-	<npc centerx="32445" centery="32481" centerz="4" radius="1">
-		<npc name="Fral the Butcher" x="0" y="0" z="4" spawntime="60" />
-	</npc>
-	<npc centerx="32434" centery="32494" centerz="4" radius="1">
-		<npc name="Dal the Huntress" x="0" y="0" z="4" spawntime="60" />
-	</npc>
 	<npc centerx="33109" centery="32525" centerz="4" radius="1">
 		<npc name="Haroun" x="0" y="0" z="4" spawntime="60" />
 	</npc>
@@ -377,9 +368,6 @@
 	</npc>
 	<npc centerx="33618" centery="32372" centerz="5" radius="1">
 		<npc name="Eruaran" x="0" y="0" z="5" spawntime="60" />
-	</npc>
-	<npc centerx="32422" centery="32481" centerz="5" radius="1">
-		<npc name="Wes the Blacksmith" x="0" y="0" z="5" spawntime="60" />
 	</npc>
 	<npc centerx="32435" centery="32492" centerz="5" radius="1">
 		<npc name="Dal the Huntress" x="0" y="0" z="5" spawntime="60" />
@@ -864,20 +852,11 @@
 	<npc centerx="32390" centery="32459" centerz="6" radius="1">
 		<npc name="Jehan the Baker" x="0" y="0" z="6" spawntime="60" />
 	</npc>
-	<npc centerx="32374" centery="32467" centerz="6" radius="1">
-		<npc name="Wes the Blacksmith" x="0" y="0" z="6" spawntime="60" />
-	</npc>
 	<npc centerx="32406" centery="32471" centerz="6" radius="1">
 		<npc name="Lesh the Seer" x="0" y="0" z="6" spawntime="60" />
 	</npc>
 	<npc centerx="33290" centery="32481" centerz="6" radius="1">
 		<npc name="Petros" x="0" y="0" z="6" spawntime="60" />
-	</npc>
-	<npc centerx="32404" centery="32493" centerz="6" radius="1">
-		<npc name="Evrard" x="0" y="0" z="6" spawntime="60" />
-	</npc>
-	<npc centerx="32399" centery="32495" centerz="6" radius="1">
-		<npc name="Fral the Butcher" x="0" y="0" z="6" spawntime="60" />
 	</npc>
 	<npc centerx="33066" centery="32530" centerz="6" radius="1">
 		<npc name="Jean Pierre" x="0" y="0" z="6" spawntime="60" />
@@ -2004,16 +1983,10 @@
 	<npc centerx="33238" centery="32482" centerz="7" radius="1">
 		<npc name="Miraia" x="0" y="0" z="7" spawntime="60" />
 	</npc>
-	<npc centerx="32411" centery="32486" centerz="7" radius="1">
-		<npc name="Fitzmaurice" x="0" y="0" z="7" spawntime="60" />
-	</npc>
 	<npc centerx="32559" centery="32490" centerz="7" radius="7">
 		<npc name="Gustavo, The Guard" x="1" y="-2" z="7" spawntime="60" />
 		<npc name="Flavius" x="7" y="-1" z="7" spawntime="60" direction="2" />
 		<npc name="Anna" x="-7" y="7" z="7" spawntime="60" direction="2" />
-	</npc>
-	<npc centerx="32417" centery="32501" centerz="7" radius="1">
-		<npc name="Innkeeper Alphonse" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="32554" centery="32505" centerz="7" radius="1">
 		<npc name="Avriel" x="0" y="0" z="7" spawntime="60" direction="2" />
@@ -3128,5 +3101,36 @@
 	</npc>
 	<npc centerx="33587" centery="32966" centerz="15" radius="1">
 		<npc name="Gnomish Operative (Raiders)" x="0" y="0" z="15" spawntime="60" />
+	</npc>
+	<!-- Targuna Quest (15.24) NPC spawns -->
+	<npc centerx="31973" centery="31892" centerz="6" radius="1">
+		<npc name="Captain Indigo" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="31960" centery="31901" centerz="6" radius="1">
+		<npc name="Emiliana" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="31942" centery="31902" centerz="6" radius="1">
+		<npc name="Camilla" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="31951" centery="31888" centerz="7" radius="1">
+		<npc name="Leonora" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="31928" centery="31903" centerz="7" radius="1">
+		<npc name="Sterling" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="31934" centery="31913" centerz="7" radius="1">
+		<npc name="Adrian" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="31955" centery="31916" centerz="7" radius="1">
+		<npc name="Aurelia" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="31941" centery="31920" centerz="7" radius="1">
+		<npc name="Lizzie" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="33514" centery="32748" centerz="8" radius="1">
+		<npc name="Morla" x="0" y="0" z="8" spawntime="60" />
+	</npc>
+	<npc centerx="32412" centery="32687" centerz="12" radius="1">
+		<npc name="Emiliana" x="0" y="0" z="12" spawntime="60" />
 	</npc>
 </npcs>

@@ -4,9 +4,9 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_MAGIC_BLUE)
 combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
-function onGetFormulaValues(player, level, magicLevel)
-	local min = (level / 5) + (magicLevel * 6.8) + 42
-	local max = (level / 5) + (magicLevel * 12.9) + 90
+function onGetFormulaValues(player, level, magicLevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (magicLevel * 6.8) + 42
+	local max = (calculateBaseDamageHealing(level)) + (magicLevel * 12.9) + 90
 	return min, max
 end
 
@@ -28,7 +28,7 @@ spell:cooldown(1 * 1000)
 spell:groupCooldown(1 * 1000)
 spell:level(30)
 spell:mana(160)
+spell:basePower(250)
 spell:isSelfTarget(true)
 spell:isAggressive(false)
-
 spell:register()

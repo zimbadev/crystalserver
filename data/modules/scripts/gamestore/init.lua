@@ -1193,15 +1193,18 @@ function sendStorePurchaseSuccessful(playerId, message)
 	end
 
 	local oldProtocol = player:getClient().version < 1200
+	local transferableCoins = player:getTransferableCoins()
+	local regularCoins = player:getTibiaCoins()
+	local totalCoins = GameStore.getStorePurchasableCoins(player)
 	local msg = NetworkMessage()
 	msg:addByte(GameStore.SendingPackets.S_CompletePurchase)
 	msg:addByte(0x00)
 	msg:addString(message, "sendStorePurchaseSuccessful - message")
 	if oldProtocol then
 		-- Send all coins can be used for buy store offers
-		msg:addU32(player:getTibiaCoins())
+		msg:addU32(totalCoins)
 		-- Send transferable coins can be used on transfer
-		msg:addU32(player:getTransferableCoins())
+		msg:addU32(transferableCoins)
 	end
 
 	msg:sendToPlayer(player)
@@ -1242,6 +1245,9 @@ function sendUpdatedStoreBalances(playerId)
 		return false
 	end
 
+	local transferableCoins = player:getTransferableCoins()
+	local regularCoins = player:getTibiaCoins()
+	local totalCoins = GameStore.getStorePurchasableCoins(player)
 	local msg = NetworkMessage()
 	msg:addByte(GameStore.SendingPackets.S_CoinBalanceUpdating)
 	msg:addByte(0x01)
@@ -1249,9 +1255,10 @@ function sendUpdatedStoreBalances(playerId)
 	msg:addByte(GameStore.SendingPackets.S_CoinBalance)
 	msg:addByte(0x01)
 
-	-- Send total of coins (transferable and normal coin)
-	msg:addU32(player:getTibiaCoins())
-	msg:addU32(player:getTransferableCoins()) -- How many are Transferable
+	-- Send total of coins that can be used in store purchases.
+	msg:addU32(totalCoins)
+	-- Send transferable subset (used in market/gift and transferable-only checks).
+	msg:addU32(transferableCoins)
 
 	local oldProtocol = player:getClient().version < 1200
 	if not oldProtocol then
@@ -2044,8 +2051,7 @@ end
 function Player.removeCoinsBalance(self, coins)
 	if self:canRemoveCoins(coins) then
 		sendStoreBalanceUpdating(self:getId(), true)
-		self:removeTibiaCoins(coins)
-		return true
+		return self:removeTibiaCoins(coins) == true
 	end
 
 	return false
@@ -2067,8 +2073,7 @@ end
 function Player.removeTransferableCoinsBalance(self, coins)
 	if self:canRemoveTransferableCoins(coins) then
 		sendStoreBalanceUpdating(self:getId(), true)
-		self:removeTransferableCoins(coins)
-		return true
+		return self:removeTransferableCoins(coins) == true
 	end
 
 	return false
@@ -2083,16 +2088,66 @@ function Player.addTransferableCoinsBalance(self, coins, update)
 end
 
 --- Support Functions
-function Player.makeCoinTransaction(self, offer, desc)
-	local op = false
+function GameStore.getStorePurchasableCoins(player)
+	if configManager.getBoolean(configKeys.STORE_COMBINED_COINS) then
+		return player:getTotalStoreCoins()
+	end
 
+	if configManager.getNumber(configKeys.STORE_COIN_TYPE) == GameStore.CoinType.Transferable then
+		return player:getTransferableCoins()
+	end
+
+	return player:getTibiaCoins()
+end
+
+function Player.getTotalStoreCoins(self)
+	return (self:getTransferableCoins() or 0) + (self:getTibiaCoins() or 0)
+end
+
+local function removeCombinedCoinsBalance(self, coins)
+	local removed = self:removeTransferableAndTibiaCoins(coins) == true
+	if removed then
+		sendStoreBalanceUpdating(self:getId(), true)
+	end
+	return removed
+end
+
+local function removeStoreCoinsBalance(self, coins, offerCoinType)
+	if offerCoinType == GameStore.CoinType.Transferable then
+		return self:removeTransferableCoinsBalance(coins)
+	end
+
+	if configManager.getBoolean(configKeys.STORE_COMBINED_COINS) then
+		return removeCombinedCoinsBalance(self, coins)
+	end
+
+	if configManager.getNumber(configKeys.STORE_COIN_TYPE) == GameStore.CoinType.Transferable then
+		return self:removeTransferableCoinsBalance(coins)
+	end
+
+	return self:removeCoinsBalance(coins)
+end
+
+local function getStoreHistoryCoinType(offer)
+	if offer.coinType == GameStore.CoinType.Transferable then
+		return GameStore.CoinType.Transferable
+	end
+
+	if configManager.getBoolean(configKeys.STORE_COMBINED_COINS) then
+		return offer.coinType or GameStore.CoinType.Coin
+	end
+
+	return configManager.getNumber(configKeys.STORE_COIN_TYPE)
+end
+
+function Player.makeCoinTransaction(self, offer, desc)
 	if desc then
 		desc = offer.name .. " (" .. desc .. ")"
 	else
 		desc = offer.name
 	end
 
-	if offer.Type == GameStore.OfferTypes.OFFER_TYPE_EXPBOOST then
+	if offer.type == GameStore.OfferTypes.OFFER_TYPE_EXPBOOST then
 		local expBoostCount = self:getStorageValue(GameStore.Storages.expBoostCount)
 
 		if expBoostCount == -1 or expBoostCount == 0 or expBoostCount > 5 then
@@ -2100,42 +2155,49 @@ function Player.makeCoinTransaction(self, offer, desc)
 		end
 		if GameStore.ExpBoostValues[expBoostCount] then
 			offer.price = GameStore.ExpBoostValues[expBoostCount]
-		else
-			offer.price = offer.price
 		end
 		self:setStorageValue(GameStore.Storages.expBoostCount, expBoostCount + 1)
 	end
 
-	if offer.coinType == GameStore.CoinType.Coin and self:canRemoveCoins(offer.price) then
-		op = self:removeCoinsBalance(offer.price)
-	elseif offer.coinType == GameStore.CoinType.Transferable and self:canRemoveTransferableCoins(offer.price) then
-		op = self:removeTransferableCoinsBalance(offer.price)
+	if offer.price <= 0 then
+		return true
 	end
+
+	if not self:canPayForOffer(offer.price, offer.coinType) then
+		return false
+	end
+
+	local op = removeStoreCoinsBalance(self, offer.price, offer.coinType)
 
 	-- When the transaction is successful add to the history
 	if op then
-		GameStore.insertHistory(self:getAccountId(), GameStore.HistoryTypes.HISTORY_TYPE_NONE, desc, offer.price * -1, offer.coinType)
+		GameStore.insertHistory(self:getAccountId(), GameStore.HistoryTypes.HISTORY_TYPE_NONE, desc, offer.price * -1, getStoreHistoryCoinType(offer))
 	end
 
 	return op
 end
 
--- Verifies if the player has enough resources to afford a given offer.
+-- Verifies if the player has enough resources to afford a store offer.
+-- When storeCombinedCoins is enabled, store purchases use transferable coins first, then regular coins.
+-- When storeCombinedCoins is disabled, only the configured storeCoinType is used (unless the offer requires transferable coins).
+-- Player-to-player coin transfers use only transferable coins (see parseTransferableCoins).
 -- @param coinsToRemove (number) - The amount of coins required for the offer.
--- @param coinType (string) - The type of the offer.
+-- @param offerCoinType (number|nil) - The coin type required by the offer.
 -- @return (boolean) - Returns true if the player can pay for the offer, false otherwise.
-function Player.canPayForOffer(self, coinsToRemove, coinType)
-	-- Check if the player has the required amount of regular coins and the offer type is regular.
-	if coinType == GameStore.CoinType.Coin then
-		return self:canRemoveCoins(coinsToRemove)
+function Player.canPayForOffer(self, coinsToRemove, offerCoinType)
+	if offerCoinType == GameStore.CoinType.Transferable then
+		return self:getTransferableCoins() >= coinsToRemove
 	end
 
-	-- Check if the player has the required amount of transferable coins and the offer type is transferable.
-	if coinType == GameStore.CoinType.Transferable then
-		return self:canRemoveTransferableCoins(coinsToRemove)
+	if configManager.getBoolean(configKeys.STORE_COMBINED_COINS) then
+		return self:getTotalStoreCoins() >= coinsToRemove
 	end
 
-	return false
+	if configManager.getNumber(configKeys.STORE_COIN_TYPE) == GameStore.CoinType.Transferable then
+		return self:getTransferableCoins() >= coinsToRemove
+	end
+
+	return self:getTibiaCoins() >= coinsToRemove
 end
 
 --- Other players functions

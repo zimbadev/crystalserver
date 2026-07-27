@@ -189,6 +189,28 @@ function playerLoginGlobal.onLogin(player)
 	player:registerEvent("DropLoot")
 	player:registerEvent("BossParticipation")
 	player:registerEvent("UpdatePlayerOnAdvancedLevel")
+	player:registerEvent("RottenTaintGain")
+	player:registerEvent("BakragorePlayerDeath")
+
+	-- Vocation Adjustment: re-frame the monk's active virtue. It was restored early in IOLoginData
+	-- (before the client's action bar existed), so the highlight did not stick; re-apply it here,
+	-- after the spell list is loaded, so the active-stance highlight is sent at the correct time.
+	local virtue = player:getVirtue()
+	if virtue and virtue > 0 then
+		player:setVirtue(virtue)
+	end
+
+	-- Vocation Adjustment: restore active stances from the previous session.
+	local stanceKv = player:kv():scoped("stance")
+	local primary = stanceKv:get("primary")
+	if primary and primary > 0 then
+		player:setStance(primary)
+	end
+	local elemental = stanceKv:get("elemental")
+	if elemental and elemental > 0 then
+		player:setElementalStance(elemental)
+	end
+
 	return true
 end
 

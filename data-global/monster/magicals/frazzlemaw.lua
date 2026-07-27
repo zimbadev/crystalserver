@@ -102,7 +102,7 @@ monster.loot = {
 	{ name = "assassin dagger", chance = 1000 },
 	{ name = "haunted blade", chance = 2240 },
 	{ name = "nightmare blade", chance = 1100 },
-	{ name = "great mana potion", chance = 15000, maxCount = 3 },
+	{ id = 238, chance = 15000, maxCount = 3 }, -- great mana potion
 	{ name = "great health potion", chance = 15000, maxCount = 2 },
 	{ name = "gold ingot", chance = 2300 },
 	{ name = "traditional sai", chance = 1460 },

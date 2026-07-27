@@ -354,6 +354,88 @@ suite<"account"> accountTest = [] {
 		expect(eq(description, std::string { "REMOVE Coins" }));
 	};
 
+	test("Account::removeCoins removes from primary then secondary coin balance") = [&injectionFixture] {
+		auto [accountRepository] = injectionFixture.get<AccountRepository>();
+
+		Account acc { 1 };
+		accountRepository.failAddCoins = false;
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.setCoins(1, enumToValue(CoinType::Transferable), 80);
+		accountRepository.setCoins(1, enumToValue(CoinType::Normal), 100);
+
+		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
+		expect(eqEnum(acc.removeCoins(enumToValue(CoinType::Transferable), enumToValue(CoinType::Normal), 130), AccountErrors_t::Ok));
+
+		auto [transferableCoins, transferableError] = acc.getCoins(enumToValue(CoinType::Transferable));
+		expect(eqEnum(transferableCoins, 0u));
+		expect(eqEnum(transferableError, AccountErrors_t::Ok));
+
+		auto [normalCoins, normalError] = acc.getCoins(enumToValue(CoinType::Normal));
+		expect(eqEnum(normalCoins, 50u));
+		expect(eqEnum(normalError, AccountErrors_t::Ok));
+
+		expect(eq(accountRepository.coinsTransactions_.size(), 1) >> fatal);
+		expect(eq(accountRepository.coinsTransactions_[1].size(), 2) >> fatal);
+
+		auto [type1, coins1, coinType1, description1] = accountRepository.coinsTransactions_[1][0];
+		expect(eqEnum(type1, CoinTransactionType::Remove));
+		expect(eq(coins1, 80u));
+		expect(eqEnum(coinType1, enumToValue(CoinType::Transferable)));
+		expect(eq(description1, std::string { "REMOVE Coins" }));
+
+		auto [type2, coins2, coinType2, description2] = accountRepository.coinsTransactions_[1][1];
+		expect(eqEnum(type2, CoinTransactionType::Remove));
+		expect(eq(coins2, 50u));
+		expect(eqEnum(coinType2, enumToValue(CoinType::Normal)));
+		expect(eq(description2, std::string { "REMOVE Coins" }));
+	};
+
+	test("Account::removeCoins does not change combined balance if insufficient") = [&injectionFixture] {
+		auto [accountRepository] = injectionFixture.get<AccountRepository>();
+
+		Account acc { 1 };
+		accountRepository.failAddCoins = false;
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.setCoins(1, enumToValue(CoinType::Transferable), 40);
+		accountRepository.setCoins(1, enumToValue(CoinType::Normal), 50);
+
+		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
+		expect(eqEnum(acc.removeCoins(enumToValue(CoinType::Transferable), enumToValue(CoinType::Normal), 100), AccountErrors_t::RemoveCoins));
+
+		auto [transferableCoins, transferableError] = acc.getCoins(enumToValue(CoinType::Transferable));
+		expect(eqEnum(transferableCoins, 40u));
+		expect(eqEnum(transferableError, AccountErrors_t::Ok));
+
+		auto [normalCoins, normalError] = acc.getCoins(enumToValue(CoinType::Normal));
+		expect(eqEnum(normalCoins, 50u));
+		expect(eqEnum(normalError, AccountErrors_t::Ok));
+
+		expect(eq(accountRepository.coinsTransactions_.size(), 0));
+	};
+
+	test("Account::removeCoins does not change combined balance if repository fails") = [&injectionFixture] {
+		auto [accountRepository] = injectionFixture.get<AccountRepository>();
+
+		Account acc { 1 };
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+		accountRepository.setCoins(1, enumToValue(CoinType::Transferable), 80);
+		accountRepository.setCoins(1, enumToValue(CoinType::Normal), 100);
+		accountRepository.failAddCoins = true;
+
+		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
+		expect(eqEnum(acc.removeCoins(enumToValue(CoinType::Transferable), enumToValue(CoinType::Normal), 130), AccountErrors_t::Storage));
+
+		auto [transferableCoins, transferableError] = acc.getCoins(enumToValue(CoinType::Transferable));
+		expect(eqEnum(transferableCoins, 80u));
+		expect(eqEnum(transferableError, AccountErrors_t::Ok));
+
+		auto [normalCoins, normalError] = acc.getCoins(enumToValue(CoinType::Normal));
+		expect(eqEnum(normalCoins, 100u));
+		expect(eqEnum(normalError, AccountErrors_t::Ok));
+
+		expect(eq(accountRepository.coinsTransactions_.size(), 0));
+	};
+
 	test("Account::removeCoins returns error if account doesn't have enough coins") = [&injectionFixture] {
 		auto [accountRepository] = injectionFixture.get<AccountRepository>();
 

@@ -4,9 +4,9 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_EXPLOSIONAREA)
 combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_EXPLOSION)
 combat:setParameter(COMBAT_PARAM_BLOCKARMOR, 1)
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 1.403) + 8
-	local max = (level / 5) + (maglevel * 2.203) + 13
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 1.403) + 8
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 2.203) + 13
 	return -min, -max
 end
 
@@ -26,12 +26,12 @@ spell:castSound(SOUND_EFFECT_TYPE_SPELL_OR_RUNE)
 spell:impactSound(SOUND_EFFECT_TYPE_SPELL_PHYSICAL_STRIKE)
 spell:level(16)
 spell:mana(20)
+spell:basePower(50)
 spell:isPremium(true)
 spell:range(3)
 spell:needCasterTargetOrDirection(true)
 spell:blockWalls(true)
 spell:cooldown(2 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("druid;true", "elder druid;true")
 spell:register()

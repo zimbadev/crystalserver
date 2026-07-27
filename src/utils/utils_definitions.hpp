@@ -340,7 +340,14 @@ enum ShootType_t : uint8_t {
 	CONST_ANI_CANDYCANE = 61,
 	CONST_ANI_CHERRYBOMB = 62,
 
-	CONST_ANI_LAST = CONST_ANI_CHERRYBOMB,
+	// 15.25 Vocation Adjustment - storm arrows (client appearances missile ids 64-68)
+	CONST_ANI_SHATTERSTORMARROW = 64,
+	CONST_ANI_FIRESTORMARROW = 65,
+	CONST_ANI_TERRASTORMARROW = 66,
+	CONST_ANI_FROSTSTORMARROW = 67,
+	CONST_ANI_THUNDERSTORMARROW = 68,
+
+	CONST_ANI_LAST = CONST_ANI_THUNDERSTORMARROW,
 
 	// for internal use, don't send to client
 	CONST_ANI_WEAPONTYPE = 0xFE, // 254
@@ -439,6 +446,9 @@ enum Fluids_t : uint8_t {
 
 enum SquareColor_t : uint8_t {
 	SQ_COLOR_BLACK = 0,
+	SQ_PLAYER_ATTACK = 3, // CreatureMark markType = IsAttacked (the swing)
+	SQ_FIST = 4, // weaponType = fist (client jump-table: wt4 -> effect 309)
+	SQ_CREATURE_SQUARE_LEGACY = 255, // omit weaponType to send legacy border mark (opcode 0x93 + 0x01 + color)
 };
 
 enum TextColor_t : uint8_t {
@@ -791,6 +801,15 @@ enum class AttrSubId_t {
 	JeanPierreFishing,
 	BloodRageProtector,
 	Sharpshooter,
+	SwiftFoot,
+	DivineDefiance,
+	SorcererMasterOfFlames,
+	SorcererMasterOfThunder,
+	SorcererMasterOfDecay,
+	DruidSharedConservation,
+	DruidElementalSynthesis,
+	SorcererSapStrengthAura,
+	SorcererExposeWeaknessAura,
 };
 
 enum Concoction_t : uint16_t {
@@ -827,7 +846,10 @@ enum ScreenshotAndBanner_t : uint8_t {
 	SCREENSHOT_AND_BANNER_TYPE_BOSSTIARY_PROGRESS = 7,
 	SCREENSHOT_AND_BANNER_TYPE_QUEST = 8,
 	SCREENSHOT_AND_BANNER_TYPE_COSMETIC = 9,
-	SCREENSHOT_AND_BANNER_TYPE_PROFICIENCY = 10
+	SCREENSHOT_AND_BANNER_TYPE_PROFICIENCY = 10,
+	SCREENSHOT_AND_BANNER_TYPE_BOUNTY_TASK = 11,
+	SCREENSHOT_AND_BANNER_TYPE_WEEKLY_TASK_SPECIFIC = 12,
+	SCREENSHOT_AND_BANNER_TYPE_SPELL = 13
 };
 
 enum Banner_t : uint8_t {
@@ -848,4 +870,8 @@ enum Banner_t : uint8_t {
 	BANNER_TYPE_TARGETTOOCLOSE = 12,
 	BANNER_TYPE_OUTOFSOULPOINTS = 13,
 	BANNER_TYPE_TUTORIALCOMPLETE = 14, // new tutorial finish popup "off to new shores"
+
+	// All vocations?
+	BANNER_TYPE_WEEKLY_TASK_ANY_CREATURE = 15,
+	BANNER_TYPE_PROMOTION_GRANTED = 16,
 };

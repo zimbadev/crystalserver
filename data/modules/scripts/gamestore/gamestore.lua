@@ -6936,7 +6936,13 @@ for k, category in ipairs(GameStore.Categories) do
 				offer.type = GameStore.OfferTypes.OFFER_TYPE_NONE
 			end
 			if not offer.coinType then
-				offer.coinType = GameStore.CoinType.Transferable
+				-- Coin (0): client checks combined store balance (transferable + regular).
+				-- Transferable (1): client only checks transferable balance (e.g. casks with {transferableprice}).
+				if offer.description and offer.description:find("{transferableprice}") then
+					offer.coinType = GameStore.CoinType.Transferable
+				else
+					offer.coinType = GameStore.CoinType.Coin
+				end
 			end
 		end
 	end

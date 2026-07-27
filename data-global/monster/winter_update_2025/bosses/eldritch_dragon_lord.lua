@@ -85,7 +85,7 @@ monster.loot = {
 	{ name = "crystal coin", chance = 100000, maxCount = 61 },
 	{ name = "dragon ham", chance = 50000, maxCount = 4 }, -- não confirmado
 	{ name = "strong mana potion", chance = 54550, maxCount = 93 }, -- não confirmado
-	{ name = "great mana potion", chance = 54550, maxCount = 69 },
+	{ id = 238, chance = 54550, maxCount = 69 }, -- great mana potion
 	{ name = "great spirit potion", chance = 54550, maxCount = 57 },
 	{ name = "ultimate mana potion", chance = 45450, maxCount = 24 },
 	{ name = "ultimate spirit potion", chance = 63640, maxCount = 25 },

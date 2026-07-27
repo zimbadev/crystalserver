@@ -320,6 +320,7 @@ public:
 	uint16_t m_transformOnUse = 0;
 
 	MagicEffectClasses magicEffect = CONST_ME_NONE;
+	MagicEffectClasses meleeAttackEffect = CONST_ME_NONE;
 	Direction bedPartnerDir = DIRECTION_NONE;
 	BedItemPart_t bedPart = BED_NONE_PART;
 	WeaponType_t weaponType = WEAPON_NONE;

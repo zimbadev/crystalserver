@@ -150,7 +150,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			if player:removeItem(6499, 20) then
 				npcHandler:say({
 					"You're indeed a dedicated protector of the true believers. Don't stop now. Kill as many of these creatures as you can. ...",
-					"I also have a reward for your great efforts. Talk to me about your {demon hunter outfit} anytime from now on. Afterwards, let's talk about the next mission that's awaiting you.",
+					"I also have a reward for your great efforts. Talk to me about your demon hunter {outfit} anytime from now on. Afterwards, let's talk about the next mission that's awaiting you.",
 				}, npc, creature)
 				player:setStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline, 16)
 				player:setStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Mission05, 2) -- The Inquisition Questlog- "Mission 5: Essential Gathering"

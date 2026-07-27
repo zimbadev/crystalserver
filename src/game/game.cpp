@@ -188,6 +188,7 @@ namespace InternalGame {
 			}
 
 			auto isGuest = house->getHouseAccessLevel(player) == HOUSE_GUEST;
+			auto isOwner = house->getHouseAccessLevel(player) == HOUSE_OWNER;
 			auto itemParentContainer = item->getParent() ? item->getParent()->getContainer() : nullptr;
 			auto isItemParentContainerBrowseField = itemParentContainer && itemParentContainer->getID() == ITEM_BROWSEFIELD;
 			if (isGuest && isItemParentContainerBrowseField) {
@@ -200,7 +201,7 @@ namespace InternalGame {
 				return false;
 			}
 
-			if (isGuest && item->isDummy()) {
+			if (!isOwner && item->isDummy() && (isGuest || item->hasActor())) {
 				return false;
 			}
 		}
@@ -1151,11 +1152,12 @@ std::shared_ptr<Player> Game::getPlayerByGUID(const uint32_t &guid, bool allowOf
 	if (guid == 0) {
 		return nullptr;
 	}
-	for (const auto &it : players) {
-		if (guid == it.second->getGUID()) {
-			return it.second;
-		}
+
+	auto it = playersByGUID.find(guid);
+	if (it != playersByGUID.end()) {
+		return it->second;
 	}
+
 	if (!allowOffline) {
 		return nullptr;
 	}
@@ -5104,6 +5106,8 @@ void Game::playerStashWithdraw(uint32_t playerId, uint16_t itemId, uint32_t coun
 	if (ret != RETURNVALUE_NOERROR) {
 		g_logger().warn("[{}] failed to retrieve item: {}, to player: {}, from the stash", __FUNCTION__, itemId, player->getName());
 		player->sendCancelMessage(ret);
+	} else {
+		g_callbacks().executeCallback(EventCallback_t::playerOnStashWithdraw, &EventCallback::playerOnStashWithdraw, player, itemId, count);
 	}
 
 	// Refresh depot search window if necessary
@@ -7150,6 +7154,20 @@ bool Game::combatBlockHit(CombatDamage &damage, const std::shared_ptr<Creature> 
 		}
 	}
 
+	// Vocation Adjustment: Paladin Divine Defiance — 15% chance to dodge any attack from a
+	// non-adjacent enemy (Chebyshev distance > 1 or a different floor). The Z check is mandatory
+	// so cross-floor ranged attackers are correctly treated as non-adjacent.
+	if (targetPlayer && attacker && targetPlayer->getStance() == STANCE_DIVINE_DEFIANCE) {
+		const Position &ap = attacker->getPosition();
+		const Position &tp = targetPlayer->getPosition();
+		const bool nonAdjacent = Position::getDistanceZ(ap, tp) != 0 || Position::getDistanceX(ap, tp) > 1 || Position::getDistanceY(ap, tp) > 1;
+		if (nonAdjacent && uniform_random(0, 10000) < 1500) {
+			InternalGame::sendBlockEffect(BLOCK_DODGE, damage.primary.type, target->getPosition(), attacker);
+			targetPlayer->sendTextMessage(MESSAGE_ATTENTION, "You dodged an attack.");
+			return true;
+		}
+	}
+
 	bool canHeal = false;
 	CombatDamage damageHeal;
 	damageHeal.primary.type = COMBAT_HEALING;
@@ -7508,6 +7526,20 @@ void Game::applyWheelOfDestinyHealing(CombatDamage &damage, const std::shared_pt
 			damage.secondary.value += attackerPlayer->wheel()->getStat(WheelStat_t::HEALING);
 		}
 
+		// Vocation Adjustment: Battle Healing now boosts the player's own spell/rune healing by +10%,
+		// tripled to +30% while wearing a shield. Gated to spell/rune heals via instantSpellName
+		// so potions, Mana-Buffer / Gift-of-Life survive-heals and the healingLink echo are not boosted.
+		if ((!damage.instantSpellName.empty() || !damage.runeSpellName.empty()) && attackerPlayer->wheel()->getInstant("Battle Healing")) {
+			const double battleHealingFactor = attackerPlayer->hasRealShield() ? 1.30 : 1.10;
+			const int32_t primaryBeforeBattleHeal = damage.primary.value;
+			damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * battleHealingFactor));
+			const int32_t secondaryBeforeBattleHeal = damage.secondary.value;
+			if (damage.secondary.value != 0) {
+				damage.secondary.value = static_cast<int32_t>(std::round(damage.secondary.value * battleHealingFactor));
+			}
+			g_logger().debug("[Battle Healing] Player: {}, Factor: {}, Primary: {} -> {}, Secondary: {} -> {}", attackerPlayer->getName(), battleHealingFactor, primaryBeforeBattleHeal, damage.primary.value, secondaryBeforeBattleHeal, damage.secondary.value);
+		}
+
 		if (damage.healingLink > 0) {
 			CombatDamage tmpDamage;
 			tmpDamage.primary.value = (damage.primary.value * damage.healingLink) / 100;
@@ -7517,11 +7549,36 @@ void Game::applyWheelOfDestinyHealing(CombatDamage &damage, const std::shared_pt
 
 		if (attackerPlayer->wheel()->getInstant("Blessing of the Grove")) {
 			damage.primary.value += (damage.primary.value * attackerPlayer->wheel()->checkBlessingGroveHealingByTarget(target)) / 100.;
+
+			// Vocation Adjustment: Blessing of the Grove lets heals critically heal, using the player's
+			// crit chance + crit extra damage (normal heals never crit — applyExtensions early-returns
+			// for COMBAT_HEALING). Roll on the already-boosted value; gate to real spell/rune heals.
+			if (damage.origin == ORIGIN_SPELL) {
+				const int32_t critChance = attackerPlayer->getSkillLevel(SKILL_CRITICAL_HIT_CHANCE);
+				const int32_t critExtra = attackerPlayer->getSkillLevel(SKILL_CRITICAL_HIT_DAMAGE);
+				if (critChance != 0 && (uniform_random(1, 100) * 100) <= critChance) {
+					const double critMult = 1.0 + static_cast<double>(critExtra) / 10000.0;
+					damage.primary.value = static_cast<int32_t>(damage.primary.value * critMult);
+					if (damage.secondary.value != 0) {
+						damage.secondary.value = static_cast<int32_t>(damage.secondary.value * critMult);
+					}
+					damage.critical = true;
+				}
+			}
 		}
 
 		if (attackerPlayer->wheel()->getInstant(WheelInstant_t::SANCTUARY)) {
 			const float sanctuaryBonus = attackerPlayer->wheel()->checkRevelationPerkSanctuary();
 			damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * sanctuaryBonus));
+
+			// Vocation Adjustment: Sanctuary additionally heals allies adjacent to the monk for +10%.
+			if (target && target != attackerPlayer) {
+				const Position &casterPos = attackerPlayer->getPosition();
+				const Position &allyPos = target->getPosition();
+				if (Position::getDistanceZ(casterPos, allyPos) == 0 && Position::getDistanceX(casterPos, allyPos) <= 1 && Position::getDistanceY(casterPos, allyPos) <= 1) {
+					damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * 1.10));
+				}
+			}
 		}
 	}
 }
@@ -7578,6 +7635,16 @@ void Game::applyWheelOfDestinyEffectsToDamage(CombatDamage &damage, const std::s
 			const float sanctuaryBonus = attackerPlayer->wheel()->checkRevelationPerkSanctuary();
 			damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * sanctuaryBonus));
 			damage.secondary.value = static_cast<int32_t>(std::round(damage.secondary.value * sanctuaryBonus));
+
+			// Vocation Adjustment: Sanctuary additionally deals +10% to enemies adjacent to the monk.
+			if (target && target != attackerPlayer) {
+				const Position &casterPos = attackerPlayer->getPosition();
+				const Position &enemyPos = target->getPosition();
+				if (Position::getDistanceZ(casterPos, enemyPos) == 0 && Position::getDistanceX(casterPos, enemyPos) <= 1 && Position::getDistanceY(casterPos, enemyPos) <= 1) {
+					damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * 1.10));
+					damage.secondary.value = static_cast<int32_t>(std::round(damage.secondary.value * 1.10));
+				}
+			}
 		}
 	}
 }
@@ -7593,6 +7660,31 @@ int32_t Game::applyHealthChange(const CombatDamage &damage, const std::shared_pt
 			if (overkillMultiplier <= targetPlayer->wheel()->getGiftOfLifeValue()) {
 				targetPlayer->wheel()->checkGiftOfLife();
 				targetHealth = target->getHealth();
+			}
+		}
+
+		// Vocation Adjustment: Mana Buffer (Sorcerer + Druid). If incoming damage would exceed the
+		// current HP, the overkill is drained from mana x8 (plus 25% of max mana at most once per 2s)
+		// and the player survives at 1 HP. If the mana cannot cover the cost, the player dies normally.
+		const auto &targetVocation = targetPlayer->getVocation();
+		if (targetVocation && (targetVocation->getBaseId() == VOCATION_SORCERER || targetVocation->getBaseId() == VOCATION_DRUID)
+		    && (damage.primary.value + damage.secondary.value) >= targetHealth) {
+			const int32_t overkill = (damage.primary.value + damage.secondary.value) - targetHealth + 1;
+			const bool taxReady = targetPlayer->getManaBufferTaxTime() <= OTSYS_TIME();
+			const int32_t manaCost = overkill * 8 + (taxReady ? static_cast<int32_t>(targetPlayer->getMaxMana() * 0.25) : 0);
+			if (manaCost > 0 && targetPlayer->getMana() >= static_cast<uint32_t>(manaCost)) {
+				CombatDamage manaDrain;
+				manaDrain.origin = ORIGIN_NONE;
+				manaDrain.primary.value = -manaCost;
+				manaDrain.primary.type = COMBAT_MANADRAIN;
+				if (g_game().combatChangeMana(targetPlayer, targetPlayer, manaDrain)) {
+					if (taxReady) {
+						targetPlayer->setManaBufferTaxTime(OTSYS_TIME() + 2000);
+					}
+					// Flag the survive; combatChangeHealth then clamps the drained damage to leave exactly 1 HP.
+					// (A survive-heal of `overkill` overshot to ~overkill HP and broke at the max-health cap.)
+					targetPlayer->setManaBufferSurvived(true);
+				}
 			}
 		}
 	}
@@ -7613,6 +7705,13 @@ static void applyImproveMonkHealing(CombatDamage &damage, const std::shared_ptr<
 		const float multiplier = 1.0f + (virtueSustainBonusPercent / 100.0f);
 
 		damage.primary.value = static_cast<int32_t>(damage.primary.value * multiplier);
+	}
+
+	// Vocation Adjustment: Monk virtue aura — a Druid near a party monk heals +12% (the druid carries
+	// the DRUID bit of its monk's aura; stacks with the Virtue Sustain bonus above). Gated to spell/rune
+	// heals so it does not buff health potions (which also flow through this path with no spell name).
+	if ((player->getMonkAuraVocMask() & (1u << VOCATION_DRUID)) && (!damage.instantSpellName.empty() || !damage.runeSpellName.empty())) {
+		damage.primary.value = static_cast<int32_t>(damage.primary.value * 1.12);
 	}
 }
 
@@ -7662,6 +7761,10 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 		realHealthChange = target->getHealth() - realHealthChange;
 
 		if (realHealthChange > 0 && !target->isInGhostMode()) {
+			// Vocation Adjustment: Blessing of the Grove critical heals show the critical effect on the heal.
+			if (damage.critical) {
+				addMagicEffect(targetPos, CONST_ME_CRITICAL_DAMAGE, attacker);
+			}
 			if (targetPlayer) {
 				targetPlayer->updateImpactTracker(COMBAT_HEALING, realHealthChange);
 			}
@@ -7821,6 +7924,79 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 			damage.primary.value *= target->getBuff(BUFF_DAMAGERECEIVED) / 100.;
 			damage.secondary.value *= target->getBuff(BUFF_DAMAGERECEIVED) / 100.;
 		}
+
+		// Vocation Adjustment: Combat Mastery (Knight wheel, reworked). Deal +1% damage per (12/10/8)%
+		// of the TARGET's missing HP (doubled with a two-handed weapon); take -1% per (12/10/8)% of
+		// OWN missing HP (doubled with a shield, reduction capped at 50%). Threshold 12/10/8 = stage 1/2/3.
+		if (damage.origin != ORIGIN_NONE && damage.primary.type != COMBAT_HEALING) {
+			if (attackerPlayer && target && target->getMaxHealth() > 0) {
+				const uint8_t stage = attackerPlayer->wheel()->getStage(WheelStage_t::COMBAT_MASTERY);
+				if (stage > 0) {
+					const int32_t threshold = stage >= 3 ? 8 : (stage >= 2 ? 10 : 12);
+					const int32_t targetMissingPct = ((target->getMaxHealth() - target->getHealth()) * 100) / target->getMaxHealth();
+					int32_t bonusPct = targetMissingPct / threshold;
+					const auto &weapon = attackerPlayer->getWeapon();
+					if (weapon && (weapon->getSlotPosition() & SLOTP_TWO_HAND)) {
+						bonusPct *= 2;
+					}
+					if (bonusPct > 0) {
+						damage.primary.value += (damage.primary.value * bonusPct) / 100.;
+						damage.secondary.value += (damage.secondary.value * bonusPct) / 100.;
+					}
+				}
+			}
+			if (targetPlayer && targetPlayer->getMaxHealth() > 0) {
+				const uint8_t stage = targetPlayer->wheel()->getStage(WheelStage_t::COMBAT_MASTERY);
+				if (stage > 0) {
+					const int32_t threshold = stage >= 3 ? 8 : (stage >= 2 ? 10 : 12);
+					const int32_t ownMissingPct = ((targetPlayer->getMaxHealth() - targetPlayer->getHealth()) * 100) / targetPlayer->getMaxHealth();
+					int32_t reductionPct = ownMissingPct / threshold;
+					if (targetPlayer->hasRealShield()) {
+						reductionPct *= 2;
+					}
+					if (reductionPct > 50) {
+						reductionPct = 50;
+					}
+					if (reductionPct > 0) {
+						damage.primary.value -= (damage.primary.value * reductionPct) / 100.;
+						damage.secondary.value -= (damage.secondary.value * reductionPct) / 100.;
+					}
+				}
+			}
+		}
+
+		// Vocation Adjustment: Monk virtue auras (interpretation A — a party member near a monk gets the
+		// buff for THEIR OWN vocation; the serene monk gets the union). Knight: -3% damage received.
+		// Paladin: +6% auto-attack (melee/ranged). Sorcerer: +6% spell & rune.
+		if (damage.origin != ORIGIN_NONE && damage.primary.type != COMBAT_HEALING) {
+			if (targetPlayer) {
+				if (targetPlayer->getMonkAuraVocMask() & (1u << VOCATION_KNIGHT)) {
+					damage.primary.value *= 0.97;
+					damage.secondary.value *= 0.97;
+				}
+				// Way of the Monk: a monk takes -2% per honoured shrine vs melee auto-attacks (capped 20%).
+				// 5 = monk base vocation id (per the serene-tick convention in checkImbuementsAndSereneStatus).
+				if (damage.origin == ORIGIN_MELEE && targetPlayer->getVocation() && targetPlayer->getVocation()->getBaseId() == 5) {
+					const int32_t shrineReduction = std::min<int32_t>(targetPlayer->getMonkShrineCount() * 2, 20);
+					if (shrineReduction > 0) {
+						damage.primary.value -= (damage.primary.value * shrineReduction) / 100.;
+						damage.secondary.value -= (damage.secondary.value * shrineReduction) / 100.;
+					}
+				}
+			}
+			if (attackerPlayer) {
+				const uint8_t auraMask = attackerPlayer->getMonkAuraVocMask();
+				if ((auraMask & (1u << VOCATION_PALADIN)) && (damage.origin == ORIGIN_MELEE || damage.origin == ORIGIN_RANGED)) {
+					damage.primary.value *= 1.06;
+					damage.secondary.value *= 1.06;
+				}
+				if ((auraMask & (1u << VOCATION_SORCERER)) && damage.origin == ORIGIN_SPELL) {
+					damage.primary.value *= 1.06;
+					damage.secondary.value *= 1.06;
+				}
+			}
+		}
+
 		auto healthChange = damage.primary.value + damage.secondary.value;
 		if (healthChange == 0) {
 			return true;
@@ -7879,14 +8055,19 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 		std::stringstream ss;
 
 		if (target->hasCondition(CONDITION_MANASHIELD) && damage.primary.type != COMBAT_UNDEFINEDDAMAGE) {
-			int32_t manaDamage = std::min<int32_t>(target->getMana(), healthChange);
 			uint32_t manaShield = target->getManaShield();
+			// Vocation Adjustment: Energy Ring (equipment manashield, getManaShield()==0) costs 2 mana
+			// per point of damage absorbed; the Magic Shield spell (buffered, >0) stays 1:1.
+			const int32_t manaCostPerDamage = (manaShield == 0) ? 2 : 1;
+			int32_t absorbedDamage = std::min<int32_t>(target->getMana() / manaCostPerDamage, healthChange);
+			int32_t manaDamage = absorbedDamage * manaCostPerDamage;
 			if (manaShield > 0) {
 				if (manaShield > manaDamage) {
 					target->setManaShield(manaShield - manaDamage);
 					manaShield = manaShield - manaDamage;
 				} else {
 					manaDamage = manaShield;
+					absorbedDamage = manaDamage; // spell path stays 1:1
 					target->removeCondition(CONDITION_MANASHIELD);
 					manaShield = 0;
 				}
@@ -7902,7 +8083,8 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 						if (healthChange == 0) {
 							return true;
 						}
-						manaDamage = std::min<int32_t>(target->getMana(), healthChange);
+						absorbedDamage = std::min<int32_t>(target->getMana() / manaCostPerDamage, healthChange);
+						manaDamage = absorbedDamage * manaCostPerDamage;
 					}
 				}
 
@@ -7969,7 +8151,7 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 					tmpPlayer->sendTextMessage(message);
 				}
 
-				damage.primary.value -= manaDamage;
+				damage.primary.value -= absorbedDamage;
 				if (damage.primary.value < 0) {
 					damage.secondary.value = std::max<int32_t>(0, damage.secondary.value + damage.primary.value);
 					damage.primary.value = 0;
@@ -8014,6 +8196,10 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 		}
 
 		targetHealth = applyHealthChange(damage, target);
+		if (targetPlayer && targetPlayer->consumeManaBufferSurvived()) {
+			// Mana Buffer absorbed the lethal hit into mana; drain only enough to leave exactly 1 HP.
+			realDamage = std::max<int32_t>(0, target->getHealth() - 1);
+		}
 		if (damage.primary.value >= targetHealth) {
 			damage.primary.value = targetHealth;
 			damage.secondary.value = 0;
@@ -8267,6 +8453,13 @@ void Game::applyOffensiveCharmRune(
 	const std::shared_ptr<Monster> &targetMonster, const std::shared_ptr<Player> &attackerPlayer, const std::shared_ptr<Creature> &target, const int32_t &realDamage
 ) const {
 	if (!targetMonster || !attackerPlayer) {
+		return;
+	}
+
+	// Vocation Adjustment charm double-proc fix: offensive charms only fire on the player's main
+	// attack target, never on collateral AoE tiles (AoE ammo/spells run this per creature).
+	const auto &lockedTarget = attackerPlayer->getAttackedCreature();
+	if (lockedTarget && target != lockedTarget) {
 		return;
 	}
 
@@ -8762,6 +8955,7 @@ void Game::checkImbuementsAndSereneStatus() {
 
 		if (mapPlayer->getSereneCooldown() > 0) {
 			mapPlayer->setSerene(true);
+			projectMonkVirtueAura(mapPlayer);
 			continue;
 		}
 
@@ -8773,6 +8967,7 @@ void Game::checkImbuementsAndSereneStatus() {
 		bool condition2 = hasLessThanSixMonsters;
 
 		mapPlayer->setSerene(condition1 && condition2);
+		projectMonkVirtueAura(mapPlayer);
 	}
 }
 
@@ -9959,6 +10154,107 @@ namespace {
 		}
 		return true;
 	}
+
+	bool canDeliverMarketItemsToInbox(const std::shared_ptr<Cylinder> &inbox, const ItemType &it, uint16_t amount, uint8_t tier) {
+		if (!inbox || it.id == ITEM_STORE_COIN) {
+			return inbox != nullptr;
+		}
+
+		if (it.stackable) {
+			uint16_t tmpAmount = amount;
+			while (tmpAmount > 0) {
+				const uint16_t stackCount = std::min<uint16_t>(it.stackSize, tmpAmount);
+				const auto &item = Item::CreateItem(it.id, stackCount);
+				if (tier > 0) {
+					item->setAttribute(ItemAttribute_t::TIER, tier);
+				}
+
+				if (g_game().internalAddItem(inbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
+					return false;
+				}
+
+				g_game().internalRemoveItem(item, -1, false, FLAG_NOLIMIT, true);
+				tmpAmount -= stackCount;
+			}
+			return true;
+		}
+
+		const int32_t subType = it.charges != 0 ? it.charges : -1;
+		for (uint16_t i = 0; i < amount; ++i) {
+			const auto &item = Item::CreateItem(it.id, subType);
+			if (tier > 0) {
+				item->setAttribute(ItemAttribute_t::TIER, tier);
+			}
+
+			if (g_game().internalAddItem(inbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
+				return false;
+			}
+
+			g_game().internalRemoveItem(item, -1, false, FLAG_NOLIMIT, true);
+		}
+
+		return true;
+	}
+
+	bool deliverMarketItemsToInbox(const std::shared_ptr<Cylinder> &inbox, const ItemType &it, uint16_t amount, uint8_t tier) {
+		if (!inbox || it.id == ITEM_STORE_COIN) {
+			return inbox != nullptr;
+		}
+
+		std::vector<std::shared_ptr<Item>> deliveredItems;
+		const auto rollback = [&]() {
+			for (const auto &deliveredItem : deliveredItems) {
+				g_game().internalRemoveItem(deliveredItem, -1, false, FLAG_NOLIMIT, true);
+			}
+			deliveredItems.clear();
+		};
+
+		if (it.stackable) {
+			uint16_t tmpAmount = amount;
+			while (tmpAmount > 0) {
+				const uint16_t stackCount = std::min<uint16_t>(it.stackSize, tmpAmount);
+				const auto &item = Item::CreateItem(it.id, stackCount);
+				if (tier > 0) {
+					item->setAttribute(ItemAttribute_t::TIER, tier);
+				}
+
+				if (g_game().internalAddItem(inbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
+					rollback();
+					return false;
+				}
+
+				deliveredItems.emplace_back(item);
+				tmpAmount -= stackCount;
+			}
+			return true;
+		}
+
+		const int32_t subType = it.charges != 0 ? it.charges : -1;
+		for (uint16_t i = 0; i < amount; ++i) {
+			const auto &item = Item::CreateItem(it.id, subType);
+			if (tier > 0) {
+				item->setAttribute(ItemAttribute_t::TIER, tier);
+			}
+
+			if (g_game().internalAddItem(inbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
+				rollback();
+				return false;
+			}
+
+			deliveredItems.emplace_back(item);
+		}
+
+		return true;
+	}
+
+	void refundMarketPurchase(const std::shared_ptr<Player> &player, uint64_t totalPrice) {
+		if (!player || totalPrice == 0) {
+			return;
+		}
+
+		player->setBankBalance(player->getBankBalance() + totalPrice);
+		g_metrics().addCounter("balance_increase", totalPrice, { { "player", player->getName() }, { "context", "market_refund" } });
+	}
 } // namespace
 
 bool checkCanInitCreateMarketOffer(const std::shared_ptr<Player> &player, uint8_t type, const ItemType &it, uint16_t amount, uint64_t price, std::ostringstream &offerStatus) {
@@ -10029,6 +10325,22 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 	// Make sure everything is ok before the create market offer starts
 	if (!checkCanInitCreateMarketOffer(player, type, it, amount, price, offerStatus)) {
 		g_logger().error("{} - Player {} had an error on init offer on the market, error code: {}", __FUNCTION__, player->getName(), offerStatus.str());
+		return;
+	}
+
+	// Check limit of own offers per side (buy/sell)
+	const uint32_t playerOfferCountPerSide = IOMarket::getPlayerOfferCountPerSide(player->getGUID(), static_cast<MarketAction_t>(type));
+	if (playerOfferCountPerSide >= IOMarket::MAX_MARKET_OWN_OFFERS_PER_SIDE) {
+		player->sendTextMessage(MESSAGE_MARKET, "You have reached the maximum number of offers per side. Cancel some offers before creating new ones.");
+		g_logger().warn("{} - Player {} reached own offers per side limit ({})", __FUNCTION__, player->getName(), IOMarket::MAX_MARKET_OWN_OFFERS_PER_SIDE);
+		return;
+	}
+
+	// Check limit of offers per item per side (buy/sell)
+	const uint32_t itemOfferCountPerSide = IOMarket::getItemOfferCountPerSide(it.id, tier, static_cast<MarketAction_t>(type));
+	if (itemOfferCountPerSide >= IOMarket::MAX_MARKET_OFFERS_PER_SIDE) {
+		player->sendTextMessage(MESSAGE_MARKET, "There are too many offers for this item. Try again later or choose a different item.");
+		g_logger().warn("{} - Player {} reached item offers per side limit ({}) for item {}", __FUNCTION__, player->getName(), IOMarket::MAX_MARKET_OFFERS_PER_SIDE, it.id);
 		return;
 	}
 
@@ -10268,6 +10580,13 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 
 		const auto &buyerPlayerInbox = buyerPlayer->getInbox();
 
+		if (it.id != ITEM_STORE_COIN && !canDeliverMarketItemsToInbox(buyerPlayerInbox, it, amount, offer.tier)) {
+			player->sendTextMessage(MESSAGE_MARKET, "The buyer's inbox is full. This offer cannot be accepted.");
+			offerStatus << "Buyer inbox is full for buy offer";
+			player->sendMarketEnter(player->getLastDepotId());
+			return;
+		}
+
 		if (it.id == ITEM_STORE_COIN) {
 			auto [transferableCoins, result] = player->getAccount()->getCoins(enumToValue(CoinType::Transferable));
 
@@ -10301,49 +10620,25 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 			return;
 		}
 
-		player->setBankBalance(player->getBankBalance() + totalPrice);
-		g_metrics().addCounter("balance_increase", totalPrice, { { "player", player->getName() }, { "context", "market_sale" } });
-
+		bool delivered = true;
 		if (it.id == ITEM_STORE_COIN) {
 			buyerPlayer->getAccount()->addCoins(enumToValue(CoinType::Transferable), amount, "Purchased on Market");
-		} else if (it.stackable) {
-			uint16_t tmpAmount = amount;
-			while (tmpAmount > 0) {
-				uint16_t stackCount = std::min<uint16_t>(it.stackSize, tmpAmount);
-				const auto &item = Item::CreateItem(it.id, stackCount);
-				if (internalAddItem(buyerPlayerInbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
-					offerStatus << "Failed to add player inbox stackable item for buy offer for player " << player->getName();
-
-					break;
-				}
-
-				if (offer.tier > 0) {
-					item->setAttribute(ItemAttribute_t::TIER, offer.tier);
-				}
-
-				tmpAmount -= stackCount;
-			}
 		} else {
-			int32_t subType;
-			if (it.charges != 0) {
-				subType = it.charges;
-			} else {
-				subType = -1;
-			}
-
-			for (uint16_t i = 0; i < amount; ++i) {
-				const auto &item = Item::CreateItem(it.id, subType);
-				if (internalAddItem(buyerPlayerInbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT) != RETURNVALUE_NOERROR) {
-					offerStatus << "Failed to add player inbox item for buy offer for player " << player->getName();
-
-					break;
-				}
-
-				if (offer.tier > 0) {
-					item->setAttribute(ItemAttribute_t::TIER, offer.tier);
-				}
+			delivered = deliverMarketItemsToInbox(buyerPlayerInbox, it, amount, offer.tier);
+			if (!delivered) {
+				offerStatus << "Failed to deliver items to buyer inbox for buy offer from player " << player->getName();
 			}
 		}
+
+		if (!delivered) {
+			player->sendTextMessage(MESSAGE_MARKET, "There was an error delivering the item to the buyer's inbox. Please contact the administrator.");
+			player->sendMarketEnter(player->getLastDepotId());
+			g_logger().error("{} - Player {} failed to deliver buy offer items to buyer inbox", __FUNCTION__, player->getName());
+			return;
+		}
+
+		player->setBankBalance(player->getBankBalance() + totalPrice);
+		g_metrics().addCounter("balance_increase", totalPrice, { { "player", player->getName() }, { "context", "market_sale" } });
 
 		if (buyerPlayer->isOffline()) {
 			g_saveManager().savePlayer(buyerPlayer);
@@ -10364,6 +10659,13 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 			return;
 		}
 
+		if (it.id != ITEM_STORE_COIN && !canDeliverMarketItemsToInbox(playerInbox, it, amount, offer.tier)) {
+			player->sendTextMessage(MESSAGE_MARKET, "Your inbox is full. Make room in your store inbox before accepting this offer.");
+			offerStatus << "Buyer inbox is full for sell offer";
+			player->sendMarketEnter(player->getLastDepotId());
+			return;
+		}
+
 		// Have enough money on the bank
 		if (totalPrice <= player->getBankBalance()) {
 			player->setBankBalance(player->getBankBalance() - totalPrice);
@@ -10375,56 +10677,22 @@ void Game::playerAcceptMarketOffer(uint32_t playerId, uint32_t timestamp, uint16
 		}
 		g_metrics().addCounter("balance_decrease", totalPrice, { { "player", player->getName() }, { "context", "market_purchase" } });
 
+		bool delivered = true;
 		if (it.id == ITEM_STORE_COIN) {
 			player->getAccount()->addCoins(enumToValue(CoinType::Transferable), amount, "Purchased on Market");
-		} else if (it.stackable) {
-			uint16_t tmpAmount = amount;
-			while (tmpAmount > 0) {
-				uint16_t stackCount = std::min<uint16_t>(it.stackSize, tmpAmount);
-				const auto &item = Item::CreateItem(it.id, stackCount);
-				if (
-					// Init-statement
-					auto ret = internalAddItem(playerInbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT);
-					// Condition
-					ret != RETURNVALUE_NOERROR
-				) {
-					g_logger().error("{} - Create offer internal add item error code: {}", __FUNCTION__, getReturnMessage(ret));
-					offerStatus << "Failed to add inbox stackable item for sell offer for player " << player->getName();
-
-					break;
-				}
-
-				if (offer.tier > 0) {
-					item->setAttribute(ItemAttribute_t::TIER, offer.tier);
-				}
-
-				tmpAmount -= stackCount;
-			}
 		} else {
-			int32_t subType;
-			if (it.charges != 0) {
-				subType = it.charges;
-			} else {
-				subType = -1;
+			delivered = deliverMarketItemsToInbox(playerInbox, it, amount, offer.tier);
+			if (!delivered) {
+				offerStatus << "Failed to add inbox item for sell offer for player " << player->getName();
 			}
+		}
 
-			for (uint16_t i = 0; i < amount; ++i) {
-				const auto &item = Item::CreateItem(it.id, subType);
-				if (
-					// Init-statement
-					auto ret = internalAddItem(playerInbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT);
-					// Condition
-					ret != RETURNVALUE_NOERROR
-				) {
-					offerStatus << "Failed to add inbox item for sell offer for player " << player->getName();
-
-					break;
-				}
-
-				if (offer.tier > 0) {
-					item->setAttribute(ItemAttribute_t::TIER, offer.tier);
-				}
-			}
+		if (!delivered) {
+			refundMarketPurchase(player, totalPrice);
+			player->sendTextMessage(MESSAGE_MARKET, "There was an error delivering the item to your inbox. Your money has been refunded.");
+			player->sendMarketEnter(player->getLastDepotId());
+			g_logger().error("{} - Player {} failed to receive sell offer items, purchase refunded", __FUNCTION__, player->getName());
+			return;
 		}
 
 		sellerPlayer->setBankBalance(sellerPlayer->getBankBalance() + totalPrice);
@@ -10584,6 +10852,11 @@ void Game::playerForgeFuseItems(uint32_t playerId, ForgeAction_t actionType, uin
 
 	uint8_t coreCount = (usedCore ? 1 : 0) + (reduceTierLoss ? 1 : 0);
 	auto baseSuccess = static_cast<uint8_t>(g_configManager().getNumber(FORGE_BASE_SUCCESS_RATE));
+	if (const auto scopedForgeChance = g_kv().scoped("eventscheduler")->get("forge-chance")) {
+		auto forgeChance = static_cast<int>(scopedForgeChance->getNumber());
+		int adjustedSuccess = baseSuccess + forgeChance - 100;
+		baseSuccess = static_cast<uint8_t>(std::clamp(adjustedSuccess, 0, 100));
+	}
 	auto coreSuccess = usedCore ? g_configManager().getNumber(FORGE_BONUS_SUCCESS_RATE) : 0;
 	auto finalRate = baseSuccess + coreSuccess;
 	auto roll = static_cast<uint8_t>(uniform_random(1, 100)) <= finalRate;
@@ -11010,6 +11283,7 @@ void Game::addPlayer(const std::shared_ptr<Player> &player) {
 	mappedPlayerNames[lowercase_name] = player;
 	wildcardTree->insert(lowercase_name);
 	players[player->getID()] = player;
+	playersByGUID[player->getGUID()] = player;
 }
 
 void Game::removePlayer(const std::shared_ptr<Player> &player) {
@@ -11017,6 +11291,7 @@ void Game::removePlayer(const std::shared_ptr<Player> &player) {
 	mappedPlayerNames.erase(lowercase_name);
 	wildcardTree->remove(lowercase_name);
 	players.erase(player->getID());
+	playersByGUID.erase(player->getGUID());
 }
 
 void Game::addNpc(const std::shared_ptr<Npc> &npc) {
@@ -12477,6 +12752,52 @@ bool Game::hasPartyMembersNearby(const std::shared_ptr<Player> &player) {
 	}
 
 	return false;
+}
+
+void Game::projectMonkVirtueAura(const std::shared_ptr<Player> &monk) {
+	// Interpretation A: each party member within 5 tiles of the monk receives the buff for THEIR OWN
+	// vocation (a single bit); the monk itself receives the union of present-vocation bonuses, but only
+	// while serene. Refreshed every 1s by the serene tick; the aura lapses ~2.5s after leaving range.
+	// Per user decision: the whole virtue aura (members AND the monk) is active ONLY while the monk is
+	// serene. When not serene / no party, clear the monk's mask; members lapse via their own 2.5s expiry.
+	const auto &party = monk->getParty();
+	if (!party || !monk->isSerene()) {
+		monk->setMonkAuraVocMask(0);
+		return;
+	}
+
+	const Position &centerPos = monk->getPosition();
+	uint8_t unionMask = 0;
+	for (int offsetX = -5; offsetX <= 5; ++offsetX) {
+		for (int offsetY = -5; offsetY <= 5; ++offsetY) {
+			if (offsetX == 0 && offsetY == 0) {
+				continue;
+			}
+			const auto &tile = map.getTile(static_cast<uint16_t>(centerPos.x + offsetX), static_cast<uint16_t>(centerPos.y + offsetY), centerPos.z);
+			if (!tile) {
+				continue;
+			}
+			const auto &topCreature = tile->getTopCreature();
+			if (!topCreature) {
+				continue;
+			}
+			const auto &member = topCreature->getPlayer();
+			if (!member || member == monk || member->getParty() != party) {
+				continue;
+			}
+			const auto &voc = member->getVocation();
+			if (!voc) {
+				continue;
+			}
+			const uint16_t baseId = voc->getBaseId();
+			if (baseId >= VOCATION_SORCERER && baseId <= VOCATION_KNIGHT) {
+				const uint8_t bit = static_cast<uint8_t>(1u << baseId);
+				unionMask |= bit;
+				member->setMonkAuraVocMask(bit);
+			}
+		}
+	}
+	monk->setMonkAuraVocMask(unionMask);
 }
 
 bool Game::isPlayerNoBoxed(const std::shared_ptr<Player> &player) {
