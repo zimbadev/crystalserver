@@ -34,10 +34,12 @@ enum DailyRewardType_t : uint8_t {
 };
 
 enum DailyRewardSystemType_t : uint8_t {
-	DAILY_REWARD_SYSTEM_SKIP = 1,
 	DAILY_REWARD_SYSTEM_TYPE_ONE = 1,
 	DAILY_REWARD_SYSTEM_TYPE_TWO = 2,
-	DAILY_REWARD_SYSTEM_TYPE_OTHER = 1,
+};
+
+enum DailyRewardSystemSubType_t : uint8_t {
+	DAILY_REWARD_SYSTEM_SKIP = 1,
 	DAILY_REWARD_SYSTEM_TYPE_PREY_REROLL = 2,
 	DAILY_REWARD_SYSTEM_TYPE_XP_BOOST = 3,
 };
@@ -162,6 +164,8 @@ private:
 	std::map<uint8_t, DailyRewardDayConfig> rewards;
 	std::map<uint8_t, std::vector<uint16_t>> vocationItems;
 	std::unordered_set<uint16_t> shrineItems;
+
+	std::map<std::string, std::vector<uint16_t>> itemGroups;
 
 	std::map<uint32_t, uint64_t> staminaEvents;
 	std::map<uint32_t, uint64_t> soulEvents;

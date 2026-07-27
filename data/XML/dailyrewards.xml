@@ -22,160 +22,80 @@
 		<bonus day="7" text="Soul Points Regeneration" />
 	</strikeBonuses>
 
+	<itemGroups>
+		<!-- Shared by every vocation that fights: identical rune pool for all of them. -->
+		<group name="commonRunes">
+			<item name="animate dead rune" />
+			<item name="avalanche rune" />
+			<item name="chameleon rune" />
+			<item name="cure poison rune" />
+			<item name="disintegrate rune" />
+			<item name="energy bomb rune" />
+			<item name="energy field rune" />
+			<item name="explosion rune" />
+			<item name="fire bomb rune" />
+			<item name="fire field rune" />
+			<item name="fire wall rune" />
+			<item name="fireball rune" />
+			<item name="great fireball rune" />
+			<item name="icicle rune" />
+			<item name="intense healing rune" />
+			<item name="magic wall rune" />
+			<item name="poison bomb rune" />
+			<item name="poison wall rune" />
+			<item name="soulfire rune" />
+			<item name="stone shower rune" />
+			<item name="sudden death rune" />
+			<item name="thunderstorm rune" />
+		</group>
+
+		<group name="basicPotions">
+			<item name="health potion" />
+			<item name="mana potion" />
+		</group>
+
+		<group name="sorcererPotions">
+			<item name="health potion" />
+			<item name="mana potion" />
+			<item name="strong mana potion" />
+			<item name="great mana potion" />
+			<item name="ultimate mana potion" />
+		</group>
+
+		<group name="paladinPotions">
+			<item name="health potion" />
+			<item name="strong health potion" />
+			<item name="mana potion" />
+			<item name="strong mana potion" />
+			<item name="great spirit potion" />
+			<item name="ultimate spirit potion" />
+		</group>
+
+		<group name="knightPotions">
+			<item name="health potion" />
+			<item name="strong health potion" />
+			<item name="great health potion" />
+			<item name="ultimate health potion" />
+			<item name="supreme health potion" />
+			<item name="mana potion" />
+		</group>
+	</itemGroups>
+
 	<vocationItems>
-		<vocation id="0">
-			<item id="266" />
-			<item id="268" />
+		<!-- None -->
+		<vocation id="0" groups="basicPotions" />
+		<!-- Sorcerer -->
+		<vocation id="1" groups="sorcererPotions,commonRunes" />
+		<!-- Druid (same potions as Sorcerer plus wild growth rune) -->
+		<vocation id="2" groups="sorcererPotions,commonRunes">
+			<item name="wild growth rune" />
 		</vocation>
-		<vocation id="3">
-			<item id="266" />
-			<item id="236" />
-			<item id="268" />
-			<item id="237" />
-			<item id="7642" />
-			<item id="23374" />
-			<item id="3203" />
-			<item id="3161" />
-			<item id="3178" />
-			<item id="3153" />
-			<item id="3197" />
-			<item id="3149" />
-			<item id="3164" />
-			<item id="3200" />
-			<item id="3192" />
-			<item id="3188" />
-			<item id="3190" />
-			<item id="3189" />
-			<item id="3191" />
-			<item id="3158" />
-			<item id="3152" />
-			<item id="3180" />
-			<item id="3173" />
-			<item id="3176" />
-			<item id="3195" />
-			<item id="3175" />
-			<item id="3155" />
-			<item id="3202" />
-		</vocation>
-		<vocation id="2">
-			<item id="266" />
-			<item id="268" />
-			<item id="237" />
-			<item id="238" />
-			<item id="23373" />
-			<item id="3203" />
-			<item id="3161" />
-			<item id="3178" />
-			<item id="3153" />
-			<item id="3197" />
-			<item id="3149" />
-			<item id="3164" />
-			<item id="3200" />
-			<item id="3192" />
-			<item id="3188" />
-			<item id="3190" />
-			<item id="3189" />
-			<item id="3156" />
-			<item id="3191" />
-			<item id="3158" />
-			<item id="3152" />
-			<item id="3180" />
-			<item id="3173" />
-			<item id="3176" />
-			<item id="3195" />
-			<item id="3175" />
-			<item id="3155" />
-			<item id="3202" />
-		</vocation>
-		<vocation id="1">
-			<item id="266" />
-			<item id="268" />
-			<item id="237" />
-			<item id="238" />
-			<item id="23373" />
-			<item id="3203" />
-			<item id="3161" />
-			<item id="3178" />
-			<item id="3153" />
-			<item id="3197" />
-			<item id="3149" />
-			<item id="3164" />
-			<item id="3200" />
-			<item id="3192" />
-			<item id="3188" />
-			<item id="3190" />
-			<item id="3189" />
-			<item id="3191" />
-			<item id="3158" />
-			<item id="3152" />
-			<item id="3180" />
-			<item id="3173" />
-			<item id="3176" />
-			<item id="3195" />
-			<item id="3175" />
-			<item id="3155" />
-			<item id="3202" />
-		</vocation>
-		<vocation id="4">
-			<item id="266" />
-			<item id="236" />
-			<item id="239" />
-			<item id="7643" />
-			<item id="23375" />
-			<item id="268" />
-			<item id="3203" />
-			<item id="3161" />
-			<item id="3178" />
-			<item id="3153" />
-			<item id="3197" />
-			<item id="3149" />
-			<item id="3164" />
-			<item id="3200" />
-			<item id="3192" />
-			<item id="3188" />
-			<item id="3190" />
-			<item id="3189" />
-			<item id="3191" />
-			<item id="3158" />
-			<item id="3152" />
-			<item id="3180" />
-			<item id="3173" />
-			<item id="3176" />
-			<item id="3195" />
-			<item id="3175" />
-			<item id="3155" />
-			<item id="3202" />
-		</vocation>
-		<vocation id="5">
-			<item id="266" />
-			<item id="236" />
-			<item id="268" />
-			<item id="237" />
-			<item id="7642" />
-			<item id="23374" />
-			<item id="3203" />
-			<item id="3161" />
-			<item id="3178" />
-			<item id="3153" />
-			<item id="3197" />
-			<item id="3149" />
-			<item id="3164" />
-			<item id="3200" />
-			<item id="3192" />
-			<item id="3188" />
-			<item id="3190" />
-			<item id="3189" />
-			<item id="3191" />
-			<item id="3158" />
-			<item id="3152" />
-			<item id="3180" />
-			<item id="3173" />
-			<item id="3176" />
-			<item id="3195" />
-			<item id="3175" />
-			<item id="3155" />
-			<item id="3202" />
-		</vocation>
+		<!-- Paladin -->
+		<vocation id="3" groups="paladinPotions,commonRunes" />
+		<!-- Knight -->
+		<vocation id="4" groups="knightPotions,commonRunes" />
+		<!-- Monk (same pool as Paladin) -->
+		<vocation id="5" groups="paladinPotions,commonRunes" />
 	</vocationItems>
 
 	<rewards>
@@ -185,14 +105,14 @@
 		<reward day="4" type="item" systemType="one" freeAccount="10" premiumAccount="20" />
 		<reward day="5" type="preyReroll" systemType="two" freeAccount="1" premiumAccount="2" />
 		<reward day="6" type="item" systemType="one" freeAccount="1" premiumAccount="2" itemCharges="50">
-			<item id="28540" />
-			<item id="28541" />
-			<item id="28542" />
-			<item id="28543" />
-			<item id="28544" />
-			<item id="28545" />
-			<item id="44064" />
-			<item id="50292" />
+			<item name="training sword" />
+			<item name="training axe" />
+			<item name="training club" />
+			<item name="training bow" />
+			<item name="training rod" />
+			<item name="training wand" />
+			<item name="training shield" />
+			<item name="training wraps" />
 		</reward>
 		<reward day="7" type="xpBoost" systemType="two" freeAccount="10" premiumAccount="30" />
 	</rewards>

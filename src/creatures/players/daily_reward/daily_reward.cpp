@@ -31,30 +31,85 @@
 #include "utils/tools.hpp"
 
 #include <algorithm>
+#include <array>
 #include <ctime>
+#include <optional>
+#include <string_view>
+#include <unordered_map>
 
 namespace {
-	DailyRewardType_t parseRewardType(const std::string &value) {
-		if (value == "item") {
-			return DAILY_REWARD_TYPE_ITEM;
+	struct RewardTypeMapping {
+		std::string_view name;
+		DailyRewardType_t type;
+	};
+
+	constexpr std::array<RewardTypeMapping, 4> REWARD_TYPE_TABLE { {
+		{ "item", DAILY_REWARD_TYPE_ITEM },
+		{ "storage", DAILY_REWARD_TYPE_STORAGE },
+		{ "preyReroll", DAILY_REWARD_TYPE_PREY_REROLL },
+		{ "xpBoost", DAILY_REWARD_TYPE_XP_BOOST },
+	} };
+
+	struct SystemTypeMapping {
+		std::string_view name;
+		DailyRewardSystemType_t type;
+	};
+
+	constexpr std::array<SystemTypeMapping, 2> SYSTEM_TYPE_TABLE { {
+		{ "one", DAILY_REWARD_SYSTEM_TYPE_ONE },
+		{ "two", DAILY_REWARD_SYSTEM_TYPE_TWO },
+	} };
+
+	std::optional<DailyRewardType_t> parseRewardType(const std::string &value) {
+		const auto it = std::ranges::find(REWARD_TYPE_TABLE, value, &RewardTypeMapping::name);
+		if (it == REWARD_TYPE_TABLE.end()) {
+			return std::nullopt;
 		}
-		if (value == "storage") {
-			return DAILY_REWARD_TYPE_STORAGE;
-		}
-		if (value == "preyReroll") {
-			return DAILY_REWARD_TYPE_PREY_REROLL;
-		}
-		if (value == "xpBoost") {
-			return DAILY_REWARD_TYPE_XP_BOOST;
-		}
-		return DAILY_REWARD_TYPE_ITEM;
+		return it->type;
 	}
 
-	DailyRewardSystemType_t parseSystemType(const std::string &value) {
-		if (value == "two") {
-			return DAILY_REWARD_SYSTEM_TYPE_TWO;
+	std::optional<DailyRewardSystemType_t> parseSystemType(const std::string &value) {
+		const auto it = std::ranges::find(SYSTEM_TYPE_TABLE, value, &SystemTypeMapping::name);
+		if (it == SYSTEM_TYPE_TABLE.end()) {
+			return std::nullopt;
 		}
-		return DAILY_REWARD_SYSTEM_TYPE_ONE;
+		return it->type;
+	}
+
+	// storage field parsing
+	struct StorageFieldMapping {
+		std::string_view name;
+		uint32_t DailyRewardStorages::*member;
+	};
+
+	constexpr std::array<StorageFieldMapping, 9> STORAGE_FIELD_TABLE { {
+		{ "currentDayStreak", &DailyRewardStorages::currentDayStreak },
+		{ "nextRewardTime", &DailyRewardStorages::nextRewardTime },
+		{ "collectionTokens", &DailyRewardStorages::collectionTokens },
+		{ "staminaBonus", &DailyRewardStorages::staminaBonus },
+		{ "jokerTokens", &DailyRewardStorages::jokerTokens },
+		{ "lastServerSave", &DailyRewardStorages::lastServerSave },
+		{ "avoidDouble", &DailyRewardStorages::avoidDouble },
+		{ "notifyReset", &DailyRewardStorages::notifyReset },
+		{ "avoidDoubleJoker", &DailyRewardStorages::avoidDoubleJoker },
+	} };
+
+	uint16_t resolveItemId(const pugi::xml_node &itemNode) {
+		if (const auto idAttr = itemNode.attribute("id")) {
+			return static_cast<uint16_t>(idAttr.as_uint());
+		}
+
+		const std::string name = itemNode.attribute("name").as_string();
+		if (name.empty()) {
+			g_logger().error("[DailyRewards::loadFromXml] <item> node is missing both 'id' and 'name' attributes, skipping.");
+			return 0;
+		}
+
+		const uint16_t itemId = Item::items.getItemIdByName(name);
+		if (itemId == 0) {
+			g_logger().error("[DailyRewards::loadFromXml] Unknown item name '{}', skipping.", name);
+		}
+		return itemId;
 	}
 } // namespace
 
@@ -85,63 +140,169 @@ bool DailyRewards::loadFromXml(bool /*reloading*/) {
 	rewards.clear();
 	vocationItems.clear();
 	shrineItems.clear();
+	itemGroups.clear();
 
-	for (const auto &storageNode : root.child("storages").children("storage")) {
-		const std::string name = storageNode.attribute("name").as_string();
-		const uint32_t key = storageNode.attribute("key").as_uint();
-		if (name == "currentDayStreak") {
-			storages.currentDayStreak = key;
-		} else if (name == "nextRewardTime") {
-			storages.nextRewardTime = key;
-		} else if (name == "collectionTokens") {
-			storages.collectionTokens = key;
-		} else if (name == "staminaBonus") {
-			storages.staminaBonus = key;
-		} else if (name == "jokerTokens") {
-			storages.jokerTokens = key;
-		} else if (name == "lastServerSave") {
-			storages.lastServerSave = key;
-		} else if (name == "avoidDouble") {
-			storages.avoidDouble = key;
-		} else if (name == "notifyReset") {
-			storages.notifyReset = key;
-		} else if (name == "avoidDoubleJoker") {
-			storages.avoidDoubleJoker = key;
+	// storages
+	{
+		std::unordered_set<std::string> seenNames;
+		std::unordered_map<uint32_t, std::string> seenKeys;
+
+		for (const auto &storageNode : root.child("storages").children("storage")) {
+			const std::string name = storageNode.attribute("name").as_string();
+			const uint32_t key = storageNode.attribute("key").as_uint();
+
+			if (name.empty()) {
+				g_logger().error("[DailyRewards::loadFromXml] <storage> node is missing the 'name' attribute, skipping.");
+				continue;
+			}
+			if (key == 0) {
+				g_logger().error("[DailyRewards::loadFromXml] Storage '{}' has an invalid key=0, skipping.", name);
+				continue;
+			}
+			if (!seenNames.insert(name).second) {
+				g_logger().error("[DailyRewards::loadFromXml] Duplicate storage name '{}', ignoring duplicate entry.", name);
+				continue;
+			}
+			if (const auto [it, inserted] = seenKeys.try_emplace(key, name); !inserted) {
+				g_logger().error(
+					"[DailyRewards::loadFromXml] Storage '{}' reuses key {} already used by '{}', skipping.",
+					name, key, it->second
+				);
+				continue;
+			}
+
+			const auto fieldIt = std::ranges::find(STORAGE_FIELD_TABLE, name, &StorageFieldMapping::name);
+			if (fieldIt == STORAGE_FIELD_TABLE.end()) {
+				g_logger().warn("[DailyRewards::loadFromXml] Unknown storage name '{}', ignoring.", name);
+				continue;
+			}
+			storages.*(fieldIt->member) = key;
 		}
 	}
 
+	// strikeBonuses
 	for (const auto &bonusNode : root.child("strikeBonuses").children("bonus")) {
+		const uint8_t day = static_cast<uint8_t>(bonusNode.attribute("day").as_uint());
+		if (day == 0 || day > REWARD_COUNT) {
+			g_logger().error("[DailyRewards::loadFromXml] Strike bonus day '{}' is out of range (1-{}), skipping.", day, REWARD_COUNT);
+			continue;
+		}
+		if (strikeBonuses.contains(day)) {
+			g_logger().error("[DailyRewards::loadFromXml] Duplicate strike bonus for day '{}', ignoring duplicate entry.", day);
+			continue;
+		}
+
 		DailyRewardStrikeBonus bonus;
-		bonus.day = static_cast<uint8_t>(bonusNode.attribute("day").as_uint());
+		bonus.day = day;
 		bonus.text = bonusNode.attribute("text").as_string();
-		strikeBonuses[bonus.day] = bonus;
+		strikeBonuses.emplace(day, std::move(bonus));
 	}
 
+	// itemGroups
+	for (const auto &groupNode : root.child("itemGroups").children("group")) {
+		const std::string groupName = groupNode.attribute("name").as_string();
+		if (groupName.empty()) {
+			g_logger().error("[DailyRewards::loadFromXml] <group> node is missing the 'name' attribute, skipping.");
+			continue;
+		}
+		if (itemGroups.contains(groupName)) {
+			g_logger().error("[DailyRewards::loadFromXml] Duplicate item group '{}', ignoring duplicate entry.", groupName);
+			continue;
+		}
+
+		std::vector<uint16_t> items;
+		for (const auto &itemNode : groupNode.children("item")) {
+			if (const uint16_t itemId = resolveItemId(itemNode); itemId != 0) {
+				items.emplace_back(itemId);
+			}
+		}
+		itemGroups.emplace(groupName, std::move(items));
+	}
+
+	// vocationItems
 	for (const auto &vocationNode : root.child("vocationItems").children("vocation")) {
 		const uint8_t vocationId = static_cast<uint8_t>(vocationNode.attribute("id").as_uint());
-		std::vector<uint16_t> items;
-		for (const auto &itemNode : vocationNode.children("item")) {
-			items.emplace_back(static_cast<uint16_t>(itemNode.attribute("id").as_uint()));
+		if (vocationItems.contains(vocationId)) {
+			g_logger().error("[DailyRewards::loadFromXml] Duplicate vocationItems entry for vocation id '{}', ignoring duplicate.", vocationId);
+			continue;
 		}
-		vocationItems[vocationId] = std::move(items);
+
+		std::vector<uint16_t> items;
+		std::unordered_set<uint16_t> seenItems;
+
+		const std::string groupsAttr = vocationNode.attribute("groups").as_string();
+		for (const std::string &groupName : explodeString(groupsAttr, ",")) {
+			const auto groupIt = itemGroups.find(groupName);
+			if (groupIt == itemGroups.end()) {
+				g_logger().error(
+					"[DailyRewards::loadFromXml] Vocation '{}' references unknown item group '{}', ignoring.",
+					vocationId, groupName
+				);
+				continue;
+			}
+			for (const uint16_t itemId : groupIt->second) {
+				if (seenItems.insert(itemId).second) {
+					items.emplace_back(itemId);
+				}
+			}
+		}
+
+		// vocations can still declare extra items inline, on top of any referenced groups.
+		for (const auto &itemNode : vocationNode.children("item")) {
+			if (const uint16_t itemId = resolveItemId(itemNode); itemId != 0 && seenItems.insert(itemId).second) {
+				items.emplace_back(itemId);
+			}
+		}
+
+		vocationItems.emplace(vocationId, std::move(items));
 	}
 
+	// rewards
 	for (const auto &rewardNode : root.child("rewards").children("reward")) {
+		const uint8_t day = static_cast<uint8_t>(rewardNode.attribute("day").as_uint());
+		if (day == 0 || day > REWARD_COUNT) {
+			g_logger().error("[DailyRewards::loadFromXml] Reward day '{}' is out of range (1-{}), skipping.", day, REWARD_COUNT);
+			continue;
+		}
+		if (rewards.contains(day)) {
+			g_logger().error("[DailyRewards::loadFromXml] Duplicate reward for day '{}', ignoring duplicate entry.", day);
+			continue;
+		}
+
+		const std::string typeValue = rewardNode.attribute("type").as_string("item");
+		const auto parsedType = parseRewardType(typeValue);
+		if (!parsedType) {
+			g_logger().error("[DailyRewards::loadFromXml] Reward day '{}' has unknown type '{}', skipping.", day, typeValue);
+			continue;
+		}
+
+		const std::string systemValue = rewardNode.attribute("systemType").as_string("one");
+		const auto parsedSystemType = parseSystemType(systemValue);
+		if (!parsedSystemType) {
+			g_logger().error("[DailyRewards::loadFromXml] Reward day '{}' has unknown systemType '{}', skipping.", day, systemValue);
+			continue;
+		}
+
 		DailyRewardDayConfig reward;
-		reward.day = static_cast<uint8_t>(rewardNode.attribute("day").as_uint());
-		reward.type = parseRewardType(rewardNode.attribute("type").as_string("item"));
-		reward.systemType = parseSystemType(rewardNode.attribute("systemType").as_string("one"));
+		reward.day = day;
+		reward.type = *parsedType;
+		reward.systemType = *parsedSystemType;
 		reward.freeAccount = static_cast<uint16_t>(rewardNode.attribute("freeAccount").as_uint());
 		reward.premiumAccount = static_cast<uint16_t>(rewardNode.attribute("premiumAccount").as_uint());
 		reward.itemCharges = static_cast<uint16_t>(rewardNode.attribute("itemCharges").as_uint());
 		for (const auto &itemNode : rewardNode.children("item")) {
-			reward.items.emplace_back(static_cast<uint16_t>(itemNode.attribute("id").as_uint()));
+			if (const uint16_t itemId = resolveItemId(itemNode); itemId != 0) {
+				reward.items.emplace_back(itemId);
+			}
 		}
-		rewards[reward.day] = std::move(reward);
+		rewards.emplace(day, std::move(reward));
 	}
 
+	// shrines
 	for (const auto &shrineNode : root.child("shrines").children("item")) {
-		shrineItems.insert(static_cast<uint16_t>(shrineNode.attribute("id").as_uint()));
+		if (const uint16_t itemId = resolveItemId(shrineNode); itemId != 0) {
+			shrineItems.insert(itemId);
+		}
 	}
 
 	loaded = true;
@@ -527,15 +688,17 @@ void DailyRewards::playerSelectReward(const std::shared_ptr<Player> &player, Net
 		}
 
 		if (totalCounter > rewardCount) {
-			g_logger().info(
-				"Player {} tried to collect {} items but only {} are allowed",
+			g_logger().error(
+				"[DailyRewards::playerSelectReward] Player '{}' tried to collect {} items but only {} are allowed for this reward, rejecting.",
 				player->getName(),
 				totalCounter,
 				rewardCount
 			);
+			player->sendMessageDialog("You cannot collect more items than the daily reward allows.");
+			return;
 		}
 		if (totalCounter != orderedCounter) {
-			g_logger().error("Player {} tried to collect invalid daily reward items", player->getName());
+			g_logger().error("[DailyRewards::playerSelectReward] Player '{}' tried to collect invalid daily reward items, rejecting.", player->getName());
 			return;
 		}
 
