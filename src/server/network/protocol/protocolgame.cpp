@@ -4085,8 +4085,7 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 	}
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
-	const auto &conditionRegen = std::dynamic_pointer_cast<ConditionRegeneration>(condition);
-	msg.add<uint16_t>(conditionRegen ? conditionRegen->getFoodTicks() / 1000 : 0x00);
+	msg.add<uint16_t>(condition ? condition->getTicks() / 1000 : 0x00);
 	msg.add<uint16_t>(player->getOfflineTrainingTime() / 60 / 1000);
 	msg.add<uint16_t>(player->getSpeed());
 	msg.add<uint16_t>(player->getBaseSpeed());
@@ -9049,8 +9048,7 @@ void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
 	msg.add<uint16_t>(player->getBaseSpeed());
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
-	const auto &conditionRegen = std::dynamic_pointer_cast<ConditionRegeneration>(condition);
-	msg.add<uint16_t>(conditionRegen ? conditionRegen->getFoodTicks() / 1000 : 0x00);
+	msg.add<uint16_t>(condition ? condition->getTicks() / 1000 : 0x00);
 
 	msg.add<uint16_t>(player->getOfflineTrainingTime() / 60 / 1000);
 
