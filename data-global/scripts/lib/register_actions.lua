@@ -1055,10 +1055,15 @@ function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHot
 	if not table.contains({ 3469, 9594, 9598 }, item.itemid) then
 		return false
 	end
-
+ 
+	-- Rottin Wood and the Married Men Quest: Kitchen Knife
+	if target and target:isItem() and rottinWoodSkinRabbit(player, target) then
+		return true
+	end
+ 
 	-- The Secret Library Quest
 	local tPos = toPosition
-
+ 
 	-- The Dream Courts Quest - Seven Keys lock
 	for i = 1, #dreamCourtsOldTable do
 		if tPos == dreamCourtsOldTable[i] then
@@ -1074,7 +1079,7 @@ function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHot
 			return true
 		end
 	end
-
+ 
 	for _, j in pairs(secret_library.crystals) do
 		if tPos == j.position then
 			if player:getStorageValue(j.storage) < os.time() then
@@ -1089,9 +1094,9 @@ function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHot
 			return true
 		end
 	end
-
+ 
 	local targetId = target:getId()
-
+ 
 	--The Ice Islands Quest - Cure the Dogs
 	if targetId == 7261 then
 		if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Questline) >= 21 then
@@ -1139,7 +1144,7 @@ function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHot
 			player:say("God shave the emperor. Some fool already did it.", TALKTYPE_MONSTER_SAY)
 			return true
 		end
-
+ 
 		player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.EmperorBeardShave, 1)
 		player:say("This is probably the most foolish thing you've ever done!", TALKTYPE_MONSTER_SAY)
 		player:addItem(113, 1)
@@ -1149,7 +1154,7 @@ function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHot
 		if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Questline) ~= 22 or player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.SpecialLeaves) == 1 then
 			return false
 		end
-
+ 
 		player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.SpecialLeaves, 1)
 		player:addItem(3129, 1)
 		toPosition:sendMagicEffect(CONST_ME_BLOCKHIT)
@@ -1160,7 +1165,7 @@ function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHot
 	else
 		return false
 	end
-
+ 
 	return true
 end
 
