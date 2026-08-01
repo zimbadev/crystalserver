@@ -21,7 +21,9 @@ local settingTable = {
 }
 
 local function getWallCount(player)
-	local ok, value = pcall(function() return player:kv():get("rottinwood-wallcount") end)
+	local ok, value = pcall(function()
+		return player:kv():get("rottinwood-wallcount")
+	end)
 	return ok and (tonumber(value) or 0) or 0
 end
 
@@ -46,7 +48,7 @@ function hammer.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 			tile:getItemById(291):remove()
 			Game.createItem(5770, 1, position):setActionId(40021)
 		end
-        return true
+		return true
 		-- Lay down the rails
 	elseif targetActionId == 40021 and tile:getItemById(5770) then
 		if player:getItemCount(9114) >= 1 and player:getItemCount(9115) >= 2 and player:getItemCount(953) >= 3 then

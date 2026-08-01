@@ -1,7 +1,9 @@
 local rottinWoodCorpse = Action()
 
 local function getCorpseCount(player)
-	local ok, value = pcall(function() return player:kv():get("rottinwood-corpsecount") end)
+	local ok, value = pcall(function()
+		return player:kv():get("rottinwood-corpsecount")
+	end)
 	return ok and (tonumber(value) or 0) or 0
 end
 

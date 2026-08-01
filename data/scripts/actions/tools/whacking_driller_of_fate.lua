@@ -8,7 +8,7 @@ function toolGear.onUse(player, item, fromPosition, target, toPosition, isHotkey
 	if math.random(1000) > 10 then
 		if onUseCrowbar and onUseCrowbar(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
-		elseif onUseKitchenKnife  and onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHotkey) then
+		elseif onUseKitchenKnife and onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true
 		elseif onUseRope and onUseRope(player, item, fromPosition, target, toPosition, isHotkey) then
 			return true

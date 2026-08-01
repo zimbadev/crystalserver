@@ -124,7 +124,7 @@ function rottinWoodSkinRabbit(player, target)
 		end
 
 		local chance = math.random(1, 100)
-		if chance <= 25	then
+		if chance <= 25 then
 			player:say("You successfully gathered a rabbit's foot in excellent condition.", TALKTYPE_MONSTER_SAY)
 			player:addItem(12172, 1)
 		elseif chance <= 35 then
