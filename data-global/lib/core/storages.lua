@@ -1738,12 +1738,11 @@ Storage = {
 			ResearchAndDevelopment = {},
 			RottinWoodAndTheMarriedMen = {
 				Questline = 43310,
-				RottinStart = 43311,
-				Trap = 43312,
-				Corpse = 43313,
-				Time = 43314,
-				Mission03 = 43315,
-				FirstTime = 43316,
+				Mission01 = 43311,
+				Mission02 = 43312,
+				Mission03 = 43313,
+				Task01 = 43314,
+				Task02 = 43315,
 			},
 			SpiritHunters = {
 				Mission01 = 43317,
