@@ -484,6 +484,9 @@ checkExpiredMarketOffersEachMinutes = 60
 maxMarketOffersAtATimePerPlayer = 100
 
 -- MySQL
+-- NOTE: mysqlPoolSize 4 (default) — small to medium servers
+-- 8–16 — high-traffic servers with heavy market usage
+-- 1 — equivalent to the old single-connection behavior
 mysqlHost = "127.0.0.1"
 mysqlUser = "root"
 mysqlPass = "root"
@@ -492,6 +495,7 @@ mysqlPort = 3306
 mysqlSock = ""
 passwordType = "sha1"
 mysqlDatabaseBackup = false
+mysqlPoolSize = 4
 
 -- NOTE: memoryConst: This is the memory cost for the Argon2 hash algorithm. It specifies the amount of memory that the algorithm will use when calculating a hash.
 --The memory cost is measured in units of KiB (1024 bytes). A higher memory cost makes the algorithm more resistant to brute-force and hash-table attacks, but also consumes more memory.
