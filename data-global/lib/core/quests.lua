@@ -7291,7 +7291,7 @@ if not Quests then
 					startValue = 1,
 					endValue = 2,
 					states = {
-						[1] = "Rottin Wood has sent you on and important mission to gather rabbit feet for him and his men. Without the money earned from selling these \"lucky charms\" they would surely starve during the next winter.",
+						[1] = 'Rottin Wood has sent you on and important mission to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
 						[2] = "You delivered the lucky charms as requested. Rottin Wood was quite pleased and offered you to continue helping him and his men.",
 					},
 				},
@@ -7302,8 +7302,10 @@ if not Quests then
 					startValue = 1,
 					endValue = 2,
 					states = {
-                        [1] = function(player)
-							local ok, value = pcall(function() return player:kv():get("rottinwood-wallcount") end)
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
 							local count = ok and (tonumber(value) or 0) or 0
 							return ("You accepted a quest to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp. So far you fixed %d of 6 broken walls."):format(math.max(count, 0))
 						end,
@@ -7318,11 +7320,13 @@ if not Quests then
 					endValue = 2,
 					states = {
 						[1] = function(player)
-							local ok, value = pcall(function() return player:kv():get("rottinwood-corpsecount") end)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-corpsecount")
+							end)
 							local count = ok and (tonumber(value) or 0) or 0
-							return ("You agreed to help Rottin Wood and the Married Men to relieve several merchants of their goods. Lay out the net traps he gave you to catch 5 of them. So far you have \"relieved\" %d of 5 merchants."):format(math.max(count, 0))
+							return ('You agreed to help Rottin Wood and the Married Men to relieve several merchants of their goods. Lay out the net traps he gave you to catch 5 of them. So far you have "relieved" %d of 5 merchants.'):format(math.max(count, 0))
 						end,
-						[2] = "You have \"relieved\" enough merchants to provide the very pleased Rottin Wood and his men with enough opportunities to gather valuables and supplies.",
+						[2] = 'You have "relieved" enough merchants to provide the very pleased Rottin Wood and his men with enough opportunities to gather valuables and supplies.',
 					},
 				},
 				[4] = {
@@ -7332,7 +7336,7 @@ if not Quests then
 					startValue = 1,
 					endValue = 2,
 					states = {
-						[1] = "Rottin Wood has sent you on and important task to gather rabbit feet for him and his men. Without the money earned from selling these \"lucky charms\" they would surely starve during the next winter.",
+						[1] = 'Rottin Wood has sent you on and important task to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
 						[2] = "You delivered the lucky charms as requested. Rottin Wood seems to be satisfied with that profit for today.",
 					},
 				},
@@ -7344,7 +7348,9 @@ if not Quests then
 					endValue = 2,
 					states = {
 						[1] = function(player)
-							local ok, value = pcall(function() return player:kv():get("rottinwood-wallcount") end)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
 							local count = ok and (tonumber(value) or 0) or 0
 							return ("You accepted a task to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp - again. So far you swong your hammer on %d of 6 broken walls."):format(math.max(count, 0))
 						end,

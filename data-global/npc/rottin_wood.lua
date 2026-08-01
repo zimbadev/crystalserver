@@ -27,12 +27,16 @@ local keywordHandler = KeywordHandler:new()
 local npcHandler = NpcHandler:new(keywordHandler)
 
 local function getWallCount(player)
-	local ok, value = pcall(function() return player:kv():get("rottinwood-wallcount") end)
+	local ok, value = pcall(function()
+		return player:kv():get("rottinwood-wallcount")
+	end)
 	return ok and (tonumber(value) or 0) or 0
 end
 
 local function getCorpseCount(player)
-	local ok, value = pcall(function() return player:kv():get("rottinwood-corpsecount") end)
+	local ok, value = pcall(function()
+		return player:kv():get("rottinwood-corpsecount")
+	end)
 	return ok and (tonumber(value) or 0) or 0
 end
 
@@ -332,7 +336,6 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:say("I don't have any tasks for you yet. Come back once you have helped us a bit more.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		end
-
 	elseif MsgContains(message, "lucky charms") and npcHandler:getTopic(playerId) == 8 then
 		local luckyLoopCooldown = player:kv():get("lucky-loop-task") or 0
 		if luckyLoopCooldown > os.time() then
@@ -345,7 +348,6 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:say("Are you ready to get more 'lucky charms'? You know, if we won't get our hands on new charms in time, we will surely have to starve... during the autumn. That would be a hard time for all of us. So... you in once again?", npc, creature)
 			npcHandler:setTopic(playerId, 9)
 		end
-
 	elseif MsgContains(message, "repairs") and npcHandler:getTopic(playerId) == 8 then
 		local handymanCooldown = player:kv():get("handyman-task") or 0
 		if handymanCooldown > os.time() then
