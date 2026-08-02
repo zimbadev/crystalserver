@@ -3601,7 +3601,7 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 		return;
 	}
 
-	const auto rate = exp / rawExp;
+	const auto rate = rawExp != 0 ? exp / rawExp : 1;
 	const std::map<std::string, std::string> attrs({ { "player", getName() }, { "level", std::to_string(getLevel()) }, { "rate", std::to_string(rate) } });
 	if (sendText) {
 		g_metrics().addCounter("player_experience_raw", rawExp, attrs);
