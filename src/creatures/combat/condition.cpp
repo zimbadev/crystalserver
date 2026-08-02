@@ -598,10 +598,19 @@ void ConditionAttributes::addCondition(std::shared_ptr<Creature> creature, const
 
 bool ConditionAttributes::unserializeProp(ConditionAttr_t attr, PropStream &propStream) {
 	if (attr == CONDITIONATTR_SKILLS) {
+		if (currentSkill > SKILL_LAST) {
+			return false;
+		}
 		return propStream.read<int32_t>(skills[currentSkill++]);
 	} else if (attr == CONDITIONATTR_STATS) {
+		if (currentStat > STAT_LAST) {
+			return false;
+		}
 		return propStream.read<int32_t>(stats[currentStat++]);
 	} else if (attr == CONDITIONATTR_BUFFS) {
+		if (currentBuff > BUFF_LAST) {
+			return false;
+		}
 		return propStream.read<int32_t>(buffs[currentBuff++]);
 	} else if (attr == CONDITIONATTR_ABSORBS) {
 		for (int32_t i = 0; i < CombatType_t::COMBAT_COUNT; ++i) {
