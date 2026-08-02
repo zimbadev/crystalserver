@@ -7006,7 +7006,11 @@ void Player::sendRemoveTileThing(const Position &pos, int32_t stackpos) const {
 
 void Player::sendUpdateTileCreature(const std::shared_ptr<Creature> &creature) {
 	if (client) {
-		client->sendUpdateTileCreature(creature->getPosition(), creature->getTile()->getClientIndexOfCreature(static_self_cast<Player>(), creature), creature);
+		const auto &tile = creature->getTile();
+		if (!tile) {
+			return;
+		}
+		client->sendUpdateTileCreature(creature->getPosition(), tile->getClientIndexOfCreature(static_self_cast<Player>(), creature), creature);
 	}
 }
 
