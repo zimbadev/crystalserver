@@ -9234,6 +9234,7 @@ ReturnValue Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 	}
 
 	uint32_t addedItemCount = 0;
+	uint32_t totalWithdrawn = finalRetrievable;
 	uint32_t remainingToRetrieve = finalRetrievable;
 
 	if (itemType.stackable) {
@@ -9334,6 +9335,13 @@ ReturnValue Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 				++cacheIndex;
 			}
 		}
+	}
+
+	// Refund unplaced items back to stash
+	if (addedItemCount < totalWithdrawn) {
+		uint32_t unplaced = totalWithdrawn - addedItemCount;
+		stashItems[itemId] += unplaced;
+		g_logger().warn("[addItemFromStash] Refunded {}x itemId: {} back to stash for player {}", unplaced, itemId, getName());
 	}
 
 	std::string itemName = itemType.name + (addedItemCount > 1 ? "s" : "");
