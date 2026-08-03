@@ -9250,6 +9250,11 @@ ReturnValue Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 					break;
 				}
 
+				if (!stackableItem || !stackableItem->getParent()) {
+					it = stackableItemsCache.erase(it);
+					continue;
+				}
+
 				uint32_t spaceInStack = stackableItem->getStackSize() - stackableItem->getItemCount();
 				uint32_t stackableCount = std::min(spaceInStack, addValue);
 
