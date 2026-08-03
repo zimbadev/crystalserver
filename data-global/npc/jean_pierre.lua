@@ -1,54 +1,54 @@
 local internalNpcName = "Jean Pierre"
 local npcType = Game.createNpcType(internalNpcName)
 local npcConfig = {}
- 
+
 npcConfig.name = internalNpcName
 npcConfig.description = internalNpcName
- 
+
 npcConfig.health = 100
 npcConfig.maxHealth = npcConfig.health
 npcConfig.walkInterval = 2000
 npcConfig.walkRadius = 2
- 
+
 npcConfig.outfit = {
 	lookType = 104,
 }
- 
+
 npcConfig.flags = {
 	floorchange = false,
 }
- 
+
 local keywordHandler = KeywordHandler:new()
 local npcHandler = NpcHandler:new(keywordHandler)
- 
+
 npcType.onThink = function(npc, interval)
 	npcHandler:onThink(npc, interval)
 end
- 
+
 npcType.onAppear = function(npc, creature)
 	npcHandler:onAppear(npc, creature)
 end
- 
+
 npcType.onDisappear = function(npc, creature)
 	npcHandler:onDisappear(npc, creature)
 end
- 
+
 npcType.onMove = function(npc, creature, fromPosition, toPosition)
 	npcHandler:onMove(npc, creature, fromPosition, toPosition)
 end
- 
+
 npcType.onSay = function(npc, creature, type, message)
 	npcHandler:onSay(npc, creature, type, message)
 end
- 
+
 npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
- 
+
 local ingredients = {
 	[1] = { { 3577, 2 }, { 8010, 20 }, { 8015, 1 }, { 8197, 1 }, { 3603, 5 }, { 2874, 2, 3 } }, -- rotworm stew
 	[2] = { { 7250, 2 }, { 3596, 2 }, { 8014, 1 }, { 3606, 2 }, { 3741, 1 }, { 2874, 1, 2 } }, -- hydra tongue salad
-	[3] = { { 4363, 1 }, { 8016, 3 }, { 3602, 5 }, { 3606, 2 }, { 3739, 1 }, { 3724, 5 } }, -- roasted dragon wings	
+	[3] = { { 4363, 1 }, { 8016, 3 }, { 3602, 5 }, { 3606, 2 }, { 3739, 1 }, { 3724, 5 } }, -- roasted dragon wings
 	[4] = { { 4330, 1 }, { 8013, 2 }, { 3586, 2 }, { 5096, 2 }, { 2874, 2, 15 }, { 3735, 1 } }, -- tropical fried terrorbird
 	[5] = { { 6574, 1 }, { 6393, 1 }, { 3587, 2 }, { 2874, 2, 9 }, { 3738, 1 }, { 3736, 1 } }, -- tropical fried terrorbird
 	[6] = { { 3595, 2 }, { 3596, 2 }, { 3597, 2 }, { 8014, 2 }, { 8015, 1 }, { 8197, 1 }, { 3607, 1 }, { 3723, 20 }, { 3725, 5 } }, -- veggie casserole
@@ -60,9 +60,9 @@ local ingredients = {
 	[12] = { { 10456, 5 }, { 2874, 2, 1 }, { 3595, 20 }, { 8010, 10 }, { 8016, 3 } }, -- pot of blackjack
 	[13] = { { 6569, 3 }, { 3599, 3 }, { 6574, 2 }, { 6500, 15 }, { 6558, 1 } }, -- demonic candy balls
 	[14] = { { 3606, 40 }, { 5096, 20 }, { 5902, 10 }, { 8758, 1 }, { 5942, 1 } }, -- sweet mangonaise elixir
-	[15] = { { 33930, 1 }, { 2874, 2, 15 }, { 11682, 1 }, { 31590, 1 }, { 48273, 1 } },  -- zaoan sauce
+	[15] = { { 33930, 1 }, { 2874, 2, 15 }, { 11682, 1 }, { 31590, 1 }, { 48273, 1 } }, -- zaoan sauce
 }
- 
+
 local function playerHasIngredients(creature)
 	local player = Player(creature)
 	local table = ingredients[player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish)]
@@ -75,30 +75,30 @@ local function playerHasIngredients(creature)
 			end
 		end
 	end
- 
+
 	for i = 1, #table do
 		player:removeItem(unpack(table[i]))
 	end
 	return true
 end
- 
+
 local function endConversationWithDelay(npcHandler, npc, creature)
 	addEvent(function()
 		npcHandler:unGreet(npc, creature)
 	end, 1000)
 end
- 
+
 local function hotCuisineKv(player)
 	return player:kv():scoped("hotcuisinequest")
 end
- 
+
 local function getLastInteractionDate(player, lastInteractionKey)
 	if type(lastInteractionKey) == "string" then
 		return hotCuisineKv(player):get(lastInteractionKey) or -1
 	end
 	return player:getStorageValue(lastInteractionKey)
 end
- 
+
 local function setLastInteractionDate(player, lastInteractionKey, value)
 	if type(lastInteractionKey) == "string" then
 		hotCuisineKv(player):set(lastInteractionKey, value)
@@ -106,13 +106,13 @@ local function setLastInteractionDate(player, lastInteractionKey, value)
 		player:setStorageValue(lastInteractionKey, value)
 	end
 end
- 
+
 local function registerDishCooked(player, lastInteractionKey, dishNumber)
 	local kv = hotCuisineKv(player)
 	local currentDate = os.time()
 	local currentDateTable = os.date("*t", currentDate)
 	local lastInteractionDate = getLastInteractionDate(player, lastInteractionKey)
- 
+
 	if lastInteractionDate ~= -1 then
 		local lastDateTable = os.date("*t", lastInteractionDate)
 		local isNewPeriod = currentDateTable.month == 8 and (currentDateTable.year > lastDateTable.year or lastDateTable.month ~= 8)
@@ -120,12 +120,12 @@ local function registerDishCooked(player, lastInteractionKey, dishNumber)
 			kv:set("bonusused-" .. dishNumber, true)
 		end
 	end
- 
+
 	setLastInteractionDate(player, lastInteractionKey, currentDate)
- 
+
 	local countKey = "cookcount-" .. dishNumber
 	kv:set(countKey, (kv:get(countKey) or 0) + 1)
- 
+
 	if not player:hasAchievement("Culinary Master") then
 		for i = 2, 16 do
 			if (kv:get("cookcount-" .. i) or 0) < 2 then
@@ -135,58 +135,58 @@ local function registerDishCooked(player, lastInteractionKey, dishNumber)
 		player:addAchievement("Culinary Master")
 	end
 end
- 
+
 local function canCookToday(player, lastInteractionKey, dishNumber)
 	local currentDate = os.time()
 	local currentDateTable = os.date("*t", currentDate)
 	local lastInteractionDate = getLastInteractionDate(player, lastInteractionKey)
- 
+
 	if lastInteractionDate == -1 then
 		return true
 	end
- 
+
 	local lastDateTable = os.date("*t", lastInteractionDate)
- 
+
 	if currentDateTable.month == 8 and (currentDateTable.year > lastDateTable.year or lastDateTable.month ~= 8) then
 		return true
 	end
- 
+
 	-- Bonus round: the first year a player finishes the whole menu (forced order), they get to redo any dish they like, out of order, once more within that same year. BonusYear is only ever set once, the first time the player completes Zaoan Sauce (the last dish), so from the following year onward this simply won't match and the rule above applies.
 	local kv = hotCuisineKv(player)
 	local bonusYear = kv:get("bonusyear")
 	if bonusYear and bonusYear == currentDateTable.year and not kv:get("bonusused-" .. dishNumber) then
 		return true
 	end
- 
+
 	return false
 end
- 
+
 local function greetCallback(npc, creature)
 	local player = Player(creature)
 	local playerId = player:getId()
- 
+
 	local currentDate = os.time()
 	local currentDateTable = os.date("*t", currentDate)
- 
+
 	if currentDateTable.month == 8 then
 		npcHandler:setMessage(MESSAGE_GREET, "Greetings, |PLAYERNAME|. What are you doing out here?")
 	else
 		endConversationWithDelay(npcHandler, npc, creature)
 	end
- 
+
 	return true
 end
- 
+
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
 	local playerId = player:getId()
- 
+
 	if not npcHandler:checkInteraction(npc, creature) then
 		return false
 	end
- 
+
 	local currentDate = os.time()
- 
+
 	if MsgContains(message, "cook") then
 		if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 1 then
 			npcHandler:say("Well, I'm not a simple cook. I travel the whole Tibian continent for the most artfully seasoned {recipes} and constantly develop new ones.", npc, creature)
@@ -307,7 +307,11 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 32)
 			end
 		elseif player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) == 2 then
-			npcHandler:say("You can now cook any dish you want from this list: {Rotworm Stew}, {Hydra Tongue Salad}, {Roasted Dragon Wings}, {Tropical Fried Terrorbird}, {Banana Chocolate Shake}, {Veggie Casserole}, {Filled Jalapeno Peppers}, {Blessed Steak}, {Northern Fishburger}, {Carrot Cake}, {Coconut Shrimp Bake}, {Blackjack}, {Demonic Candy Balls}, {Sweet Mangonaise Elixir}, {Zaoan Sauce}.", npc, creature)
+			npcHandler:say(
+				"You can now cook any dish you want from this list: {Rotworm Stew}, {Hydra Tongue Salad}, {Roasted Dragon Wings}, {Tropical Fried Terrorbird}, {Banana Chocolate Shake}, {Veggie Casserole}, {Filled Jalapeno Peppers}, {Blessed Steak}, {Northern Fishburger}, {Carrot Cake}, {Coconut Shrimp Bake}, {Blackjack}, {Demonic Candy Balls}, {Sweet Mangonaise Elixir}, {Zaoan Sauce}.",
+				npc,
+				creature
+			)
 		end
 	elseif MsgContains(message, "apprentice") then
 		if npcHandler:getTopic(playerId) == 2 then
@@ -794,10 +798,10 @@ local function creatureSayCallback(npc, creature, type, message)
 	end
 	return true
 end
- 
+
 npcHandler:setCallback(CALLBACK_GREET, greetCallback)
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
- 
+
 -- npcType registering the npcConfig table
 npcType:register(npcConfig)
