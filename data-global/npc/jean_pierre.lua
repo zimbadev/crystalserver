@@ -1,67 +1,68 @@
 local internalNpcName = "Jean Pierre"
 local npcType = Game.createNpcType(internalNpcName)
 local npcConfig = {}
-
+ 
 npcConfig.name = internalNpcName
 npcConfig.description = internalNpcName
-
+ 
 npcConfig.health = 100
 npcConfig.maxHealth = npcConfig.health
 npcConfig.walkInterval = 2000
 npcConfig.walkRadius = 2
-
+ 
 npcConfig.outfit = {
 	lookType = 104,
 }
-
+ 
 npcConfig.flags = {
 	floorchange = false,
 }
-
+ 
 local keywordHandler = KeywordHandler:new()
 local npcHandler = NpcHandler:new(keywordHandler)
-
+ 
 npcType.onThink = function(npc, interval)
 	npcHandler:onThink(npc, interval)
 end
-
+ 
 npcType.onAppear = function(npc, creature)
 	npcHandler:onAppear(npc, creature)
 end
-
+ 
 npcType.onDisappear = function(npc, creature)
 	npcHandler:onDisappear(npc, creature)
 end
-
+ 
 npcType.onMove = function(npc, creature, fromPosition, toPosition)
 	npcHandler:onMove(npc, creature, fromPosition, toPosition)
 end
-
+ 
 npcType.onSay = function(npc, creature, type, message)
 	npcHandler:onSay(npc, creature, type, message)
 end
-
+ 
 npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
-
+ 
 local ingredients = {
-	[1] = { { 3577, 2 }, { 8010, 20 }, { 8015, 1 }, { 8197, 1 }, { 3603, 5 }, { 2874, 2, 3 } },
-	[2] = { { 7250, 2 }, { 3596, 2 }, { 8014, 1 }, { 3606, 2 }, { 3741, 1 }, { 2874, 1, 2 } },
-	[3] = { { 4363, 1 }, { 8016, 3 }, { 3602, 5 }, { 3606, 2 }, { 3739, 1 }, { 3724, 5 } },
-	[4] = { { 4330, 1 }, { 8013, 2 }, { 3586, 2 }, { 5096, 2 }, { 2874, 2, 15 }, { 3735, 1 } },
-	[5] = { { 6574, 1 }, { 6393, 1 }, { 3587, 2 }, { 2874, 2, 9 }, { 3738, 1 }, { 3736, 1 } },
-	[6] = { { 3595, 2 }, { 3596, 2 }, { 3597, 2 }, { 8014, 2 }, { 8015, 1 }, { 8197, 1 }, { 3607, 1 }, { 3723, 20 }, { 3725, 5 } },
-	[7] = { { 8016, 10 }, { 3607, 2 }, { 3741, 1 }, { 3740, 1 }, { 2874, 1, 16 }, { 3606, 2 } },
-	[8] = { { 3582, 1 }, { 8011, 5 }, { 8015, 1 }, { 8017, 2 }, { 3594, 1 }, { 8016, 2 } },
-	[9] = { { 3580, 1 }, { 7158, 1 }, { 7159, 1 }, { 3581, 5 }, { 3601, 2 }, { 3737, 1 } },
-	[10] = { { 3595, 5 }, { 2874, 1, 9 }, { 8013, 1 }, { 3603, 10 }, { 3606, 2 }, { 3598, 10 }, { 841, 2 } },
-	[11] = { { 2874, 5, 15 }, { 3725, 5 }, { 3724, 5 }, { 10329, 10 }, { 3581, 10 } },
-	[12] = { { 10456, 5 }, { 2874, 2, 1 }, { 3595, 20 }, { 8010, 10 }, { 8016, 3 } },
-	[13] = { { 6569, 3 }, { 3599, 3 }, { 6574, 2 }, { 6500, 15 }, { 6558, 1 } },
-	[14] = { { 3606, 40 }, { 5096, 20 }, { 5902, 10 }, { 8758, 1 }, { 5942, 1 } },
+	[1] = { { 3577, 2 }, { 8010, 20 }, { 8015, 1 }, { 8197, 1 }, { 3603, 5 }, { 2874, 2, 3 } }, -- rotworm stew
+	[2] = { { 7250, 2 }, { 3596, 2 }, { 8014, 1 }, { 3606, 2 }, { 3741, 1 }, { 2874, 1, 2 } }, -- hydra tongue salad
+	[3] = { { 4363, 1 }, { 8016, 3 }, { 3602, 5 }, { 3606, 2 }, { 3739, 1 }, { 3724, 5 } }, -- roasted dragon wings	
+	[4] = { { 4330, 1 }, { 8013, 2 }, { 3586, 2 }, { 5096, 2 }, { 2874, 2, 15 }, { 3735, 1 } }, -- tropical fried terrorbird
+	[5] = { { 6574, 1 }, { 6393, 1 }, { 3587, 2 }, { 2874, 2, 9 }, { 3738, 1 }, { 3736, 1 } }, -- tropical fried terrorbird
+	[6] = { { 3595, 2 }, { 3596, 2 }, { 3597, 2 }, { 8014, 2 }, { 8015, 1 }, { 8197, 1 }, { 3607, 1 }, { 3723, 20 }, { 3725, 5 } }, -- veggie casserole
+	[7] = { { 8016, 10 }, { 3607, 2 }, { 3741, 1 }, { 3740, 1 }, { 2874, 1, 16 }, { 3606, 2 } }, -- filled jalapeno peppers
+	[8] = { { 3582, 1 }, { 8011, 5 }, { 8015, 1 }, { 8017, 2 }, { 3594, 1 }, { 8016, 2 } }, -- blessed steak
+	[9] = { { 3580, 1 }, { 7158, 1 }, { 7159, 1 }, { 3581, 5 }, { 3601, 2 }, { 3737, 1 } }, -- northern fishburger
+	[10] = { { 3595, 5 }, { 2874, 1, 9 }, { 8013, 1 }, { 3603, 10 }, { 3606, 2 }, { 3598, 10 }, { 841, 2 } }, -- carrot cake
+	[11] = { { 2874, 5, 15 }, { 3725, 5 }, { 3724, 5 }, { 10329, 10 }, { 3581, 10 } }, -- coconut shrimp bake
+	[12] = { { 10456, 5 }, { 2874, 2, 1 }, { 3595, 20 }, { 8010, 10 }, { 8016, 3 } }, -- pot of blackjack
+	[13] = { { 6569, 3 }, { 3599, 3 }, { 6574, 2 }, { 6500, 15 }, { 6558, 1 } }, -- demonic candy balls
+	[14] = { { 3606, 40 }, { 5096, 20 }, { 5902, 10 }, { 8758, 1 }, { 5942, 1 } }, -- sweet mangonaise elixir
+	[15] = { { 33930, 1 }, { 2874, 2, 15 }, { 11682, 1 }, { 31590, 1 }, { 48273, 1 } },  -- zaoan sauce
 }
-
+ 
 local function playerHasIngredients(creature)
 	local player = Player(creature)
 	local table = ingredients[player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish)]
@@ -74,63 +75,118 @@ local function playerHasIngredients(creature)
 			end
 		end
 	end
-
+ 
 	for i = 1, #table do
 		player:removeItem(unpack(table[i]))
 	end
 	return true
 end
-
+ 
 local function endConversationWithDelay(npcHandler, npc, creature)
 	addEvent(function()
 		npcHandler:unGreet(npc, creature)
 	end, 1000)
 end
-
-local function canCookToday(player, lastInteractionKey)
+ 
+local function hotCuisineKv(player)
+	return player:kv():scoped("hotcuisinequest")
+end
+ 
+local function getLastInteractionDate(player, lastInteractionKey)
+	if type(lastInteractionKey) == "string" then
+		return hotCuisineKv(player):get(lastInteractionKey) or -1
+	end
+	return player:getStorageValue(lastInteractionKey)
+end
+ 
+local function setLastInteractionDate(player, lastInteractionKey, value)
+	if type(lastInteractionKey) == "string" then
+		hotCuisineKv(player):set(lastInteractionKey, value)
+	else
+		player:setStorageValue(lastInteractionKey, value)
+	end
+end
+ 
+local function registerDishCooked(player, lastInteractionKey, dishNumber)
+	local kv = hotCuisineKv(player)
 	local currentDate = os.time()
-	local lastInteractionDate = player:getStorageValue(lastInteractionKey)
-
+	local currentDateTable = os.date("*t", currentDate)
+	local lastInteractionDate = getLastInteractionDate(player, lastInteractionKey)
+ 
+	if lastInteractionDate ~= -1 then
+		local lastDateTable = os.date("*t", lastInteractionDate)
+		local isNewPeriod = currentDateTable.month == 8 and (currentDateTable.year > lastDateTable.year or lastDateTable.month ~= 8)
+		if not isNewPeriod then
+			kv:set("bonusused-" .. dishNumber, true)
+		end
+	end
+ 
+	setLastInteractionDate(player, lastInteractionKey, currentDate)
+ 
+	local countKey = "cookcount-" .. dishNumber
+	kv:set(countKey, (kv:get(countKey) or 0) + 1)
+ 
+	if not player:hasAchievement("Culinary Master") then
+		for i = 2, 16 do
+			if (kv:get("cookcount-" .. i) or 0) < 2 then
+				return
+			end
+		end
+		player:addAchievement("Culinary Master")
+	end
+end
+ 
+local function canCookToday(player, lastInteractionKey, dishNumber)
+	local currentDate = os.time()
+	local currentDateTable = os.date("*t", currentDate)
+	local lastInteractionDate = getLastInteractionDate(player, lastInteractionKey)
+ 
 	if lastInteractionDate == -1 then
 		return true
 	end
-
+ 
 	local lastDateTable = os.date("*t", lastInteractionDate)
-	local currentDateTable = os.date("*t", currentDate)
-
+ 
 	if currentDateTable.month == 8 and (currentDateTable.year > lastDateTable.year or lastDateTable.month ~= 8) then
 		return true
 	end
-
+ 
+	-- Bonus round: the first year a player finishes the whole menu (forced order), they get to redo any dish they like, out of order, once more within that same year. BonusYear is only ever set once, the first time the player completes Zaoan Sauce (the last dish), so from the following year onward this simply won't match and the rule above applies.
+	local kv = hotCuisineKv(player)
+	local bonusYear = kv:get("bonusyear")
+	if bonusYear and bonusYear == currentDateTable.year and not kv:get("bonusused-" .. dishNumber) then
+		return true
+	end
+ 
 	return false
 end
-
+ 
 local function greetCallback(npc, creature)
 	local player = Player(creature)
 	local playerId = player:getId()
-
+ 
 	local currentDate = os.time()
 	local currentDateTable = os.date("*t", currentDate)
-
+ 
 	if currentDateTable.month == 8 then
 		npcHandler:setMessage(MESSAGE_GREET, "Greetings, |PLAYERNAME|. What are you doing out here?")
 	else
 		endConversationWithDelay(npcHandler, npc, creature)
 	end
-
+ 
 	return true
 end
-
+ 
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
 	local playerId = player:getId()
-
+ 
 	if not npcHandler:checkInteraction(npc, creature) then
 		return false
 	end
-
+ 
 	local currentDate = os.time()
-
+ 
 	if MsgContains(message, "cook") then
 		if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 1 then
 			npcHandler:say("Well, I'm not a simple cook. I travel the whole Tibian continent for the most artfully seasoned {recipes} and constantly develop new ones.", npc, creature)
@@ -141,7 +197,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:say("You're interested in my recipes? Well. They are not for sale, but if you want to become my {apprentice}, I'll share my knowledge with you.", npc, creature)
 			npcHandler:setTopic(playerId, 2)
 		end
-		if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
+		if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) == 1 then
 			if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish) == 1 then
 				npcHandler:say({
 					"The first dish we are going to prepare together is called {Rotworm Stew}. Now, don't be scared off. Of course we won't eat those nasty and dirty earth-crawlers! ...",
@@ -240,9 +296,18 @@ local function creatureSayCallback(npc, creature, type, message)
 					"Oh yes, I understand your worries about the eggs, but just make sure they're fresh and all should be fine for our {Sweet Mangonaise Elixir}!",
 				}, npc, creature)
 				npcHandler:setTopic(playerId, 30)
+			elseif player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish) == 15 then
+				npcHandler:say({
+					"What a drink! Did I promise too much? I guess not, judging by your satisfied look! Well, if you are really that eager - there's more. ...",
+					"Another part of a meal or even a course of several meals that should not be underestimated is the sauce. ...",
+					"How about a delicious sweet and sour {Zaoan Sauce} to accompany your meal, exciting, fresh and pleasing to the palate. ...",
+					"We need the following ingredients to get cracking: a pinch of salt, two vials of coconut milk, a dragonfruit, a young lich worm and a taiyaki. ...",
+					"What? You think that lich worm will not go well with the dragonfruit? Worry not, for this is a vital ingredient to the 'sour' part of this excellent sweet and sour sauce!",
+				}, npc, creature)
+				npcHandler:setTopic(playerId, 32)
 			end
 		elseif player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) == 2 then
-			npcHandler:say("You can now cook any dish you want from this list: {Rotworm Stew, Hydra Tongue Salad, Roasted Dragon Wings, Tropical Fried Terrorbird, Banana Chocolate Shake, Veggie Casserole, Filled Jalapeno Peppers, Blessed Steak, Northern Fishburger, Carrot Cake, Coconut Shrimp Bake, Blackjack, Demonic Candy Balls, Sweet Mangonaise Elixir}.", npc, creature)
+			npcHandler:say("You can now cook any dish you want from this list: {Rotworm Stew}, {Hydra Tongue Salad}, {Roasted Dragon Wings}, {Tropical Fried Terrorbird}, {Banana Chocolate Shake}, {Veggie Casserole}, {Filled Jalapeno Peppers}, {Blessed Steak}, {Northern Fishburger}, {Carrot Cake}, {Coconut Shrimp Bake}, {Blackjack}, {Demonic Candy Balls}, {Sweet Mangonaise Elixir}, {Zaoan Sauce}.", npc, creature)
 		end
 	elseif MsgContains(message, "apprentice") then
 		if npcHandler:getTopic(playerId) == 2 then
@@ -256,7 +321,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 1)
 			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 1)
 		elseif npcHandler:getTopic(playerId) == 5 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate2) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate2, 2) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Aah, so let's see! <prepares the food quickly while he explains it to you> We cook the meat in a large pot together with the chopped onion until it's separated from the bones. Now we also have a fine meat broth! ...",
@@ -264,9 +329,11 @@ local function creatureSayCallback(npc, creature, type, message)
 						"And voilà, we're done. I developed this recipe while talking to Maryza in the Jolly Axeman. She said to eat it when one's health is low. Enjoy!",
 					}, npc, creature)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 2)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 2)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate2, currentDate)
-					player:addItem(9079, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 2)
+					end
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate2, 2)
+					player:addItem(9079, 1) -- rotworm stew
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -277,7 +344,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 7 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate3) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate3, 3) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Okay, here we go! <cuts the ingredients so fast that his hands seem almost blurry> This one is easy, just chop the hydra tongues, tomatoes and cucumber into tiny pieces. ...",
@@ -285,9 +352,11 @@ local function creatureSayCallback(npc, creature, type, message)
 						"Pour it over the salad, and voilà, we're done! This is a Venorean recipe and very tasty. I recommend eating it when you're suffering from some kind of dangerous condition. Enjoy!",
 					}, npc, creature)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 3)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 3)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate3, currentDate)
-					player:addItem(9080, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 3)
+					end
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate3, 3)
+					player:addItem(9080, 1) -- hydra tongue salad
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -298,7 +367,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 9 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate4) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate4, 4) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Let's get started! <starts grinding and chopping at amazing speed> The trick with this one is the crunchy crust around the wings. ...",
@@ -306,10 +375,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"Carefully separate the bat wings, clean them of any possible hairs and coat them in our mixture. Roast them in a pan together with sliced mushrooms and serve. ...",
 						"Voilà, we're done! This recipe is from the area around Thais and should help you protect yourself in your battles. Enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate4, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate4, 4)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 4)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 4)
-					player:addItem(9081, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 4)
+					end
+					player:addItem(9081, 1) -- roasted dragon wings
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -320,7 +391,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 11 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate5) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate5, 5) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"This is a recipe right from the jungles of Tiquanda! <grinds and chops during his talk> Grind the stone herb and mix it with the coconut milk, then bathe the chicken in it for a while. ...",
@@ -328,10 +399,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"Take the fruits out of the spicy coconut milk and heat them on an oven. Once the chicken is fried, add the fruits and spray some squeezed lemon over it. ...",
 						"Voilà, we're done! They say that this dish has magical abilities and can awaken secret powers in you during your battles. Enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate5, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate5, 5)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 5)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 5)
-					player:addItem(9082, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 5)
+					end
+					player:addItem(9082, 1) -- tropical fried terrorbird
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -342,7 +415,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 13 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate6) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate6, 6) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Great! Let's get it done! <mixes and shakes faster than any human could> An easy one again, but you'll get right into holiday mood, like the Meriana beach dwellers I got that recipe from. ...",
@@ -350,10 +423,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"Mash the banana and stir it really well into the chocolate-milk mixture. Gosh, do you smell that? Pure goodness! Now finally, we take just a bit of the creamcake and fold it in. ...",
 						"Voilà, we're done! To be honest, I don't know what this drink does, but at least it makes me really happy. Drink together with a loved one and enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate6, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate6, 6)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 6)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 6)
-					player:addItem(9083, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 6)
+					end
+					player:addItem(9083, 1) -- banana chocolate shake
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -364,7 +439,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 15 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate7) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate7, 7) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"So let's start! <rubs hands together and chops the vegetables> This is a dish especially famous in the area around Ab'Dendriel! Chop the onions into little cubes and sweat them in a pan until they are glassy. ...",
@@ -372,10 +447,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"Put in carrot pieces and cucumber at the very end, so they will stay crisp! Finally put the cheese over it like a little blanket have it melt on the oven until it's slightly brownish. ...",
 						"And voilà, we're done! This dish will help you in your battles and supply you with enough power to hit really hard! Enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate7, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate7, 7)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 7)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 7)
-					player:addItem(9084, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 7)
+					end
+					player:addItem(9084, 1) -- veggie casserole
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -386,7 +463,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 17 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate8) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate8, 8) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Okay! So after all of these heavy dishes, we're going to create a fast little snack. <starts preparing the peppers as he speaks> ...",
@@ -395,10 +472,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"The filling will melt nicely, just be careful that it doesn't drip out! And voilà, we're done! ...",
 						"This famous dish from Ankrahmun is quite hot and spicy, so only eat one at a time. It's also possible that you get the urge to run really fast afterwards. Enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate8, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate8, 8)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 8)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 8)
-					player:addItem(9085, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 8)
+					end
+					player:addItem(9085, 1) -- filled jalapeno peppers
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -409,7 +488,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 19 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate9) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate9, 9) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Here we go! <pounds with his bare hands on the steak> This will break through the meat fibres, making our steak more tender for this fine Daramanian dish. ...",
@@ -417,10 +496,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"Finally, remove the fruits and onions from the pan and fry the steak from both sides until it's crisp and crusty. Put on a plate and decorate with the fruit mix. ...",
 						"The people of Darashia say that it has magical abilities and will help you if you feel totally drained. Enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate9, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate9, 9)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 9)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 9)
-					player:addItem(9086, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 9)
+					end
+					player:addItem(9086, 1) -- blessed steak
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -431,7 +512,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 21 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate10) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate10, 10) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Great! After all this meat, we shouldn't neglect to prepare some fish. <carefully removes heads, tails and bones from the fishes and peels shrimps at incredible speed> ...",
@@ -439,10 +520,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"Simply cut the rolls in half, shortly fry one slice of each fish type, put in the shrimps and spice up with grinded fern, which, by the way, tastes slightly like dill. ...",
 						"Nicely decorate it on a plate, and voilà, we're done already! Can't tell you much about the effects, but fishermen in Svargrond seem to love it. Enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate10, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate10, 10)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 10)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 10)
-					player:addItem(9088, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 10)
+					end
+					player:addItem(9088, 1) -- northern fishburger
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -453,7 +536,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 23 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate11) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate11, 11) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"So, now for our final dish - a grand dessert from the amazon girls at Carlin! <grates carrots during his explanations> ...",
@@ -464,11 +547,13 @@ local function creatureSayCallback(npc, creature, type, message)
 						"But anyway, it's up to you what you make of your newly discovered skills! In case you forget my recipes, please feel free to take a copy of the cookbook upstairs. ...",
 						"You can drop by and practice cooking those dishes, at least during the time that I'm at home. I promise that I will cook each dish once with you, but then I have to take care of my other apprentices. Cheers to you!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate11, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate11, 11)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 11)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 11)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 11)
+					end
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CookbookDoor, 1)
-					player:addItem(10000, 1)
+					player:addItem(9087, 1) -- carrot cake
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -479,7 +564,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 25 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate12) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate12, 12) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Yum! Just the thought of it makes me drool. <tosses the shrimps into a bowl and soaks them in coconut milk as he goes on chopping all mushrooms in the blink of an eye> ...",
@@ -489,10 +574,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"... dum di dum ... <waits> ...",
 						"Aaaaaaand there you go! Sweet coconut goodness! And psst - the shrimps add some submarine flavour to this dish. You should definitely eat it while walking underwater and wearing a helmet of the deep. Just in case. Enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate12, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate12, 12)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 12)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 13)
-					player:addItem(11584, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 13)
+					end
+					player:addItem(11584, 1) -- coconut shrimp bake
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -503,7 +590,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 27 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate13) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate13, 13) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Awesome! Let's go! Let's start with preparing the sandcrawlers <starts boiling water on a stove and tosses the sandcrawler shells in there> ...",
@@ -513,10 +600,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"You're wondering why I chose a simple recipe like that for my famous menu? You'll know when you taste it! ...",
 						"Heeeeeere you are - just a few spoons of this great stew make you so full that the bowl I give you will last for a long time until it's finally depleted. Enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate13, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate13, 13)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 13)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 14)
-					player:addItem(11586, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 14)
+					end
+					player:addItem(11586, 1) -- pot of blackjack
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -527,7 +616,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 29 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate14) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate14, 14) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Very nice! I'm ready for action! <quickly grabs all the candies, candy canes and gingerbread men and crushes them with amazing speed> ...",
@@ -536,10 +625,12 @@ local function creatureSayCallback(npc, creature, type, message)
 						"Now, carefully, we add the demonic blood... <and time seems to stand still as seemingly for the first time ever he does something slowly, pouring a single drop of concentrated demonic blood onto each ball> ...",
 						"Here you go, but beware possible side effects! You never know for sure what will happen and so far all of those I tried had awesome effects, so of course I don't hope for nasty surprises! Enjoy!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate14, currentDate)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate14, 14)
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 14)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 15)
-					player:addItem(11587, 1)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 15)
+					end
+					player:addItem(11587, 1) -- demonic candy ball
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -550,21 +641,52 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 31 then
-			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate15) then
+			if canCookToday(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate15, 15) then
 				if playerHasIngredients(creature) then
 					npcHandler:say({
 						"Time to have a sweet drink! Let's pour the bug milk into my cauldron and heat it over fire until it's boiling... <starts slicing mangoes in the meantime> there! ...",
 						"Now we're breaking all of the eggs into there - 1, 2, 10, 20, 40 <ticktickcrack> crumble the honeycombs and toss the sliced mangoes into the hot mix. ...",
 						"Now we just have to let it simmer and stir using a blessed wooden stake <stirs so vigorously that you can barely see his arms anymore> for thirty minutes. ...",
 						"By now, the power of the blessed wooden stake will have been transferred into our elixir, so let's put out the fire and let it cool down. ...",
-						"<carefully pours the cooled elixir into a small bottle or glass> There! Its inventor said it had amazing effects on the ring you're wearing, as long as the ring is based on time, not on charges. Enjoy! ...",
+						"<carefully pours the cooled elixir into a small bottle or glass> There! Its inventor said it had amazing effects on the ring you're wearing, as long as the ring is based on time, not on charges. Enjoy!",
+					}, npc, creature)
+					registerDishCooked(player, Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate15, 15)
+					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 15)
+					if player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2 then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 16)
+					end
+					player:addItem(11588, 1) -- sweet mangonaise elixir
+					npcHandler:setTopic(playerId, 0)
+				else
+					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
+					npcHandler:setTopic(playerId, 0)
+				end
+			else
+				npcHandler:say("It seems you have already cooked this dish this year. Please come back next year in August.", npc, creature)
+				npcHandler:setTopic(playerId, 0)
+			end
+		elseif npcHandler:getTopic(playerId) == 33 then
+			if canCookToday(player, "lastinteractiondate16", 16) then
+				if playerHasIngredients(creature) then
+					npcHandler:say({
+						"And we are off to start with our sauce! First pour the coconut milk into my cauldron and, yes you may have already expected that, heat it over fire until it's boiling. <salts the young lich worms in the meantime> ...",
+						"Now we're cutting the dragonfruit and toss the sliced goodness into the mix <flubbflubb>. ...",
+						"Now we calmly slice and add the taiyaki to get that certain sweet impression. <drops the slices into the cauldron> There! ...",
+						"How did this ancient saying about this sweet yet sour sauce go, something along the lines of inner harmony and balance of body and soul - well, I can't remember the exact wording right now. ...",
+						"What I do know is that you will absolutely benefit from tasting the soup. Bon appétit! ...",
 						"And by the way... since those were all the recipes from this year and you cooked them so nicely, you may take the cookbook containing them from upstairs, if you like!",
 					}, npc, creature)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.LastInteractionDate15, currentDate)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart, 2)
+					registerDishCooked(player, "lastinteractiondate16", 16)
+					local isFirstCompletion = player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) < 2
+					if isFirstCompletion then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart, 2)
+						hotCuisineKv(player):set("bonusyear", os.date("*t", currentDate).year)
+					end
 					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 15)
-					player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 16)
-					player:addItem(11588, 1)
+					if isFirstCompletion then
+						player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestLog, 17)
+					end
+					player:addItem(50334, 1) -- zaoan sauce
 					npcHandler:setTopic(playerId, 0)
 				else
 					npcHandler:say("Make sure that you have all the ingredients with you.", npc, creature)
@@ -579,66 +701,79 @@ local function creatureSayCallback(npc, creature, type, message)
 	elseif MsgContains(message, "rotworm stew") then
 		if npcHandler:getTopic(playerId) == 4 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to cook Rotworm Stew with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 1)
 			npcHandler:setTopic(playerId, 5)
 		end
 	elseif MsgContains(message, "hydra tongue salad") then
 		if npcHandler:getTopic(playerId) == 6 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to prepare a Hydra Tongue Salad with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 2)
 			npcHandler:setTopic(playerId, 7)
 		end
 	elseif MsgContains(message, "roasted dragon wings") then
 		if npcHandler:getTopic(playerId) == 8 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to prepare Roasted Dragon Wings with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 3)
 			npcHandler:setTopic(playerId, 9)
 		end
 	elseif MsgContains(message, "tropical fried terrorbird") then
 		if npcHandler:getTopic(playerId) == 10 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to prepare a Tropical Fried Terrorbird with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 4)
 			npcHandler:setTopic(playerId, 11)
 		end
 	elseif MsgContains(message, "banana chocolate shake") then
 		if npcHandler:getTopic(playerId) == 12 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to make a Banana Chocolate Shake with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 5)
 			npcHandler:setTopic(playerId, 13)
 		end
 	elseif MsgContains(message, "veggie casserole") then
 		if npcHandler:getTopic(playerId) == 14 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to cook a Veggie Casserole with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 6)
 			npcHandler:setTopic(playerId, 15)
 		end
 	elseif MsgContains(message, "filled") or MsgContains(message, "jalapeño") or MsgContains(message, "peppers") then
 		if npcHandler:getTopic(playerId) == 16 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to prepare Filled Jalapeño Peppers with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 7)
 			npcHandler:setTopic(playerId, 17)
 		end
 	elseif MsgContains(message, "blessed steak") then
 		if npcHandler:getTopic(playerId) == 18 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to prepare a Blessed Steak with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 8)
 			npcHandler:setTopic(playerId, 19)
 		end
 	elseif MsgContains(message, "northern fishburger") then
 		if npcHandler:getTopic(playerId) == 20 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to make a Northern Fishburger with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 9)
 			npcHandler:setTopic(playerId, 21)
 		end
 	elseif MsgContains(message, "carrot cake") then
 		if npcHandler:getTopic(playerId) == 22 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to bake a Carrot Cake with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 10)
 			npcHandler:setTopic(playerId, 23)
 		end
 	elseif MsgContains(message, "coconut shrimp bake") then
 		if npcHandler:getTopic(playerId) == 24 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to prepare a Coconut Shrimp Bake with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 11)
 			npcHandler:setTopic(playerId, 25)
 		end
 	elseif MsgContains(message, "blackjack") then
 		if npcHandler:getTopic(playerId) == 26 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to cook a Blackjack with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 12)
 			npcHandler:setTopic(playerId, 27)
 		end
 	elseif MsgContains(message, "demonic candy ball") then
 		if npcHandler:getTopic(playerId) == 28 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
 			npcHandler:say("Did you gather all necessary ingredients to make Demonic Candy Balls with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 13)
 			npcHandler:setTopic(playerId, 29)
 		end
 	elseif MsgContains(message, "sweet mangonaise elixir") then
@@ -647,16 +782,22 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 14)
 			npcHandler:setTopic(playerId, 31)
 		end
+	elseif MsgContains(message, "zaoan sauce") then
+		if npcHandler:getTopic(playerId) == 32 or player:getStorageValue(Storage.Quest.U8_5.HotCuisineQuest.QuestStart) >= 1 then
+			npcHandler:say("Did you gather all necessary ingredients to cook the Zaoan Sauce with me?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.HotCuisineQuest.CurrentDish, 15)
+			npcHandler:setTopic(playerId, 33)
+		end
 	elseif MsgContains(message, "no") then
 		npcHandler:say("No?, come back when you are ready to cook.", npc, creature)
 		npcHandler:setTopic(playerId, 0)
 	end
 	return true
 end
-
+ 
 npcHandler:setCallback(CALLBACK_GREET, greetCallback)
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
-
+ 
 -- npcType registering the npcConfig table
 npcType:register(npcConfig)
