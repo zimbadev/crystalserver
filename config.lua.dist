@@ -667,6 +667,7 @@ mountSounds = false
 -- Scripts
 warnUnsafeScripts = true
 convertUnsafeScripts = true
+luaDebugHook = false
 
 -- Startup
 -- NOTE: defaultPriority only works on Windows and sets process
