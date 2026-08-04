@@ -824,6 +824,14 @@ void Game::loadCustomMaps(const std::filesystem::path &customMapPath) {
 void Game::loadMap(const std::string &path, const Position &pos) {
 	lastMapLoadTime = OTSYS_TIME();
 	map.loadMap(path, false, false, false, false, false, pos);
+
+	// Resend the viewport to all connected players so the client does not
+	// retain stale tile references after a map swap (e.g. quest map changes).
+	for (const auto &[playerId, player] : players) {
+		if (player) {
+			player->sendMapDescription(player->getPosition());
+		}
+	}
 }
 
 std::shared_ptr<Cylinder> Game::internalGetCylinder(const std::shared_ptr<Player> &player, const Position &pos) {

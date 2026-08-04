@@ -8413,6 +8413,12 @@ void Player::sendEnterWorld() const {
 	}
 }
 
+void Player::sendMapDescription(const Position &pos) const {
+	if (client) {
+		client->sendMapDescription(pos);
+	}
+}
+
 void Player::sendFightModes() const {
 	if (client) {
 		client->sendFightModes();
