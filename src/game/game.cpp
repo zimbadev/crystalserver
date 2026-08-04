@@ -9033,16 +9033,17 @@ void Game::checkLight() {
 }
 
 ItemClassification* Game::getItemsClassification(uint8_t id, bool create) {
-	auto it = std::ranges::find_if(itemsClassifications, [id](ItemClassification* classification) {
+	auto it = std::ranges::find_if(itemsClassifications, [id](const std::unique_ptr<ItemClassification> &classification) {
 		return classification->id == id;
 	});
 
 	if (it != itemsClassifications.end()) {
-		return *it;
+		return it->get();
 	} else if (create) {
-		auto itemClassification = new ItemClassification(id);
-		addItemsClassification(itemClassification);
-		return itemClassification;
+		auto itemClassification = std::make_unique<ItemClassification>(id);
+		auto* raw = itemClassification.get();
+		addItemsClassification(std::move(itemClassification));
+		return raw;
 	}
 
 	return nullptr;
