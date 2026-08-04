@@ -299,6 +299,11 @@ void Connection::parsePacket(const std::error_code &error) {
 		skipReadingNextPacket = protocol->onRecvMessage(m_msg);
 	}
 
+	// Protocol may have closed us (e.g. XTEA fail) — do not rearm timers/reads.
+	if (connectionState == CONNECTION_STATE_CLOSED || !socket.is_open()) {
+		return;
+	}
+
 	try {
 		readTimer.expires_from_now(std::chrono::seconds(CONNECTION_READ_TIMEOUT));
 		readTimer.async_wait([self = std::weak_ptr<Connection>(shared_from_this())](const std::error_code &error) { Connection::handleTimeout(self, error); });
@@ -314,10 +319,17 @@ void Connection::parsePacket(const std::error_code &error) {
 }
 
 void Connection::resumeWork() {
-	readTimer.expires_from_now(std::chrono::seconds(CONNECTION_READ_TIMEOUT));
-	readTimer.async_wait([self = std::weak_ptr<Connection>(shared_from_this())](const std::error_code &error) { Connection::handleTimeout(self, error); });
+	// Dispatcher may run a previously queued sendRecv callback after the peer
+	// already dropped (XTEA fail / Broken pipe). Never arm ASIO reads on a dead socket.
+	std::scoped_lock lock(connectionLock);
+	if (connectionState == CONNECTION_STATE_CLOSED || !socket.is_open()) {
+		return;
+	}
 
 	try {
+		readTimer.expires_from_now(std::chrono::seconds(CONNECTION_READ_TIMEOUT));
+		readTimer.async_wait([self = std::weak_ptr<Connection>(shared_from_this())](const std::error_code &error) { Connection::handleTimeout(self, error); });
+
 		asio::async_read(socket, asio::buffer(m_msg.getBuffer(), HEADER_LENGTH), [self = shared_from_this()](const std::error_code &error, std::size_t N) { self->parseHeader(error); });
 	} catch (const std::system_error &e) {
 		g_logger().error("[Connection::resumeWork] - Exception in async_read: {}", e.what());
