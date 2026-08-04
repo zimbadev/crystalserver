@@ -820,11 +820,11 @@ void Combat::CombatHealthFunc(const std::shared_ptr<Creature> &caster, const std
 
 					g_logger().debug("[{}] skillPercentageAsExtraDamageForAutoAttack before {} / {} bonus {} skill id {}", __FUNCTION__, damage.primary.value, damage.secondary.value, bonus, static_cast<uint8_t>(skillType));
 
-					if (damage.primary.value > 0) {
+					if (damage.primary.value < 0) {
 						damage.primary.value -= bonus;
 					}
 
-					if (damage.secondary.value > 0) {
+					if (damage.secondary.value < 0) {
 						damage.secondary.value -= bonus;
 					}
 
