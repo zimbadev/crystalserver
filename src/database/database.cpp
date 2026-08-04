@@ -514,23 +514,21 @@ const char* DBResult::getStream(const std::string &s, unsigned long &size) const
 }
 
 uint8_t DBResult::getU8FromString(const std::string &string, const std::string &function) {
-	auto result = static_cast<uint8_t>(std::atoi(string.c_str()));
-	if (result > std::numeric_limits<uint8_t>::max()) {
-		g_logger().error("[{}] Failed to get number value {} for tier table result, on function call: {}", __FUNCTION__, result, function);
+	int v = std::atoi(string.c_str());
+	if (v < 0 || v > std::numeric_limits<uint8_t>::max()) {
+		g_logger().error("[{}] Failed to get number value {} for tier table result, on function call: {}", __FUNCTION__, v, function);
 		return 0;
 	}
-
-	return result;
+	return static_cast<uint8_t>(v);
 }
 
 int8_t DBResult::getInt8FromString(const std::string &string, const std::string &function) {
-	auto result = static_cast<int8_t>(std::atoi(string.c_str()));
-	if (result > std::numeric_limits<int8_t>::max()) {
-		g_logger().error("[{}] Failed to get number value {} for tier table result, on function call: {}", __FUNCTION__, result, function);
+	int v = std::atoi(string.c_str());
+	if (v < std::numeric_limits<int8_t>::min() || v > std::numeric_limits<int8_t>::max()) {
+		g_logger().error("[{}] Failed to get number value {} for tier table result, on function call: {}", __FUNCTION__, v, function);
 		return 0;
 	}
-
-	return result;
+	return static_cast<int8_t>(v);
 }
 
 size_t DBResult::countResults() const {
