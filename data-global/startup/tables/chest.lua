@@ -3026,4 +3026,17 @@ ChestUnique = {
 		itemId = 2472,
 		itemPos = { x = 32620, y = 32198, z = 10 },
 	},
+	-- Targuna Quest
+	[14092] = {
+		itemId = 28827,
+		itemPos = { x = 31950, y = 31862, z = 8 },
+		reward = { { 268, 5 } }, -- 5 mana potions
+		storage = Storage.Quest.U15_24.Targuna.ManaPotionsChest,
+	},
+	[14093] = {
+		itemId = 28827,
+		itemPos = { x = 31909, y = 31908, z = 9 },
+		reward = { { 3054, 1 } }, -- silver amulet
+		storage = Storage.Quest.U15_24.Targuna.SilverAmuletChest,
+	},
 }

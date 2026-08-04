@@ -75,6 +75,51 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 	local resultId = db.storeQuery("SELECT `player_id` FROM `player_deaths` WHERE `player_id` = " .. playerGuid)
 	Webhook.sendMessage(":skull_crossbones: " .. player:getMarkdownLink() .. " has died. Killed at level _" .. player:getLevel() .. "_ by **" .. killerName .. "**.", announcementChannels["player-kills"])
 
+	local function removeAllPlayerIcons(player)
+		local iconMap = {
+			"whitecross",
+			"redcross",
+			"redball",
+			"greenball",
+			"redgreenball",
+			"greenshield",
+			"yellowshield",
+			"blueshield",
+			"purpleshield",
+			"redshield",
+			"dove",
+			"energy",
+			"earth",
+			"water",
+			"fire",
+			"ice",
+			"arrowup",
+			"arrowdown",
+			"exclamationmark",
+			"questionmark",
+			"cancelmark",
+			"hazard",
+			"brownskull",
+			"higherdamagereceived",
+			"lowerdamagedealt",
+			"turnedmelee",
+			"influenced",
+			"fiendish",
+			"reducedhealth",
+			"reducedhealthexclamation",
+			"rotten-area",
+			"rotten-hazard",
+			"white-cross",
+		}
+		if player.removeIconBakragore then
+			player:removeIconBakragore()
+		end
+		for _, iconKey in ipairs(iconMap) do
+			player:removeIcon(iconKey)
+		end
+	end
+	removeAllPlayerIcons(player)
+
 	local deathRecords = 0
 	local tmpResultId = resultId
 	while tmpResultId ~= false do

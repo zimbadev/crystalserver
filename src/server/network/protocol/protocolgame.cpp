@@ -825,6 +825,7 @@ void ProtocolGame::connect(const std::string &playerName, OperatingSystem_t oper
 
 	player->sendHarmonyProtocol();
 	player->sendSereneProtocol();
+	player->sendStanceProtocol();
 	player->resyncSpellCooldowns();
 
 	sendAddCreature(player, player->getPosition(), 0, true);
@@ -2164,25 +2165,35 @@ void ProtocolGame::parseSay(NetworkMessage &msg) {
 		return;
 	}
 
+	// 15.25 crossHairTarget spells append the aim tile to the say packet:
+	//   [aimMode:u8] (0 = none, 1 = cursor position, 2 = crosshair) and, when aimMode != 0,
+	//   [x:u16 LE][y:u16 LE][z:u8][seq:u8]. parseSay historically ignored this tail.
+	// Stash the aimed tile so the cast (crossHairTarget spell) can land there.
+	const int32_t sayRemaining = static_cast<int32_t>(msg.getLength()) - (static_cast<int32_t>(msg.getBufferPosition()) - 7);
+	if (sayRemaining > 0) {
+		const uint8_t aimMode = msg.getByte();
+		if (aimMode != 0 && sayRemaining >= 6) {
+			Position aimPos;
+			aimPos.x = msg.get<uint16_t>();
+			aimPos.y = msg.get<uint16_t>();
+			aimPos.z = msg.getByte();
+			player->setSpellAimPosition(aimPos);
+		} else {
+			player->clearSpellAimPosition();
+		}
+	} else {
+		player->clearSpellAimPosition();
+	}
+
 	g_game().playerSay(player->getID(), channelId, type, receiver, text);
 }
 
 void ProtocolGame::parseFightModes(NetworkMessage &msg) {
-	uint8_t rawFightMode = msg.getByte(); // 1 - offensive, 2 - balanced, 3 - defensive
+	// uint8_t rawFightMode = msg.getByte(); // 1 - offensive, 2 - balanced, 3 - defensive -- FIGHT MODE DEPRECATED FROM 15.25
 	uint8_t rawChaseMode = msg.getByte(); // 0 - stand while fightning, 1 - chase opponent
 	uint8_t rawSecureMode = msg.getByte(); // 0 - can't attack unmarked, 1 - can attack unmarked
-	// uint8_t rawPvpMode = msg.getByte(); // pvp mode introduced in 10.0
 
-	FightMode_t fightMode;
-	if (rawFightMode == 1) {
-		fightMode = FIGHTMODE_ATTACK;
-	} else if (rawFightMode == 2) {
-		fightMode = FIGHTMODE_BALANCED;
-	} else {
-		fightMode = FIGHTMODE_DEFENSE;
-	}
-
-	g_game().playerSetFightModes(player->getID(), fightMode, rawChaseMode != 0, rawSecureMode != 0);
+	g_game().playerSetFightModes(player->getID(), FIGHTMODE_ATTACK, rawChaseMode != 0, rawSecureMode != 0);
 }
 
 void ProtocolGame::parseAttack(NetworkMessage &msg) {
@@ -3239,9 +3250,22 @@ void ProtocolGame::parseBestiarySendCreatures(NetworkMessage &msg) {
 	uint8_t search = msg.getByte();
 
 	if (search == 1) {
-		auto monsterAmount = msg.get<uint16_t>();
-		std::map<uint16_t, std::string> mtype_list = g_game().getBestiaryList();
-		for (uint16_t monsterCount = 1; monsterCount <= monsterAmount; monsterCount++) {
+		if (!msg.canRead(sizeof(uint16_t))) {
+			return;
+		}
+
+		const auto monsterAmount = msg.get<uint16_t>();
+		const auto raceIdsSize = static_cast<int32_t>(monsterAmount) * static_cast<int32_t>(sizeof(uint16_t));
+		if (!msg.canRead(raceIdsSize)) {
+			return;
+		}
+
+		const auto mtype_list = g_game().getBestiaryList();
+		if (monsterAmount > mtype_list.size()) {
+			return;
+		}
+
+		for (uint32_t monsterCount = 0; monsterCount < monsterAmount; ++monsterCount) {
 			auto raceid = msg.get<uint16_t>();
 			if (player->getBestiaryKillCount(raceid) > 0) {
 				auto it = mtype_list.find(raceid);
@@ -4061,8 +4085,7 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 	}
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
-	const auto &conditionRegen = std::dynamic_pointer_cast<ConditionRegeneration>(condition);
-	msg.add<uint16_t>(conditionRegen ? conditionRegen->getFoodTicks() / 1000 : 0x00);
+	msg.add<uint16_t>(condition ? condition->getTicks() / 1000 : 0x00);
 	msg.add<uint16_t>(player->getOfflineTrainingTime() / 60 / 1000);
 	msg.add<uint16_t>(player->getSpeed());
 	msg.add<uint16_t>(player->getBaseSpeed());
@@ -4881,20 +4904,22 @@ void ProtocolGame::sendCyclopediaCharacterDefenceStats() {
 
 	const auto shieldingSkill = player->getSkillLevel(SKILL_SHIELD);
 	const uint16_t defenseWheel = player->wheel()->getMajorStatConditional("Combat Mastery", WheelMajor_t::DEFENSE);
+	// DefenceValueStats: client (15.25) reads exactly 5 fields here (u16,u16,u8,i16,u16).
+	// shieldingSkill is read SIGNED but is always >= 0 so the wire bytes are identical to u16.
 	msg.add<uint16_t>(player->getDefense(true));
 	msg.add<uint16_t>(player->getDefenseEquipment());
 	msg.addByte(0x06);
 	msg.add<uint16_t>(shieldingSkill);
 	msg.add<uint16_t>(defenseWheel);
-	msg.add<uint16_t>(0);
 
+	// MitigationStats: client reads exactly 5 doubles (NOT 6 — the type-14 parser is shorter
+	// than type-13 OffenceStats; sending a 6th double desyncs the absorb-count byte -> crash).
 	const auto wheelMultiplier = player->wheel()->getMitigationMultiplier();
 	msg.addDouble(player->getMitigation() / 100.);
 	msg.addDouble(0.0);
 	msg.addDouble(player->getDefenseEquipment() / 10000.);
 	msg.addDouble(player->getSkillLevel(SKILL_SHIELD) * player->getVocation()->mitigationFactor / 10000.);
 	msg.addDouble(wheelMultiplier / 100.);
-	msg.addDouble(player->getCombatTacticsMitigation());
 
 	// Store the "combats" to increase in absorb values function and send to client later
 	uint8_t combats = 0;
@@ -4909,6 +4934,10 @@ void ProtocolGame::sendCyclopediaCharacterDefenceStats() {
 	msg.setBufferPosition(startCombats);
 	msg.addByte(combats);
 	msg.setBufferPosition(endCombats);
+
+	// NOTE: DefenceStats (type 14) ends right after the absorb list. The 15.25 client's
+	// type-14 parser has NO reads past this point — unlike OffenceStats (type 13), it does
+	// NOT consume a trailing "Winter Update" block, so appending one here desyncs/crashes.
 
 	writeToOutputBuffer(msg);
 }
@@ -5380,14 +5409,6 @@ void ProtocolGame::sendIcons(const std::unordered_set<PlayerIcon> &iconSet, cons
 		msg.addByte(enumToValue(iconBakragore)); // Icons Bakragore
 	}
 
-	writeToOutputBuffer(msg);
-}
-
-void ProtocolGame::sendIconBakragore(const IconBakragore icon) {
-	NetworkMessage msg;
-	msg.addByte(0xA2);
-	msg.add<uint64_t>(0); // Send empty normal icons
-	msg.addByte(enumToValue(icon));
 	writeToOutputBuffer(msg);
 }
 
@@ -9027,8 +9048,7 @@ void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
 	msg.add<uint16_t>(player->getBaseSpeed());
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
-	const auto &conditionRegen = std::dynamic_pointer_cast<ConditionRegeneration>(condition);
-	msg.add<uint16_t>(conditionRegen ? conditionRegen->getFoodTicks() / 1000 : 0x00);
+	msg.add<uint16_t>(condition ? condition->getTicks() / 1000 : 0x00);
 
 	msg.add<uint16_t>(player->getOfflineTrainingTime() / 60 / 1000);
 
@@ -10792,6 +10812,46 @@ void ProtocolGame::sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, c
 	writeToOutputBuffer(msg);
 }
 
+void ProtocolGame::sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) {
+	if (oldProtocol) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x75);
+	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_SPELL);
+	msg.add<uint32_t>(spellId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId) {
+	if (oldProtocol) {
+		return;
+	}
+
+	// Client GameEventTypeBountyTaskFinished: the creature race id is sent as a
+	// uint16; the client resolves it to the creature name ("Completed task: ...").
+	NetworkMessage msg;
+	msg.addByte(0x75);
+	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_BOUNTY_TASK);
+	msg.add<uint16_t>(raceId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId) {
+	if (oldProtocol) {
+		return;
+	}
+
+	// Client GameEventTypeWeeklyTaskSpecificCreatureFinished: the creature race id
+	// is sent as a uint16; the client resolves it to the creature name.
+	NetworkMessage msg;
+	msg.addByte(0x75);
+	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_WEEKLY_TASK_SPECIFIC);
+	msg.add<uint16_t>(raceId);
+	writeToOutputBuffer(msg);
+}
+
 void ProtocolGame::sendOutfitWindowCustomOTCR(NetworkMessage &msg) {
 	if (!isOTCR) {
 		return;
@@ -11146,20 +11206,13 @@ void ProtocolGame::sendSereneProtocol(const bool isSerene) {
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::sendVirtueProtocol(const uint8_t virtueValue) {
+void ProtocolGame::sendStanceProtocol(const std::vector<uint16_t> &spellIds) {
 	NetworkMessage msg;
 	msg.addByte(0xC1);
 	msg.addByte(0x02);
-	switch (virtueValue) {
-		case 1:
-			msg.addByte(0x01); // Virtue of Harmony
-			break;
-		case 2:
-			msg.addByte(0x02); // Virtue of Justice
-			break;
-		case 3:
-			msg.addByte(0x03); // Virtue of Sustain
-			break;
+	msg.addByte(static_cast<uint8_t>(spellIds.size()));
+	for (const uint16_t spellId : spellIds) {
+		msg.add<uint16_t>(spellId);
 	}
 	writeToOutputBuffer(msg);
 }

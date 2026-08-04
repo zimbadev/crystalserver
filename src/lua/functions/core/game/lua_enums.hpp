@@ -77,4 +77,5 @@ private:
 	static void initGuildsEnum(lua_State* L);
 	static void initWorldTypeEnums(lua_State* L);
 	static void initVirtueEnums(lua_State* L);
+	static void initStanceEnums(lua_State* L);
 };

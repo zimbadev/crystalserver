@@ -99,7 +99,7 @@ monster.loot = {
 	{ name = "assassin star", chance = 2222, maxCount = 5 },
 	{ name = "vile axe", chance = 480 },
 	{ name = "butcher's axe", chance = 850 },
-	{ name = "great mana potion", chance = 14830, maxCount = 2 },
+	{ id = 238, chance = 14830, maxCount = 2 }, -- great mana potion
 	{ name = "great health potion", chance = 10000, maxCount = 2 },
 	{ name = "gold ingot", chance = 3140 },
 }

@@ -88,7 +88,7 @@ monster.loot = {
 	{ name = "gold coin", chance = 47000, maxCount = 98 },
 	{ name = "platinum coin", chance = 50590, maxCount = 8 },
 	{ name = "meat", chance = 50450, maxCount = 4 },
-	{ name = "great mana potion", chance = 9950, maxCount = 3 },
+	{ id = 238, chance = 9950, maxCount = 3 }, -- great mana potion
 	{ name = "terra hood", chance = 8730 },
 	{ name = "great spirit potion", chance = 4905, maxCount = 3 },
 	{ name = "ultimate health potion", chance = 9400, maxCount = 3 },

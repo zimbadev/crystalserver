@@ -31,8 +31,8 @@ npcConfig.light = {
 npcConfig.voices = {
 	interval = 10000,
 	chance = 50,
-	{ text = "Ready for a passage to the continent?" },
-	{ text = "No fear! This ferry will take you safely to the Mainland." },
+	{ text = "Ready for a passage to Targuna?" },
+	{ text = "No fear! This ferry will take you safely to the island of Targuna." },
 }
 
 npcType:speechBubble(SPEECHBUBBLE_TRAVELER)
@@ -64,8 +64,7 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
-local THAIS_PENINSULA_DESTINATION = Position(32310, 32210, 6)
-local BLUE_VALLEY_DESTINATION = Position(33614, 31494, 7) -- Blue Valley for Monks
+local TARGUNA_DESTINATION = Position(31938, 31928, 7)
 local MIN_LEVEL_TO_TRAVEL = 8
 
 local function creatureSayCallback(npc, creature, type, message)
@@ -82,17 +81,12 @@ local function creatureSayCallback(npc, creature, type, message)
 
 	if MsgContains(message, "passage") then
 		if player:getLevel() < MIN_LEVEL_TO_TRAVEL then
-			npcHandler:say("You need to be at least level " .. MIN_LEVEL_TO_TRAVEL .. " to travel to the mainland. Keep training!", npc, creature)
+			npcHandler:say("You need to be at least level " .. MIN_LEVEL_TO_TRAVEL .. " to travel to Targuna. Keep training!", npc, creature)
 			return true
 		end
 
-		if player:isMonk() then
-			npcHandler:say("I see you are a Monk. I can take you to the {Blue Valley}, the heart of the Merudri culture. Are you interested?", npc, creature)
-			npcHandler:setTopic(playerId, 2)
-		else
-			npcHandler:say("I'm offering a ferry service to Thais Peninsula, are you interested?", npc, creature)
-			npcHandler:setTopic(playerId, 1)
-		end
+		npcHandler:say("I'm offering a ferry service to the island {Targuna}, are you interested?", npc, creature)
+		npcHandler:setTopic(playerId, 1)
 	elseif MsgContains(message, "yes") then
 		if player:getLevel() < MIN_LEVEL_TO_TRAVEL then
 			npcHandler:say("You need to be at least level " .. MIN_LEVEL_TO_TRAVEL .. " to travel.", npc, creature)
@@ -101,26 +95,20 @@ local function creatureSayCallback(npc, creature, type, message)
 		end
 
 		if npcHandler:getTopic(playerId) == 1 then
-			-- Thais Peninsula
-			npcHandler:say("Very well, I'll take you to the Thais Peninsula then. Don't forget to talk to Hector at the port for directions!", npc, creature)
-			player:teleportTo(THAIS_PENINSULA_DESTINATION)
-		elseif npcHandler:getTopic(playerId) == 2 then
-			-- Blue Valley for Monks
-			npcHandler:say("Very well, I'll take you to the Blue Valley. May serenity guide your path, young Monk!", npc, creature)
-			player:teleportTo(BLUE_VALLEY_DESTINATION)
+			npcHandler:say("Very well, I'll take you to Targuna then. The locals there could use a helping hand!", npc, creature)
+			player:teleportTo(TARGUNA_DESTINATION)
+			player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
+			npcHandler:setTopic(playerId, 0)
+
+			player:setStorageValue(Storage.Quest.U15_12.newhavenCitizen, -1)
+			player:setStorageValue(Storage.Quest.U15_12.newhavenTutorialHunting, -1)
+			player:setStorageValue(Storage.Quest.U15_12.newhavenNewLootTheCorruptor, -1)
+
+			player:setTown(Town(TOWNS_LIST.TARGUNA))
 		end
-
-		player:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
-		npcHandler:setTopic(playerId, 0)
-		player:setStorageValue(Storage.Quest.U15_12.newhavenCitizen, -1)
-		player:setStorageValue(Storage.Quest.U15_12.newhavenTutorialHunting, -1)
-		player:setStorageValue(Storage.Quest.U15_12.newhavenNewLootTheCorruptor, -1)
-
-		local town = Town(TOWNS_LIST.THAIS)
-		player:setTown(town)
 	elseif MsgContains(message, "no") then
 		if npcHandler:getTopic(playerId) >= 1 then
-			npcHandler:say("No problem. Come back when you're ready to explore the mainland!", npc, creature)
+			npcHandler:say("No problem. Come back when you're ready to explore Targuna!", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		end
 	end
@@ -129,7 +117,8 @@ end
 
 -- Keywords about NPCs
 keywordHandler:addKeyword({ "name" }, StdModule.say, { npcHandler = npcHandler, text = "My full {name} is Anna Maria Mauricia, but you may call me just Anna." })
-keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I'm offering a ferry service to the Mainland and to the {Blue Valley}." })
+keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I'm offering a ferry service to the island of {Targuna}." })
+keywordHandler:addKeyword({ "targuna" }, StdModule.say, { npcHandler = npcHandler, text = "Targuna is a beautiful island where adventurers are always welcome. Ask me for a {passage} if you're interested." })
 keywordHandler:addKeyword({ "mainland" }, StdModule.say, { npcHandler = npcHandler, text = "You chose a peaceful world. Not much danger from other adventurers. Just beware the monsters. Ask me for a passage if you're interested." })
 keywordHandler:addKeyword({ "blue valley" }, StdModule.say, { npcHandler = npcHandler, text = "The {Blue Valley} is the heart of the {Merudri} culture, or what is left of it." })
 keywordHandler:addKeyword({ "merudri" }, StdModule.say, { npcHandler = npcHandler, text = "The {Merudri} are warrior monks. Honing serenity, preserving their legacy, defending the {Blue Valley} and beyond." })
@@ -144,7 +133,7 @@ keywordHandler:addKeyword({ "viola" }, StdModule.say, { npcHandler = npcHandler,
 keywordHandler:addKeyword({ "tim" }, StdModule.say, { npcHandler = npcHandler, text = "He is a friend of our guard {Gustavo} but he lives in the capital {Thais}." })
 keywordHandler:addKeyword({ "ben" }, StdModule.say, { npcHandler = npcHandler, text = "Hmm, no one in the village has that {name}. Oh wait... {Gustavo} mentioned it once." })
 
-npcHandler:setMessage(MESSAGE_GREET, "Hello, my friend. Do you seek passage to the Mainland, also known as {Thais Peninsula}.")
+npcHandler:setMessage(MESSAGE_GREET, "Hello, my friend. Do you seek {passage} to the island {Targuna}?")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Fair winds, |PLAYERNAME|! Safe travels!")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Take care!")
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)

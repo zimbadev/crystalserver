@@ -17,6 +17,8 @@
 
 #include "utils/tools.hpp"
 
+#include <cmath>
+
 #include "core.hpp"
 #include "enums/object_category.hpp"
 #include "items/item.hpp"
@@ -419,6 +421,11 @@ std::mt19937 &getRandomGenerator() {
 	static std::random_device rd;
 	static std::mt19937 generator(rd());
 	return generator;
+}
+
+int32_t getBaseDamageHealing(uint32_t level) {
+	const auto step = static_cast<int32_t>(std::floor((std::sqrt(2.0 * static_cast<double>(level) + 2025.0) + 5.0) / 10.0));
+	return static_cast<int32_t>(std::floor(static_cast<double>(level + 1000) / step)) + 50 * step - 450;
 }
 
 int32_t uniform_random(int32_t minNumber, int32_t maxNumber) {
@@ -866,6 +873,11 @@ ShootTypeNames shootTypeNames = {
 	{ "diamondarrow", CONST_ANI_DIAMONDARROW },
 	{ "spectralbolt", CONST_ANI_SPECTRALBOLT },
 	{ "royalstar", CONST_ANI_ROYALSTAR },
+	{ "shatterstormarrow", CONST_ANI_SHATTERSTORMARROW },
+	{ "firestormarrow", CONST_ANI_FIRESTORMARROW },
+	{ "terrastormarrow", CONST_ANI_TERRASTORMARROW },
+	{ "froststormarrow", CONST_ANI_FROSTSTORMARROW },
+	{ "thunderstormarrow", CONST_ANI_THUNDERSTORMARROW },
 };
 
 CombatTypeNames combatTypeNames = {
@@ -1664,6 +1676,9 @@ SpellGroup_t stringToSpellGroup(const std::string &value) {
 	if (tmpStr == "greatbeams" || tmpStr == "10") {
 		return SPELLGROUP_GREAT_BEAMS;
 	}
+	if (tmpStr == "stance" || tmpStr == "11") {
+		return SPELLGROUP_STANCE;
+	}
 
 	return SPELLGROUP_NONE;
 }
@@ -2186,7 +2201,7 @@ std::string convertToUTF8(const std::string &input) {
 const std::unordered_set<std::string_view> harmonySpells = {
 	"Devastating Knockout",
 	"Greater Tiger Clash",
-	"Mass Spirit Mend",
+	// Vocation Adjustment: Mass Spirit Mend is no longer a spender (removed from the harmony set).
 	"Spiritual Outburst",
 	"Sweeping Takedown",
 	"Tiger Clash"

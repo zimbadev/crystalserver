@@ -898,6 +898,7 @@ private:
 
 	std::unordered_map<std::string, std::weak_ptr<Player>> m_deadPlayers;
 	phmap::parallel_flat_hash_map<uint32_t, std::shared_ptr<Player>> players;
+	phmap::parallel_flat_hash_map<uint32_t, std::shared_ptr<Player>> playersByGUID;
 	phmap::flat_hash_map<std::string, std::weak_ptr<Player>> mappedPlayerNames;
 	phmap::parallel_flat_hash_map<uint32_t, std::shared_ptr<Guild>> guilds;
 	phmap::flat_hash_map<uint16_t, std::shared_ptr<Item>> uniqueItems;
@@ -1031,6 +1032,7 @@ private:
 	std::string generateHighscoreOrGetCachedQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation);
 
 	bool hasPartyMembersNearby(const std::shared_ptr<Player> &player);
+	void projectMonkVirtueAura(const std::shared_ptr<Player> &monk);
 	bool isPlayerNoBoxed(const std::shared_ptr<Player> &player);
 };
 

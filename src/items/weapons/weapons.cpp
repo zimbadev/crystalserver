@@ -53,7 +53,7 @@ namespace {
 			case CONST_ME_MONK_DAGGERS_ATTACK:
 				return 6;
 			default:
-				return 4;
+				return 0;
 		}
 	}
 } // namespace
@@ -307,10 +307,13 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		}
 	}
 
-	// 15.x: directional melee swing for weapons (CreatureMark IsAttacked + per-weapon weaponType,
-	// preserving the monk staff/daggers distinction via getWeaponAttackEffect).
+	// 15.x: directional melee swing for melee weapons (CreatureMark IsAttacked + per-weapon weaponType).
+	// Non-melee weapons (distance, wands) have no melee swing — skip.
 	if (cleavePercent == 0) {
-		player->sendCreatureSquare(target, SQ_PLAYER_ATTACK, static_cast<SquareColor_t>(markWeaponType(getWeaponAttackEffect(item, player))));
+		const uint16_t attackEffect = getWeaponAttackEffect(item, player);
+		if (attackEffect != CONST_ME_NONE) {
+			player->sendCreatureSquare(target, SQ_PLAYER_ATTACK, static_cast<SquareColor_t>(markWeaponType(attackEffect)));
+		}
 	}
 
 	if (isLoadedScriptId()) {
@@ -373,11 +376,8 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 			if (selfWeapon) {
 				m_combat->setupChain(selfWeapon);
 			}
-			if (!m_combat->doCombatChain(player, target, params.aggressive)) {
-				Combat::doCombatHealth(player, target, damage, params);
-			} else {
-				g_logger().debug("Weapon::internalUseWeapon - Chain executed with distance effects.");
-			}
+			Combat::doCombatHealth(player, target, damage, params);
+			m_combat->doCombatChain(player, target, params.aggressive, true);
 		} else {
 			Combat::doCombatHealth(player, target, damage, params);
 		}
@@ -411,12 +411,10 @@ void Weapon::onUsedWeapon(const std::shared_ptr<Player> &player, const std::shar
 
 	const uint32_t manaCost = getManaCost(player);
 	if (manaCost != 0) {
+		// Vocation Adjustment: wand/rod attacks GENERATE mana instead of consuming it -- the per-shot
+		// mana cost (the only weapons with one are wands/rods) is added back to the caster's mana pool.
 		player->addManaSpent(manaCost);
-		player->changeMana(-static_cast<int32_t>(manaCost));
-
-		if (g_configManager().getBoolean(REFUND_BEGINNING_WEAPON_MANA) && (item->getName() == "wand of vortex" || item->getName() == "snakebite rod")) {
-			player->changeMana(static_cast<int32_t>(manaCost));
-		}
+		player->changeMana(static_cast<int32_t>(manaCost));
 	}
 
 	const uint32_t healthCost = getHealthCost(player);

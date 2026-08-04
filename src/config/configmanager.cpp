@@ -67,6 +67,7 @@ bool ConfigManager::load() {
 		loadIntConfig(L, LOGIN_PORT, "loginProtocolPort", 7171);
 		loadIntConfig(L, MARKET_OFFER_DURATION, "marketOfferDuration", 30 * 24 * 60 * 60);
 		loadIntConfig(L, MARKET_REFRESH_PRICES, "marketRefreshPricesInterval", 30);
+		loadIntConfig(L, MYSQL_POOL_SIZE, "mysqlPoolSize", 4);
 		loadIntConfig(L, PREMIUM_DEPOT_LIMIT, "premiumDepotLimit", 8000);
 		loadIntConfig(L, SQL_PORT, "mysqlPort", 3306);
 		loadIntConfig(L, STATUS_PORT, "statusProtocolPort", 7171);

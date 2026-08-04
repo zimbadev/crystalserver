@@ -918,11 +918,13 @@ RaceType_t Monster::getRace() const {
 }
 
 float Monster::getMitigation() const {
-	float mitigation = mType->info.mitigation * getDefenseMultiplier();
+	// Vocation Adjustment: monster mitigation increased ~50% (x1.5) with a higher ceiling (30 -> 45)
+	// to compensate for the player mitigation rework.
+	float mitigation = mType->info.mitigation * getDefenseMultiplier() * 1.5f;
 	if (g_configManager().getBoolean(DISABLE_MONSTER_ARMOR)) {
 		mitigation += std::ceil(static_cast<float>(getDefense() + getArmor()) / 100.f) * getDefenseMultiplier() * 2.f;
 	}
-	return std::min<float>(mitigation, 30.f);
+	return std::min<float>(mitigation, 45.f);
 }
 
 int32_t Monster::getArmor() const {
@@ -2599,11 +2601,8 @@ bool Monster::challengeCreature(const std::shared_ptr<Creature> &creature, int t
 	if (result) {
 		challengeFocusDuration = targetChangeCooldown;
 		targetChangeTicks = 0;
-		// Wheel of destiny
-		const auto &player = creature ? creature->getPlayer() : nullptr;
-		if (player && !player->isRemoved()) {
-			player->wheel()->healIfBattleHealingActive();
-		}
+		// Vocation Adjustment: Battle Healing no longer heals on challenge (reworked into a healing
+		// multiplier in Game::applyWheelOfDestinyHealing).
 	}
 	return result;
 }

@@ -1286,15 +1286,6 @@ void ConditionRegeneration::addCondition(std::shared_ptr<Creature> creature, con
 
 		healthGain = conditionRegen->healthGain;
 		manaGain = conditionRegen->manaGain;
-
-		foodTicks += conditionRegen->foodTicks;
-		if (foodTicks > 1200000) {
-			foodTicks = 1200000; // max foodTicks
-		}
-	}
-
-	if (const auto &player = creature->getPlayer()) {
-		player->sendStats();
 	}
 }
 
@@ -1307,8 +1298,6 @@ bool ConditionRegeneration::unserializeProp(ConditionAttr_t attr, PropStream &pr
 		return propStream.read<uint32_t>(manaTicks);
 	} else if (attr == CONDITIONATTR_MANAGAIN) {
 		return propStream.read<uint32_t>(manaGain);
-	} else if (attr == CONDITIONATTR_FOODTICKS) {
-		return propStream.read<uint32_t>(foodTicks);
 	}
 	return Condition::unserializeProp(attr, propStream);
 }
@@ -1327,21 +1316,14 @@ void ConditionRegeneration::serialize(PropWriteStream &propWriteStream) {
 
 	propWriteStream.write<uint8_t>(CONDITIONATTR_MANAGAIN);
 	propWriteStream.write<uint32_t>(manaGain);
-
-	propWriteStream.write<uint8_t>(CONDITIONATTR_FOODTICKS);
-	propWriteStream.write<uint32_t>(foodTicks);
 }
 
 bool ConditionRegeneration::executeCondition(const std::shared_ptr<Creature> &creature, int32_t interval) {
 	internalHealthTicks += interval;
 	internalManaTicks += interval;
 
-	if (foodTicks > 0) {
-		internalFoodTicks += interval;
-		if (internalFoodTicks >= foodTicks) {
-			foodTicks = 0;
-			internalFoodTicks = 0;
-		}
+	if (const auto &player = creature->getPlayer()) {
+		player->sendStats();
 	}
 
 	const auto &player = creature->getPlayer();
@@ -1425,11 +1407,6 @@ bool ConditionRegeneration::setParam(ConditionParam_t param, int32_t value) {
 			manaTicks = value;
 			return true;
 
-		case CONDITION_PARAM_FOODTICKS:
-			foodTicks = value;
-			internalFoodTicks = 0;
-			return true;
-
 		default:
 			return ret;
 	}
@@ -1449,10 +1426,6 @@ uint32_t ConditionRegeneration::getManaTicks(const std::shared_ptr<Creature> &cr
 	}
 
 	return manaTicks;
-}
-
-uint32_t ConditionRegeneration::getFoodTicks() const {
-	return foodTicks;
 }
 
 std::shared_ptr<Condition> ConditionRegeneration::clone() const {
@@ -2653,7 +2626,7 @@ bool ConditionLight::startCondition(std::shared_ptr<Creature> creature) {
 	}
 
 	internalLightTicks = 0;
-	lightChangeInterval = ticks / lightInfo.level;
+	lightChangeInterval = ticks / std::max<uint8_t>(1, lightInfo.level);
 	creature->setCreatureLight(lightInfo);
 	g_game().changeLight(creature);
 	return true;
@@ -2738,7 +2711,7 @@ bool ConditionLight::unserializeProp(ConditionAttr_t attr, PropStream &propStrea
 			return false;
 		}
 
-		lightInfo.level = value;
+		lightInfo.level = std::max<uint32_t>(1, value);
 		return true;
 	} else if (attr == CONDITIONATTR_LIGHTTICKS) {
 		return propStream.read<uint32_t>(internalLightTicks);

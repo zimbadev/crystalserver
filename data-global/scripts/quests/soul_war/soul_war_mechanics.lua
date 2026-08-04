@@ -35,6 +35,10 @@ goshnarsMaliceReflection:register()
 local soulCageReflection = CreatureEvent("SoulCageHealthChange")
 
 function soulCageReflection.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
+	if not attacker then
+		return primaryDamage, primaryType, secondaryDamage, secondaryType
+	end
+
 	local player = attacker:getPlayer()
 	if player then
 		if primaryDamage > 0 then

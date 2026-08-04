@@ -1817,6 +1817,12 @@ ItemAction = {
 			{ x = 32652, y = 32200, z = 5 },
 		},
 	},
+	[42506] = {
+		itemId = 12185,
+		itemPos = {
+			{ x = 32679, y = 32210, z = 6 },
+		},
+	},
 	-- Tinder Box Quest - Event Chyllfroests
 	[50000] = {
 		itemId = false,

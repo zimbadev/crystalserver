@@ -7167,5 +7167,197 @@ if not Quests then
 				},
 			},
 		},
+		[55] = {
+			name = "Targuna",
+			startStorageId = Storage.Quest.U15_24.Targuna.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "A long lost treasure",
+					storageId = Storage.Quest.U15_24.Targuna.LongLostTreasure.Mission,
+					missionId = 11011,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "Sterling told you that his turtle Matilda can take you from Targuna to the pirate island Aragonia, whenever you're ready.\nTravel to Aragonia and take care of the pirates and save Morla in the process.",
+						[2] = function(player)
+							return ("You've arrived in Aragonia. Help Sterling and his friend Morla by saving the tortoise eggs scattered around the island and taking care of the local pirate problem.\n\nYou already killed %d/20 pirates and saved %d/10 tortoise eggs.\n\nReport back to Morla once your objective is completed. You can find her in a small cave on the south side of Aragonia."):format(
+								math.max(player:getStorageValue(Storage.Quest.U15_24.Targuna.LongLostTreasure.PirateKillCount), 0),
+								math.max(player:getStorageValue(Storage.Quest.U15_24.Targuna.LongLostTreasure.TortoiseEggCount), 0)
+							)
+						end,
+						[3] = "After talking to Morla and assuring her that she and her eggs will stay safe from now on, she handed you an old map she stole from one of the sleeping pirates.\n\nTravel back to Targuna and show Sterling the mysterious treasure map and let him decipher it.",
+						[4] = "Sterling deciphered the map and told you about the spot on Targuna.\nThe long lost treasure can be found for those who have their eyes open and their hearts pure.\nLook for a hidden place on the island where water and rocks meet.",
+						[5] = "You found the marked spot on Targuna and dug into the sand. Beneath it, a hidden entrance to a previously unknown cave was revealed.\n\nAt the end of the cave you find the long forgotten treasure chest ready to be opened.\n\nTake what is hidden inside as your reward for your hard work and service to Sterling, Morla and Targuna as a whole.",
+					},
+				},
+				[2] = {
+					name = "An Ancient Enemy",
+					storageId = Storage.Quest.U15_24.Targuna.AncientEnemy.Mission,
+					missionId = 11010,
+					startValue = 1,
+					endValue = 4,
+					states = {
+						[1] = "You heard about a growing lizard clan hidden deep inside a temple under Targuna.\nTalk to Lizzie in order to get more information on how to find these lizards and what to be careful of.\nYou can find Lizzie on the southside of Targuna.",
+						[2] = function(player)
+							return ("After talking to Lizzie you received all necessary information about the lizard group on Targuna.\nYour mission is now to eliminate the Lizard Commander and put an end to his reign.\n\nYou've eliminated %d/1 Lizard Commander.\n\nInform Lizzie after eliminating your target."):format(
+								math.max(player:getStorageValue(Storage.Quest.U15_24.Targuna.AncientEnemy.LizardCommanderKilled), 0)
+							)
+						end,
+						[3] = "You finally put an end to the reign of the Lizard Commander.\nBased on Lizzie's research, this lizard group will soon dissolve and won't be a threat again.\n\nTalk to the mayor, Camilla, about your work. You can find her in the upper levels of the depot.",
+						[4] = "You've told Camilla about the Hidden Lizard Temple under Targuna and the research Lizzie was involved in to uncover the danger hidden beneath.\n\nCamilla, Lizzie and all citizens of Targuna are grateful for your efforts, ensuring the town stays safe for years to come.",
+					},
+				},
+				[3] = {
+					name = "Burning Heat",
+					storageId = Storage.Quest.U15_24.Targuna.BurningHeart.Mission,
+					missionId = 11017,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "Emiliana asked you to help her fight the danger lingering within the portal.\nUse the teleporter in her upstairs room to travel into the Crimson Court and speak to Emiliana again to discuss your further plans.",
+						[2] = "You've reached the Crimson Court and talked to Emiliana about your next actions.\nShe tasked you to make your way deeper into the crater.\nFind out where the uprising demonic force called Herald of Fire resides and destroy his growing kingdom in order to save Targuna and its residents.",
+						[3] = "At last his kingdom comes to an end as you feel the power bursting from the remains of the Herald of Fire.\nTake what's now rightfully yours and travel back to Emiliana on Targuna to discuss further actions.",
+						[4] = "As a sign of gratitude for your service, Emiliana gifted you a bunch of turnips, hinting at the wild ram living behind the bakery on Targuna. Emiliana seems to know how much these creatures enjoy the taste of fresh roots.\n\nVisit the ram and use the given bunch of turnips to feed the hungry mammal.",
+						[5] = "You used the bunch of turnips on the ram in Targuna. It enjoyed your gift so much that it will now follow you as a partner in crime after helping Emiliana and the citizens of the island by taking care of the Herald of Fire.\n\nWhere will you and your new wandering partner head next?",
+					},
+				},
+				[4] = {
+					name = "Claim your Daily Reward",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.DailyReward,
+					missionId = 11012,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Task: Claim your Daily Reward\nYou can find the Daily Reward shrine at the depot in the center of Targuna.\nChoose your Daily Reward from the menu by clicking it.",
+						[2] = "You successfully claimed your daily reward.",
+					},
+				},
+				[5] = {
+					name = "Deposit Gold",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.DepositGold,
+					missionId = 11013,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Task: Deposit gold into your bank account\nYou can deposit gold from your backpack into your bank account by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and deposit gold by using the according icon or typing "deposit".',
+						[2] = "You successfully deposited gold into your bank account.",
+					},
+				},
+				[6] = {
+					name = "Stash an Item",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.StashItem,
+					missionId = 11014,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Task: Stash an item\nYou can find the stash inside the locker at the depot in the center of Targuna.\nInteract with the locker by clicking on a chest next to the glowing depot plates.\nMove an item from your backpack into your stash by dragging it onto the stash icon.",
+						[2] = "You successfully stashed an item.",
+					},
+				},
+				[7] = {
+					name = "Take an item from your stash",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.TakeFromStash,
+					missionId = 11015,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Task: Take an item from your stash\nYou can find the stash inside the locker at the depot in the center of Targuna.\nInteract with the locker by clicking on a chest next to the glowing depot plates.\nOpen the stash by clicking on the icon and choose your desired item. Click it to move it into your inventory.",
+						[2] = "You successfully took an item from your stash.",
+					},
+				},
+				[8] = {
+					name = "Withdraw gold from your account",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.WithdrawGold,
+					missionId = 11016,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Task: Withdraw gold from your bank account\nYou can withdraw gold from your bank account into your backpack by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and withdraw gold by using the according icon or typing "withdraw".',
+						[2] = "You successfully withdrew gold from your bank account.",
+					},
+				},
+			},
+		},
+		[56] = {
+			name = "Rottin Wood and the Married Men",
+			startStorageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Mission 1: Lucky Charms",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission01,
+					missionId = 11018,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Rottin Wood has sent you on and important mission to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
+						[2] = "You delivered the lucky charms as requested. Rottin Wood was quite pleased and offered you to continue helping him and his men.",
+					},
+				},
+				[2] = {
+					name = "Mission 2: In a State of Dispair",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission02,
+					missionId = 11019,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ("You accepted a quest to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp. So far you fixed %d of 6 broken walls."):format(math.max(count, 0))
+						end,
+						[2] = "You tried your best to fix the walls in the camp. It does not look like any of your repairs will hold forever. Rottin Wood would like you to stay around and look for any further damages another day.",
+					},
+				},
+				[3] = {
+					name = "Mission 3: Bushwhacking",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission03,
+					missionId = 11020,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-corpsecount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ('You agreed to help Rottin Wood and the Married Men to relieve several merchants of their goods. Lay out the net traps he gave you to catch 5 of them. So far you have "relieved" %d of 5 merchants.'):format(math.max(count, 0))
+						end,
+						[2] = 'You have "relieved" enough merchants to provide the very pleased Rottin Wood and his men with enough opportunities to gather valuables and supplies.',
+					},
+				},
+				[4] = {
+					name = "Daily Task: Lucky Loop",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Task01,
+					missionId = 11021,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Rottin Wood has sent you on and important task to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
+						[2] = "You delivered the lucky charms as requested. Rottin Wood seems to be satisfied with that profit for today.",
+					},
+				},
+				[5] = {
+					name = "Daily Task: Handyman",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Task02,
+					missionId = 11022,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ("You accepted a task to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp - again. So far you swong your hammer on %d of 6 broken walls."):format(math.max(count, 0))
+						end,
+						[2] = "You tried your best to fix the walls in the camp all day long. It does not look like any of your repairs will hold forever. More repairs maybe needed in the future.",
+					},
+				},
+			},
+		},
 	}
 end

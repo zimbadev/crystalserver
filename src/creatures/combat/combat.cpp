@@ -55,7 +55,7 @@ int32_t Combat::getLevelFormula(const std::shared_ptr<Player> &player, const std
 		}
 	}
 
-	int32_t levelFormula = player->getLevel() * 2 + (player->getMagicLevel() + player->getSpecializedMagicLevel(damage.primary.type, true)) * 3;
+	int32_t levelFormula = getBaseDamageHealing(player->getLevel()) * 2 + (magicLevelSkill + player->getSpecializedMagicLevel(damage.primary.type, true)) * 3;
 	return levelFormula;
 }
 
@@ -98,6 +98,100 @@ static void applyImproveMonkAttackSpender(const std::shared_ptr<Player> &player,
 	const float multiplier = 1.0f + (totalBonusPercent / 100.0f);
 	damage.primary.value = static_cast<int32_t>(damage.primary.value * multiplier);
 	damage.secondary.value = static_cast<int32_t>(damage.secondary.value * multiplier);
+}
+
+// Vocation Adjustment: Sorcerer ELEMENTAL stances (Master of Flames / Thunder / Decay).
+// Applies the per-element spell bonus and drives the "next off-element spell" conversion.
+// Only player spell casts (ORIGIN_SPELL) participate, so auto-attacks / fields / ticks are ignored.
+static void applyElementalStance(const std::shared_ptr<Player> &player, CombatDamage &damage) {
+	if (!player || damage.origin != ORIGIN_SPELL) {
+		return;
+	}
+	// Only aggressive elemental DAMAGE spells participate. Without this, a non-aggressive cast (heal /
+	// mana / utility) would consume the armed conversion and corrupt its combat type (turning the heal
+	// into COMBAT_FIREDAMAGE, which then drops the Wheel/Virtue heal bonuses).
+	if (damage.primary.type == COMBAT_HEALING || damage.primary.type == COMBAT_MANADRAIN || damage.primary.type == COMBAT_NONE) {
+		return;
+	}
+
+	const Stance_t stance = player->getElementalStance();
+	const bool flames = (stance == STANCE_MASTER_OF_FLAMES);
+	const bool thunder = (stance == STANCE_MASTER_OF_THUNDER);
+	const bool decay = (stance == STANCE_MASTER_OF_DECAY);
+	if (!flames && !thunder && !decay) {
+		return;
+	}
+
+	// Wheel "Lord of Destruction" (repurposed Drain Body stage, grade 0..3) scales the stance bonus.
+	// Grade 0 == no Lord of Destruction == the base values, so this stays fully backward-compatible.
+	uint8_t lod = player->wheel()->getStage(WheelStage_t::DRAIN_BODY);
+	if (lod > 3) {
+		lod = 3;
+	}
+
+	// (A) Consume a pending conversion FIRST so the converted element also receives the bonus.
+	bool converted = false;
+	const CombatType_t pending = player->getPendingElementConversion();
+	if (pending != COMBAT_NONE && damage.primary.type != pending) {
+		damage.primary.type = pending;
+		if (damage.secondary.type != COMBAT_NONE) {
+			damage.secondary.type = pending;
+		}
+		player->setPendingElementConversion(COMBAT_NONE);
+		converted = true;
+	}
+
+	// (B) Apply the active stance's bonus when the (possibly converted) spell matches its element.
+	// Lord of Destruction adds, by grade: Flames +2/3/4% power, Thunder +2/3/4% crit chance,
+	// Decay +15/22.5/30% crit extra damage, on top of the base +4% / +4% / +30%.
+	static constexpr float flamesExtra[4] = { 0.0f, 0.02f, 0.03f, 0.04f };
+	static constexpr int32_t thunderExtra[4] = { 0, 200, 300, 400 };
+	static constexpr int32_t decayExtra[4] = { 0, 1500, 2250, 3000 };
+	if (flames && damage.primary.type == COMBAT_FIREDAMAGE) {
+		const float mult = 1.04f + flamesExtra[lod];
+		damage.primary.value = static_cast<int32_t>(damage.primary.value * mult);
+		if (damage.secondary.type == COMBAT_FIREDAMAGE) {
+			damage.secondary.value = static_cast<int32_t>(damage.secondary.value * mult);
+		}
+	} else if (thunder && damage.primary.type == COMBAT_ENERGYDAMAGE) {
+		damage.criticalChance += 400 + thunderExtra[lod]; // +4% base crit chance (+ Lord of Destruction)
+	} else if (decay && damage.primary.type == COMBAT_DEATHDAMAGE) {
+		damage.criticalDamage += 3000 + decayExtra[lod]; // +30% base crit extra (+ Lord of Destruction)
+	}
+
+	// (C) Arm a conversion for the NEXT spell, but ONLY when this spell was natively the stance's
+	// element (never off a freshly converted spell, otherwise every cast would chain-convert).
+	if (!converted) {
+		if ((flames && damage.primary.type == COMBAT_FIREDAMAGE)
+		    || (thunder && damage.primary.type == COMBAT_ENERGYDAMAGE)
+		    || (decay && damage.primary.type == COMBAT_DEATHDAMAGE)) {
+			player->setPendingElementConversion(damage.primary.type);
+		}
+	}
+}
+
+// Vocation Adjustment: Sorcerer CRIPPLING stances. Every enemy a player damages while the stance
+// is active receives a refreshing debuff condition (fixed subId -> re-hits refresh, never stack).
+// Sap Strength: the target deals -10% damage. Expose Weakness: the target takes +8% elemental
+// damage from EVERY attacker (modelled as negative absorb on the target).
+static void applyCripplingStanceAura(const std::shared_ptr<Player> &attackerPlayer, const std::shared_ptr<Creature> &target) {
+	if (!attackerPlayer || !target || !target->isAlive()) {
+		return;
+	}
+
+	const Stance_t stance = attackerPlayer->getStance();
+	if (stance == STANCE_SAP_STRENGTH) {
+		const auto condition = Condition::createCondition(CONDITIONID_COMBAT, CONDITION_ATTRIBUTES, 10000, 0, false, static_cast<uint32_t>(AttrSubId_t::SorcererSapStrengthAura));
+		condition->setParam(CONDITION_PARAM_BUFF_DAMAGEDEALT, 90); // deals 90% => -10% damage
+		target->addCombatCondition(condition, true);
+	} else if (stance == STANCE_EXPOSE_WEAKNESS) {
+		const auto condition = Condition::createCondition(CONDITIONID_COMBAT, CONDITION_ATTRIBUTES, 10000, 0, false, static_cast<uint32_t>(AttrSubId_t::SorcererExposeWeaknessAura));
+		condition->setParam(CONDITION_PARAM_ABSORB_FIREPERCENT, -8); // negative absorb => +8% taken
+		condition->setParam(CONDITION_PARAM_ABSORB_ICEPERCENT, -8);
+		condition->setParam(CONDITION_PARAM_ABSORB_ENERGYPERCENT, -8);
+		condition->setParam(CONDITION_PARAM_ABSORB_EARTHPERCENT, -8);
+		target->addCombatCondition(condition, true);
+	}
 }
 
 CombatDamage Combat::getCombatDamage(const std::shared_ptr<Creature> &creature, const std::shared_ptr<Creature> &target) const {
@@ -167,6 +261,12 @@ CombatDamage Combat::getCombatDamage(const std::shared_ptr<Creature> &creature, 
 		}
 	}
 
+	// Vocation Adjustment: Sorcerer elemental-stance bonus + next-spell conversion (covers every
+	// player spell formula, so it runs outside the value-callback branch above).
+	if (attackerPlayer) {
+		applyElementalStance(attackerPlayer, damage);
+	}
+
 	return damage;
 }
 
@@ -232,7 +332,7 @@ ConditionType_t Combat::DamageToConditionType(CombatType_t type) {
 		case COMBAT_EARTHDAMAGE:
 			return CONDITION_POISON;
 
-		case CONDITION_AGONY:
+		case COMBAT_AGONYDAMAGE:
 			return CONDITION_AGONY;
 
 		case COMBAT_ICEDAMAGE:
@@ -845,8 +945,26 @@ void Combat::CombatHealthFunc(const std::shared_ptr<Creature> &caster, const std
 		CombatConditionFunc(caster, target, params, &damage);
 		CombatDispelFunc(caster, target, params, nullptr);
 
+		// Vocation Adjustment: Sorcerer crippling-stance auras debuff every enemy the player damages
+		// (spells, runes AND auto-attacks). Only on aggressive, non-healing hits that actually dealt
+		// damage (skip immune / fully-blocked / fully-absorbed hits); covers PvP targets too since this
+		// runs before the monster-only early-return below.
+		if (attackerPlayer && params.aggressive && damage.primary.type != COMBAT_HEALING && (damage.primary.value != 0 || damage.secondary.value != 0)) {
+			applyCripplingStanceAura(attackerPlayer, target);
+		}
+
 		if (!targetMonster || !attackerPlayer) {
 			return;
+		}
+
+		// Vocation Adjustment charm double-proc fix: on MULTI-target (AoE) hits only proc Fatal Hold on the
+		// player's locked main target, to avoid one proc per collateral tile (storm/diamond arrows run this
+		// per creature). On single-target casts (affected == 1) always proc on the actual hit target.
+		if (damage.affected > 1) {
+			const auto &lockedFatalTarget = attackerPlayer->getAttackedCreature();
+			if (lockedFatalTarget && target != lockedFatalTarget) {
+				return;
+			}
 		}
 
 		if (const auto &fatalCharm = attackerPlayer->isApplyCharm(CHARM_MINOR_FATALHOLD, targetMonster->getName())) {
@@ -1318,7 +1436,7 @@ void Combat::setupChain(const std::shared_ptr<Weapon> &weapon) {
 	}
 }
 
-bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, bool aggressive) const {
+bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, bool aggressive, bool disableFirstTarget /* = false */) const {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (!params.chainCallback) {
 		return false;
@@ -1339,6 +1457,10 @@ bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::s
 	int i = 0;
 	auto combat = this;
 	for (const auto &[from, toVector] : targets) {
+		if (disableFirstTarget) {
+			disableFirstTarget = false;
+			continue;
+		}
 		auto delay = i * std::max<int32_t>(50, g_configManager().getNumber(COMBAT_CHAIN_DELAY));
 		++i;
 		for (const auto &to : toVector) {
@@ -1347,10 +1469,14 @@ bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::s
 				continue;
 			}
 			g_dispatcher().scheduleEvent(
-				delay, [combat, caster, nextTarget, from, affected]() {
+				delay, [combat, caster, nextTarget, affected]() {
 					if (combat && caster && nextTarget) {
-						Combat::doChainEffect(from, nextTarget->getPosition(), combat->params.chainEffect);
-						combat->doCombat(caster, nextTarget, from, affected);
+						CombatDamage damage = combat->getCombatDamage(caster, nextTarget);
+						damage.affected = affected;
+						Combat::CombatHealthFunc(caster, nextTarget, combat->params, &damage);
+						if (combat->params.targetCallback) {
+							combat->params.targetCallback->onTargetCombat(caster, nextTarget);
+						}
 					}
 				},
 				"Combat::doCombatChain"
@@ -1878,6 +2004,22 @@ uint32_t ValueCallback::getMagicLevelSkill(const std::shared_ptr<Player> &player
 	return magicLevelSkill + player->getSpecializedMagicLevel(damage.primary.type, true);
 }
 
+static uint16_t getSpellBasePowerFromDamage(const CombatDamage &damage) {
+	if (!damage.instantSpellName.empty()) {
+		if (const auto &instantSpell = g_spells().getInstantSpellByName(damage.instantSpellName)) {
+			return instantSpell->getBasePower();
+		}
+	}
+
+	if (!damage.runeSpellName.empty()) {
+		if (const auto &runeSpell = g_spells().getRuneSpellByName(damage.runeSpellName)) {
+			return runeSpell->getBasePower();
+		}
+	}
+
+	return 0;
+}
+
 void ValueCallback::getMinMaxValues(const std::shared_ptr<Player> &player, CombatDamage &damage, bool useCharges) const {
 	// onGetPlayerMinMaxValues(...)
 	if (!LuaScriptInterface::reserveScriptEnv()) {
@@ -1907,15 +2049,16 @@ void ValueCallback::getMinMaxValues(const std::shared_ptr<Player> &player, Comba
 
 	switch (type) {
 		case COMBAT_FORMULA_LEVELMAGIC: {
-			// onGetPlayerMinMaxValues(player, level, maglevel)
+			// onGetPlayerMinMaxValues(player, level, maglevel, basePower)
 			lua_pushnumber(L, player->getLevel());
 			lua_pushnumber(L, getMagicLevelSkill(player, damage));
-			parameters += 2;
+			lua_pushnumber(L, getSpellBasePowerFromDamage(damage));
+			parameters += 3;
 			break;
 		}
 
 		case COMBAT_FORMULA_SKILL: {
-			// onGetPlayerMinMaxValues(player, attackSkill, attackValue, attackFactor)
+			// onGetPlayerMinMaxValues(player, attackSkill, attackValue, attackFactor, basePower)
 			const auto &tool = player->getWeapon();
 			const auto &weapon = g_weapons().getWeapon(tool);
 			int32_t attackSkill = 0;
@@ -1927,7 +2070,8 @@ void ValueCallback::getMinMaxValues(const std::shared_ptr<Player> &player, Comba
 			lua_pushnumber(L, attackSkill);
 			lua_pushnumber(L, attackValue);
 			lua_pushnumber(L, attackFactor);
-			parameters += 3;
+			lua_pushnumber(L, getSpellBasePowerFromDamage(damage));
+			parameters += 4;
 			break;
 		}
 
@@ -2742,50 +2886,24 @@ int32_t MagicField::getDamage() const {
 }
 
 MatrixArea::MatrixArea(uint32_t initRows, uint32_t initCols) :
-	centerX(0), centerY(0), rows(initRows), cols(initCols) {
-	data_ = new bool*[rows];
-
-	for (uint32_t row = 0; row < rows; ++row) {
-		data_[row] = new bool[cols];
-
-		for (uint32_t col = 0; col < cols; ++col) {
-			data_[row][col] = false;
-		}
-	}
+	centerX(0), centerY(0), rows(initRows), cols(initCols),
+	data_(initRows, std::vector<char>(initCols, 0)) {
 }
 
-MatrixArea::MatrixArea(const MatrixArea &rhs) {
-	centerX = rhs.centerX;
-	centerY = rhs.centerY;
-	rows = rhs.rows;
-	cols = rhs.cols;
-
-	data_ = new bool*[rows];
-
-	for (uint32_t row = 0; row < rows; ++row) {
-		data_[row] = new bool[cols];
-
-		for (uint32_t col = 0; col < cols; ++col) {
-			data_[row][col] = rhs.data_[row][col];
-		}
-	}
+MatrixArea::MatrixArea(const MatrixArea &rhs) :
+	centerX(rhs.centerX), centerY(rhs.centerY), rows(rhs.rows), cols(rhs.cols),
+	data_(rhs.data_) {
 }
 
-MatrixArea::~MatrixArea() {
-	for (uint32_t row = 0; row < rows; ++row) {
-		delete[] data_[row];
-	}
-
-	delete[] data_;
-}
+MatrixArea::~MatrixArea() = default;
 
 std::unique_ptr<MatrixArea> MatrixArea::clone() const {
 	return std::make_unique<MatrixArea>(*this);
 }
 
-void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) const {
+void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) {
 	if (row < rows && col < cols) {
-		data_[row][col] = value;
+		data_[row][col] = value ? 1 : 0;
 	} else {
 		g_logger().error("[{}] Access exceeds the upper limit of memory block");
 		throw std::out_of_range("Access exceeds the upper limit of memory block");
@@ -2793,7 +2911,7 @@ void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) const {
 }
 
 bool MatrixArea::getValue(uint32_t row, uint32_t col) const {
-	return data_[row][col];
+	return data_[row][col] != 0;
 }
 
 void MatrixArea::setCenter(uint32_t y, uint32_t x) {
@@ -2814,11 +2932,11 @@ uint32_t MatrixArea::getCols() const {
 	return cols;
 }
 const bool* MatrixArea::operator[](uint32_t i) const {
-	return data_[i];
+	return reinterpret_cast<const bool*>(data_[i].data());
 }
 
 bool* MatrixArea::operator[](uint32_t i) {
-	return data_[i];
+	return reinterpret_cast<bool*>(data_[i].data());
 }
 
 CombatDamage Combat::applyWeaponProficiencyDamage(const std::shared_ptr<Player> &attackerPlayer, std::shared_ptr<Item> item, std::shared_ptr<Monster> &targetMonster, CombatDamage damage) {

@@ -21,8 +21,10 @@
 
 #ifndef USE_PRECOMPILED_HEADERS
 	#include <mysql/mysql.h>
+	#include <atomic>
 	#include <mutex>
 	#include <utility>
+	#include <vector>
 #endif
 
 class DBResult;
@@ -43,7 +45,7 @@ public:
 
 	bool connect();
 
-	bool connect(const std::string* host, const std::string* user, const std::string* password, const std::string* database, uint32_t port, const std::string* sock);
+	bool connect(const std::string* host, const std::string* user, const std::string* password, const std::string* database, uint32_t port, const std::string* sock, uint32_t poolSize = 4);
 
 	/**
 	 * @brief Creates a backup of the database.
@@ -62,18 +64,36 @@ public:
 	 */
 	void createDatabaseBackup(bool compress) const;
 
-	bool retryQuery(std::string_view query, int retries);
 	bool executeQuery(std::string_view query);
 
 	DBResult_ptr storeQuery(std::string_view query);
 
-	std::string escapeString(const std::string &s) const;
+	std::string escapeString(const std::string &s);
 
-	std::string escapeBlob(const char* s, uint32_t length) const;
+	std::string escapeBlob(const char* s, uint32_t length);
 
-	uint64_t getLastInsertId() const {
-		return static_cast<uint64_t>(mysql_insert_id(handle));
-	}
+	uint64_t getLastInsertId();
+
+	/**
+	 * @brief Atomically executes an INSERT and returns the generated id in the same connection round-trip.
+	 *
+	 * Why this exists: with a connection pool, calling executeQuery() and then getLastInsertId()
+	 * is NOT safe, because the second call may acquire a different connection from the pool
+	 * (round-robin) and return that connection's LAST_INSERT_ID() — which is either 0 or, worse,
+	 * the id of an unrelated INSERT that another thread happened to run on that connection.
+	 *
+	 * This method solves the problem by executing "INSERT ... ; SELECT LAST_INSERT_ID() AS id"
+	 * in a single storeQuery() call, guaranteeing that the SELECT runs on the SAME connection
+	 * as the INSERT. The connection is acquired once, both statements execute on that pinned
+	 * connection, and the result is read before the connection is released to the pool.
+	 *
+	 * @return The generated id on success, or 0 on failure (caller must check).
+	 *
+	 * @note This MUST be used instead of executeQuery() + getLastInsertId() for any INSERT
+	 * whose auto-increment id is consumed downstream (account/player creation, guild creation,
+	 * market offers, house bids, statements, etc.).
+	 */
+	uint64_t insertAndGetId(std::string_view query);
 
 	static const char* getClientVersion() {
 		return mysql_get_client_info();
@@ -84,15 +104,32 @@ public:
 	}
 
 private:
+	struct DBConnection {
+		MYSQL* handle = nullptr;
+		std::mutex mutex;
+	};
+
 	bool beginTransaction();
 	bool rollback();
 	bool commit();
 
 	static bool isRecoverableError(unsigned int error);
 
-	MYSQL* handle = nullptr;
-	std::recursive_mutex databaseLock;
+	bool retryQuery(MYSQL* handle, std::string_view query, int retries);
+
+	// Acquire a connection from the pool (mutex locked on return).
+	// If inside a transaction, returns the pinned connection (mutex already locked).
+	DBConnection* getConnection();
+
+	// Release a connection back to the pool (unlocks mutex).
+	// If the connection is pinned by a transaction, does nothing.
+	void putConnection(DBConnection* conn);
+
+	std::vector<std::unique_ptr<DBConnection>> connections;
+	std::atomic<size_t> nextIndex { 0 };
 	uint64_t maxPacketSize = 1048576;
+
+	static thread_local DBConnection* tls_pinnedConnection;
 
 	friend class DBTransaction;
 };

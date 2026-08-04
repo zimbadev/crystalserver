@@ -3,9 +3,9 @@ combatGrenade:setParameter(COMBAT_PARAM_TYPE, COMBAT_HOLYDAMAGE)
 combatGrenade:setArea(createCombatArea(AREA_CIRCLE2X2))
 combatGrenade:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_HOLYDAMAGE)
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 4)
-	local max = (level / 5) + (maglevel * 6)
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4)
+	local max = (calculateBaseDamageHealing(level)) + (maglevel * 6)
 
 	local grade = player:upgradeSpellsWOD("Divine Grenade")
 
@@ -46,12 +46,27 @@ local function removeGrenadeEffect(position)
 	position:removeMagicEffect(CONST_ME_DIVINE_GRENADE)
 end
 
+-- A grenade may only land on a walkable, non-PZ tile (Tile:isWalkable(true) = has ground,
+-- no wall/blocksolid/blockprojectile, and not a protection zone / house).
+local function grenadeTileValid(position)
+	local tile = Tile(position)
+	if not tile then
+		return false
+	end
+	return tile:isWalkable(true)
+end
+
 function onTargetCreature(creature, target)
 	if not (creature and target and creature:isPlayer()) then
 		return false
 	end
 
 	local position = creature:getPosition():getWithinRange(target:getPosition(), 4)
+	if not grenadeTileValid(position) then
+		creature:sendCancelMessage("You cannot throw the grenade there.")
+		creature:getPosition():sendMagicEffect(CONST_ME_POFF)
+		return false
+	end
 	addEvent(explodeGrenade, 3000, position, creature:getId())
 	addEvent(removeGrenadeEffect, 3000, position)
 	return true
@@ -67,22 +82,17 @@ function spell.onCastSpell(creature, var)
 		return false
 	end
 
-	local grade = creature:revelationStageWOD("Divine Grenade")
-
-	if grade == 0 then
-		creature:sendCancelMessage("You cannot cast this spell")
+	-- needPosition: var is the clicked tile (cursor/crosshair). Only allow walkable, non-PZ tiles.
+	local position = var:getPosition()
+	if not grenadeTileValid(position) then
+		creature:sendCancelMessage("You cannot throw the grenade there.")
 		creature:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return false
 	end
-
-	var.instantName = "Divine Grenade Cast"
-	if combatCast:execute(creature, var) then
-		local target = Creature(var:getNumber())
-		local position = creature:getPosition():getWithinRange(target:getPosition(), 4)
-		position:sendMagicEffect(CONST_ME_DIVINE_GRENADE)
-		return true
-	end
-	return false
+	position:sendMagicEffect(CONST_ME_DIVINE_GRENADE)
+	addEvent(explodeGrenade, 3000, position, creature:getId())
+	addEvent(removeGrenadeEffect, 3000, position)
+	return true
 end
 
 spell:group("attack")
@@ -91,12 +101,13 @@ spell:name("Divine Grenade")
 spell:words("exevo tempo mas san")
 spell:level(300)
 spell:mana(160)
+spell:basePower(190)
 spell:isPremium(true)
 spell:range(7)
-spell:needTarget(true)
+spell:needPosition(true) -- cast at the clicked tile (cursor/crosshair); var is VARIANT_POSITION
 spell:blockWalls(true)
+spell:isAggressive(true) -- attack grenade: applies in-fight and is blocked in protection zones
 spell:cooldown(26 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("paladin;true", "royal paladin;true")
 spell:register()

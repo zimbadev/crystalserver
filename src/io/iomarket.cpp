@@ -42,8 +42,10 @@ MarketOfferList IOMarket::getActiveOffers(MarketAction_t action) {
 	std::string query = fmt::format(
 		"SELECT `id`, `itemtype`, `amount`, `price`, `tier`, `created`, `anonymous`, "
 		"(SELECT `name` FROM `players` WHERE `id` = `player_id`) AS `player_name` "
-		"FROM `market_offers` WHERE `sale` = {}",
-		action
+		"FROM `market_offers` WHERE `sale` = {} "
+		"ORDER BY `id` DESC "
+		"LIMIT {}",
+		action, MAX_MARKET_OFFERS_RETURNED
 	);
 
 	DBResult_ptr result = g_database().storeQuery(query);
@@ -75,7 +77,7 @@ MarketOfferList IOMarket::getActiveOffers(MarketAction_t action, uint16_t itemId
 	MarketOfferList offerList;
 
 	std::ostringstream query;
-	query << "SELECT `id`, `amount`, `price`, `tier`, `created`, `anonymous`, (SELECT `name` FROM `players` WHERE `id` = `player_id`) AS `player_name` FROM `market_offers` WHERE `sale` = " << action << " AND `itemtype` = " << itemId << " AND `tier` = " << std::to_string(tier);
+	query << "SELECT `id`, `amount`, `price`, `tier`, `created`, `anonymous`, (SELECT `name` FROM `players` WHERE `id` = `player_id`) AS `player_name` FROM `market_offers` WHERE `sale` = " << action << " AND `itemtype` = " << itemId << " AND `tier` = " << std::to_string(tier) << " ORDER BY `id` DESC LIMIT " << MAX_MARKET_OFFERS_PER_SIDE;
 
 	DBResult_ptr result = Database::getInstance().storeQuery(query.str());
 	if (!result) {
@@ -264,6 +266,28 @@ uint32_t IOMarket::getPlayerOfferCount(uint32_t playerId) {
 	return result->getNumber<int32_t>("count");
 }
 
+uint32_t IOMarket::getPlayerOfferCountPerSide(uint32_t playerId, MarketAction_t action) {
+	std::ostringstream query;
+	query << "SELECT COUNT(*) AS `count` FROM `market_offers` WHERE `player_id` = " << playerId << " AND `sale` = " << action;
+
+	DBResult_ptr result = Database::getInstance().storeQuery(query.str());
+	if (!result) {
+		return 0;
+	}
+	return result->getNumber<int32_t>("count");
+}
+
+uint32_t IOMarket::getItemOfferCountPerSide(uint16_t itemId, uint8_t tier, MarketAction_t action) {
+	std::ostringstream query;
+	query << "SELECT COUNT(*) AS `count` FROM `market_offers` WHERE `itemtype` = " << itemId << " AND `tier` = " << std::to_string(tier) << " AND `sale` = " << action;
+
+	DBResult_ptr result = Database::getInstance().storeQuery(query.str());
+	if (!result) {
+		return 0;
+	}
+	return result->getNumber<int32_t>("count");
+}
+
 MarketOfferEx IOMarket::getOfferByCounter(uint32_t timestamp, uint16_t counter) {
 	MarketOfferEx offer;
 
@@ -298,7 +322,7 @@ MarketOfferEx IOMarket::getOfferByCounter(uint32_t timestamp, uint16_t counter) 
 void IOMarket::createOffer(uint32_t playerId, MarketAction_t action, uint32_t itemId, uint16_t amount, uint64_t price, uint8_t tier, bool anonymous) {
 	std::ostringstream query;
 	query << "INSERT INTO `market_offers` (`player_id`, `sale`, `itemtype`, `amount`, `created`, `anonymous`, `price`, `tier`) VALUES (" << playerId << ',' << action << ',' << itemId << ',' << amount << ',' << getTimeNow() << ',' << anonymous << ',' << price << ',' << std::to_string(tier) << ')';
-	Database::getInstance().executeQuery(query.str());
+	(void)Database::getInstance().insertAndGetId(query.str());
 }
 
 void IOMarket::acceptOffer(uint32_t offerId, uint16_t amount) {

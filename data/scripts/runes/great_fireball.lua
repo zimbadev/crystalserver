@@ -4,9 +4,8 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_FIREAREA)
 combat:setParameter(COMBAT_PARAM_DISTANCEEFFECT, CONST_ANI_FIRE)
 combat:setArea(createCombatArea(AREA_CIRCLE3X3))
 
-function onGetFormulaValues(player, level, maglevel)
-	local min = (level / 5) + (maglevel * 1.2) + 7
-	local max = (level / 5) + (maglevel * 2.8) + 17
+function onGetFormulaValues(player, level, maglevel, basePower)
+	local min, max = calculateMagicSpellDamage(level, maglevel, basePower)
 	return -min, -max
 end
 
@@ -28,6 +27,7 @@ rune:allowFarUse(true)
 rune:charges(4)
 rune:level(30)
 rune:magicLevel(4)
+rune:basePower(50)
 rune:cooldown(2 * 1000)
 rune:groupCooldown(2 * 1000)
 rune:isBlocking(false) -- True = Solid / False = Creature

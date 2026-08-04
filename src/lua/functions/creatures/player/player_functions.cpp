@@ -66,6 +66,7 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "isPlayer", PlayerFunctions::luaPlayerIsPlayer);
 
 	Lua::registerMethod(L, "Player", "getGuid", PlayerFunctions::luaPlayerGetGuid);
+	Lua::registerMethod(L, "Player", "getSpellAimPosition", PlayerFunctions::luaPlayerGetSpellAimPosition);
 	Lua::registerMethod(L, "Player", "getIp", PlayerFunctions::luaPlayerGetIp);
 	Lua::registerMethod(L, "Player", "getAccountId", PlayerFunctions::luaPlayerGetAccountId);
 	Lua::registerMethod(L, "Player", "getLastLoginSaved", PlayerFunctions::luaPlayerGetLastLoginSaved);
@@ -502,6 +503,10 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "setSereneCooldown", PlayerFunctions::luaPlayerSetSereneCooldown);
 	Lua::registerMethod(L, "Player", "getVirtue", PlayerFunctions::luaPlayerGetVirtue);
 	Lua::registerMethod(L, "Player", "setVirtue", PlayerFunctions::luaPlayerSetVirtue);
+	Lua::registerMethod(L, "Player", "getStance", PlayerFunctions::luaPlayerGetStance);
+	Lua::registerMethod(L, "Player", "setStance", PlayerFunctions::luaPlayerSetStance);
+	Lua::registerMethod(L, "Player", "getElementalStance", PlayerFunctions::luaPlayerGetElementalStance);
+	Lua::registerMethod(L, "Player", "setElementalStance", PlayerFunctions::luaPlayerSetElementalStance);
 
 	Lua::registerMethod(L, "Player", "applyImbuementScrollToItem", PlayerFunctions::luaPlayerApplyImbuementScrollToItem);
 	Lua::registerMethod(L, "Player", "onClearAllImbuementsOnEtcher", PlayerFunctions::luaPlayerOnClearAllImbuementsOnEtcher);
@@ -830,6 +835,17 @@ int PlayerFunctions::luaPlayerAddMinorCharmEchoes(lua_State* L) {
 int PlayerFunctions::luaPlayerIsPlayer(lua_State* L) {
 	// player:isPlayer()
 	Lua::pushBoolean(L, Lua::getUserdataShared<Player>(L, 1) != nullptr);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetSpellAimPosition(lua_State* L) {
+	// player:getSpellAimPosition()  -- crosshair/cursor tile from the say packet tail, or nil
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player && player->hasSpellAimPosition()) {
+		Lua::pushPosition(L, player->getSpellAimPosition());
+	} else {
+		lua_pushnil(L);
+	}
 	return 1;
 }
 
@@ -3660,11 +3676,19 @@ int PlayerFunctions::luaPlayerCanLearnSpell(lua_State* L) {
 }
 
 int PlayerFunctions::luaPlayerLearnSpell(lua_State* L) {
-	// player:learnSpell(spellName)
+	// player:learnSpell(spellName[, showBanner = true])
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (player) {
 		const std::string &spellName = Lua::getString(L, 2);
+		const bool showBanner = Lua::getBoolean(L, 3, true);
+		const bool alreadyLearned = player->hasLearnedInstantSpell(spellName);
 		player->learnInstantSpell(spellName);
+		if (showBanner && !alreadyLearned) {
+			const auto &spell = g_spells().getInstantSpellByName(spellName);
+			if (spell && spell->getSpellId() > 0) {
+				player->sendScreenshotAndBannerUnlockedSpell(spell->getSpellId());
+			}
+		}
 		Lua::pushBoolean(L, true);
 	} else {
 		lua_pushnil(L);
@@ -5636,6 +5660,60 @@ int PlayerFunctions::luaPlayerSetVirtue(lua_State* L) {
 		lua_pushboolean(L, false);
 	}
 
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetStance(lua_State* L) {
+	// player:getStance()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushnil(L);
+		return 1;
+	}
+	lua_pushnumber(L, static_cast<uint8_t>(player->getStance()));
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetStance(lua_State* L) {
+	// player:setStance(stanceType)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushnil(L);
+		return 1;
+	}
+	const auto stance = static_cast<Stance_t>(Lua::getNumber<uint8_t>(L, 2, 0));
+	const bool result = player->setStance(stance);
+	player->persistStances(); // Vocation Adjustment: persist active stances across sessions
+	lua_pushboolean(L, result);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetElementalStance(lua_State* L) {
+	// player:getElementalStance()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushnil(L);
+		return 1;
+	}
+	lua_pushnumber(L, static_cast<uint8_t>(player->getElementalStance()));
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetElementalStance(lua_State* L) {
+	// player:setElementalStance(stanceType)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushnil(L);
+		return 1;
+	}
+	const auto stance = static_cast<Stance_t>(Lua::getNumber<uint8_t>(L, 2, 0));
+	const bool result = player->setElementalStance(stance);
+	player->persistStances(); // Vocation Adjustment: persist active stances across sessions
+	lua_pushboolean(L, result);
 	return 1;
 }
 

@@ -84,7 +84,7 @@ monster.loot = {
 	{ name = "gold coin", chance = 100000, maxCount = 180 },
 	{ name = "platinum coin", chance = 70190, maxCount = 2 },
 	{ name = "great health potion", chance = 15100, maxCount = 3 },
-	{ name = "great mana potion", chance = 15060, maxCount = 3 },
+	{ id = 238, chance = 15060, maxCount = 3 }, -- great mana potion
 	{ name = "deepling breaktime snack", chance = 14990 },
 	{ name = "deepling guard belt buckle", chance = 12010 },
 	{ name = "eye of a deepling", chance = 9840 },

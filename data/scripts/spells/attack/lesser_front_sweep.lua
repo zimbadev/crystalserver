@@ -7,7 +7,7 @@ combat:setArea(createCombatArea(AREA_WAVE6, AREADIAGONAL_WAVE6))
 
 function onGetFormulaValues(player, skill, attack, factor)
 	local skillTotal = skill * attack
-	local levelTotal = player:getLevel() / 5
+	local levelTotal = calculateBaseDamageHealing(player:getLevel())
 	return -(((skillTotal * 0.02) + 7) + levelTotal) * 1.1, -(((skillTotal * 0.04) + 14) + levelTotal) * 1.1 -- TODO : Use New Real Formula instead of an %
 end
 
@@ -26,11 +26,11 @@ spell:words("exori infir min")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_FRONT_SWEEP)
 spell:level(1)
 spell:mana(6)
+spell:basePower(14)
 spell:isPremium(true)
 spell:needDirection(true)
 spell:needWeapon(true)
 spell:cooldown(6 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("knight;true", "elite knight;true")
 spell:register()

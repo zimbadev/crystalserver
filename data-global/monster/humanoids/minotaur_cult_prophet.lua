@@ -86,7 +86,7 @@ monster.loot = {
 	{ name = "moonlight rod", chance = 8480 },
 	{ name = "cultish robe", chance = 15450 },
 	{ name = "great health potion", chance = 7070 },
-	{ name = "great mana potion", chance = 16810 },
+	{ id = 238, chance = 16810 }, -- great mana potion
 	{ name = "gold ingot", chance = 1120 },
 	{ name = "small ruby", chance = 7160 },
 	{ name = "small topaz", chance = 7650 },

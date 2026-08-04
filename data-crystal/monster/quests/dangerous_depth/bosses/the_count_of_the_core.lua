@@ -78,7 +78,7 @@ monster.loot = {
 	{ name = "stone skin amulet", chance = 100000 },
 	{ name = "amber staff", chance = 100000 },
 	{ name = "ultimate health potion", chance = 80000, maxCount = 15 },
-	{ name = "great mana potion", chance = 60000, maxCount = 23 },
+	{ id = 238, chance = 60000, maxCount = 23 }, -- great mana potion
 	{ name = "small topaz", chance = 60000, maxCount = 10 },
 	{ name = "green crystal shard", chance = 60000 },
 	{ name = "wand of inferno", chance = 60000 },

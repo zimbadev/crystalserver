@@ -367,6 +367,7 @@ local questTable = {
 	{ storageName = "TheOrderOfTheLion.AccessEasternSide", storage = Storage.Quest.U12_40.TheOrderOfTheLion.AccessEasternSide, storageValue = 1 },
 	{ storageName = "TheOrderOfTheLion.AccessSouthernSide", storage = Storage.Quest.U12_40.TheOrderOfTheLion.AccessSouthernSide, storageValue = 1 },
 	{ storageName = "TheOrderOfTheLion.AugustinDoor", storage = Storage.Quest.U12_40.TheOrderOfTheLion.AugustinDoor, storageValue = 1 },
+	{ storageName = "TheOrderOfTheLion.KesarMission", storage = Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission, storageValue = 4 },
 	{ storageName = "ThreatenedDreams.QuestLine", storage = Storage.Quest.U11_40.ThreatenedDreams.QuestLine, storageValue = 1 },
 	{ storageName = "ThreatenedDreams.Mission01.TroubledAnimals", storage = Storage.Quest.U11_40.ThreatenedDreams.Mission01.TroubledAnimals, storageValue = 16 },
 	{ storageName = "ThreatenedDreams.Mission02.KroazurAccess", storage = Storage.Quest.U11_40.ThreatenedDreams.Mission02.KroazurAccess, storageValue = 1 },

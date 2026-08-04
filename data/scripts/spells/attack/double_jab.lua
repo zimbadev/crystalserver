@@ -12,17 +12,16 @@ local combatEarth = Combat()
 combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_TIGERCLASH)
 
-function onGetFormulaValues(player, skill, weaponDamage, attackFactor)
-	local basePower = 40
+function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
 	local attackValue = calculateAttackValue(player, skill, weaponDamage)
 	local spellFactor = 0.9
-	local total = (basePower * attackValue) / 100 + (spellFactor * attackValue)
+	local total = calculateMonkSpellDamage(player, skill, weaponDamage, basePower, spellFactor)
 	return -total * 0.9, -total * 1.1
 end
 
-onGetFormulaValuesEnergy = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesEarth = loadstring(string.dump(onGetFormulaValues))
-onGetFormulaValuesPhysical = loadstring(string.dump(onGetFormulaValues))
+onGetFormulaValuesEnergy = onGetFormulaValues
+onGetFormulaValuesEarth = onGetFormulaValues
+onGetFormulaValuesPhysical = onGetFormulaValues
 
 combatPhysical:setCallback(CALLBACK_PARAM_SKILLVALUE, "onGetFormulaValuesPhysical")
 combatEnergy:setCallback(CALLBACK_PARAM_SKILLVALUE, "onGetFormulaValuesEnergy")
@@ -59,12 +58,12 @@ spell:words("exori pug")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_DOUBLE_JAB)
 spell:level(14)
 spell:mana(30)
+spell:basePower(40)
 spell:range(1)
 spell:isPremium(false)
 spell:needTarget(true)
 spell:blockWalls(true)
 spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("monk;true", "exalted monk;true")
 spell:register()

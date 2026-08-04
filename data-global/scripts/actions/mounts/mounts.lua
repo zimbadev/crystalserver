@@ -60,7 +60,6 @@ local config = {
 	[12549] = { NAME = "Panda", ID = 19, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 40, FAIL_MSG = { { 4, "Panda the leaves and ran away." } }, SUCCESS_MSG = "You have tamed the panda.", ACHIEV = "Chequered Teddy" },
 	[12509] = { NAME = "Sandstone Scorpion", ID = 21, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 40, FAIL_MSG = { { 1, "The scorpion has vanished." }, { 2, "Scorpion broken the sceptre." } }, SUCCESS_MSG = "You have tamed the scorpion.", ACHIEV = "Golden Sands" },
 	[20274] = { NAME = "Shock Head", ID = 42, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 1, "The shock head ran away." }, { 3, "The shock head is growling at you." } }, SUCCESS_MSG = "You tamed the shock head.", ACHIEV = "Personal Nightmare" },
-	[36938] = { NAME = "Singeing Steed", ID = 184, BREAK = false, TYPE = TYPE_SINGEING_STEED, CHANCE = 100, REQUIRED = { key = "fiery-horseshoe", count = 4 }, SUCCESS_MSG = "Singeing Steed is now yours!", ACHIEV = "Hot on the Trail" },
 	[24960] = { NAME = "Stone Rhino", ID = 106, BREAK = false, TYPE = TYPE_MONSTER, CHANCE = 30, FAIL_MSG = { { 1, "The stone rhino ran away." }, { 3, "The stone rhino is growling at you." } }, SUCCESS_MSG = "You tamed the stone rhino.", ACHIEV = "Rhino Rider" },
 	[12519] = { NAME = "Slug", ID = 14, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 40, FAIL_MSG = { { 1, "The slug has run away." }, { 3, "The drug had no effect." } }, SUCCESS_MSG = "You have tamed the slug.", ACHIEV = "Slugging Around" },
 	[12311] = { NAME = "Terror Bird", ID = 2, BREAK = true, TYPE = TYPE_MONSTER, CHANCE = 15, FAIL_MSG = { { 1, "The bird ran away." }, { 3, "The terror bird is pecking you." } }, SUCCESS_MSG = "You have tamed the bird.", ACHIEV = "Pecking Order" },
@@ -135,27 +134,6 @@ function mounts.onUse(cid, item, fromPosition, itemEx, toPosition)
 			player:addMount(mount.ID)
 			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, mount.SUCCESS_MSG)
 			toPosition:sendMagicEffect(CONST_ME_MAGIC_GREEN)
-			return true
-		end
-	end
-
-	-- Singeing Steed
-	if mount.TYPE == TYPE_SINGEING_STEED then
-		if mount.REQUIRED then
-			local currentCount = (player:kv():get(mount.REQUIRED.key) or 0) + 1
-			player:kv():set(mount.REQUIRED.key, currentCount)
-			player:getPosition():sendMagicEffect(CONST_ME_FIREATTACK)
-			item:remove(1)
-
-			if currentCount >= mount.REQUIRED.count then
-				if mount.ACHIEV then
-					player:addAchievement(mount.ACHIEV)
-				end
-				player:addAchievement("Natural Born Cowboy")
-				player:addMount(mount.ID)
-				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, mount.SUCCESS_MSG)
-				player:getPosition():sendMagicEffect(CONST_ME_MAGIC_GREEN)
-			end
 			return true
 		end
 	end

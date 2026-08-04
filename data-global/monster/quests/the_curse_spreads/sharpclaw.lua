@@ -83,7 +83,7 @@ monster.loot = {
 	{ name = "onyx chip", chance = 13600000, maxCount = 9 },
 	{ name = "small enchanted amethyst", chance = 13600000, maxCount = 9 },
 	{ name = "beetroot", chance = 13600000, maxCount = 9 },
-	{ name = "great mana potion", chance = 13600000, maxCount = 9 },
+	{ id = 238, chance = 13600000, maxCount = 9 }, -- great mana potion
 	{ name = "platinum amulet", chance = 13600000 },
 	{ id = 3098, chance = 13600000 }, -- ring of healing
 	{ name = "troll green", chance = 13600000, maxCount = 9 },

@@ -983,16 +983,20 @@ void Npc::removeShopPlayer(uint32_t playerGUID) {
 }
 
 void Npc::closeAllShopWindows() {
-	for (auto it = shopPlayers.begin(); it != shopPlayers.end();) {
-		const auto &player = g_game().getPlayerByGUID(it->first);
+	std::vector<uint32_t> guids;
+	guids.reserve(shopPlayers.size());
+	for (const auto &it : shopPlayers) {
+		guids.push_back(it.first);
+	}
+
+	for (const auto &guid : guids) {
+		const auto &player = g_game().getPlayerByGUID(guid);
 		if (player) {
 			player->closeShopWindow();
 		}
 	}
 
-	if (!shopPlayers.empty()) {
-		shopPlayers.clear();
-	}
+	shopPlayers.clear();
 }
 
 void Npc::sendDialogOptions(const std::shared_ptr<Player> &player, uint8_t conversationId) const {

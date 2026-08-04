@@ -657,6 +657,37 @@ public:
 	const Position &getLoginPosition() const {
 		return loginPosition;
 	}
+
+	// Spell crosshair/cursor aim tile (sent by the 15.25 client in the say packet tail).
+	void setSpellAimPosition(const Position &pos) {
+		m_spellAimPosition = pos;
+		m_hasSpellAim = true;
+	}
+	void clearSpellAimPosition() {
+		m_hasSpellAim = false;
+	}
+	bool hasSpellAimPosition() const {
+		return m_hasSpellAim;
+	}
+	const Position &getSpellAimPosition() const {
+		return m_spellAimPosition;
+	}
+
+	// Vocation Adjustment: Mana Buffer (Sorcerer/Druid) -- gates the 25% max-mana tax to once per 2s.
+	int64_t getManaBufferTaxTime() const {
+		return m_manaBufferTaxTime;
+	}
+	void setManaBufferTaxTime(int64_t t) {
+		m_manaBufferTaxTime = t;
+	}
+	void setManaBufferSurvived(bool value) {
+		m_manaBufferSurvived = value;
+	}
+	bool consumeManaBufferSurvived() {
+		const bool survived = m_manaBufferSurvived;
+		m_manaBufferSurvived = false;
+		return survived;
+	}
 	const Position &getTemplePosition() const;
 	std::shared_ptr<Town> getTown() const;
 	void setTown(const std::shared_ptr<Town> &newTown);
@@ -781,6 +812,7 @@ public:
 	bool isImmune(CombatType_t type) const override;
 	bool isImmune(ConditionType_t type) const override;
 	bool hasShield() const;
+	bool hasRealShield() const;
 	bool isAttackable() const override;
 	static bool lastHitIsPlayer(const std::shared_ptr<Creature> &lastHitCreature);
 
@@ -1040,7 +1072,7 @@ public:
 	void sendCreatePrivateChannel(uint16_t channelId, const std::string &channelName) const;
 	void sendClosePrivate(uint16_t channelId);
 	void sendIcons();
-	void sendIconBakragore(IconBakragore icon) const;
+	void sendIconBakragore(IconBakragore icon);
 	void removeBakragoreIcons();
 	void removeBakragoreIcon(const IconBakragore icon);
 	void sendClientCheck() const;
@@ -1153,6 +1185,11 @@ public:
 	void sendScreenshotAndBannerProgressRace(uint16_t raceId, uint8_t progressLevel, bool isBoss) const;
 	void sendScreenshotAndBannerProgressQuest(const std::string &questName, bool isCompleted) const;
 	void sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message) const;
+	void sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) const;
+
+	void checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, uint32_t oldMagLevel, uint32_t newMagLevel) const;
+	void sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId) const;
+	void sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId) const;
 
 	void onThink(uint32_t interval) override;
 
@@ -1615,10 +1652,34 @@ public:
 	uint64_t getSereneCooldown();
 	void setSereneCooldown(const uint64_t addTime);
 	void resyncSpellCooldowns() const;
-	void sendVirtueProtocol() const;
 	void setVirtue(const VirtueMonk_t virtue);
 	VirtueMonk_t getVirtue() const;
 	uint16_t getMantraTotal() const;
+
+	// Stance system (persistent vocation toggle)
+	void sendStanceProtocol() const;
+	std::vector<uint16_t> buildActiveStanceSpellIds() const;
+	Stance_t getStance() const {
+		return m_stancePrimary;
+	}
+	Stance_t getElementalStance() const {
+		return m_stanceElemental;
+	}
+	CombatType_t getPendingElementConversion() const {
+		return m_pendingElementConversion;
+	}
+	void setPendingElementConversion(CombatType_t type) {
+		m_pendingElementConversion = type;
+	}
+	uint8_t getMonkAuraVocMask() const;
+	void setMonkAuraVocMask(uint8_t mask);
+	uint8_t getMonkShrineCount() const;
+	bool setStance(Stance_t stance);
+	bool setElementalStance(Stance_t stance);
+	void persistStances();
+	static bool isStanceCompatibleWithVocation(Stance_t stance, uint16_t vocationBaseId);
+	static uint16_t getStanceSpellId(Stance_t stance);
+	static bool isElementalStance(Stance_t stance);
 
 	std::unordered_map<uint16_t, uint8_t> spellActivedAimMap;
 
@@ -1747,6 +1808,10 @@ private:
 	LightInfo itemsLight;
 	Position loginPosition;
 	Position lastWalkthroughPosition;
+	Position m_spellAimPosition;
+	bool m_hasSpellAim = false;
+	int64_t m_manaBufferTaxTime = 0;
+	bool m_manaBufferSurvived = false; // transient: Mana Buffer absorbed a lethal hit this combatChangeHealth pass
 
 	time_t lastLoginSaved = 0;
 	time_t lastLogout = 0;
@@ -1970,6 +2035,12 @@ private:
 	bool m_serene = false;
 	uint64_t m_serene_cooldown = 0;
 	VirtueMonk_t m_virtue = VIRTUE_NONE;
+
+	Stance_t m_stancePrimary = STANCE_NONE; // single stance for non-sorc; crippling stance for sorc
+	Stance_t m_stanceElemental = STANCE_NONE; // sorcerer-only (Master of Flames/Thunder/Decay)
+	CombatType_t m_pendingElementConversion = COMBAT_NONE; // Master-of-*: convert the NEXT off-element spell
+	uint8_t m_monkAuraVocMask = 0; // monk virtue aura: bitmask (1<<baseId) of vocation bonuses active here
+	int64_t m_monkAuraExpiry = 0; // OTSYS_TIME() until which m_monkAuraVocMask is valid
 
 	friend class Game;
 	friend class SaveManager;

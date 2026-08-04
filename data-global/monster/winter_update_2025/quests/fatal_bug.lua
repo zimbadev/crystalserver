@@ -72,7 +72,7 @@ monster.loot = {
 	{ name = "giant amethyst", chance = 100000 }, -- não confirmado (chance)
 	{ name = "giant sapphire", chance = 100000, maxCount = 3 }, -- não confirmado (chance)
 	{ name = "strong mana potion", chance = 100000, maxCount = 92 }, -- não confirmado (chance)
-	{ name = "great mana potion", chance = 100000, maxCount = 67 }, -- não confirmado (chance)
+	{ id = 238, chance = 100000, maxCount = 67 }, -- great mana potion -- não confirmado (chance)
 	{ name = "great spirit potion", chance = 100000, maxCount = 56 }, -- não confirmado (chance)
 	{ name = "ultimate mana potion", chance = 100000, maxCount = 25 }, -- não confirmado (chance)
 	{ name = "ultimate spirit potion", chance = 100000, maxCount = 25 }, -- não confirmado (chance)

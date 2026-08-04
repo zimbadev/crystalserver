@@ -1056,6 +1056,11 @@ function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHot
 		return false
 	end
 
+	-- Rottin Wood and the Married Men Quest: Kitchen Knife
+	if target and target:isItem() and rottinWoodSkinRabbit(player, target) then
+		return true
+	end
+
 	-- The Secret Library Quest
 	local tPos = toPosition
 

@@ -89,7 +89,7 @@ monster.loot = {
 	{ name = "knight armor", chance = 4000 },
 	{ id = 5909, chance = 4520 }, -- white piece of cloth
 	{ name = "red piece of cloth", chance = 1130 },
-	{ name = "great mana potion", chance = 36000, maxCount = 2 },
+	{ id = 238, chance = 36000, maxCount = 2 }, -- great mana potion
 	{ name = "ultimate health potion", chance = 26000 },
 	{ name = "small topaz", chance = 17000, maxCount = 2 },
 	{ name = "blue crystal shard", chance = 6000 },

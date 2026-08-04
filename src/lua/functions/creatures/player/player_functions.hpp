@@ -41,6 +41,7 @@ class PlayerFunctions {
 	static int luaPlayerIsPlayer(lua_State* L);
 
 	static int luaPlayerGetGuid(lua_State* L);
+	static int luaPlayerGetSpellAimPosition(lua_State* L);
 	static int luaPlayerGetIp(lua_State* L);
 	static int luaPlayerGetAccountId(lua_State* L);
 	static int luaPlayerGetLastLoginSaved(lua_State* L);
@@ -476,6 +477,10 @@ class PlayerFunctions {
 	static int luaPlayerSetSereneCooldown(lua_State* L);
 	static int luaPlayerGetVirtue(lua_State* L);
 	static int luaPlayerSetVirtue(lua_State* L);
+	static int luaPlayerGetStance(lua_State* L);
+	static int luaPlayerSetStance(lua_State* L);
+	static int luaPlayerGetElementalStance(lua_State* L);
+	static int luaPlayerSetElementalStance(lua_State* L);
 
 	static int luaPlayerApplyImbuementScrollToItem(lua_State* L);
 	static int luaPlayerOnClearAllImbuementsOnEtcher(lua_State* L);

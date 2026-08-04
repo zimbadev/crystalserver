@@ -81,7 +81,7 @@ monster.loot = {
 	{ name = "gold coin", chance = 50000, maxCount = 91 },
 	{ name = "small amethyst", chance = 3270, maxCount = 3 },
 	{ name = "strong mana potion", chance = 17450 },
-	{ name = "great mana potion", chance = 5450 },
+	{ id = 238, chance = 5450 }, -- great mana potion
 	{ name = "lightning pendant", chance = 730 },
 	{ name = "lightning legs", chance = 150 },
 	{ name = "spellbook of warding", chance = 360 },

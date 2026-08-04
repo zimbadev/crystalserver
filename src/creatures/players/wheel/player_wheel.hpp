@@ -258,7 +258,7 @@ public:
 	int32_t checkDrainBodyLeech(const std::shared_ptr<Creature> &target, skills_t skill) const;
 	int32_t checkBeamMasteryDamage() const;
 	int32_t checkBattleHealingAmount() const;
-	int32_t checkBlessingGroveHealingByTarget(const std::shared_ptr<Creature> &target) const;
+	double checkBlessingGroveHealingByTarget(const std::shared_ptr<Creature> &target) const;
 	int32_t checkTwinBurstByTarget(const std::shared_ptr<Creature> &target) const;
 	int32_t checkExecutionersThrow(const std::shared_ptr<Creature> &target) const;
 	int32_t checkDivineGrenade(const std::shared_ptr<Creature> &target) const;

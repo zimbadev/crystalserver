@@ -86,7 +86,7 @@ monster.loot = {
 	{ name = "small emerald", chance = 5111, maxCount = 2 },
 	{ name = "shrimp", chance = 4545, maxCount = 5 },
 	{ name = "black pearl", chance = 3150 },
-	{ name = "great mana potion", chance = 2880 },
+	{ id = 238, chance = 2880 }, -- great mana potion
 	{ name = "fish fin", chance = 1410 },
 	{ id = 3098, chance = 1218 }, -- ring of healing
 	{ name = "wand of cosmic energy", chance = 980 },

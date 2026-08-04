@@ -23,9 +23,13 @@
 #include "utils/tools.hpp"
 #include <ctime>
 
+thread_local Database::DBConnection* Database::tls_pinnedConnection = nullptr;
+
 Database::~Database() {
-	if (handle != nullptr) {
-		mysql_close(handle);
+	for (auto &conn : connections) {
+		if (conn && conn->handle) {
+			mysql_close(conn->handle);
+		}
 	}
 }
 
@@ -34,39 +38,69 @@ Database &Database::getInstance() {
 }
 
 bool Database::connect() {
-	return connect(&g_configManager().getString(MYSQL_HOST), &g_configManager().getString(MYSQL_USER), &g_configManager().getString(MYSQL_PASS), &g_configManager().getString(MYSQL_DB), g_configManager().getNumber(SQL_PORT), &g_configManager().getString(MYSQL_SOCK));
+	uint32_t poolSize = g_configManager().getNumber(MYSQL_POOL_SIZE);
+	if (poolSize < 1) {
+		poolSize = 1;
+	}
+	if (poolSize > 32) {
+		poolSize = 32;
+	}
+	return connect(&g_configManager().getString(MYSQL_HOST), &g_configManager().getString(MYSQL_USER), &g_configManager().getString(MYSQL_PASS), &g_configManager().getString(MYSQL_DB), g_configManager().getNumber(SQL_PORT), &g_configManager().getString(MYSQL_SOCK), poolSize);
 }
 
-bool Database::connect(const std::string* host, const std::string* user, const std::string* password, const std::string* database, uint32_t port, const std::string* sock) {
-	// connection handle initialization
-	handle = mysql_init(nullptr);
-	if (!handle) {
-		g_logger().error("Failed to initialize MySQL connection handle.");
-		return false;
-	}
-
+bool Database::connect(const std::string* host, const std::string* user, const std::string* password, const std::string* database, uint32_t port, const std::string* sock, uint32_t poolSize) {
 	if (host->empty() || user->empty() || password->empty() || database->empty() || port <= 0) {
 		g_logger().warn("MySQL host, user, password, database or port not provided");
 	}
 
+	// Close any existing connections
+	for (auto &conn : connections) {
+		if (conn && conn->handle) {
+			mysql_close(conn->handle);
+			conn->handle = nullptr;
+		}
+	}
+	connections.clear();
+
 	// automatic reconnect
 	bool reconnect = true;
-	mysql_options(handle, MYSQL_OPT_RECONNECT, &reconnect);
-
-	// Remove ssl verification
 	bool ssl_enabled = false;
-	mysql_options(handle, MYSQL_OPT_SSL_VERIFY_SERVER_CERT, &ssl_enabled);
 
-	// connects to database
-	if (!mysql_real_connect(handle, host->c_str(), user->c_str(), password->c_str(), database->c_str(), port, sock->c_str(), 0)) {
-		g_logger().error("MySQL Error Message: {}", mysql_error(handle));
-		return false;
+	if (poolSize < 1) {
+		poolSize = 1;
+	}
+	if (poolSize > 32) {
+		poolSize = 32;
 	}
 
+	connections.reserve(poolSize);
+	for (uint32_t i = 0; i < poolSize; ++i) {
+		auto conn = std::make_unique<DBConnection>();
+
+		conn->handle = mysql_init(nullptr);
+		if (!conn->handle) {
+			g_logger().error("Failed to initialize MySQL connection handle (pool index {}).", i);
+			return false;
+		}
+
+		mysql_options(conn->handle, MYSQL_OPT_RECONNECT, &reconnect);
+		mysql_options(conn->handle, MYSQL_OPT_SSL_VERIFY_SERVER_CERT, &ssl_enabled);
+
+		if (!mysql_real_connect(conn->handle, host->c_str(), user->c_str(), password->c_str(), database->c_str(), port, sock->c_str(), 0)) {
+			g_logger().error("MySQL Error Message (pool index {}): {}", i, mysql_error(conn->handle));
+			return false;
+		}
+
+		connections.push_back(std::move(conn));
+	}
+
+	// Query max_allowed_packet from the first connection
 	DBResult_ptr result = storeQuery("SHOW VARIABLES LIKE 'max_allowed_packet'");
 	if (result) {
 		maxPacketSize = result->getNumber<uint64_t>("Value");
 	}
+
+	g_logger().info("MySQL connection pool initialized with {} connection(s).", poolSize);
 	return true;
 }
 
@@ -164,45 +198,94 @@ void Database::createDatabaseBackup(bool compress) const {
 	}
 }
 
+Database::DBConnection* Database::getConnection() {
+	if (tls_pinnedConnection) {
+		return tls_pinnedConnection;
+	}
+
+	if (connections.empty()) {
+		g_logger().error("[Database::getConnection] Connection pool is empty - database not connected?");
+		return nullptr;
+	}
+
+	size_t count = connections.size();
+	size_t idx = nextIndex.fetch_add(1, std::memory_order_relaxed) % count;
+	auto &conn = connections[idx];
+	conn->mutex.lock();
+	return conn.get();
+}
+
+void Database::putConnection(DBConnection* conn) {
+	if (tls_pinnedConnection != conn) {
+		conn->mutex.unlock();
+	}
+}
+
 bool Database::beginTransaction() {
-	if (!executeQuery("BEGIN")) {
+	DBConnection* conn = getConnection();
+	if (!conn) {
 		return false;
 	}
-	metrics::lock_latency measureLock("database");
-	databaseLock.lock();
-	measureLock.stop();
 
+	if (mysql_query(conn->handle, "BEGIN") != 0) {
+		g_logger().error("MySQL Error Message: {}", mysql_error(conn->handle));
+		putConnection(conn);
+		return false;
+	}
+
+	tls_pinnedConnection = conn;
 	return true;
 }
 
 bool Database::rollback() {
-	if (!handle) {
+	if (!tls_pinnedConnection) {
+		g_logger().error("No active transaction to rollback!");
+		return false;
+	}
+
+	if (!tls_pinnedConnection->handle) {
 		g_logger().error("Database not initialized!");
+		tls_pinnedConnection = nullptr;
 		return false;
 	}
 
-	if (mysql_rollback(handle) != 0) {
-		g_logger().error("Message: {}", mysql_error(handle));
-		databaseLock.unlock();
+	if (mysql_rollback(tls_pinnedConnection->handle) != 0) {
+		g_logger().error("Message: {}", mysql_error(tls_pinnedConnection->handle));
+		DBConnection* conn = tls_pinnedConnection;
+		tls_pinnedConnection = nullptr;
+		putConnection(conn);
 		return false;
 	}
 
-	databaseLock.unlock();
+	DBConnection* conn = tls_pinnedConnection;
+	tls_pinnedConnection = nullptr;
+	putConnection(conn);
 	return true;
 }
 
 bool Database::commit() {
-	if (!handle) {
-		g_logger().error("Database not initialized!");
-		return false;
-	}
-	if (mysql_commit(handle) != 0) {
-		g_logger().error("Message: {}", mysql_error(handle));
-		databaseLock.unlock();
+	if (!tls_pinnedConnection) {
+		g_logger().error("No active transaction to commit!");
 		return false;
 	}
 
-	databaseLock.unlock();
+	if (!tls_pinnedConnection->handle) {
+		g_logger().error("Database not initialized!");
+		tls_pinnedConnection = nullptr;
+		return false;
+	}
+
+	if (mysql_commit(tls_pinnedConnection->handle) != 0) {
+		g_logger().error("Message: {}", mysql_error(tls_pinnedConnection->handle));
+		DBConnection* conn = tls_pinnedConnection;
+		tls_pinnedConnection = nullptr;
+		putConnection(conn);
+		return false;
+	}
+
+	DBConnection* conn = tls_pinnedConnection;
+	tls_pinnedConnection = nullptr;
+	putConnection(conn);
 	return true;
 }
 
@@ -210,7 +293,7 @@ bool Database::isRecoverableError(unsigned int error) {
 	return error == CR_SERVER_LOST || error == CR_SERVER_GONE_ERROR || error == CR_CONN_HOST_ERROR || error == 1053 /*ER_SERVER_SHUTDOWN*/ || error == CR_CONNECTION_ERROR;
 }
 
-bool Database::retryQuery(std::string_view query, int retries) {
+bool Database::retryQuery(MYSQL* handle, std::string_view query, int retries) {
 	while (retries > 0 && mysql_query(handle, query.data()) != 0) {
 		g_logger().error("Query: {}", query.substr(0, 256));
 		g_logger().error("MySQL error [{}]: {}", mysql_errno(handle), mysql_error(handle));
@@ -229,41 +312,50 @@ bool Database::retryQuery(std::string_view query, int retries) {
 }
 
 bool Database::executeQuery(std::string_view query) {
-	if (!handle) {
+	DBConnection* conn = getConnection();
+	if (!conn) {
+		return false;
+	}
+
+	if (!conn->handle) {
 		g_logger().error("Database not initialized!");
+		putConnection(conn);
 		return false;
 	}
 
 	g_logger().trace("Executing Query: {}", query);
 
-	metrics::lock_latency measureLock("database");
-	std::scoped_lock lock { databaseLock };
-	measureLock.stop();
-
 	metrics::query_latency measure(query.substr(0, 50));
-	bool success = retryQuery(query, 10);
-	mysql_free_result(mysql_store_result(handle));
+	bool success = retryQuery(conn->handle, query, 10);
+	mysql_free_result(mysql_store_result(conn->handle));
+	measure.stop();
 
+	putConnection(conn);
 	return success;
 }
 
 DBResult_ptr Database::storeQuery(std::string_view query) {
-	if (!handle) {
-		g_logger().error("Database not initialized!");
+	DBConnection* conn = getConnection();
+	if (!conn) {
 		return nullptr;
 	}
-	g_logger().trace("Storing Query: {}", query);
 
-	metrics::lock_latency measureLock("database");
-	std::scoped_lock lock { databaseLock };
-	measureLock.stop();
+	if (!conn->handle) {
+		g_logger().error("Database not initialized!");
+		putConnection(conn);
+		return nullptr;
+	}
+
+	g_logger().trace("Storing Query: {}", query);
 
 	metrics::query_latency measure(query.substr(0, 50));
 retry:
-	if (mysql_query(handle, query.data()) != 0) {
+	if (mysql_query(conn->handle, query.data()) != 0) {
 		g_logger().error("Query: {}", query);
-		g_logger().error("Message: {}", mysql_error(handle));
-		if (!isRecoverableError(mysql_errno(handle))) {
+		g_logger().error("Message: {}", mysql_error(conn->handle));
+		if (!isRecoverableError(mysql_errno(conn->handle))) {
+			measure.stop();
+			putConnection(conn);
 			return nullptr;
 		}
 		std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -271,7 +363,10 @@ retry:
 	}
 
 	// Retrieving results of query
-	MYSQL_RES* res = mysql_store_result(handle);
+	MYSQL_RES* res = mysql_store_result(conn->handle);
+	measure.stop();
+	putConnection(conn);
+
 	if (res != nullptr) {
 		DBResult_ptr result = std::make_shared<DBResult>(res);
 		if (!result->hasNext()) {
@@ -282,7 +377,7 @@ retry:
 	return nullptr;
 }
 
-std::string Database::escapeString(const std::string &s) const {
+std::string Database::escapeString(const std::string &s) {
 	std::string::size_type len = s.length();
 	auto length = static_cast<uint32_t>(len);
 	std::string escaped = escapeBlob(s.c_str(), length);
@@ -292,7 +387,18 @@ std::string Database::escapeString(const std::string &s) const {
 	return escaped;
 }
 
-std::string Database::escapeBlob(const char* s, uint32_t length) const {
+std::string Database::escapeBlob(const char* s, uint32_t length) {
+	DBConnection* conn = getConnection();
+	if (!conn) {
+		return "''";
+	}
+
+	if (!conn->handle) {
+		g_logger().error("Database not initialized!");
+		putConnection(conn);
+		return "''";
+	}
+
 	size_t maxLength = (length * 2) + 1;
 
 	std::string escaped;
@@ -301,13 +407,65 @@ std::string Database::escapeBlob(const char* s, uint32_t length) const {
 
 	if (length != 0) {
 		std::string output(maxLength, '\0');
-		size_t escapedLength = mysql_real_escape_string(handle, &output[0], s, length);
+		size_t escapedLength = mysql_real_escape_string(conn->handle, &output[0], s, length);
 		output.resize(escapedLength);
 		escaped.append(output);
 	}
 
 	escaped.push_back('\'');
+
+	putConnection(conn);
 	return escaped;
+}
+
+uint64_t Database::getLastInsertId() {
+	DBConnection* conn = tls_pinnedConnection;
+	bool borrowed = false;
+	if (!conn) {
+		conn = getConnection();
+		borrowed = true;
+	}
+	if (!conn) {
+		return 0;
+	}
+
+	uint64_t id = static_cast<uint64_t>(mysql_insert_id(conn->handle));
+	if (id == 0) {
+		g_logger().warn("[Database::getLastInsertId] LAST_INSERT_ID is 0 — caller likely ran INSERT on a different connection than this one. Use insertAndGetId() to be safe.");
+	}
+	if (borrowed) {
+		putConnection(conn);
+	}
+	return id;
+}
+
+uint64_t Database::insertAndGetId(std::string_view query) {
+	if (query.empty()) {
+		return 0;
+	}
+
+	DBConnection* conn = getConnection();
+	if (!conn) {
+		return 0;
+	}
+
+	uint64_t insertedId = 0;
+
+	// Run the INSERT first (using the existing execute path for retry/error handling).
+	metrics::query_latency measure(query.substr(0, 50));
+	if (!retryQuery(conn->handle, query, 10)) {
+		measure.stop();
+		putConnection(conn);
+		return 0;
+	}
+	mysql_free_result(mysql_store_result(conn->handle));
+
+	// Same connection, same session — mysql_insert_id() is reliable here.
+	insertedId = static_cast<uint64_t>(mysql_insert_id(conn->handle));
+	measure.stop();
+
+	putConnection(conn);
+	return insertedId;
 }
 
 DBResult::DBResult(MYSQL_RES* res) {
