@@ -1128,6 +1128,7 @@ void Monster::onThink(uint32_t interval) {
 
 	if (!mType->canSpawn(position)) {
 		g_game().removeCreature(static_self_cast<Monster>());
+		return;
 	}
 
 	if (!isInSpawnRange(position)) {

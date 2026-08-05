@@ -344,6 +344,7 @@ void Npc::onThink(uint32_t interval) {
 
 	if (!npcType->canSpawn(position)) {
 		g_game().removeCreature(static_self_cast<Npc>());
+		return;
 	}
 
 	if (!isInSpawnRange(position)) {
