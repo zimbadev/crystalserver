@@ -88,7 +88,7 @@
 #include <appearances.pb.h>
 
 std::vector<std::weak_ptr<Creature>> checkCreatureLists[EVENT_CREATURECOUNT];
-size_t checkCreatureSizes[EVENT_CREATURECOUNT] = {};  // Track sizes for reserve
+size_t checkCreatureSizes[EVENT_CREATURECOUNT] = {}; // Track sizes for reserve
 
 namespace {
 	bool isBountyHighscoreCategory(const std::string &categoryName) {
