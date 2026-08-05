@@ -2063,7 +2063,8 @@ void PlayerWheel::addExtraPointsFromHuntingTaskShop(uint16_t amount) {
 
 uint16_t PlayerWheel::getWheelPoints(bool includeExtraPoints /* = true*/) const {
 	const uint32_t level = m_player.getLevel();
-	auto totalPoints = std::max(0u, (level - m_minLevelToStartCountPoints)) * m_pointsPerLevel;
+	const uint32_t effLevel = level > m_minLevelToStartCountPoints ? level - m_minLevelToStartCountPoints : 0;
+	uint32_t totalPoints = effLevel * m_pointsPerLevel;
 
 	if (includeExtraPoints) {
 		totalPoints += getExtraPoints();
