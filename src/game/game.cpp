@@ -825,12 +825,49 @@ void Game::loadMap(const std::string &path, const Position &pos) {
 	lastMapLoadTime = OTSYS_TIME();
 	map.loadMap(path, false, false, false, false, false, pos);
 
-	// Resend the viewport to all connected players so the client does not
-	// retain stale tile references after a map swap (e.g. quest map changes).
+	const auto &area = map.getLastLoadedArea();
+	if (!area.valid) {
+		return;
+	}
+
+	// The client draws neighbouring floors shifted on x/y, so pad the box by
+	// the viewport plus the maximum floor shift.
+	constexpr int32_t paddingX = MAP_MAX_CLIENT_VIEW_PORT_X + 1 + MAP_MAX_LAYERS;
+	constexpr int32_t paddingY = MAP_MAX_CLIENT_VIEW_PORT_Y + 1 + MAP_MAX_LAYERS;
+
 	for (const auto &[playerId, player] : players) {
-		if (player) {
-			player->sendMapDescription(player->getPosition());
+		if (!player) {
+			continue;
 		}
+
+		const Position &playerPos = player->getPosition();
+		const auto posX = static_cast<int32_t>(playerPos.x);
+		const auto posY = static_cast<int32_t>(playerPos.y);
+		const auto posZ = static_cast<int32_t>(playerPos.z);
+
+		if (posX < area.minX - paddingX || posX > area.maxX + paddingX) {
+			continue;
+		}
+
+		if (posY < area.minY - paddingY || posY > area.maxY + paddingY) {
+			continue;
+		}
+
+		// Same floor range ProtocolGame::GetMapDescription walks through.
+		int32_t visibleMinZ, visibleMaxZ;
+		if (posZ > MAP_INIT_SURFACE_LAYER) {
+			visibleMinZ = posZ - MAP_LAYER_VIEW_LIMIT;
+			visibleMaxZ = std::min<int32_t>(MAP_MAX_LAYERS - 1, posZ + MAP_LAYER_VIEW_LIMIT);
+		} else {
+			visibleMinZ = 0;
+			visibleMaxZ = MAP_INIT_SURFACE_LAYER;
+		}
+
+		if (area.maxZ < visibleMinZ || area.minZ > visibleMaxZ) {
+			continue;
+		}
+
+		player->sendMapDescription(playerPos);
 	}
 }
 
