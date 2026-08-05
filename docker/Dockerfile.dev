@@ -30,7 +30,7 @@ WORKDIR /srv/build
 COPY src ./src
 COPY cmake ./cmake
 COPY recompile.sh CMakeLists.txt CMakePresets.json vcpkg.json ./
-RUN ./recompile.sh "/opt"
+RUN TERM=xterm ./recompile.sh "/opt"
 
 # Stage 3: execute
 FROM ubuntu:24.04 AS prod
