@@ -382,7 +382,8 @@ void Npc::onPlayerBuyItem(const std::shared_ptr<Player> &player, uint16_t itemId
 			slotsNedeed = inBackpacks ? std::ceil(static_cast<double>(amount) / shoppingBagSlots) : static_cast<double>(amount);
 		}
 
-		if ((static_cast<double>(tile->getItemList()->size()) + (slotsNedeed - player->getFreeBackpackSlots())) > 30) {
+		const TileItemVector* itemList = tile->getItemList();
+		if ((static_cast<double>(itemList ? itemList->size() : 0) + (slotsNedeed - player->getFreeBackpackSlots())) > 30) {
 			player->sendCancelMessage(RETURNVALUE_NOTENOUGHROOM);
 			return;
 		}
