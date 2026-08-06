@@ -149,13 +149,12 @@ local function creatureSayCallback(npc, creature, type, message)
 		end
 	elseif MsgContains(message, "yes") then
 		if npcHandler:getTopic(playerId) == 11 then
-			local haveItens = false
+			local haveItens = true
 
 			for _, k in pairs(buildCompass) do
-				if player:getItemCount(k.id) >= k.qnt then
-					haveItens = true
-				else
+				if player:getItemCount(k.id) < k.qnt then
 					haveItens = false
+					break
 				end
 			end
 
@@ -198,13 +197,12 @@ local function creatureSayCallback(npc, creature, type, message)
 		end
 	elseif MsgContains(message, "unleash") then
 		if player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.UnsafeRelease.Questline) == 2 then
-			local haveItens = false
+			local haveItens = true
 
 			for _, k in pairs(chargeCompass) do
-				if player:getItemCount(k.id) >= k.qnt then
-					haveItens = true
-				else
+				if player:getItemCount(k.id) < k.qnt then
 					haveItens = false
+					break
 				end
 			end
 
