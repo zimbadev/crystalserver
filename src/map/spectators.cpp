@@ -198,6 +198,11 @@ Spectators Spectators::find(const Position &centerPos, bool multifloor, bool onl
 			cache.minRangeY = minRangeY = std::min<int32_t>(minRangeY, cache.minRangeY);
 			cache.maxRangeX = maxRangeX = std::max<int32_t>(maxRangeX, cache.maxRangeX);
 			cache.maxRangeY = maxRangeY = std::max<int32_t>(maxRangeY, cache.maxRangeY);
+			// Invalidate all sibling lists since they were computed at the old smaller range
+			cache.creatures = {};
+			cache.monsters = {};
+			cache.npcs = {};
+			cache.players = {};
 		} else {
 			const bool checkDistance = minRangeX != cache.minRangeX || maxRangeX != cache.maxRangeX || minRangeY != cache.minRangeY || maxRangeY != cache.maxRangeY;
 
