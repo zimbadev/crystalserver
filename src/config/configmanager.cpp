@@ -375,7 +375,9 @@ bool ConfigManager::load() {
 	loadIntConfig(L, PZ_LOCKED, "pzLocked", 60000);
 	loadIntConfig(L, RATE_EXPERIENCE, "rateExp", 1);
 	loadIntConfig(L, RATE_KILLING_IN_THE_NAME_OF_POINTS, "rateKillingInTheNameOfPoints", 1);
-	loadIntConfig(L, RATE_LOOT, "rateLoot", 1);
+	// rateLoot accepts decimals: loadIntConfig static_casts to int32_t and would
+	// silently drop the fractional part ("rateLoot = 2.5" became 2, with no warning).
+	loadFloatConfig(L, RATE_LOOT, "rateLoot", 1.0);
 	loadIntConfig(L, RATE_MAGIC, "rateMagic", 1);
 	loadIntConfig(L, RATE_SKILL, "rateSkill", 1);
 	loadIntConfig(L, RATE_SPAWN, "rateSpawn", 1);
