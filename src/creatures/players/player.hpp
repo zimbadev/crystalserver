@@ -1169,6 +1169,7 @@ public:
 	bool hasAsyncOngoingTask(uint64_t flags) const;
 	void resetAsyncOngoingTask(uint64_t flags);
 	void sendEnterWorld() const;
+	void sendMapDescription(const Position &pos) const;
 	void sendFightModes() const;
 	void sendNetworkMessage(NetworkMessage &message) const;
 
