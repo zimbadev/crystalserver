@@ -811,32 +811,16 @@ bool Monster::searchTarget(TargetSearchType_t searchType /*= TARGETSEARCH_DEFAUL
 
 				if (++it != resultList.end()) {
 					const Position &targetPosition = getTarget->getPosition();
-					int32_t minRange = std::max<int32_t>(Position::getDistanceX(myPos, targetPosition), Position::getDistanceY(myPos, targetPosition));
-					int32_t factionOffset = static_cast<int32_t>(getTarget->getFaction()) * 100;
+					int32_t minRange = std::max<int32_t>(Position::getDistanceX(myPos, targetPosition), Position::getDistanceY(myPos, targetPosition)) + static_cast<int32_t>(getTarget->getFaction()) * 100;
 					do {
 						const Position &pos = (*it)->getPosition();
 
-						int32_t distance = std::max<int32_t>(Position::getDistanceX(myPos, pos), Position::getDistanceY(myPos, pos)) + factionOffset;
+						int32_t distance = std::max<int32_t>(Position::getDistanceX(myPos, pos), Position::getDistanceY(myPos, pos)) + static_cast<int32_t>((*it)->getFaction()) * 100;
 						if (distance < minRange) {
 							getTarget = *it;
 							minRange = distance;
 						}
 					} while (++it != resultList.end());
-				}
-			} else {
-				int32_t minRange = std::numeric_limits<int32_t>::max();
-				for (const auto &creature : getTargetList()) {
-					if (!isTarget(creature)) {
-						continue;
-					}
-
-					const Position &pos = creature->getPosition();
-					int32_t factionOffset = static_cast<int32_t>(getTarget->getFaction()) * 100;
-					int32_t distance = std::max<int32_t>(Position::getDistanceX(myPos, pos), Position::getDistanceY(myPos, pos)) + factionOffset;
-					if (distance < minRange) {
-						getTarget = creature;
-						minRange = distance;
-					}
 				}
 			}
 
