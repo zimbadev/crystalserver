@@ -70,19 +70,21 @@ function getLootRandom(modifier)
 	return math.random(0, MAX_LOOTCHANCE) * 100 / math.max(1, multi)
 end
 
-local start = os.time()
-local linecount = 0
-debug.sethook(function(event, line)
-	linecount = linecount + 1
-	if systemTime() - start >= 1 then
-		if linecount >= 30000 then
-			logger.warn("[debug.sethook] - Possible infinite loop in file [{}] near line [{}]", debug.getinfo(2).source, line)
-			debug.sethook()
+if configManager.getBoolean(configKeys.LUA_DEBUG_HOOK) then
+	local start = os.time()
+	local linecount = 0
+	debug.sethook(function(event, line)
+		linecount = linecount + 1
+		if systemTime() - start >= 1 then
+			if linecount >= 30000 then
+				logger.warn("[debug.sethook] - Possible infinite loop in file [{}] near line [{}]", debug.getinfo(2).source, line)
+				debug.sethook()
+			end
+			linecount = 0
+			start = os.time()
 		end
-		linecount = 0
-		start = os.time()
-	end
-end, "l")
+	end, "l")
+end
 
 -- Global functions
 function getJackLastMissionState(player)
