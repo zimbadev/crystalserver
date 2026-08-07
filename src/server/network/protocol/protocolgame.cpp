@@ -6135,6 +6135,14 @@ void ProtocolGame::sendCoinBalance() {
 	}
 
 	writeToOutputBuffer(msg);
+
+	// PATCH LOCAL (CoxaOT): o 0xDF acima nao alimenta o market do cliente 15.x.
+	// O t_market.lua usa getResourceBalance(91) para saber quantas coins podem
+	// ser ofertadas; sem o 0xEE a barra de quantidade fica presa em setRange(0,0).
+	if (!oldProtocol) {
+		sendResourceBalance(RESOURCE_COIN_NORMAL, player->coinBalance);
+		sendResourceBalance(RESOURCE_COIN_TRANSFERRABLE, player->coinTransferableBalance);
+	}
 }
 
 void ProtocolGame::updateCoinBalance() {

@@ -78,7 +78,12 @@ enum Resource_t : uint8_t {
 	RESOURCE_LESSER_FRAGMENT = 0x54,
 	RESOURCE_GREATER_FRAGMENT = 0x55,
 	RESOURCE_BOUNTY_POINTS = 0x56,
-	RESOURCE_SOULSEALS_POINTS = 0x57
+	RESOURCE_SOULSEALS_POINTS = 0x57,
+	// PATCH LOCAL (CoxaOT): faltavam no upstream. O market do cliente 15.x le o
+	// saldo de coins transferiveis por AQUI (getResourceBalance(91)), nao pelo
+	// pacote 0xDF -- sem isso a barra de quantidade da oferta trava em zero.
+	RESOURCE_COIN_NORMAL = 0x5A,
+	RESOURCE_COIN_TRANSFERRABLE = 0x5B
 };
 
 enum CharmResource_t : uint8_t {
