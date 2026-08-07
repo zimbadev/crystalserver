@@ -117,8 +117,6 @@ end
 
 bossesDeath:register()
 
-fourthTaintBossesDeath:register()
-
 local lastUse = 0
 local cooldown = 30
 
@@ -247,6 +245,11 @@ function setTaint.onSay(player, words, param)
 		return false
 	end
 
+	if not split[2] then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Usage: /settaint PlayerName, taintLevel")
+		return true
+	end
+
 	local taintLevel = split[2]:trim():lower()
 	local taintName = player:getTaintNameByNumber(tonumber(taintLevel), true)
 	if taintName ~= nil then
@@ -298,6 +301,11 @@ function setTaint.onSay(player, words, param)
 		return false
 	end
 
+	if not split[2] then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Usage: /removetaint PlayerName, taintLevel")
+		return true
+	end
+
 	local taintLevel = split[2]:trim():lower()
 	local taintName = player:getTaintNameByNumber(tonumber(taintLevel))
 	if taintName ~= nil then
@@ -319,7 +327,7 @@ function changeMap.onSay(player, words, param)
 	elseif param == "inundate" then
 		Game.loadMap(SoulWarQuest.ebbAndFlow.mapsPath.inundate)
 	elseif param == "ebb" then
-		Game.loadMap(SoulWarQuest.ebbAndFlowmapsPath.ebbFlow)
+		Game.loadMap(SoulWarQuest.ebbAndFlow.mapsPath.ebbFlow)
 	end
 end
 
