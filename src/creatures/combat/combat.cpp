@@ -2679,7 +2679,7 @@ void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 	}
 }
 
-void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std::vector<std::shared_ptr<Creature>> targets, CombatDamage &damage, const CombatParams &params) {
+void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std::vector<std::shared_ptr<Creature>> &targets, CombatDamage &damage, const CombatParams &params) {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (damage.extension || !caster || damage.primary.type == COMBAT_HEALING) {
 		return;
@@ -2740,7 +2740,7 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 
 			const auto &targetMonster = targetCreature->getMonster();
 			if (targetMonster) {
-				const auto &mType = g_monsters().getMonsterType(targetMonster->getName());
+				const auto &mType = targetMonster->getMonsterType();
 				if (!mType) {
 					continue;
 				}
