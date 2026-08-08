@@ -412,7 +412,7 @@ local questTable = {
 	{ storageName = "TheTravellingTrader.Mission06", storage = Storage.Quest.U8_1.TheTravellingTrader.Mission06, storageValue = 2 },
 	{ storageName = "TheTravellingTrader.Mission07", storage = Storage.Quest.U8_1.TheTravellingTrader.Mission07, storageValue = 1 },
 	{ storageName = "TheWhiteRavenMonastery.QuestLog", storage = Storage.Quest.U7_24.TheWhiteRavenMonastery.QuestLog, storageValue = 1 },
-	{ storageName = "TheWhiteRavenMonastery.Passage", storage = Storage.Quest.U7_24.TheWhiteRavenMonastery.Passage, storageValue = 1 },
+	{ storageName = "TheWhiteRavenMonastery.Passage", storage = Storage.Quest.U7_24.TheWhiteRavenMonastery.Passage, storageValue = 2 },
 	{ storageName = "TheWhiteRavenMonastery.Diary", storage = Storage.Quest.U7_24.TheWhiteRavenMonastery.Diary, storageValue = 2 },
 	{ storageName = "TheWhiteRavenMonastery.Door", storage = Storage.Quest.U7_24.TheWhiteRavenMonastery.Door, storageValue = 1 },
 	{ storageName = "TibiaTales.DefaultStart", storage = Storage.Quest.U8_1.TibiaTales.DefaultStart, storageValue = 1 },
