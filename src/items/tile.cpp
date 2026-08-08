@@ -1684,7 +1684,7 @@ void Tile::internalAddThing(uint32_t, const std::shared_ptr<Thing> &thing) {
 				ground = item;
 				setTileFlags(item);
 			} else {
-				thing->setParent(nullptr);
+				thing->setParent(std::weak_ptr<Cylinder>());
 			}
 			return;
 		}
