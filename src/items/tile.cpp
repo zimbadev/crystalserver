@@ -1683,6 +1683,8 @@ void Tile::internalAddThing(uint32_t, const std::shared_ptr<Thing> &thing) {
 			if (ground == nullptr) {
 				ground = item;
 				setTileFlags(item);
+			} else {
+				thing->setParent(nullptr);
 			}
 			return;
 		}
