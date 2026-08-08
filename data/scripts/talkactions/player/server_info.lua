@@ -28,7 +28,7 @@ function serverInfo.onSay(player, words, param)
 
 	text = text
 		.. "\nLoot rate: "
-		.. configManager.getNumber(configKeys.RATE_LOOT)
+		.. configManager.getFloat(configKeys.RATE_LOOT)
 		.. "x"
 		.. "\nSpawns rate: "
 		.. configManager.getNumber(configKeys.RATE_SPAWN)
