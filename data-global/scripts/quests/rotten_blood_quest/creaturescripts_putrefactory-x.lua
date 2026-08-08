@@ -85,11 +85,7 @@ function checkPlayersInZonePutrefactory.onThink(interval, lastExecution)
 	local checkedPlayers = {}
 
 	-- Check putrefactory zone (large, 2 floors)
-	local putrefactoryCenter = Position(
-		(config.specPutrefactory.from.x + config.specPutrefactory.to.x) / 2,
-		(config.specPutrefactory.from.y + config.specPutrefactory.to.y) / 2,
-		(config.specPutrefactory.from.z + config.specPutrefactory.to.z) / 2
-	)
+	local putrefactoryCenter = Position((config.specPutrefactory.from.x + config.specPutrefactory.to.x) / 2, (config.specPutrefactory.from.y + config.specPutrefactory.to.y) / 2, (config.specPutrefactory.from.z + config.specPutrefactory.to.z) / 2)
 	local putrefactoryRangeX = (config.specPutrefactory.to.x - config.specPutrefactory.from.x) / 2
 	local putrefactoryRangeY = (config.specPutrefactory.to.y - config.specPutrefactory.from.y) / 2
 	local putrefactoryPlayers = Game.getSpectators(putrefactoryCenter, true, true, putrefactoryRangeX, putrefactoryRangeX, putrefactoryRangeY, putrefactoryRangeY)
@@ -99,11 +95,7 @@ function checkPlayersInZonePutrefactory.onThink(interval, lastExecution)
 	end
 
 	-- Check lever zone
-	local leverCenter = Position(
-		(config.specLever.from.x + config.specLever.to.x) / 2,
-		(config.specLever.from.y + config.specLever.to.y) / 2,
-		config.specLever.from.z
-	)
+	local leverCenter = Position((config.specLever.from.x + config.specLever.to.x) / 2, (config.specLever.from.y + config.specLever.to.y) / 2, config.specLever.from.z)
 	local leverRangeX = (config.specLever.to.x - config.specLever.from.x) / 2
 	local leverRangeY = (config.specLever.to.y - config.specLever.from.y) / 2
 	local leverPlayers = Game.getSpectators(leverCenter, false, true, leverRangeX, leverRangeX, leverRangeY, leverRangeY)
@@ -115,11 +107,7 @@ function checkPlayersInZonePutrefactory.onThink(interval, lastExecution)
 	end
 
 	-- Check vestibule zone
-	local vestibuleCenter = Position(
-		(config.specVestibule.from.x + config.specVestibule.to.x) / 2,
-		(config.specVestibule.from.y + config.specVestibule.to.y) / 2,
-		(config.specVestibule.from.z + config.specVestibule.to.z) / 2
-	)
+	local vestibuleCenter = Position((config.specVestibule.from.x + config.specVestibule.to.x) / 2, (config.specVestibule.from.y + config.specVestibule.to.y) / 2, (config.specVestibule.from.z + config.specVestibule.to.z) / 2)
 	local vestibuleRangeX = (config.specVestibule.to.x - config.specVestibule.from.x) / 2
 	local vestibuleRangeY = (config.specVestibule.to.y - config.specVestibule.from.y) / 2
 	local vestibulePlayers = Game.getSpectators(vestibuleCenter, true, true, vestibuleRangeX, vestibuleRangeX, vestibuleRangeY, vestibuleRangeY)
