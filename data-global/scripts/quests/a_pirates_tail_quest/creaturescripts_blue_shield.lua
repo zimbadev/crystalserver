@@ -55,11 +55,7 @@ ratmiralCheeseLogin:register()
 
 local ratmiralCheeseZoneCheck = GlobalEvent("RatmiralCheeseZoneCheck")
 function ratmiralCheeseZoneCheck.onThink(interval)
-	local centerPos = Position(
-		(cheeseConfig.specArea.from.x + cheeseConfig.specArea.to.x) / 2,
-		(cheeseConfig.specArea.from.y + cheeseConfig.specArea.to.y) / 2,
-		cheeseConfig.specArea.from.z
-	)
+	local centerPos = Position((cheeseConfig.specArea.from.x + cheeseConfig.specArea.to.x) / 2, (cheeseConfig.specArea.from.y + cheeseConfig.specArea.to.y) / 2, cheeseConfig.specArea.from.z)
 	local rangeX = (cheeseConfig.specArea.to.x - cheeseConfig.specArea.from.x) / 2
 	local rangeY = (cheeseConfig.specArea.to.y - cheeseConfig.specArea.from.y) / 2
 
