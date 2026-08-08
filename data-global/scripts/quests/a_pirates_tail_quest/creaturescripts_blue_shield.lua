@@ -55,21 +55,24 @@ ratmiralCheeseLogin:register()
 
 local ratmiralCheeseZoneCheck = GlobalEvent("RatmiralCheeseZoneCheck")
 function ratmiralCheeseZoneCheck.onThink(interval)
-	local players = Game.getPlayers()
+	local centerPos = Position(
+		(cheeseConfig.specArea.from.x + cheeseConfig.specArea.to.x) / 2,
+		(cheeseConfig.specArea.from.y + cheeseConfig.specArea.to.y) / 2,
+		cheeseConfig.specArea.from.z
+	)
+	local rangeX = (cheeseConfig.specArea.to.x - cheeseConfig.specArea.from.x) / 2
+	local rangeY = (cheeseConfig.specArea.to.y - cheeseConfig.specArea.from.y) / 2
+
+	local players = Game.getSpectators(centerPos, false, true, rangeX, rangeX, rangeY, rangeY)
 	for _, player in ipairs(players) do
-		if not player:getPosition():isInRange(cheeseConfig.specArea.from, cheeseConfig.specArea.to) then
-			player:removeIcon("blue-shield")
-			player:setStorageValue(cheeseConfig.storageKey, 0)
-		else
-			local ticks = player:getStorageValue(cheeseConfig.storageKey)
-			if ticks > 0 then
-				player:setIcon("blue-shield", CreatureIconCategory_Quests, CreatureIconQuests_BlueShield, ticks)
-			end
+		local ticks = player:getStorageValue(cheeseConfig.storageKey)
+		if ticks > 0 then
+			player:setIcon("blue-shield", CreatureIconCategory_Quests, CreatureIconQuests_BlueShield, ticks)
 		end
 	end
 	return true
 end
-ratmiralCheeseZoneCheck:interval(500)
+ratmiralCheeseZoneCheck:interval(2000)
 ratmiralCheeseZoneCheck:register()
 
 local ratmiralCheeseLogout = CreatureEvent("RatmiralCheeseLogout")
