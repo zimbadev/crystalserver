@@ -88,6 +88,7 @@
 #include <appearances.pb.h>
 
 std::vector<std::weak_ptr<Creature>> checkCreatureLists[EVENT_CREATURECOUNT];
+size_t checkCreatureSizes[EVENT_CREATURECOUNT] = {}; // Track sizes for reserve
 
 namespace {
 	bool isBountyHighscoreCategory(const std::string &categoryName) {
@@ -7004,7 +7005,12 @@ void Game::addCreatureCheck(const std::shared_ptr<Creature> &creature) {
 	}
 
 	g_dispatcher().addEvent([this, index = uniform_random(0, EVENT_CREATURECOUNT - 1), creature] {
+		// Reserve capacity to avoid frequent reallocations
+		if (checkCreatureLists[index].capacity() <= checkCreatureLists[index].size()) {
+			checkCreatureLists[index].reserve(checkCreatureLists[index].size() + 32);
+		}
 		checkCreatureLists[index].emplace_back(creature);
+		checkCreatureSizes[index]++;
 	},
 	                        "Game::addCreatureCheck");
 }
@@ -7020,13 +7026,23 @@ void Game::checkCreatures() {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	static size_t index = 0;
 
-	std::erase_if(checkCreatureLists[index], [this](const std::weak_ptr<Creature> &weak) {
+	auto &bucket = checkCreatureLists[index];
+
+	// Skip empty buckets early
+	if (bucket.empty()) {
+		index = (index + 1) % EVENT_CREATURECOUNT;
+		return;
+	}
+
+	// Manual loop for better control and tracking
+	size_t writeIndex = 0;
+	for (size_t i = 0; i < bucket.size(); ++i) {
+		const auto &weak = bucket[i];
 		if (const auto creature = weak.lock()) {
 			if (creature->creatureCheck && creature->isAlive()) {
 				creature->onThink(EVENT_CREATURE_THINK_INTERVAL);
 				if (creature->getMonster()) {
-					// The monster's onThink function runs asynchronously,
-					// meaning the target gets updated at a later time; therefore, we must delay the actions outlined below.
+					// Monster's onThink runs asynchronously, so delay attacking/conditions
 					g_dispatcher().addEvent([creature] {
 						if (creature->isAlive()) {
 							creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
@@ -7036,15 +7052,25 @@ void Game::checkCreatures() {
 					creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
 					creature->executeConditions(EVENT_CREATURE_THINK_INTERVAL);
 				}
-				return false;
+				// Keep entry (alive and active)
+				if (writeIndex != i) {
+					bucket[writeIndex] = std::move(bucket[i]);
+				}
+				writeIndex++;
+			} else {
+				creature->inCheckCreaturesVector = false;
 			}
-
-			creature->inCheckCreaturesVector = false;
 		}
+		// Dead/expired: don't increment writeIndex (remove entry)
+	}
 
-		return true;
-	});
+	// Shrink if too many empty slots
+	bucket.resize(writeIndex);
+	if (bucket.capacity() > 64 && bucket.size() < bucket.capacity() / 4) {
+		bucket.shrink_to_fit();
+	}
 
+	checkCreatureSizes[index] = writeIndex;
 	index = (index + 1) % EVENT_CREATURECOUNT;
 }
 
