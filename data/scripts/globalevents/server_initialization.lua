@@ -118,11 +118,6 @@ local function updateEventRates()
 		SCHEDULE_INFLUENCED_RATE = influencedRate
 	end
 
-	local spawnRate = EventsScheduler.getSpawnMonsterSchedule()
-	if spawnRate ~= 100 then
-		SCHEDULE_SPAWN_RATE = spawnRate
-	end
-
 	local rates = {
 		{ name = "Exp", value = expRate },
 		{ name = "Loot", value = lootRate },
