@@ -28,7 +28,7 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 	end
 
 	local byPlayerMostDamage = 0
-	local mostDamageKillerName
+	local mostDamageName
 	if mostDamageKiller ~= nil then
 		if mostDamageKiller:isPlayer() then
 			byPlayerMostDamage = 1
