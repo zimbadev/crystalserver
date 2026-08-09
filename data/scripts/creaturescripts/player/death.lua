@@ -44,7 +44,7 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 		mostDamageName = "field item"
 	end
 
-	player:sendBannerType(byPlayer and BANNER_TYPE_DEATHPVP or BANNER_TYPE_DEATHPVE)
+	player:sendBannerType(byPlayer == 1 and BANNER_TYPE_DEATHPVP or BANNER_TYPE_DEATHPVE)
 
 	if mostDamageKiller and mostDamageKiller:isPlayer() then
 		mostDamageKiller:sendBannerType(BANNER_TYPE_PLAYERKILL)
