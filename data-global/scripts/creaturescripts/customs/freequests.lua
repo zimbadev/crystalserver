@@ -182,6 +182,13 @@ local questTable = {
 	{ storageName = "FerumbrasAscension.HabitatsAccess", storage = Storage.Quest.U10_90.FerumbrasAscension.HabitatsAccess, storageValue = 1 },
 	{ storageName = "FerumbrasAscension.TheLordOfTheLiceAccess", storage = Storage.Quest.U10_90.FerumbrasAscension.TheLordOfTheLiceAccess, storageValue = 1 },
 	{ storageName = "FerumbrasAscension.Statue", storage = Storage.Quest.U10_90.FerumbrasAscension.Statue, storageValue = 1 },
+	{ storageName = "FerumbrasAscension.Razzagorn", storage = Storage.Quest.U10_90.FerumbrasAscension.Razzagorn, storageValue = 1 },
+	{ storageName = "FerumbrasAscension.Ragiaz", storage = Storage.Quest.U10_90.FerumbrasAscension.Ragiaz, storageValue = 1 },
+	{ storageName = "FerumbrasAscension.Zamulosh", storage = Storage.Quest.U10_90.FerumbrasAscension.Zamulosh, storageValue = 1 },
+	{ storageName = "FerumbrasAscension.Mazoran", storage = Storage.Quest.U10_90.FerumbrasAscension.Mazoran, storageValue = 1 },
+	{ storageName = "FerumbrasAscension.Tarbaz", storage = Storage.Quest.U10_90.FerumbrasAscension.Tarbaz, storageValue = 1 },
+	{ storageName = "FerumbrasAscension.Shulgrax", storage = Storage.Quest.U10_90.FerumbrasAscension.Shulgrax, storageValue = 1 },
+	{ storageName = "FerumbrasAscension.Plagirath", storage = Storage.Quest.U10_90.FerumbrasAscension.Plagirath, storageValue = 1 },
 	{ storageName = "ForgottenKnowledge.Tomes", storage = Storage.Quest.U11_02.ForgottenKnowledge.Tomes, storageValue = 1 },
 	{ storageName = "ForgottenKnowledge.LastLoreKilled", storage = Storage.Quest.U11_02.ForgottenKnowledge.LastLoreKilled, storageValue = 1 },
 	{ storageName = "ForgottenKnowledge.TimeGuardianKilled", storage = Storage.Quest.U11_02.ForgottenKnowledge.TimeGuardianKilled, storageValue = 1 },
@@ -295,7 +302,7 @@ local questTable = {
 	{ storageName = "TheApeCity.Started", storage = Storage.Quest.U7_6.TheApeCity.Started, storageValue = 1 },
 	{ storageName = "TheApeCity.Questline", storage = Storage.Quest.U7_6.TheApeCity.Questline, storageValue = 18 },
 	{ storageName = "TheDreamCourts.Main.Questline", storage = Storage.Quest.U12_00.TheDreamCourts.Main.Questline, storageValue = 1 },
-	{ storageName = "TheDreamCourts.HauntedHouse.Questline", storage = Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Questline, storageValue = 1 },
+	{ storageName = "TheDreamCourts.HauntedHouse.Questline", storage = Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Questline, storageValue = 2 },
 	{ storageName = "TheDreamCourts.HauntedHouse.Cellar", storage = Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Cellar, storageValue = 1 },
 	{ storageName = "TheDreamCourts.BurriedCatedral.WordCount", storage = Storage.Quest.U12_00.TheDreamCourts.BurriedCatedral.WordCount, storageValue = 4 },
 	{ storageName = "TheDreamCourts.UnsafeRelease.Questline", storage = Storage.Quest.U12_00.TheDreamCourts.UnsafeRelease.Questline, storageValue = 1 },
@@ -442,6 +449,7 @@ local questTable = {
 	{ storageName = "12332", storage = 12332, storageValue = 13 },
 	{ storageName = "12333", storage = 12333, storageValue = 3 },
 	{ storageName = "12450", storage = 12450, storageValue = 6 },
+	{ storageName = "BloodyTusks.TheWrathOfTheAncestorst", storage = Storage.Quest.U15_10.BloodyTusks.TheWrathOfTheAncestorst, storageValue = 1 },
 }
 
 local function playerFreeQuestStart(playerId, index)
