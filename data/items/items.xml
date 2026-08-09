@@ -29641,7 +29641,13 @@
 		<attribute key="primarytype" value="constructions" />
 	</item>
 	<item id="12140" article="an" name="alter of fire" />
-	<item fromid="12141" toid="12142" name="unknown item" />
+	<item fromid="12141" toid="12142" article="a" name="dead cake golem">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
+		<attribute key="containersize" value="10" />
+		<attribute key="weight" value="4000" />
+	</item>
 	<item id="12143" article="a" name="sweet and sugary substance">
 		<attribute key="description" value="It is incredibly sticky and too sweet to eat it" />
 		<attribute key="weight" value="65" />

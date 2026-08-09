@@ -289,6 +289,49 @@ TileAction = {
 			{ x = 33591, y = 32321, z = 10 },
 		},
 	},
+	-- =====================
+	-- A Piece of Cake Quest - ExtractionSpot AID
+	-- =====================
+	-- Carlin
+	[43910] = {
+		itemId = 8886,
+		itemPos = {
+			{ x = 32346, y = 31822, z = 7 },
+			{ x = 32346, y = 31823, z = 7 },
+		},
+	},
+	-- Thais
+	[43911] = {
+		itemId = 8886,
+		itemPos = {
+			{ x = 32350, y = 32275, z = 7 },
+			{ x = 32350, y = 32276, z = 7 },
+		},
+	},
+	-- Edron
+	[43912] = {
+		itemId = 8886,
+		itemPos = {
+			{ x = 33251, y = 31802, z = 7 },
+			{ x = 33251, y = 31803, z = 7 },
+		},
+	},
+	-- Darashia
+	[43913] = {
+		itemId = 8886,
+		itemPos = {
+			{ x = 33191, y = 32397, z = 7 },
+			{ x = 33191, y = 32398, z = 7 },
+		},
+	},
+	-- Liberty Bay
+	[43914] = {
+		itemId = 8886,
+		itemPos = {
+			{ x = 32377, y = 32801, z = 7 },
+			{ x = 32377, y = 32802, z = 7 },
+		},
+	},
 	-- Others actions
 	-- Kilmaresh
 	-- First mission

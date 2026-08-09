@@ -123,6 +123,11 @@ function playerLoginGlobal.onLogin(player)
 			end
 		end
 
+		-- A Piece of Cake Quest - bonus xp
+		if player:isPremium() and os.time() < CakeQuest.get(CakeQuest.Keys.WorldBonusUntil, 0) then
+			baseRate = baseRate + (baseRate * (CakeQuest.Config.EXP_BONUS_PERCENT / 100))
+		end
+
 		player:setBaseXpGain(baseRate)
 	end
 
