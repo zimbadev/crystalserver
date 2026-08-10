@@ -4104,7 +4104,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			magLevel--;
 		}
 
-		manaSpent -= lostMana;
+		manaSpent = (lostMana > manaSpent) ? 0 : manaSpent - lostMana;
 
 		uint64_t nextReqMana = vocation->getReqMana(magLevel + 1);
 		if (nextReqMana > vocation->getReqMana(magLevel)) {
@@ -4158,7 +4158,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 				skills[i].level--;
 			}
 
-			skills[i].tries = std::max<int32_t>(0, skills[i].tries - lostSkillTries);
+			skills[i].tries = (lostSkillTries > skills[i].tries) ? 0 : skills[i].tries - lostSkillTries;
 			skills[i].percent = Player::getPercentLevel(skills[i].tries, vocation->getReqSkillTries(i, skills[i].level));
 		}
 
@@ -5371,7 +5371,7 @@ uint32_t Player::getCapacity() const {
 	if (hasFlag(PlayerFlags_t::HasInfiniteCapacity)) {
 		return std::numeric_limits<uint32_t>::max();
 	}
-	return capacity + bonusCapacity + varStats[STAT_CAPACITY] + (m_wheelPlayer->getStat(WheelStat_t::CAPACITY) * 100);
+	return static_cast<uint32_t>(std::max<int64_t>(0, static_cast<int64_t>(capacity) + bonusCapacity + varStats[STAT_CAPACITY] + (m_wheelPlayer->getStat(WheelStat_t::CAPACITY) * 100)));
 }
 
 uint32_t Player::getBonusCapacity() const {
@@ -6436,10 +6436,10 @@ void Player::onAttackedCreatureDrainHealth(const std::shared_ptr<Creature> &targ
 
 void Player::onTargetCreatureGainHealth(const std::shared_ptr<Creature> &target, int32_t points) {
 	if (target && m_party) {
-		std::shared_ptr<Player> tmpPlayer = nullptr;
+		std::shared_ptr<Player> tmpPlayer;
 
-		if (isPartner(tmpPlayer) && (tmpPlayer != getPlayer())) {
-			tmpPlayer = target->getPlayer();
+		if (const auto &targetPlayer = target->getPlayer()) {
+			tmpPlayer = targetPlayer;
 		} else if (const auto &targetMaster = target->getMaster()) {
 			if (const auto &targetMasterPlayer = targetMaster->getPlayer()) {
 				tmpPlayer = targetMasterPlayer;
