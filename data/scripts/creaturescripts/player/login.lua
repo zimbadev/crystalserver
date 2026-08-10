@@ -96,6 +96,7 @@ function playerLoginGlobal.onLogin(player)
 	local resultId = db.storeQuery("SELECT `recruiter` FROM `accounts` WHERE `id`= " .. Game.getPlayerAccountId(getPlayerName(player)))
 	if resultId then
 		local recruiterStatus = Result.getNumber(resultId, "recruiter")
+		Result.free(resultId)
 		local sex = player:getSex()
 		local outfitId = (sex == 1) and 746 or 745
 		for outfitAddOn = 0, 2 do
