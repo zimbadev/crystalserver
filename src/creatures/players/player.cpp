@@ -5939,8 +5939,12 @@ std::shared_ptr<Thing> Player::getThing(size_t index) const {
 
 // TODO: review this function
 bool Player::updateSaleShopList(const std::shared_ptr<Item> &item) {
+	if (!item) {
+		return true;
+	}
+
 	const uint16_t itemId = item->getID();
-	if (!itemId || !item) {
+	if (!itemId) {
 		return true;
 	}
 
