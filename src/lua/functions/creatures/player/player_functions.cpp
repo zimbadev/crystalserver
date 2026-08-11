@@ -2528,7 +2528,7 @@ int PlayerFunctions::luaPlayerSetGuild(lua_State* L) {
 int PlayerFunctions::luaPlayerGetGuildLevel(lua_State* L) {
 	// player:getGuildLevel()
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
-	if (player && player->getGuild()) {
+	if (player && player->getGuild() && player->getGuildRank()) {
 		lua_pushnumber(L, player->getGuildRank()->level);
 	} else {
 		lua_pushnil(L);

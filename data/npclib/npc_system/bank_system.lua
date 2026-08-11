@@ -454,7 +454,7 @@ function Npc:parseGuildBank(message, npc, creature, playerId, npcHandler)
 		end
 		if string.match(message, "%d+") then
 			count[playerId] = getMoneyCount(message)
-			if Bank.hasBalance(player, count[playerId]) then
+			if not Bank.hasBalance(player, count[playerId]) then
 				npcHandler:say("You do not have enough gold.", npc, creature)
 				npcHandler:setTopic(playerId, 0)
 				return false

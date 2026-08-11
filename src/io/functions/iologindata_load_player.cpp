@@ -166,7 +166,7 @@ bool IOLoginDataLoad::loadPlayerBasicInfo(const std::shared_ptr<Player> &player,
 	player->setPronoun(static_cast<PlayerPronoun_t>(result->getNumber<uint16_t>("pronoun")));
 	player->level = std::max<uint32_t>(1, result->getNumber<uint32_t>("level"));
 	player->soul = static_cast<uint8_t>(result->getNumber<unsigned short>("soul"));
-	player->capacity = result->getNumber<uint32_t>("cap") * 100;
+	player->capacity = std::min<uint64_t>(UINT32_MAX, static_cast<uint64_t>(result->getNumber<uint32_t>("cap")) * 100);
 	player->mana = result->getNumber<uint32_t>("mana");
 	player->manaMax = result->getNumber<uint32_t>("manamax");
 	player->magLevel = result->getNumber<uint32_t>("maglevel");

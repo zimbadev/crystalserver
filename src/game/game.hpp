@@ -27,6 +27,7 @@
 #include "modal_window/modal_window.hpp"
 #include "movement/position.hpp"
 #include "creatures/creatures_definitions.hpp"
+#include "items/items_classification.hpp"
 
 // Forward declaration for protobuf class
 namespace Crystal {
@@ -44,7 +45,6 @@ class Npc;
 class Charm;
 class IOPrey;
 class IOWheel;
-class ItemClassification;
 class Guild;
 class Mounts;
 class AttachedEffects;
@@ -224,8 +224,8 @@ public:
 	bool isSwimmingPool(const std::shared_ptr<Item> &item, const std::shared_ptr<Tile> &tile, bool checkProtection) const;
 	void createIllusion(const std::shared_ptr<Player> &player, const Outfit_t &outfit, int32_t time);
 
-	void addItemsClassification(ItemClassification* itemsClassification) {
-		itemsClassifications.push_back(itemsClassification);
+	void addItemsClassification(std::unique_ptr<ItemClassification> itemsClassification) {
+		itemsClassifications.push_back(std::move(itemsClassification));
 	}
 	ItemClassification* getItemsClassification(uint8_t id, bool create);
 
@@ -498,8 +498,8 @@ public:
 	}
 
 	void setBoostedName(std::string name) {
-		boostedCreature = name;
 		g_logger().info("Boosted creature: {}", name);
+		boostedCreature = std::move(name);
 	}
 
 	std::string getBoostedMonsterName() const {
@@ -625,8 +625,13 @@ public:
 	void removeDeadPlayer(const std::string &playerName);
 	std::shared_ptr<Player> getDeadPlayer(const std::string &playerName);
 
-	const std::vector<ItemClassification*> &getItemsClassifications() const {
-		return itemsClassifications;
+	std::vector<ItemClassification*> getItemsClassifications() const {
+		std::vector<ItemClassification*> result;
+		result.reserve(itemsClassifications.size());
+		for (const auto &ptr : itemsClassifications) {
+			result.push_back(ptr.get());
+		}
+		return result;
 	}
 
 	void addPlayer(const std::shared_ptr<Player> &player);
@@ -983,7 +988,7 @@ private:
 
 	std::map<uint16_t, std::map<uint8_t, uint64_t>> itemsPriceMap;
 
-	std::vector<ItemClassification*> itemsClassifications;
+	std::vector<std::unique_ptr<ItemClassification>> itemsClassifications;
 
 	bool isTryingToStow(const Position &toPos, const std::shared_ptr<Cylinder> &toCylinder) const;
 

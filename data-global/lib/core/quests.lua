@@ -713,7 +713,7 @@ if not Quests then
 					storageId = Storage.Quest.U8_5.HotCuisineQuest.QuestLog,
 					missionId = 1070,
 					startValue = 1,
-					endValue = 16,
+					endValue = 17,
 					states = {
 						[1] = "You've become the apprentice of Maltre Jean Pierre. \z
 							The first dish he will teach you to prepare is Rotworm Stew. Bring him the ingredients he told you.",
@@ -745,7 +745,9 @@ if not Quests then
 							prepare is Demonic Candy Balls. Bring him the ingredients he told you.",
 						[15] = "You have completed the thirteenth dish, the fourteenth dish he will teach you to \z
 							prepare is Sweet Mangonaise Elixir. Bring him the ingredients he told you.",
-						[16] = "You have completed all the dishes. You are now able to make all the dishes in any order you want.",
+						[16] = "You have completed the fourteenth dish, the fifteenth dish he will teach you to \z
+							prepare is Zaoan Sauce. Bring him the ingredients he told you.",
+						[17] = "You have completed all the dishes. You are now able to make all the dishes in any order you want.",
 					},
 				},
 			},
@@ -7275,6 +7277,86 @@ if not Quests then
 					states = {
 						[1] = 'Task: Withdraw gold from your bank account\nYou can withdraw gold from your bank account into your backpack by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and withdraw gold by using the according icon or typing "withdraw".',
 						[2] = "You successfully withdrew gold from your bank account.",
+					},
+				},
+			},
+		},
+		[56] = {
+			name = "Rottin Wood and the Married Men",
+			startStorageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Mission 1: Lucky Charms",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission01,
+					missionId = 11018,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Rottin Wood has sent you on and important mission to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
+						[2] = "You delivered the lucky charms as requested. Rottin Wood was quite pleased and offered you to continue helping him and his men.",
+					},
+				},
+				[2] = {
+					name = "Mission 2: In a State of Dispair",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission02,
+					missionId = 11019,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ("You accepted a quest to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp. So far you fixed %d of 6 broken walls."):format(math.max(count, 0))
+						end,
+						[2] = "You tried your best to fix the walls in the camp. It does not look like any of your repairs will hold forever. Rottin Wood would like you to stay around and look for any further damages another day.",
+					},
+				},
+				[3] = {
+					name = "Mission 3: Bushwhacking",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission03,
+					missionId = 11020,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-corpsecount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ('You agreed to help Rottin Wood and the Married Men to relieve several merchants of their goods. Lay out the net traps he gave you to catch 5 of them. So far you have "relieved" %d of 5 merchants.'):format(math.max(count, 0))
+						end,
+						[2] = 'You have "relieved" enough merchants to provide the very pleased Rottin Wood and his men with enough opportunities to gather valuables and supplies.',
+					},
+				},
+				[4] = {
+					name = "Daily Task: Lucky Loop",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Task01,
+					missionId = 11021,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Rottin Wood has sent you on and important task to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
+						[2] = "You delivered the lucky charms as requested. Rottin Wood seems to be satisfied with that profit for today.",
+					},
+				},
+				[5] = {
+					name = "Daily Task: Handyman",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Task02,
+					missionId = 11022,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ("You accepted a task to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp - again. So far you swong your hammer on %d of 6 broken walls."):format(math.max(count, 0))
+						end,
+						[2] = "You tried your best to fix the walls in the camp all day long. It does not look like any of your repairs will hold forever. More repairs maybe needed in the future.",
 					},
 				},
 			},

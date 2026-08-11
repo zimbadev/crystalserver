@@ -1480,6 +1480,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			if (outfitModule) {
 				outfitModule->executeOnRecvbyte(player, msg);
 			}
+			if (!player) {
+				break;
+			}
 			if (msg.getBufferPosition() == startBufferPosition) {
 				g_game().playerRequestOutfit(player->getID());
 			}
@@ -1490,6 +1493,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			const auto &outfitModule = g_modules().getEventByRecvbyte(0xD3, false);
 			if (outfitModule) {
 				outfitModule->executeOnRecvbyte(player, msg);
+			}
+			if (!player) {
+				break;
 			}
 			if (msg.getBufferPosition() == startBufferPosition) {
 				parseSetOutfit(msg);
@@ -3271,9 +3277,22 @@ void ProtocolGame::parseBestiarySendCreatures(NetworkMessage &msg) {
 	uint8_t search = msg.getByte();
 
 	if (search == 1) {
-		auto monsterAmount = msg.get<uint16_t>();
-		std::map<uint16_t, std::string> mtype_list = g_game().getBestiaryList();
-		for (uint16_t monsterCount = 1; monsterCount <= monsterAmount; monsterCount++) {
+		if (!msg.canRead(sizeof(uint16_t))) {
+			return;
+		}
+
+		const auto monsterAmount = msg.get<uint16_t>();
+		const auto raceIdsSize = static_cast<int32_t>(monsterAmount) * static_cast<int32_t>(sizeof(uint16_t));
+		if (!msg.canRead(raceIdsSize)) {
+			return;
+		}
+
+		const auto mtype_list = g_game().getBestiaryList();
+		if (monsterAmount > mtype_list.size()) {
+			return;
+		}
+
+		for (uint32_t monsterCount = 0; monsterCount < monsterAmount; ++monsterCount) {
 			auto raceid = msg.get<uint16_t>();
 			if (player->getBestiaryKillCount(raceid) > 0) {
 				auto it = mtype_list.find(raceid);
@@ -4355,8 +4374,7 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 	}
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
-	const auto &conditionRegen = std::dynamic_pointer_cast<ConditionRegeneration>(condition);
-	msg.add<uint16_t>(conditionRegen ? conditionRegen->getFoodTicks() / 1000 : 0x00);
+	msg.add<uint16_t>(condition ? condition->getTicks() / 1000 : 0x00);
 	msg.add<uint16_t>(player->getOfflineTrainingTime() / 60 / 1000);
 	msg.add<uint16_t>(player->getSpeed());
 	msg.add<uint16_t>(player->getBaseSpeed());
@@ -6406,6 +6424,11 @@ void ProtocolGame::sendCoinBalance() {
 	}
 
 	writeToOutputBuffer(msg);
+
+	if (!oldProtocol) {
+		sendResourceBalance(RESOURCE_COIN_NORMAL, player->coinBalance);
+		sendResourceBalance(RESOURCE_COIN_TRANSFERRABLE, player->coinTransferableBalance);
+	}
 }
 
 void ProtocolGame::updateCoinBalance() {
@@ -9310,8 +9333,7 @@ void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
 	msg.add<uint16_t>(player->getBaseSpeed());
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
-	const auto &conditionRegen = std::dynamic_pointer_cast<ConditionRegeneration>(condition);
-	msg.add<uint16_t>(conditionRegen ? conditionRegen->getFoodTicks() / 1000 : 0x00);
+	msg.add<uint16_t>(condition ? condition->getTicks() / 1000 : 0x00);
 
 	msg.add<uint16_t>(player->getOfflineTrainingTime() / 60 / 1000);
 

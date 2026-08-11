@@ -3601,7 +3601,7 @@ void Player::addExperience(const std::shared_ptr<Creature> &target, uint64_t exp
 		return;
 	}
 
-	const auto rate = exp / rawExp;
+	const auto rate = rawExp != 0 ? exp / rawExp : 1;
 	const std::map<std::string, std::string> attrs({ { "player", getName() }, { "level", std::to_string(getLevel()) }, { "rate", std::to_string(rate) } });
 	if (sendText) {
 		g_metrics().addCounter("player_experience_raw", rawExp, attrs);
@@ -4104,7 +4104,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 			magLevel--;
 		}
 
-		manaSpent -= lostMana;
+		manaSpent = (lostMana > manaSpent) ? 0 : manaSpent - lostMana;
 
 		uint64_t nextReqMana = vocation->getReqMana(magLevel + 1);
 		if (nextReqMana > vocation->getReqMana(magLevel)) {
@@ -4158,7 +4158,7 @@ void Player::death(const std::shared_ptr<Creature> &lastHitCreature) {
 				skills[i].level--;
 			}
 
-			skills[i].tries = std::max<int32_t>(0, skills[i].tries - lostSkillTries);
+			skills[i].tries = (lostSkillTries > skills[i].tries) ? 0 : skills[i].tries - lostSkillTries;
 			skills[i].percent = Player::getPercentLevel(skills[i].tries, vocation->getReqSkillTries(i, skills[i].level));
 		}
 
@@ -5371,7 +5371,7 @@ uint32_t Player::getCapacity() const {
 	if (hasFlag(PlayerFlags_t::HasInfiniteCapacity)) {
 		return std::numeric_limits<uint32_t>::max();
 	}
-	return capacity + bonusCapacity + varStats[STAT_CAPACITY] + (m_wheelPlayer->getStat(WheelStat_t::CAPACITY) * 100);
+	return static_cast<uint32_t>(std::max<int64_t>(0, static_cast<int64_t>(capacity) + bonusCapacity + varStats[STAT_CAPACITY] + (m_wheelPlayer->getStat(WheelStat_t::CAPACITY) * 100)));
 }
 
 uint32_t Player::getBonusCapacity() const {
@@ -5939,8 +5939,12 @@ std::shared_ptr<Thing> Player::getThing(size_t index) const {
 
 // TODO: review this function
 bool Player::updateSaleShopList(const std::shared_ptr<Item> &item) {
+	if (!item) {
+		return true;
+	}
+
 	const uint16_t itemId = item->getID();
-	if (!itemId || !item) {
+	if (!itemId) {
 		return true;
 	}
 
@@ -6432,10 +6436,10 @@ void Player::onAttackedCreatureDrainHealth(const std::shared_ptr<Creature> &targ
 
 void Player::onTargetCreatureGainHealth(const std::shared_ptr<Creature> &target, int32_t points) {
 	if (target && m_party) {
-		std::shared_ptr<Player> tmpPlayer = nullptr;
+		std::shared_ptr<Player> tmpPlayer;
 
-		if (isPartner(tmpPlayer) && (tmpPlayer != getPlayer())) {
-			tmpPlayer = target->getPlayer();
+		if (const auto &targetPlayer = target->getPlayer()) {
+			tmpPlayer = targetPlayer;
 		} else if (const auto &targetMaster = target->getMaster()) {
 			if (const auto &targetMasterPlayer = targetMaster->getPlayer()) {
 				tmpPlayer = targetMasterPlayer;
@@ -7006,7 +7010,11 @@ void Player::sendRemoveTileThing(const Position &pos, int32_t stackpos) const {
 
 void Player::sendUpdateTileCreature(const std::shared_ptr<Creature> &creature) {
 	if (client) {
-		client->sendUpdateTileCreature(creature->getPosition(), creature->getTile()->getClientIndexOfCreature(static_self_cast<Player>(), creature), creature);
+		const auto &tile = creature->getTile();
+		if (!tile) {
+			return;
+		}
+		client->sendUpdateTileCreature(creature->getPosition(), tile->getClientIndexOfCreature(static_self_cast<Player>(), creature), creature);
 	}
 }
 
@@ -8409,6 +8417,12 @@ void Player::sendEnterWorld() const {
 	}
 }
 
+void Player::sendMapDescription(const Position &pos) const {
+	if (client) {
+		client->sendMapDescription(pos);
+	}
+}
+
 void Player::sendFightModes() const {
 	if (client) {
 		client->sendFightModes();
@@ -9244,6 +9258,7 @@ ReturnValue Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 	}
 
 	uint32_t addedItemCount = 0;
+	uint32_t totalWithdrawn = finalRetrievable;
 	uint32_t remainingToRetrieve = finalRetrievable;
 
 	if (itemType.stackable) {
@@ -9257,6 +9272,11 @@ ReturnValue Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 				auto &stackableItem = *it;
 				if (addValue == 0) {
 					break;
+				}
+
+				if (!stackableItem || !stackableItem->getParent()) {
+					it = stackableItemsCache.erase(it);
+					continue;
 				}
 
 				uint32_t spaceInStack = stackableItem->getStackSize() - stackableItem->getItemCount();
@@ -9344,6 +9364,13 @@ ReturnValue Player::addItemFromStash(uint16_t itemId, uint32_t itemCount) {
 				++cacheIndex;
 			}
 		}
+	}
+
+	// Refund unplaced items back to stash
+	if (addedItemCount < totalWithdrawn) {
+		uint32_t unplaced = totalWithdrawn - addedItemCount;
+		stashItems[itemId] += unplaced;
+		g_logger().warn("[addItemFromStash] Refunded {}x itemId: {} back to stash for player {}", unplaced, itemId, getName());
 	}
 
 	std::string itemName = itemType.name + (addedItemCount > 1 ? "s" : "");
@@ -13364,7 +13391,7 @@ void Player::applyEquippedWeaponProficiency(const uint16_t itemId) {
 				continue;
 			}
 
-			if (perk.perkValue < 0.0f) {
+			if (perk.perkValue < 0.0f && perk.perkType != PROFICIENCY_PERK_AUGMENT_TYPE) {
 				continue;
 			}
 
