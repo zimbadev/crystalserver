@@ -76,20 +76,23 @@ local function creatureSayCallback(npc, creature, type, message)
 			"Are you willing to take the barbarian test?",
 		}, npc, creature)
 		npcHandler:setTopic(playerId, 2)
-	elseif MsgContains(message, "mead") and player:getStorageValue(Storage.Quest.U8_0.BarbarianTest.Questline) == 1 then
-		npcHandler:say("Do you have some honey with you?", npc, creature)
-		npcHandler:setTopic(playerId, 4)
-	elseif MsgContains(message, "barbarian mead") and player:getStorageValue(Storage.Quest.U8_0.BarbarianTest.Questline) == 3 then
-		npcHandler:say({
-			"An impressive start. Here, take your own mead horn to fill it at the mead bucket as often as you like ...",
-			"But there is much left to be done. Your next test will be to hug a bear ...",
-			"You will find one in a cave north of the town. If you are lucky, it's still sleeping. If not ... well that might hurt ...",
-			"Unless you feel that you hugged the bear, the test is not passed. Once you are done, talk to me about the bear hugging.",
-		}, npc, creature)
-		player:setStorageValue(Storage.Quest.U8_0.BarbarianTest.Questline, 4)
-		player:setStorageValue(Storage.Quest.U8_0.BarbarianTest.Mission02, 1) -- Questlog Barbarian Test Quest Barbarian Test 2: The Bear Hugging
-		player:addItem(7140, 1)
-		npcHandler:setTopic(playerId, 0)
+	elseif MsgContains(message, "mead") then
+		local stage = player:getStorageValue(Storage.Quest.U8_0.BarbarianTest.Questline)
+		if stage == 1 then
+			npcHandler:say("Do you have some honey with you?", npc, creature)
+			npcHandler:setTopic(playerId, 4)
+		elseif stage == 3 then
+			npcHandler:say({
+				"An impressive start. Here, take your own mead horn to fill it at the mead bucket as often as you like ...",
+				"But there is much left to be done. Your next test will be to hug a bear ...",
+				"You will find one in a cave north of the town. If you are lucky, it's still sleeping. If not ... well that might hurt ...",
+				"Unless you feel that you hugged the bear, the test is not passed. Once you are done, talk to me about the bear hugging.",
+			}, npc, creature)
+			player:setStorageValue(Storage.Quest.U8_0.BarbarianTest.Questline, 4)
+			player:setStorageValue(Storage.Quest.U8_0.BarbarianTest.Mission02, 1) -- Barbarian Test 2: The Bear Hugging
+			player:addItem(7140, 1)
+			npcHandler:setTopic(playerId, 0)
+		end
 	elseif MsgContains(message, "hug") then
 		if player:getStorageValue(Storage.Quest.U8_0.BarbarianTest.Questline) == 5 then
 			npcHandler:say({

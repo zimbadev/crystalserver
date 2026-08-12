@@ -61,27 +61,24 @@ local TEN_MINUTES = 10 * 60
 local ONE_TIBIAN_DAY = 60 * 60
 local TWENTY_HOURS = 20 * 60 * 60
 
-local function creatureSayCallback(npc, creature, type, message)
+local function creatureSayCallback(npc, creature, msgtype, message)
 	local player = Player(creature)
 	local playerId = player:getId()
 
-	if MsgContains(message, "siege") then
-		local mission = player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission)
-		local timer = player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarSiegeTimer)
-		local now = os.time()
+	if not npcHandler:checkInteraction(npc, creature) then
+		return false
+	end
 
-		if mission < 1 then
+	if MsgContains(message, "siege") then
+		if player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission) < 1 then
 			player:setStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission, 1)
-			player:setStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarSiegeTimer, now)
+			player:setStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarSiegeTimer, os.time())
 			npcHandler:say({
 				"You will have to wait until I have time to take care of your request. In the meantime, take a seat. ...",
 				"Usually they're reserved for my council but they never seem to sit down... and somehow I doubt you will, either.",
 			}, npc, creature)
-			return true
-		end
-
-		if mission == 1 then
-			if (now - timer) >= TEN_MINUTES then
+		elseif player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission) == 1 then
+			if (os.time() - player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarSiegeTimer)) >= TEN_MINUTES then
 				npcHandler:say({
 					"So, I trust you're not here to join the usurpers besieging our humble enclave. Otherwise my men would've surely put you in your place before you even passed the gate. ...",
 					"Sources are telling me that you helped our small community quite a bit. And you seem to know your way around the usurpers. ...",
@@ -91,37 +88,22 @@ local function creatureSayCallback(npc, creature, type, message)
 			else
 				npcHandler:say("I am still quite occupied, traveller. Please be patient and give me some time.", npc, creature)
 			end
-			return true
-		end
-
-		if mission == 2 then
-			local lastSpawn = player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.FugueSpawnTime)
-			local fugueSpawned = player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.FugueSpawned)
-
-			if (now - timer) < ONE_TIBIAN_DAY then
+		elseif player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission) == 2 then
+			if (os.time() - player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarSiegeTimer)) < ONE_TIBIAN_DAY then
 				npcHandler:say("I am still preparing. Give it some more time, traveller.", npc, creature)
-				return true
-			end
-
-			if fugueSpawned == 1 and lastSpawn > 0 and (now - lastSpawn) >= TWENTY_HOURS then
+			elseif player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.FugueSpawned) == 1 and player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.FugueSpawnTime) > 0 and (os.time() - player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.FugueSpawnTime)) >= TWENTY_HOURS then
 				player:setStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.FugueSpawned, 0)
 				npcHandler:say({
 					"I expected them to show up last night but nothing happened. Perhaps they are waiting for the right moment. ...",
 					"Return to my chambers when night falls and stay alert. They will come.",
 				}, npc, creature)
-			elseif fugueSpawned == 1 then
+			elseif player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.FugueSpawned) == 1 then
 				npcHandler:say("I know they appeared last night. You need to deal with them - go back to my chambers when night comes.", npc, creature)
 			else
 				npcHandler:say("I am still preparing. Give it some more time, traveller.", npc, creature)
 			end
-			return true
-		end
-
-		if mission == 3 then
-			local hasFalcon = player:getStorageValue(Storage.Quest.U11_80.TheSecretLibrary.FalconBastion.Access) >= 1
-			local hasCobra = player:getStorageValue(Storage.Quest.U12_20.GraveDanger.CobraBastion.Access) >= 1
-
-			if hasFalcon and hasCobra then
+		elseif player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission) == 3 then
+			if player:getStorageValue(Storage.Quest.U11_80.TheSecretLibrary.FalconBastion.Access) >= 1 and player:getStorageValue(Storage.Quest.U12_20.GraveDanger.CobraBastion.Access) >= 1 then
 				npcHandler:say({
 					"Fugue... he attacked right away and had to be punished. You did the right thing. However, this will probably mean all out war if Drume does not come to his senses. ...",
 					"I will have to arrange a meeting with him immediately to prevent the worst from happening. There is still another way. ...",
@@ -137,20 +119,14 @@ local function creatureSayCallback(npc, creature, type, message)
 					"And there is another order, I am not quite sure of its name but they travelled far south of Edron, into the desert.",
 				}, npc, creature)
 			end
-			return true
-		end
-
-		if mission == 4 then
+		elseif player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission) == 4 then
 			npcHandler:say({
 				"What news from the orders of the Falcon and the other successor order? ...",
 				"The Order of the Cobra you say? Both destroyed...? The flame of virtue, the power of righteousness - diminished? In all of them? Oh... ...",
 				"Far too long have I stayed silent and idle. Drume wants war. We will meet him in battle near the eastern coast of Bounac. ...",
 				"Prepare yourself and I will see you on the battlefield. Good luck, my friend.",
 			}, npc, creature)
-			return true
-		end
-
-		if mission >= 5 then
+		elseif player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission) >= 5 then
 			npcHandler:say({
 				"It is done. Drume's forces lie broken on the battlefield. You witnessed the fall of a great enemy of the Order of the Lion. ...",
 				"You stood tall against the enemy forces and helped our cause wherever you could. ...",
@@ -164,14 +140,11 @@ local function creatureSayCallback(npc, creature, type, message)
 			if not player:hasAchievement("Lionheart") then
 				player:addAchievement("Lionheart")
 			end
-			return true
 		end
-	end
 
-	if message:lower() == "yes" then
-		local mission = player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission)
-
-		if npcHandler:getTopic(playerId) == 1 and mission == 1 then
+		return true
+	elseif message:lower() == "yes" then
+		if npcHandler:getTopic(playerId) == 1 and player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission) == 1 then
 			player:setStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission, 2)
 			player:setStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarSiegeTimer, os.time())
 			npcHandler:say({
@@ -181,9 +154,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			}, npc, creature)
 			npcHandler:setTopic(playerId, 0)
 			return true
-		end
-
-		if npcHandler:getTopic(playerId) == 2 and mission == 3 then
+		elseif npcHandler:getTopic(playerId) == 2 and player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission) == 3 then
 			player:setStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission, 4)
 			npcHandler:say({
 				"Good, however, we have to wait until the recent skirmishes along the coast have settled down. ...",
@@ -192,10 +163,18 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:setTopic(playerId, 0)
 			return true
 		end
+	elseif message:lower() == "no" then
+		if npcHandler:getTopic(playerId) == 1 or npcHandler:getTopic(playerId) == 2 then
+			npcHandler:say("Come back when you have reconsidered.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+			return true
+		end
 	end
+
+	return false
 end
 
-npcHandler:setMessage(MESSAGE_GREET, "Hail, traveller. What brings you here during these dire times under siege? The fair Bounac is suffering greatly.")
+npcHandler:setMessage(MESSAGE_GREET, "Hail, traveller. What brings you here during these dire times under {siege}? The fair Bounac is suffering greatly.")
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
