@@ -381,7 +381,6 @@ bool ConfigManager::load() {
 	loadIntConfig(L, PVP_MAX_LEVEL_DIFFERENCE, "pvpMaxLevelDifference", 0);
 	loadIntConfig(L, PZ_LOCKED, "pzLocked", 60000);
 	loadIntConfig(L, RATE_EXPERIENCE, "rateExp", 1);
-	loadIntConfig(L, RATE_EXERCISE_TRAINING_SPEED, "rateExerciseTrainingSpeed", 1.0);
 	loadIntConfig(L, RATE_KILLING_IN_THE_NAME_OF_POINTS, "rateKillingInTheNameOfPoints", 1);
 	loadIntConfig(L, RATE_MAGIC, "rateMagic", 1);
 	loadIntConfig(L, RATE_SKILL, "rateSkill", 1);
