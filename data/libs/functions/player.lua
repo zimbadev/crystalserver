@@ -165,14 +165,14 @@ function Player.addFamePoint(self)
 end
 
 function Player.getFamePoints(self)
-	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Constants.Spike_Fame_Points)
+	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Spike_Fame_Points)
 	return math.max(0, points)
 end
 
 function Player.removeFamePoints(self, amount)
-	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Constants.Spike_Fame_Points)
+	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Spike_Fame_Points)
 	local current = math.max(0, points)
-	self:setStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Constants.Spike_Fame_Points, current - amount)
+	self:setStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Spike_Fame_Points, current - amount)
 end
 
 function Player.depositMoney(self, amount)

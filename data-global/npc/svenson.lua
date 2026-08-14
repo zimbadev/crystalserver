@@ -92,13 +92,21 @@ addTravelKeyword("vega", "Vega for |TRAVELCOST|?", 10, Position(32020, 31692, 7)
 keywordHandler:addKeyword({ "passage" }, StdModule.say, { npcHandler = npcHandler, text = "Where do you want to go? To {Tibia}, {Senja} or {Vega}?" })
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I am the captain of this ship." })
 keywordHandler:addKeyword({ "captain" }, StdModule.say, { npcHandler = npcHandler, text = "I am the captain of this ship." })
+keywordHandler:addKeyword({ "ferries" }, StdModule.say, { npcHandler = npcHandler, text = "Our ferries are strong enough to stand the high waves of the Nordic Ocean." })
+keywordHandler:addKeyword({ "ferry" }, StdModule.say, { npcHandler = npcHandler, text = "Our ferries are strong enough to stand the high waves of the Nordic Ocean." })
+keywordHandler:addKeyword({ "ice islands" }, StdModule.say, { npcHandler = npcHandler, text = "We serve the routes to Senja, Folda, and Vega, and back to Tibia." })
+keywordHandler:addKeyword({ "folda" }, StdModule.say, { npcHandler = npcHandler, text = "This island is Folda." })
+keywordHandler:addKeyword({ "name" }, StdModule.say, { npcHandler = npcHandler, text = "My name is Svenson from the Nordic Tibia Ferries." })
+keywordHandler:addKeyword({ "anderson" }, StdModule.say, { npcHandler = npcHandler, text = "The four of us are the captains of the Nordic Tibia Ferries." })
+keywordHandler:addKeyword({ "carlson" }, StdModule.say, { npcHandler = npcHandler, text = "The four of us are the captains of the Nordic Tibia Ferries." })
+keywordHandler:addKeyword({ "nielson" }, StdModule.say, { npcHandler = npcHandler, text = "The four of us are the captains of the Nordic Tibia Ferries." })
+keywordHandler:addKeyword({ "svenson" }, StdModule.say, { npcHandler = npcHandler, text = "The four of us are the captains of the Nordic Tibia Ferries." })
 
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
-
 -- Dialog options (interactive icons in the NPC conversation window)
 npcType:addDialogOptions("passage", "bye")
 
+-- npcType registering the npcConfig table
 npcType:register(npcConfig)

@@ -52,6 +52,19 @@ end
 
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I'm merely a humble druid like so many others here. I may not be the most talented of healers, but I am gifted with a special atunement to the elements." })
 keywordHandler:addKeyword({ "nature" }, StdModule.say, { npcHandler = npcHandler, text = "For me, nature is the harmony of the elements. This harmony can be disturbed by certain events, but nature always finds its way back to harmony in the end." })
+keywordHandler:addKeyword({ "druid" }, StdModule.say, { npcHandler = npcHandler, text = "<sigh> Druids are supposed to be healers and preservers of nature. And what have most of us become? Hunters and killers who are only interested in furthering their own cause." })
+keywordHandler:addKeyword({ "name" }, StdModule.say, { npcHandler = npcHandler, text = "I am Cerdras of the Carlinian Druid Guild." })
+keywordHandler:addKeyword({ "earth" }, StdModule.say, {
+	npcHandler = npcHandler,
+	text = "The song of earth is always with me. As is the song of air. Both are often in some kind of harmony and sometimes it is hard to separate the one from the other. ... If I concentrate hard enough I can distinguish the many individual songs that make the melody. ... Each boulder, each stone, each grain of sand has its own voice in the symphony of the great melody.",
+})
+keywordHandler:addKeyword({ "yalahari" }, StdModule.say, { npcHandler = npcHandler, text = "I have heard little of the Yalahari. And the little that I know does not tempt me to learn more." })
+keywordHandler:addKeyword({ "yalahar" }, StdModule.say, { npcHandler = npcHandler, text = "The city sounds like a urban nightmare to me." })
+keywordHandler:addKeyword({ "hunt" }, StdModule.say, { npcHandler = npcHandler, text = "The hunt can be part of the cycle of life and death. Nowadays that cycle has been broken. People take more than they give and greed dictates their actions." })
+keywordHandler:addKeyword({ "crunor" }, StdModule.say, { npcHandler = npcHandler, text = "Crunor has not forsaken us despite our failings. Crunor's love for life is truly great." })
+keywordHandler:addKeyword({ "greed" }, StdModule.say, { npcHandler = npcHandler, text = "Crunor has not forsaken us despite our failings. Crunor's love for life is truly great." })
+keywordHandler:addKeyword({ "golem" }, StdModule.say, { npcHandler = npcHandler, text = "I have indeed gathered some knowledge in the field of elemental golems. Particularly the secrets of the Earth element, which is involved in the process of their creation." })
+keywordHandler:addKeyword({ "telas" }, StdModule.say, { npcHandler = npcHandler, text = "Ah, yes, dear Telas. It is a pity that he has closed his eyes to nature's beauty, but I can't reproach him for that." })
 
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
