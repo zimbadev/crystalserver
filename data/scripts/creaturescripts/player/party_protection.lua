@@ -64,10 +64,8 @@ function partyProtection.onHealthChange(creature, attacker, primaryDamage, prima
 		if sourceSkull == SKULL_NONE or sourceSkull == SKULL_WHITE then
 			sourcePlayer:setSkull(SKULL_WHITE)
 		end
-
-		local condition = Condition(CONDITION_INFIGHT)
-		condition:setTicks(60000)
-		sourcePlayer:addCondition(condition)
+		sourcePlayer:addInFightTicks(true)
+		targetPlayer:addInFightTicks(true)
 	end
 
 	return primaryDamage, primaryType, secondaryDamage, secondaryType
