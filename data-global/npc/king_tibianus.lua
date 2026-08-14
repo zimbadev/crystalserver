@@ -53,76 +53,66 @@ local function creatureSayCallback(npc, creature, type, message)
 		return false
 	end
 
--- The New Frontier
-local persuasionReplies = {
-    flatter  = "Indeed, indeed. Without the help of Thais, our allies stand no chance! Well, I'll send some money to support their cause.",
-    threaten = "You dare raise your voice to a king?! ...Still, I suppose a show of resolve is not without merit. Very well, our allies shall have their support.",
-    bluff    = "Ha! Bold tales indeed, adventurer. Preposterous as they sound, my kingdom cannot afford to be left behind if there is even a grain of truth to them. I'll send support.",
-    impress  = "A new frontier, you say? Tibia's glory has always grown through bold expansion. Very well, I am impressed enough to lend our allies my support.",
-    reason   = "A sound argument, and a king who ignores reason is no king at all. I shall see to it that our allies receive support.",
-    plea     = "Your plea moves me, adventurer. A king must also show mercy and generosity. Our allies shall have their support."
-}
-local persuasionKeywords = { "flatter", "threaten", "bluff", "impress", "reason", "plea" }
+	-- The New Frontier
+	local persuasionReplies = {
+		flatter = "Indeed, indeed. Without the help of Thais, our allies stand no chance! Well, I'll send some money to support their cause.",
+		threaten = "You dare raise your voice to a king?! ...Still, I suppose a show of resolve is not without merit. Very well, our allies shall have their support.",
+		bluff = "Ha! Bold tales indeed, adventurer. Preposterous as they sound, my kingdom cannot afford to be left behind if there is even a grain of truth to them. I'll send support.",
+		impress = "A new frontier, you say? Tibia's glory has always grown through bold expansion. Very well, I am impressed enough to lend our allies my support.",
+		reason = "A sound argument, and a king who ignores reason is no king at all. I shall see to it that our allies receive support.",
+		plea = "Your plea moves me, adventurer. A king must also show mercy and generosity. Our allies shall have their support.",
+	}
+	local persuasionKeywords = { "flatter", "threaten", "bluff", "impress", "reason", "plea" }
 
-if MsgContains(message, "farmine") and player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus) < 3 then
-    if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 then
-        if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus) == 1 then
-            npcHandler:say("Ah, I vaguely remember that our little allies were eager to build some base. So speak up, what do you want?", npc, creature)
-            npcHandler:setTopic(playerId, 6)
-        else
-            npcHandler:say("Do you have anything that might change my mind?", npc, creature)
-            npcHandler:setTopic(playerId, 8)
-        end
-    end
-
-elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 8 then
-    if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 and player:removeItem(10009, 1) then
-        npcHandler:say("Ah, I vaguely remember that our little allies were eager to build some base. So speak up, what do you want?", npc, creature)
-        player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 1)
-        npcHandler:setTopic(playerId, 7)
-    else
-        npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
-        player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 2)
-        npcHandler:setTopic(playerId, 0)
-    end
-
-elseif MsgContains(message, "flatter")
-    or MsgContains(message, "threaten")
-    or MsgContains(message, "bluff")
-    or MsgContains(message, "impress")
-    or MsgContains(message, "reason")
-    or MsgContains(message, "plea") then
-
-    if npcHandler:getTopic(playerId) == 6 then
-        if player:removeItem(10009, 1) then
-            for _, keyword in ipairs(persuasionKeywords) do
-                if MsgContains(message, keyword) then
-                    npcHandler:say(persuasionReplies[keyword], npc, creature)
-                    break
-                end
-            end
-            player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 3)
-        else
-            npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
-            player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 2)
-        end
-        npcHandler:setTopic(playerId, 0)
-
-    elseif npcHandler:getTopic(playerId) == 7 then
-        for _, keyword in ipairs(persuasionKeywords) do
-            if MsgContains(message, keyword) then
-                npcHandler:say(persuasionReplies[keyword], npc, creature)
-                break
-            end
-        end
-        player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 3)
-        npcHandler:setTopic(playerId, 0)
-    end
-
-elseif MsgContains(message, "no") and (npcHandler:getTopic(playerId) == 6 or npcHandler:getTopic(playerId) == 8) then
-    npcHandler:say("Come back when you find any information.", npc, creature)
-    npcHandler:setTopic(playerId, 0)
-end
+	if MsgContains(message, "farmine") and player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus) < 3 then
+		if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 then
+			if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus) == 1 then
+				npcHandler:say("Ah, I vaguely remember that our little allies were eager to build some base. So speak up, what do you want?", npc, creature)
+				npcHandler:setTopic(playerId, 6)
+			else
+				npcHandler:say("Do you have anything that might change my mind?", npc, creature)
+				npcHandler:setTopic(playerId, 8)
+			end
+		end
+	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 8 then
+		if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 and player:removeItem(10009, 1) then
+			npcHandler:say("Ah, I vaguely remember that our little allies were eager to build some base. So speak up, what do you want?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 1)
+			npcHandler:setTopic(playerId, 7)
+		else
+			npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 2)
+			npcHandler:setTopic(playerId, 0)
+		end
+	elseif MsgContains(message, "flatter") or MsgContains(message, "threaten") or MsgContains(message, "bluff") or MsgContains(message, "impress") or MsgContains(message, "reason") or MsgContains(message, "plea") then
+		if npcHandler:getTopic(playerId) == 6 then
+			if player:removeItem(10009, 1) then
+				for _, keyword in ipairs(persuasionKeywords) do
+					if MsgContains(message, keyword) then
+						npcHandler:say(persuasionReplies[keyword], npc, creature)
+						break
+					end
+				end
+				player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 3)
+			else
+				npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
+				player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 2)
+			end
+			npcHandler:setTopic(playerId, 0)
+		elseif npcHandler:getTopic(playerId) == 7 then
+			for _, keyword in ipairs(persuasionKeywords) do
+				if MsgContains(message, keyword) then
+					npcHandler:say(persuasionReplies[keyword], npc, creature)
+					break
+				end
+			end
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 3)
+			npcHandler:setTopic(playerId, 0)
+		end
+	elseif MsgContains(message, "no") and (npcHandler:getTopic(playerId) == 6 or npcHandler:getTopic(playerId) == 8) then
+		npcHandler:say("Come back when you find any information.", npc, creature)
+		npcHandler:setTopic(playerId, 0)
+	end
 
 	local outfitHandled = false
 	if (MsgContains(message, "outfit")) or (MsgContains(message, "addon")) then
