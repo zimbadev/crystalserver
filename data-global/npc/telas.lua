@@ -58,76 +58,66 @@ local function creatureSayCallback(npc, creature, type, message)
 		return false
 	end
 
--- The New Frontier
-local persuasionReplies = {
-    flatter  = "Well, of course my worker golems are quite useful and it might indeed be a good idea to see how they operate on realistic conditions. I will send some to Farmine soon.",
-    threaten = "Threatening me will get you nowhere, but I admire the boldness. Very well, let us see how my golems fare in Farmine.",
-    bluff    = "Faces on stomachs and golden eggs, you say? Preposterous! Still, if there is any truth to it, my golems should be there to study it. I'll send them.",
-    impress  = "I must admit, the scale of this whole excavation is rather impressive. Very well, I'll send some of my golems to assist.",
-    reason   = "Well it sounds like a good idea to test my golems in some real environment. I think it is acceptable to send some of them to Farmine.",
-    plea     = "Well, if the situation is that desperate I think it is possible to send some of the golems to help the poor dwarfs out of their misery."
-}
-local persuasionKeywords = { "flatter", "threaten", "bluff", "impress", "reason", "plea" }
+	-- The New Frontier
+	local persuasionReplies = {
+		flatter = "Well, of course my worker golems are quite useful and it might indeed be a good idea to see how they operate on realistic conditions. I will send some to Farmine soon.",
+		threaten = "Threatening me will get you nowhere, but I admire the boldness. Very well, let us see how my golems fare in Farmine.",
+		bluff = "Faces on stomachs and golden eggs, you say? Preposterous! Still, if there is any truth to it, my golems should be there to study it. I'll send them.",
+		impress = "I must admit, the scale of this whole excavation is rather impressive. Very well, I'll send some of my golems to assist.",
+		reason = "Well it sounds like a good idea to test my golems in some real environment. I think it is acceptable to send some of them to Farmine.",
+		plea = "Well, if the situation is that desperate I think it is possible to send some of the golems to help the poor dwarfs out of their misery.",
+	}
+	local persuasionKeywords = { "flatter", "threaten", "bluff", "impress", "reason", "plea" }
 
-if MsgContains(message, "farmine") and player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas) < 3 then
-    if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 then
-        if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas) == 1 then
-            npcHandler:say("I have heard only little about this mine. I am a bit absorbed in my studies. But what does this mine have to do with me?", npc, creature)
-            npcHandler:setTopic(playerId, 1)
-        else
-            npcHandler:say("You are starting this discussion again? Why should I listen to you this time, do you have anything to convince me to let you even try?", npc, creature)
-            npcHandler:setTopic(playerId, 2)
-        end
-    end
-
-elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 2 then
-    if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 and player:removeItem(10027, 1) then
-        npcHandler:say("Oh how nice of you. I might have misjudged you. So let us return to this matter of worker golems. Do you have any better arguments this time?", npc, creature)
-        player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 1)
-        npcHandler:setTopic(playerId, 3)
-    else
-        npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
-        player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 2)
-        npcHandler:setTopic(playerId, 0)
-    end
-
-elseif MsgContains(message, "flatter")
-    or MsgContains(message, "threaten")
-    or MsgContains(message, "bluff")
-    or MsgContains(message, "impress")
-    or MsgContains(message, "reason")
-    or MsgContains(message, "plea") then
-
-    if npcHandler:getTopic(playerId) == 1 then
-        if player:removeItem(10027, 1) then
-            for _, keyword in ipairs(persuasionKeywords) do
-                if MsgContains(message, keyword) then
-                    npcHandler:say(persuasionReplies[keyword], npc, creature)
-                    break
-                end
-            end
-            player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 3)
-        else
-            npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
-            player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 2)
-        end
-        npcHandler:setTopic(playerId, 0)
-
-    elseif npcHandler:getTopic(playerId) == 3 then
-        for _, keyword in ipairs(persuasionKeywords) do
-            if MsgContains(message, keyword) then
-                npcHandler:say(persuasionReplies[keyword], npc, creature)
-                break
-            end
-        end
-        player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 3)
-        npcHandler:setTopic(playerId, 0)
-    end
-
-elseif MsgContains(message, "no") and (npcHandler:getTopic(playerId) == 1 or npcHandler:getTopic(playerId) == 2) then
-    npcHandler:say("Come back when you find any information.", npc, creature)
-    npcHandler:setTopic(playerId, 0)
-end
+	if MsgContains(message, "farmine") and player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas) < 3 then
+		if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 then
+			if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas) == 1 then
+				npcHandler:say("I have heard only little about this mine. I am a bit absorbed in my studies. But what does this mine have to do with me?", npc, creature)
+				npcHandler:setTopic(playerId, 1)
+			else
+				npcHandler:say("You are starting this discussion again? Why should I listen to you this time, do you have anything to convince me to let you even try?", npc, creature)
+				npcHandler:setTopic(playerId, 2)
+			end
+		end
+	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 2 then
+		if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 and player:removeItem(10027, 1) then
+			npcHandler:say("Oh how nice of you. I might have misjudged you. So let us return to this matter of worker golems. Do you have any better arguments this time?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 1)
+			npcHandler:setTopic(playerId, 3)
+		else
+			npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 2)
+			npcHandler:setTopic(playerId, 0)
+		end
+	elseif MsgContains(message, "flatter") or MsgContains(message, "threaten") or MsgContains(message, "bluff") or MsgContains(message, "impress") or MsgContains(message, "reason") or MsgContains(message, "plea") then
+		if npcHandler:getTopic(playerId) == 1 then
+			if player:removeItem(10027, 1) then
+				for _, keyword in ipairs(persuasionKeywords) do
+					if MsgContains(message, keyword) then
+						npcHandler:say(persuasionReplies[keyword], npc, creature)
+						break
+					end
+				end
+				player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 3)
+			else
+				npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
+				player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 2)
+			end
+			npcHandler:setTopic(playerId, 0)
+		elseif npcHandler:getTopic(playerId) == 3 then
+			for _, keyword in ipairs(persuasionKeywords) do
+				if MsgContains(message, keyword) then
+					npcHandler:say(persuasionReplies[keyword], npc, creature)
+					break
+				end
+			end
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 3)
+			npcHandler:setTopic(playerId, 0)
+		end
+	elseif MsgContains(message, "no") and (npcHandler:getTopic(playerId) == 1 or npcHandler:getTopic(playerId) == 2) then
+		npcHandler:say("Come back when you find any information.", npc, creature)
+		npcHandler:setTopic(playerId, 0)
+	end
 
 	return true
 end
