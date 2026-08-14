@@ -79,7 +79,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		end
 		if player:getStorageValue(Storage.Quest.U11_40.CultsOfTibia.Barkless.TrialAccessDoor) < 1 then
 			player:setStorageValue(Storage.Quest.U11_40.CultsOfTibia.Barkless.TrialAccessDoor, 1)
-		end 
+		end
 		if player:getStorageValue(Storage.Quest.U11_40.CultsOfTibia.Questline) < 1 then
 			player:setStorageValue(Storage.Quest.U11_40.CultsOfTibia.Questline, 1)
 		end
