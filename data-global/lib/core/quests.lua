@@ -7492,23 +7492,23 @@ if not Quests then
 								local kv = player:kv():scoped("shadows-of-yalahar")
 								local index = kv:get("mission10-index")
 								local state = kv:get("mission10-state")
-						
+
 								if not index or not state then
 									return 0
 								end
-								
+
 								if state == "done" then
 									return 3
 								end
 
-								return math.max(index -1, 0)
+								return math.max(index - 1, 0)
 							end)
 							count = ok and count or 0
 
 							if count == 0 then
 								return "To make the ritual work, Telas needs certain ingredients. You have brought him none of the ingredients by now."
 							end
-							
+
 							return ("To make the ritual work, Telas needs certain ingredients. You have brought him %d of the 3 ingredients by now."):format(count)
 						end,
 						[2] = "You have brought all the ingredients Telas needs.",
