@@ -49,6 +49,35 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
+local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
+local function creatureSayCallback(npc, creature, type, message)
+	local player = Player(creature)
+	local kv = player:kv():scoped("shadows-of-yalahar")
+	local playerId = player:getId()
+
+	if not npcHandler:checkInteraction(npc, creature) then
+		return false
+	end
+
+	if MsgContains(message, "research notes") and player:getStorageValue(ShadowsOfYalahar.Mission01) == 1 then
+		if kv:get("research-scutty") then
+			npcHandler:say("We've already talked about this.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		else
+			npcHandler:say({
+				"Ok, ok. Considering how much knowledge Telas was willing to share and keeping in mind that he promised to send me the results of his research I'll make an exception. I will send him the information he wants .. even a bit more. ...",
+				"He'd better live up to his promises, a dwarf does not forget or forgive easily.",
+			}, npc, creature)
+			kv:set("research-scutty", 1)
+			npcHandler:setTopic(playerId, 0)
+		end
+		return true
+	end
+	return false
+end
+
+npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
+npcHandler:setMessage(MESSAGE_GREET, "Hello there.")
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 -- npcType registering the npcConfig table

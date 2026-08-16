@@ -806,6 +806,130 @@ ItemAction = {
 			{ x = 32676, y = 32715, z = 10 },
 		},
 	},
+	-- Shadows of Yalahar Quest (Mission 09)
+	[4953] = {
+		itemId = 9193, -- yalahari folio
+		itemPos = {
+			{ x = 32797, y = 31197, z = 9 },
+			{ x = 32797, y = 31193, z = 9 },
+			{ x = 32797, y = 31189, z = 9 },
+			{ x = 32801, y = 31197, z = 9 },
+			{ x = 32801, y = 31189, z = 9 },
+			{ x = 32805, y = 31197, z = 9 },
+			{ x = 32805, y = 31193, z = 9 },
+			{ x = 32805, y = 31189, z = 9 },
+		},
+	},
+	[4954] = {
+		itemId = 9192, -- yalahari inkwell
+		itemPos = {
+			{ x = 32801, y = 31193, z = 9 },
+		},
+	},
+	-- Shadows of Yalahar Quest (Mission 11)
+	[4955] = {
+		itemId = 9254, -- sparkling gems (elevator buttom)
+		itemPos = {
+			{ x = 32895, y = 31296, z = 9 },
+			{ x = 32895, y = 31296, z = 11 },
+		},
+	},
+	-- Shadows of Yalahar Quest (Mission 12)
+	[4956] = {
+		itemId = 9164, -- storage box (bag of screws)
+		itemPos = {
+			{ x = 32554, y = 31246, z = 10 },
+		},
+	},
+	[4957] = {
+		itemId = 9165, -- toolbox (spare part)
+		itemPos = {
+			{ x = 32559, y = 31248, z = 10 },
+		},
+	},
+	[4958] = {
+		itemId = 9166, -- screwdriver holder (giant screwdriver)
+		itemPos = {
+			{ x = 32562, y = 31253, z = 10 },
+		},
+	},
+	[4959] = {
+		itemId = 9168, -- dusty box (v-Belt)
+		itemPos = {
+			{ x = 32562, y = 31258, z = 10 },
+		},
+	},
+	[4960] = {
+		itemId = 9169, -- old crate (yalahari gear wheel)
+		itemPos = {
+			{ x = 32562, y = 31265, z = 10 },
+		},
+	},
+	[4961] = {
+		itemId = 9167, -- energy generator (energy net)
+		itemPos = {
+			{ x = 32554, y = 31265, z = 10 },
+		},
+	},
+	[4962] = {
+		itemId = 9163, -- amphora of grease (glob of grease)
+		itemPos = {
+			{ x = 32544, y = 31265, z = 10 },
+		},
+	},
+	[4963] = {
+		itemId = 9162, -- storage chest (green power core)
+		itemPos = {
+			{ x = 32536, y = 31264, z = 10 },
+		},
+	},
+	[4964] = {
+		itemId = 9161, -- glue dispenser (wonder glue)
+		itemPos = {
+			{ x = 32536, y = 31258, z = 10 },
+		},
+	},
+	[4965] = {
+		itemId = 9158, -- vortex of elemental water (vial of elemental water)
+		itemPos = {
+			{ x = 32536, y = 31253, z = 10 },
+		},
+	},
+	[4966] = {
+		itemId = 9160, -- metal locker (red power core)
+		itemPos = {
+			{ x = 32536, y = 31246, z = 10 },
+		},
+	},
+	[4967] = {
+		itemId = 9159, -- pile of chaos matter (chaos matter)
+		itemPos = {
+			{ x = 32544, y = 31246, z = 10 },
+		},
+	},
+	[4968] = {
+		itemId = false, -- strange apparatus (elevator)
+		itemPos = {
+			{ x = 32551, y = 31250, z = 9 },
+			{ x = 32551, y = 31250, z = 11 },
+		},
+	},
+	-- Shadows of Yalahar Quest (Mission 02)
+	[4969] = {
+		itemId = 9628,
+		itemPos = {
+			{ x = 32867, y = 31257, z = 11 },
+			{ x = 32869, y = 31257, z = 11 },
+			{ x = 32871, y = 31257, z = 11 },
+			{ x = 32873, y = 31257, z = 11 },
+		},
+	},
+	[4970] = {
+		itemId = 9250,
+		itemPos = {
+			{ x = 32864, y = 31262, z = 11 },
+		},
+	},
 	-- Cults of Tibia Quest
 	[5522] = {
 		itemId = 25687,
