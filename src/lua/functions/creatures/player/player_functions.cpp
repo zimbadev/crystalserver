@@ -343,6 +343,7 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "popupFYI", PlayerFunctions::luaPlayerPopupFYI);
 
 	Lua::registerMethod(L, "Player", "isPzLocked", PlayerFunctions::luaPlayerIsPzLocked);
+	Lua::registerMethod(L, "Player", "addInFightTicks", PlayerFunctions::luaPlayerAddInFightTicks);
 
 	Lua::registerMethod(L, "Player", "getClient", PlayerFunctions::luaPlayerGetClient);
 
@@ -3807,6 +3808,18 @@ int PlayerFunctions::luaPlayerIsPzLocked(lua_State* L) {
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (player) {
 		Lua::pushBoolean(L, player->isPzLocked());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerAddInFightTicks(lua_State* L) {
+	// player:addInFightTicks([pzlock = false])
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		player->addInFightTicks(Lua::getBoolean(L, 2, false));
+		Lua::pushBoolean(L, true);
 	} else {
 		lua_pushnil(L);
 	}
