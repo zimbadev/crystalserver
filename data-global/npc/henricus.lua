@@ -111,6 +111,9 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Mission02, 1) -- The Inquisition Questlog- "Mission 2: Eclipse"
 			player:addItem(133, 1)
 			npcHandler:setTopic(playerId, 0)
+		elseif player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 4 then
+			npcHandler:say("Your current mission is to destroy the witches' brew with the vial of holy water and to steal their grimoire.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
 		elseif player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 5 then
 			npcHandler:say("Your current mission is to destroy this coven. Are you done with that mission?", npc, creature)
 			npcHandler:setTopic(playerId, 9)
@@ -158,6 +161,12 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:say("You need 20 of them.", npc, creature)
 			end
 			npcHandler:setTopic(playerId, 0)
+		elseif player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 16 then
+			npcHandler:say("Talk to me about your {outfit} anytime from now on. Afterwards, let's talk about the next mission that's awaiting you.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		elseif player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 16 then
+			npcHandler:say("Talk to me about your {outfit} anytime from now on. Afterwards, let's talk about the next mission that's awaiting you.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
 		elseif player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 17 then
 			npcHandler:say({
 				"We've got information about something very dangerous going on on the isle of Edron. The demons are preparing something there ...",
@@ -166,6 +175,9 @@ local function creatureSayCallback(npc, creature, type, message)
 			}, npc, creature)
 			player:setStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline, 18)
 			player:setStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Mission06, 1) -- The Inquisition Questlog- "Mission 6: The Demon Ungreez"
+			npcHandler:setTopic(playerId, 0)
+		elseif player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 18 then
+			npcHandler:say("Your current mission is to take revenge and to kill the demon Ungreez. You'll find him in the depths of Edron.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		elseif player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 19 then
 			npcHandler:say({
@@ -184,6 +196,9 @@ local function creatureSayCallback(npc, creature, type, message)
 		elseif player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 21 or player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 22 then
 			npcHandler:say("Your current mission is to destroy the shadow nexus in the Demon Forge. Are you done with that mission?", npc, creature)
 			npcHandler:setTopic(playerId, 6)
+		elseif player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 23 then
+			npcHandler:say("Don't forget to ask me about your {outfit} to receive the final addon as demon hunter.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
 		end
 	elseif MsgContains(message, "yes") then
 		if npcHandler:getTopic(playerId) == 2 then
@@ -230,7 +245,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			if player:getStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline) == 22 then
 				npcHandler:say({
 					"Incredible! You're a true defender of faith! I grant you the title of a High Inquisitor for your noble deeds. From now on you can obtain the blessing of the inquisition which makes the pilgrimage of ashes obsolete ...",
-					"The blessing of the inquisition will bestow upon you all available blessings for the price of 110000 gold. Also, don't forget to ask me about your {outfit} to receive the final addon as demon hunter.",
+					"The blessing of the inquisition will bestow upon you all available blessings for a slightly higher price than if you'd buy them separately. Also, don't forget to ask me about your {outfit} to receive the final addon as demon hunter.",
 				}, npc, creature)
 				player:setStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Questline, 23)
 				player:setStorageValue(Storage.Quest.U8_2.TheInquisitionQuest.Mission07, 3) -- The Inquisition Questlog- "Mission 7: The Shadow Nexus"
@@ -398,8 +413,4 @@ end
 npcType.onCheckItem = function(npc, player, clientId, subType) end
 
 -- npcType registering the npcConfig table
-
--- Dialog options (interactive icons in the NPC conversation window)
-npcType:addDialogOptions("trade", "bye")
-
 npcType:register(npcConfig)
