@@ -98,7 +98,7 @@ int CrystalServer::run() {
 				g_game().transferHouseItemsToDepot();
 
 				IOMarket::checkExpiredOffers();
-				IOMarket::processWebOrders();
+				IOMarket::checkWebOrders();
 				IOMarket::getInstance().updateStatistics();
 
 				g_ioweeklytasks().initializeShopOffers(); // Winter Update 2025 - Task Board Shop (after mounts/outfits are loaded)
