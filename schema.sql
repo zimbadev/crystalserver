@@ -955,6 +955,30 @@ CREATE TABLE IF NOT EXISTS `kv_store` (
   PRIMARY KEY (`key_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Table structure `market_web_orders`
+CREATE TABLE IF NOT EXISTS `market_web_orders` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `offer_id` INT(11) NOT NULL,
+  `buyer_id` INT(11) NOT NULL,
+  `buyer_account_id` INT(11) NOT NULL,
+  `seller_id` INT(11) NOT NULL,
+  `seller_account_id` INT(11) NOT NULL,
+  `itemtype` INT(11) NOT NULL,
+  `amount` INT(11) NOT NULL,
+  `price` BIGINT(20) UNSIGNED NOT NULL,
+  `tier` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
+  `currency_type` VARCHAR(16) NOT NULL DEFAULT 'gold',
+  `status` ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
+  `fail_reason` VARCHAR(255) NOT NULL DEFAULT '',
+  `created_at` BIGINT(20) NOT NULL,
+  `processed_at` BIGINT(20) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  INDEX `idx_mwo_status_created` (`status`, `created_at`),
+  INDEX `idx_mwo_buyer` (`buyer_id`),
+  INDEX `idx_mwo_seller` (`seller_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 -- Create Account god/god
 INSERT INTO `accounts`
 (`id`, `name`, `email`, `password`, `type`) VALUES

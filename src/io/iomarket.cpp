@@ -255,6 +255,153 @@ void IOMarket::checkExpiredOffers() {
 	g_dispatcher().scheduleEvent(checkExpiredMarketOffersEachMinutes * 60 * 1000, IOMarket::checkExpiredOffers, __FUNCTION__);
 }
 
+void IOMarket::processWebOrders() {
+	if (!g_configManager().getBoolean(TOGGLE_WEB_MARKET_ORDERS)) {
+		return;
+	}
+
+	Database &db = Database::getInstance();
+	std::ostringstream query;
+	query << "SELECT `id`, `offer_id`, `buyer_id`, `buyer_account_id`, `seller_id`, `seller_account_id`, `itemtype`, `amount`, `price`, `tier`, `currency_type` FROM `market_web_orders` WHERE `status` = 'PENDING' ORDER BY `id` ASC LIMIT 20";
+
+	DBResult_ptr result = db.storeQuery(query.str());
+	if (result) {
+		do {
+			uint64_t orderId = result->getNumber<uint64_t>("id");
+			uint32_t offerId = result->getNumber<uint32_t>("offer_id");
+			uint32_t buyerId = result->getNumber<uint32_t>("buyer_id");
+			uint32_t buyerAccountId = result->getNumber<uint32_t>("buyer_account_id");
+			uint32_t sellerId = result->getNumber<uint32_t>("seller_id");
+			uint32_t sellerAccountId = result->getNumber<uint32_t>("seller_account_id");
+			uint16_t itemId = result->getNumber<uint16_t>("itemtype");
+			uint16_t amount = result->getNumber<uint16_t>("amount");
+			uint64_t totalPrice = result->getNumber<uint64_t>("price");
+			uint8_t tier = result->getNumber<uint8_t>("tier");
+			std::string currencyType = result->getString("currency_type");
+
+			std::ostringstream lockQuery;
+			lockQuery << "UPDATE `market_web_orders` SET `status` = 'PROCESSING' WHERE `id` = " << orderId << " AND `status` = 'PENDING'";
+			if (!db.executeQuery(lockQuery.str())) {
+				continue;
+			}
+
+			std::ostringstream offerQuery;
+			offerQuery << "SELECT `id`, `amount`, `price`, `tier` FROM `market_offers` WHERE `id` = " << offerId;
+			DBResult_ptr offerRes = db.storeQuery(offerQuery.str());
+			if (!offerRes) {
+				std::ostringstream failQuery;
+				failQuery << "UPDATE `market_web_orders` SET `status` = 'FAILED', `fail_reason` = 'Offer no longer available on market', `processed_at` = " << getTimeNow() << " WHERE `id` = " << orderId;
+				db.executeQuery(failQuery.str());
+				continue;
+			}
+
+			uint16_t offerAmount = offerRes->getNumber<uint16_t>("amount");
+			if (offerAmount < amount) {
+				std::ostringstream failQuery;
+				failQuery << "UPDATE `market_web_orders` SET `status` = 'FAILED', `fail_reason` = 'Insufficient offer amount on market', `processed_at` = " << getTimeNow() << " WHERE `id` = " << orderId;
+				db.executeQuery(failQuery.str());
+				continue;
+			}
+
+			const auto &buyer = g_game().getPlayerByID(buyerId);
+			bool buyerCharged = false;
+
+			if (currencyType == "tibia_coin") {
+				std::ostringstream coinCheck;
+				coinCheck << "SELECT `coins` FROM `accounts` WHERE `id` = " << buyerAccountId;
+				DBResult_ptr coinRes = db.storeQuery(coinCheck.str());
+				if (coinRes && coinRes->getNumber<uint64_t>("coins") >= totalPrice) {
+					std::ostringstream chargeCoins;
+					chargeCoins << "UPDATE `accounts` SET `coins` = `coins` - " << totalPrice << " WHERE `id` = " << buyerAccountId;
+					db.executeQuery(chargeCoins.str());
+					std::ostringstream creditCoins;
+					creditCoins << "UPDATE `accounts` SET `coins` = `coins` + " << totalPrice << " WHERE `id` = " << sellerAccountId;
+					db.executeQuery(creditCoins.str());
+					buyerCharged = true;
+				}
+			} else {
+				if (buyer) {
+					if (buyer->getBankBalance() >= totalPrice) {
+						buyer->setBankBalance(buyer->getBankBalance() - totalPrice);
+						buyerCharged = true;
+					}
+				} else {
+					std::ostringstream balQuery;
+					balQuery << "SELECT `balance` FROM `players` WHERE `id` = " << buyerId;
+					DBResult_ptr balRes = db.storeQuery(balQuery.str());
+					if (balRes && balRes->getNumber<uint64_t>("balance") >= totalPrice) {
+						std::ostringstream chargeBal;
+						chargeBal << "UPDATE `players` SET `balance` = `balance` - " << totalPrice << " WHERE `id` = " << buyerId;
+						db.executeQuery(chargeBal.str());
+						buyerCharged = true;
+					}
+				}
+			}
+
+			if (!buyerCharged) {
+				std::ostringstream failQuery;
+				failQuery << "UPDATE `market_web_orders` SET `status` = 'FAILED', `fail_reason` = 'Buyer has insufficient balance/coins', `processed_at` = " << getTimeNow() << " WHERE `id` = " << orderId;
+				db.executeQuery(failQuery.str());
+				continue;
+			}
+
+			if (buyer) {
+				const auto &inbox = buyer->getInbox();
+				const auto &item = Item::CreateItem(itemId, amount);
+				if (item) {
+					if (tier > 0) {
+						item->setAttribute(ItemAttribute_t::TIER, tier);
+					}
+					g_game().internalAddItem(inbox, item, INDEX_WHEREEVER, FLAG_NOLIMIT);
+				}
+				buyer->sendTextMessage(MESSAGE_EVENT_ADVANCE, "Your purchase on the Web Market was completed! The item has been delivered to your Inbox.");
+			} else {
+				std::ostringstream sidQuery;
+				sidQuery << "SELECT MAX(sid) AS `max_sid` FROM `player_depotitems` WHERE `player_id` = " << buyerId;
+				DBResult_ptr sidRes = db.storeQuery(sidQuery.str());
+				uint32_t nextSid = 101;
+				if (sidRes && sidRes->getNumber<uint32_t>("max_sid") >= 100) {
+					nextSid = sidRes->getNumber<uint32_t>("max_sid") + 1;
+				}
+				std::ostringstream insertDepot;
+				insertDepot << "INSERT INTO `player_depotitems` (`player_id`, `sid`, `pid`, `itemtype`, `count`, `attributes`) VALUES (" << buyerId << ", " << nextSid << ", 1, " << itemId << ", " << amount << ", '')";
+				db.executeQuery(insertDepot.str());
+			}
+
+			if (currencyType == "gold") {
+				const auto &seller = g_game().getPlayerByID(sellerId);
+				if (seller) {
+					seller->setBankBalance(seller->getBankBalance() + totalPrice);
+					seller->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You sold an item on the Web Market! Gold has been credited to your bank account.");
+				} else {
+					std::ostringstream creditBal;
+					creditBal << "UPDATE `players` SET `balance` = `balance` + " << totalPrice << " WHERE `id` = " << sellerId;
+					db.executeQuery(creditBal.str());
+				}
+			}
+
+			if (offerAmount == amount) {
+				deleteOffer(offerId);
+			} else {
+				acceptOffer(offerId, amount);
+			}
+
+			appendHistory(buyerId, MARKETACTION_BUY, itemId, amount, totalPrice, getTimeNow(), tier, OFFERSTATE_ACCEPTEDEX);
+			appendHistory(sellerId, MARKETACTION_SELL, itemId, amount, totalPrice, getTimeNow(), tier, OFFERSTATE_ACCEPTED);
+
+			std::ostringstream compQuery;
+			compQuery << "UPDATE `market_web_orders` SET `status` = 'COMPLETED', `processed_at` = " << getTimeNow() << " WHERE `id` = " << orderId;
+			db.executeQuery(compQuery.str());
+
+		} while (result->next());
+	}
+
+	uint32_t interval = g_configManager().getNumber(WEB_MARKET_ORDERS_INTERVAL);
+	if (interval > 0) {
+		g_dispatcher().scheduleEvent(interval, IOMarket::processWebOrders, __FUNCTION__);
+	}
+}
+
 uint32_t IOMarket::getPlayerOfferCount(uint32_t playerId) {
 	std::ostringstream query;
 	query << "SELECT COUNT(*) AS `count` FROM `market_offers` WHERE `player_id` = " << playerId;

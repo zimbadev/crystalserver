@@ -488,6 +488,8 @@ marketRefreshPricesInterval = 30
 premiumToCreateMarketOffer = true
 checkExpiredMarketOffersEachMinutes = 60
 maxMarketOffersAtATimePerPlayer = 100
+toggleWebMarketOrders = true
+webMarketOrdersInterval = 2000
 
 -- MySQL
 -- NOTE: mysqlPoolSize 4 (default) — small to medium servers

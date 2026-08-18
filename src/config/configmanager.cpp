@@ -186,6 +186,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_SERVER_IS_RETRO, "toggleServerIsRetroPVP", false);
 	loadBoolConfig(L, TOGGLE_SPECIAL_TILES, "toggleSpecialTiles", false);
 	loadBoolConfig(L, TOGGLE_TRAVELS_FREE, "toggleTravelsFree", false);
+	loadBoolConfig(L, TOGGLE_WEB_MARKET_ORDERS, "toggleWebMarketOrders", true);
 	loadBoolConfig(L, TOGGLE_WHEELSYSTEM, "wheelSystemEnabled", true);
 	loadBoolConfig(L, UNLOCK_ALL_FAMILIARS, "unlockAllFamiliars", false);
 	loadBoolConfig(L, UNLOCK_ALL_MOUNTS, "unlockAllMounts", false);
@@ -417,6 +418,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, TIBIADROME_CONCOCTION_DURATION, "tibiadromeConcoctionDuration", 1 * 60 * 60);
 	loadIntConfig(L, TRANSCENDENCE_AVATAR_DURATION, "transcendenceAvatarDuration", 7000);
 	loadIntConfig(L, UI_ACTIONS_DELAY_INTERVAL, "uiActionsDelay", 1000);
+	loadIntConfig(L, WEB_MARKET_ORDERS_INTERVAL, "webMarketOrdersInterval", 2000);
 	loadIntConfig(L, VIP_BONUS_EXP, "vipBonusExp", 0);
 	loadIntConfig(L, VIP_BONUS_LOOT, "vipBonusLoot", 0);
 	loadIntConfig(L, VIP_BONUS_SKILL, "vipBonusSkill", 0);
