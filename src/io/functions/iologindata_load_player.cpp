@@ -85,7 +85,7 @@ bool IOLoginDataLoad::preLoadPlayer(const std::shared_ptr<Player> &player, const
 	Database &db = Database::getInstance();
 
 	std::ostringstream query;
-	query << "SELECT `id`, `account_id`, `group_id`, `deletion` FROM `players` WHERE `name` = " << db.escapeString(name);
+	query << "SELECT `id`, `account_id`, `group_id`, `deletion`, `is_locked`, `locked_at`, `lock_reason` FROM `players` WHERE `name` = " << db.escapeString(name);
 	DBResult_ptr result = db.storeQuery(query.str());
 	if (!result) {
 		return false;
@@ -93,6 +93,17 @@ bool IOLoginDataLoad::preLoadPlayer(const std::shared_ptr<Player> &player, const
 
 	if (result->getNumber<uint64_t>("deletion") != 0) {
 		return false;
+	}
+
+	if (g_configManager().getBoolean(TOGGLE_PLAYER_LOCK)) {
+		if (result->getNumber<uint8_t>("is_locked") == 1) {
+			auto lockedAt = result->getNumber<time_t>("locked_at");
+			auto timeout = g_configManager().getNumber(PLAYER_LOCK_TIMEOUT);
+			if (time(nullptr) - lockedAt < timeout) {
+				g_logger().warn("Player {} login rejected: character is currently locked for a web/market transaction (reason: {})", name, result->getString("lock_reason"));
+				return false;
+			}
+		}
 	}
 
 	player->setGUID(result->getNumber<uint32_t>("id"));

@@ -183,6 +183,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_IMBUEMENT_SHRINE_STORAGE, "toggleImbuementShrineStorage", true);
 	loadBoolConfig(L, TOGGLE_MAX_CONNECTIONS_BY_IP, "toggleMaxConnectionsByIP", false);
 	loadBoolConfig(L, TOGGLE_MOUNT_IN_PZ, "toggleMountInProtectionZone", false);
+	loadBoolConfig(L, TOGGLE_PLAYER_LOCK, "togglePlayerLock", true);
 	loadBoolConfig(L, TOGGLE_RECEIVE_REWARD, "toggleReceiveReward", false);
 	loadBoolConfig(L, TOGGLE_SAVE_ASYNC, "toggleSaveAsync", false);
 	loadBoolConfig(L, TOGGLE_SAVE_INTERVAL_CLEAN_MAP, "toggleSaveIntervalCleanMap", false);
@@ -362,6 +363,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, MONTH_KILLS_TO_RED, "monthKillsToRedSkull", 10);
 	loadIntConfig(L, ORANGE_SKULL_DURATION, "orangeSkullDuration", 7);
 	loadIntConfig(L, PARALLELISM, "parallelism", 2);
+	loadIntConfig(L, PLAYER_LOCK_TIMEOUT, "playerLockTimeout", 60);
 	loadIntConfig(L, PARTY_LIST_MAX_DISTANCE, "partyListMaxDistance", 0);
 	loadIntConfig(L, PREY_BONUS_REROLL_PRICE, "preyBonusRerollPrice", 1);
 	loadIntConfig(L, PREY_BONUS_TIME, "preyBonusTime", 7200);

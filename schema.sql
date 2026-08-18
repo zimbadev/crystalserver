@@ -156,8 +156,12 @@ CREATE TABLE IF NOT EXISTS `players` (
     `virtue` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `harmony` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `weapon_proficiencies` mediumblob DEFAULT NULL,
+    `is_locked` tinyint(1) NOT NULL DEFAULT '0',
+    `locked_at` bigint(20) NOT NULL DEFAULT '0',
+    `lock_reason` varchar(64) NOT NULL DEFAULT '',
     INDEX `account_id` (`account_id`),
     INDEX `vocation` (`vocation`),
+    INDEX `idx_players_concurrency_lock` (`is_locked`, `locked_at`),
     CONSTRAINT `players_pk` PRIMARY KEY (`id`),
     CONSTRAINT `players_unique` UNIQUE (`name`),
     CONSTRAINT `players_account_fk`
