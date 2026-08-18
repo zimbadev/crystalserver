@@ -363,8 +363,8 @@ bool ConfigManager::load() {
 	loadIntConfig(L, MONTH_KILLS_TO_RED, "monthKillsToRedSkull", 10);
 	loadIntConfig(L, ORANGE_SKULL_DURATION, "orangeSkullDuration", 7);
 	loadIntConfig(L, PARALLELISM, "parallelism", 2);
-	loadIntConfig(L, PLAYER_LOCK_TIMEOUT, "playerLockTimeout", 60);
 	loadIntConfig(L, PARTY_LIST_MAX_DISTANCE, "partyListMaxDistance", 0);
+	loadIntConfig(L, PLAYER_LOCK_TIMEOUT, "playerLockTimeout", 60);
 	loadIntConfig(L, PREY_BONUS_REROLL_PRICE, "preyBonusRerollPrice", 1);
 	loadIntConfig(L, PREY_BONUS_TIME, "preyBonusTime", 7200);
 	loadIntConfig(L, PREY_FREE_REROLL_TIME, "preyFreeRerollTime", 72000);
