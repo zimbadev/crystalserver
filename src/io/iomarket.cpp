@@ -264,7 +264,7 @@ void IOMarket::checkWebOrders() {
 
 	std::ostringstream query;
 	query << "SELECT `id`, `offer_id`, `buyer_id`, `buyer_account_id`, `seller_id`, `seller_account_id`, `itemtype`, `amount`, `price`, `tier`, `currency_type` "
-	      << "FROM `market_web_orders` WHERE `status` = 'PENDING' AND `world_id` = " << worldId << " ORDER BY `id` ASC LIMIT 20";
+		  << "FROM `market_web_orders` WHERE `status` = 'PENDING' AND `world_id` = " << worldId << " ORDER BY `id` ASC LIMIT 20";
 	g_databaseTasks().store(query.str(), IOMarket::processWebOrders);
 
 	int32_t interval = g_configManager().getNumber(WEB_MARKET_ORDERS_INTERVAL);
@@ -305,7 +305,7 @@ void IOMarket::processWebOrders(const DBResult_ptr &result, bool) {
 		auto failOrder = [&](const std::string &reason) {
 			std::ostringstream failQuery;
 			failQuery << "UPDATE `market_web_orders` SET `status` = 'FAILED', `fail_reason` = " << db.escapeString(reason)
-			          << ", `processed_at` = UNIX_TIMESTAMP() WHERE `id` = " << orderId;
+					  << ", `processed_at` = UNIX_TIMESTAMP() WHERE `id` = " << orderId;
 			db.executeQuery(failQuery.str());
 		};
 

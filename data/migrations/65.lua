@@ -1,8 +1,5 @@
 local function tableExists(tableName)
-	local resultId = db.storeQuery(string.format(
-		"SELECT 1 FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '%s' LIMIT 1;",
-		tableName
-	))
+	local resultId = db.storeQuery(string.format("SELECT 1 FROM `information_schema`.`TABLES` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '%s' LIMIT 1;", tableName))
 	if resultId then
 		Result.free(resultId)
 		return true
