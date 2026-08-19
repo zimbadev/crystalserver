@@ -97,10 +97,10 @@ bool IOLoginDataLoad::preLoadPlayer(const std::shared_ptr<Player> &player, const
 
 	if (g_configManager().getBoolean(TOGGLE_PLAYER_LOCK)) {
 		if (result->getNumber<uint8_t>("is_locked") == 1) {
-			auto lockedAt = result->getNumber<time_t>("locked_at");
-			auto dbTime = result->getNumber<time_t>("db_time");
+			auto lockedAt = result->getNumber<int64_t>("locked_at");
+			auto dbTime = result->getNumber<int64_t>("db_time");
 			auto timeout = std::max<int32_t>(1, g_configManager().getNumber(PLAYER_LOCK_TIMEOUT));
-			if (dbTime - lockedAt < timeout) {
+			if (lockedAt > 0 && lockedAt <= dbTime + timeout && (dbTime - lockedAt < timeout)) {
 				g_logger().warn("Player {} login rejected: character is currently locked for a web/market transaction (reason: {})", name, result->getString("lock_reason"));
 				return false;
 			}
