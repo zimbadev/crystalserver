@@ -1,8 +1,5 @@
 local function columnExists(tableName, columnName)
-	local resultId = db.storeQuery(string.format(
-		"SELECT 1 FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '%s' AND `COLUMN_NAME` = '%s' LIMIT 1;",
-		tableName, columnName
-	))
+	local resultId = db.storeQuery(string.format("SELECT 1 FROM `information_schema`.`COLUMNS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '%s' AND `COLUMN_NAME` = '%s' LIMIT 1;", tableName, columnName))
 	if resultId then
 		Result.free(resultId)
 		return true
@@ -11,10 +8,7 @@ local function columnExists(tableName, columnName)
 end
 
 local function indexExists(tableName, indexName)
-	local resultId = db.storeQuery(string.format(
-		"SELECT 1 FROM `information_schema`.`STATISTICS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '%s' AND `INDEX_NAME` = '%s' LIMIT 1;",
-		tableName, indexName
-	))
+	local resultId = db.storeQuery(string.format("SELECT 1 FROM `information_schema`.`STATISTICS` WHERE `TABLE_SCHEMA` = DATABASE() AND `TABLE_NAME` = '%s' AND `INDEX_NAME` = '%s' LIMIT 1;", tableName, indexName))
 	if resultId then
 		Result.free(resultId)
 		return true
