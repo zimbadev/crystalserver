@@ -66,6 +66,7 @@ keywordHandler:addKeyword({ "greed" }, StdModule.say, { npcHandler = npcHandler,
 keywordHandler:addKeyword({ "golem" }, StdModule.say, { npcHandler = npcHandler, text = "I have indeed gathered some knowledge in the field of elemental golems. Particularly the secrets of the Earth element, which is involved in the process of their creation." })
 keywordHandler:addKeyword({ "telas" }, StdModule.say, { npcHandler = npcHandler, text = "Ah, yes, dear Telas. It is a pity that he has closed his eyes to nature's beauty, but I can't reproach him for that." })
 
+local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
 	local playerId = player:getId()
@@ -90,6 +91,19 @@ local function creatureSayCallback(npc, creature, type, message)
 			"I sometimes think words have become just as much of a hindrance as a help. ...",
 			"Perhaps we would fare better if only we forgot words and dealt purely in feelings. Then perhaps all of us could hear the wonderful melody of nature.",
 		}, npc, creature)
+	elseif MsgContains(message, "research notes") and player:getStorageValue(ShadowsOfYalahar.Mission01) == 1 then
+		local kv = player:kv():scoped("shadows-of-yalahar")
+		if kv:get("research-cerdras") then
+			npcHandler:say("We've already talked about this.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		else
+			npcHandler:say({
+				"I see no harm in sending him my notes. I hope it will help him in his efforts. ...",
+				"Maybe you could persuade him to use the time my research saves him in touch with nature. I am sure this will help him focus his mind on his studies.",
+			}, npc, creature)
+			kv:set("research-cerdras", 1)
+			npcHandler:setTopic(playerId, 0)
+		end
 	end
 	return true
 end

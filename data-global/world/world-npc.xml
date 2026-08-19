@@ -3102,6 +3102,21 @@
 	<npc centerx="33587" centery="32966" centerz="15" radius="1">
 		<npc name="Gnomish Operative (Raiders)" x="0" y="0" z="15" spawntime="60" />
 	</npc>
+	<npc centerx="33258" centery="31823" centerz="3" radius="1">
+		<npc name="Milos" x="0" y="0" z="3" spawntime="60" />
+	</npc>
+	<npc centerx="32548" centery="31254" centerz="9" radius="1">
+		<npc name="Golem Servant" x="0" y="0" z="9" spawntime="60" />
+	</npc>
+	<npc centerx="32574" centery="31915" centerz="12" radius="1">
+		<npc name="Scutty" x="0" y="0" z="12" spawntime="60" />
+	</npc>
+	<npc centerx="32431" centery="32090" centerz="15" radius="1">
+		<npc name="Boveas" x="0" y="0" z="15" spawntime="60" />
+	</npc>
+	<npc centerx="32800" centery="31572" centerz="14" radius="1">
+		<npc name="Dreadeye" x="0" y="0" z="14" spawntime="60" />
+	</npc>
 	<!-- Targuna Quest (15.24) NPC spawns -->
 	<npc centerx="31973" centery="31892" centerz="6" radius="1">
 		<npc name="Captain Indigo" x="0" y="0" z="6" spawntime="60" />
