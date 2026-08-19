@@ -26,9 +26,11 @@ maintainModeMessage = ""
 
 -- Combat settings
 -- NOTE: valid values for worldType are: "pvp", "no-pvp" and "pvp-enforced"
+-- NOTE: worldId specifies the world/server id for multi-world setups (default: 0)
 -- NOTE: removeBeginningWeaponAmmunition: spears, arrows, bolt have endless ammo (allows training for paladins)
 -- NOTE: refundManaOnBeginningWeapons: wand of vortex and snakebite refund mana used (allows training for mages)
 worldType = "pvp"
+worldId = 0
 hotkeyAimbotEnabled = true
 protectionLevel = 7
 pzLocked = 60 * 1000
