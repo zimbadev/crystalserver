@@ -94,7 +94,7 @@ npcConfig.shop = {
 	{ itemName = "green book", clientId = 2831, sell = 30 },
 	{ itemName = "greeting card", clientId = 6386, buy = 40 },
 	{ itemName = "grey small book", clientId = 2839, buy = 20 },
-	{ itemName = "inkwell", clientId = 3509, buy = 20, sell = 15 },
+	{ itemName = "inkwell", clientId = 3509, buy = 20, sell = 9 },
 	{ itemName = "orange book", clientId = 2843, sell = 60 },
 	{ itemName = "parchment", clientId = 2833, buy = 15, sell = 10 },
 	{ itemName = "parchment", clientId = 2835, buy = 15 },
