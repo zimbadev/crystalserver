@@ -1476,6 +1476,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			if (outfitModule) {
 				outfitModule->executeOnRecvbyte(player, msg);
 			}
+			if (!player) {
+				break;
+			}
 			if (msg.getBufferPosition() == startBufferPosition) {
 				g_game().playerRequestOutfit(player->getID());
 			}
@@ -1486,6 +1489,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			const auto &outfitModule = g_modules().getEventByRecvbyte(0xD3, false);
 			if (outfitModule) {
 				outfitModule->executeOnRecvbyte(player, msg);
+			}
+			if (!player) {
+				break;
 			}
 			if (msg.getBufferPosition() == startBufferPosition) {
 				parseSetOutfit(msg);
@@ -6136,9 +6142,6 @@ void ProtocolGame::sendCoinBalance() {
 
 	writeToOutputBuffer(msg);
 
-	// PATCH LOCAL (CoxaOT): o 0xDF acima nao alimenta o market do cliente 15.x.
-	// O t_market.lua usa getResourceBalance(91) para saber quantas coins podem
-	// ser ofertadas; sem o 0xEE a barra de quantidade fica presa em setRange(0,0).
 	if (!oldProtocol) {
 		sendResourceBalance(RESOURCE_COIN_NORMAL, player->coinBalance);
 		sendResourceBalance(RESOURCE_COIN_TRANSFERRABLE, player->coinTransferableBalance);

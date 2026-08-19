@@ -92,7 +92,7 @@ function getJackLastMissionState(player)
 		return true
 	end
 
-	if player:getStorageValue(Storage.TibiaTales.JackFutureQuest.LastMissionState) == 1 then
+	if player:getStorageValue(Storage.Quest.U8_7.JackFutureQuest.LastMissionState) == 1 then
 		return "You told Jack the truth about his personality. You also explained that you and Spectulus \z
 		made a mistake by assuming him as the real Jack."
 	else
@@ -282,7 +282,8 @@ function clearForgotten(fromPosition, toPosition, exitPosition, storage)
 end
 
 function isValidMoney(money)
-	return isNumber(money) and money > 0 and money < 4294967296
+	-- 2^53: max integer LuaJIT doubles represent exactly (bank balance is uint64_t in C++)
+	return isNumber(money) and money > 0 and money < 9007199254740992
 end
 
 function iterateArea(func, from, to)

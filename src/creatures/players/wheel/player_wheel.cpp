@@ -896,6 +896,17 @@ uint16_t PlayerWheel::getUnusedPoints() const {
 
 void PlayerWheel::reclaimExcessPoints() {
 	if (!canOpenWheel()) {
+		bool changed = false;
+		for (auto slot : magic_enum::enum_values<WheelSlots_t>()) {
+			if (getPointsBySlotType(slot) > 0) {
+				setPointsBySlotType(static_cast<uint8_t>(slot), 0);
+				changed = true;
+			}
+		}
+		if (changed) {
+			loadPlayerBonusData();
+			saveDBPlayerSlotPointsOnLogout();
+		}
 		return;
 	}
 

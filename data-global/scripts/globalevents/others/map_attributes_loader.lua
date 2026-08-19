@@ -1,4 +1,5 @@
 local function loadMapActionsAndUniques()
+	CreateMapItem(CreateItemOnMap)
 	loadLuaMapAction(ChestAction)
 	loadLuaMapUnique(ChestUnique)
 	loadLuaMapAction(CorpseAction)
@@ -19,7 +20,6 @@ local function loadMapActionsAndUniques()
 	loadLuaMapAction(TileAction)
 	loadLuaMapUnique(TileUnique)
 	loadLuaMapAction(TilePickAction)
-	CreateMapItem(CreateItemOnMap)
 	updateKeysStorage(QuestKeysUpdate)
 end
 

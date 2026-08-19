@@ -1061,7 +1061,7 @@ std::shared_ptr<Creature> Game::getCreatureByID(uint32_t id) {
 	} else if (id <= Npc::npcAutoID) {
 		return getNpcByID(id);
 	} else {
-		g_logger().warn("Creature with id {} not exists");
+		g_logger().warn("Creature with id {} does not exist", id);
 	}
 	return nullptr;
 }
@@ -2292,6 +2292,9 @@ ReturnValue Game::internalMoveItem(std::shared_ptr<Cylinder> fromCylinder, std::
 	// check if we can add this item
 	ret = toCylinder->queryAdd(index, item, count, flags, actor);
 	if (ret == RETURNVALUE_NEEDEXCHANGE) {
+		if (!toItem) {
+			return RETURNVALUE_NOTPOSSIBLE;
+		}
 		// check if we can add it to source cylinder
 		ret = fromCylinder->queryAdd(fromCylinder->getThingIndex(item), toItem, toItem->getItemCount(), 0);
 		if (ret == RETURNVALUE_NOERROR) {
@@ -3505,7 +3508,7 @@ ReturnValue Game::collectRewardChestItems(const std::shared_ptr<Player> &player,
 	std::string lootedItemsMessage;
 	for (const auto &item : rewardItemsVector) {
 		// Stop if player not have free capacity
-		if (item && player->getCapacity() < item->getWeight()) {
+		if (item && player->getFreeCapacity() < item->getWeight()) {
 			player->sendCancelMessage(RETURNVALUE_NOTENOUGHCAPACITY);
 			break;
 		}

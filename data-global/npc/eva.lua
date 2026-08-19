@@ -78,11 +78,14 @@ npcHandler:setMessage(MESSAGE_FAREWELL, "Have a nice day.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Have a nice day.")
 npcHandler:setCallback(CALLBACK_GREET, NpcBankGreetCallback)
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
-npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
+keywordHandler:addKeyword({ "name" }, StdModule.say, { npcHandler = npcHandler, text = "I am Eva." })
+keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I work in this bank. I can change money for you and help you with your bank account." })
 
 -- Dialog options (interactive icons in the NPC conversation window)
 npcType:addDialogOptions("deposit all", "withdraw", "balance", "bye")
 
+npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
+
+-- npcType registering the npcConfig table
 npcType:register(npcConfig)

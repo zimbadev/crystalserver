@@ -24561,49 +24561,71 @@
 		<attribute key="weight" value="777" />
 	</item>
 	<item id="9147" article="a" name="glob of grease">
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="260" />
 	</item>
 	<item id="9148" article="a" name="giant screwdriver">
 		<attribute key="primarytype" value="quest items" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="2000" />
 	</item>
 	<item id="9149" article="a" name="vial of elemental water">
 		<attribute key="description" value="It contains the ink of a freshly slain quara." />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="180" />
 	</item>
 	<item id="9150" article="an" name="energy net">
 		<attribute key="primarytype" value="quest items" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="100" />
 	</item>
 	<item id="9151" article="a" name="bag of screws">
 		<attribute key="containersize" value="8" />
 		<attribute key="weight" value="800" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="script" value="moveevent">
 			<attribute key="slot" value="backpack" />
 		</attribute>
 	</item>
 	<item id="9152" article="a" name="v-belt">
 		<attribute key="primarytype" value="quest items" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="540" />
 	</item>
 	<item id="9153" article="a" name="yalahari gear wheel">
 		<attribute key="primarytype" value="quest items" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="5" />
 	</item>
 	<item id="9154" article="a" name="spare part">
 		<attribute key="primarytype" value="quest items" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="150" />
 	</item>
 	<item id="9155" article="a" name="red power core">
 		<attribute key="primarytype" value="quest items" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="100" />
 	</item>
 	<item id="9156" article="a" name="green power core">
 		<attribute key="primarytype" value="quest items" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="100" />
 	</item>
 	<item id="9157" article="a" name="chaos matter">
 		<attribute key="primarytype" value="quest items" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="100" />
 	</item>
 	<item id="9158" article="a" name="vortex of elemental water">
@@ -24653,6 +24675,8 @@
 	</item>
 	<item id="9170" article="an" name="wonder glue">
 		<attribute key="primarytype" value="quest items" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
 		<attribute key="weight" value="180" />
 	</item>
 	<item id="9171" article="a" name="parchment">
@@ -29641,7 +29665,13 @@
 		<attribute key="primarytype" value="constructions" />
 	</item>
 	<item id="12140" article="an" name="alter of fire" />
-	<item fromid="12141" toid="12142" name="unknown item" />
+	<item fromid="12141" toid="12142" article="a" name="dead cake golem">
+		<attribute key="fluidsource" value="blood" />
+		<attribute key="duration" value="60" />
+		<attribute key="decayTo" value="0" />
+		<attribute key="containersize" value="10" />
+		<attribute key="weight" value="4000" />
+	</item>
 	<item id="12143" article="a" name="sweet and sugary substance">
 		<attribute key="description" value="It is incredibly sticky and too sweet to eat it" />
 		<attribute key="weight" value="65" />
