@@ -80519,12 +80519,7 @@
 		<attribute key="description" value="Offers a soul to the Soulpit. Combine with an exalted core to turn it into a lesser soul core." />
 		<attribute key="weight" value="100" />
 	</item>
-	<item id="47992" article="a" name="varnished diremaw soul core">
-		<attribute key="primarytype" value="soul cores" />
-		<attribute key="description" value="Offers a soul to the Soulpit. Combine with an exalted core to turn it into a lesser soul core." />
-		<attribute key="weight" value="100" />
-	</item>
-	<item id="47993" article="a" name="tremendous tyrant soul core">
+	<item id="47992" article="a" name="tremendous tyrant soul core">
 		<attribute key="primarytype" value="soul cores" />
 		<attribute key="description" value="Offers a soul to the Soulpit. Combine with an exalted core to turn it into a lesser soul core." />
 		<attribute key="weight" value="100" />
