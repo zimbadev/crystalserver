@@ -453,9 +453,11 @@ bool IOLoginDataSave::savePlayerKills(const std::shared_ptr<Player> &player) {
 
 	query.str("");
 
-	DBInsert killsQuery("INSERT INTO `player_kills` (`player_id`, `target`, `time`, `unavenged`) VALUES");
+	DBInsert killsQuery("INSERT INTO `player_kills` (`player_id`, `target`, `time`, `unavenged`, `weight`) VALUES");
 	for (const auto &kill : player->unjustifiedKills) {
-		query << player->getGUID() << ',' << kill.target << ',' << kill.time << ',' << kill.unavenged;
+		// frag-share weight persisted as a percentage (100 = full frag) to avoid float columns
+		const auto weightPercent = static_cast<uint16_t>(std::clamp(std::round(kill.weight * 100.0), 0.0, 100.0));
+		query << player->getGUID() << ',' << kill.target << ',' << kill.time << ',' << kill.unavenged << ',' << weightPercent;
 		if (!killsQuery.addRow(query)) {
 			return false;
 		}

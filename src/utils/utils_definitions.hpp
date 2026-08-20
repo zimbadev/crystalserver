@@ -451,6 +451,13 @@ enum SquareColor_t : uint8_t {
 	SQ_CREATURE_SQUARE_LEGACY = 255, // omit weaponType to send legacy border mark (opcode 0x93 + 0x01 + color)
 };
 
+enum PvPBox_t : uint8_t {
+	PVP_BOX_BROWN = 114,
+	PVP_BOX_ORANGE = 198,
+	PVP_BOX_YELLOW = 210,
+	PVP_BOX_NONE = 0xFF, // MARK_UNMARKED
+};
+
 enum TextColor_t : uint8_t {
 	TEXTCOLOR_BLUE = 5,
 	TEXTCOLOR_LIGHTGREEN = 30,

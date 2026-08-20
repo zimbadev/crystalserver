@@ -803,10 +803,18 @@ public:
 	void setChaseMode(bool mode);
 	void setFightMode(FightMode_t mode);
 	void setSecureMode(bool mode);
+	// Open PvP expert mode (dove / white hand / yellow hand / red fist), sent by the 15.25 client in 0xA0.
+	void setPvpMode(PvpMode_t mode) {
+		pvpMode = mode;
+	}
+	PvpMode_t getPvpMode() const {
+		return pvpMode;
+	}
 
 	Faction_t getFaction() const override;
 
 	void setFaction(Faction_t factionId);
+
 	// combat functions
 	bool setAttackedCreature(const std::shared_ptr<Creature> &creature) override;
 	bool isImmune(CombatType_t type) const override;
@@ -922,9 +930,23 @@ public:
 	void setSkullTicks(int64_t ticks);
 
 	bool hasAttacked(const std::shared_ptr<Player> &attacked) const;
+	// Open PvP (white hand): has this player attacked any party/guild member of `defender`?
+	bool hasAttackedAllyOf(const std::shared_ptr<Player> &defender) const;
 	void addAttacked(const std::shared_ptr<Player> &attacked);
 	void removeAttacked(const std::shared_ptr<Player> &attacked);
 	void clearAttacked();
+	// Open PvP: mutual "PvP situation" between two players, refreshed on every aggressive act.
+	void addPvpSituationWith(const std::shared_ptr<Player> &other);
+	bool isInPvpSituationWith(const std::shared_ptr<Player> &other) const;
+	bool hasActivePvpSituation() const;
+	// Open PvP situation boxes: the persistent creature-mark byte this player renders with for
+	// `viewer` (yellow = participant, orange = fights viewer's party/guild mate, brown = fights
+	// somebody else, 0xFF = none). Sent in the creature description; refreshed on state changes.
+	PvPBox_t getPvpSituationMarkFor(const std::shared_ptr<Player> &viewer) const;
+	// 1 Hz: re-send our creature block to viewers whenever the set of active situations changes.
+	void updatePvpSituationMarks();
+	// Open PvP: true when no other player is stacked on top of us on our tile.
+	bool isFirstInStack() const;
 	void addUnjustifiedDead(const std::shared_ptr<Player> &attacked);
 	void sendCreatureEmblem(const std::shared_ptr<Creature> &creature) const;
 	void sendCreatureSkull(const std::shared_ptr<Creature> &creature) const;
@@ -1763,6 +1785,10 @@ private:
 	void addBosstiaryKill(const std::shared_ptr<MonsterType> &mType);
 
 	phmap::flat_hash_set<uint32_t> attackedSet {};
+	// Open PvP: pairwise "PvP situation" state (guid -> expiry, OTSYS_TIME ms). Mutual aggression
+	// puts both players in a situation; fields/magic walls/boxes key off it. Runtime-only.
+	phmap::flat_hash_map<uint32_t, int64_t> pvpSituations {};
+	size_t pvpActivePairs = 0; // last broadcast count of active situations (box refresh detection)
 
 	std::map<uint8_t, OpenContainer> openContainers;
 	std::map<uint32_t, std::shared_ptr<DepotLocker>> depotLockerMap;
@@ -1958,6 +1984,7 @@ private:
 	BlockType_t lastAttackBlockType = BLOCK_NONE;
 	TradeState_t tradeState = TRADE_NONE;
 	FightMode_t fightMode = FIGHTMODE_ATTACK;
+	PvpMode_t pvpMode = PVP_MODE_DOVE;
 	Faction_t faction = FACTION_PLAYER;
 	QuickLootFilter_t quickLootFilter {};
 	PlayerPronoun_t pronoun = PLAYERPRONOUN_THEY;

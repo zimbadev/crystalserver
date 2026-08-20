@@ -22,6 +22,7 @@
 #include "core.hpp"
 #include "creatures/appearance/mounts/mounts.hpp"
 #include "creatures/appearance/attached_effects/attached_effects.hpp"
+#include "creatures/combat/combat.hpp"
 #include "creatures/combat/condition.hpp"
 #include "creatures/combat/spells.hpp"
 #include "creatures/interactions/chat.hpp"
@@ -475,7 +476,42 @@ void ProtocolGame::AddItem(NetworkMessage &msg, const std::shared_ptr<Item> &ite
 
 	const ItemType &it = Item::items[item->getID()];
 
-	msg.add<uint16_t>(it.id);
+	uint16_t wireId = it.id;
+	// Open PvP (2014 rules): player-made fields and walls are shown per-viewer. A bystander (no PvP
+	// situation with the owner) sees the harmless "nopvp"/"safe" variant — fields signal they deal
+	// no damage, walls become walkable client-side (the server still arbitrates in Tile::queryAdd).
+	// The owner and players in a PvP situation with him see the dangerous/solid originals.
+	if (!oldProtocol && player) {
+		switch (wireId) {
+			case ITEM_MAGICWALL:
+			case ITEM_WILDGROWTH:
+			case ITEM_FIREFIELD_PVP_FULL:
+			case ITEM_FIREFIELD_PVP_MEDIUM:
+			case ITEM_FIREFIELD_PVP_SMALL:
+			case ITEM_POISONFIELD_PVP:
+			case ITEM_ENERGYFIELD_PVP: {
+				// PvE walls (cast outside a PvP situation) look walkable to everyone, caster included
+				if (!Combat::isPveWall(item) && !Combat::isOwnedFieldBystander(player, item)) {
+					break;
+				}
+				if (wireId == ITEM_MAGICWALL) {
+					wireId = ITEM_MAGICWALL_SAFE;
+				} else if (wireId == ITEM_WILDGROWTH) {
+					wireId = ITEM_WILDGROWTH_SAFE;
+				} else if (wireId == ITEM_POISONFIELD_PVP) {
+					wireId = ITEM_POISONFIELD_NOPVP;
+				} else if (wireId == ITEM_ENERGYFIELD_PVP) {
+					wireId = ITEM_ENERGYFIELD_NOPVP;
+				} else {
+					wireId = ITEM_FIREFIELD_NOPVP;
+				}
+				break;
+			}
+			default:
+				break;
+		}
+	}
+	msg.add<uint16_t>(wireId);
 
 	if (oldProtocol) {
 		msg.addByte(0xFF);
@@ -2199,7 +2235,16 @@ void ProtocolGame::parseFightModes(NetworkMessage &msg) {
 	uint8_t rawChaseMode = msg.getByte(); // 0 - stand while fightning, 1 - chase opponent
 	uint8_t rawSecureMode = msg.getByte(); // 0 - can't attack unmarked, 1 - can attack unmarked
 
-	g_game().playerSetFightModes(player->getID(), FIGHTMODE_ATTACK, rawChaseMode != 0, rawSecureMode != 0);
+	// 15.25 tail (RE 2026-07-02): [pvpMode:u8][junk:u8] — 0 dove, 1 white hand, 2 yellow hand, 3 red fist.
+	uint8_t rawPvpMode = PVP_MODE_DOVE;
+	// Deterministic version gate: modern (non-oldProtocol) clients always send [pvpMode:u8][junk:u8];
+	// oldProtocol (<=1100) clients omit the tail and keep the PVP_MODE_DOVE default.
+	if (!oldProtocol) {
+		rawPvpMode = msg.getByte();
+	}
+	const auto pvpMode = rawPvpMode <= PVP_MODE_RED_FIST ? static_cast<PvpMode_t>(rawPvpMode) : PVP_MODE_DOVE;
+
+	g_game().playerSetFightModes(player->getID(), FIGHTMODE_ATTACK, rawChaseMode != 0, rawSecureMode != 0, pvpMode);
 }
 
 void ProtocolGame::parseAttack(NetworkMessage &msg) {
@@ -7853,7 +7898,7 @@ void ProtocolGame::sendFightModes() {
 	msg.addByte(player->fightMode);
 	msg.addByte(player->chaseMode);
 	msg.addByte(player->secureMode);
-	msg.addByte(PVP_MODE_DOVE);
+	msg.addByte(player->getPvpMode());
 	writeToOutputBuffer(msg);
 }
 
@@ -7921,8 +7966,10 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 		}
 	}
 
-	msg.addByte(0x00); // can change pvp framing option
-	msg.addByte(0x00); // expert mode button enabled
+	// Open PvP: unlock the client's expert PvP controls (the "E" button + dove/white/yellow/red modes)
+	const bool expertPvpControls = g_game().isExpertPvp();
+	msg.addByte(expertPvpControls ? 0x01 : 0x00); // can change pvp framing option
+	msg.addByte(expertPvpControls ? 0x01 : 0x00); // expert mode button enabled
 
 	msg.addString(g_configManager().getString(STORE_IMAGES_URL));
 	msg.add<uint16_t>(static_cast<uint16_t>(g_configManager().getNumber(STORE_COIN_PACKET)));
@@ -8983,7 +9030,10 @@ void ProtocolGame::AddCreature(NetworkMessage &msg, const std::shared_ptr<Creatu
 
 	auto bubble = creature->getSpeechBubble();
 	msg.addByte(oldProtocol && bubble == SPEECHBUBBLE_HIRELING ? static_cast<uint8_t>(SPEECHBUBBLE_NONE) : bubble);
-	msg.addByte(0xFF); // MARK_UNMARKED
+	// Open PvP situation boxes: persistent creature mark, computed per viewer
+	// (yellow = participant, orange = fights the viewer's party/guild mate, brown = other fights)
+	const auto &markedPlayer = creature->getPlayer();
+	msg.addByte(markedPlayer ? markedPlayer->getPvpSituationMarkFor(player) : 0xFF);
 	if (!oldProtocol) {
 		msg.addByte(0x00); // inspection type
 	} else {

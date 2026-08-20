@@ -1613,9 +1613,11 @@ struct Kill {
 	uint32_t target;
 	time_t time;
 	bool unavenged;
+	// Open PvP "unfair fight" frag share: 1.0 = full frag, <1.0 with 6+ participants.
+	double weight;
 
-	Kill(uint32_t _target, time_t _time, bool _unavenged) :
-		target(_target), time(_time), unavenged(_unavenged) { }
+	Kill(uint32_t _target, time_t _time, bool _unavenged, double _weight = 1.0) :
+		target(_target), time(_time), unavenged(_unavenged), weight(_weight) { }
 };
 
 struct IntervalInfo {

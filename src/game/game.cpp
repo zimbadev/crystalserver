@@ -6314,7 +6314,7 @@ void Game::playerFollowCreature(uint32_t playerId, uint32_t creatureId) {
 	player->setFollowCreature(getCreatureByID(creatureId));
 }
 
-void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode) {
+void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode, PvpMode_t pvpMode) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
@@ -6323,6 +6323,7 @@ void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool ch
 	player->setFightMode(fightMode);
 	player->setChaseMode(chaseMode);
 	player->setSecureMode(secureMode);
+	player->setPvpMode(pvpMode);
 }
 
 void Game::playerRequestAddVip(uint32_t playerId, const std::string &name) {
@@ -11546,6 +11547,20 @@ void Game::sendUpdateCreature(const std::shared_ptr<Creature> &creature) {
 
 	for (const auto &spectator : Spectators().find<Player>(creature->getPosition(), true)) {
 		spectator->getPlayer()->sendUpdateCreature(creature);
+	}
+}
+
+void Game::refreshPvpSituationMarks() {
+	if (!isExpertPvp()) {
+		return;
+	}
+	// A party/guild change alters how the changing player sees the situation boxes of players who are
+	// currently fighting (an ally's opponent becomes ORANGE, an unrelated one BROWN). Re-send those
+	// players' creature blocks once so every viewer in range recomputes its color — event-driven, no flicker.
+	for (const auto &[playerId, player] : players) {
+		if (player && player->hasActivePvpSituation()) {
+			sendUpdateCreature(player);
+		}
 	}
 }
 

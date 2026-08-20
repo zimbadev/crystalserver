@@ -419,12 +419,15 @@ void IOLoginDataLoad::loadPlayerKills(const std::shared_ptr<Player> &player, DBR
 
 	Database &db = Database::getInstance();
 	std::ostringstream query;
-	query << "SELECT `player_id`, `time`, `target`, `unavenged` FROM `player_kills` WHERE `player_id` = " << player->getGUID();
+	query << "SELECT `player_id`, `time`, `target`, `unavenged`, `weight` FROM `player_kills` WHERE `player_id` = " << player->getGUID();
 	if ((result = db.storeQuery(query.str()))) {
 		do {
 			auto killTime = result->getNumber<time_t>("time");
-			if ((time(nullptr) - killTime) <= g_configManager().getNumber(FRAG_TIME)) {
-				player->unjustifiedKills.emplace_back(result->getNumber<uint32_t>("target"), killTime, result->getNumber<bool>("unavenged"));
+			// keep the full 30-day window: the month frag bar counts it and the orange skull
+			// (unavenged kills) lasts 7 days — the old FRAG_TIME (24h) gate dropped both on relog
+			if ((time(nullptr) - killTime) <= 30 * 24 * 60 * 60) {
+				const double weight = std::clamp(static_cast<double>(result->getNumber<uint16_t>("weight")) / 100.0, 0.0, 1.0);
+				player->unjustifiedKills.emplace_back(result->getNumber<uint32_t>("target"), killTime, result->getNumber<bool>("unavenged"), weight);
 			}
 		} while (result->next());
 	}
