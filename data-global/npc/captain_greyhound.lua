@@ -98,15 +98,25 @@ keywordHandler:addKeyword({ "darashia" }, StdModule.say, { npcHandler = npcHandl
 keywordHandler:addKeyword({ "darama" }, StdModule.say, { npcHandler = npcHandler, text = "I'm not sailing there. This route is afflicted by a ghost ship! However I've heard that Captain Fearless from Venore sails there." })
 keywordHandler:addKeyword({ "ghost" }, StdModule.say, { npcHandler = npcHandler, text = "Many people who sailed to Darashia never returned because they were attacked by a ghostship! I'll never sail there!" })
 keywordHandler:addKeyword({ "carlin" }, StdModule.say, { npcHandler = npcHandler, text = "This is Carlin. Where do you want to go?" })
+keywordHandler:addKeyword({ "farmine" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "kazordoon" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "krailos" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "liberty bay" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "oramond" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "ankrahmun" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "port hope" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "rathleton" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "roshamuul" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "tiquanda" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
+keywordHandler:addKeyword({ "zao" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, but I don't sail there." })
 
 npcHandler:setMessage(MESSAGE_GREET, "Welcome on board, |PLAYERNAME|. Where can I {sail} you today?")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye. Recommend us if you were satisfied with our service.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Good bye then.")
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
-
 -- Dialog options (interactive icons in the NPC conversation window)
 npcType:addDialogOptions("passage", "bye")
 
+-- npcType registering the npcConfig table
 npcType:register(npcConfig)

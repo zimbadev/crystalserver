@@ -118,7 +118,7 @@ void IOBountyTasks::generateCreatureList(const std::shared_ptr<Player> &player, 
 				validForDifficulty = (mtype->info.bestiaryStars <= 3);
 				break;
 			case BOUNTY_DIFFICULTY_EXPERT:
-				validForDifficulty = (mtype->info.bestiaryStars >= 2 && mtype->info.bestiaryStars <= 5);
+				validForDifficulty = (mtype->info.bestiaryStars >= 3 && mtype->info.bestiaryStars <= 4);
 				break;
 			case BOUNTY_DIFFICULTY_MASTER:
 				validForDifficulty = (mtype->info.bestiaryStars >= 4);

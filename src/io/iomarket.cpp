@@ -336,7 +336,7 @@ void IOMarket::createOffer(uint32_t playerId, MarketAction_t action, uint32_t it
 		"INSERT INTO `market_offers` (`player_id`, `sale`, `itemtype`, `amount`, `created`, `anonymous`, `price`, `tier`, `world_id`) VALUES ({}, {}, {}, {}, {}, {}, {}, {}, {})",
 		playerId, action, itemId, amount, getTimeNow(), anonymous, price, std::to_string(tier), g_game().worlds().getCurrentWorld()->id
 	);
-	Database::getInstance().executeQuery(query);
+	Database::getInstance().insertAndGetId(query);
 }
 
 void IOMarket::acceptOffer(uint32_t offerId, uint16_t amount) {

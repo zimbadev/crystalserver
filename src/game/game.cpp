@@ -89,6 +89,7 @@
 #include <appearances.pb.h>
 
 std::vector<std::weak_ptr<Creature>> checkCreatureLists[EVENT_CREATURECOUNT];
+size_t checkCreatureSizes[EVENT_CREATURECOUNT] = {}; // Track sizes for reserve
 
 namespace {
 	bool isBountyHighscoreCategory(const std::string &categoryName) {
@@ -842,6 +843,51 @@ void Game::loadCustomMaps(const std::filesystem::path &customMapPath) {
 void Game::loadMap(const std::string &path, const Position &pos) {
 	lastMapLoadTime = OTSYS_TIME();
 	map.loadMap(path, false, false, false, false, false, pos);
+
+	const auto &area = map.getLastLoadedArea();
+	if (!area.valid) {
+		return;
+	}
+
+	// The client draws neighbouring floors shifted on x/y, so pad the box by
+	// the viewport plus the maximum floor shift.
+	constexpr int32_t paddingX = MAP_MAX_CLIENT_VIEW_PORT_X + 1 + MAP_MAX_LAYERS;
+	constexpr int32_t paddingY = MAP_MAX_CLIENT_VIEW_PORT_Y + 1 + MAP_MAX_LAYERS;
+
+	for (const auto &[playerId, player] : players) {
+		if (!player) {
+			continue;
+		}
+
+		const Position &playerPos = player->getPosition();
+		const auto posX = static_cast<int32_t>(playerPos.x);
+		const auto posY = static_cast<int32_t>(playerPos.y);
+		const auto posZ = static_cast<int32_t>(playerPos.z);
+
+		if (posX < area.minX - paddingX || posX > area.maxX + paddingX) {
+			continue;
+		}
+
+		if (posY < area.minY - paddingY || posY > area.maxY + paddingY) {
+			continue;
+		}
+
+		// Same floor range ProtocolGame::GetMapDescription walks through.
+		int32_t visibleMinZ, visibleMaxZ;
+		if (posZ > MAP_INIT_SURFACE_LAYER) {
+			visibleMinZ = posZ - MAP_LAYER_VIEW_LIMIT;
+			visibleMaxZ = std::min<int32_t>(MAP_MAX_LAYERS - 1, posZ + MAP_LAYER_VIEW_LIMIT);
+		} else {
+			visibleMinZ = 0;
+			visibleMaxZ = MAP_INIT_SURFACE_LAYER;
+		}
+
+		if (area.maxZ < visibleMinZ || area.minZ > visibleMaxZ) {
+			continue;
+		}
+
+		player->sendMapDescription(playerPos);
+	}
 }
 
 std::shared_ptr<Cylinder> Game::internalGetCylinder(const std::shared_ptr<Player> &player, const Position &pos) {
@@ -1033,7 +1079,7 @@ std::shared_ptr<Creature> Game::getCreatureByID(uint32_t id) {
 	} else if (id <= Npc::npcAutoID) {
 		return getNpcByID(id);
 	} else {
-		g_logger().warn("Creature with id {} not exists");
+		g_logger().warn("Creature with id {} does not exist", id);
 	}
 	return nullptr;
 }
@@ -2264,6 +2310,9 @@ ReturnValue Game::internalMoveItem(std::shared_ptr<Cylinder> fromCylinder, std::
 	// check if we can add this item
 	ret = toCylinder->queryAdd(index, item, count, flags, actor);
 	if (ret == RETURNVALUE_NEEDEXCHANGE) {
+		if (!toItem) {
+			return RETURNVALUE_NOTPOSSIBLE;
+		}
 		// check if we can add it to source cylinder
 		ret = fromCylinder->queryAdd(fromCylinder->getThingIndex(item), toItem, toItem->getItemCount(), 0);
 		if (ret == RETURNVALUE_NOERROR) {
@@ -3477,7 +3526,7 @@ ReturnValue Game::collectRewardChestItems(const std::shared_ptr<Player> &player,
 	std::string lootedItemsMessage;
 	for (const auto &item : rewardItemsVector) {
 		// Stop if player not have free capacity
-		if (item && player->getCapacity() < item->getWeight()) {
+		if (item && player->getFreeCapacity() < item->getWeight()) {
 			player->sendCancelMessage(RETURNVALUE_NOTENOUGHCAPACITY);
 			break;
 		}
@@ -6977,7 +7026,12 @@ void Game::addCreatureCheck(const std::shared_ptr<Creature> &creature) {
 	}
 
 	g_dispatcher().addEvent([this, index = uniform_random(0, EVENT_CREATURECOUNT - 1), creature] {
+		// Reserve capacity to avoid frequent reallocations
+		if (checkCreatureLists[index].capacity() <= checkCreatureLists[index].size()) {
+			checkCreatureLists[index].reserve(checkCreatureLists[index].size() + 32);
+		}
 		checkCreatureLists[index].emplace_back(creature);
+		checkCreatureSizes[index]++;
 	},
 	                        "Game::addCreatureCheck");
 }
@@ -6993,13 +7047,23 @@ void Game::checkCreatures() {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	static size_t index = 0;
 
-	std::erase_if(checkCreatureLists[index], [this](const std::weak_ptr<Creature> &weak) {
+	auto &bucket = checkCreatureLists[index];
+
+	// Skip empty buckets early
+	if (bucket.empty()) {
+		index = (index + 1) % EVENT_CREATURECOUNT;
+		return;
+	}
+
+	// Manual loop for better control and tracking
+	size_t writeIndex = 0;
+	for (size_t i = 0; i < bucket.size(); ++i) {
+		const auto &weak = bucket[i];
 		if (const auto creature = weak.lock()) {
 			if (creature->creatureCheck && creature->isAlive()) {
 				creature->onThink(EVENT_CREATURE_THINK_INTERVAL);
 				if (creature->getMonster()) {
-					// The monster's onThink function runs asynchronously,
-					// meaning the target gets updated at a later time; therefore, we must delay the actions outlined below.
+					// Monster's onThink runs asynchronously, so delay attacking/conditions
 					g_dispatcher().addEvent([creature] {
 						if (creature->isAlive()) {
 							creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
@@ -7009,15 +7073,25 @@ void Game::checkCreatures() {
 					creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
 					creature->executeConditions(EVENT_CREATURE_THINK_INTERVAL);
 				}
-				return false;
+				// Keep entry (alive and active)
+				if (writeIndex != i) {
+					bucket[writeIndex] = std::move(bucket[i]);
+				}
+				writeIndex++;
+			} else {
+				creature->inCheckCreaturesVector = false;
 			}
-
-			creature->inCheckCreaturesVector = false;
 		}
+		// Dead/expired: don't increment writeIndex (remove entry)
+	}
 
-		return true;
-	});
+	// Shrink if too many empty slots
+	bucket.resize(writeIndex);
+	if (bucket.capacity() > 64 && bucket.size() < bucket.capacity() / 4) {
+		bucket.shrink_to_fit();
+	}
 
+	checkCreatureSizes[index] = writeIndex;
 	index = (index + 1) % EVENT_CREATURECOUNT;
 }
 
@@ -7610,6 +7684,11 @@ void Game::applyWheelOfDestinyEffectsToDamage(CombatDamage &damage, const std::s
 	if (damage.damageMultiplier > 0) {
 		damage.primary.value += (damage.primary.value * (damage.damageMultiplier)) / 100.;
 		damage.secondary.value += (damage.secondary.value * (damage.damageMultiplier)) / 100.;
+	}
+
+	if (damage.damageReductionMultiplier > 0) {
+		damage.primary.value -= (damage.primary.value * damage.damageReductionMultiplier) / 100;
+		damage.secondary.value -= (damage.secondary.value * damage.damageReductionMultiplier) / 100;
 	}
 
 	if (attackerPlayer) {
@@ -9051,16 +9130,17 @@ void Game::checkLight() {
 }
 
 ItemClassification* Game::getItemsClassification(uint8_t id, bool create) {
-	auto it = std::ranges::find_if(itemsClassifications, [id](ItemClassification* classification) {
+	auto it = std::ranges::find_if(itemsClassifications, [id](const std::unique_ptr<ItemClassification> &classification) {
 		return classification->id == id;
 	});
 
 	if (it != itemsClassifications.end()) {
-		return *it;
+		return it->get();
 	} else if (create) {
-		auto itemClassification = new ItemClassification(id);
-		addItemsClassification(itemClassification);
-		return itemClassification;
+		auto itemClassification = std::make_unique<ItemClassification>(id);
+		auto* raw = itemClassification.get();
+		addItemsClassification(std::move(itemClassification));
+		return raw;
 	}
 
 	return nullptr;

@@ -3460,6 +3460,11 @@ std::shared_ptr<Item> Item::transform(uint16_t itemId, uint16_t itemCount /*= -1
 		newItem = Item::CreateItem(itemId, itemCount);
 	}
 
+	if (!newItem) {
+		g_logger().error("[{}] failed to transform item {} to {}, CreateItem returned nullptr", __FUNCTION__, getID(), itemId);
+		return nullptr;
+	}
+
 	const int32_t itemIndex = cylinder->getThingIndex(static_self_cast<Item>());
 	const auto duration = getDuration();
 	if (duration > 0) {

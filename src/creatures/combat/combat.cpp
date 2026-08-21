@@ -332,7 +332,7 @@ ConditionType_t Combat::DamageToConditionType(CombatType_t type) {
 		case COMBAT_EARTHDAMAGE:
 			return CONDITION_POISON;
 
-		case CONDITION_AGONY:
+		case COMBAT_AGONYDAMAGE:
 			return CONDITION_AGONY;
 
 		case COMBAT_ICEDAMAGE:
@@ -820,11 +820,11 @@ void Combat::CombatHealthFunc(const std::shared_ptr<Creature> &caster, const std
 
 					g_logger().debug("[{}] skillPercentageAsExtraDamageForAutoAttack before {} / {} bonus {} skill id {}", __FUNCTION__, damage.primary.value, damage.secondary.value, bonus, static_cast<uint8_t>(skillType));
 
-					if (damage.primary.value > 0) {
+					if (damage.primary.value < 0) {
 						damage.primary.value -= bonus;
 					}
 
-					if (damage.secondary.value > 0) {
+					if (damage.secondary.value < 0) {
 						damage.secondary.value -= bonus;
 					}
 
@@ -1468,9 +1468,14 @@ bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::s
 			if (!nextTarget) {
 				continue;
 			}
+
 			g_dispatcher().scheduleEvent(
-				delay, [combat, caster, nextTarget, affected]() {
+				delay, [combat, caster, origin = from, nextTarget, affected]() {
 					if (combat && caster && nextTarget) {
+						if (combat->params.chainEffect != CONST_ME_NONE) {
+							Combat::doChainEffect(origin, nextTarget->getPosition(), combat->params.chainEffect);
+						}
+
 						CombatDamage damage = combat->getCombatDamage(caster, nextTarget);
 						damage.affected = affected;
 						Combat::CombatHealthFunc(caster, nextTarget, combat->params, &damage);
@@ -2679,7 +2684,7 @@ void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 	}
 }
 
-void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std::vector<std::shared_ptr<Creature>> targets, CombatDamage &damage, const CombatParams &params) {
+void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std::vector<std::shared_ptr<Creature>> &targets, CombatDamage &damage, const CombatParams &params) {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (damage.extension || !caster || damage.primary.type == COMBAT_HEALING) {
 		return;
@@ -2740,7 +2745,7 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 
 			const auto &targetMonster = targetCreature->getMonster();
 			if (targetMonster) {
-				const auto &mType = g_monsters().getMonsterType(targetMonster->getName());
+				const auto &mType = targetMonster->getMonsterType();
 				if (!mType) {
 					continue;
 				}

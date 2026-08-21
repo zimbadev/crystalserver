@@ -144,7 +144,9 @@ void ProtocolStatus::sendStatusString() {
 	pugi::xml_node rates = tsqp.append_child("rates");
 	rates.append_attribute("experience") = std::to_string(g_configManager().getNumber(RATE_EXPERIENCE)).c_str();
 	rates.append_attribute("skill") = std::to_string(g_configManager().getNumber(RATE_SKILL)).c_str();
-	rates.append_attribute("loot") = std::to_string(g_configManager().getNumber(RATE_LOOT)).c_str();
+	// RATE_LOOT is stored as a float; getNumber() would hit the wrong type branch,
+	// return 0 and make the status protocol announce loot="0" while looting worked.
+	rates.append_attribute("loot") = fmt::format("{:g}", g_configManager().getFloat(RATE_LOOT)).c_str();
 	rates.append_attribute("magic") = std::to_string(g_configManager().getNumber(RATE_MAGIC)).c_str();
 	rates.append_attribute("spawn") = std::to_string(g_configManager().getNumber(RATE_SPAWN)).c_str();
 

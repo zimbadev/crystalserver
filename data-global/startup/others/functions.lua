@@ -1,20 +1,43 @@
 -- This function load the table "CreateItemOnMap"from script "create_item.lua"
 -- Basically it works to create items on the map without the need to edit the map
-function CreateMapItem(tablename)
-	for index, value in pairs(tablename) do
-		for i = 1, #value.itemPos do
-			local item
-			local tile = Tile(value.itemPos[i])
-			-- Checks if the position is valid
-			if tile then
-				item = tile:getItemById(index)
-				if item then
-					Game.createItem(index, 1, value.itemPos[i])
-					item:setLoadedFromMap(true)
+function CreateMapItem(itemsTable)
+	if type(itemsTable) ~= "table" then
+		logger.error("CreateMapItem: table is nil or invalid")
+		return
+	end
+
+	for itemId, value in pairs(itemsTable) do
+		if value.itemPos then
+			for i = 1, #value.itemPos do
+				local pos = value.itemPos[i]
+				local tile = Tile(pos)
+
+				if tile then
+					-- Remove item(s) especificado(s) antes de criar o novo, se configurado
+					if value.removeItemId then
+						local removeIds = type(value.removeItemId) == "table" and value.removeItemId or { value.removeItemId }
+						for _, removeId in ipairs(removeIds) do
+							local toRemove = tile:getItemById(removeId)
+							if toRemove then
+								toRemove:remove()
+								logger.debug("CreateMapItem: removed item {} at position {}", removeId, pos)
+							end
+						end
+					end
+
+					local item = tile:getItemById(itemId)
+
+					if not item then
+						item = Game.createItem(itemId, 1, pos)
+						if item then
+							item:setLoadedFromMap(true)
+						end
+					end
 				end
 			end
 		end
 	end
+
 	logger.debug("Created all items in the map")
 end
 

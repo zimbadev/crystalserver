@@ -82,16 +82,59 @@ login_check_putrefactory:register()
 
 local checkPlayersInZonePutrefactory = GlobalEvent("checkPlayersInZonePutrefactory")
 function checkPlayersInZonePutrefactory.onThink(interval, lastExecution)
-	local players = Game.getPlayers()
+	local checkedPlayers = {}
 
-	for _, player in ipairs(players) do
+	-- Check putrefactory zone (large, 2 floors)
+	local putrefactoryCenter = Position((config.specPutrefactory.from.x + config.specPutrefactory.to.x) / 2, (config.specPutrefactory.from.y + config.specPutrefactory.to.y) / 2, (config.specPutrefactory.from.z + config.specPutrefactory.to.z) / 2)
+	local putrefactoryRangeX = (config.specPutrefactory.to.x - config.specPutrefactory.from.x) / 2
+	local putrefactoryRangeY = (config.specPutrefactory.to.y - config.specPutrefactory.from.y) / 2
+	local putrefactoryPlayers = Game.getSpectators(putrefactoryCenter, true, true, putrefactoryRangeX, putrefactoryRangeX, putrefactoryRangeY, putrefactoryRangeY)
+	for _, player in ipairs(putrefactoryPlayers) do
+		checkedPlayers[player:getId()] = true
 		checkPlayerInZone(player)
+	end
+
+	-- Check lever zone
+	local leverCenter = Position((config.specLever.from.x + config.specLever.to.x) / 2, (config.specLever.from.y + config.specLever.to.y) / 2, config.specLever.from.z)
+	local leverRangeX = (config.specLever.to.x - config.specLever.from.x) / 2
+	local leverRangeY = (config.specLever.to.y - config.specLever.from.y) / 2
+	local leverPlayers = Game.getSpectators(leverCenter, false, true, leverRangeX, leverRangeX, leverRangeY, leverRangeY)
+	for _, player in ipairs(leverPlayers) do
+		if not checkedPlayers[player:getId()] then
+			checkedPlayers[player:getId()] = true
+			checkPlayerInZone(player)
+		end
+	end
+
+	-- Check vestibule zone
+	local vestibuleCenter = Position((config.specVestibule.from.x + config.specVestibule.to.x) / 2, (config.specVestibule.from.y + config.specVestibule.to.y) / 2, (config.specVestibule.from.z + config.specVestibule.to.z) / 2)
+	local vestibuleRangeX = (config.specVestibule.to.x - config.specVestibule.from.x) / 2
+	local vestibuleRangeY = (config.specVestibule.to.y - config.specVestibule.from.y) / 2
+	local vestibulePlayers = Game.getSpectators(vestibuleCenter, true, true, vestibuleRangeX, vestibuleRangeX, vestibuleRangeY, vestibuleRangeY)
+	for _, player in ipairs(vestibulePlayers) do
+		if not checkedPlayers[player:getId()] then
+			checkedPlayers[player:getId()] = true
+			checkPlayerInZone(player)
+		end
+	end
+
+	-- Clean up players who left all zones
+	for playerId, _ in pairs(activePlayers) do
+		if not checkedPlayers[playerId] then
+			local player = Player(playerId)
+			if player then
+				activePlayers[playerId] = nil
+				removeWhiteCrossIcon(player)
+			else
+				activePlayers[playerId] = nil
+			end
+		end
 	end
 
 	return true
 end
 
-checkPlayersInZonePutrefactory:interval(500)
+checkPlayersInZonePutrefactory:interval(2000)
 checkPlayersInZonePutrefactory:register()
 
 local function startGlobalTickProcessing()
@@ -109,7 +152,7 @@ end
 
 startGlobalTickProcessing()
 
-local config = {
+local putrefactoryClickConfig = {
 	positions = {
 		Position(34081, 31704, 14),
 		Position(34013, 31744, 14),
@@ -130,7 +173,7 @@ local config = {
 }
 
 local function getPositionIndex(pos)
-	for index, validPos in ipairs(config.positions) do
+	for index, validPos in ipairs(putrefactoryClickConfig.positions) do
 		if pos.x == validPos.x and pos.y == validPos.y and pos.z == validPos.z then
 			return index
 		end
@@ -146,7 +189,7 @@ function putrefactoryClick.onUse(player, item, fromPosition, target, toPosition,
 		return false
 	end
 
-	local exhaustStorage = config.exhaustStorageBase + posIndex
+	local exhaustStorage = putrefactoryClickConfig.exhaustStorageBase + posIndex
 
 	local now = os.time()
 	local exhaust = player:getStorageValue(exhaustStorage)
@@ -156,23 +199,23 @@ function putrefactoryClick.onUse(player, item, fromPosition, target, toPosition,
 		return true
 	end
 
-	local currentTicks = player:getStorageValue(config.storageKey)
+	local currentTicks = player:getStorageValue(putrefactoryClickConfig.storageKey)
 	if currentTicks < 0 then
 		currentTicks = 0
 	end
 
-	if currentTicks >= config.maxTicks then
+	if currentTicks >= putrefactoryClickConfig.maxTicks then
 		return true
 	end
 
-	local newTicks = math.min(currentTicks + config.ticksPerUse, config.maxTicks)
+	local newTicks = math.min(currentTicks + putrefactoryClickConfig.ticksPerUse, putrefactoryClickConfig.maxTicks)
 
-	player:setStorageValue(config.storageKey, newTicks)
-	player:setStorageValue(exhaustStorage, now + config.cooldown)
+	player:setStorageValue(putrefactoryClickConfig.storageKey, newTicks)
+	player:setStorageValue(exhaustStorage, now + putrefactoryClickConfig.cooldown)
 
 	player:setIcon("putrefactory-task-x", CreatureIconCategory_Quests, CreatureIconQuests_WhiteCross, newTicks)
 
-	toPosition:sendMagicEffect(config.effect)
+	toPosition:sendMagicEffect(putrefactoryClickConfig.effect)
 
 	return true
 end

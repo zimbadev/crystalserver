@@ -38,7 +38,7 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 		return false;
 	}
 
-	const Database &db = Database::getInstance();
+	Database &db = Database::getInstance();
 	std::ostringstream ss;
 
 	// Initialize variables
@@ -1060,12 +1060,10 @@ bool IOLoginDataSave::savePlayerStatement(const std::shared_ptr<Player> &player,
 		  << player->getGUID() << ", " << db.escapeString(receiver) << ", " << channelId << ", "
 		  << db.escapeString(utf8Text) << ", " << time(nullptr) << ")";
 
-	if (!db.executeQuery(query.str())) {
-		return false;
-	}
-
-	statementId = db.getLastInsertId();
-	return true;
+	// Pool-safe: pin the connection for INSERT + LAST_INSERT_ID so a concurrent INSERT
+	// on another connection in the pool can't return a foreign id here.
+	statementId = db.insertAndGetId(query.str());
+	return statementId != 0;
 }
 
 bool IOLoginDataSave::savePlayerNamesAndChangeName(const std::shared_ptr<Player> &player, const std::string &newName, const std::string &oldName) {

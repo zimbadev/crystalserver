@@ -46,6 +46,25 @@ public:
 	}
 
 	/**
+	 * Axis aligned bounding box of every tile touched by the last load().
+	 * Lets the caller refresh only the players that can actually see the
+	 * swapped tiles instead of every player online.
+	 */
+	struct LoadedArea {
+		bool valid = false;
+		int32_t minX = 0;
+		int32_t minY = 0;
+		int32_t minZ = 0;
+		int32_t maxX = 0;
+		int32_t maxY = 0;
+		int32_t maxZ = 0;
+	};
+
+	const LoadedArea &getLastLoadedArea() const {
+		return lastLoadedArea;
+	}
+
+	/**
 	 * Load a map.
 	 * \returns true if the map was loaded successfully
 	 */
@@ -169,6 +188,8 @@ private:
 
 	uint32_t width = 0;
 	uint32_t height = 0;
+
+	LoadedArea lastLoadedArea;
 
 	friend class Game;
 	friend class IOMap;

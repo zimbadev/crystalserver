@@ -841,6 +841,16 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 	else
 		return false
 	end
+	-- Mission 03 Shadows of Yalahar Quest
+	if target and target:isItem() and target:getId() == 8106 then
+		if player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.Mission03) ~= 1 then
+			return true
+		end
+
+		target:transform(8107)
+		player:addItem(9251, 1)
+		return true
+	end
 
 	return true
 end
@@ -1054,6 +1064,11 @@ end
 function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHotkey)
 	if not table.contains({ 3469, 9594, 9598 }, item.itemid) then
 		return false
+	end
+
+	-- Rottin Wood and the Married Men Quest: Kitchen Knife
+	if target and target:isItem() and rottinWoodSkinRabbit(player, target) then
+		return true
 	end
 
 	-- The Secret Library Quest

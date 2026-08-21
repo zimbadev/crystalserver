@@ -110,7 +110,7 @@ void Monster::setName(const std::string &name) {
 	auto spectators = Spectators().find<Player>(position, true);
 	for (const auto &spectator : spectators) {
 		if (const auto &tmpPlayer = spectator->getPlayer()) {
-			tmpPlayer->sendUpdateTileCreature(static_self_cast<Monster>());
+			tmpPlayer->sendCreatureReload(static_self_cast<Monster>());
 		}
 	}
 }
@@ -1128,6 +1128,7 @@ void Monster::onThink(uint32_t interval) {
 
 	if (!mType->canSpawn(position)) {
 		g_game().removeCreature(static_self_cast<Monster>());
+		return;
 	}
 
 	if (!isInSpawnRange(position)) {
@@ -2558,7 +2559,7 @@ void Monster::dropLoot(const std::shared_ptr<Container> &corpse, const std::shar
 			}
 		}
 
-		if (!this->isRewardBoss() && g_configManager().getNumber(RATE_LOOT) > 0) {
+		if (!this->isRewardBoss() && g_configManager().getFloat(RATE_LOOT) > 0) {
 			g_callbacks().executeCallback(EventCallback_t::monsterOnDropLoot, &EventCallback::monsterOnDropLoot, getMonster(), corpse);
 			g_callbacks().executeCallback(EventCallback_t::monsterPostDropLoot, &EventCallback::monsterPostDropLoot, getMonster(), corpse);
 		}
