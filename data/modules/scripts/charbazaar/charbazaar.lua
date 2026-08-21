@@ -109,7 +109,7 @@ end
 -- rarely has anything to do. It exists because "the input is ours" stops being true
 -- the moment a quest name or a sales argument carries an apostrophe or a quote.
 local function jsonEscape(text)
-	return (text:gsub("[\\\"]", "\\%0"):gsub("%c", " "))
+	return (text:gsub('[\\"]', "\\%0"):gsub("%c", " "))
 end
 
 --- Whether a query returns at least one row.
@@ -265,49 +265,33 @@ function CharBazaar.conditions(player)
 	local tile = player:getTile()
 	local inProtectionZone = tile ~= nil and tile:hasFlag(TILESTATE_PROTECTIONZONE)
 
-	add(not rowExists(string.format(
-		"SELECT 1 FROM `myaac_charbazaar` WHERE `account_old` = %d AND `status` = 0 LIMIT 1", accountId
-	)), "You may not have any open character trade auctions.")
+	add(not rowExists(string.format("SELECT 1 FROM `myaac_charbazaar` WHERE `account_old` = %d AND `status` = 0 LIMIT 1", accountId)), "You may not have any open character trade auctions.")
 
-	add(not rowExists(string.format(
-		"SELECT 1 FROM `account_bans` WHERE `account_id` = %d AND (`expires_at` <= 0 OR `expires_at` > %d) LIMIT 1",
-		accountId, os.time()
-	)), "Your account may not be banned.")
+	add(not rowExists(string.format("SELECT 1 FROM `account_bans` WHERE `account_id` = %d AND (`expires_at` <= 0 OR `expires_at` > %d) LIMIT 1", accountId, os.time())), "Your account may not be banned.")
 
-	add(player:getTransferableCoins() >= CharBazaar.Config.fee,
-		"You need to have enough transferable Coins to create this auction.")
+	add(player:getTransferableCoins() >= CharBazaar.Config.fee, "You need to have enough transferable Coins to create this auction.")
 
-	add(rowExists(string.format(
-		"SELECT 1 FROM `accounts` WHERE `id` = %d AND `key` IS NOT NULL AND `key` <> '' LIMIT 1", accountId
-	)), "Your account must be registered.")
+	add(rowExists(string.format("SELECT 1 FROM `accounts` WHERE `id` = %d AND `key` IS NOT NULL AND `key` <> '' LIMIT 1", accountId)), "Your account must be registered.")
 
-	add(player:getLevel() >= CharBazaar.Config.minLevel,
-		"The character needs to be at least level " .. CharBazaar.Config.minLevel .. ".")
+	add(player:getLevel() >= CharBazaar.Config.minLevel, "The character needs to be at least level " .. CharBazaar.Config.minLevel .. ".")
 
-	add(not rowExists(string.format("SELECT 1 FROM `houses` WHERE `owner` = %d LIMIT 1", guid)),
-		"The character may not own any houses.")
+	add(not rowExists(string.format("SELECT 1 FROM `houses` WHERE `owner` = %d LIMIT 1", guid)), "The character may not own any houses.")
 
-	add(not rowExists(string.format("SELECT 1 FROM `houses` WHERE `bidder` = %d LIMIT 1", guid)),
-		"The character may not bid for a house.")
+	add(not rowExists(string.format("SELECT 1 FROM `houses` WHERE `bidder` = %d LIMIT 1", guid)), "The character may not bid for a house.")
 
-	add(not rowExists(string.format("SELECT 1 FROM `houses` WHERE `new_owner` = %d AND `new_owner` > 0 LIMIT 1", guid)),
-		"The character may not be involved in a house transfer.")
+	add(not rowExists(string.format("SELECT 1 FROM `houses` WHERE `new_owner` = %d AND `new_owner` > 0 LIMIT 1", guid)), "The character may not be involved in a house transfer.")
 
 	add(player:getGuild() == nil, "The character may not be a member of a guild.")
 
-	add(not rowExists(string.format("SELECT 1 FROM `guild_invites` WHERE `player_id` = %d LIMIT 1", guid)),
-		"The character may not have applied to a guild.")
+	add(not rowExists(string.format("SELECT 1 FROM `guild_invites` WHERE `player_id` = %d LIMIT 1", guid)), "The character may not have applied to a guild.")
 
-	add(not rowExists(string.format("SELECT 1 FROM `market_offers` WHERE `player_id` = %d LIMIT 1", guid)),
-		"The character may not have any running auctions in the Market.")
+	add(not rowExists(string.format("SELECT 1 FROM `market_offers` WHERE `player_id` = %d LIMIT 1", guid)), "The character may not have any running auctions in the Market.")
 
-	add(not rowExists(string.format("SELECT 1 FROM `players` WHERE `id` = %d AND `deletion` <> 0 LIMIT 1", guid)),
-		"The character may not be scheduled for deletion.")
+	add(not rowExists(string.format("SELECT 1 FROM `players` WHERE `id` = %d AND `deletion` <> 0 LIMIT 1", guid)), "The character may not be scheduled for deletion.")
 
 	add(player:getSkull() == SKULL_NONE, "The character may not be marked with a skull.")
 
-	add(not rowExists(string.format("SELECT 1 FROM `player_namelocks` WHERE `player_id` = %d LIMIT 1", guid)),
-		"There may not be an open namelock for the character.")
+	add(not rowExists(string.format("SELECT 1 FROM `player_namelocks` WHERE `player_id` = %d LIMIT 1", guid)), "There may not be an open namelock for the character.")
 
 	add(inProtectionZone, "The character must be in a protection zone.")
 
@@ -472,8 +456,7 @@ function CharBazaar.sendProbe(player, dataType)
 	end
 	table.sort(described)
 
-	debugLog("probe: {} bytes for dataType {}, pokes [{}]",
-		CharBazaar.probeBytes, dataType, table.concat(described, " "))
+	debugLog("probe: {} bytes for dataType {}, pokes [{}]", CharBazaar.probeBytes, dataType, table.concat(described, " "))
 end
 
 function CharBazaar.sendConditions(player, dataType)
@@ -540,8 +523,7 @@ function CharBazaar.sendConditions(player, dataType)
 	-- floor reads to the client as "any price is fine".
 	local floor = CharBazaar.minimumStartingBid()
 	if floor > 65535 then
-		logger.warn("[CharBazaar] the minimum starting bid of {} does not fit the client's "
-			.. "u16 field: it is being sent as 65535, so only the server will enforce the real floor", floor)
+		logger.warn("[CharBazaar] the minimum starting bid of {} does not fit the client's " .. "u16 field: it is being sent as 65535, so only the server will enforce the real floor", floor)
 		floor = 65535
 	end
 
@@ -557,8 +539,7 @@ function CharBazaar.sendConditions(player, dataType)
 
 	msg:sendToPlayer(player)
 
-	debugLog("sent conditions to {}: {} entries, all met: {}",
-		player:getName(), #conditions, tostring(CharBazaar.conditionsMet(conditions)))
+	debugLog("sent conditions to {}: {} entries, all met: {}", player:getName(), #conditions, tostring(CharBazaar.conditionsMet(conditions)))
 end
 
 --[[ ==================== items ==================== ]]
@@ -698,9 +679,7 @@ function CharBazaar.itemTotals(player)
 		tallyContents(owned, player:getDepotChest(box, false))
 	end
 
-	tallyDatabaseItems(owned, string.format(
-		"SELECT `item_id`, `item_count` FROM `player_stash` WHERE `player_id` = %d AND `item_id` > 0", guid
-	), "item_id", "item_count")
+	tallyDatabaseItems(owned, string.format("SELECT `item_id`, `item_count` FROM `player_stash` WHERE `player_id` = %d AND `item_id` > 0", guid), "item_id", "item_count")
 
 	return { owned = flatten(owned), store = flatten(store) }
 end
@@ -824,19 +803,97 @@ CharBazaar.categoryProbe = false
 -- Transfer, the Cyclopedia map, Exaltation, store assets - and those stay out
 -- rather than being filled with something invented.
 CharBazaar.Highlights = {
-	{ id = 1, category = "SKILLS", text = function(player) return "Level " .. player:getLevel() end },
-	{ id = 2, category = "SKILLS", text = function(player) return "Magic Level " .. player:getMagicLevel() end },
-	{ id = 3, category = "SKILLS", text = function(player) return "Fist Fighting " .. player:getSkillLevel(SKILL_FIST) end },
-	{ id = 4, category = "SKILLS", text = function(player) return "Club Fighting " .. player:getSkillLevel(SKILL_CLUB) end },
-	{ id = 5, category = "SKILLS", text = function(player) return "Sword Fighting " .. player:getSkillLevel(SKILL_SWORD) end },
-	{ id = 6, category = "SKILLS", text = function(player) return "Axe Fighting " .. player:getSkillLevel(SKILL_AXE) end },
-	{ id = 7, category = "SKILLS", text = function(player) return "Distance Fighting " .. player:getSkillLevel(SKILL_DISTANCE) end },
-	{ id = 8, category = "SKILLS", text = function(player) return "Shielding " .. player:getSkillLevel(SKILL_SHIELD) end },
-	{ id = 9, category = "SKILLS", text = function(player) return "Fishing " .. player:getSkillLevel(SKILL_FISHING) end },
-	{ id = 10, category = "GOLD", text = function(player) return "Bank Balance " .. player:getBankBalance() end },
-	{ id = 11, category = "BLESSINGS", text = function(player) return CharBazaar.blessingCount(player) .. " of 7 Blessings" end },
-	{ id = 12, category = "ACHIEVEMENTS", text = function(player) return player:getAchievementPoints() .. " Achievement Points" end },
-	{ id = 13, category = "PREY_HUNTING_TASKS", text = function(player) return player:getTaskHuntingPoints() .. " Hunting Task Points" end },
+	{
+		id = 1,
+		category = "SKILLS",
+		text = function(player)
+			return "Level " .. player:getLevel()
+		end,
+	},
+	{
+		id = 2,
+		category = "SKILLS",
+		text = function(player)
+			return "Magic Level " .. player:getMagicLevel()
+		end,
+	},
+	{
+		id = 3,
+		category = "SKILLS",
+		text = function(player)
+			return "Fist Fighting " .. player:getSkillLevel(SKILL_FIST)
+		end,
+	},
+	{
+		id = 4,
+		category = "SKILLS",
+		text = function(player)
+			return "Club Fighting " .. player:getSkillLevel(SKILL_CLUB)
+		end,
+	},
+	{
+		id = 5,
+		category = "SKILLS",
+		text = function(player)
+			return "Sword Fighting " .. player:getSkillLevel(SKILL_SWORD)
+		end,
+	},
+	{
+		id = 6,
+		category = "SKILLS",
+		text = function(player)
+			return "Axe Fighting " .. player:getSkillLevel(SKILL_AXE)
+		end,
+	},
+	{
+		id = 7,
+		category = "SKILLS",
+		text = function(player)
+			return "Distance Fighting " .. player:getSkillLevel(SKILL_DISTANCE)
+		end,
+	},
+	{
+		id = 8,
+		category = "SKILLS",
+		text = function(player)
+			return "Shielding " .. player:getSkillLevel(SKILL_SHIELD)
+		end,
+	},
+	{
+		id = 9,
+		category = "SKILLS",
+		text = function(player)
+			return "Fishing " .. player:getSkillLevel(SKILL_FISHING)
+		end,
+	},
+	{
+		id = 10,
+		category = "GOLD",
+		text = function(player)
+			return "Bank Balance " .. player:getBankBalance()
+		end,
+	},
+	{
+		id = 11,
+		category = "BLESSINGS",
+		text = function(player)
+			return CharBazaar.blessingCount(player) .. " of 7 Blessings"
+		end,
+	},
+	{
+		id = 12,
+		category = "ACHIEVEMENTS",
+		text = function(player)
+			return player:getAchievementPoints() .. " Achievement Points"
+		end,
+	},
+	{
+		id = 13,
+		category = "PREY_HUNTING_TASKS",
+		text = function(player)
+			return player:getTaskHuntingPoints() .. " Hunting Task Points"
+		end,
+	},
 }
 
 -- The section header drawn above each group. Ours to write, so it is the wording
@@ -1020,8 +1077,7 @@ function CharBazaar.sendSummary(player, dataType, problems)
 		player:sendTextMessage(MESSAGE_FAILURE, problem)
 	end
 
-	debugLog("sent summary to {}: fee {}, {} problems",
-		player:getName(), CharBazaar.Config.fee, #problems)
+	debugLog("sent summary to {}: fee {}, {} problems", player:getName(), CharBazaar.Config.fee, #problems)
 end
 
 -- sendBaseData and sendEmptyBlock lived here: two guesses at blocks that turned out
@@ -1218,11 +1274,8 @@ end
 function CharBazaar.snapshotOutfits(guid)
 	local parts = {}
 
-	eachRow(string.format(
-		"SELECT `outfit_id`, `addons` FROM `player_outfits` WHERE `player_id` = %d", guid
-	), function(resultId)
-		parts[#parts + 1] = string.format('"%d":%d',
-			Result.getNumber(resultId, "outfit_id"), Result.getNumber(resultId, "addons"))
+	eachRow(string.format("SELECT `outfit_id`, `addons` FROM `player_outfits` WHERE `player_id` = %d", guid), function(resultId)
+		parts[#parts + 1] = string.format('"%d":%d', Result.getNumber(resultId, "outfit_id"), Result.getNumber(resultId, "addons"))
 	end)
 
 	return "{" .. table.concat(parts, ",") .. "}"
@@ -1232,9 +1285,7 @@ end
 function CharBazaar.snapshotMounts(guid)
 	local parts = {}
 
-	eachRow(string.format(
-		"SELECT `mount_id` FROM `player_mounts` WHERE `player_id` = %d", guid
-	), function(resultId)
+	eachRow(string.format("SELECT `mount_id` FROM `player_mounts` WHERE `player_id` = %d", guid), function(resultId)
 		parts[#parts + 1] = tostring(Result.getNumber(resultId, "mount_id"))
 	end)
 
@@ -1360,10 +1411,7 @@ function CharBazaar.snapshotFeatures(player, guid, salesArguments, storeTotals)
 		lookfamiliarstype = 0,
 	}
 
-	eachRow(string.format(
-		"SELECT `boss_points`, `task_points`, `prey_wildcard`, `forge_dusts`, `forge_dust_level`, "
-			.. "`lookfamiliarstype` FROM `players` WHERE `id` = %d", guid
-	), function(resultId)
+	eachRow(string.format("SELECT `boss_points`, `task_points`, `prey_wildcard`, `forge_dusts`, `forge_dust_level`, " .. "`lookfamiliarstype` FROM `players` WHERE `id` = %d", guid), function(resultId)
 		for column in pairs(counters) do
 			counters[column] = Result.getNumber(resultId, column)
 		end
@@ -1378,10 +1426,7 @@ function CharBazaar.snapshotFeatures(player, guid, salesArguments, storeTotals)
 		unlocked = 0,
 	}
 
-	eachRow(string.format(
-		"SELECT `charm_points`, `max_charm_points`, `minor_charm_echoes`, `max_minor_charm_echoes`, "
-			.. "`charm_expansion`, `UnlockedRunesBit` FROM `player_charms` WHERE `player_id` = %d", guid
-	), function(resultId)
+	eachRow(string.format("SELECT `charm_points`, `max_charm_points`, `minor_charm_echoes`, `max_minor_charm_echoes`, " .. "`charm_expansion`, `UnlockedRunesBit` FROM `player_charms` WHERE `player_id` = %d", guid), function(resultId)
 		-- The server keeps the running balance in charm_points and the lifetime
 		-- total in max_charm_points, which is the pair the website shows as
 		-- "total (Unused: balance)".
@@ -1401,18 +1446,14 @@ function CharBazaar.snapshotFeatures(player, guid, salesArguments, storeTotals)
 
 	-- The website falls back to the kv counter when the table is absent, and a
 	-- failed query lands on the default here, so the fallback is the same shape.
-	local hirelings = scalar(string.format(
-		"SELECT COUNT(*) AS `total` FROM `player_hirelings` WHERE `player_id` = %d", guid), "total", 0)
+	local hirelings = scalar(string.format("SELECT COUNT(*) AS `total` FROM `player_hirelings` WHERE `player_id` = %d", guid), "total", 0)
 	if hirelings == 0 then
 		hirelings = kvInt(player, "summary.hirelings.amount")
 	end
 
-	local preySlots = scalar(string.format(
-		"SELECT COUNT(*) AS `total` FROM `player_prey` WHERE `player_id` = %d AND `slot` >= 2 AND `state` > 0",
-		guid), "total", 0)
+	local preySlots = scalar(string.format("SELECT COUNT(*) AS `total` FROM `player_prey` WHERE `player_id` = %d AND `slot` >= 2 AND `state` > 0", guid), "total", 0)
 
-	local weeklyTaskExpansion = scalar(string.format(
-		"SELECT `has_expansion` FROM `player_weekly_tasks` WHERE `player_id` = %d", guid), "has_expansion", 0)
+	local weeklyTaskExpansion = scalar(string.format("SELECT `has_expansion` FROM `player_weekly_tasks` WHERE `player_id` = %d", guid), "has_expansion", 0)
 
 	return table.concat({
 		"{",
@@ -1472,20 +1513,49 @@ function CharBazaar.writeSnapshot(player, auctionId, configuration)
 		outfits = CharBazaar.snapshotOutfits(guid),
 		mounts = CharBazaar.snapshotMounts(guid),
 		quests = CharBazaar.snapshotQuests(player),
-		features = CharBazaar.snapshotFeatures(player, guid,
-			CharBazaar.salesArguments(player, configuration.highlights), totals.store),
+		features = CharBazaar.snapshotFeatures(player, guid, CharBazaar.salesArguments(player, configuration.highlights), totals.store),
 		showcase = CharBazaar.snapshotShowcase(totals.owned, configuration.items),
 	}
 
 	local columns = {
-		"skill_fist", "skill_club", "skill_sword", "skill_axe", "skill_dist",
-		"skill_shielding", "skill_fishing",
-		"skill_fist_tries", "skill_club_tries", "skill_sword_tries", "skill_axe_tries",
-		"skill_dist_tries", "skill_shielding_tries", "skill_fishing_tries",
-		"looktype", "lookaddons", "lookhead", "lookbody", "looklegs", "lookfeet",
-		"lookmounthead", "lookmountbody", "lookmountlegs", "lookmountfeet",
-		"health", "healthmax", "mana", "manamax", "maglevel", "manaspent",
-		"cap", "soul", "balance", "experience", "created", "level", "vocation", "sex",
+		"skill_fist",
+		"skill_club",
+		"skill_sword",
+		"skill_axe",
+		"skill_dist",
+		"skill_shielding",
+		"skill_fishing",
+		"skill_fist_tries",
+		"skill_club_tries",
+		"skill_sword_tries",
+		"skill_axe_tries",
+		"skill_dist_tries",
+		"skill_shielding_tries",
+		"skill_fishing_tries",
+		"looktype",
+		"lookaddons",
+		"lookhead",
+		"lookbody",
+		"looklegs",
+		"lookfeet",
+		"lookmounthead",
+		"lookmountbody",
+		"lookmountlegs",
+		"lookmountfeet",
+		"health",
+		"healthmax",
+		"mana",
+		"manamax",
+		"maglevel",
+		"manaspent",
+		"cap",
+		"soul",
+		"balance",
+		"experience",
+		"created",
+		"level",
+		"vocation",
+		"sex",
 	}
 
 	local copied = "`" .. table.concat(columns, "`, `") .. "`"
@@ -1504,16 +1574,25 @@ function CharBazaar.writeSnapshot(player, auctionId, configuration)
 			.. "%d, %d, %s, %s, %s, %s, %s, %s, %s, %d, %s "
 			.. "FROM `players` `p` WHERE `p`.`id` = %d "
 			.. "ON DUPLICATE KEY UPDATE `created_at` = VALUES(`created_at`)",
-		copied, auctionId, db.escapeString(configManager.getString(configKeys.SERVER_NAME)), blessings, twist,
-		db.escapeString(blobs.equipment), db.escapeString(blobs.items),
-		db.escapeString(blobs.outfits), db.escapeString(blobs.mounts),
-		db.escapeString(blobs.quests), db.escapeString(blobs.features),
-		db.escapeString(blobs.showcase), os.time(), selected, guid
+		copied,
+		auctionId,
+		db.escapeString(configManager.getString(configKeys.SERVER_NAME)),
+		blessings,
+		twist,
+		db.escapeString(blobs.equipment),
+		db.escapeString(blobs.items),
+		db.escapeString(blobs.outfits),
+		db.escapeString(blobs.mounts),
+		db.escapeString(blobs.quests),
+		db.escapeString(blobs.features),
+		db.escapeString(blobs.showcase),
+		os.time(),
+		selected,
+		guid
 	)
 
 	if not db.query(query) then
-		logger.warn("[CharBazaar] could not freeze {} for auction {}: the website will "
-			.. "freeze it on the next page view instead", player:getName(), auctionId)
+		logger.warn("[CharBazaar] could not freeze {} for auction {}: the website will " .. "freeze it on the next page view instead", player:getName(), auctionId)
 		return false
 	end
 
@@ -1543,19 +1622,14 @@ function CharBazaar.configurationProblems(player, configuration)
 
 	local minimum = CharBazaar.minimumStartingBid()
 	if configuration.price < minimum then
-		problems[#problems + 1] = string.format(
-			"The starting price must be at least %d Tibia Coins.", minimum)
+		problems[#problems + 1] = string.format("The starting price must be at least %d Tibia Coins.", minimum)
 	elseif configuration.price > CharBazaar.maximumStartingBid then
-		problems[#problems + 1] = string.format(
-			"The starting price may not be higher than %d Tibia Coins.", CharBazaar.maximumStartingBid)
+		problems[#problems + 1] = string.format("The starting price may not be higher than %d Tibia Coins.", CharBazaar.maximumStartingBid)
 	end
 
 	local now = os.time()
-	if configuration.endTimestamp < now + CharBazaar.Config.minDays * 86400
-		or configuration.endTimestamp > now + (CharBazaar.Config.maxDays + 1) * 86400 then
-		problems[#problems + 1] = string.format(
-			"The auction must end between %d and %d days from now.",
-			CharBazaar.Config.minDays, CharBazaar.Config.maxDays)
+	if configuration.endTimestamp < now + CharBazaar.Config.minDays * 86400 or configuration.endTimestamp > now + (CharBazaar.Config.maxDays + 1) * 86400 then
+		problems[#problems + 1] = string.format("The auction must end between %d and %d days from now.", CharBazaar.Config.minDays, CharBazaar.Config.maxDays)
 	end
 
 	return problems
@@ -1574,13 +1648,10 @@ CharBazaar.knownColumns = {}
 
 function CharBazaar.hasColumn(column, migration)
 	if CharBazaar.knownColumns[column] == nil then
-		CharBazaar.knownColumns[column] = rowExists(string.format(
-			"SHOW COLUMNS FROM `myaac_charbazaar` LIKE '%s'", column))
+		CharBazaar.knownColumns[column] = rowExists(string.format("SHOW COLUMNS FROM `myaac_charbazaar` LIKE '%s'", column))
 
 		if not CharBazaar.knownColumns[column] then
-			logger.warn("[CharBazaar] myaac_charbazaar has no `{}` column: what the seller "
-				.. "picks in game will not reach the website until its migration {} has run",
-				column, migration)
+			logger.warn("[CharBazaar] myaac_charbazaar has no `{}` column: what the seller " .. "picks in game will not reach the website until its migration {} has run", column, migration)
 		end
 	end
 
@@ -1609,11 +1680,7 @@ function CharBazaar.salesArguments(player, chosen)
 		local highlight = byId[id]
 
 		if highlight then
-			entries[#entries + 1] = string.format(
-				'{"icon":%d,"text":"%s"}',
-				CharBazaar.HighlightCategory[highlight.category] or 0,
-				jsonEscape(highlight.text(player))
-			)
+			entries[#entries + 1] = string.format('{"icon":%d,"text":"%s"}', CharBazaar.HighlightCategory[highlight.category] or 0, jsonEscape(highlight.text(player)))
 		end
 	end
 
@@ -1628,10 +1695,7 @@ end
 -- exactly like a successful insert of auction number zero. Asking for the row is
 -- both the id and the proof that the row is there.
 function CharBazaar.openAuctionId(guid)
-	local resultId = db.storeQuery(string.format(
-		"SELECT `id` FROM `myaac_charbazaar` WHERE `player_id` = %d AND `status` = 0 ORDER BY `id` DESC LIMIT 1",
-		guid
-	))
+	local resultId = db.storeQuery(string.format("SELECT `id` FROM `myaac_charbazaar` WHERE `player_id` = %d AND `status` = 0 ORDER BY `id` DESC LIMIT 1", guid))
 
 	if not resultId then
 		return 0
@@ -1708,9 +1772,7 @@ function CharBazaar.create(player, configuration)
 	-- The conditions already refuse an account with an auction open, but they ask
 	-- about the account and this asks about the character, which is what the row is
 	-- keyed on.
-	if rowExists(string.format(
-		"SELECT 1 FROM `myaac_charbazaar` WHERE `player_id` = %d AND `status` = 0 LIMIT 1", guid
-	)) then
+	if rowExists(string.format("SELECT 1 FROM `myaac_charbazaar` WHERE `player_id` = %d AND `status` = 0 LIMIT 1", guid)) then
 		return CharBazaar.refuse(player, "This character is already up for auction.")
 	end
 
@@ -1724,12 +1786,7 @@ function CharBazaar.create(player, configuration)
 	--
 	-- The dates are quoted because the column is a datetime and the website writes
 	-- fourteen digits into it, which MySQL reads as YYYYMMDDHHMMSS either way.
-	local inserted = db.query(string.format(
-		"INSERT INTO `myaac_charbazaar` (`account_old`, `account_new`, `player_id`, `price`, "
-			.. "`date_end`, `date_start`, `bid_account`, `bid_price`, `status`) "
-			.. "VALUES (%d, %d, %d, %d, '%s', '%s', 0, 0, 0)",
-		accountId, CharBazaar.Config.vaultAccount, guid, configuration.price, dateEnd, dateStart
-	))
+	local inserted = db.query(string.format("INSERT INTO `myaac_charbazaar` (`account_old`, `account_new`, `player_id`, `price`, " .. "`date_end`, `date_start`, `bid_account`, `bid_price`, `status`) " .. "VALUES (%d, %d, %d, %d, '%s', '%s', 0, 0, 0)", accountId, CharBazaar.Config.vaultAccount, guid, configuration.price, dateEnd, dateStart))
 
 	local auctionId = inserted and CharBazaar.openAuctionId(guid) or 0
 	if auctionId == 0 then
@@ -1740,17 +1797,11 @@ function CharBazaar.create(player, configuration)
 	-- database still missing either column costs only what that column carried
 	-- rather than the whole auction - which is the mistake that cost a character.
 	if CharBazaar.hasColumn("showcase", 54) then
-		db.query(string.format(
-			"UPDATE `myaac_charbazaar` SET `showcase` = '%s' WHERE `id` = %d",
-			CharBazaar.showcaseIds(configuration.items), auctionId
-		))
+		db.query(string.format("UPDATE `myaac_charbazaar` SET `showcase` = '%s' WHERE `id` = %d", CharBazaar.showcaseIds(configuration.items), auctionId))
 	end
 
 	if CharBazaar.hasColumn("sales_arguments", 55) then
-		db.query(string.format(
-			"UPDATE `myaac_charbazaar` SET `sales_arguments` = %s WHERE `id` = %d",
-			db.escapeString(CharBazaar.salesArguments(player, configuration.highlights)), auctionId
-		))
+		db.query(string.format("UPDATE `myaac_charbazaar` SET `sales_arguments` = %s WHERE `id` = %d", db.escapeString(CharBazaar.salesArguments(player, configuration.highlights)), auctionId))
 	end
 
 	if not player:removeTransferableCoins(CharBazaar.Config.fee) then
@@ -1764,9 +1815,7 @@ function CharBazaar.create(player, configuration)
 	-- second auction for it in the same moment, and reading the column back is how a
 	-- Lua script finds out whether the guard held - db.query says whether the query
 	-- ran, never how many rows it touched.
-	local claimed = db.query(string.format(
-		"UPDATE `players` SET `deletion` = 1, `charbazaar` = 1 WHERE `id` = %d AND `charbazaar` = 0", guid
-	)) and rowExists(string.format("SELECT 1 FROM `players` WHERE `id` = %d AND `charbazaar` = 1", guid))
+	local claimed = db.query(string.format("UPDATE `players` SET `deletion` = 1, `charbazaar` = 1 WHERE `id` = %d AND `charbazaar` = 0", guid)) and rowExists(string.format("SELECT 1 FROM `players` WHERE `id` = %d AND `charbazaar` = 1", guid))
 
 	if not claimed then
 		player:addTransferableCoins(CharBazaar.Config.fee)
@@ -1774,12 +1823,9 @@ function CharBazaar.create(player, configuration)
 		return CharBazaar.refuse(player, "This character could not be put up for auction.")
 	end
 
-	if not db.query(string.format(
-		"UPDATE `players` SET `account_id` = %d WHERE `id` = %d", CharBazaar.Config.vaultAccount, guid
-	)) then
+	if not db.query(string.format("UPDATE `players` SET `account_id` = %d WHERE `id` = %d", CharBazaar.Config.vaultAccount, guid)) then
 		player:addTransferableCoins(CharBazaar.Config.fee)
-		db.query(string.format(
-			"UPDATE `players` SET `deletion` = 0, `charbazaar` = 0 WHERE `id` = %d", guid))
+		db.query(string.format("UPDATE `players` SET `deletion` = 0, `charbazaar` = 0 WHERE `id` = %d", guid))
 		db.query(string.format("DELETE FROM `myaac_charbazaar` WHERE `id` = %d", auctionId))
 		return CharBazaar.refuse(player, "This character could not be put up for auction.")
 	end
@@ -1791,17 +1837,13 @@ function CharBazaar.create(player, configuration)
 	-- it earlier would mean rolling back a live auction over a copy.
 	CharBazaar.writeSnapshot(player, auctionId, configuration)
 
-	logger.info("[CharBazaar] created auction {} for {}: price {}, ends {}, {} items, {} sales arguments",
-		auctionId, name, configuration.price, dateEnd,
-		#configuration.items, #configuration.highlights)
+	logger.info("[CharBazaar] created auction {} for {}: price {}, ends {}, {} items, {} sales arguments", auctionId, name, configuration.price, dateEnd, #configuration.items, #configuration.highlights)
 
 	player:remove()
 
 	-- After the logout save, so it is not put back. A position of nothing is read as
 	-- the town temple on the next login, which is where the buyer should start.
-	db.query(string.format(
-		"UPDATE `players` SET `posx` = 0, `posy` = 0, `posz` = 0 WHERE `id` = %d", guid
-	))
+	db.query(string.format("UPDATE `players` SET `posx` = 0, `posy` = 0, `posz` = 0 WHERE `id` = %d", guid))
 
 	return true
 end
@@ -1878,15 +1920,13 @@ function onRecvbyte(player, msg, byte)
 		-- whether what the seller assembled is acceptable, one page before it lets
 		-- them confirm it. Answering with the problems is what turns Confirm from a
 		-- button that does nothing into a page that says why.
-		CharBazaar.sendSummary(player, CharBazaar.summaryDataType,
-			CharBazaar.configurationProblems(player, CharBazaar.parseConfiguration(msg)))
+		CharBazaar.sendSummary(player, CharBazaar.summaryDataType, CharBazaar.configurationProblems(player, CharBazaar.parseConfiguration(msg)))
 	elseif action == CharBazaar.Actions.CONFIRM_CONFIGURATION then
 		CharBazaar.create(player, CharBazaar.parseConfiguration(msg))
 	else
 		-- Consumes the rest, which is the only way to see what an action nobody
 		-- has mapped actually carries.
-		debugLog("action {} from {} left unanswered, payload [{}]",
-			action, player:getName(), dumpRest(msg))
+		debugLog("action {} from {} left unanswered, payload [{}]", action, player:getName(), dumpRest(msg))
 	end
 end
 
@@ -1902,7 +1942,5 @@ end
 -- Said once at load rather than guessed at per auction, because the answer cannot
 -- change while the server is up.
 if configManager.getBoolean(configKeys.TOGGLE_SAVE_ASYNC) then
-	logger.warn("[CharBazaar] toggleSaveAsync is on: an auction created from the client may "
-		.. "freeze an incomplete copy of the character and may leave the buyer starting at the "
-		.. "seller's last position. Turn it off to create auctions in game.")
+	logger.warn("[CharBazaar] toggleSaveAsync is on: an auction created from the client may " .. "freeze an incomplete copy of the character and may leave the buyer starting at the " .. "seller's last position. Turn it off to create auctions in game.")
 end
