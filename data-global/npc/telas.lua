@@ -631,10 +631,19 @@ local function creatureSayCallback(npc, creature, type, message)
 		npcHandler:setTopic(playerId, 0)
 	end
 
+local function onTradeRequest(npc, creature)
+	local player = Player(creature)
+	local kv = player:kv():scoped(SOY_KV_SCOPE)
+	if not kv:get("telas-trade", true) then
+		npcHandler:say("I have nothing to trade with you.", npc, creature)
+		return false
+	end
+
 	return true
 end
 
 npcHandler:setMessage(MESSAGE_GREET, "Hello! Sorry I'm a bit busy.")
+npcHandler:setCallback(CALLBACK_ON_TRADE_REQUEST, onTradeRequest)
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
@@ -667,10 +676,16 @@ npcConfig.shop = {
 }
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
+	if not shadowsOfYalaharCompleted(player) then
+		return
+	end
 	npc:sellItem(player, itemId, amount, subType, 0, ignore, inBackpacks)
 end
 -- On sell npc shop message
 npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name, totalCost)
+	if not shadowsOfYalaharCompleted(player) then
+		return
+	end
 	player:sendTextMessage(MESSAGE_TRADE, string.format("Sold %ix %s for %i gold.", amount, name, totalCost))
 end
 -- On check npc shop message (look item)
