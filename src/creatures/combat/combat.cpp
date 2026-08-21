@@ -1468,9 +1468,14 @@ bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::s
 			if (!nextTarget) {
 				continue;
 			}
+
 			g_dispatcher().scheduleEvent(
-				delay, [combat, caster, nextTarget, affected]() {
+				delay, [combat, caster, origin = from, nextTarget, affected]() {
 					if (combat && caster && nextTarget) {
+						if (combat->params.chainEffect != CONST_ME_NONE) {
+							Combat::doChainEffect(origin, nextTarget->getPosition(), combat->params.chainEffect);
+						}
+
 						CombatDamage damage = combat->getCombatDamage(caster, nextTarget);
 						damage.affected = affected;
 						Combat::CombatHealthFunc(caster, nextTarget, combat->params, &damage);
