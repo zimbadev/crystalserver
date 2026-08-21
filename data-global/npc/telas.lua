@@ -631,9 +631,13 @@ local function creatureSayCallback(npc, creature, type, message)
 		npcHandler:setTopic(playerId, 0)
 	end
 
+	return true
+end
+
 local function onTradeRequest(npc, creature)
 	local player = Player(creature)
 	local kv = player:kv():scoped(SOY_KV_SCOPE)
+
 	if not kv:get("telas-trade", true) then
 		npcHandler:say("I have nothing to trade with you.", npc, creature)
 		return false
