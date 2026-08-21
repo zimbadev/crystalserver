@@ -18,7 +18,7 @@ VALUES ('Crystal', 'pvp', 'Welcome to the Crystal Server!', 'South America', '12
 
 -- Table structure `server_config`
 CREATE TABLE IF NOT EXISTS `server_config` (
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     `config` varchar(50) NOT NULL,
     `value` varchar(256) NOT NULL DEFAULT '',
     CONSTRAINT `server_config_pk` PRIMARY KEY (`world_id`, `config`),
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS `players` (
     `boss_points` int NOT NULL DEFAULT '0',
     `loyalty_points` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `animus_mastery` mediumblob DEFAULT NULL,
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     `virtue` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `harmony` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `weapon_proficiencies` mediumblob DEFAULT NULL,
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `account_viplist` (
     `description` varchar(128) NOT NULL DEFAULT '',
     `icon` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',
     `notify` tinyint(1) NOT NULL DEFAULT '0',
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `account_id` (`account_id`),
     INDEX `player_id` (`player_id`),
     CONSTRAINT `account_viplist_unique` UNIQUE (`account_id`, `player_id`),
@@ -389,7 +389,7 @@ CREATE TABLE IF NOT EXISTS `guilds` (
     `residence` int(11) NOT NULL DEFAULT '0',
     `balance` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
     `points` int(11) NOT NULL DEFAULT '0',
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     CONSTRAINT `guilds_pk` PRIMARY KEY (`id`),
     CONSTRAINT `guilds_name_unique` UNIQUE (`name`),
     CONSTRAINT `guilds_owner_unique` UNIQUE (`ownerid`),
@@ -518,7 +518,7 @@ CREATE TABLE IF NOT EXISTS `houses` (
     `bid_end_date` int(11) NOT NULL DEFAULT '0',
     `state` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
     `transfer_status` tinyint(1) DEFAULT '0',
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `owner` (`owner`),
     INDEX `town_id` (`town_id`),
     CONSTRAINT `houses_pk` PRIMARY KEY (`id`, `world_id`),
@@ -543,7 +543,7 @@ CREATE TABLE IF NOT EXISTS `house_lists` (
     `listid` int NOT NULL,
     `version` bigint NOT NULL DEFAULT '0',
     `list` text NOT NULL,
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     PRIMARY KEY (`house_id`, `listid`),
     KEY `house_id_index` (`house_id`),
     KEY `version` (`version`),
@@ -582,7 +582,7 @@ CREATE TABLE IF NOT EXISTS `market_history` (
     `inserted` bigint(20) UNSIGNED NOT NULL,
     `state` tinyint(1) UNSIGNED NOT NULL,
     `tier` tinyint UNSIGNED NOT NULL DEFAULT '0',
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `player_id` (`player_id`,`sale`),
     CONSTRAINT `market_history_pk` PRIMARY KEY (`id`),
     CONSTRAINT `market_history_players_fk`
@@ -604,7 +604,7 @@ CREATE TABLE IF NOT EXISTS `market_offers` (
     `anonymous` tinyint(1) NOT NULL DEFAULT '0',
     `price` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
     `tier` tinyint UNSIGNED NOT NULL DEFAULT '0',
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `sale` (`sale`,`itemtype`),
     INDEX `created` (`created`),
     INDEX `player_id` (`player_id`),
@@ -620,7 +620,7 @@ CREATE TABLE IF NOT EXISTS `market_offers` (
 -- Table structure `players_online`
 CREATE TABLE IF NOT EXISTS `players_online` (
     `player_id` int(11) NOT NULL,
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     CONSTRAINT `players_online_pk` PRIMARY KEY (`player_id`),
     CONSTRAINT `players_online_worlds_fk`
         FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
@@ -970,7 +970,7 @@ CREATE TABLE IF NOT EXISTS `store_history` (
 CREATE TABLE IF NOT EXISTS `tile_store` (
     `house_id` int(11) NOT NULL,
     `data` longblob NOT NULL,
-    `world_id` int(3) UNSIGNED NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `house_id` (`house_id`),
     CONSTRAINT `tile_store_account_fk`
         FOREIGN KEY (`house_id`) REFERENCES `houses` (`id`)

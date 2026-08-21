@@ -9,7 +9,7 @@ function onUpdateDatabase()
 			`name` varchar(80) NOT NULL,
 			`type` enum('no-pvp','pvp','retro-pvp','pvp-enforced','retro-hardcore') NOT NULL,
 			`motd` varchar(255) NOT NULL DEFAULT '',
-			`location` enum('Europe','North America','South America','Oceania') NOT NULL,
+			`location` enum('Europe','North America','South America','Oceania') NOT NULL DEFAULT 'South America',
 			`ip` varchar(15) NOT NULL,
 			`port` int(5) UNSIGNED NOT NULL,
 			`port_status` int(6) UNSIGNED NOT NULL,
@@ -18,6 +18,8 @@ function onUpdateDatabase()
 			CONSTRAINT `worlds_unique` UNIQUE (`name`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	]])
+
+	db.query("INSERT IGNORE INTO `worlds` (`id`, `name`, `type`, `location`, `ip`, `port`, `port_status`) VALUES (1, 'Crystal', 'pvp', 'South America', '127.0.0.1', 7172, 7173);")
 
 	db.query("ALTER TABLE `server_config` ADD `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1;")
 	db.query("ALTER TABLE `server_config` DROP PRIMARY KEY;")
@@ -34,7 +36,6 @@ function onUpdateDatabase()
 	db.query("ALTER TABLE `guilds` ADD FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`) ON DELETE CASCADE;")
 
 	db.query("ALTER TABLE `houses` ADD `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1;")
-	db.query("ALTER TABLE `houses` ADD FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`) ON DELETE CASCADE;")
 
 	db.query("ALTER TABLE `house_lists` ADD `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1;")
 	db.query("ALTER TABLE `house_lists` ADD FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`) ON DELETE CASCADE;")
@@ -51,14 +52,15 @@ function onUpdateDatabase()
 	db.query("ALTER TABLE `market_history` ADD `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1;")
 	db.query("ALTER TABLE `market_history` ADD FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`) ON DELETE CASCADE;")
 
-	db.query("ALTER TABLE `server_config` DROP PRIMARY KEY")
-	db.query("ALTER TABLE `server_config` ADD PRIMARY KEY (`world_id`, `config`);")
-
 	db.query("ALTER TABLE `houses` CHANGE `id` `id` INT(11) NOT NULL;")
+	db.query("ALTER TABLE `house_lists` DROP FOREIGN KEY `houses_list_house_fk`;")
+	db.query("ALTER TABLE `tile_store` DROP FOREIGN KEY `tile_store_account_fk`;")
 	db.query("ALTER TABLE `houses` DROP PRIMARY KEY;")
 	db.query("ALTER TABLE `houses` ADD PRIMARY KEY (`id`, `world_id`);")
 	db.query("ALTER TABLE `houses` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT;")
 	db.query("ALTER TABLE `houses` ADD FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`) ON DELETE CASCADE;")
+	db.query("ALTER TABLE `house_lists` ADD CONSTRAINT `houses_list_house_fk` FOREIGN KEY (`house_id`) REFERENCES `houses` (`id`) ON DELETE CASCADE;")
+	db.query("ALTER TABLE `tile_store` ADD CONSTRAINT `tile_store_account_fk` FOREIGN KEY (`house_id`) REFERENCES `houses` (`id`) ON DELETE CASCADE;")
 
 	db.query("DROP TRIGGER `ondelete_players`;")
 	db.query([[
