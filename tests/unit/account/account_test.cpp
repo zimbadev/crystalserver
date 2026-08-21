@@ -614,7 +614,7 @@ suite<"account"> accountTest = [] {
 		expect(eqEnum(error, AccountErrors_t::Ok));
 		expect(eq(players.size(), 2));
 		expect(eq(players["Crystal"].deletion, 1));
-		expect(eq(players["Crystal2"].deletion, 2));
+		expect(eq(players["crystal2"].deletion, 2));
 	};
 
 	test("Account::authenticate password using sha1") = [&injectionFixture] {
