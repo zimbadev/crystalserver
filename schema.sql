@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
     CONSTRAINT `server_config_pk` PRIMARY KEY (`config`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '63'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
+INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '64'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -156,8 +156,12 @@ CREATE TABLE IF NOT EXISTS `players` (
     `virtue` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `harmony` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `weapon_proficiencies` mediumblob DEFAULT NULL,
+    `is_locked` tinyint(1) NOT NULL DEFAULT '0',
+    `locked_at` bigint(20) NOT NULL DEFAULT '0',
+    `lock_reason` varchar(64) NOT NULL DEFAULT '',
     INDEX `account_id` (`account_id`),
     INDEX `vocation` (`vocation`),
+    INDEX `idx_players_concurrency_lock` (`is_locked`, `locked_at`),
     CONSTRAINT `players_pk` PRIMARY KEY (`id`),
     CONSTRAINT `players_unique` UNIQUE (`name`),
     CONSTRAINT `players_account_fk`

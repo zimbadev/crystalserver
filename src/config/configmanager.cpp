@@ -178,6 +178,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_IMBUEMENT_SHRINE_STORAGE, "toggleImbuementShrineStorage", true);
 	loadBoolConfig(L, TOGGLE_MAX_CONNECTIONS_BY_IP, "toggleMaxConnectionsByIP", false);
 	loadBoolConfig(L, TOGGLE_MOUNT_IN_PZ, "toggleMountInProtectionZone", false);
+	loadBoolConfig(L, TOGGLE_PLAYER_LOCK, "togglePlayerLock", true);
 	loadBoolConfig(L, TOGGLE_RECEIVE_REWARD, "toggleReceiveReward", false);
 	loadBoolConfig(L, TOGGLE_SAVE_ASYNC, "toggleSaveAsync", false);
 	loadBoolConfig(L, TOGGLE_SAVE_INTERVAL, "toggleSaveInterval", false);
@@ -369,6 +370,7 @@ bool ConfigManager::load() {
 	loadIntConfig(L, PARALYZE_DELAY_INTERVAL, "timeAfterParalyze", 200);
 	loadIntConfig(L, PARALLELISM, "parallelism", 2);
 	loadIntConfig(L, PARTY_LIST_MAX_DISTANCE, "partyListMaxDistance", 0);
+	loadIntConfig(L, PLAYER_LOCK_TIMEOUT, "playerLockTimeout", 60);
 	loadIntConfig(L, PREMIUM_DEPOT_LIMIT, "premiumDepotLimit", 8000);
 	loadIntConfig(L, PREY_BONUS_REROLL_PRICE, "preyBonusRerollPrice", 1);
 	loadIntConfig(L, PREY_BONUS_TIME, "preyBonusTime", 7200);
