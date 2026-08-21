@@ -21,6 +21,8 @@
 #include "config/configmanager.hpp"
 #include "creatures/players/player.hpp"
 #include "database/databasetasks.hpp"
+#include "enums/account_coins.hpp"
+#include "enums/account_errors.hpp"
 #include "game/game.hpp"
 #include "game/scheduling/dispatcher.hpp"
 #include "game/scheduling/save_manager.hpp"
