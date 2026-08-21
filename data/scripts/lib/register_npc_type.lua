@@ -171,24 +171,25 @@ registerNpcType.shop = function(npcType, mask)
 			end
 
 			if clientId then
-				if not NpcPriceChecker[clientId] then
-					NpcPriceChecker[clientId] = { buy = nil, sell = nil, buyNpc = nil, sellNpc = nil }
+				local priceEntry = NpcPriceChecker[clientId]
+				if not priceEntry then
+					priceEntry = { buy = nil, sell = nil, buyNpc = nil, sellNpc = nil, itemName = nil }
+					NpcPriceChecker[clientId] = priceEntry
 				end
 
-				if buyPrice then
-					NpcPriceChecker[clientId].buy = buyPrice
-					NpcPriceChecker[clientId].buyNpc = npcName
+				priceEntry.itemName = priceEntry.itemName or itemName
+
+				-- Record the cheapest price a player can buy at and the highest price a
+				-- player can sell at. Comparing those two extremes is what detects the
+				-- exploit; comparing whichever NPC happened to load last does not.
+				if buyPrice and (not priceEntry.buy or buyPrice < priceEntry.buy) then
+					priceEntry.buy = buyPrice
+					priceEntry.buyNpc = npcName
 				end
 
-				if sellPrice then
-					NpcPriceChecker[clientId].sell = sellPrice
-					NpcPriceChecker[clientId].sellNpc = npcName
-				end
-
-				if NpcPriceChecker[clientId].buy and NpcPriceChecker[clientId].sell then
-					if NpcPriceChecker[clientId].sell > NpcPriceChecker[clientId].buy then
-						logger.warn("The item {} ({}) is being sold for a value greater than the value it is purchased for by the NPCs. Buy NPC: {}, Sell NPC: {}", itemName, clientId, NpcPriceChecker[clientId].buyNpc, NpcPriceChecker[clientId].sellNpc)
-					end
+				if sellPrice and (not priceEntry.sell or sellPrice > priceEntry.sell) then
+					priceEntry.sell = sellPrice
+					priceEntry.sellNpc = npcName
 				end
 			end
 

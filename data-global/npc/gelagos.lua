@@ -57,6 +57,7 @@ keywordHandler:addKeyword({ "gelagos" }, StdModule.say, { npcHandler = npcHandle
 keywordHandler:addKeyword({ "brother" }, StdModule.say, { npcHandler = npcHandler, text = "Ajax is even more stupid." })
 keywordHandler:addKeyword({ "savage" }, StdModule.say, { npcHandler = npcHandler, text = "You are as stupid as Bron." })
 keywordHandler:addKeyword({ "cyclops" }, StdModule.say, { npcHandler = npcHandler, text = "Any cyclops is smarter than Bron." })
+keywordHandler:addKeyword({ "blood" }, StdModule.say, { npcHandler = npcHandler, text = "Roses are red, and so is blood." })
 
 npcHandler:setMessage(MESSAGE_GREET, "Hehehe.")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Hope you die and lose it.")

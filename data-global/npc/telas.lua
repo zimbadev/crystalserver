@@ -49,6 +49,69 @@ end
 npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
+local SOY_KV_SCOPE = "shadows-of-yalahar"
+local MISSION10_ORDER_KEY = "mission10-order"
+local MISSION10_INDEX_KEY = "mission10-index"
+local MISSION10_STATE_KEY = "mission10-state"
+local mission10Items = {
+	deepcrystal = {
+		itemId = 9240,
+		assign = "According to dwarven miners you might find the deep crystal somewhere in the depths under Ab'Dendriel. I have no idea where though, or even how to get there.",
+		deliver = "I truly hope this is a deep crystal. I have to admit, all those crystals look the same to me.",
+	},
+	darkessence = {
+		itemId = 9238,
+		assign = "One of the more unpleasant components that I need is some dark essence. Some of my colleagues believe that it sometimes condenses in the depths beneath the cursed town of Drefia in the desert of the Daramian continent.",
+		deliver = "By the Gods! Handle that dark essence with care! Didn't I mention it might explode? Ooops, I probably forgot to tell you! Well, whatever, I'll put it in a safe place for now. Thank you for your efforts my friend.",
+	},
+	shadoworb = {
+		itemId = 9237,
+		assign = "One of the components is a shadow orb. So far, I have had no luck acquiring one. I even tried one of my more dubious contacts but he refused, saying that he would only mess with the guys in the dark cathedral if he had a death wish'. I think if you find this dark cathedral you might find a shadow orb.",
+		deliver = "Ah, a perfect shadow orb! This is exactly what we need.",
+	},
+	bloodkiss = {
+		itemId = 9241,
+		assign = "Some of the elves of Shadowthorn cultivate a plant known as bloodkiss. I need one sample for the ritual.",
+		deliver = "What a beautiful flower. A shame that we have to destroy it in the ritual.",
+	},
+	wormqueentooth = {
+		itemId = 9239,
+		assign = "I am convinced that the tooth from a long dead rotworm queen will make an apt replacement for one of the more exotic ingredients in the Yalahari ritual. The books in the Edron academy suggest that the most likely place to find one might be deeper Fibula.",
+		deliver = "My, this rotworm tooth looks old. But the older the better. It will certainly be sufficient for our ritual.",
+	},
+	animalfetish = {
+		itemId = 9236,
+		assign = "One of the components could easily be substituted by an animal fetish. I have heard that the orcs in the Orcland use them to tame their war wolves. That's where you should start looking.",
+		deliver = "Phew. That fetish stinks. I'd better put it into some sort of container.",
+	},
+}
+local mission10ItemKeys = { "wormqueentooth", "shadoworb", "bloodkiss", "animalfetish", "darkessence", "deepcrystal" }
+local function mission10RandomItem()
+	local pool = {}
+	for i, key in ipairs(mission10ItemKeys) do
+		pool[i] = key
+	end
+
+	for i = #pool, 2, -1 do
+		local j = math.random(i)
+		pool[i], pool[j] = pool[j], pool[i]
+	end
+
+	return { pool[1], pool[2], pool[3] }
+end
+
+local function mission10GetOrder(kv)
+	local orderValue = kv:get(MISSION10_ORDER_KEY)
+	if not orderValue then
+		return nil
+	end
+
+	local order = {}
+	for itemKey in orderValue:gmatch("[^,]+") do
+		order[#order + 1] = itemKey
+	end
+	return order
+end
 
 -- Shadows of Yalahar
 local SOY_KV_SCOPE = "shadows-of-yalahar"
@@ -590,6 +653,16 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:say("You are starting this discussion again? Why should I listen to you this time, do you have anything to convince me to let you even try?", npc, creature)
 				npcHandler:setTopic(playerId, 2)
 			end
+		elseif npcHandler:getTopic(playerId) == 3 then
+			if player:getStorageValue(ShadowsOfYalahar.Mission11) == 2 then
+				npcHandler:say("It's done! I really hope that will be enough to enter the complex. It is probably somewhere in the underground of Fenrock. I have no idea what you might find there but look for a golem's head and bring it to me.", npc, creature)
+				player:setStorageValue(ShadowsOfYalahar.Mission11, 3) -- Finish Mission 11
+				player:setStorageValue(ShadowsOfYalahar.Mission12, 1) -- Start Mission 12
+				player:setStorageValue(ShadowsOfYalahar.Questline, 20)
+			else
+				npcHandler:say("Come back after finish your assignment.", npc, creature)
+				npcHandler:setTopic(playerId, 0)
+			end
 		end
 	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 2 then
 		if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 and player:removeItem(10027, 1) then
@@ -678,6 +751,7 @@ npcConfig.shop = {
 	{ itemName = "vein of ore", clientId = 16135, sell = 330 },
 	{ itemName = "war crystal", clientId = 9654, sell = 460 },
 }
+
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
 	if not shadowsOfYalaharCompleted(player) then
