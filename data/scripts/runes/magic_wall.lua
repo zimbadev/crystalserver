@@ -12,12 +12,7 @@ function onCreateMagicWall(creature, position)
 		return false
 	end
 
-	local magicWall
-	if Game.getWorldType() == WORLDTYPE_OPTIONAL then
-		magicWall = ITEM_MAGICWALL_SAFE
-	else
-		magicWall = ITEM_MAGICWALL
-	end
+	local magicWall = Game.getWorldType() == WORLDTYPE_OPTIONAL and ITEM_MAGICWALL_SAFE or ITEM_MAGICWALL
 
 	local item = Game.createItem(magicWall, 1, position)
 	if item then

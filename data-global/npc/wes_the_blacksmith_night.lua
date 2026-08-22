@@ -135,7 +135,7 @@ npcConfig.shop = {
 	{ itemName = "longsword", clientId = 3285, buy = 160, sell = 51 },
 	{ itemName = "mace", clientId = 3286, buy = 90, sell = 30 },
 	{ itemName = "morning star", clientId = 3282, buy = 430, sell = 100 },
-	{ itemName = "nunchaku", clientId = 3347, buy = 405, sell = 135 },
+	{ itemName = "nunchaku", clientId = 50182, buy = 405, sell = 135 },
 	{ itemName = "orcish axe", clientId = 3316, sell = 350 },
 	{ itemName = "pair of monk fists", clientId = 7423, buy = 270, sell = 90 },
 	{ itemName = "plate armor", clientId = 3357, buy = 1200, sell = 400 },
