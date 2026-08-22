@@ -172,19 +172,11 @@ public:
 			}
 			// Check if the type T is signed or unsigned
 			if constexpr (std::is_signed_v<T>) {
-				// Check if the type T is int8_t or int16_t
-				if constexpr (std::is_same_v<T, int8_t> || std::is_same_v<T, int16_t>) {
-					// Use std::stoi to convert string to int8_t
-					data = static_cast<T>(std::stoi(row[it->second]));
-				}
-				// Check if the type T is int32_t
-				else if constexpr (std::is_same_v<T, int32_t>) {
-					// Use std::stol to convert string to int32_t
+				// Dispatch on width, not on exact type: int64_t is `long` on LP64 (Linux)
+				// but `long long` on macOS, so `long`/`time_t` matches neither there.
+				if constexpr (std::is_integral_v<T> && sizeof(T) <= sizeof(int32_t)) {
 					data = static_cast<T>(std::stol(row[it->second]));
-				}
-				// Check if the type T is int64_t
-				else if constexpr (std::is_same_v<T, int64_t>) {
-					// Use std::stoll to convert string to int64_t
+				} else if constexpr (std::is_integral_v<T> && sizeof(T) <= sizeof(long long)) {
 					data = static_cast<T>(std::stoll(row[it->second]));
 				} else {
 					// Throws exception indicating that type T is invalid
@@ -193,14 +185,10 @@ public:
 			} else if (std::is_same<T, bool>::value) {
 				data = static_cast<T>(std::stoi(row[it->second]));
 			} else {
-				// Check if the type T is uint8_t or uint16_t or uint32_t
-				if constexpr (std::is_same_v<T, uint8_t> || std::is_same_v<T, uint16_t> || std::is_same_v<T, uint32_t>) {
-					// Use std::stoul to convert string to uint8_t
+				// Dispatch on width, not on exact type (see the signed branch above).
+				if constexpr (std::is_integral_v<T> && sizeof(T) <= sizeof(uint32_t)) {
 					data = static_cast<T>(std::stoul(row[it->second]));
-				}
-				// Check if the type T is uint64_t
-				else if constexpr (std::is_same_v<T, uint64_t>) {
-					// Use std::stoull to convert string to uint64_t
+				} else if constexpr (std::is_integral_v<T> && sizeof(T) <= sizeof(unsigned long long)) {
 					data = static_cast<T>(std::stoull(row[it->second]));
 				} else {
 					// Send log indicating that type T is invalid
