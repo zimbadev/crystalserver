@@ -21,7 +21,7 @@ monster.bosstiary = {
 monster.health = 960
 monster.maxHealth = 960
 monster.race = "blood"
-monster.corpse = 6335
+monster.corpse = 9405
 monster.speed = 175
 monster.manaCost = 0
 
@@ -77,12 +77,7 @@ monster.voices = {
 	{ text = "WHARR! MUST ... KIDNAP WOMEN!", yell = true },
 }
 
-monster.loot = {
-	{ id = 9381, chance = 1000 }, -- helmet of ultimate terror
-	{ id = 9386, chance = 1000 }, -- farmer's avenger
-	{ id = 9380, chance = 1000 }, -- shield of care
-	{ id = 9396, chance = 1000 }, -- incredible mumpiz slayer
-}
+monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 1200, chance = 100, minDamage = 0, maxDamage = -167 },

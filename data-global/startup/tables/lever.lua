@@ -292,6 +292,13 @@ LeverAction = {
 			{ x = 33269, y = 31789, z = 11 },
 		},
 	},
+	-- Isle of Evil
+	[57237] = {
+		itemId = false,
+		itemPos = {
+			{ x = 32756, y = 31469, z = 6 },
+		},
+	},
 }
 
 LeverUnique = {

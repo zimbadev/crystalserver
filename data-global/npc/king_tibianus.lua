@@ -67,6 +67,18 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:say("Indeed, indeed. Without the help of Thais, our allies stand no chance! Well, I'll send some money to support their cause.", npc, creature)
 			player:setStorageValue(TheNewFrontier.Mission05.KingTibianus, 3)
 		end
+	elseif MsgContains(message, "fan club membership card") and player:getStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Questline) == 15 then
+		npcHandler:say({
+			"Ah, A fan club premium membership card! You must be that intelligent fellow who wrote me all those flattering letters! Nice to finally meet my greatest admirer in person. Here, take this little token of appreciation. ...",
+			"And now if you will excuse me, I have to attend urgent matters of state.",
+		}, npc, creature)
+		player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission07, 4) -- Finish The Isle of Evil Quest
+		player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Questline, 16)
+		player:addItem(9389, 1) -- fan doll of King Tibianus
+		if not player:hasAchievement("King Tibianus Fan") then
+			player:addAchievement("King Tibianus Fan")
+		end
+		npcHandler:setTopic(playerId, 0)
 	elseif (MsgContains(message, "outfit")) or (MsgContains(message, "addon")) then
 		npcHandler:say("In exchange for a truly generous donation, I will offer a special outfit. Do you want to make a donation?", npc, creature)
 		npcHandler:setTopic(playerId, 1)

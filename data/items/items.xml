@@ -25009,12 +25009,12 @@
 	</item>
 	<item id="9242" article="a" name="crucible">
 		<attribute key="primarytype" value="tools (objects)" />
-		<attribute key="duration" value="60" />
+		<attribute key="duration" value="6" />
 		<attribute key="decayTo" value="9243" />
 	</item>
 	<item id="9243" article="a" name="crucible">
 		<attribute key="primarytype" value="tools (objects)" />
-		<attribute key="duration" value="60" />
+		<attribute key="duration" value="6" />
 		<attribute key="decayTo" value="9242" />
 	</item>
 	<item id="9244" article="a" name="crucible">

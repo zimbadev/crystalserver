@@ -236,8 +236,9 @@ CreateItemOnMap = {
 		itemPos = { -- closed door
 			{ x = 33271, y = 31798, z = 6 }, -- Telas (Edron)
 			{ x = 32249, y = 32474, z = 10 }, -- Fibula - Shadows of Yalahar Quest
+			{ x = 32681, y = 31992, z = 14 }, -- The Isle of Evil Door
 		},
-		removeItemId = 1648,
+		removeItemId = { 1648, 7727 },
 	},
 	[564] = {
 		itemPos = {
@@ -247,10 +248,11 @@ CreateItemOnMap = {
 		removeItemId = 1949,
 	},
 	[1642] = {
-		itemPos = {
-			{ x = 33265, y = 31797, z = 11 },
-			{ x = 33249, y = 31797, z = 11 },
+		itemPos = { -- door
+			{ x = 33265, y = 31797, z = 11 }, -- Telas lab
+			{ x = 33249, y = 31797, z = 11 }, -- Telas lab
+			{ x = 32536, y = 31628, z = 8 }, -- Northport cave
 		},
-		removeItemId = { 8365, 1646 },
+		removeItemId = { 8365, 1646, 1696 },
 	},
 }
