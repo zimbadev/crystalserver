@@ -15,17 +15,30 @@ function IsRunningGlobalDatapack()
 	end
 end
 
-function IsRetroPVP()
-	return configManager.getBoolean(configKeys.TOGGLE_SERVER_IS_RETRO)
+function getWorldTypeName()
+	local worldType = Game.getWorldType()
+	if worldType == WORLDTYPE_OPEN then
+		return "Open PvP"
+	elseif worldType == WORLDTYPE_OPTIONAL then
+		return "Optional PvP"
+	elseif worldType == WORLDTYPE_HARDCORE then
+		return "Hardcore PvP"
+	elseif worldType == WORLDTYPE_RETRO_PVP then
+		return "Retro Open PvP"
+	elseif worldType == WORLDTYPE_RETRO_HARDCORE then
+		return "Retro Hardcore PvP"
+	else
+		return "Unknown"
+	end
+end
+
+function isRetroPVP()
+	return table.contains({ WORLDTYPE_RETRO_PVP, WORLDTYPE_RETRO_HARDCORE }, Game.getWorldType())
 end
 
 function IsTravelFree()
 	return configManager.getBoolean(configKeys.TOGGLE_TRAVELS_FREE)
 end
-
--- NOTE: 0 is disabled.
-PARTY_PROTECTION = (IsRetroPVP() and 0) or 1
-ADVANCED_SECURE_MODE = (IsRetroPVP() and 0) or 1
 
 NORTH = DIRECTION_NORTH
 EAST = DIRECTION_EAST

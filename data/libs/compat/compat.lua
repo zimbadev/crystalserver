@@ -63,9 +63,12 @@ setConditionFormula = Condition.setFormula
 addDamageCondition = Condition.addDamage
 addOutfitCondition = Condition.setOutfit
 
-WORLD_TYPE_NO_PVP = WORLDTYPE_OPTIONAL
+WORLD_TYPE_NONE = WORLDTYPE_NONE
 WORLD_TYPE_PVP = WORLDTYPE_OPEN
+WORLD_TYPE_NO_PVP = WORLDTYPE_OPTIONAL
 WORLD_TYPE_PVP_ENFORCED = WORLDTYPE_HARDCORE
+WORLD_TYPE_RETRO_PVP = WORLDTYPE_RETRO_PVP
+WORLD_TYPE_RETRO_PVP_ENFORCED = WORLDTYPE_RETRO_HARDCORE
 
 function doCombat(cid, combat, var)
 	local line = debug.getinfo(2).currentline
@@ -1464,8 +1467,6 @@ function setGlobalStorageValue(key, value)
 	Game.setStorageValue(key, value)
 	return true
 end
-
-getWorldType = Game.getWorldType
 
 numberToVariant = Variant
 stringToVariant = Variant
