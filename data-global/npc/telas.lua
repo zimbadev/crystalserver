@@ -113,8 +113,75 @@ local function mission10GetOrder(kv)
 	return order
 end
 
-local TheNewFrontier = Storage.Quest.U8_54.TheNewFrontier
+-- Shadows of Yalahar
+local SOY_KV_SCOPE = "shadows-of-yalahar"
+local MISSION10_ORDER_KEY = "mission10-order"
+local MISSION10_INDEX_KEY = "mission10-index"
+local MISSION10_STATE_KEY = "mission10-state"
+
+local mission10Items = {
+	deepcrystal = {
+		itemId = 9240,
+		assign = "According to dwarven miners you might find the deep crystal somewhere in the depths under Ab'Dendriel. I have no idea where though, or even how to get there.",
+		deliver = "I truly hope this is a deep crystal. I have to admit, all those crystals look the same to me.",
+	},
+	darkessence = {
+		itemId = 9238,
+		assign = "One of the more unpleasant components that I need is some dark essence. Some of my colleagues believe that it sometimes condenses in the depths beneath the cursed town of Drefia in the desert of the Daramian continent.",
+		deliver = "By the Gods! Handle that dark essence with care! Didn't I mention it might explode? Ooops, I probably forgot to tell you! Well, whatever, I'll put it in a safe place for now. Thank you for your efforts my friend.",
+	},
+	shadoworb = {
+		itemId = 9237,
+		assign = "One of the components is a shadow orb. So far, I have had no luck acquiring one. I even tried one of my more dubious contacts but he refused, saying that he would only mess with the guys in the dark cathedral if he had a death wish'. I think if you find this dark cathedral you might find a shadow orb.",
+		deliver = "Ah, a perfect shadow orb! This is exactly what we need.",
+	},
+	bloodkiss = {
+		itemId = 9241,
+		assign = "Some of the elves of Shadowthorn cultivate a plant known as bloodkiss. I need one sample for the ritual.",
+		deliver = "What a beautiful flower. A shame that we have to destroy it in the ritual.",
+	},
+	wormqueentooth = {
+		itemId = 9239,
+		assign = "I am convinced that the tooth from a long dead rotworm queen will make an apt replacement for one of the more exotic ingredients in the Yalahari ritual. The books in the Edron academy suggest that the most likely place to find one might be deeper Fibula.",
+		deliver = "My, this rotworm tooth looks old. But the older the better. It will certainly be sufficient for our ritual.",
+	},
+	animalfetish = {
+		itemId = 9236,
+		assign = "One of the components could easily be substituted by an animal fetish. I have heard that the orcs in the Orcland use them to tame their war wolves. That's where you should start looking.",
+		deliver = "Phew. That fetish stinks. I'd better put it into some sort of container.",
+	},
+}
+local mission10ItemKeys = { "wormqueentooth", "shadoworb", "bloodkiss", "animalfetish", "darkessence", "deepcrystal" }
+
+local function mission10RandomItem()
+	local pool = {}
+	for i, key in ipairs(mission10ItemKeys) do
+		pool[i] = key
+	end
+
+	for i = #pool, 2, -1 do
+		local j = math.random(i)
+		pool[i], pool[j] = pool[j], pool[i]
+	end
+
+	return { pool[1], pool[2], pool[3] }
+end
+
+local function mission10GetOrder(kv)
+	local orderValue = kv:get(MISSION10_ORDER_KEY)
+	if not orderValue then
+		return nil
+	end
+
+	local order = {}
+	for itemKey in orderValue:gmatch("[^,]+") do
+		order[#order + 1] = itemKey
+	end
+	return order
+end
+
 local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
+
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
 	local playerId = player:getId()
@@ -123,26 +190,8 @@ local function creatureSayCallback(npc, creature, type, message)
 		return false
 	end
 
-	if MsgContains(message, "farmine") and player:getStorageValue(TheNewFrontier.Questline) == 14 then
-		if player:getStorageValue(TheNewFrontier.Mission05.Telas) == 1 then
-			npcHandler:say("I have heard only little about this mine. I am a bit absorbed in my studies. But what does this mine have to do with me?", npc, creature)
-			npcHandler:setTopic(playerId, 1)
-		else
-			npcHandler:say("You are starting this discussion again? Why should I listen to you this time, do you have anything to convince me to let you even try?", npc, creature)
-			npcHandler:setTopic(playerId, 2)
-		end
-	elseif (MsgContains(message, "reason") or MsgContains(message, "flatter")) and player:getStorageValue(TheNewFrontier.Mission05.TelasKeyword) <= 2 and player:getStorageValue(TheNewFrontier.Mission05.Telas) == 1 then
-		if npcHandler:getTopic(playerId) == 1 then
-			if MsgContains(message, "reason") and player:getStorageValue(TheNewFrontier.Mission05.TelasKeyword) == 1 then
-				npcHandler:say("Well it sounds like a good idea to test my golems in some real environment. I think it is acceptable to send some of them to Farmine.", npc, creature)
-				player:setStorageValue(TheNewFrontier.Mission05.Telas, 3)
-			elseif MsgContains(message, "flatter") and player:getStorageValue(TheNewFrontier.Mission05.TelasKeyword) == 2 then
-				npcHandler:say("Well, of course my worker golems are quite usefull and it might indeed be a good idea to see who they operate on realistic conditions. I will send some to farmine soon.", npc, creature)
-				player:setStorageValue(TheNewFrontier.Mission05.Telas, 3)
-			end
-			player:setStorageValue(TheNewFrontier.Mission05.TelasKeyword, 3)
-		end
-	elseif MsgContains(message, "mission") then
+	-- Shadows of Yalahar
+	if MsgContains(message, "mission") then
 		-- Mission 01
 		if player:getStorageValue(ShadowsOfYalahar.Questline) < 1 then
 			npcHandler:say({
@@ -476,7 +525,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(ShadowsOfYalahar.Door_11, 1)
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 19 then
 			npcHandler:say("Ah, yes. My instruments tell me you have taken the shower! Are you ready to receive the amplifying charge?", npc, creature)
-			npcHandler:setTopic(playerId, 3)
+			npcHandler:setTopic(playerId, 4)
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 20 then
 			if player:getItemCount(9255) >= 1 then
 				npcHandler:say("The head! You've got it! Incredible! Now we have everything we need! Give me a Tibian day to prepare everything for the activation process, then meet me here again.", npc, creature)
@@ -556,14 +605,9 @@ local function creatureSayCallback(npc, creature, type, message)
 				"It's even more of a marvel than I had hoped for! Absolutely fascinating! I will run a series of tests and .. and .. there is so much to be done. ...",
 				"It seems my work has only just begun!",
 			}, npc, creature)
-			npchandler:setTopic(playerId, 0)
+			npcHandler:setTopic(playerId, 0)
 		end
-	elseif MsgContains(message, "plea") and player:getStorageValue(TheNewFrontier.Mission05.TelasKeyword) == 3 and player:getStorageValue(TheNewFrontier.Mission05.Telas) == 1 then
-		if npcHandler:getTopic(playerId) == 1 then
-			npcHandler:say("Well, if the situation is that desperate I think it is possible to send some of the golems to help the poor dwarfs out of their misery.", npc, creature)
-			player:setStorageValue(TheNewFrontier.Mission05.Telas, 3)
-		end
-	elseif MsgContains(message, "yes") then
+	elseif MsgContains(message, "yes") and (player:getStorageValue(ShadowsOfYalahar.Questline) == 17 or npcHandler:getTopic(playerId) == 4) then
 		if player:getStorageValue(ShadowsOfYalahar.Questline) == 17 then
 			local kv = player:kv():scoped(SOY_KV_SCOPE)
 			local state = kv:get(MISSION10_STATE_KEY)
@@ -576,11 +620,38 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:say(currentItem.assign, npc, creature)
 				kv:set(MISSION10_STATE_KEY, "collecting")
 			end
-		elseif npcHandler:getTopic(playerId) == 2 then
-			if player:getStorageValue(TheNewFrontier.Mission05.Telas) == 2 and player:removeItem(10027, 1) then
-				npcHandler:say("Oh how nice of you. I might have misjudged you. So let us return to this matter of worker golems. Do you have any better arguments this time?", npc, creature)
-				player:setStorageValue(TheNewFrontier.Mission05.Telas, 1)
+		elseif npcHandler:getTopic(playerId) == 4 then
+			if player:getStorageValue(ShadowsOfYalahar.Mission11) == 2 then
+				npcHandler:say("It's done! I really hope that will be enough to enter the complex. It is probably somewhere in the underground of Fenrock. I have no idea what you might find there but look for a golem's head and bring it to me.", npc, creature)
+				player:setStorageValue(ShadowsOfYalahar.Mission11, 3) -- Finish Mission 11
+				player:setStorageValue(ShadowsOfYalahar.Mission12, 1) -- Start Mission 12
+				player:setStorageValue(ShadowsOfYalahar.Questline, 20)
+			else
+				npcHandler:say("Come back after finish your assignment.", npc, creature)
+				npcHandler:setTopic(playerId, 0)
+			end
+		end
+	end
+
+	-- The New Frontier
+	local persuasionReplies = {
+		flatter = "Well, of course my worker golems are quite useful and it might indeed be a good idea to see how they operate on realistic conditions. I will send some to Farmine soon.",
+		threaten = "Threatening me will get you nowhere, but I admire the boldness. Very well, let us see how my golems fare in Farmine.",
+		bluff = "Faces on stomachs and golden eggs, you say? Preposterous! Still, if there is any truth to it, my golems should be there to study it. I'll send them.",
+		impress = "I must admit, the scale of this whole excavation is rather impressive. Very well, I'll send some of my golems to assist.",
+		reason = "Well it sounds like a good idea to test my golems in some real environment. I think it is acceptable to send some of them to Farmine.",
+		plea = "Well, if the situation is that desperate I think it is possible to send some of the golems to help the poor dwarfs out of their misery.",
+	}
+	local persuasionKeywords = { "flatter", "threaten", "bluff", "impress", "reason", "plea" }
+
+	if MsgContains(message, "farmine") and player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas) < 3 then
+		if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 then
+			if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas) == 1 then
+				npcHandler:say("I have heard only little about this mine. I am a bit absorbed in my studies. But what does this mine have to do with me?", npc, creature)
 				npcHandler:setTopic(playerId, 1)
+			else
+				npcHandler:say("You are starting this discussion again? Why should I listen to you this time, do you have anything to convince me to let you even try?", npc, creature)
+				npcHandler:setTopic(playerId, 2)
 			end
 		elseif npcHandler:getTopic(playerId) == 3 then
 			if player:getStorageValue(ShadowsOfYalahar.Mission11) == 2 then
@@ -593,26 +664,62 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		end
-	else
-		if player:getStorageValue(TheNewFrontier.Questline) == 14 and player:getStorageValue(TheNewFrontier.Mission05.Telas) == 1 then
+	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 2 then
+		if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 and player:removeItem(10027, 1) then
+			npcHandler:say("Oh how nice of you. I might have misjudged you. So let us return to this matter of worker golems. Do you have any better arguments this time?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 1)
+			npcHandler:setTopic(playerId, 3)
+		else
 			npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
-			player:setStorageValue(TheNewFrontier.Mission05.Telas, 2)
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 2)
+			npcHandler:setTopic(playerId, 0)
 		end
+	elseif MsgContains(message, "flatter") or MsgContains(message, "threaten") or MsgContains(message, "bluff") or MsgContains(message, "impress") or MsgContains(message, "reason") or MsgContains(message, "plea") then
+		if npcHandler:getTopic(playerId) == 1 then
+			if player:removeItem(10027, 1) then
+				for _, keyword in ipairs(persuasionKeywords) do
+					if MsgContains(message, keyword) then
+						npcHandler:say(persuasionReplies[keyword], npc, creature)
+						break
+					end
+				end
+				player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 3)
+			else
+				npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
+				player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 2)
+			end
+			npcHandler:setTopic(playerId, 0)
+		elseif npcHandler:getTopic(playerId) == 3 then
+			for _, keyword in ipairs(persuasionKeywords) do
+				if MsgContains(message, keyword) then
+					npcHandler:say(persuasionReplies[keyword], npc, creature)
+					break
+				end
+			end
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.Telas, 3)
+			npcHandler:setTopic(playerId, 0)
+		end
+	elseif MsgContains(message, "no") and (npcHandler:getTopic(playerId) == 1 or npcHandler:getTopic(playerId) == 2) then
+		npcHandler:say("Come back when you find any information.", npc, creature)
+		npcHandler:setTopic(playerId, 0)
 	end
+
 	return true
 end
 
 local function onTradeRequest(npc, creature)
 	local player = Player(creature)
 	local kv = player:kv():scoped(SOY_KV_SCOPE)
+
 	if not kv:get("telas-trade", true) then
 		npcHandler:say("I have nothing to trade with you.", npc, creature)
 		return false
 	end
+
 	return true
 end
 
-npcHandler:setMessage(MESSAGE_GREET, "Hello!")
+npcHandler:setMessage(MESSAGE_GREET, "Hello! Sorry I'm a bit busy.")
 npcHandler:setCallback(CALLBACK_ON_TRADE_REQUEST, onTradeRequest)
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)

@@ -570,7 +570,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		elseif npcHandler:getTopic(playerId) == 34 then
 			if player:removeItem(12510, 1) then
 				npcHandler:say("Marvellous! You brought a giant smith hammer for the explorer society!", npc, creature)
-				player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.GiantSmithHammer.Hamer, 2)
+				player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.GiantSmithHammer.Hammer, 2)
 				npcHandler:setTopic(playerId, 0)
 			else
 				npcHandler:say("No you don't.", npc, creature)
@@ -636,6 +636,13 @@ end
 npcHandler:setMessage(MESSAGE_GREET, "Greetings, what can I do for you?")
 npcHandler:setCallback(CALLBACK_ON_TRADE_REQUEST, onTradeRequest)
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
+
+keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I am the local representative of the explorer society." })
+keywordHandler:addKeyword({ "explorer society" }, StdModule.say, { npcHandler = npcHandler, text = "Our noble society is dedicated to exploring the unknown. No location is too remote for our members to travel there ... No beast is too wild to be hunted. No treasure buried too deep to be unearthed ... Only the most dedicated and fearless adventurers may join our ranks." })
+keywordHandler:addKeyword({ "base" }, StdModule.say, { npcHandler = npcHandler, text = "Currently we maintain public bases in Port Hope and Northport." })
+keywordHandler:addKeyword({ "portals" }, StdModule.say, { npcHandler = npcHandler, text = "The portals should be ready to be used now. If you have an orichalcum pearl with you, enter the portal." })
+keywordHandler:addKeyword({ "parchment" }, StdModule.say, { npcHandler = npcHandler, text = "The examination of scrolls with lizard writings is a valuable source of information." })
+keywordHandler:addKeyword({ "scroll lizard" }, StdModule.say, { npcHandler = npcHandler, text = "The examination of scrolls with lizard writings is a valuable source of information." })
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 npcConfig.shop = {
