@@ -98,7 +98,7 @@ suite<"account"> accountTest = [] {
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.getAccountType(), AccountType::ACCOUNT_TYPE_GOD));
 
-		accountRepository.addAccount("crystal2@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GAMEMASTER });
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GAMEMASTER });
 
 		expect(eqEnum(acc.reload(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.getAccountType(), AccountType::ACCOUNT_TYPE_GAMEMASTER));
