@@ -104,6 +104,23 @@ suite<"account"> accountTest = [] {
 		expect(eqEnum(acc.getAccountType(), AccountType::ACCOUNT_TYPE_GAMEMASTER));
 	};
 
+	test("Account::reload sees an account rewritten under another descriptor") = [&injectionFixture] {
+		auto [accountRepository] = injectionFixture.get<AccountRepository>();
+
+		Account acc { 1 };
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+
+		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
+
+		// Reusing id 1 must replace the stored account rather than leave a second
+		// one behind, which loadByID would then resolve by unspecified iteration
+		// order — passing on one platform and failing on another.
+		accountRepository.addAccount("crystal2@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GAMEMASTER });
+
+		expect(eqEnum(acc.reload(), AccountErrors_t::Ok));
+		expect(eqEnum(acc.getAccountType(), AccountType::ACCOUNT_TYPE_GAMEMASTER));
+	};
+
 	test("Account::save returns error if not yet loaded") = [] {
 		expect(eqEnum(Account { 1 }.save(), AccountErrors_t::NotInitialized));
 	};
