@@ -176,13 +176,21 @@ void DatabaseManager::registerDatabaseConfig(const std::string &config, int32_t 
 
 	int32_t tmp;
 
+	// `db_version` describes the schema, not a world, and is written by the migration
+	// runner before any world is loaded (getCurrentWorld() is still the default, id 0).
+	// It must stay world-independent, matching how getDatabaseConfig reads it back.
+	const bool isDatabaseVersion = config == "db_version";
+
 	if (!getDatabaseConfig(config, tmp)) {
-		query = fmt::format("INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ({}, {}, {})", db.escapeString(config), value, g_game().worlds().getCurrentWorld()->id);
+		if (isDatabaseVersion) {
+			query = fmt::format("INSERT INTO `server_config` (`config`, `value`) VALUES ({}, {})", db.escapeString(config), value);
+		} else {
+			query = fmt::format("INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ({}, {}, {})", db.escapeString(config), value, g_game().worlds().getCurrentWorld()->id);
+		}
+	} else if (isDatabaseVersion) {
+		query = fmt::format("UPDATE `server_config` SET `value` = {} WHERE `config` = {}", value, db.escapeString(config));
 	} else {
 		query = fmt::format("UPDATE `server_config` SET `value` = {} WHERE `world_id` = {} AND `config` = {}", value, g_game().worlds().getCurrentWorld()->id, db.escapeString(config));
-		if (strcasecmp(config.c_str(), "db_version")) {
-			query = fmt::format("UPDATE `server_config` SET `value` = {} WHERE `config` = {}", value, db.escapeString(config));
-		}
 	}
 
 	db.executeQuery(query);
