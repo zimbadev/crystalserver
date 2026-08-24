@@ -36,11 +36,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, macos-15]
+        # macos-14 defaults to Xcode 15.4, whose clang predates P0960
+        # (parenthesized aggregate init) and fails on make_shared/emplace_back of
+        # plain structs. Nothing in the tree needs it, so the matrix stays on 15.
+        os: [macos-15]
         buildtype: [macos-release, macos-debug]
         include:
-          - os: macos-14
-            triplet: arm64-osx
           - os: macos-15
             triplet: arm64-osx
 
