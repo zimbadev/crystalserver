@@ -60,13 +60,17 @@ local function greetCallback(npc, creature)
 	local health = player:getHealth()
 	local lowHealth = health < 65
 	local poisoned = player:getCondition(CONDITION_POISON)
-	if lowHealth or poisoned then
+	local burning = player:getCondition(CONDITION_FIRE)
+	if lowHealth or poisoned or burning then
 		npcHandler:setMessage(MESSAGE_GREET, "Hello, |PLAYERNAME|! You are looking really bad. Let me heal your wounds. It's my job after all.")
 		if lowHealth then
 			player:addHealth(65 - health)
 		end
 		if poisoned then
 			player:removeCondition(CONDITION_POISON)
+		end
+		if burning then
+			player:removeCondition(CONDITION_FIRE)
 		end
 		player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
 	else
@@ -131,24 +135,32 @@ keywordHandler:addAliasKeyword({ "wolves" })
 keywordHandler:addKeyword({ "adventure" }, StdModule.say, { npcHandler = npcHandler, text = "I can see a bright future for you... you will soon embark on a very big adventure and explore the world of {Tibia} - maybe even influence history!" })
 keywordHandler:addAliasKeyword({ "explore" })
 
-keywordHandler:addKeyword({ "heal" }, StdModule.say, { npcHandler = npcHandler, text = "You are poisoned. I will help you." }, function(player)
-	return player:getCondition(CONDITION_POISON)
-end, function(player)
+keywordHandler:addKeyword({ "heal" }, function(npc, player, message, keywords, parameters, node)
 	local health = player:getHealth()
-	if health < 65 then
-		player:addHealth(65 - health)
+	local function healTo(amount)
+		if health < amount then
+			player:addHealth(amount - health)
+		end
 	end
-	player:removeCondition(CONDITION_POISON)
-	player:getPosition():sendMagicEffect(CONST_ME_MAGIC_RED)
-end)
-keywordHandler:addKeyword({ "heal" }, StdModule.say, { npcHandler = npcHandler, text = "Let me heal your wounds." }, function(player)
-	return player:getHealth() < 185 and player:getHealth() < player:getBaseMaxHealth()
-end, function(player)
-	local health = player:getHealth()
-	player:addHealth(185 - health)
-	player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
-end)
-keywordHandler:addKeyword({ "heal" }, StdModule.say, { npcHandler = npcHandler, text = "You aren't looking really bad, |PLAYERNAME|. I can only help in cases of real emergencies. Raise your health simply by eating {food}." })
+	if player:getCondition(CONDITION_FIRE) then
+		healTo(65)
+		player:removeCondition(CONDITION_FIRE)
+		player:getPosition():sendMagicEffect(CONST_ME_MAGIC_GREEN)
+		npcHandler:say("You are burning. Let me quench those flames.", npc, player)
+	elseif player:getCondition(CONDITION_POISON) then
+		healTo(65)
+		player:removeCondition(CONDITION_POISON)
+		player:getPosition():sendMagicEffect(CONST_ME_MAGIC_RED)
+		npcHandler:say("You are poisoned. I will help you.", npc, player)
+	elseif health < 185 and health < player:getBaseMaxHealth() then
+		player:addHealth(185 - health)
+		player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+		npcHandler:say("Let me heal your wounds.", npc, player)
+	else
+		npcHandler:say("You aren't looking really bad, |PLAYERNAME|. I can only help in cases of real emergencies. Raise your health simply by eating {food}.", npc, player)
+	end
+	return true
+end, {})
 
 -- Names
 keywordHandler:addKeyword({ "obi" }, StdModule.say, { npcHandler = npcHandler, text = "Obi's {shop} is to the north-east of this humble temple. He sells {weapons}, and his granddaughter {Dixi} sells {armor} and {shields} upstairs." })

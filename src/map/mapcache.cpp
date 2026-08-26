@@ -98,12 +98,10 @@ std::shared_ptr<Item> MapCache::createItem(const std::shared_ptr<BasicItem> &Bas
 		item->setItemCount(1);
 	}
 
-	if (item->canDecay()) {
-		item->startDecaying();
-	}
-
 	item->setLoadedFromMap(true);
-	item->setDecayDisabled(Item::items[item->getID()].decayTo != -1);
+	const bool hasValidDecay = Item::items[item->getID()].decayTo != -1;
+	item->setDecayDisabled(hasValidDecay && item->isMovable());
+
 	return item;
 }
 
@@ -146,11 +144,19 @@ std::shared_ptr<Tile> MapCache::getOrCreateTileFromCache(const std::shared_ptr<F
 	}
 
 	if (cachedTile->ground != nullptr) {
-		tile->internalAddThing(createItem(cachedTile->ground, pos));
+		const auto &groundItem = createItem(cachedTile->ground, pos);
+		tile->internalAddThing(groundItem);
+		if (groundItem && groundItem->canDecay()) {
+			groundItem->startDecaying();
+		}
 	}
 
 	for (const auto &BasicItemd : cachedTile->items) {
-		tile->internalAddThing(createItem(BasicItemd, pos));
+		const auto &tileItem = createItem(BasicItemd, pos);
+		tile->internalAddThing(tileItem);
+		if (tileItem && tileItem->canDecay()) {
+			tileItem->startDecaying();
+		}
 	}
 
 	tile->setFlag(static_cast<TileFlags_t>(cachedTile->flags));

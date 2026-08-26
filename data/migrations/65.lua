@@ -1,5 +1,5 @@
 function onUpdateDatabase()
-	logger.info("Updating database to version 64 (feat: char bazaar auction flag on players)")
+	logger.info("Updating database to version 65 (feat: char bazaar auction flag on players)")
 
 	if not db.query([[
 		ALTER TABLE `players`
