@@ -2885,6 +2885,14 @@ ChestUnique = {
 		weight = 2.00,
 		questName = "golem-wrench",
 	},
+	[6340] = {
+		useKV = true,
+		itemId = 2473,
+		itemPos = { x = 32576, y = 31572, z = 110 },
+		reward = { { 9308, 1 } }, -- Nautical Map
+		weight = 8.19,
+		questName = "nautical-map",
+	},
 	-- Reward of others scrips files (varied rewards)
 	-- The First dragon Quest
 	-- Treasure chests (data\scripts\actions\quests\first_dragon\treasure_chests.lua)

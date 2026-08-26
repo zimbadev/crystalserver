@@ -7550,5 +7550,103 @@ if not Quests then
 				},
 			},
 		},
+		[58] = {
+			name = "The Isle Of Evil",
+			startStorageId = Storage.Quest.U8_5.TheIsleOfEvil.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Hired",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission13,
+					missionId = 11036,
+					startValue = 0,
+					endValue = 1,
+					description = "You are hired .. sort of. Speak to Rapanaio about your first mission to help him.",
+				},
+				[2] = {
+					name = "Mission 01: Just A Fishing Trip",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission01,
+					missionId = 11037,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio wants a mechanical fish. Travel to sewers of Yalahar and use your mechanical fishing rod along with some nails as bait to tactch one. Return that fish to Rapanaio for examination.You have delivered a mechanical fish to Rapanaio and are ready for your next mission.",
+						[2] = "You have delivered the mechanical fish to Rapanaio.",
+					},
+				},
+				[3] = {
+					name = "Mission 02: A Potent Fuel",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission02,
+					missionId = 11038,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio needs 10 vials filled with rum as fuel for his ominous invention.",
+						[2] = "You have delivered 10 instances of rum to Rapanaio... and pray he actually saves it as fuel.",
+					},
+				},
+				[4] = {
+					name = "Mission 03: Something Sweet",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission03,
+					missionId = 11039,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio urgently wants one vial of fruit juice. You better hurry, else his invention might be in danger.",
+						[2] = "Rapanaio got the juice he requested just in time... to quench his thirst.",
+					},
+				},
+				[5] = {
+					name = "Mission 04: The Technomancer's Machine",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission04,
+					missionId = 11040,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "Rapanaio has asked you to get him a machina from his old acquaintance Scutty of the technomancers' guild in Kazordoon.",
+						[2] = "Scutty asked you to scared away 6 carrion worms. Take caro to don't hit his ordinary worms!",
+						[3] = "You have gotten the machine from Scutty and can deliver it to Rapanaio.",
+						[4] = "You received the machine from Scutty. Go deliver it to Rapanaio.",
+						[5] = "You have delivered the machine from Scutty to Rapanaio.",
+					},
+				},
+				[6] = {
+					name = "Mission 05: The Map To Evil",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission05,
+					missionId = 11041,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "Rapanaio needs a nautical map from the Explorer Society. Ask about one at their base northeast of Carlin.",
+						[2] = "Mortimer advised you to look for the map in a cave to the east.",
+						[3] = "You have delivered the Nautical Map to Rapanaio.",
+					},
+				},
+				[7] = {
+					name = "Mission 06: The Secret",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission06,
+					missionId = 11042,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio has asked you to meet him downstairs where he will reveal his invention. Surely absolutely nothing can happen to you in some dwarf's cellar and you should be perfectly safe... probably.",
+						[2] = "You have now seen Rapanaio's invention - an underwater boat of dubious design. He has rather reluctantly transported you to the Isle of Evil. You should talk to him about the next step in his plan.",
+					},
+				},
+				[8] = {
+					name = "Mission 07: The Master Of Evil",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission07,
+					missionId = 11043,
+					startValue = 1,
+					endValue = 4,
+					states = {
+						[1] = "Now that you finally arrived on the Isle of Evil it's your duty to slay the master of this isle. Make sure to use his corpse to find prof of your accomplishment. Rapanaio will await your return.",
+						[2] = "You killed every threat on the island of evil. Talk to Rapanaio about it.",
+						[3] = "You have finally braved the perils of the Isle of Evil. Now you should follow Rapanaio's suggestion and speak to King Tibianus in Thais about that membership card.",
+						[4] = "You spoke with King Tibianus about the membership card.",
+					},
+				},
+			},
+		},
 	}
 end

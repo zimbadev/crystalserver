@@ -1057,6 +1057,30 @@ QuestDoorAction = {
 			{ x = 33249, y = 31797, z = 11 },
 		},
 	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Questline] = {
+		itemId = 7721,
+		itemPos = {
+			{ x = 32678, y = 31990, z = 14 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Door_04] = {
+		itemId = 7723,
+		itemPos = {
+			{ x = 32576, y = 31923, z = 12 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Door_05] = {
+		itemId = 1642,
+		itemPos = {
+			{ x = 32536, y = 31628, z = 8 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Door_06] = {
+		itemId = 1644,
+		itemPos = {
+			{ x = 32681, y = 31992, z = 14 },
+		},
+	},
 }
 
 QuestDoorUnique = {

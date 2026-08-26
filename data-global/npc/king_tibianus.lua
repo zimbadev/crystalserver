@@ -215,6 +215,21 @@ local function creatureSayCallback(npc, creature, type, message)
 		npcHandler:say("So you would like to donate 250.000.000 gold pieces which in return will entitle you to wear a unique boots?", npc, creature)
 		npcHandler:setTopic(playerId, 5)
 	end
+
+	-- The Isle of Evil
+	if MsgContains(message, "fan club membership card") and player:getStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Questline) == 15 then
+		npcHandler:say({
+			"Ah, A fan club premium membership card! You must be that intelligent fellow who wrote me all those flattering letters! Nice to finally meet my greatest admirer in person. Here, take this little token of appreciation. ...",
+			"And now if you will excuse me, I have to attend urgent matters of state.",
+		}, npc, creature)
+		player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission07, 4) -- Finish The Isle of Evil Quest
+		player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Questline, 16)
+		player:addItem(9389, 1) -- fan doll of King Tibianus
+		if not player:hasAchievement("King Tibianus Fan") then
+			player:addAchievement("King Tibianus Fan")
+		end
+		npcHandler:setTopic(playerId, 0)
+	end
 end
 
 local node1 = keywordHandler:addKeyword({ "promot" }, StdModule.say, {
