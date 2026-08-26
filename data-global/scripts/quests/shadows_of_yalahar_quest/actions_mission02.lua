@@ -20,9 +20,9 @@ local pillars = {
 	{ x = 32873, y = 31253, z = 11 },
 }
 
-local RED_PILLAR_ID = 9139
-local GREEN_PILLAR_IDS = { [9133] = true, [9134] = true, [9136] = true }
-local ALL_PILLAR_IDS = { 9133, 9134, 9136, 9139 }
+local RED_PILLAR_ID = { [9137] = true, [9138] = true, [9139] = true, [9140] = true }
+local GREEN_PILLAR_IDS = { [9133] = true, [9134] = true, [9135] = true, [9136] = true }
+local ALL_PILLAR_IDS = { 9133, 9134, 9135, 9136, 9137, 9138, 9139, 9140 }
 
 local FRONT_DIRECTION = { x = 0, y = -1 }
 
