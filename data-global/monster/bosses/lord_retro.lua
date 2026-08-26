@@ -79,7 +79,7 @@ monster.voices = {
 
 monster.loot = {
 	{ name = "crystal coin", chance = 96080, maxCount = 22 },
-	{ name = "Great Mana Potion", chance = 96080, maxCount = 52 },
+	{ id = 238, chance = 96080, maxCount = 52 }, -- great mana potion
 	{ name = "Great Spirit Potion", chance = 96080, maxCount = 52 },
 	{ name = "Platinum Coin", chance = 96080, maxCount = 152 },
 	{ name = "Great Spirit Potion", chance = 96080, maxCount = 52 },

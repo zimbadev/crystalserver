@@ -78,7 +78,9 @@ enum Resource_t : uint8_t {
 	RESOURCE_LESSER_FRAGMENT = 0x54,
 	RESOURCE_GREATER_FRAGMENT = 0x55,
 	RESOURCE_BOUNTY_POINTS = 0x56,
-	RESOURCE_SOULSEALS_POINTS = 0x57
+	RESOURCE_SOULSEALS_POINTS = 0x57,
+	RESOURCE_COIN_NORMAL = 0x5A,
+	RESOURCE_COIN_TRANSFERRABLE = 0x5B
 };
 
 enum CharmResource_t : uint8_t {
@@ -135,13 +137,14 @@ enum Stash_Actions_t : uint8_t {
 };
 
 struct HighscoreCharacter {
-	HighscoreCharacter(std::string name, uint64_t points, uint32_t id, uint32_t rank, uint16_t level, uint8_t vocation, std::string loyaltyTitle) :
+	HighscoreCharacter(std::string name, uint64_t points, uint32_t id, uint32_t rank, uint16_t level, uint8_t vocation, std::string worldName, std::string loyaltyTitle) :
 		name(std::move(name)),
 		points(points),
 		id(id),
 		rank(rank),
 		level(level),
 		vocation(vocation),
+		worldName(std::move(worldName)),
 		loyaltyTitle(std::move(loyaltyTitle)) { }
 
 	std::string name;
@@ -150,6 +153,7 @@ struct HighscoreCharacter {
 	uint32_t rank;
 	uint16_t level;
 	uint8_t vocation;
+	std::string worldName;
 	std::string loyaltyTitle;
 };
 

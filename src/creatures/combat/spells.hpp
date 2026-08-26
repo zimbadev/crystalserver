@@ -145,6 +145,8 @@ public:
 	void setSoulCost(uint32_t s);
 	[[nodiscard]] uint32_t getLevel() const;
 	void setLevel(uint32_t lvl);
+	[[nodiscard]] uint16_t getBasePower() const;
+	void setBasePower(uint16_t power);
 	[[nodiscard]] uint32_t getMagicLevel() const;
 	void setMagicLevel(uint32_t lvl);
 	[[nodiscard]] uint32_t getMana() const;
@@ -258,6 +260,7 @@ protected:
 	uint32_t secondaryGroupCooldown = 0;
 	uint32_t level = 0;
 	uint32_t magLevel = 0;
+	uint16_t basePower = 0;
 	int32_t range = -1;
 
 	uint16_t m_spellId = 0;
@@ -296,7 +299,7 @@ private:
 class InstantSpell final : public Spell {
 public:
 	InstantSpell();
-	bool playerCastInstant(const std::shared_ptr<Player> &player, std::string &param) const;
+	bool playerCastInstant(const std::shared_ptr<Player> &player, std::string &param, const Position &to = {}) const;
 
 	bool castSpell(const std::shared_ptr<Creature> &creature) override;
 	bool castSpell(const std::shared_ptr<Creature> &creature, const std::shared_ptr<Creature> &target) override;
@@ -311,6 +314,8 @@ public:
 	void setHasPlayerNameParam(bool p);
 	[[nodiscard]] bool getNeedDirection() const;
 	void setNeedDirection(bool n);
+	[[nodiscard]] bool getNeedPosition() const;
+	void setNeedPosition(bool n);
 	[[nodiscard]] bool getNeedCasterTargetOrDirection() const;
 	void setNeedCasterTargetOrDirection(bool d);
 	[[nodiscard]] bool getBlockWalls() const;
@@ -320,6 +325,7 @@ public:
 
 private:
 	bool needDirection = false;
+	bool needPosition = false;
 	bool hasParam = false;
 	bool hasPlayerNameParam = false;
 	bool checkLineOfSight = true;

@@ -42,6 +42,7 @@
 #include "game/scheduling/dispatcher.hpp"
 #include "game/scheduling/events_scheduler.hpp"
 #include "game/scheduling/save_manager.hpp"
+#include "game/worlds/gameworlds.hpp"
 #include "game/zones/zone.hpp"
 #include "io/io_bosstiary.hpp"
 #include "io/io_wheel.hpp"
@@ -88,6 +89,7 @@
 #include <appearances.pb.h>
 
 std::vector<std::weak_ptr<Creature>> checkCreatureLists[EVENT_CREATURECOUNT];
+size_t checkCreatureSizes[EVENT_CREATURECOUNT] = {}; // Track sizes for reserve
 
 namespace {
 	bool isBountyHighscoreCategory(const std::string &categoryName) {
@@ -267,6 +269,14 @@ Game::Game() {
 	offlineTrainingWindow.defaultEscapeButton = 1;
 	offlineTrainingWindow.defaultEnterButton = 0;
 	offlineTrainingWindow.priority = true;
+
+	m_worldTypesNames = {
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_OPEN), "Open PvP" },
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_OPTIONAL), "Optional PvP" },
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_HARDCORE), "Hardcore PvP" },
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_RETRO_PVP), "Retro Open PvP" },
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_RETRO_HARDCORE), "Retro Hardcore PvP" },
+	};
 
 	// Create instance of IOWheel to Game class
 	m_IOWheel = std::make_unique<IOWheel>();
@@ -488,6 +498,19 @@ Game &Game::getInstance() {
 	return inject<Game>();
 }
 
+// Worlds interface
+Worlds &Game::worlds() {
+	return m_worlds;
+}
+
+const Worlds &Game::worlds() const {
+	return m_worlds;
+}
+
+const std::unordered_map<uint8_t, std::string> &Game::getWorldTypeNames() const {
+	return m_worldTypesNames;
+}
+
 void Game::resetMonsters() const {
 	for (const auto &[monsterId, monster] : getMonsters()) {
 		monster->clearTargetList();
@@ -505,11 +528,16 @@ void Game::resetNpcs() const {
 
 void Game::loadBoostedCreature() {
 	auto &db = Database::getInstance();
-	const auto result = db.storeQuery("SELECT * FROM `boosted_creature`");
+	const std::string &selectQuery = "SELECT `date`, `boostname`, `raceid`, `looktype`, `lookfeet`, `looklegs`, `lookhead`, `lookbody`, `lookaddons`, `lookmount` FROM `boosted_creature`";
+	auto result = db.storeQuery(selectQuery);
 	if (!result) {
-		g_logger().warn("[Game::loadBoostedCreature] - "
-		                "Failed to detect boosted creature database. (CODE 01)");
-		return;
+		db.storeQuery("INSERT INTO `boosted_creature` (`boostname`, `date`, `raceid`) VALUES ('default', 0, 0)");
+
+		result = db.storeQuery(selectQuery);
+		if (!result) {
+			g_logger().warn("{} - Failed to detect boosted creature database. (CODE 01)", __FUNCTION__);
+			return;
+		}
 	}
 
 	const auto date = result->getNumber<uint16_t>("date");
@@ -544,45 +572,40 @@ void Game::loadBoostedCreature() {
 	}
 
 	if (selectedMonster.raceId == 0) {
-		g_logger().warn("[Game::loadBoostedCreature] - "
-		                "It was not possible to generate a new boosted creature->");
+		g_logger().warn("{} - It was not possible to generate a new boosted creature->", __FUNCTION__);
 		return;
 	}
 
 	const auto monsterType = g_monsters().getMonsterType(selectedMonster.name);
 	if (!monsterType) {
-		g_logger().warn("[Game::loadBoostedCreature] - "
-		                "It was not possible to generate a new boosted creature-> Monster '{}' not found.",
-		                selectedMonster.name);
+		g_logger().warn("{} - It was not possible to generate a new boosted creature-> Monster '{}' not found.", __FUNCTION__, selectedMonster.name);
 		return;
 	}
 
 	setBoostedName(selectedMonster.name);
 
-	auto query = std::string("UPDATE `boosted_creature` SET ")
-		+ "`date` = '" + std::to_string(ltm->tm_mday) + "',"
-		+ "`boostname` = " + db.escapeString(selectedMonster.name) + ","
-		+ "`looktype` = " + std::to_string(monsterType->info.outfit.lookType) + ","
-		+ "`lookfeet` = " + std::to_string(monsterType->info.outfit.lookFeet) + ","
-		+ "`looklegs` = " + std::to_string(monsterType->info.outfit.lookLegs) + ","
-		+ "`lookhead` = " + std::to_string(monsterType->info.outfit.lookHead) + ","
-		+ "`lookbody` = " + std::to_string(monsterType->info.outfit.lookBody) + ","
-		+ "`lookaddons` = " + std::to_string(monsterType->info.outfit.lookAddons) + ","
-		+ "`lookmount` = " + std::to_string(monsterType->info.outfit.lookMount) + ","
-		+ "`raceid` = '" + std::to_string(selectedMonster.raceId) + "'";
+	auto query = fmt::format(
+		"UPDATE `boosted_creature` SET `date` = '{}', `boostname` = {}, `looktype` = {}, `lookfeet` = {}, `looklegs` = {}, `lookhead` = {}, `lookbody` = {}, `lookaddons` = {}, `lookmount` = {}, `raceid` = {}",
+		std::to_string(ltm->tm_mday), db.escapeString(selectedMonster.name), std::to_string(monsterType->info.outfit.lookType), std::to_string(monsterType->info.outfit.lookFeet),
+		std::to_string(monsterType->info.outfit.lookLegs), std::to_string(monsterType->info.outfit.lookHead), std::to_string(monsterType->info.outfit.lookBody),
+		std::to_string(monsterType->info.outfit.lookAddons), std::to_string(monsterType->info.outfit.lookMount), std::to_string(selectedMonster.raceId)
+	);
 
 	if (!db.executeQuery(query)) {
-		g_logger().warn("[Game::loadBoostedCreature] - "
-		                "Failed to detect boosted creature database. (CODE 02)");
+		g_logger().warn("{} - Failed to detect boosted creature database. (CODE 02)", __FUNCTION__);
 	}
 }
 
 void Game::start(ServiceManager* manager) {
+	const std::shared_ptr<World> &currentWorld = worlds().getCurrentWorld();
+	if (!currentWorld) {
+		throw std::runtime_error("No world found to start the game server.");
+	}
 	// Game client protocols
-	manager->add<ProtocolGame>(static_cast<uint16_t>(g_configManager().getNumber(GAME_PORT)));
+	manager->add<ProtocolGame>(currentWorld->port);
 	manager->add<ProtocolLogin>(static_cast<uint16_t>(g_configManager().getNumber(LOGIN_PORT)));
 	// OT protocols
-	manager->add<ProtocolStatus>(static_cast<uint16_t>(g_configManager().getNumber(STATUS_PORT)));
+	manager->add<ProtocolStatus>(currentWorld->portStatus);
 
 	serviceManager = manager;
 
@@ -626,10 +649,6 @@ void Game::start(ServiceManager* manager) {
 
 GameState_t Game::getGameState() const {
 	return gameState;
-}
-
-void Game::setWorldType(WorldType_t type) {
-	worldType = type;
 }
 
 const std::unique_ptr<TeamFinder> &Game::getTeamFinder(const std::shared_ptr<Player> &player) const {
@@ -824,6 +843,51 @@ void Game::loadCustomMaps(const std::filesystem::path &customMapPath) {
 void Game::loadMap(const std::string &path, const Position &pos) {
 	lastMapLoadTime = OTSYS_TIME();
 	map.loadMap(path, false, false, false, false, false, pos);
+
+	const auto &area = map.getLastLoadedArea();
+	if (!area.valid) {
+		return;
+	}
+
+	// The client draws neighbouring floors shifted on x/y, so pad the box by
+	// the viewport plus the maximum floor shift.
+	constexpr int32_t paddingX = MAP_MAX_CLIENT_VIEW_PORT_X + 1 + MAP_MAX_LAYERS;
+	constexpr int32_t paddingY = MAP_MAX_CLIENT_VIEW_PORT_Y + 1 + MAP_MAX_LAYERS;
+
+	for (const auto &[playerId, player] : players) {
+		if (!player) {
+			continue;
+		}
+
+		const Position &playerPos = player->getPosition();
+		const auto posX = static_cast<int32_t>(playerPos.x);
+		const auto posY = static_cast<int32_t>(playerPos.y);
+		const auto posZ = static_cast<int32_t>(playerPos.z);
+
+		if (posX < area.minX - paddingX || posX > area.maxX + paddingX) {
+			continue;
+		}
+
+		if (posY < area.minY - paddingY || posY > area.maxY + paddingY) {
+			continue;
+		}
+
+		// Same floor range ProtocolGame::GetMapDescription walks through.
+		int32_t visibleMinZ, visibleMaxZ;
+		if (posZ > MAP_INIT_SURFACE_LAYER) {
+			visibleMinZ = posZ - MAP_LAYER_VIEW_LIMIT;
+			visibleMaxZ = std::min<int32_t>(MAP_MAX_LAYERS - 1, posZ + MAP_LAYER_VIEW_LIMIT);
+		} else {
+			visibleMinZ = 0;
+			visibleMaxZ = MAP_INIT_SURFACE_LAYER;
+		}
+
+		if (area.maxZ < visibleMinZ || area.minZ > visibleMaxZ) {
+			continue;
+		}
+
+		player->sendMapDescription(playerPos);
+	}
 }
 
 std::shared_ptr<Cylinder> Game::internalGetCylinder(const std::shared_ptr<Player> &player, const Position &pos) {
@@ -1015,7 +1079,7 @@ std::shared_ptr<Creature> Game::getCreatureByID(uint32_t id) {
 	} else if (id <= Npc::npcAutoID) {
 		return getNpcByID(id);
 	} else {
-		g_logger().warn("Creature with id {} not exists");
+		g_logger().warn("Creature with id {} does not exist", id);
 	}
 	return nullptr;
 }
@@ -1152,11 +1216,12 @@ std::shared_ptr<Player> Game::getPlayerByGUID(const uint32_t &guid, bool allowOf
 	if (guid == 0) {
 		return nullptr;
 	}
-	for (const auto &it : players) {
-		if (guid == it.second->getGUID()) {
-			return it.second;
-		}
+
+	auto it = playersByGUID.find(guid);
+	if (it != playersByGUID.end()) {
+		return it->second;
 	}
+
 	if (!allowOffline) {
 		return nullptr;
 	}
@@ -2245,6 +2310,9 @@ ReturnValue Game::internalMoveItem(std::shared_ptr<Cylinder> fromCylinder, std::
 	// check if we can add this item
 	ret = toCylinder->queryAdd(index, item, count, flags, actor);
 	if (ret == RETURNVALUE_NEEDEXCHANGE) {
+		if (!toItem) {
+			return RETURNVALUE_NOTPOSSIBLE;
+		}
 		// check if we can add it to source cylinder
 		ret = fromCylinder->queryAdd(fromCylinder->getThingIndex(item), toItem, toItem->getItemCount(), 0);
 		if (ret == RETURNVALUE_NOERROR) {
@@ -3458,7 +3526,7 @@ ReturnValue Game::collectRewardChestItems(const std::shared_ptr<Player> &player,
 	std::string lootedItemsMessage;
 	for (const auto &item : rewardItemsVector) {
 		// Stop if player not have free capacity
-		if (item && player->getCapacity() < item->getWeight()) {
+		if (item && player->getFreeCapacity() < item->getWeight()) {
 			player->sendCancelMessage(RETURNVALUE_NOTENOUGHCAPACITY);
 			break;
 		}
@@ -6958,7 +7026,12 @@ void Game::addCreatureCheck(const std::shared_ptr<Creature> &creature) {
 	}
 
 	g_dispatcher().addEvent([this, index = uniform_random(0, EVENT_CREATURECOUNT - 1), creature] {
+		// Reserve capacity to avoid frequent reallocations
+		if (checkCreatureLists[index].capacity() <= checkCreatureLists[index].size()) {
+			checkCreatureLists[index].reserve(checkCreatureLists[index].size() + 32);
+		}
 		checkCreatureLists[index].emplace_back(creature);
+		checkCreatureSizes[index]++;
 	},
 	                        "Game::addCreatureCheck");
 }
@@ -6974,13 +7047,23 @@ void Game::checkCreatures() {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	static size_t index = 0;
 
-	std::erase_if(checkCreatureLists[index], [this](const std::weak_ptr<Creature> &weak) {
+	auto &bucket = checkCreatureLists[index];
+
+	// Skip empty buckets early
+	if (bucket.empty()) {
+		index = (index + 1) % EVENT_CREATURECOUNT;
+		return;
+	}
+
+	// Manual loop for better control and tracking
+	size_t writeIndex = 0;
+	for (size_t i = 0; i < bucket.size(); ++i) {
+		const auto &weak = bucket[i];
 		if (const auto creature = weak.lock()) {
 			if (creature->creatureCheck && creature->isAlive()) {
 				creature->onThink(EVENT_CREATURE_THINK_INTERVAL);
 				if (creature->getMonster()) {
-					// The monster's onThink function runs asynchronously,
-					// meaning the target gets updated at a later time; therefore, we must delay the actions outlined below.
+					// Monster's onThink runs asynchronously, so delay attacking/conditions
 					g_dispatcher().addEvent([creature] {
 						if (creature->isAlive()) {
 							creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
@@ -6990,15 +7073,25 @@ void Game::checkCreatures() {
 					creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
 					creature->executeConditions(EVENT_CREATURE_THINK_INTERVAL);
 				}
-				return false;
+				// Keep entry (alive and active)
+				if (writeIndex != i) {
+					bucket[writeIndex] = std::move(bucket[i]);
+				}
+				writeIndex++;
+			} else {
+				creature->inCheckCreaturesVector = false;
 			}
-
-			creature->inCheckCreaturesVector = false;
 		}
+		// Dead/expired: don't increment writeIndex (remove entry)
+	}
 
-		return true;
-	});
+	// Shrink if too many empty slots
+	bucket.resize(writeIndex);
+	if (bucket.capacity() > 64 && bucket.size() < bucket.capacity() / 4) {
+		bucket.shrink_to_fit();
+	}
 
+	checkCreatureSizes[index] = writeIndex;
 	index = (index + 1) % EVENT_CREATURECOUNT;
 }
 
@@ -7147,6 +7240,20 @@ bool Game::combatBlockHit(CombatDamage &damage, const std::shared_ptr<Creature> 
 	if (targetPlayer) {
 		auto chance = targetPlayer->getDodgeChance();
 		if (chance > 0 && uniform_random(0, 10000) < chance || damage.hazardDodge) {
+			InternalGame::sendBlockEffect(BLOCK_DODGE, damage.primary.type, target->getPosition(), attacker);
+			targetPlayer->sendTextMessage(MESSAGE_ATTENTION, "You dodged an attack.");
+			return true;
+		}
+	}
+
+	// Vocation Adjustment: Paladin Divine Defiance — 15% chance to dodge any attack from a
+	// non-adjacent enemy (Chebyshev distance > 1 or a different floor). The Z check is mandatory
+	// so cross-floor ranged attackers are correctly treated as non-adjacent.
+	if (targetPlayer && attacker && targetPlayer->getStance() == STANCE_DIVINE_DEFIANCE) {
+		const Position &ap = attacker->getPosition();
+		const Position &tp = targetPlayer->getPosition();
+		const bool nonAdjacent = Position::getDistanceZ(ap, tp) != 0 || Position::getDistanceX(ap, tp) > 1 || Position::getDistanceY(ap, tp) > 1;
+		if (nonAdjacent && uniform_random(0, 10000) < 1500) {
 			InternalGame::sendBlockEffect(BLOCK_DODGE, damage.primary.type, target->getPosition(), attacker);
 			targetPlayer->sendTextMessage(MESSAGE_ATTENTION, "You dodged an attack.");
 			return true;
@@ -7511,6 +7618,20 @@ void Game::applyWheelOfDestinyHealing(CombatDamage &damage, const std::shared_pt
 			damage.secondary.value += attackerPlayer->wheel()->getStat(WheelStat_t::HEALING);
 		}
 
+		// Vocation Adjustment: Battle Healing now boosts the player's own spell/rune healing by +10%,
+		// tripled to +30% while wearing a shield. Gated to spell/rune heals via instantSpellName
+		// so potions, Mana-Buffer / Gift-of-Life survive-heals and the healingLink echo are not boosted.
+		if ((!damage.instantSpellName.empty() || !damage.runeSpellName.empty()) && attackerPlayer->wheel()->getInstant("Battle Healing")) {
+			const double battleHealingFactor = attackerPlayer->hasRealShield() ? 1.30 : 1.10;
+			const int32_t primaryBeforeBattleHeal = damage.primary.value;
+			damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * battleHealingFactor));
+			const int32_t secondaryBeforeBattleHeal = damage.secondary.value;
+			if (damage.secondary.value != 0) {
+				damage.secondary.value = static_cast<int32_t>(std::round(damage.secondary.value * battleHealingFactor));
+			}
+			g_logger().debug("[Battle Healing] Player: {}, Factor: {}, Primary: {} -> {}, Secondary: {} -> {}", attackerPlayer->getName(), battleHealingFactor, primaryBeforeBattleHeal, damage.primary.value, secondaryBeforeBattleHeal, damage.secondary.value);
+		}
+
 		if (damage.healingLink > 0) {
 			CombatDamage tmpDamage;
 			tmpDamage.primary.value = (damage.primary.value * damage.healingLink) / 100;
@@ -7520,11 +7641,36 @@ void Game::applyWheelOfDestinyHealing(CombatDamage &damage, const std::shared_pt
 
 		if (attackerPlayer->wheel()->getInstant("Blessing of the Grove")) {
 			damage.primary.value += (damage.primary.value * attackerPlayer->wheel()->checkBlessingGroveHealingByTarget(target)) / 100.;
+
+			// Vocation Adjustment: Blessing of the Grove lets heals critically heal, using the player's
+			// crit chance + crit extra damage (normal heals never crit — applyExtensions early-returns
+			// for COMBAT_HEALING). Roll on the already-boosted value; gate to real spell/rune heals.
+			if (damage.origin == ORIGIN_SPELL) {
+				const int32_t critChance = attackerPlayer->getSkillLevel(SKILL_CRITICAL_HIT_CHANCE);
+				const int32_t critExtra = attackerPlayer->getSkillLevel(SKILL_CRITICAL_HIT_DAMAGE);
+				if (critChance != 0 && (uniform_random(1, 100) * 100) <= critChance) {
+					const double critMult = 1.0 + static_cast<double>(critExtra) / 10000.0;
+					damage.primary.value = static_cast<int32_t>(damage.primary.value * critMult);
+					if (damage.secondary.value != 0) {
+						damage.secondary.value = static_cast<int32_t>(damage.secondary.value * critMult);
+					}
+					damage.critical = true;
+				}
+			}
 		}
 
 		if (attackerPlayer->wheel()->getInstant(WheelInstant_t::SANCTUARY)) {
 			const float sanctuaryBonus = attackerPlayer->wheel()->checkRevelationPerkSanctuary();
 			damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * sanctuaryBonus));
+
+			// Vocation Adjustment: Sanctuary additionally heals allies adjacent to the monk for +10%.
+			if (target && target != attackerPlayer) {
+				const Position &casterPos = attackerPlayer->getPosition();
+				const Position &allyPos = target->getPosition();
+				if (Position::getDistanceZ(casterPos, allyPos) == 0 && Position::getDistanceX(casterPos, allyPos) <= 1 && Position::getDistanceY(casterPos, allyPos) <= 1) {
+					damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * 1.10));
+				}
+			}
 		}
 	}
 }
@@ -7538,6 +7684,11 @@ void Game::applyWheelOfDestinyEffectsToDamage(CombatDamage &damage, const std::s
 	if (damage.damageMultiplier > 0) {
 		damage.primary.value += (damage.primary.value * (damage.damageMultiplier)) / 100.;
 		damage.secondary.value += (damage.secondary.value * (damage.damageMultiplier)) / 100.;
+	}
+
+	if (damage.damageReductionMultiplier > 0) {
+		damage.primary.value -= (damage.primary.value * damage.damageReductionMultiplier) / 100;
+		damage.secondary.value -= (damage.secondary.value * damage.damageReductionMultiplier) / 100;
 	}
 
 	if (attackerPlayer) {
@@ -7581,6 +7732,16 @@ void Game::applyWheelOfDestinyEffectsToDamage(CombatDamage &damage, const std::s
 			const float sanctuaryBonus = attackerPlayer->wheel()->checkRevelationPerkSanctuary();
 			damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * sanctuaryBonus));
 			damage.secondary.value = static_cast<int32_t>(std::round(damage.secondary.value * sanctuaryBonus));
+
+			// Vocation Adjustment: Sanctuary additionally deals +10% to enemies adjacent to the monk.
+			if (target && target != attackerPlayer) {
+				const Position &casterPos = attackerPlayer->getPosition();
+				const Position &enemyPos = target->getPosition();
+				if (Position::getDistanceZ(casterPos, enemyPos) == 0 && Position::getDistanceX(casterPos, enemyPos) <= 1 && Position::getDistanceY(casterPos, enemyPos) <= 1) {
+					damage.primary.value = static_cast<int32_t>(std::round(damage.primary.value * 1.10));
+					damage.secondary.value = static_cast<int32_t>(std::round(damage.secondary.value * 1.10));
+				}
+			}
 		}
 	}
 }
@@ -7596,6 +7757,31 @@ int32_t Game::applyHealthChange(const CombatDamage &damage, const std::shared_pt
 			if (overkillMultiplier <= targetPlayer->wheel()->getGiftOfLifeValue()) {
 				targetPlayer->wheel()->checkGiftOfLife();
 				targetHealth = target->getHealth();
+			}
+		}
+
+		// Vocation Adjustment: Mana Buffer (Sorcerer + Druid). If incoming damage would exceed the
+		// current HP, the overkill is drained from mana x8 (plus 25% of max mana at most once per 2s)
+		// and the player survives at 1 HP. If the mana cannot cover the cost, the player dies normally.
+		const auto &targetVocation = targetPlayer->getVocation();
+		if (targetVocation && (targetVocation->getBaseId() == VOCATION_SORCERER || targetVocation->getBaseId() == VOCATION_DRUID)
+		    && (damage.primary.value + damage.secondary.value) >= targetHealth) {
+			const int32_t overkill = (damage.primary.value + damage.secondary.value) - targetHealth + 1;
+			const bool taxReady = targetPlayer->getManaBufferTaxTime() <= OTSYS_TIME();
+			const int32_t manaCost = overkill * 8 + (taxReady ? static_cast<int32_t>(targetPlayer->getMaxMana() * 0.25) : 0);
+			if (manaCost > 0 && targetPlayer->getMana() >= static_cast<uint32_t>(manaCost)) {
+				CombatDamage manaDrain;
+				manaDrain.origin = ORIGIN_NONE;
+				manaDrain.primary.value = -manaCost;
+				manaDrain.primary.type = COMBAT_MANADRAIN;
+				if (g_game().combatChangeMana(targetPlayer, targetPlayer, manaDrain)) {
+					if (taxReady) {
+						targetPlayer->setManaBufferTaxTime(OTSYS_TIME() + 2000);
+					}
+					// Flag the survive; combatChangeHealth then clamps the drained damage to leave exactly 1 HP.
+					// (A survive-heal of `overkill` overshot to ~overkill HP and broke at the max-health cap.)
+					targetPlayer->setManaBufferSurvived(true);
+				}
 			}
 		}
 	}
@@ -7616,6 +7802,13 @@ static void applyImproveMonkHealing(CombatDamage &damage, const std::shared_ptr<
 		const float multiplier = 1.0f + (virtueSustainBonusPercent / 100.0f);
 
 		damage.primary.value = static_cast<int32_t>(damage.primary.value * multiplier);
+	}
+
+	// Vocation Adjustment: Monk virtue aura — a Druid near a party monk heals +12% (the druid carries
+	// the DRUID bit of its monk's aura; stacks with the Virtue Sustain bonus above). Gated to spell/rune
+	// heals so it does not buff health potions (which also flow through this path with no spell name).
+	if ((player->getMonkAuraVocMask() & (1u << VOCATION_DRUID)) && (!damage.instantSpellName.empty() || !damage.runeSpellName.empty())) {
+		damage.primary.value = static_cast<int32_t>(damage.primary.value * 1.12);
 	}
 }
 
@@ -7665,6 +7858,10 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 		realHealthChange = target->getHealth() - realHealthChange;
 
 		if (realHealthChange > 0 && !target->isInGhostMode()) {
+			// Vocation Adjustment: Blessing of the Grove critical heals show the critical effect on the heal.
+			if (damage.critical) {
+				addMagicEffect(targetPos, CONST_ME_CRITICAL_DAMAGE, attacker);
+			}
 			if (targetPlayer) {
 				targetPlayer->updateImpactTracker(COMBAT_HEALING, realHealthChange);
 			}
@@ -7824,6 +8021,79 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 			damage.primary.value *= target->getBuff(BUFF_DAMAGERECEIVED) / 100.;
 			damage.secondary.value *= target->getBuff(BUFF_DAMAGERECEIVED) / 100.;
 		}
+
+		// Vocation Adjustment: Combat Mastery (Knight wheel, reworked). Deal +1% damage per (12/10/8)%
+		// of the TARGET's missing HP (doubled with a two-handed weapon); take -1% per (12/10/8)% of
+		// OWN missing HP (doubled with a shield, reduction capped at 50%). Threshold 12/10/8 = stage 1/2/3.
+		if (damage.origin != ORIGIN_NONE && damage.primary.type != COMBAT_HEALING) {
+			if (attackerPlayer && target && target->getMaxHealth() > 0) {
+				const uint8_t stage = attackerPlayer->wheel()->getStage(WheelStage_t::COMBAT_MASTERY);
+				if (stage > 0) {
+					const int32_t threshold = stage >= 3 ? 8 : (stage >= 2 ? 10 : 12);
+					const int32_t targetMissingPct = ((target->getMaxHealth() - target->getHealth()) * 100) / target->getMaxHealth();
+					int32_t bonusPct = targetMissingPct / threshold;
+					const auto &weapon = attackerPlayer->getWeapon();
+					if (weapon && (weapon->getSlotPosition() & SLOTP_TWO_HAND)) {
+						bonusPct *= 2;
+					}
+					if (bonusPct > 0) {
+						damage.primary.value += (damage.primary.value * bonusPct) / 100.;
+						damage.secondary.value += (damage.secondary.value * bonusPct) / 100.;
+					}
+				}
+			}
+			if (targetPlayer && targetPlayer->getMaxHealth() > 0) {
+				const uint8_t stage = targetPlayer->wheel()->getStage(WheelStage_t::COMBAT_MASTERY);
+				if (stage > 0) {
+					const int32_t threshold = stage >= 3 ? 8 : (stage >= 2 ? 10 : 12);
+					const int32_t ownMissingPct = ((targetPlayer->getMaxHealth() - targetPlayer->getHealth()) * 100) / targetPlayer->getMaxHealth();
+					int32_t reductionPct = ownMissingPct / threshold;
+					if (targetPlayer->hasRealShield()) {
+						reductionPct *= 2;
+					}
+					if (reductionPct > 50) {
+						reductionPct = 50;
+					}
+					if (reductionPct > 0) {
+						damage.primary.value -= (damage.primary.value * reductionPct) / 100.;
+						damage.secondary.value -= (damage.secondary.value * reductionPct) / 100.;
+					}
+				}
+			}
+		}
+
+		// Vocation Adjustment: Monk virtue auras (interpretation A — a party member near a monk gets the
+		// buff for THEIR OWN vocation; the serene monk gets the union). Knight: -3% damage received.
+		// Paladin: +6% auto-attack (melee/ranged). Sorcerer: +6% spell & rune.
+		if (damage.origin != ORIGIN_NONE && damage.primary.type != COMBAT_HEALING) {
+			if (targetPlayer) {
+				if (targetPlayer->getMonkAuraVocMask() & (1u << VOCATION_KNIGHT)) {
+					damage.primary.value *= 0.97;
+					damage.secondary.value *= 0.97;
+				}
+				// Way of the Monk: a monk takes -2% per honoured shrine vs melee auto-attacks (capped 20%).
+				// 5 = monk base vocation id (per the serene-tick convention in checkImbuementsAndSereneStatus).
+				if (damage.origin == ORIGIN_MELEE && targetPlayer->getVocation() && targetPlayer->getVocation()->getBaseId() == 5) {
+					const int32_t shrineReduction = std::min<int32_t>(targetPlayer->getMonkShrineCount() * 2, 20);
+					if (shrineReduction > 0) {
+						damage.primary.value -= (damage.primary.value * shrineReduction) / 100.;
+						damage.secondary.value -= (damage.secondary.value * shrineReduction) / 100.;
+					}
+				}
+			}
+			if (attackerPlayer) {
+				const uint8_t auraMask = attackerPlayer->getMonkAuraVocMask();
+				if ((auraMask & (1u << VOCATION_PALADIN)) && (damage.origin == ORIGIN_MELEE || damage.origin == ORIGIN_RANGED)) {
+					damage.primary.value *= 1.06;
+					damage.secondary.value *= 1.06;
+				}
+				if ((auraMask & (1u << VOCATION_SORCERER)) && damage.origin == ORIGIN_SPELL) {
+					damage.primary.value *= 1.06;
+					damage.secondary.value *= 1.06;
+				}
+			}
+		}
+
 		auto healthChange = damage.primary.value + damage.secondary.value;
 		if (healthChange == 0) {
 			return true;
@@ -7882,14 +8152,19 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 		std::stringstream ss;
 
 		if (target->hasCondition(CONDITION_MANASHIELD) && damage.primary.type != COMBAT_UNDEFINEDDAMAGE) {
-			int32_t manaDamage = std::min<int32_t>(target->getMana(), healthChange);
 			uint32_t manaShield = target->getManaShield();
+			// Vocation Adjustment: Energy Ring (equipment manashield, getManaShield()==0) costs 2 mana
+			// per point of damage absorbed; the Magic Shield spell (buffered, >0) stays 1:1.
+			const int32_t manaCostPerDamage = (manaShield == 0) ? 2 : 1;
+			int32_t absorbedDamage = std::min<int32_t>(target->getMana() / manaCostPerDamage, healthChange);
+			int32_t manaDamage = absorbedDamage * manaCostPerDamage;
 			if (manaShield > 0) {
 				if (manaShield > manaDamage) {
 					target->setManaShield(manaShield - manaDamage);
 					manaShield = manaShield - manaDamage;
 				} else {
 					manaDamage = manaShield;
+					absorbedDamage = manaDamage; // spell path stays 1:1
 					target->removeCondition(CONDITION_MANASHIELD);
 					manaShield = 0;
 				}
@@ -7905,7 +8180,8 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 						if (healthChange == 0) {
 							return true;
 						}
-						manaDamage = std::min<int32_t>(target->getMana(), healthChange);
+						absorbedDamage = std::min<int32_t>(target->getMana() / manaCostPerDamage, healthChange);
+						manaDamage = absorbedDamage * manaCostPerDamage;
 					}
 				}
 
@@ -7972,7 +8248,7 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 					tmpPlayer->sendTextMessage(message);
 				}
 
-				damage.primary.value -= manaDamage;
+				damage.primary.value -= absorbedDamage;
 				if (damage.primary.value < 0) {
 					damage.secondary.value = std::max<int32_t>(0, damage.secondary.value + damage.primary.value);
 					damage.primary.value = 0;
@@ -8017,6 +8293,10 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 		}
 
 		targetHealth = applyHealthChange(damage, target);
+		if (targetPlayer && targetPlayer->consumeManaBufferSurvived()) {
+			// Mana Buffer absorbed the lethal hit into mana; drain only enough to leave exactly 1 HP.
+			realDamage = std::max<int32_t>(0, target->getHealth() - 1);
+		}
 		if (damage.primary.value >= targetHealth) {
 			damage.primary.value = targetHealth;
 			damage.secondary.value = 0;
@@ -8270,6 +8550,13 @@ void Game::applyOffensiveCharmRune(
 	const std::shared_ptr<Monster> &targetMonster, const std::shared_ptr<Player> &attackerPlayer, const std::shared_ptr<Creature> &target, const int32_t &realDamage
 ) const {
 	if (!targetMonster || !attackerPlayer) {
+		return;
+	}
+
+	// Vocation Adjustment charm double-proc fix: offensive charms only fire on the player's main
+	// attack target, never on collateral AoE tiles (AoE ammo/spells run this per creature).
+	const auto &lockedTarget = attackerPlayer->getAttackedCreature();
+	if (lockedTarget && target != lockedTarget) {
 		return;
 	}
 
@@ -8765,6 +9052,7 @@ void Game::checkImbuementsAndSereneStatus() {
 
 		if (mapPlayer->getSereneCooldown() > 0) {
 			mapPlayer->setSerene(true);
+			projectMonkVirtueAura(mapPlayer);
 			continue;
 		}
 
@@ -8776,6 +9064,7 @@ void Game::checkImbuementsAndSereneStatus() {
 		bool condition2 = hasLessThanSixMonsters;
 
 		mapPlayer->setSerene(condition1 && condition2);
+		projectMonkVirtueAura(mapPlayer);
 	}
 }
 
@@ -8841,16 +9130,17 @@ void Game::checkLight() {
 }
 
 ItemClassification* Game::getItemsClassification(uint8_t id, bool create) {
-	auto it = std::ranges::find_if(itemsClassifications, [id](ItemClassification* classification) {
+	auto it = std::ranges::find_if(itemsClassifications, [id](const std::unique_ptr<ItemClassification> &classification) {
 		return classification->id == id;
 	});
 
 	if (it != itemsClassifications.end()) {
-		return *it;
+		return it->get();
 	} else if (create) {
-		auto itemClassification = new ItemClassification(id);
-		addItemsClassification(itemClassification);
-		return itemClassification;
+		auto itemClassification = std::make_unique<ItemClassification>(id);
+		auto* raw = itemClassification.get();
+		addItemsClassification(std::move(itemClassification));
+		return raw;
 	}
 
 	return nullptr;
@@ -8868,6 +9158,14 @@ bool Game::gameIsDay() {
 	}
 
 	return isDay;
+}
+
+bool Game::isRetroPVP() const {
+	if (const auto &currentWorld = worlds().getCurrentWorld()) {
+		const auto worldType = currentWorld->type;
+		return worldType == WORLDTYPE_RETRO_PVP || worldType == WORLDTYPE_RETRO_HARDCORE;
+	}
+	return false;
 }
 
 void Game::dieSafely(const std::string &errorMsg /* = "" */) {
@@ -8921,7 +9219,7 @@ void Game::updateCreatureWalkthrough(const std::shared_ptr<Creature> &creature) 
 }
 
 void Game::updateCreatureSkull(const std::shared_ptr<Creature> &creature) const {
-	if (getWorldType() != WORLDTYPE_OPEN) {
+	if (worlds().getCurrentWorld()->type != WORLDTYPE_OPEN) {
 		return;
 	}
 
@@ -8971,35 +9269,35 @@ void Game::updateCreatureType(const std::shared_ptr<Creature> &creature) {
 
 void Game::loadMotdNum() {
 	Database &db = Database::getInstance();
+	const auto worldId = worlds().getCurrentWorld()->id;
 
-	DBResult_ptr result = db.storeQuery("SELECT `value` FROM `server_config` WHERE `config` = 'motd_num'");
+	auto result = db.storeQuery(fmt::format("SELECT `value` FROM `server_config` WHERE `config` = 'motd_num' AND `world_id` = {}", worldId));
 	if (result) {
 		motdNum = result->getNumber<uint32_t>("value");
 	} else {
-		db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('motd_num', '0')");
+		db.executeQuery(fmt::format("INSERT INTO `server_config` (`world_id`, `config`, `value`) VALUES ({}, 'motd_num', '0')", worldId));
 	}
 
-	result = db.storeQuery("SELECT `value` FROM `server_config` WHERE `config` = 'motd_hash'");
+	result = db.storeQuery(fmt::format("SELECT `value` FROM `server_config` WHERE `config` = 'motd_hash' AND `world_id` = {}", worldId));
 	if (result) {
 		motdHash = result->getString("value");
 		if (motdHash != transformToSHA1(g_configManager().getString(SERVER_MOTD))) {
 			++motdNum;
 		}
 	} else {
-		db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('motd_hash', '')");
+		db.executeQuery(fmt::format("INSERT INTO `server_config` (`world_id`, `config`, `value`) VALUES ({}, 'motd_hash', '')", worldId));
 	}
 }
 
 void Game::saveMotdNum() const {
 	Database &db = Database::getInstance();
+	const auto worldId = worlds().getCurrentWorld()->id;
 
-	std::ostringstream query;
-	query << "UPDATE `server_config` SET `value` = '" << motdNum << "' WHERE `config` = 'motd_num'";
-	db.executeQuery(query.str());
+	std::string query = fmt::format("UPDATE `server_config` SET `value` = {} WHERE `config` = 'motd_num' AND `world_id` = {}", motdNum, worldId);
+	db.executeQuery(query);
 
-	query.str(std::string());
-	query << "UPDATE `server_config` SET `value` = '" << transformToSHA1(g_configManager().getString(SERVER_MOTD)) << "' WHERE `config` = 'motd_hash'";
-	db.executeQuery(query.str());
+	query = fmt::format("UPDATE `server_config` SET `value` = '{}' WHERE `config` = 'motd_hash' AND `world_id` = {}", transformToSHA1(g_configManager().getString(SERVER_MOTD)), worldId);
+	db.executeQuery(query);
 }
 
 void Game::checkPlayersRecord() {
@@ -9018,19 +9316,19 @@ void Game::checkPlayersRecord() {
 void Game::updatePlayersRecord() const {
 	Database &db = Database::getInstance();
 
-	std::ostringstream query;
-	query << "UPDATE `server_config` SET `value` = '" << playersRecord << "' WHERE `config` = 'players_record'";
-	db.executeQuery(query.str());
+	std::string query = fmt::format("UPDATE `server_config` SET `value` = {} WHERE `config` = 'players_record' AND `world_id` = {}", playersRecord, worlds().getCurrentWorld()->id);
+	db.executeQuery(query);
 }
 
 void Game::loadPlayersRecord() {
 	Database &db = Database::getInstance();
+	const auto worldId = worlds().getCurrentWorld()->id;
 
-	DBResult_ptr result = db.storeQuery("SELECT `value` FROM `server_config` WHERE `config` = 'players_record'");
+	const auto result = db.storeQuery(fmt::format("SELECT `value` FROM `server_config` WHERE `config` = 'players_record' AND `world_id` = {}", worldId));
 	if (result) {
 		playersRecord = result->getNumber<uint32_t>("value");
 	} else {
-		db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('players_record', '0')");
+		db.executeQuery(fmt::format("INSERT INTO `server_config` (`world_id`, `config`, `value`) VALUES ({}, 'players_record', '0')", worldId));
 	}
 }
 
@@ -9147,7 +9445,7 @@ void Game::playerLeaveParty(uint32_t playerId) {
 	}
 
 	std::shared_ptr<Party> party = player->getParty();
-	if (!party || (player->hasCondition(CONDITION_INFIGHT) && !player->getZoneType() == ZONE_PROTECTION)) {
+	if (!party || (player->hasCondition(CONDITION_INFIGHT) && player->getZoneType() != ZONE_PROTECTION)) {
 		player->sendTextMessage(TextMessage(MESSAGE_FAILURE, "You cannot leave party, contact the administrator."));
 		return;
 	}
@@ -9367,63 +9665,89 @@ void Game::playerCyclopediaCharacterInfo(const std::shared_ptr<Player> &player, 
 	}
 }
 
-std::string Game::generateHighscoreQueryForEntries(const std::string &categoryName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation) {
-	std::ostringstream query;
-	uint32_t startPage = (static_cast<uint32_t>(page - 1) * static_cast<uint32_t>(entriesPerPage));
+std::string Game::generateHighscoreQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation) {
+	uint32_t startPage = (page - 1) * static_cast<uint32_t>(entriesPerPage);
 	uint32_t endPage = startPage + static_cast<uint32_t>(entriesPerPage);
-	const std::string pointsExpression = getHighscorePointsExpression(categoryName);
-	const std::string fromClause = getHighscoreFromClause(categoryName);
+	std::string vocationCondition = (vocation != 0xFFFFFFFF) ? generateVocationConditionHighscore(vocation) : "";
 
-	query << "SELECT *, @row AS `entries`, " << page << " AS `page` FROM (SELECT *, (@row := @row + 1) AS `rn` FROM (SELECT `id`, `name`, `level`, `vocation`, "
-		  << pointsExpression << " AS `points`, @curRank := IF(@prevRank = " << pointsExpression << ", @curRank, IF(@prevRank := " << pointsExpression
-		  << ", @curRank + 1, @curRank + 1)) AS `rank` " << fromClause << ", (SELECT @curRank := 0, @prevRank := NULL, @row := 0) `r` WHERE `group_id` < "
-		  << static_cast<int>(GROUP_TYPE_GAMEMASTER) << " ORDER BY " << pointsExpression << " DESC) `t`";
+	std::string worldCondition = !worldName.empty() ? fmt::format(" AND `w`.`name` = {}", Database::getInstance().escapeString(worldName)) : "";
 
-	if (vocation != 0xFFFFFFFF) {
-		query << generateVocationConditionHighscore(vocation);
-	}
-	query << ") `T` WHERE `rn` > " << startPage << " AND `rn` <= " << endPage;
+	std::string query = fmt::format(
+		"SELECT *, @row AS `entries`, {0} AS `page` FROM ("
+		"SELECT *, (@row := @row + 1) AS `rn` FROM ("
+		"SELECT `p`.`id`, `p`.`name`, `p`.`level`, `p`.`vocation`, `w`.`name` AS `worldName`, `p`.`{1}` AS `points`, "
+		"@curRank := IF(@prevRank = `{1}`, @curRank, IF(@prevRank := `{1}`, @curRank + 1, @curRank + 1)) AS `rank` "
+		"FROM `players` `p` INNER JOIN `worlds` `w` ON `p`.`world_id` = `w`.`id`, "
+		"(SELECT @curRank := 0, @prevRank := NULL, @row := 0) `r` "
+		"WHERE `group_id` < {2}{3}{4} "
+		"ORDER BY `{1}` DESC) `t`"
+		") `T` WHERE `rn` > {5} AND `rn` <= {6}",
+		page, // {0}
+		categoryName, // {1}
+		static_cast<int>(GROUP_TYPE_GAMEMASTER), // {2}
+		vocationCondition, // {3}
+		worldCondition, // {4}
+		startPage, // {5}
+		endPage // {6}
+	);
 
-	return query.str();
+	return query;
 }
 
-std::string Game::generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation) {
-	std::ostringstream query;
+std::string Game::generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation, const std::string &selectedWorld) {
 	std::string entriesStr = std::to_string(entriesPerPage);
-	const std::string pointsExpression = getHighscorePointsExpression(categoryName);
-	const std::string fromClause = getHighscoreFromClause(categoryName);
 
-	query << "SELECT *, @row AS `entries`, (@ourRow DIV " << entriesStr << ") + 1 AS `page` FROM (SELECT *, (@row := @row + 1) AS `rn`, @ourRow := IF(`id` = "
-		  << playerGUID << ", @row - 1, @ourRow) AS `rw` FROM (SELECT `id`, `name`, `level`, `vocation`, " << pointsExpression << " AS `points`, @curRank := IF(@prevRank = "
-		  << pointsExpression << ", @curRank, IF(@prevRank := " << pointsExpression << ", @curRank + 1, @curRank + 1)) AS `rank` " << fromClause << ", (SELECT @curRank := 0, @prevRank := NULL, @row := 0, @ourRow := 0) `r` WHERE `group_id` < "
-		  << static_cast<int>(GROUP_TYPE_GAMEMASTER) << " ORDER BY " << pointsExpression << " DESC) `t`";
+	std::string vocationCondition = (vocation != 0xFFFFFFFF) ? generateVocationConditionHighscore(vocation) : "";
+	std::string worldCondition = !selectedWorld.empty() ? fmt::format(" AND `w`.`name` = {}", Database::getInstance().escapeString(selectedWorld)) : "";
 
-	if (vocation != 0xFFFFFFFF) {
-		query << generateVocationConditionHighscore(vocation);
-	}
-	query << ") `T` WHERE `rn` > ((@ourRow DIV " << entriesStr << ") * " << entriesStr << ") AND `rn` <= (((@ourRow DIV " << entriesStr << ") * " << entriesStr << ") + " << entriesStr << ")";
+	std::string query = fmt::format(
+		"SELECT *, @row AS `entries`, (@ourRow DIV {0}) + 1 AS `page` FROM ("
+		"SELECT *, (@row := @row + 1) AS `rn`, @ourRow := IF(`id` = {1}, @row - 1, @ourRow) AS `rw` FROM ("
+		"SELECT `p`.`id`, `p`.`name`, `p`.`level`, `p`.`vocation`, `w`.`name` AS `worldName`, `p`.`{2}` AS `points`, "
+		"@curRank := IF(@prevRank = `{2}`, @curRank, IF(@prevRank := `{2}`, @curRank + 1, @curRank + 1)) AS `rank` "
+		"FROM `players` `p` INNER JOIN `worlds` `w` ON `p`.`world_id` = `w`.`id`, "
+		"(SELECT @curRank := 0, @prevRank := NULL, @row := 0, @ourRow := 0) `r` "
+		"WHERE `group_id` < {3}{4}{5} "
+		"ORDER BY `{2}` DESC) `t`) `T` WHERE `rn` > ((@ourRow DIV {0}) * {0}) AND `rn` <= (((@ourRow DIV {0}) * {0}) + {0})",
+		entriesStr, // {0}
+		playerGUID, // {1}
+		categoryName, // {2}
+		static_cast<int>(GROUP_TYPE_GAMEMASTER), // {3}
+		vocationCondition, // {4}
+		worldCondition // {5}
+	);
 
-	return query.str();
+	return query;
 }
 
 std::string Game::generateVocationConditionHighscore(uint32_t searchVocationBaseId) {
-	std::ostringstream queryPart;
-
+	// Build a safe AND(...) clause containing all matching vocation ids.
+	std::vector<uint32_t> ids;
 	const auto vocationsMap = g_vocations().getVocations();
 	for (const auto &[currentVocationId, vocationPtr] : vocationsMap) {
 		if (vocationPtr->getBaseId() == searchVocationBaseId) {
-			if (vocationPtr->getFromVocation() == static_cast<uint32_t>(currentVocationId)) {
-				queryPart << " WHERE `vocation` = " << currentVocationId;
-			} else {
-				queryPart << " OR `vocation` = " << currentVocationId;
-			}
+			ids.push_back(currentVocationId);
 		}
 	}
 
-	return queryPart.str();
+	if (ids.empty()) {
+		return std::string();
+	}
+
+	std::ostringstream ss;
+	ss << " AND (";
+	for (size_t i = 0; i < ids.size(); ++i) {
+		if (i) {
+			ss << " OR ";
+		}
+		ss << "`vocation` = " << ids[i];
+	}
+	ss << ")";
+
+	return ss.str();
 }
 
-void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage) {
+void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage, const std::string &selectedWorld) {
 	const auto &player = g_game().getPlayerByID(playerID);
 	if (!player) {
 		return;
@@ -9441,9 +9765,7 @@ void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID
 	pages += entriesPerPage - 1;
 	pages /= entriesPerPage;
 
-	std::ostringstream cacheKeyStream;
-	cacheKeyStream << "Highscore_" << static_cast<int>(category) << "_" << static_cast<int>(vocation) << "_" << static_cast<int>(entriesPerPage) << "_" << page;
-	std::string cacheKey = cacheKeyStream.str();
+	std::string cacheKey = fmt::format("Highscore_{}_{}_{}_{}_{}", selectedWorld.empty() ? "All" : selectedWorld, static_cast<int>(category), static_cast<int>(vocation), static_cast<int>(entriesPerPage), page);
 
 	auto it = highscoreCache.find(cacheKey);
 	auto now = std::chrono::system_clock::now();
@@ -9453,7 +9775,7 @@ void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID
 		auto durationSinceEpoch = cachedTime.time_since_epoch();
 		auto secondsSinceEpoch = std::chrono::duration_cast<std::chrono::seconds>(durationSinceEpoch).count();
 		auto updateTimer = static_cast<uint32_t>(secondsSinceEpoch);
-		player->sendHighscores(cacheEntry.characters, category, vocation, cacheEntry.page, static_cast<uint16_t>(cacheEntry.entriesPerPage), updateTimer);
+		player->sendHighscores(selectedWorld, cacheEntry.characters, category, vocation, cacheEntry.page, static_cast<uint16_t>(cacheEntry.entriesPerPage), updateTimer);
 	} else {
 		std::vector<HighscoreCharacter> characters;
 		characters.reserve(result->countResults());
@@ -9462,11 +9784,11 @@ void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID
 				const auto &voc = g_vocations().getVocation(result->getNumber<uint16_t>("vocation"));
 				uint8_t characterVocation = voc ? voc->getClientId() : 0;
 				std::string loyaltyTitle; // todo get loyalty title from player
-				characters.emplace_back(std::move(result->getString("name")), result->getNumber<uint64_t>("points"), result->getNumber<uint32_t>("id"), result->getNumber<uint32_t>("rank"), result->getNumber<uint16_t>("level"), characterVocation, loyaltyTitle);
+				characters.emplace_back(std::move(result->getString("name")), result->getNumber<uint64_t>("points"), result->getNumber<uint32_t>("id"), result->getNumber<uint32_t>("rank"), result->getNumber<uint16_t>("level"), characterVocation, result->getString("worldName"), loyaltyTitle);
 			} while (result->next());
 		}
 
-		player->sendHighscores(characters, category, vocation, page, static_cast<uint16_t>(pages), getTimeNow());
+		player->sendHighscores(selectedWorld, characters, category, vocation, page, static_cast<uint16_t>(pages), getTimeNow());
 		highscoreCache[cacheKey] = { characters, page, pages, now };
 	}
 }
@@ -9476,10 +9798,8 @@ void Game::cacheQueryHighscore(const std::string &key, const std::string &query,
 	queryCache[key] = queryEntry;
 }
 
-std::string Game::generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation) {
-	std::ostringstream cacheKeyStream;
-	cacheKeyStream << "Entries_" << categoryName << "_" << page << "_" << static_cast<int>(entriesPerPage) << "_" << vocation;
-	std::string cacheKey = cacheKeyStream.str();
+std::string Game::generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation) {
+	std::string cacheKey = fmt::format("Entries_{}_{}_{}_{}_{}", worldName.empty() ? "All" : worldName, categoryName, page, static_cast<int>(entriesPerPage), vocation);
 
 	if (queryCache.find(cacheKey) != queryCache.end()) {
 		const QueryHighscoreCacheEntry &cachedEntry = queryCache[cacheKey];
@@ -9488,7 +9808,7 @@ std::string Game::generateHighscoreOrGetCachedQueryForEntries(const std::string 
 		}
 	}
 
-	std::string newQuery = generateHighscoreQueryForEntries(categoryName, page, entriesPerPage, vocation);
+	std::string newQuery = generateHighscoreQueryForEntries(categoryName, worldName, page, entriesPerPage, vocation);
 	cacheQueryHighscore(cacheKey, newQuery, page, entriesPerPage);
 
 	return newQuery;
@@ -9506,13 +9826,13 @@ std::string Game::generateHighscoreOrGetCachedQueryForOurRank(const std::string 
 		}
 	}
 
-	std::string newQuery = generateHighscoreQueryForOurRank(categoryName, entriesPerPage, playerGUID, vocation);
+	std::string newQuery = generateHighscoreQueryForOurRank(categoryName, entriesPerPage, playerGUID, vocation, worlds().getCurrentWorld()->name);
 	cacheQueryHighscore(cacheKey, newQuery, entriesPerPage, entriesPerPage);
 
 	return newQuery;
 }
 
-void Game::playerHighscores(const std::shared_ptr<Player> &player, HighscoreType_t type, uint8_t category, uint32_t vocation, const std::string &, uint16_t page, uint8_t entriesPerPage) {
+void Game::playerHighscores(const std::shared_ptr<Player> &player, HighscoreType_t type, uint8_t category, uint32_t vocation, const std::string &worldName, uint16_t page, uint8_t entriesPerPage) {
 	if (player->hasAsyncOngoingTask(PlayerAsyncTask_Highscore)) {
 		return;
 	}
@@ -9521,14 +9841,14 @@ void Game::playerHighscores(const std::shared_ptr<Player> &player, HighscoreType
 
 	std::string query;
 	if (type == HIGHSCORE_GETENTRIES) {
-		query = generateHighscoreOrGetCachedQueryForEntries(categoryName, page, entriesPerPage, vocation);
+		query = generateHighscoreOrGetCachedQueryForEntries(categoryName, worldName, page, entriesPerPage, vocation);
 	} else if (type == HIGHSCORE_OURRANK) {
 		query = generateHighscoreOrGetCachedQueryForOurRank(categoryName, entriesPerPage, player->getGUID(), vocation);
 	}
 
 	uint32_t playerID = player->getID();
-	std::function<void(DBResult_ptr, bool)> callback = [this, playerID, category, vocation, entriesPerPage](const DBResult_ptr &result, bool) {
-		processHighscoreResults(result, playerID, category, vocation, entriesPerPage);
+	std::function<void(DBResult_ptr, bool)> callback = [this, playerID, category, vocation, entriesPerPage, worldName](const DBResult_ptr &result, bool) {
+		processHighscoreResults(result, playerID, category, vocation, entriesPerPage, worldName);
 	};
 
 	g_databaseTasks().store(query, callback);
@@ -10133,6 +10453,22 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 	// Make sure everything is ok before the create market offer starts
 	if (!checkCanInitCreateMarketOffer(player, type, it, amount, price, offerStatus)) {
 		g_logger().error("{} - Player {} had an error on init offer on the market, error code: {}", __FUNCTION__, player->getName(), offerStatus.str());
+		return;
+	}
+
+	// Check limit of own offers per side (buy/sell)
+	const uint32_t playerOfferCountPerSide = IOMarket::getPlayerOfferCountPerSide(player->getGUID(), static_cast<MarketAction_t>(type));
+	if (playerOfferCountPerSide >= IOMarket::MAX_MARKET_OWN_OFFERS_PER_SIDE) {
+		player->sendTextMessage(MESSAGE_MARKET, "You have reached the maximum number of offers per side. Cancel some offers before creating new ones.");
+		g_logger().warn("{} - Player {} reached own offers per side limit ({})", __FUNCTION__, player->getName(), IOMarket::MAX_MARKET_OWN_OFFERS_PER_SIDE);
+		return;
+	}
+
+	// Check limit of offers per item per side (buy/sell)
+	const uint32_t itemOfferCountPerSide = IOMarket::getItemOfferCountPerSide(it.id, tier, static_cast<MarketAction_t>(type));
+	if (itemOfferCountPerSide >= IOMarket::MAX_MARKET_OFFERS_PER_SIDE) {
+		player->sendTextMessage(MESSAGE_MARKET, "There are too many offers for this item. Try again later or choose a different item.");
+		g_logger().warn("{} - Player {} reached item offers per side limit ({}) for item {}", __FUNCTION__, player->getName(), IOMarket::MAX_MARKET_OFFERS_PER_SIDE, it.id);
 		return;
 	}
 
@@ -11075,6 +11411,7 @@ void Game::addPlayer(const std::shared_ptr<Player> &player) {
 	mappedPlayerNames[lowercase_name] = player;
 	wildcardTree->insert(lowercase_name);
 	players[player->getID()] = player;
+	playersByGUID[player->getGUID()] = player;
 }
 
 void Game::removePlayer(const std::shared_ptr<Player> &player) {
@@ -11082,6 +11419,7 @@ void Game::removePlayer(const std::shared_ptr<Player> &player) {
 	mappedPlayerNames.erase(lowercase_name);
 	wildcardTree->remove(lowercase_name);
 	players.erase(player->getID());
+	playersByGUID.erase(player->getGUID());
 }
 
 void Game::addNpc(const std::shared_ptr<Npc> &npc) {
@@ -12542,6 +12880,52 @@ bool Game::hasPartyMembersNearby(const std::shared_ptr<Player> &player) {
 	}
 
 	return false;
+}
+
+void Game::projectMonkVirtueAura(const std::shared_ptr<Player> &monk) {
+	// Interpretation A: each party member within 5 tiles of the monk receives the buff for THEIR OWN
+	// vocation (a single bit); the monk itself receives the union of present-vocation bonuses, but only
+	// while serene. Refreshed every 1s by the serene tick; the aura lapses ~2.5s after leaving range.
+	// Per user decision: the whole virtue aura (members AND the monk) is active ONLY while the monk is
+	// serene. When not serene / no party, clear the monk's mask; members lapse via their own 2.5s expiry.
+	const auto &party = monk->getParty();
+	if (!party || !monk->isSerene()) {
+		monk->setMonkAuraVocMask(0);
+		return;
+	}
+
+	const Position &centerPos = monk->getPosition();
+	uint8_t unionMask = 0;
+	for (int offsetX = -5; offsetX <= 5; ++offsetX) {
+		for (int offsetY = -5; offsetY <= 5; ++offsetY) {
+			if (offsetX == 0 && offsetY == 0) {
+				continue;
+			}
+			const auto &tile = map.getTile(static_cast<uint16_t>(centerPos.x + offsetX), static_cast<uint16_t>(centerPos.y + offsetY), centerPos.z);
+			if (!tile) {
+				continue;
+			}
+			const auto &topCreature = tile->getTopCreature();
+			if (!topCreature) {
+				continue;
+			}
+			const auto &member = topCreature->getPlayer();
+			if (!member || member == monk || member->getParty() != party) {
+				continue;
+			}
+			const auto &voc = member->getVocation();
+			if (!voc) {
+				continue;
+			}
+			const uint16_t baseId = voc->getBaseId();
+			if (baseId >= VOCATION_SORCERER && baseId <= VOCATION_KNIGHT) {
+				const uint8_t bit = static_cast<uint8_t>(1u << baseId);
+				unionMask |= bit;
+				member->setMonkAuraVocMask(bit);
+			}
+		}
+	}
+	monk->setMonkAuraVocMask(unionMask);
 }
 
 bool Game::isPlayerNoBoxed(const std::shared_ptr<Player> &player) {

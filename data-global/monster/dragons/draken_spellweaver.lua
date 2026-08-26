@@ -81,7 +81,7 @@ monster.loot = {
 	{ name = "platinum coin", chance = 23800, maxCount = 5 },
 	{ name = "weaver's wandtip", chance = 18450 },
 	{ name = "small ruby", chance = 6640, maxCount = 5 },
-	{ name = "great mana potion", chance = 5350 },
+	{ id = 238, chance = 5350 }, -- great mana potion
 	{ name = "draken sulphur", chance = 4610 },
 	{ name = "luminous orb", chance = 2580 },
 	{ name = "green gem", chance = 1290 },

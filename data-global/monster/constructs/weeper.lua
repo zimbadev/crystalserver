@@ -82,7 +82,7 @@ monster.loot = {
 	{ id = 3035, chance = 100000, maxCount = 7 }, -- platinum coin
 	{ name = "fire sword", chance = 3280 },
 	{ name = "fire axe", chance = 2150 },
-	{ name = "great mana potion", chance = 14800, maxCount = 2 },
+	{ id = 238, chance = 14800, maxCount = 2 }, -- great mana potion
 	{ name = "magma legs", chance = 790 },
 	{ name = "magma coat", chance = 790 },
 	{ name = "ultimate health potion", chance = 15440, maxCount = 2 },

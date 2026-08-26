@@ -79,7 +79,7 @@ monster.loot = {
 	{ name = "rotten feather", chance = 50000 },
 	{ name = "great health potion", chance = 40000, maxCount = 5 },
 	{ name = "great spirit potion", chance = 25530, maxCount = 1 },
-	{ name = "great mana potion", chance = 34040, maxCount = 5 },
+	{ id = 238, chance = 34040, maxCount = 5 }, -- great mana potion
 	{ name = "ritual tooth", chance = 32980 },
 	{ name = "diamond", chance = 5320, maxCount = 8 },
 	{ name = "amber with a bug", chance = 3190 },

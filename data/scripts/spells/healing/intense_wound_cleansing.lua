@@ -4,10 +4,9 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_MAGIC_BLUE)
 combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
-function onGetFormulaValues(player, level, magicLevel)
-	local min = (level * 0.2 + magicLevel * 70) + 438
-	local max = (level * 0.2 + magicLevel * 92) + 544
-	return min, max
+-- Vocation Adjustment: base power 500, scales with magic level + shielding.
+function onGetFormulaValues(player, level, magicLevel, basePower)
+	return calculateKnightHealing(player, magicLevel, basePower, 20.0, 40.0, 5.0, 2)
 end
 
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
@@ -24,12 +23,12 @@ spell:group("healing")
 spell:vocation("knight;true", "elite knight;true")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_INTENSE_WOUND_CLEANSING)
 spell:id(158)
-spell:cooldown(600000) -- 600 sec
-spell:groupCooldown(1000)
+spell:cooldown(120000) -- Vocation Adjustment: 10min -> 2min
+spell:groupCooldown(2 * 1000) -- Phase A rebalance: 1s -> 2s
 spell:level(80)
 spell:mana(200)
 spell:isSelfTarget(true)
 spell:isAggressive(false)
 spell:isPremium(true)
-
+spell:basePower(500)
 spell:register()

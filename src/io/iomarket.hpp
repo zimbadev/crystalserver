@@ -29,6 +29,10 @@ public:
 		return inject<IOMarket>();
 	}
 
+	static constexpr uint32_t MAX_MARKET_OFFERS_RETURNED = 1500;
+	static constexpr uint32_t MAX_MARKET_OFFERS_PER_SIDE = 700;
+	static constexpr uint32_t MAX_MARKET_OWN_OFFERS_PER_SIDE = 1000;
+
 	static MarketOfferList getActiveOffers(MarketAction_t action);
 	static MarketOfferList getActiveOffers(MarketAction_t action, uint16_t itemId, uint8_t tier);
 	static MarketOfferList getOwnOffers(MarketAction_t action, uint32_t playerId);
@@ -38,6 +42,8 @@ public:
 	static void checkExpiredOffers();
 
 	static uint32_t getPlayerOfferCount(uint32_t playerId);
+	static uint32_t getPlayerOfferCountPerSide(uint32_t playerId, MarketAction_t action);
+	static uint32_t getItemOfferCountPerSide(uint16_t itemId, uint8_t tier, MarketAction_t action);
 	static MarketOfferEx getOfferByCounter(uint32_t timestamp, uint16_t counter);
 
 	static void createOffer(uint32_t playerId, MarketAction_t action, uint32_t itemId, uint16_t amount, uint64_t price, uint8_t tier, bool anonymous);

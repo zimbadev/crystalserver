@@ -96,6 +96,7 @@ function playerLoginGlobal.onLogin(player)
 	local resultId = db.storeQuery("SELECT `recruiter` FROM `accounts` WHERE `id`= " .. Game.getPlayerAccountId(getPlayerName(player)))
 	if resultId then
 		local recruiterStatus = Result.getNumber(resultId, "recruiter")
+		Result.free(resultId)
 		local sex = player:getSex()
 		local outfitId = (sex == 1) and 746 or 745
 		for outfitAddOn = 0, 2 do
@@ -121,6 +122,11 @@ function playerLoginGlobal.onLogin(player)
 				baseRate = baseRate * (1 + (vipBonusExp / 100))
 				player:sendTextMessage(MESSAGE_BOOSTED_CREATURE, "Normal base xp is: " .. baseRate .. "%, because you are VIP, bonus of " .. vipBonusExp .. "%")
 			end
+		end
+
+		-- A Piece of Cake Quest - bonus xp
+		if player:isPremium() and os.time() < CakeQuest.get(CakeQuest.Keys.WorldBonusUntil, 0) then
+			baseRate = baseRate + (baseRate * (CakeQuest.Config.EXP_BONUS_PERCENT / 100))
 		end
 
 		player:setBaseXpGain(baseRate)
@@ -195,6 +201,28 @@ function playerLoginGlobal.onLogin(player)
 	player:registerEvent("DropLoot")
 	player:registerEvent("BossParticipation")
 	player:registerEvent("UpdatePlayerOnAdvancedLevel")
+	player:registerEvent("RottenTaintGain")
+	player:registerEvent("BakragorePlayerDeath")
+
+	-- Vocation Adjustment: re-frame the monk's active virtue. It was restored early in IOLoginData
+	-- (before the client's action bar existed), so the highlight did not stick; re-apply it here,
+	-- after the spell list is loaded, so the active-stance highlight is sent at the correct time.
+	local virtue = player:getVirtue()
+	if virtue and virtue > 0 then
+		player:setVirtue(virtue)
+	end
+
+	-- Vocation Adjustment: restore active stances from the previous session.
+	local stanceKv = player:kv():scoped("stance")
+	local primary = stanceKv:get("primary")
+	if primary and primary > 0 then
+		player:setStance(primary)
+	end
+	local elemental = stanceKv:get("elemental")
+	if elemental and elemental > 0 then
+		player:setElementalStance(elemental)
+	end
+
 	return true
 end
 

@@ -129,7 +129,7 @@ npcConfig.shop = {
 	{ itemName = "fire wall rune", clientId = 3190, buy = 61 },
 	{ itemName = "great fireball rune", clientId = 3191, buy = 64 },
 	{ itemName = "great health potion", clientId = 239, buy = 225 },
-	{ itemName = "great mana potion", clientId = 238, buy = 158 },
+	{ itemid = 238, clientId = 238, buy = 158 },
 	{ itemName = "great spirit potion", clientId = 7642, buy = 254 },
 	{ itemName = "ham", clientId = 3582, buy = 10 },
 	{ itemName = "health potion", clientId = 266, buy = 50 },

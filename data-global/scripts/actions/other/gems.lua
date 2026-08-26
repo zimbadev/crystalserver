@@ -134,36 +134,44 @@ function gems.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	end
 
 	-- Reset lion's fields
-	local function lionsRockFieldReset()
-		local gemSpot = Tile(setting.itemPos):getItemById(setting.fieldId)
+	local function lionsRockFieldReset(playerId, resetSetting)
+		local resetPlayer = Player(playerId)
+		if not resetPlayer then
+			return false
+		end
+		local gemSpot = Tile(resetSetting.itemPos):getItemById(resetSetting.fieldId)
 		if gemSpot then
-			player:setStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields, player:getStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields) - 1)
+			resetPlayer:setStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields, resetPlayer:getStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields) - 1)
 			gemSpot:remove()
 			return true
 		end
 	end
 
 	-- Check if all lion's fields are set
-	local function checkLionsRockFields(storage)
-		if player:getStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields) == 3 then
+	local function checkLionsRockFields(checkPlayer, storage)
+		if checkPlayer:getStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields) == 3 then
 			local stone = Tile(lionsRockSanctuaryPos):getItemById(lionsRockSanctuaryRockId)
 			if stone then
 				stone:transform(lionsRockSanctuaryFountainId)
 				lionsRockSanctuaryPos:sendMagicEffect(CONST_ME_THUNDER)
-				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Something happens at the center of the room ...")
-				player:setStorageValue(storage, 10)
+				checkPlayer:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Something happens at the center of the room ...")
+				checkPlayer:setStorageValue(storage, 10)
 				return true
 			end
 		end
 	end
 
 	-- Delay to create lion's field
-	local function lionsRockCreateField(itemPos, fieldId, storage)
+	local function lionsRockCreateField(playerId, itemPos, fieldId, storage)
+		local createPlayer = Player(playerId)
+		if not createPlayer then
+			return false
+		end
 		local gemSpot = Tile(itemPos):getItemById(fieldId)
 		if not gemSpot then
 			Game.createItem(fieldId, 1, itemPos)
-			player:setStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields, player:getStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields) + 1)
-			checkLionsRockFields(storage)
+			createPlayer:setStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields, createPlayer:getStorageValue(Storage.Quest.U10_70.LionsRock.LionsRockFields) + 1)
+			checkLionsRockFields(createPlayer, storage)
 			return true
 		end
 	end
@@ -176,8 +184,8 @@ function gems.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, setting.message)
 				item:remove(1)
 				player:setStorageValue(setting.storage, setting.value + 1)
-				addEvent(lionsRockCreateField, 2 * 1000, setting.itemPos, setting.fieldId, setting.storage)
-				addEvent(lionsRockFieldReset, 60 * 1000, setting)
+				addEvent(lionsRockCreateField, 2 * 1000, player:getId(), setting.itemPos, setting.fieldId, setting.storage)
+				addEvent(lionsRockFieldReset, 60 * 1000, player:getId(), setting)
 				return true
 			end
 		end

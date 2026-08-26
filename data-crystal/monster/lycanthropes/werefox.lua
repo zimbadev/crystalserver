@@ -90,7 +90,7 @@ monster.loot = {
 	{ name = "fox paw", chance = 4050, maxCount = 2 },
 	{ name = "werefox tail", chance = 4050, maxCount = 2 },
 	{ name = "strong mana potion", chance = 4050, maxCount = 2 },
-	{ name = "great mana potion", chance = 4050, maxCount = 2 },
+	{ id = 238, chance = 4050, maxCount = 2 }, -- great mana potion
 	{ name = "mana potion", chance = 4050, maxCount = 2 },
 	{ name = "small enchanted emerald", chance = 4050, maxCount = 2 },
 	{ name = "emerald bangle", chance = 4050, maxCount = 2 },

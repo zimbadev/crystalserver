@@ -93,7 +93,7 @@ monster.loot = {
 	{ name = "gold token", chance = 18180 },
 	{ name = "gold coin", chance = 100000, maxCount = 200 },
 	{ name = "small emerald", chance = 19000, maxCount = 10 },
-	{ name = "great mana potion", chance = 31230, maxCount = 5 },
+	{ id = 238, chance = 31230, maxCount = 5 }, -- great mana potion
 	{ id = 3039, chance = 12000 }, -- red gem
 	{ name = "oriental shoes", chance = 11000 },
 	{ name = "torn shirt", chance = 42000 },

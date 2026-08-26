@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "items/item.hpp"
 #include "lua/global/baseevents.hpp"
 #include "creatures/monsters/monster.hpp"
@@ -134,7 +136,7 @@ public:
 	// non-assignable
 	MatrixArea &operator=(const MatrixArea &) = delete;
 
-	void setValue(uint32_t row, uint32_t col, bool value) const;
+	void setValue(uint32_t row, uint32_t col, bool value);
 	bool getValue(uint32_t row, uint32_t col) const;
 
 	void setCenter(uint32_t y, uint32_t x);
@@ -152,7 +154,7 @@ private:
 
 	uint32_t rows;
 	uint32_t cols;
-	bool** data_;
+	std::vector<std::vector<char>> data_;
 };
 
 class AreaCombat {
@@ -193,7 +195,7 @@ public:
 	Combat(const Combat &) = delete;
 	Combat &operator=(const Combat &) = delete;
 
-	static void applyExtensions(const std::shared_ptr<Creature> &caster, const std::vector<std::shared_ptr<Creature>> targets, CombatDamage &damage, const CombatParams &params);
+	static void applyExtensions(const std::shared_ptr<Creature> &caster, const std::vector<std::shared_ptr<Creature>> &targets, CombatDamage &damage, const CombatParams &params);
 
 	static void doCombatHealth(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, CombatDamage &damage, const CombatParams &params);
 	static void doCombatHealth(const std::shared_ptr<Creature> &caster, const Position &position, const std::unique_ptr<AreaCombat> &area, CombatDamage &damage, const CombatParams &params);
@@ -253,7 +255,7 @@ public:
 	void setRuneSpellName(const std::string &value);
 
 	void setupChain(const std::shared_ptr<Weapon> &weapon);
-	bool doCombatChain(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, bool aggressive) const;
+	bool doCombatChain(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Creature> &target, bool aggressive, bool disableFirstTarget = false) const;
 
 private:
 	static void doChainEffect(const Position &origin, const Position &pos, uint8_t effect);

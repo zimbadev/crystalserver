@@ -241,6 +241,28 @@ function BossLever:onUse(player)
 			monster:registerEvent("BossLeverOnDeath")
 		end
 		lever:teleportPlayers()
+		local rottenBloodBosses = {
+			["murcion"] = true,
+			["chagorz"] = true,
+			["ichgahal"] = true,
+			["vemiath"] = true,
+			["bakragore"] = true,
+		}
+		if rottenBloodBosses[self.name:lower()] then
+			lever:executeOnPlayers(function(player)
+				if player and player:isPlayer() then
+					player:removeIcon("rotten-area")
+					local whiteCrossIcon = player:getIcon("white-cross")
+					if whiteCrossIcon then
+						player:removeIcon("white-cross")
+					end
+					local redCrossIcon = player:getIcon("red-cross")
+					if redCrossIcon then
+						player:removeIcon("red-cross")
+					end
+				end
+			end)
+		end
 		lever:setCooldownAllPlayers(self.name, os.time() + self.timeToFightAgain)
 		if self.encounter then
 			local encounter = Encounter(self.encounter)

@@ -355,11 +355,10 @@ uint32_t IOGuild::createGuild(const std::string &guildName, const std::string &l
 
 	std::ostringstream query4;
 	query4 << "INSERT INTO `guilds` (`name`, `ownerid`, `creationdata`, `balance`, `motd`) VALUES (" << db.escapeString(guildName) << ", " << playerId << ", " << time(nullptr) << ", 0, '')";
-	if (!db.executeQuery(query4.str())) {
+	uint32_t guildId = db.insertAndGetId(query4.str());
+	if (guildId == 0) {
 		return 0;
 	}
-
-	uint32_t guildId = db.getLastInsertId();
 	std::ostringstream query5;
 	query5 << "INSERT INTO `guild_ranks` (`guild_id`, `name`, `level`) VALUES (" << guildId << ", 'Leader', 3), "
 		   << "(" << guildId << ", 'Vice-Leader', 2), "

@@ -80,7 +80,7 @@ monster.respawnType = {
 
 monster.loot = {
 	{ name = "strong mana potion", chance = 10360, minCount = 8, maxCount = 12 },
-	{ name = "great mana potion", chance = 10170, minCount = 8, maxCount = 12 },
+	{ id = 238, chance = 10170, minCount = 8, maxCount = 12 }, -- great mana potion
 	{ name = "great spirit potion", chance = 9630, minCount = 4, maxCount = 8 },
 	{ name = "night harpy feathers", chance = 540, minCount = 6, maxCount = 10 },
 	{ name = "giant sapphire", chance = 230 },

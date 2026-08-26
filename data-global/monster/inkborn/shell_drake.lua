@@ -82,7 +82,7 @@ monster.loot = {
 	{ name = "gold coin", chance = 60000, minCount = 1, maxCount = 150 },
 	{ name = "platinum coin", chance = 45000, minCount = 1, maxCount = 8 },
 	{ name = "paper plane", chance = 2800 }, -- new item
-	{ name = "great mana potion", chance = 2000 },
+	{ id = 238, chance = 2000 }, -- great mana potion
 	{ name = "small enchanted amethyst", chance = 1800 },
 	{ name = "spiked squelcher", chance = 1600 },
 	{ name = "violet crystal shard", chance = 1500 },

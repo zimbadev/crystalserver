@@ -2,7 +2,7 @@
 ---@param config { factor: number, gut: boolean, filter?: fun(itemType: ItemType, unique: boolean): boolean }
 ---@return LootItems
 function MonsterType:generateLootRoll(config, resultTable, player)
-	if configManager.getNumber(configKeys.RATE_LOOT) <= 0 then
+	if configManager.getFloat(configKeys.RATE_LOOT) <= 0 then
 		return resultTable or {}
 	end
 
@@ -34,6 +34,56 @@ function MonsterType:generateLootRoll(config, resultTable, player)
 		if SoulWarQuest and iType:getId() == SoulWarQuest.bagYouDesireItemId then
 			result[item.itemId].chance = self:calculateBagYouDesireChance(player, chance)
 			logger.debug("Final chance for bag you desire: {}, original chance: {}", result[item.itemId].chance, chance)
+		end
+
+		local heartDropBonus = {
+			[5] = { heartdrop = 0.05 },
+			[6] = { heartdrop = 0.10 },
+			[7] = { heartdrop = 0.15 },
+			[8] = { heartdrop = 0.20 },
+			[9] = { heartdrop = 0.35 },
+		}
+		local rottenBloodMonsters1 = {
+			"sopping corpus",
+			"oozing corpus",
+			"mycobiontic beetle",
+			"bloated man-maggot",
+			"oozing carcass",
+			"sopping carcass",
+			"rotten man-maggot",
+			"meandering mushroom",
+		}
+		local rottenBloodMonsters2 = {
+			"walking pillar",
+			"darklight matter",
+			"darklight source",
+			"darklight striker",
+			"darklight emitter",
+			"darklight construct",
+			"wandering pillar",
+			"converter",
+		}
+		local monsterName = self:getName():lower()
+		local taints = 0
+		if player then
+			local kv = player:kv():scoped("rotten-blood-quest")
+			taints = kv:get("taints") or 0
+		end
+		if table.contains(rottenBloodMonsters1, monsterName) and item.itemId == 43854 then
+			if taints >= 5 and taints <= 9 then
+				local bonus = heartDropBonus[taints]
+				if bonus then
+					chance = bonus.heartdrop * 1000
+				end
+			end
+		end
+		if table.contains(rottenBloodMonsters2, monsterName) and item.itemId == 43855 then
+			if taints >= 5 and taints <= 9 then
+				local bonus = heartDropBonus[taints]
+				if bonus then
+					chance = bonus.heartdrop * 1000
+				end
+			end
 		end
 
 		local dynamicFactor = factor * (math.random(95, 105) / 100)

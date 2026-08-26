@@ -4,10 +4,11 @@ combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_MAGIC_BLUE)
 combat:setParameter(COMBAT_PARAM_DISPEL, CONDITION_PARALYZE)
 combat:setParameter(COMBAT_PARAM_AGGRESSIVE, false)
 
-function onGetFormulaValues(_player, level, magicLevel) -- already compared to the official tibia | compared date: 08/03/21(m/d/y) (need more chars test accuracy)
-	local min = (level * 0.2 + magicLevel * 1.795)
-	local max = (level * 0.2 + magicLevel * 1.795) + 5
-	return min, max
+-- Vocation Adjustment: base power 15, scales with magic level + shielding.
+function onGetFormulaValues(player, level, magicLevel, basePower)
+	local shielding = player:getEffectiveSkillLevel(SKILL_SHIELD) or 0
+	local common = calculateBaseDamageHealing(level) + magicLevel * 0.9 + shielding * 0.3 + basePower
+	return common, common + 5
 end
 
 combat:setCallback(CALLBACK_PARAM_LEVELMAGICVALUE, "onGetFormulaValues")
@@ -25,11 +26,12 @@ spell:vocation("knight;true", "elite knight;true")
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_BRUISE_BANE)
 spell:id(170)
 spell:cooldown(1000)
-spell:groupCooldown(1000)
+spell:groupCooldown(2 * 1000) -- Phase A rebalance: 1s -> 2s
 spell:level(1)
 spell:mana(10)
 spell:isSelfTarget(true)
 spell:isAggressive(false)
 
 spell:isPremium(false)
+spell:basePower(15)
 spell:register()

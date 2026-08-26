@@ -118,15 +118,39 @@ function setMonsterName.onSay(player, words, param)
 	end
 
 	local splitParams = param:split(",")
-	local newMonsterName = splitParams[1]
+	local newMonsterName = splitParams[1]:trimSpace()
+	if newMonsterName == "" then
+		player:sendCancelMessage("Command param required.")
+		return true
+	end
+
 	local spectators, spectator = Game.getSpectators(player:getPosition(), false, false, 4, 4, 4, 4)
+	local monsterCount = 0
+	local renamedCount = 0
 
 	for i = 1, #spectators do
 		spectator = spectators[i]
 		if spectator:isMonster() then
-			spectator:setName(newMonsterName)
+			monsterCount = monsterCount + 1
+			if spectator:getName() ~= newMonsterName then
+				spectator:setName(newMonsterName)
+				renamedCount = renamedCount + 1
+			end
 		end
 	end
+
+	if monsterCount == 0 then
+		player:sendCancelMessage("No monsters found within 4 tiles.")
+		return true
+	end
+
+	if renamedCount == 0 then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("All nearby monsters are already named '%s'.", newMonsterName))
+		return true
+	end
+
+	local monsterNoun = renamedCount == 1 and "monster" or "monsters"
+	player:sendTextMessage(MESSAGE_EVENT_ADVANCE, string.format("Renamed %d %s to '%s'.", renamedCount, monsterNoun, newMonsterName))
 	return true
 end
 

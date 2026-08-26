@@ -80,9 +80,7 @@ local CRIMSON_COURT_EMILIANA_FROM = Position(32409, 32683, 12)
 local CRIMSON_COURT_EMILIANA_TO = Position(32420, 32693, 12)
 
 local function isInCrimsonCourtArea(position)
-	return position.x >= CRIMSON_COURT_EMILIANA_FROM.x and position.x <= CRIMSON_COURT_EMILIANA_TO.x
-		and position.y >= CRIMSON_COURT_EMILIANA_FROM.y and position.y <= CRIMSON_COURT_EMILIANA_TO.y
-		and position.z == CRIMSON_COURT_EMILIANA_FROM.z
+	return position.x >= CRIMSON_COURT_EMILIANA_FROM.x and position.x <= CRIMSON_COURT_EMILIANA_TO.x and position.y >= CRIMSON_COURT_EMILIANA_FROM.y and position.y <= CRIMSON_COURT_EMILIANA_TO.y and position.z == CRIMSON_COURT_EMILIANA_FROM.z
 end
 
 local function greetCallback(npc, creature)

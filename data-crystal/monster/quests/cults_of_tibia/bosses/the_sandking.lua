@@ -79,7 +79,7 @@ monster.loot = {
 	{ name = "small diamond", chance = 21000, maxCount = 10 },
 	{ name = "green gem", chance = 12000 },
 	{ name = "luminous orb", chance = 35000 },
-	{ name = "great mana potion", chance = 31230, maxCount = 10 },
+	{ id = 238, chance = 31230, maxCount = 10 }, -- great mana potion
 	{ name = "ultimate health potion", chance = 28230, maxCount = 10 },
 	{ name = "cobra crown", chance = 400 },
 	{ name = "silver token", chance = 25520 },

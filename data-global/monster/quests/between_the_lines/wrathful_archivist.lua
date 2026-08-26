@@ -81,7 +81,7 @@ monster.loot = {
 	{ name = "mana potion", chance = 6000, maxCount = 14 },
 	{ name = "violet crystal shard", chance = 5000, maxCount = 2 },
 	{ name = "blue crystal splinter", chance = 4800 },
-	{ name = "great mana potion", chance = 4000, maxCount = 6 },
+	{ id = 238, chance = 4000, maxCount = 6 }, -- great mana potion
 	{ name = "strong mana potion", chance = 3800, maxCount = 14 },
 	{ name = "small ruby", chance = 3800, maxCount = 3 },
 	{ name = "small sapphire", chance = 3800, maxCount = 3 },

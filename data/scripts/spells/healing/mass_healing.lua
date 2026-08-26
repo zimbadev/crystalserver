@@ -1,7 +1,7 @@
 local function targetFunction(creature, target)
 	local player = creature:getPlayer()
-	local min = ((player:getLevel() / 5) + (player:getMagicLevel() * 5.7) + 26)
-	local max = ((player:getLevel() / 5) + (player:getMagicLevel() * 10.43) + 62)
+	local min = ((calculateBaseDamageHealing(player:getLevel())) + (player:getMagicLevel() * 5.7) + 26)
+	local max = ((calculateBaseDamageHealing(player:getLevel())) + (player:getMagicLevel() * 10.43) + 62)
 
 	local bosses = { "leiden", "ravennous hunger", "dorokoll the mystic", "eshtaba the conjurer", "eliz the unyielding", "mezlon the defiler", "malkhar deathbringer", "containment crystal" }
 	local master = target:getMaster()
@@ -58,8 +58,8 @@ spell:cooldown(2 * 1000)
 spell:groupCooldown(1 * 1000)
 spell:level(36)
 spell:mana(150)
+spell:basePower(200)
 spell:isPremium(true)
 spell:isAggressive(false)
-
 spell:castSound(SOUND_EFFECT_TYPE_SPELL_MASS_HEALING)
 spell:register()

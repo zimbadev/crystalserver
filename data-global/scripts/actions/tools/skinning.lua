@@ -13,13 +13,10 @@ local MARBLE_CONFIG = {
 	{ value = 60000, newItem = 10427, desc = "This shoddy work was made by |PLAYERNAME|." },
 }
 
+local RABBIT_KNIFE_IDS = { [5908] = true }
+
 local config = {
 	[5908] = {
-
-		-- rabbit
-		[4173] = { value = CREATURE_SKINNING_CHANCE, newItem = 12172, after = 4302 },
-		[6017] = { value = CREATURE_SKINNING_CHANCE, newItem = 12172, after = 4302 }, -- after being killed
-
 		-- minotaurs
 		[4011] = { value = CREATURE_SKINNING_CHANCE, newItem = 5878, after = 4012 }, -- minotaur
 		[5969] = { value = CREATURE_SKINNING_CHANCE, newItem = 5878, after = 4012 }, -- minotaur, after being killed
@@ -62,23 +59,23 @@ local config = {
 		[10356] = { value = CREATURE_SKINNING_CHANCE, newItem = 5876, after = 10357 }, -- lizard legionnaire
 		[10359] = { value = CREATURE_SKINNING_CHANCE, newItem = 5876, after = 10357 }, -- lizard legionnaire, after being killed
 
-		-- dragon
+		-- dragons
 		[4025] = { value = CREATURE_SKINNING_CHANCE, newItem = 5877, after = 4026 }, -- Dragon
 		[5973] = { value = CREATURE_SKINNING_CHANCE, newItem = 5877, after = 4026 }, -- Dragon, after being killed
 
-		-- dragon lord
+		-- dragon lords
 		[4062] = { value = CREATURE_SKINNING_CHANCE, newItem = 5948, after = 4063 },
 		[5984] = { value = CREATURE_SKINNING_CHANCE, newItem = 5948, after = 4063 }, -- after being killed
 
-		-- behemoth
+		-- behemoths
 		[4112] = { value = CREATURE_SKINNING_CHANCE, newItem = 5893, after = 4113 },
 		[5999] = { value = CREATURE_SKINNING_CHANCE, newItem = 5893, after = 4113 }, -- after being killed
 
-		-- bone beast
+		-- bone beasts
 		[4212] = { value = CREATURE_SKINNING_CHANCE, newItem = 5925, after = 4213 },
 		[6030] = { value = CREATURE_SKINNING_CHANCE, newItem = 5925, after = 4213 }, -- after being killed
 
-		-- clomp - raw meat
+		-- clomp
 		[22743] = { value = CREATURE_SKINNING_CHANCE, newItem = 22186, after = 22744 },
 		[22742] = { value = CREATURE_SKINNING_CHANCE, newItem = 22186, after = 22744 }, -- after being killed
 
@@ -116,9 +113,41 @@ local config = {
 	},
 }
 
-local skinning = Action()
+function rottinWoodSkinRabbit(player, target)
+	if target.itemid == 6017 then
+		player:say("You have to wait a bit before you can skin this animal.", TALKTYPE_MONSTER_SAY)
+		return true
+	elseif target.itemid == 4301 then
+		local S = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen
+		if player:getStorageValue(S.Mission01) ~= 1 and player:getStorageValue(S.Task01) ~= 1 then
+			return false
+		end
 
-function skinning.onUse(player, item, fromPosition, target, toPosition, isHotkey)
+		local chance = math.random(1, 100)
+		if chance <= 25 then
+			player:say("You successfully gathered a rabbit's foot in excellent condition.", TALKTYPE_MONSTER_SAY)
+			player:addItem(12172, 1)
+		elseif chance <= 35 then
+			player:say("You successfully gathered two rabbit's feet in excellent condition.", TALKTYPE_MONSTER_SAY)
+			player:addItem(12172, 2)
+		else
+			player:say("Your attempt to skin the rabbit failed. None of the rabbit's feet are in an acceptable condition to create a lucky charm.", TALKTYPE_MONSTER_SAY)
+		end
+		target:transform(4302)
+		return true
+	end
+	return false
+end
+
+function onUseKnife(player, item, fromPosition, target, toPosition, isHotkey)
+	if not target or not target:isItem() then
+		return true
+	end
+
+	if RABBIT_KNIFE_IDS[item.itemid] and rottinWoodSkinRabbit(player, target) then
+		return true
+	end
+
 	if ICE_CONFIG[target.itemid] then -- ice blocks
 		local ice = ICE_CONFIG[target.itemid]
 		if math.random(1, 100000) <= ice.chance then
@@ -183,12 +212,12 @@ function skinning.onUse(player, item, fromPosition, target, toPosition, isHotkey
 	end
 
 	local topItem = false
-	local skin = config[item.itemid][target.itemid]
+	local skin = config[item.itemid] and config[item.itemid][target.itemid]
 	local tile = Tile(toPosition)
 	if tile then
 		topItem = tile:getTopDownItem()
 		if topItem then
-			skin = config[item.itemid][topItem.itemid]
+			skin = config[item.itemid] and config[item.itemid][topItem.itemid]
 		end
 	end
 
@@ -229,10 +258,6 @@ function skinning.onUse(player, item, fromPosition, target, toPosition, isHotkey
 			player:say("You got Neutral matter.", TALKTYPE_MONSTER_SAY)
 			player:addItem(954, 1)
 			player:setStorageValue(789100, 2)
-			return true
-		elseif target.itemid == 4301 then -- rottin wood and the married men quest
-			player:say("You successfully gathered a rabbit's food in excellent condition.", TALKTYPE_MONSTER_SAY)
-			player:addItem(12172, 1)
 			return true
 		end
 	end
@@ -299,7 +324,10 @@ function skinning.onUse(player, item, fromPosition, target, toPosition, isHotkey
 	end
 
 	if transform then
-		topItem:transform(skin.after or topItem:getType():getDecayId() or topItem.itemid + 1)
+		local corpse = topItem or target
+		if corpse then
+			corpse:transform(skin.after or corpse:getType():getDecayId() or (corpse.itemid + 1))
+		end
 	else
 		target:remove()
 	end
@@ -310,6 +338,12 @@ function skinning.onUse(player, item, fromPosition, target, toPosition, isHotkey
 	toPosition:sendMagicEffect(effect)
 
 	return true
+end
+
+local skinning = Action()
+
+function skinning.onUse(player, item, fromPosition, target, toPosition, isHotkey)
+	return onUseKnife(player, item, fromPosition, target, toPosition, isHotkey)
 end
 
 skinning:id(5908, 5942)
