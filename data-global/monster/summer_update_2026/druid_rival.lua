@@ -63,11 +63,9 @@ monster.voices = {
 	{ text = "NATURE NEED LIGHT!", yell = false },
 }
 
-monster.loot = {
-}
+monster.loot = {}
 
-monster.attacks = {
-}
+monster.attacks = {}
 
 monster.defenses = {
 	defense = 78,

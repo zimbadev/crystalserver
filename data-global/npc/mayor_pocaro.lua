@@ -110,11 +110,15 @@ keywordHandler:addKeyword({ "base" }, StdModule.say, { npcHandler = npcHandler, 
 keywordHandler:addKeyword({ "name" }, StdModule.say, { npcHandler = npcHandler, text = "Pocaro. Mayor of Salgadora, for whatever that is still worth." })
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I am the mayor of Salgadora. Still in service of our {kingdom}, I guess, and for what that is worth." })
 
-keywordHandler:addKeyword({ "kingdom" }, StdModule.say, { npcHandler = npcHandler, text = {
-	"This land was not always as you see it now. Long before your kind set foot here, it was known as the Coral Kingdom of Thalassara.",
-	"The capital, Coralmar, stood behind {reefs} that made it unreachable from the sea. A kingdom shaped by the tides, and protected by them.",
-	"That is until that rock broke off, supposedly from the moon.",
-} })
+keywordHandler:addKeyword(
+	{ "kingdom" },
+	StdModule.say,
+	{ npcHandler = npcHandler, text = {
+		"This land was not always as you see it now. Long before your kind set foot here, it was known as the Coral Kingdom of Thalassara.",
+		"The capital, Coralmar, stood behind {reefs} that made it unreachable from the sea. A kingdom shaped by the tides, and protected by them.",
+		"That is until that rock broke off, supposedly from the moon.",
+	} }
+)
 keywordHandler:addKeyword({ "reefs" }, StdModule.say, { npcHandler = npcHandler, text = {
 	"Even before all this, Coralmar could not be reached from the sea. The reefs would tear apart any ship that dared approach.",
 	"Now? If anything still lives there, it is beyond our reach.",
@@ -136,10 +140,14 @@ keywordHandler:addKeyword({ "moonspawn", "moonspawns" }, StdModule.say, { npcHan
 	"Then came the fall. A fragment of the moon struck the south. And with it, the first of the moonspawn appeared.",
 	"At first, they thought they could master them. Control them. There were even some successes.",
 } })
-keywordHandler:addKeyword({ "recifar" }, StdModule.say, { npcHandler = npcHandler, text = {
-	"When that rock fell from the sky, it disrupted the flow of the Rionda River. The town of Recifar, once settled along its banks, suffered severely and the surrounding land sank into swamp.",
-	"At first they tried irrigation and pumps, but then the moonspawn made their first appearance. In the end, the town was abandoned and lost.",
-} })
+keywordHandler:addKeyword(
+	{ "recifar" },
+	StdModule.say,
+	{ npcHandler = npcHandler, text = {
+		"When that rock fell from the sky, it disrupted the flow of the Rionda River. The town of Recifar, once settled along its banks, suffered severely and the surrounding land sank into swamp.",
+		"At first they tried irrigation and pumps, but then the moonspawn made their first appearance. In the end, the town was abandoned and lost.",
+	} }
+)
 keywordHandler:addKeyword({ "marrow" }, StdModule.say, { npcHandler = npcHandler, text = "The doctor? He came, he took, he vanished. If the cult has him, he earned it." })
 
 npcHandler:setMessage(MESSAGE_GREET, "Ah, another one drawn here by the promise of moonsilver, I presume. I am the mayor of what remains of this {settlement}.")
