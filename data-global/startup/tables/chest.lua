@@ -2796,6 +2796,103 @@ ChestUnique = {
 		weight = 6.00,
 		storage = Storage.Quest.U11_80.TheSecretLibrary.SmallIslands.Hawser,
 	},
+	-- Shadows of Yalahar Quest Mision 06
+	[6331] = {
+		useKV = true,
+		itemId = 2469,
+		itemPos = { x = 32903, y = 31281, z = 11 },
+		reward = { { 9247, 1 } }, -- golem blueprint
+		weight = 1.20,
+		questName = "golem-blueprint",
+	},
+	-- Shadows of Yalahar Quest Mision 07
+	[6332] = {
+		useKV = true,
+		itemId = 9253,
+		itemPos = { x = 32648, y = 31104, z = 10 },
+		reward = { { 9252, 1 } }, -- old power core
+		weight = 7.80,
+		questName = "old-power-core",
+	},
+	-- Shadows of Yalahar Quest Mision 08
+	[6333] = {
+		useKV = true,
+		itemId = 2473,
+		itemPos = { x = 32944, y = 31195, z = 13 },
+		reward = { { 9248, 1 } }, -- stabilizer
+		weight = 1.14,
+		questName = "stabilizer",
+	},
+	-- Shadows of Yalahar Quest Mision 10
+	[6334] = {
+		useKV = true,
+		itemId = 4285,
+		itemPos = { x = 32693, y = 31565, z = 13 },
+		reward = { { 9240, 1 } }, -- deep crystal
+		weight = 3.10,
+		questName = "deep-crystal",
+	},
+	-- Shadows of Yalahar Quest Mision 10
+	[6335] = {
+		useKV = true,
+		itemId = 1994,
+		itemPos = { x = 32994, y = 32405, z = 12 },
+		reward = { { 9238, 1 } }, -- dark essence
+		weight = 2.60,
+		questName = "dark-essence",
+	},
+	-- Shadows of Yalahar Quest Mision 10
+	[6335] = {
+		useKV = true,
+		itemId = 2469,
+		itemPos = { x = 32629, y = 32446, z = 10 },
+		reward = { { 9237, 1 } }, -- shadow orb
+		weight = 4.00,
+		questName = "shadow-orb",
+	},
+	-- Shadows of Yalahar Quest Mision 10
+	[6336] = {
+		useKV = true,
+		itemId = 3634,
+		itemPos = { x = 33038, y = 32185, z = 9 },
+		reward = { { 9241, 1 } }, -- bloodkiss flower
+		weight = 0.95,
+		questName = "bloodkiss-flower",
+	},
+	-- Shadows of Yalahar Quest Mision 10
+	[6337] = {
+		useKV = true,
+		itemId = 2472,
+		itemPos = { x = 32249, y = 32473, z = 10 },
+		reward = { { 9239, 1 } }, -- worm queen tooth
+		weight = 8.50,
+		questName = "worm-queen-tooth",
+	},
+	-- Shadows of Yalahar Quest Mision 12
+	[6338] = {
+		useKV = true,
+		itemId = 2469,
+		itemPos = { x = 32548, y = 31244, z = 13 },
+		reward = { { 9255, 1 } }, -- Golem Head
+		weight = 30.00,
+		questName = "golem-head",
+	},
+	[6339] = {
+		useKV = true,
+		itemId = 2472,
+		itemPos = { x = 33239, y = 31798, z = 11 },
+		reward = { { 16251, 1 } }, -- Golem Wrench
+		weight = 2.00,
+		questName = "golem-wrench",
+	},
+	[6340] = {
+		useKV = true,
+		itemId = 2473,
+		itemPos = { x = 32576, y = 31572, z = 110 },
+		reward = { { 9308, 1 } }, -- Nautical Map
+		weight = 8.19,
+		questName = "nautical-map",
+	},
 	-- Reward of others scrips files (varied rewards)
 	-- The First dragon Quest
 	-- Treasure chests (data\scripts\actions\quests\first_dragon\treasure_chests.lua)

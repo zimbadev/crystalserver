@@ -24,11 +24,17 @@ toggleMaintainMode = false
 -- @field [parent=#global] #string maintainModeMessage an empty string by default, set a custom message if needed.
 maintainModeMessage = ""
 
+-- World settings (This information will be loaded from the 'worlds' database table as well)
+-- NOTE: World id is 1 as default, new worlds must have different ids always greater than 1
+-- NOTE: valid values for worldType are: "pvp", "no-pvp", "pvp-enforced", "retro-pvp" and "retro-hardcore"
+-- NOTE: valid values for worldLocation are: "Europe", "North America", "South America" and "Oceania"
+worldId = 1
+worldType = "pvp"
+worldLocation = "South America"
+
 -- Combat settings
--- NOTE: valid values for worldType are: "pvp", "no-pvp" and "pvp-enforced"
 -- NOTE: removeBeginningWeaponAmmunition: spears, arrows, bolt have endless ammo (allows training for paladins)
 -- NOTE: refundManaOnBeginningWeapons: wand of vortex and snakebite refund mana used (allows training for mages)
-worldType = "pvp"
 hotkeyAimbotEnabled = true
 protectionLevel = 7
 pzLocked = 60 * 1000
@@ -80,7 +86,7 @@ allowOldProtocol = false
 bindOnlyGlobalAddress = false
 loginProtocolPort = 7171
 gameProtocolPort = 7172
-statusProtocolPort = 7171
+statusProtocolPort = 97172
 maxPlayers = 0
 serverName = "Crystal"
 serverMotd = "Welcome to the Crystal Server!"
@@ -306,7 +312,6 @@ onlyPremiumAccount = false
 -- NOTE: autoBank = true, the dropped coins from monsters will be automatically deposited to your bank account.
 -- NOTE: toggleGoldPouchAllowAnything will allow players to move items or gold to gold pouch
 -- NOTE: toggleGoldPouchQuickLootOnly will ONLY allow quickloot to move items to gold pouch
--- NOTE: toggleServerIsRetroPVP will make this server as retro, setting PARTY_PROTECTION and ADVANCED_SECURE_MODE to 0
 -- NOTE: toggleTravelsFree will make all travels from boat free
 -- NOTE: buyAolCommandFee will add fee when player buy aol by command (!aol), active changing value more than 0 (fee value. ex: 1 = 1gp  aol will be 50001)
 -- NOTE: teleportPlayerToVocationRoom will enable oressa to teleport player to his/her room vocation
@@ -323,7 +328,6 @@ autoLoot = false
 autoBank = false
 toggleGoldPouchAllowAnything = false
 toggleGoldPouchQuickLootOnly = false
-toggleServerIsRetroPVP = false
 toggleTravelsFree = false
 buyAolCommandFee = 0
 teleportPlayerToVocationRoom = true
@@ -679,7 +683,6 @@ startupDatabaseOptimization = true
 ownerName = "Tryller"
 ownerEmail = "@gmail.com"
 url = "https://github.com/zimbadev/crystalserver"
-location = "South America"
 
 -- Sends Discord webhook notifications on startup, raids and shutdown.
 -- The URL layout is https://discord.com/api/webhooks/:id/:token

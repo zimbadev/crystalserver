@@ -327,6 +327,7 @@ class PlayerFunctions {
 	static int luaPlayerPopupFYI(lua_State* L);
 
 	static int luaPlayerIsPzLocked(lua_State* L);
+	static int luaPlayerAddInFightTicks(lua_State* L);
 	static int luaPlayerIsOffline(lua_State* L);
 
 	static int luaPlayerGetClient(lua_State* L);

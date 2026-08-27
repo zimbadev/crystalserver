@@ -82,6 +82,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			}, npc, creature)
 			player:setStorageValue(Storage.Quest.U11_40.ThreatenedDreams.Mission01.TroubledAnimals, 5)
 			npcHandler:setTopic(playerId, 0)
+			player:addItem(25295, 1)
 		end
 	elseif MsgContains(message, "no") then
 		npcHandler:say("Then not.", npc, creature)

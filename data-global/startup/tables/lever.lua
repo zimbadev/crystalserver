@@ -277,6 +277,28 @@ LeverAction = {
 		itemId = 2772,
 		itemPos = { x = 33841, y = 32080, z = 14 },
 	},
+	-- Shadows of Yalahar Quest (Teleport Telas/Lab)
+	[57235] = {
+		itemId = false,
+		itemPos = {
+			{ x = 33272, y = 31797, z = 6 },
+			{ x = 33272, y = 31797, z = 11 },
+		},
+	},
+	-- Shadows of Yalahar Quest (Final Mission 13)
+	[57236] = {
+		itemId = 2773,
+		itemPos = {
+			{ x = 33269, y = 31789, z = 11 },
+		},
+	},
+	-- Isle of Evil
+	[57237] = {
+		itemId = false,
+		itemPos = {
+			{ x = 32756, y = 31469, z = 6 },
+		},
+	},
 }
 
 LeverUnique = {

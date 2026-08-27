@@ -21,7 +21,7 @@ monster.bosstiary = {
 monster.health = 630
 monster.maxHealth = 630
 monster.race = "blood"
-monster.corpse = 18197
+monster.corpse = 9403
 monster.speed = 150
 monster.manaCost = 0
 
@@ -77,14 +77,7 @@ monster.voices = {
 	{ text = "Yarr, death to all landlubbers!", yell = false },
 }
 
-monster.loot = {
-	{ id = 3031, chance = 2000, maxCount = 95 }, -- gold coin
-	{ id = 3035, chance = 30000, maxCount = 9 }, -- platinum coin
-	{ id = 9375, chance = 1000 }, -- pointed rabbitslayer
-	{ id = 9382, chance = 1000 }, -- helmet of nature
-	{ id = 9374, chance = 1000 }, -- odd hat
-	{ id = 9401, chance = 2000 }, -- shield nevermourn
-}
+monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -125 },

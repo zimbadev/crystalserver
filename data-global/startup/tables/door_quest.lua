@@ -991,6 +991,96 @@ QuestDoorAction = {
 			{ x = 32953, y = 31460, z = 9 },
 		},
 	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_02] = {
+		itemId = 8363,
+		itemPos = {
+			{ x = 32885, y = 31259, z = 10 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_05] = {
+		itemId = 8361,
+		itemPos = {
+			{ x = 32699, y = 31184, z = 9 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_06] = {
+		itemId = 8363,
+		itemPos = {
+			{ x = 32902, y = 31292, z = 10 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_07] = {
+		itemId = 8363,
+		itemPos = {
+			{ x = 32649, y = 31113, z = 10 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_08] = {
+		itemId = false,
+		itemPos = {
+			{ x = 32950, y = 31203, z = 13 },
+			{ x = 32950, y = 31207, z = 13 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_09] = {
+		itemId = 1674,
+		itemPos = {
+			{ x = 32787, y = 31195, z = 8 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_10] = {
+		itemId = false,
+		itemPos = {
+			{ x = 32693, y = 31564, z = 13 }, -- hellgate
+			{ x = 32993, y = 32405, z = 12 }, -- drefia
+			{ x = 32628, y = 32446, z = 10 }, -- dark cathedral
+			{ x = 33038, y = 32184, z = 9 }, -- shadowthorn
+			{ x = 32249, y = 32474, z = 10 }, -- fibula
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_11] = {
+		itemId = 8363,
+		itemPos = {
+			{ x = 32894, y = 31302, z = 9 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.DoorLab] = {
+		itemId = 1644,
+		itemPos = {
+			{ x = 33271, y = 31798, z = 6 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.DoorFinal] = {
+		itemId = 1642,
+		itemPos = {
+			{ x = 33265, y = 31797, z = 11 },
+			{ x = 33249, y = 31797, z = 11 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Questline] = {
+		itemId = 7721,
+		itemPos = {
+			{ x = 32678, y = 31990, z = 14 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Door_04] = {
+		itemId = 7723,
+		itemPos = {
+			{ x = 32576, y = 31923, z = 12 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Door_05] = {
+		itemId = 1642,
+		itemPos = {
+			{ x = 32536, y = 31628, z = 8 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Door_06] = {
+		itemId = 1644,
+		itemPos = {
+			{ x = 32681, y = 31992, z = 14 },
+		},
+	},
 }
 
 QuestDoorUnique = {

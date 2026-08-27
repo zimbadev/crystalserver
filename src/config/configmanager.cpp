@@ -70,7 +70,8 @@ bool ConfigManager::load() {
 		loadIntConfig(L, MYSQL_POOL_SIZE, "mysqlPoolSize", 4);
 		loadIntConfig(L, PREMIUM_DEPOT_LIMIT, "premiumDepotLimit", 8000);
 		loadIntConfig(L, SQL_PORT, "mysqlPort", 3306);
-		loadIntConfig(L, STATUS_PORT, "statusProtocolPort", 7171);
+		loadIntConfig(L, STATUS_PORT, "statusProtocolPort", 7173);
+		loadIntConfig(L, WORLD_ID, "worldId", 1);
 
 		loadStringConfig(L, AUTH_TYPE, "authType", "password");
 		loadStringConfig(L, HOUSE_RENT_PERIOD, "houseRentPeriod", "never");
@@ -182,7 +183,6 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, TOGGLE_SAVE_ASYNC, "toggleSaveAsync", false);
 	loadBoolConfig(L, TOGGLE_SAVE_INTERVAL, "toggleSaveInterval", false);
 	loadBoolConfig(L, TOGGLE_SAVE_INTERVAL_CLEAN_MAP, "toggleSaveIntervalCleanMap", false);
-	loadBoolConfig(L, TOGGLE_SERVER_IS_RETRO, "toggleServerIsRetroPVP", false);
 	loadBoolConfig(L, TOGGLE_SPECIAL_TILES, "toggleSpecialTiles", false);
 	loadBoolConfig(L, TOGGLE_TRAVELS_FREE, "toggleTravelsFree", false);
 	loadBoolConfig(L, TOGGLE_WHEELSYSTEM, "wheelSystemEnabled", true);
@@ -381,7 +381,6 @@ bool ConfigManager::load() {
 	loadIntConfig(L, PVP_MAX_LEVEL_DIFFERENCE, "pvpMaxLevelDifference", 0);
 	loadIntConfig(L, PZ_LOCKED, "pzLocked", 60000);
 	loadIntConfig(L, RATE_EXPERIENCE, "rateExp", 1);
-	loadIntConfig(L, RATE_EXERCISE_TRAINING_SPEED, "rateExerciseTrainingSpeed", 1.0);
 	loadIntConfig(L, RATE_KILLING_IN_THE_NAME_OF_POINTS, "rateKillingInTheNameOfPoints", 1);
 	loadIntConfig(L, RATE_MAGIC, "rateMagic", 1);
 	loadIntConfig(L, RATE_SKILL, "rateSkill", 1);
@@ -439,8 +438,6 @@ bool ConfigManager::load() {
 	loadStringConfig(L, FORGE_INFLUENCED_INTERVAL_TIME, "forgeInfluencedIntervalTime", "1");
 	loadStringConfig(L, FORGE_INFLUENCED_INTERVAL_TYPE, "forgeInfluencedIntervalType", "hour");
 	loadStringConfig(L, GLOBAL_SERVER_SAVE_TIME, "globalServerSaveTime", "06:00");
-	loadStringConfig(L, LOCATION, "location", "");
-	loadStringConfig(L, LOGLEVEL, "logLevel", "info");
 	loadStringConfig(L, M_CONST, "memoryConst", "1<<16");
 	loadStringConfig(L, METRICS_PROMETHEUS_ADDRESS, "metricsPrometheusAddress", "localhost:9464");
 	loadStringConfig(L, OWNER_EMAIL, "ownerEmail", "");
@@ -452,7 +449,9 @@ bool ConfigManager::load() {
 	loadStringConfig(L, TIBIADROME_CONCOCTION_TICK_TYPE, "tibiadromeConcoctionTickType", "online");
 	loadStringConfig(L, URL, "url", "");
 	loadStringConfig(L, WEEKLY_TASKS_RESET_DAY, "weeklyTasksResetDay", "monday");
+	loadStringConfig(L, WORLD_LOCATION, "worldLocation", "South America");
 	loadStringConfig(L, WORLD_TYPE, "worldType", "pvp");
+	loadStringConfig(L, LOGLEVEL, "logLevel", "info");
 
 	loadLuaOTCFeatures(L);
 

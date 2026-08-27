@@ -570,7 +570,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		elseif npcHandler:getTopic(playerId) == 34 then
 			if player:removeItem(12510, 1) then
 				npcHandler:say("Marvellous! You brought a giant smith hammer for the explorer society!", npc, creature)
-				player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.GiantSmithHammer.Hamer, 2)
+				player:setStorageValue(Storage.Quest.U7_6.ExplorerSociety.GiantSmithHammer.Hammer, 2)
 				npcHandler:setTopic(playerId, 0)
 			else
 				npcHandler:say("No you don't.", npc, creature)
@@ -623,6 +623,20 @@ local function creatureSayCallback(npc, creature, type, message)
 			"We offer a reward for each brooch returned to us. Have you found an explorer brooch?",
 		}, npc, creature)
 		npcHandler:setTopic(playerId, 36)
+	elseif MsgContains(message, "nautical map") and player:getStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission05) == 1 then
+		npcHandler:say({
+			"Now this is getting ridiculous. That map has been lying around, collecting dust for years and now after those madmen stole it, someone else shows up asking for it. ...",
+			"However, the map was completely useless because it only showed the waters around some remote piece of rock in the middle of the sea. We only stored it here for completeness. ...",
+			"Some days ago some wannabe pirates turned up and threatened to kill me if I did not give them a map. ...",
+			"As far as I could make out between their boasting and threatening they wanted to start out as pirates and thought it would be easier to start by stealing some maps before getting a whole ship. The only map I had here was that worthless nautical map. ...",
+			"Luckily enough they seemed to have no idea how to read such maps and were pleased to get a map with some water and lines on it. ...",
+			"So they took the map, but not before they had ruined the interior decorating and made me dance and sing pirate songs for them. ...",
+			"I tell you something: If you manage to find those bandits and teach them a lesson you can keep the map. It's worthless anyway. As far as I could make out their hideout is somewhere to the east. ...",
+			"They referred to it as 'the cave' and said the entrance is hidden. They also mentioned sand and two mossy stones. I hope that helps. I wish you luck.",
+		}, npc, creature)
+		player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission05, 2)
+		player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Door_05, 1)
+		npcHandler:setTopic(playerId, 0)
 	else
 		-- The New Frontier
 		if player:getStorageValue(TheNewFrontier.Questline) == 14 and player:getStorageValue(TheNewFrontier.Mission05.Angus) == 1 then
@@ -636,6 +650,13 @@ end
 npcHandler:setMessage(MESSAGE_GREET, "Greetings, what can I do for you?")
 npcHandler:setCallback(CALLBACK_ON_TRADE_REQUEST, onTradeRequest)
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
+
+keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I am the local representative of the explorer society." })
+keywordHandler:addKeyword({ "explorer society" }, StdModule.say, { npcHandler = npcHandler, text = "Our noble society is dedicated to exploring the unknown. No location is too remote for our members to travel there ... No beast is too wild to be hunted. No treasure buried too deep to be unearthed ... Only the most dedicated and fearless adventurers may join our ranks." })
+keywordHandler:addKeyword({ "base" }, StdModule.say, { npcHandler = npcHandler, text = "Currently we maintain public bases in Port Hope and Northport." })
+keywordHandler:addKeyword({ "portals" }, StdModule.say, { npcHandler = npcHandler, text = "The portals should be ready to be used now. If you have an orichalcum pearl with you, enter the portal." })
+keywordHandler:addKeyword({ "parchment" }, StdModule.say, { npcHandler = npcHandler, text = "The examination of scrolls with lizard writings is a valuable source of information." })
+keywordHandler:addKeyword({ "scroll lizard" }, StdModule.say, { npcHandler = npcHandler, text = "The examination of scrolls with lizard writings is a valuable source of information." })
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 npcConfig.shop = {
