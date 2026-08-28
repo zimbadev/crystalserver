@@ -6734,7 +6734,7 @@ void ProtocolGame::sendForgingData() {
 		msg.add<uint64_t>(price);
 	}
 
-	const auto dustLevelByte = static_cast<uint8_t>(std::min<uint64_t>(player->getForgeDustLevel() > 100 ? player->getForgeDustLevel() - 100 : 0, 225));
+	const auto dustLevelByte = static_cast<uint8_t>(std::min<uint64_t>(player->getForgeDustLevel() > 100 ? (player->getForgeDustLevel() - 100) / 20 : 0, 225));
 	msg.addByte(dustLevelByte);
 
 	// Update player resources
@@ -6975,7 +6975,7 @@ void ProtocolGame::sendOpenForge() {
 	msg.addByte(convergenceTransferCount);
 	msg.setBufferPosition(dustLevelPosition);
 
-	msg.addByte(static_cast<uint8_t>(std::min<uint16_t>(player->getForgeDustLevel(), 0xFF))); // Player dust limit
+	msg.addByte(static_cast<uint8_t>(std::min<uint64_t>(player->getForgeDustLevel() > 100 ? (player->getForgeDustLevel() - 100) / 20 : 0, 225))); // Player dust limit
 	writeToOutputBuffer(msg);
 	// Update forging informations
 	sendForgingData();
