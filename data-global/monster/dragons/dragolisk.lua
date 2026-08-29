@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Dragolisk")
 local monster = {}
 
 monster.description = "a dragolisk"
-monster.experience = 5050
+monster.experience = 4650
 monster.outfit = {
 	lookType = 1707,
 	lookHead = 0,
@@ -103,7 +103,7 @@ monster.elements = {
 	{ type = COMBAT_PHYSICALDAMAGE, percent = 15 },
 	{ type = COMBAT_ENERGYDAMAGE, percent = 0 },
 	{ type = COMBAT_EARTHDAMAGE, percent = -10 },
-	{ type = COMBAT_FIREDAMAGE, percent = 0 },
+	{ type = COMBAT_FIREDAMAGE, percent = 40 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
