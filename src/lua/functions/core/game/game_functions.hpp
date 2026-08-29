@@ -66,6 +66,7 @@ private:
 	static int luaGameStartRaid(lua_State* L);
 
 	static int luaGameGetClientVersion(lua_State* L);
+	static int luaGameSetImprovedRespawnZones(lua_State* L);
 
 	static int luaGameReload(lua_State* L);
 

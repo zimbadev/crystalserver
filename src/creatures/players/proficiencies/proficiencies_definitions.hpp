@@ -50,6 +50,90 @@ enum WeaponProficiencyPerkType_t : uint16_t {
 	PROFICIENCY_PERK_OMEGA_STRIKE_EXTRA_DAMAGE = 29,
 	PROFICIENCY_PERK_ARMOR_PENETRATION = 30,
 	PROFICIENCY_PERK_ELEMENTAL_PIERCE = 31,
+	PROFICIENCY_PERK_ON_HIT_HOMING_MISSILE = 32,
+};
+
+// 15.25 (sommerrelease26) SHAPE system: the perkType sent in a modified slot / reshape offer (0xC4/0xBB) is an
+// INDEX into the client's shaping catalogue (1-323), NOT this server enum. UNIVERSAL = the per-vocation spell
+// augment OFFSETS (added to region*50 in rollWeaponProficiencyPerk): {1-5 crit-chance, 11-15 crit-extra,
+// 21-25 base-damage}. GENERAL = the vocation-agnostic 251-323 block (bestiary / leech-on-hit-on-kill /
+// alpha-omega / skill% / armor-pen / elemental-pierce / powerful-foe). See CLIENT_15.25_e2a4a1_PORT.md §8.1.
+inline constexpr WeaponProficiencyPerkType_t WEAPON_PROFICIENCY_UNIVERSAL_SHAPEABLE_PERKS[] = {
+	static_cast<WeaponProficiencyPerkType_t>(1),
+	static_cast<WeaponProficiencyPerkType_t>(2),
+	static_cast<WeaponProficiencyPerkType_t>(3),
+	static_cast<WeaponProficiencyPerkType_t>(4),
+	static_cast<WeaponProficiencyPerkType_t>(5),
+	static_cast<WeaponProficiencyPerkType_t>(11),
+	static_cast<WeaponProficiencyPerkType_t>(12),
+	static_cast<WeaponProficiencyPerkType_t>(13),
+	static_cast<WeaponProficiencyPerkType_t>(14),
+	static_cast<WeaponProficiencyPerkType_t>(15),
+	static_cast<WeaponProficiencyPerkType_t>(21),
+	static_cast<WeaponProficiencyPerkType_t>(22),
+	static_cast<WeaponProficiencyPerkType_t>(23),
+	static_cast<WeaponProficiencyPerkType_t>(24),
+	static_cast<WeaponProficiencyPerkType_t>(25),
+};
+
+// 15.25 (sommerrelease26): the GENERAL (vocation-agnostic) shapeable catalogue indices in the 251-323 block.
+//   251-271 = bestiary damage (250 + bestiaryId, 21 races)
+//   281-288 = mana/life leech, mana/life on-hit, mana/life on-kill, alpha strike, omega strike
+//   291-297 = skill% of auto-attacks (290 + skillSlot 1-7); 301-307 = skill% of spells; 311-317 = skill% of healing (313 omitted)
+//   321-323 = armor penetration, elemental pierce, powerful foe
+inline constexpr WeaponProficiencyPerkType_t WEAPON_PROFICIENCY_GENERAL_SHAPEABLE_PERKS[] = {
+	static_cast<WeaponProficiencyPerkType_t>(251),
+	static_cast<WeaponProficiencyPerkType_t>(252),
+	static_cast<WeaponProficiencyPerkType_t>(253),
+	static_cast<WeaponProficiencyPerkType_t>(254),
+	static_cast<WeaponProficiencyPerkType_t>(255),
+	static_cast<WeaponProficiencyPerkType_t>(256),
+	static_cast<WeaponProficiencyPerkType_t>(257),
+	static_cast<WeaponProficiencyPerkType_t>(258),
+	static_cast<WeaponProficiencyPerkType_t>(259),
+	static_cast<WeaponProficiencyPerkType_t>(260),
+	static_cast<WeaponProficiencyPerkType_t>(261),
+	static_cast<WeaponProficiencyPerkType_t>(262),
+	static_cast<WeaponProficiencyPerkType_t>(263),
+	static_cast<WeaponProficiencyPerkType_t>(264),
+	static_cast<WeaponProficiencyPerkType_t>(265),
+	static_cast<WeaponProficiencyPerkType_t>(266),
+	static_cast<WeaponProficiencyPerkType_t>(267),
+	static_cast<WeaponProficiencyPerkType_t>(268),
+	static_cast<WeaponProficiencyPerkType_t>(269),
+	static_cast<WeaponProficiencyPerkType_t>(270),
+	static_cast<WeaponProficiencyPerkType_t>(271),
+	static_cast<WeaponProficiencyPerkType_t>(281),
+	static_cast<WeaponProficiencyPerkType_t>(282),
+	static_cast<WeaponProficiencyPerkType_t>(283),
+	static_cast<WeaponProficiencyPerkType_t>(284),
+	static_cast<WeaponProficiencyPerkType_t>(285),
+	static_cast<WeaponProficiencyPerkType_t>(286),
+	static_cast<WeaponProficiencyPerkType_t>(287),
+	static_cast<WeaponProficiencyPerkType_t>(288),
+	static_cast<WeaponProficiencyPerkType_t>(291),
+	static_cast<WeaponProficiencyPerkType_t>(292),
+	static_cast<WeaponProficiencyPerkType_t>(293),
+	static_cast<WeaponProficiencyPerkType_t>(294),
+	static_cast<WeaponProficiencyPerkType_t>(295),
+	static_cast<WeaponProficiencyPerkType_t>(296),
+	static_cast<WeaponProficiencyPerkType_t>(297),
+	static_cast<WeaponProficiencyPerkType_t>(301),
+	static_cast<WeaponProficiencyPerkType_t>(302),
+	static_cast<WeaponProficiencyPerkType_t>(303),
+	static_cast<WeaponProficiencyPerkType_t>(304),
+	static_cast<WeaponProficiencyPerkType_t>(305),
+	static_cast<WeaponProficiencyPerkType_t>(306),
+	static_cast<WeaponProficiencyPerkType_t>(307),
+	static_cast<WeaponProficiencyPerkType_t>(311),
+	static_cast<WeaponProficiencyPerkType_t>(312),
+	static_cast<WeaponProficiencyPerkType_t>(314),
+	static_cast<WeaponProficiencyPerkType_t>(315),
+	static_cast<WeaponProficiencyPerkType_t>(316),
+	static_cast<WeaponProficiencyPerkType_t>(317),
+	static_cast<WeaponProficiencyPerkType_t>(321),
+	static_cast<WeaponProficiencyPerkType_t>(322),
+	static_cast<WeaponProficiencyPerkType_t>(323),
 };
 
 enum WeaponProficiencyPerkSkills_t : int8_t {

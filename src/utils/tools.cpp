@@ -878,6 +878,21 @@ ShootTypeNames shootTypeNames = {
 	{ "terrastormarrow", CONST_ANI_TERRASTORMARROW },
 	{ "froststormarrow", CONST_ANI_FROSTSTORMARROW },
 	{ "thunderstormarrow", CONST_ANI_THUNDERSTORMARROW },
+	// 15.25 client homing-missile effects (proficiency Type-32 perk). ids 69/76 are placeholders.
+	{ "homingphysical", CONST_ANI_HOMING_PHYSICAL },
+	{ "homingfire", CONST_ANI_HOMING_FIRE },
+	{ "homingearth", CONST_ANI_HOMING_EARTH },
+	{ "homingenergy", CONST_ANI_HOMING_ENERGY },
+	{ "homingice", CONST_ANI_HOMING_ICE },
+	{ "homingholy", CONST_ANI_HOMING_HOLY },
+	{ "homingdeath", CONST_ANI_HOMING_DEATH },
+	{ "homingstellarphysical", CONST_ANI_HOMING_STELLAR_PHYSICAL },
+	{ "homingstellarfire", CONST_ANI_HOMING_STELLAR_FIRE },
+	{ "homingstellarearth", CONST_ANI_HOMING_STELLAR_EARTH },
+	{ "homingstellarenergy", CONST_ANI_HOMING_STELLAR_ENERGY },
+	{ "homingstellarice", CONST_ANI_HOMING_STELLAR_ICE },
+	{ "homingstellarholy", CONST_ANI_HOMING_STELLAR_HOLY },
+	{ "homingstellardeath", CONST_ANI_HOMING_STELLAR_DEATH },
 };
 
 CombatTypeNames combatTypeNames = {

@@ -276,5 +276,7 @@
 	<mount id="247" clientid="1908" name="Tidal Seawater Predator" speed="10" premium="yes" type="quest" />
 	<mount id="248" clientid="1909" name="Ashen Coast Predator" speed="10" premium="yes" type="quest" />
 	<mount id="249" clientid="1910" name="Crimson Bay Predator" speed="10" premium="yes" type="quest" />
-	<mount id="250" clientid="1934" name="Reliable Ram" speed="10" premium="no" type="quest" />
+	<mount id="250" clientid="1962" name="Jaracal" speed="10" premium="yes" type="quest" />
+	<mount id="251" clientid="1975" name="Radiant Nimbus" speed="10" premium="yes" type="quest" />
+	<mount id="252" clientid="1934" name="Reliable Ram" speed="10" premium="no" type="quest" />
 </mounts>

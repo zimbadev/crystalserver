@@ -38,6 +38,12 @@ struct ProficiencyPerk {
 	uint8_t bestiaryId = 0;
 	int32_t damageType = 0;
 	uint8_t range = 0;
+	// Type 32 (PROFICIENCY_PERK_ON_HIT_HOMING_MISSILE): on weapon hit, roll `probability`; on success fire a
+	// homing missile (`missileId` shoot effect) dealing `multiplier` * playerLevel damage of the combat type
+	// derived from `damageType` (parsed from ElementId).
+	uint16_t missileId = 0;
+	float multiplier = 0.0f;
+	float probability = 0.0f;
 	// std::string bestiaryName = "";
 };
 

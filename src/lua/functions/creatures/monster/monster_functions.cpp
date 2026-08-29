@@ -91,6 +91,8 @@ void MonsterFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "Monster", "walkTo", MonsterFunctions::luaMonsterWalkTo);
 
+	Lua::registerMethod(L, "Monster", "applyEchoWarden", MonsterFunctions::luaMonsterApplyEchoWarden);
+
 	CharmFunctions::init(L);
 	LootFunctions::init(L);
 	MonsterSpellFunctions::init(L);
@@ -912,5 +914,20 @@ int MonsterFunctions::luaMonsterWalkTo(lua_State* L) {
 
 	monster->walkTo(position);
 	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int MonsterFunctions::luaMonsterApplyEchoWarden(lua_State* L) {
+	// monster:applyEchoWarden(hpMult[, atkMult = 1.0])
+	const auto &monster = Lua::getUserdataShared<Monster>(L, 1);
+	if (!monster) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_MONSTER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	const float hpMult = Lua::getNumber<float>(L, 2, 1.0f);
+	const float atkMult = Lua::getNumber<float>(L, 3, 1.0f);
+	Lua::pushBoolean(L, monster->applyEchoWarden(hpMult, atkMult));
 	return 1;
 }

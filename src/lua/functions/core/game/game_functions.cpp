@@ -86,6 +86,7 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "startRaid", GameFunctions::luaGameStartRaid);
 
 	Lua::registerMethod(L, "Game", "getClientVersion", GameFunctions::luaGameGetClientVersion);
+	Lua::registerMethod(L, "Game", "setImprovedRespawnZones", GameFunctions::luaGameSetImprovedRespawnZones);
 
 	Lua::registerMethod(L, "Game", "reload", GameFunctions::luaGameReload);
 
@@ -778,6 +779,30 @@ int GameFunctions::luaGameGetClientVersion(lua_State* L) {
 	Lua::setField(L, "max", CLIENT_VERSION);
 	const std::string version = fmt::format("{}.{}", CLIENT_VERSION_UPPER, CLIENT_VERSION_LOWER);
 	Lua::setField(L, "string", version);
+	return 1;
+}
+
+int GameFunctions::luaGameSetImprovedRespawnZones(lua_State* L) {
+	// Game.setImprovedRespawnZones(rects) ; rects = { {x1, y1, x2, y2}, ... } (whole replace)
+	std::vector<ImprovedRespawnZone> zones;
+	luaL_checktype(L, 1, LUA_TTABLE);
+	lua_pushnil(L);
+	while (lua_next(L, 1) != 0) {
+		luaL_checktype(L, -1, LUA_TTABLE);
+		lua_rawgeti(L, -1, 1);
+		lua_rawgeti(L, -2, 2);
+		lua_rawgeti(L, -3, 3);
+		lua_rawgeti(L, -4, 4);
+		zones.push_back(ImprovedRespawnZone {
+			static_cast<uint16_t>(luaL_checknumber(L, -4)),
+			static_cast<uint16_t>(luaL_checknumber(L, -3)),
+			static_cast<uint16_t>(luaL_checknumber(L, -2)),
+			static_cast<uint16_t>(luaL_checknumber(L, -1)),
+		});
+		lua_pop(L, 5);
+	}
+	g_game().setImprovedRespawnZones(std::move(zones));
+	Lua::pushBoolean(L, true);
 	return 1;
 }
 

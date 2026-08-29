@@ -8517,11 +8517,21 @@ void Player::sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId) 
 	}
 }
 
+void Player::sendScreenshotAndBannerLeaderMonsterKilled(uint16_t raceId, uint32_t charmPoints) const {
+	if (client) {
+		client->sendScreenshotAndBannerLeaderMonsterKilled(raceId, charmPoints);
+	}
+}
+
 void Player::checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, uint32_t oldMagLevel, uint32_t newMagLevel) const {
 	if (!client) {
 		return;
 	}
 
+	// Vocation spells that auto-unlock (needLearn == false) show the "New Spell
+	// Unlocked" banner the moment the player meets their level / magic level
+	// requirement. Learnable spells are taught explicitly (NPC/quest) and are
+	// handled through Player::learnInstantSpell / player:learnSpell instead.
 	for (const uint16_t spellId : g_spells().getSpellsByVocation(getVocationId())) {
 		const auto &spell = g_spells().getInstantSpellById(spellId);
 		if (!spell || spell->getSpellId() == 0 || spell->isLearnable()) {
@@ -10960,7 +10970,7 @@ void Player::forgeResourceConversion(ForgeAction_t actionType) {
 			return;
 		}
 
-		const auto upgradeCost = dustLevel - 75;
+		const uint64_t upgradeCost = dustLevel > 100 ? dustLevel - 75 : 25;
 		if (const auto dusts = getForgeDusts();
 		    upgradeCost > dusts) {
 			g_logger().error("[{}] Not enough dust", __FUNCTION__);
@@ -10971,7 +10981,7 @@ void Player::forgeResourceConversion(ForgeAction_t actionType) {
 		history.cost = upgradeCost;
 		history.gained = dustLevel;
 		removeForgeDusts(upgradeCost);
-		addForgeDustLevel(1);
+		addForgeDustLevel(20);
 	}
 
 	history.createdAt = getTimeNow();
@@ -11207,7 +11217,7 @@ void Player::registerForgeHistoryDescription(ForgeHistory history) {
 		detailsResponse << fmt::format("Converted {:d} slivers to {:d} exalted core.", history.cost, history.gained);
 	} else if (history.actionType == ForgeAction_t::INCREASELIMIT) {
 		history.actionType = ForgeAction_t::DUSTTOSLIVERS;
-		detailsResponse << fmt::format("Spent {:d} dust to increase the dust limit to {:d}.", history.cost, history.gained + 1);
+		detailsResponse << fmt::format("Spent {:d} dust to increase the dust limit to {:d}.", history.cost, history.gained + 20);
 	} else {
 		detailsResponse << "(unknown)";
 	}
@@ -12770,6 +12780,121 @@ EquippedWeaponProficiencyBonuses &Player::getEquippedWeaponProficiency() {
 	return equippedWeaponProficiency;
 }
 
+void Player::tryProcWeaponProficiencyHomingMissile(const std::shared_ptr<Creature> &target) {
+	if (!target || target->isRemoved() || target->getHealth() <= 0) {
+		return;
+	}
+
+	// Equipped weapon (ignore ammo so distance weapons resolve to the bow itself).
+	const auto &weapon = getWeapon(true);
+	if (!weapon) {
+		return;
+	}
+	const uint16_t itemId = weapon->getID();
+
+	// Player's unlocked/active perk slots for this weapon.
+	auto profIt = weaponProficiencies.find(itemId);
+	if (profIt == weaponProficiencies.end()) {
+		return;
+	}
+	const WeaponProficiencyData &playerProficiencyData = profIt->second;
+
+	// The weapon's proficiency tree (the perk catalogue). Nullptr-guarded (also logs internally).
+	const WeaponProficiencyStruct* proficiencyData = g_proficiencies().getProficiencyByItemId(itemId);
+	if (!proficiencyData) {
+		return;
+	}
+
+	for (const auto &lvl : proficiencyData->proficiencyDataLevel) {
+		for (const auto &perk : lvl.proficiencyDataPerks) {
+			if (perk.perkType != PROFICIENCY_PERK_ON_HIT_HOMING_MISSILE) {
+				continue;
+			}
+
+			// Active only if the player has unlocked this exact slot (level + position).
+			const bool isActive = std::any_of(
+				playerProficiencyData.activePerks.begin(), playerProficiencyData.activePerks.end(),
+				[&](const WeaponProficiencyPerk &p) {
+					return p.proficiencyLevel == lvl.proficiencyLevel && p.perkPosition == perk.positionSlot;
+				}
+			);
+			if (!isActive) {
+				continue;
+			}
+
+			if (perk.probability <= 0.0f || perk.multiplier <= 0.0f) {
+				continue;
+			}
+
+			// Roll Probability (e.g. 0.01 = 1%).
+			if (!boolean_random(static_cast<double>(perk.probability))) {
+				continue;
+			}
+
+			// Map ElementId (stored in perk.damageType) -> CombatType + the homing-missile target hit effect
+			// observed in the 15.25 client. These raw effect ids (176-181) are sent verbatim over the wire;
+			// the official client renders them as the element-specific homing-missile impact.
+			CombatType_t combatType = COMBAT_NONE;
+			uint16_t targetEffect = CONST_ME_NONE;
+			switch (perk.damageType) {
+				case PROFICIENCY_DAMAGETYPE_PHYSICAL:
+					combatType = COMBAT_PHYSICALDAMAGE;
+					targetEffect = CONST_ME_DRAWBLOOD;
+					break;
+				case PROFICIENCY_DAMAGETYPE_FIRE:
+					combatType = COMBAT_FIREDAMAGE;
+					targetEffect = 177;
+					break;
+				case PROFICIENCY_DAMAGETYPE_EARTH:
+					combatType = COMBAT_EARTHDAMAGE;
+					targetEffect = 178;
+					break;
+				case PROFICIENCY_DAMAGETYPE_ENERGY:
+					combatType = COMBAT_ENERGYDAMAGE;
+					targetEffect = 179;
+					break;
+				case PROFICIENCY_DAMAGETYPE_ICE:
+					combatType = COMBAT_ICEDAMAGE;
+					targetEffect = 176;
+					break;
+				case PROFICIENCY_DAMAGETYPE_HOLY:
+					combatType = COMBAT_HOLYDAMAGE;
+					targetEffect = 181;
+					break;
+				case PROFICIENCY_DAMAGETYPE_DEATH:
+					combatType = COMBAT_DEATHDAMAGE;
+					targetEffect = 180;
+					break;
+				default:
+					continue; // healing / unsupported element -> skip
+			}
+
+			// Damage = Multiplier * level (data-driven; Multiplier lives in proficiencies.json).
+			const int32_t dmg = static_cast<int32_t>(perk.multiplier * static_cast<float>(getLevel()));
+			if (dmg <= 0) {
+				continue;
+			}
+
+			// (b) shoot/distance effect caster -> target. missileId is the raw 15.25 shoot id from the json
+			// (e.g. 74 normal / 81 Stellar for holy); sent verbatim, the official client renders it.
+			g_game().addDistanceEffect(getPosition(), target->getPosition(), perk.missileId, static_self_cast<Player>());
+
+			// (c) magic hit effect on the target tile.
+			g_game().addMagicEffect(target->getPosition(), targetEffect);
+
+			// (a) element-typed damage (negative value = damage).
+			CombatDamage damage;
+			damage.origin = ORIGIN_SPELL;
+			damage.primary.type = combatType;
+			damage.primary.value = -dmg;
+			g_game().combatChangeHealth(static_self_cast<Player>(), target, damage);
+
+			// One proc per hit: stop after the first active homing-missile perk fires.
+			return;
+		}
+	}
+}
+
 void Player::addWeaponProficiencyExperience(const std::shared_ptr<MonsterType> &mType, const ForgeClassifications_t classification, const bool bossSoulpit) {
 	uint32_t addProficiencyExperience = 0;
 	const auto weaponProficiencyRate = std::max(0.0f, g_configManager().getFloat(RATE_WEAPON_PROFICIENCY));
@@ -12891,6 +13016,342 @@ void Player::sendWeaponProficiencyInfo(const uint16_t itemId) const {
 	if (client) {
 		client->sendWeaponProficiencyInfo(itemId);
 	}
+}
+
+void Player::sendBossDifficultySelection(uint8_t selectedDifficulty, const std::vector<uint32_t> &numbers, const std::vector<std::string> &banners, const std::vector<std::string> &redMods, const std::vector<std::string> &greenMods) const {
+	if (client) {
+		client->sendBossDifficultySelection(selectedDifficulty, numbers, banners, redMods, greenMods);
+	}
+}
+
+void Player::sendCyclopediaDiscoveryTest(uint16_t mainAreaId, uint16_t subAreaId, const Position &base) {
+	if (!client) {
+		return;
+	}
+
+	client->sendCyclopediaMapDiscoveryData({ std::make_tuple(mainAreaId, static_cast<uint8_t>(1), static_cast<uint8_t>(14)) }, {}, { subAreaId });
+	client->sendCyclopediaMapSetCurrentArea(subAreaId);
+	static const int offsets[7][2] = { { 0, 0 }, { 2, 0 }, { -2, 0 }, { 0, 2 }, { 0, -2 }, { 3, 3 }, { -3, -3 } };
+	std::vector<std::pair<Position, uint8_t>> points;
+	points.reserve(7);
+	for (const auto &off : offsets) {
+		points.emplace_back(Position(static_cast<uint16_t>(base.x + off[0]), static_cast<uint16_t>(base.y + off[1]), base.z), static_cast<uint8_t>(0));
+	}
+	client->sendCyclopediaMapSetDiscoveryArea(subAreaId, true, 7, points);
+}
+
+void Player::sendCyclopediaMapDiscoveryData(const std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> &mainAreas, const std::vector<uint16_t> &discoveredSubAreas, const std::vector<uint16_t> &discoverableSubAreas) {
+	discoveryMains = mainAreas;
+	discoveryDiscovered = discoveredSubAreas;
+	discoveryDiscoverable = discoverableSubAreas;
+	if (client) {
+		client->sendCyclopediaMapDiscoveryData(mainAreas, discoveredSubAreas, discoverableSubAreas);
+	}
+}
+
+void Player::resendCyclopediaMapDiscoveryData() const {
+	if (client && !discoveryMains.empty()) {
+		client->sendCyclopediaMapDiscoveryData(discoveryMains, discoveryDiscovered, discoveryDiscoverable);
+	}
+}
+
+void Player::sendCyclopediaMapSetCurrentArea(uint16_t subAreaId) const {
+	if (client) {
+		client->sendCyclopediaMapSetCurrentArea(subAreaId);
+	}
+}
+
+void Player::sendCyclopediaMapSetExploringArea(uint16_t subAreaId) const {
+	if (client) {
+		client->sendCyclopediaMapSetExploringArea(subAreaId);
+	}
+}
+
+void Player::sendCyclopediaMapDonations(uint64_t donationGoal, const std::vector<std::tuple<uint16_t, bool, uint64_t>> &areas) const {
+	if (client) {
+		client->sendCyclopediaMapDonations(donationGoal, areas);
+	}
+}
+
+void Player::sendCyclopediaMapSetDiscoveryArea(uint16_t subAreaId, bool active, uint8_t poiTarget, const std::vector<std::pair<Position, uint8_t>> &points) const {
+	if (client) {
+		client->sendCyclopediaMapSetDiscoveryArea(subAreaId, active, poiTarget, points);
+	}
+}
+
+void Player::sendWeaponProficiencyReshapeOffers(const uint16_t itemId) const {
+	if (client) {
+		client->sendWeaponProficiencyReshapeOffers(itemId);
+	}
+}
+
+uint8_t Player::getWeaponProficiencyVocationRegion(const uint16_t itemId) const {
+	// 15.25 (sommerrelease26): the client shaping catalogue is laid out in 50-wide vocation regions
+	// (0 = knight 1-50, 1 = paladin 51-100, 2 = sorcerer 101-150, 3 = druid 151-200, 4 = monk 201-250).
+	// Derive the region from the WEAPON so a paladin bow always offers paladin augments. Wands (sorcerer)
+	// and rods (druid) share WEAPON_WAND, so disambiguate by the holder's CIP vocation.
+	const ItemType &itemType = Item::items[itemId];
+	switch (itemType.weaponType) {
+		case WEAPON_SWORD:
+		case WEAPON_CLUB:
+		case WEAPON_AXE:
+			return 0; // knight
+		case WEAPON_DISTANCE:
+		case WEAPON_AMMO:
+		case WEAPON_MISSILE:
+			return 1; // paladin
+		case WEAPON_FIST:
+			return 4; // monk
+		case WEAPON_WAND: {
+			return getPlayerVocationEnum() == Vocation_t::VOCATION_DRUID_CIP ? 3 : 2;
+		}
+		default: {
+			const uint16_t cip = getPlayerVocationEnum();
+			return cip > Vocation_t::VOCATION_NONE ? static_cast<uint8_t>(cip - 1) : 0;
+		}
+	}
+}
+
+WeaponProficiencyPerkType_t Player::rollWeaponProficiencyPerk(const uint16_t itemId) const {
+	// 15.25 (sommerrelease26): roll one valid shapeable perk from the union of the weapon's per-vocation spell
+	// augments (region*50 + UNIVERSAL offsets) and the GENERAL vocation-agnostic pool. Both contain only valid
+	// catalogue indices, so the client never renders the "Attack Damage" fallback.
+	const uint8_t region = getWeaponProficiencyVocationRegion(itemId);
+	constexpr int32_t augmentPoolSize = static_cast<int32_t>(sizeof(WEAPON_PROFICIENCY_UNIVERSAL_SHAPEABLE_PERKS) / sizeof(WEAPON_PROFICIENCY_UNIVERSAL_SHAPEABLE_PERKS[0]));
+	constexpr int32_t generalPoolSize = static_cast<int32_t>(sizeof(WEAPON_PROFICIENCY_GENERAL_SHAPEABLE_PERKS) / sizeof(WEAPON_PROFICIENCY_GENERAL_SHAPEABLE_PERKS[0]));
+	const int32_t pick = uniform_random(0, augmentPoolSize + generalPoolSize - 1);
+	if (pick < augmentPoolSize) {
+		return static_cast<WeaponProficiencyPerkType_t>(region * 50 + static_cast<int32_t>(WEAPON_PROFICIENCY_UNIVERSAL_SHAPEABLE_PERKS[pick]));
+	}
+	return WEAPON_PROFICIENCY_GENERAL_SHAPEABLE_PERKS[pick - augmentPoolSize];
+}
+
+void Player::modifyWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
+	static constexpr uint64_t MODIFY_DUST_COST = 250;
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		sendTextMessage(MESSAGE_FAILURE, "You have no proficiency progress on this weapon.");
+		return;
+	}
+	const auto &tile = getTile();
+	if (!tile || !tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
+		sendTextMessage(MESSAGE_FAILURE, "You can only modify proficiency slots inside a protection zone.");
+		return;
+	}
+	if (getForgeDusts() < MODIFY_DUST_COST) {
+		sendTextMessage(MESSAGE_FAILURE, "You do not have enough dust to modify this slot.");
+		return;
+	}
+	removeForgeDusts(MODIFY_DUST_COST);
+	auto &proficiency = it->second;
+	const auto perkType = rollWeaponProficiencyPerk(itemId);
+	const uint8_t value = 1;
+	// Store 1-based; the wire request is 0-based.
+	const uint8_t storedLevel = static_cast<uint8_t>(proficiencyLevel + 1);
+	const uint8_t storedPosition = static_cast<uint8_t>(perkPosition + 1);
+	bool replaced = false;
+	for (auto &slot : proficiency.modifiedSlots) {
+		if (slot.proficiencyLevel == storedLevel && slot.perkPosition == storedPosition) {
+			slot.perkType = perkType;
+			slot.value = value;
+			replaced = true;
+			break;
+		}
+	}
+	if (!replaced) {
+		proficiency.modifiedSlots.push_back({ storedLevel, storedPosition, perkType, value });
+	}
+	applyEquippedWeaponProficiency(itemId);
+	sendWeaponProficiencyInfo(itemId);
+}
+
+void Player::refineWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
+	static constexpr uint64_t REFINE_DUST_COST = 200;
+	static constexpr uint8_t MAX_RANK = 10;
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		sendTextMessage(MESSAGE_FAILURE, "You have no proficiency progress on this weapon.");
+		return;
+	}
+	const auto &tile = getTile();
+	if (!tile || !tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
+		sendTextMessage(MESSAGE_FAILURE, "You can only refine proficiency slots inside a protection zone.");
+		return;
+	}
+	const uint8_t storedLevel = static_cast<uint8_t>(proficiencyLevel + 1);
+	const uint8_t storedPosition = static_cast<uint8_t>(perkPosition + 1);
+	auto &proficiency = it->second;
+	WeaponProficiencyModifiedSlot* slot = nullptr;
+	for (auto &candidate : proficiency.modifiedSlots) {
+		if (candidate.proficiencyLevel == storedLevel && candidate.perkPosition == storedPosition) {
+			slot = &candidate;
+			break;
+		}
+	}
+	if (!slot) {
+		sendTextMessage(MESSAGE_FAILURE, "That slot has not been modified yet.");
+		return;
+	}
+	if (slot->value >= MAX_RANK) {
+		sendTextMessage(MESSAGE_FAILURE, "This perk is already at its maximum rank.");
+		return;
+	}
+	if (getForgeDusts() < REFINE_DUST_COST) {
+		sendTextMessage(MESSAGE_FAILURE, fmt::format("You need {} dust to refine this perk (you currently have {}).", REFINE_DUST_COST, getForgeDusts()));
+		return;
+	}
+	removeForgeDusts(REFINE_DUST_COST);
+	++slot->value;
+	applyEquippedWeaponProficiency(itemId);
+	sendWeaponProficiencyInfo(itemId);
+}
+
+void Player::maximiseWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
+	// TODO(15.25): official client charges 1 special tradeable item; not in data yet, so just set to max.
+	static constexpr uint8_t MAX_RANK = 10;
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		sendTextMessage(MESSAGE_FAILURE, "You have no proficiency progress on this weapon.");
+		return;
+	}
+	const auto &tile = getTile();
+	if (!tile || !tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
+		sendTextMessage(MESSAGE_FAILURE, "You can only shape proficiency slots inside a protection zone.");
+		return;
+	}
+	const uint8_t storedLevel = static_cast<uint8_t>(proficiencyLevel + 1);
+	const uint8_t storedPosition = static_cast<uint8_t>(perkPosition + 1);
+	auto &proficiency = it->second;
+	WeaponProficiencyModifiedSlot* slot = nullptr;
+	for (auto &candidate : proficiency.modifiedSlots) {
+		if (candidate.proficiencyLevel == storedLevel && candidate.perkPosition == storedPosition) {
+			slot = &candidate;
+			break;
+		}
+	}
+	if (!slot) {
+		sendTextMessage(MESSAGE_FAILURE, "That slot has not been modified yet.");
+		return;
+	}
+	if (slot->value >= MAX_RANK) {
+		sendTextMessage(MESSAGE_FAILURE, "This perk is already at its maximum rank.");
+		return;
+	}
+	slot->value = MAX_RANK;
+	applyEquippedWeaponProficiency(itemId);
+	sendWeaponProficiencyInfo(itemId);
+}
+
+void Player::clearWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		sendTextMessage(MESSAGE_FAILURE, "You have no proficiency progress on this weapon.");
+		return;
+	}
+	const auto &tile = getTile();
+	if (!tile || !tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
+		sendTextMessage(MESSAGE_FAILURE, "You can only shape proficiency slots inside a protection zone.");
+		return;
+	}
+	const uint8_t storedLevel = static_cast<uint8_t>(proficiencyLevel + 1);
+	const uint8_t storedPosition = static_cast<uint8_t>(perkPosition + 1);
+	auto &proficiency = it->second;
+	const auto removed = std::erase_if(proficiency.modifiedSlots, [storedLevel, storedPosition](const WeaponProficiencyModifiedSlot &s) {
+		return s.proficiencyLevel == storedLevel && s.perkPosition == storedPosition;
+	});
+	if (removed == 0) {
+		sendTextMessage(MESSAGE_FAILURE, "That slot has not been modified.");
+		return;
+	}
+	applyEquippedWeaponProficiency(itemId);
+	sendWeaponProficiencyInfo(itemId);
+}
+
+void Player::reshapeWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
+	static constexpr uint8_t RESHAPE_OFFER_COUNT = 3;
+	static constexpr uint64_t RESHAPE_DUST_COST = 250;
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		sendTextMessage(MESSAGE_FAILURE, "You have no proficiency progress on this weapon.");
+		return;
+	}
+	const auto &tile = getTile();
+	if (!tile || !tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
+		sendTextMessage(MESSAGE_FAILURE, "You can only shape proficiency slots inside a protection zone.");
+		return;
+	}
+	const uint8_t storedLevel = static_cast<uint8_t>(proficiencyLevel + 1);
+	const uint8_t storedPosition = static_cast<uint8_t>(perkPosition + 1);
+	auto &proficiency = it->second;
+	WeaponProficiencyModifiedSlot* slot = nullptr;
+	for (auto &candidate : proficiency.modifiedSlots) {
+		if (candidate.proficiencyLevel == storedLevel && candidate.perkPosition == storedPosition) {
+			slot = &candidate;
+			break;
+		}
+	}
+	if (!slot) {
+		sendTextMessage(MESSAGE_FAILURE, "That slot has not been modified yet.");
+		return;
+	}
+	if (getForgeDusts() < RESHAPE_DUST_COST) {
+		sendTextMessage(MESSAGE_FAILURE, fmt::format("You need {} dust to reshape this perk (you currently have {}).", RESHAPE_DUST_COST, getForgeDusts()));
+		return;
+	}
+	removeForgeDusts(RESHAPE_DUST_COST);
+	(void)slot;
+	std::vector<WeaponProficiencyPerkType_t> offers;
+	offers.reserve(RESHAPE_OFFER_COUNT);
+	for (int32_t guard = 0; offers.size() < RESHAPE_OFFER_COUNT && guard < 200; ++guard) {
+		const auto candidate = rollWeaponProficiencyPerk(itemId);
+		bool duplicate = false;
+		for (const auto existing : offers) {
+			if (existing == candidate) {
+				duplicate = true;
+				break;
+			}
+		}
+		if (!duplicate) {
+			offers.push_back(candidate);
+		}
+	}
+	proficiency.pendingReshapeLevel = storedLevel;
+	proficiency.pendingReshapePosition = storedPosition;
+	proficiency.pendingReshapeOffers = offers;
+	sendWeaponProficiencyReshapeOffers(itemId);
+}
+
+void Player::pickReshapeWeaponProficiencyOffer(const uint16_t itemId, const uint8_t offerIndex) {
+	// 15.25: the client sends the 0-based index of the clicked offer (left=0/middle=1/right=2).
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		return;
+	}
+	auto &proficiency = it->second;
+	if (proficiency.pendingReshapeOffers.empty()) {
+		return;
+	}
+	if (static_cast<size_t>(offerIndex) >= proficiency.pendingReshapeOffers.size()) {
+		return;
+	}
+	const auto chosen = proficiency.pendingReshapeOffers[offerIndex];
+	WeaponProficiencyModifiedSlot* slot = nullptr;
+	for (auto &candidate : proficiency.modifiedSlots) {
+		if (candidate.proficiencyLevel == proficiency.pendingReshapeLevel && candidate.perkPosition == proficiency.pendingReshapePosition) {
+			slot = &candidate;
+			break;
+		}
+	}
+	if (!slot) {
+		proficiency.pendingReshapeOffers.clear();
+		return;
+	}
+	slot->perkType = chosen;
+	proficiency.pendingReshapeOffers.clear();
+	proficiency.pendingReshapeLevel = 0;
+	proficiency.pendingReshapePosition = 0;
+	applyEquippedWeaponProficiency(itemId);
+	sendWeaponProficiencyInfo(itemId);
 }
 
 void Player::resetAllWeaponProficiencyPerks(const uint16_t itemId) {
@@ -13173,6 +13634,72 @@ void Player::applyEquippedWeaponProficiency(const uint16_t itemId) {
 					break;
 				}
 			}
+		}
+	}
+
+	// 15.25 (sommerrelease26) SHAPE: apply the dust-modified slots on top of the tree perks. modSlot.perkType is
+	// a CLIENT CATALOGUE INDEX (1-323) from rollWeaponProficiencyPerk() -- NOT a server perk enum -- so decode the
+	// index range here into the SAME aggregate fields the tree-perk switch above uses (already-wired hooks pick
+	// them up). Magnitude is linear between the catalogue's rank-0 and rank-10 figures. See PORT.md §8.2.
+	for (const auto &modSlot : playerProficiencyData.modifiedSlots) {
+		const int32_t idx = static_cast<int32_t>(modSlot.perkType);
+		const float rankFraction = static_cast<float>(modSlot.value) / 10.0f;
+		const auto lerp = [rankFraction](float rank0, float rank10) {
+			return rank0 + (rank10 - rank0) * rankFraction;
+		};
+
+		// --- bestiary damage: 251-271 = 250 + bestiaryId (0.50% -> 2.50% vs that race) ---
+		if (idx >= 251 && idx <= 271) {
+			equippedWeaponProficiency.bestiaryRacePercentDamageGain += lerp(0.5f, 2.5f) / 100.0f;
+			equippedWeaponProficiency.bestiaryId = static_cast<uint8_t>(idx - 250); // single-slot: last decoded wins
+			continue;
+		}
+
+		switch (idx) {
+			// --- leech / on-hit / on-kill / alpha / omega: 281-288 ---
+			case 281: // mana leech 1.00% -> 8.00% (stored as fraction * 10000 bp)
+				equippedWeaponProficiency.manaLeech += static_cast<uint16_t>((lerp(1.0f, 8.0f) / 100.0f) * 10000.0f);
+				break;
+			case 282: // life leech 1.00% -> 16.00%
+				equippedWeaponProficiency.lifeLeech += static_cast<uint16_t>((lerp(1.0f, 16.0f) / 100.0f) * 10000.0f);
+				break;
+			case 283: // +2 -> +12 mana on hit
+				equippedWeaponProficiency.manaGainOnHit += static_cast<uint8_t>(lerp(2.0f, 12.0f));
+				break;
+			case 284: // +5 -> +25 HP on hit
+				equippedWeaponProficiency.lifeGainOnHit += static_cast<uint8_t>(lerp(5.0f, 25.0f));
+				break;
+			case 285: // +4 -> +24 mana on kill
+				equippedWeaponProficiency.manaGainOnKill += static_cast<uint8_t>(lerp(4.0f, 24.0f));
+				break;
+			case 286: // +10 -> +50 HP on kill
+				equippedWeaponProficiency.lifeGainOnKill += static_cast<uint8_t>(lerp(10.0f, 50.0f));
+				break;
+			case 287: // alpha strike 2.00% -> 10.00% (vs targets above 95% HP)
+				equippedWeaponProficiency.alphaStrikeExtraDamage += lerp(2.0f, 10.0f) / 100.0f;
+				break;
+			case 288: // omega strike 1.00% -> 4.00% (vs targets below 30% HP)
+				equippedWeaponProficiency.omegaStrikeExtraDamage += lerp(1.0f, 4.0f) / 100.0f;
+				break;
+
+			// --- universals: 321 armor pen, 322 elemental pierce, 323 powerful foe ---
+			case 321: // armor penetration 5% -> 15%
+				equippedWeaponProficiency.armorPenetration += lerp(5.0f, 15.0f) / 100.0f;
+				break;
+			case 322: // elemental pierce 5% -> 15% (no element sub-id -> all elements; curve estimated)
+				for (int element = 0; element < COMBAT_COUNT; ++element) {
+					equippedWeaponProficiency.elementalPierce[element] += lerp(5.0f, 15.0f) / 100.0f;
+				}
+				break;
+			case 323: // powerful foe (boss / sinister-embraced) 1% -> 5% (curve estimated)
+				equippedWeaponProficiency.damageGainBossAndSinisterEmbraced += lerp(1.0f, 5.0f) / 100.0f;
+				break;
+
+			default:
+				// 1-250 (per-vocation spell augments) and 291-317 (skill%) intentionally NOT applied yet (§8.3:
+				// augments need the authoritative (region, spellIndex) -> spellId map; skill% needs its real curve
+				// + the combat.cpp auto-attack sign fix). Decoded but parked until live data.
+				break;
 		}
 	}
 

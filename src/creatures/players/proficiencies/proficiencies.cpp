@@ -63,7 +63,9 @@ bool Proficiencies::loadFromJson(bool /* reloading */) {
 				const auto &perkJson = perksArray[perkIdx];
 				const uint8_t positionSlot = static_cast<uint8_t>(perkIdx + 1);
 				const WeaponProficiencyPerkType_t perkType = static_cast<WeaponProficiencyPerkType_t>(perkJson.at("Type").get<uint16_t>());
-				const float perkValue = perkJson.at("Value").get<float>();
+				// Some perks carry no "Value" (e.g. the on-hit elemental proc, Type 32, which uses
+				// ElementId/MissileId/Multiplier/Probability instead). Default to 0 so they still load.
+				const float perkValue = perkJson.value("Value", 0.0f);
 
 				ProficiencyPerk perk(positionSlot, perkType, perkValue);
 
@@ -97,6 +99,19 @@ bool Proficiencies::loadFromJson(bool /* reloading */) {
 
 				if (perkJson.contains("DamageType")) {
 					perk.damageType = perkJson.at("DamageType").get<int32_t>();
+				}
+
+				// Type 32 (PROFICIENCY_PERK_ON_HIT_HOMING_MISSILE) fields.
+				if (perkJson.contains("MissileId")) {
+					perk.missileId = perkJson.at("MissileId").get<uint16_t>();
+				}
+
+				if (perkJson.contains("Multiplier")) {
+					perk.multiplier = perkJson.value("Multiplier", 0.0f);
+				}
+
+				if (perkJson.contains("Probability")) {
+					perk.probability = perkJson.value("Probability", 0.0f);
 				}
 
 				levelStruct.proficiencyDataPerks.emplace_back(std::move(perk));
