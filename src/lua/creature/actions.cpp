@@ -19,6 +19,7 @@
 
 #include "config/configmanager.hpp"
 #include "creatures/combat/spells.hpp"
+#include "creatures/players/daily_reward/daily_reward.hpp"
 #include "creatures/players/player.hpp"
 #include "enums/account_group_type.hpp"
 #include "game/game.hpp"
@@ -405,6 +406,11 @@ ReturnValue Actions::internalUseItem(const std::shared_ptr<Player> &player, cons
 			player->sendTextWindow(item, 0, false);
 		}
 
+		return RETURNVALUE_NOERROR;
+	}
+
+	if (g_dailyRewards().isShrineItem(item->getID())) {
+		g_dailyRewards().loadDailyReward(player, DAILY_REWARD_FROM_SHRINE);
 		return RETURNVALUE_NOERROR;
 	}
 

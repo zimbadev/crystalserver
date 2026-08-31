@@ -130,6 +130,10 @@ class PlayerFunctions {
 	static int luaPlayerGetRewardList(lua_State* L);
 
 	static int luaPlayerSetDailyReward(lua_State* L);
+	static int luaPlayerGetCollectionTokens(lua_State* L);
+	static int luaPlayerSetCollectionTokens(lua_State* L);
+	static int luaPlayerGetJokerTokens(lua_State* L);
+	static int luaPlayerSetJokerTokens(lua_State* L);
 
 	static int luaPlayerSendInventory(lua_State* L);
 	static int luaPlayerSendLootStats(lua_State* L);

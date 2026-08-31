@@ -22,6 +22,7 @@
 #include "creatures/npcs/npcs.hpp"
 #include "creatures/players/grouping/familiars.hpp"
 #include "creatures/players/imbuements/imbuements.hpp"
+#include "creatures/players/daily_reward/daily_reward.hpp"
 #include "creatures/players/proficiencies/proficiencies.hpp"
 #include "creatures/players/storages/storages.hpp"
 #include "database/databasemanager.hpp"
@@ -362,6 +363,7 @@ void CrystalServer::loadModules() {
 	modulesLoadHelper(Outfits::getInstance().loadFromXml(), "XML/outfits.xml");
 	modulesLoadHelper(Familiars::getInstance().loadFromXml(), "XML/familiars.xml");
 	modulesLoadHelper(g_imbuements().loadFromXml(), "XML/imbuements.xml");
+	modulesLoadHelper(g_dailyRewards().loadFromXml(), "XML/dailyrewards.xml");
 	modulesLoadHelper(g_proficiencies().loadFromJson(), "json/proficiencies.json");
 	modulesLoadHelper(g_storages().loadFromXML(), "XML/storages.xml");
 

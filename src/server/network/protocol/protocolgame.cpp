@@ -41,6 +41,8 @@
 #include "creatures/players/management/ban.hpp"
 #include "creatures/players/management/waitlist.hpp"
 #include "creatures/players/player.hpp"
+#include "creatures/players/daily_reward/daily_reward.hpp"
+#include "database/database.hpp"
 #include "creatures/players/vip/player_vip.hpp"
 #include "creatures/players/wheel/player_wheel.hpp"
 #include "enums/player_icons.hpp"
@@ -82,6 +84,53 @@
 // This "getIteration" function will allow us to get the total number of iterations that run within a specific map
 // Very useful to send the total amount in certain bytes in the ProtocolGame class
 namespace {
+	void writeDailyRewardDay(NetworkMessage &msg, const std::shared_ptr<Player> &player, uint8_t currentDay, DailyRewardAccountStatus_t accountStatus) {
+		const auto &rewards = g_dailyRewards().getRewards();
+		const auto rewardIt = rewards.find(currentDay);
+		if (rewardIt == rewards.end()) {
+			return;
+		}
+
+		const auto &dailyTable = rewardIt->second;
+		uint16_t itemsToPick = dailyTable.freeAccount;
+		if (accountStatus == DAILY_REWARD_STATUS_PREMIUM) {
+			itemsToPick = dailyTable.premiumAccount;
+		}
+
+		std::vector<uint16_t> rewardItems;
+		const uint8_t baseId = player->getVocation()->getBaseId();
+		if (const auto itemsIt = g_dailyRewards().getVocationItems().find(baseId); itemsIt != g_dailyRewards().getVocationItems().end()) {
+			rewardItems = itemsIt->second;
+		}
+		if (!dailyTable.items.empty()) {
+			rewardItems = dailyTable.items;
+		}
+
+		msg.addByte(static_cast<uint8_t>(dailyTable.systemType));
+		if (dailyTable.systemType == DAILY_REWARD_SYSTEM_TYPE_ONE) {
+			if (dailyTable.type == DAILY_REWARD_TYPE_ITEM) {
+				msg.addByte(static_cast<uint8_t>(itemsToPick));
+				msg.addByte(static_cast<uint8_t>(rewardItems.size()));
+				for (const uint16_t itemId : rewardItems) {
+					const ItemType &itemType = Item::items[itemId];
+					msg.add<uint16_t>(itemId);
+					msg.addString(fmt::format("{} {}", itemType.article, itemType.name));
+					msg.add<uint32_t>(static_cast<uint32_t>(itemType.weight));
+				}
+			}
+		} else if (dailyTable.systemType == DAILY_REWARD_SYSTEM_TYPE_TWO) {
+			if (dailyTable.type == DAILY_REWARD_TYPE_PREY_REROLL) {
+				msg.addByte(DAILY_REWARD_SYSTEM_SKIP);
+				msg.addByte(DAILY_REWARD_SYSTEM_TYPE_PREY_REROLL);
+				msg.addByte(static_cast<uint8_t>(itemsToPick));
+			} else if (dailyTable.type == DAILY_REWARD_TYPE_XP_BOOST) {
+				msg.addByte(DAILY_REWARD_SYSTEM_SKIP);
+				msg.addByte(DAILY_REWARD_SYSTEM_TYPE_XP_BOOST);
+				msg.add<uint16_t>(itemsToPick);
+			}
+		}
+	}
+
 	template <typename T>
 	uint16_t getVectorIterationIncreaseCount(T &vector) {
 		uint16_t totalIterationCount = 0;
@@ -1509,6 +1558,15 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			break;
 		case 0xD7:
 			parseCloseImbuementWindow(msg);
+			break;
+		case 0xD8:
+			parseOpenDailyReward(msg);
+			break;
+		case 0xD9:
+			parseOpenDailyRewardHistory(msg);
+			break;
+		case 0xDA:
+			parseSelectDailyReward(msg);
 			break;
 		case 0xDC:
 			parseAddVip(msg);
@@ -9407,6 +9465,159 @@ void ProtocolGame::sendMessageDialog(const std::string &message) {
 	msg.addByte(0xED);
 	msg.addByte(0x14); // Unknown type
 	msg.addString(message);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::parseOpenDailyReward(NetworkMessage &) {
+	if (!player) {
+		return;
+	}
+	g_dailyRewards().playerOpenRewardWall(player);
+}
+
+void ProtocolGame::parseOpenDailyRewardHistory(NetworkMessage &) {
+	if (!player) {
+		return;
+	}
+	g_dailyRewards().playerOpenRewardHistory(player);
+}
+
+void ProtocolGame::parseSelectDailyReward(NetworkMessage &msg) {
+	if (!player) {
+		return;
+	}
+	g_dailyRewards().playerSelectReward(player, msg);
+}
+
+void ProtocolGame::sendDailyRewardBasic() {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0xE4);
+	msg.addByte(DailyRewards::REWARD_COUNT);
+	for (uint8_t currentDay = 1; currentDay <= DailyRewards::REWARD_COUNT; ++currentDay) {
+		writeDailyRewardDay(msg, player, currentDay, DAILY_REWARD_STATUS_FREE);
+		writeDailyRewardDay(msg, player, currentDay, DAILY_REWARD_STATUS_PREMIUM);
+	}
+
+	constexpr uint8_t maxBonus = 7;
+	msg.addByte(maxBonus - 1);
+	for (uint8_t day = 2; day <= maxBonus; ++day) {
+		const auto &strikeBonuses = g_dailyRewards().getStrikeBonuses();
+		if (const auto bonusIt = strikeBonuses.find(day); bonusIt != strikeBonuses.end()) {
+			msg.addString(bonusIt->second.text);
+			msg.addByte(day);
+		}
+	}
+	msg.addByte(1);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendOpenRewardWall(uint8_t shrine, uint8_t dayStreak, uint16_t jokerTokens, uint16_t streakLevel, uint32_t nextRewardTime, bool rewardTaken, bool testMode) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	const uint32_t now = static_cast<uint32_t>(std::time(nullptr));
+	const bool collected = rewardTaken || nextRewardTime > now || (player && player->getDailyReward() == DAILY_REWARD_COLLECTED);
+
+	NetworkMessage msg;
+	msg.addByte(0xE2);
+	msg.addByte(shrine);
+	if (testMode || !collected) {
+		msg.add<uint32_t>(0);
+	} else {
+		msg.add<uint32_t>(nextRewardTime);
+	}
+	msg.addByte(dayStreak);
+	if (collected) {
+		msg.addByte(1);
+		msg.addString("Sorry, you have already taken your daily reward or you are unable to collect it.");
+		if (jokerTokens > 0) {
+			msg.addByte(1);
+			msg.add<uint16_t>(jokerTokens);
+		} else {
+			msg.addByte(0);
+		}
+	} else {
+		msg.addByte(0);
+		msg.addByte(2);
+		uint32_t availableAt = nextRewardTime;
+		if (availableAt <= 0) {
+			availableAt = static_cast<uint32_t>(g_dailyRewards().getLastServerSave() + g_dailyRewards().getServerTimeThreshold());
+		}
+		msg.add<uint32_t>(availableAt);
+		msg.add<uint16_t>(jokerTokens);
+	}
+	msg.add<uint16_t>(streakLevel);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendDailyRewardCollectionState(uint8_t state) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0xDE);
+	msg.addByte(state);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendDailyRewardHistory(uint32_t playerGuid) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	struct HistoryEntry {
+		std::string description;
+		uint32_t timestamp = 0;
+		uint16_t daystreak = 0;
+	};
+
+	std::vector<HistoryEntry> entries;
+	const auto query = fmt::format(
+		"SELECT * FROM `daily_reward_history` WHERE `player_id` = {} ORDER BY `timestamp` DESC LIMIT 15",
+		playerGuid
+	);
+	if (const auto &result = Database::getInstance().storeQuery(query)) {
+		do {
+			entries.push_back({
+				.description = result->getString("description"),
+				.timestamp = result->getNumber<uint32_t>("timestamp"),
+				.daystreak = result->getNumber<uint16_t>("daystreak"),
+			});
+		} while (result->next());
+	}
+
+	if (entries.empty()) {
+		sendMessageDialog("You don't have any entries yet.");
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0xE5);
+	msg.addByte(static_cast<uint8_t>(entries.size()));
+	for (const auto &entry : entries) {
+		msg.add<uint32_t>(entry.timestamp);
+		msg.addByte(0);
+		msg.addString(entry.description);
+		msg.add<uint16_t>(entry.daystreak + 1);
+	}
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendDailyRewardCollectionResource(uint8_t resourceType, uint64_t value) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0xEE);
+	msg.addByte(resourceType);
+	msg.add<uint64_t>(value);
 	writeToOutputBuffer(msg);
 }
 

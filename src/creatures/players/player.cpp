@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "creatures/players/player.hpp"
+#include "creatures/players/daily_reward/daily_reward.hpp"
 
 #include "account/account.hpp"
 #include "config/configmanager.hpp"
@@ -4488,6 +4489,26 @@ void Player::setDailyReward(uint8_t reward) {
 	this->isDailyReward = reward;
 }
 
+uint8_t Player::getDailyReward() const {
+	return isDailyReward;
+}
+
+uint32_t Player::getCollectionTokens() const {
+	return std::max<int32_t>(0, getStorageValue(g_dailyRewards().getStorages().collectionTokens));
+}
+
+void Player::setCollectionTokens(uint32_t value) {
+	addStorageValue(g_dailyRewards().getStorages().collectionTokens, static_cast<int32_t>(value));
+}
+
+uint32_t Player::getJokerTokens() const {
+	return std::max<int32_t>(0, getStorageValue(g_dailyRewards().getStorages().jokerTokens));
+}
+
+void Player::setJokerTokens(uint32_t value) {
+	addStorageValue(g_dailyRewards().getStorages().jokerTokens, static_cast<int32_t>(value));
+}
+
 void Player::removeList() {
 	g_game().removePlayer(static_self_cast<Player>());
 
@@ -4520,6 +4541,10 @@ uint64_t Player::getExpForLevel(const uint32_t level) {
 
 uint16_t Player::getStaminaMinutes() const {
 	return staminaMinutes;
+}
+
+void Player::addStaminaMinutes(uint16_t amount) {
+	staminaMinutes = std::min<uint16_t>(2520, static_cast<uint16_t>(staminaMinutes + amount));
 }
 
 void Player::sendItemsPrice() const {
@@ -6414,6 +6439,8 @@ void Player::onPlacedCreature() {
 	if (!g_creatureEvents().playerLogin(static_self_cast<Player>())) {
 		removePlayer(true);
 	}
+
+	g_dailyRewards().initPlayer(static_self_cast<Player>());
 
 	this->onChangeZone(this->getZoneType());
 
@@ -11571,6 +11598,7 @@ void Player::onRemoveCreature(const std::shared_ptr<Creature> &creature, bool is
 	if (const auto &player = getPlayer(); player == creature) {
 		if (isLogout) {
 			onDeEquipInventory();
+			g_dailyRewards().stopPlayerBonuses(player->getID());
 
 			if (m_party) {
 				m_party->leaveParty(player, true);
@@ -11847,6 +11875,36 @@ bool Player::canAutoWalk(const Position &toPosition, const std::function<void()>
 void Player::sendMessageDialog(const std::string &message) const {
 	if (client) {
 		client->sendMessageDialog(message);
+	}
+}
+
+void Player::sendDailyRewardCollectionState(uint8_t state) const {
+	if (client) {
+		client->sendDailyRewardCollectionState(state);
+	}
+}
+
+void Player::sendDailyRewardCollectionResource(uint8_t resourceType, uint64_t value) const {
+	if (client) {
+		client->sendDailyRewardCollectionResource(resourceType, value);
+	}
+}
+
+void Player::sendDailyRewardBasic() const {
+	if (client) {
+		client->sendDailyRewardBasic();
+	}
+}
+
+void Player::sendOpenRewardWall(uint8_t shrine, uint8_t dayStreak, uint16_t jokerTokens, uint16_t streakLevel, uint32_t nextRewardTime, bool rewardTaken, bool testMode) const {
+	if (client) {
+		client->sendOpenRewardWall(shrine, dayStreak, jokerTokens, streakLevel, nextRewardTime, rewardTaken, testMode);
+	}
+}
+
+void Player::sendDailyRewardHistory(uint32_t playerGuid) const {
+	if (client) {
+		client->sendDailyRewardHistory(playerGuid);
 	}
 }
 

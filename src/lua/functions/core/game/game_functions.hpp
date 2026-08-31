@@ -117,4 +117,5 @@ private:
 	static int luaGameSetRankName(lua_State* L);
 	static int luaGameCreateGuild(lua_State* L);
 	static int luaGameJoinGuild(lua_State* L);
+	static int luaGameUpdateDailyRewardLastServerSave(lua_State* L);
 };

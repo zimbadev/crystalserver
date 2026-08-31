@@ -11,7 +11,7 @@ local function ServerSave()
 	end
 
 	-- Update daily reward next server save timestamp
-	UpdateDailyRewardGlobalStorage(DailyReward.storages.lastServerSave, os.time())
+	Game.updateDailyRewardLastServerSave()
 end
 
 local function ServerSaveWarning(time)

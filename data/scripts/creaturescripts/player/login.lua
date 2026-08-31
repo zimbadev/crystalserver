@@ -169,16 +169,10 @@ function playerLoginGlobal.onLogin(player)
 	_G.NextUseStaminaTime[playerId] = 1
 	_G.NextUseXpStamina[playerId] = 1
 	_G.NextUseConcoctionTime[playerId] = 1
-	DailyReward.init(playerId)
 
 	local stats = player:inBossFight()
 	if stats then
 		stats.playerId = player:getId()
-	end
-
-	-- Remove Boss Time
-	if GetDailyRewardLastServerSave() >= player:getLastLoginSaved() then
-		player:setRemoveBossTime(1)
 	end
 
 	-- Remove combat protection

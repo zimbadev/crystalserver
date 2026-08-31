@@ -570,6 +570,16 @@ private:
 	void sendWeaponProficiencyExperience(const uint16_t itemId, const uint32_t experience);
 	void sendWeaponProficiencyInfo(const uint16_t itemId);
 
+	void parseOpenDailyReward(NetworkMessage &msg);
+	void parseOpenDailyRewardHistory(NetworkMessage &msg);
+	void parseSelectDailyReward(NetworkMessage &msg);
+
+	void sendDailyRewardBasic();
+	void sendOpenRewardWall(uint8_t shrine, uint8_t dayStreak, uint16_t jokerTokens, uint16_t streakLevel, uint32_t nextRewardTime, bool rewardTaken, bool testMode);
+	void sendDailyRewardCollectionState(uint8_t state);
+	void sendDailyRewardHistory(uint32_t playerGuid);
+	void sendDailyRewardCollectionResource(uint8_t resourceType, uint64_t value);
+
 	friend class Player;
 	friend class PlayerWheel;
 	friend class PlayerVIP;

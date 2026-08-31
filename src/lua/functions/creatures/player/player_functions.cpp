@@ -155,6 +155,10 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "getRewardList", PlayerFunctions::luaPlayerGetRewardList);
 
 	Lua::registerMethod(L, "Player", "setDailyReward", PlayerFunctions::luaPlayerSetDailyReward);
+	Lua::registerMethod(L, "Player", "getCollectionTokens", PlayerFunctions::luaPlayerGetCollectionTokens);
+	Lua::registerMethod(L, "Player", "setCollectionTokens", PlayerFunctions::luaPlayerSetCollectionTokens);
+	Lua::registerMethod(L, "Player", "getJokerTokens", PlayerFunctions::luaPlayerGetJokerTokens);
+	Lua::registerMethod(L, "Player", "setJokerTokens", PlayerFunctions::luaPlayerSetJokerTokens);
 
 	Lua::registerMethod(L, "Player", "sendInventory", PlayerFunctions::luaPlayerSendInventory);
 	Lua::registerMethod(L, "Player", "sendLootStats", PlayerFunctions::luaPlayerSendLootStats);
@@ -1519,6 +1523,52 @@ int PlayerFunctions::luaPlayerSetDailyReward(lua_State* L) {
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (player) {
 		player->setDailyReward(Lua::getNumber<uint8_t>(L, 2));
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetCollectionTokens(lua_State* L) {
+	// player:getCollectionTokens()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		lua_pushnumber(L, player->getCollectionTokens());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetCollectionTokens(lua_State* L) {
+	// player:setCollectionTokens(value)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		player->setCollectionTokens(Lua::getNumber<uint32_t>(L, 2));
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetJokerTokens(lua_State* L) {
+	// player:getJokerTokens()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		lua_pushnumber(L, player->getJokerTokens());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetJokerTokens(lua_State* L) {
+	// player:setJokerTokens(value)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		player->setJokerTokens(Lua::getNumber<uint32_t>(L, 2));
 		Lua::pushBoolean(L, true);
 	} else {
 		lua_pushnil(L);

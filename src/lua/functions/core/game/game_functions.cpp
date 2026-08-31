@@ -22,6 +22,7 @@
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/npcs/npc.hpp"
 #include "creatures/players/achievement/player_achievement.hpp"
+#include "creatures/players/daily_reward/daily_reward.hpp"
 #include "creatures/players/player.hpp"
 #include "game/functions/game_reload.hpp"
 #include "game/game.hpp"
@@ -38,6 +39,8 @@
 #include "lua/scripts/lua_environment.hpp"
 #include "map/spectators.hpp"
 #include "lua/functions/lua_functions_loader.hpp"
+
+#include <ctime>
 
 void GameFunctions::init(lua_State* L) {
 	Lua::registerTable(L, "Game");
@@ -136,6 +139,7 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "setRankName", GameFunctions::luaGameSetRankName);
 	Lua::registerMethod(L, "Game", "createGuild", GameFunctions::luaGameCreateGuild);
 	Lua::registerMethod(L, "Game", "joinGuild", GameFunctions::luaGameJoinGuild);
+	Lua::registerMethod(L, "Game", "updateDailyRewardLastServerSave", GameFunctions::luaGameUpdateDailyRewardLastServerSave);
 }
 
 // Game
@@ -1266,5 +1270,13 @@ int GameFunctions::luaGameJoinGuild(lua_State* L) {
 
 	bool success = g_game().joinGuild(guildName, playerName);
 	Lua::pushBoolean(L, success);
+	return 1;
+}
+
+int GameFunctions::luaGameUpdateDailyRewardLastServerSave(lua_State* L) {
+	// Game.updateDailyRewardLastServerSave([timestamp])
+	const time_t timestamp = lua_gettop(L) >= 2 ? static_cast<time_t>(Lua::getNumber<int64_t>(L, 2)) : std::time(nullptr);
+	g_dailyRewards().updateLastServerSave(timestamp);
+	Lua::pushBoolean(L, true);
 	return 1;
 }
