@@ -143,7 +143,16 @@
 	<raid name="svargrond.barbariansbittermor" file="svargrond/barbarians_bittermor.xml" interval2="1440" margin="360" />
 	<raid name="svargrond.barbarianssvargrond1" file="svargrond/barbarians_svargrond1.xml" interval2="1440" margin="360" />
 	<raid name="svargrond.barbarianssvargrond2" file="svargrond/barbarians_svargrond2.xml" interval2="1440" margin="180" />
-	<raid name="svargrond.direpenguins" file="svargrond/dire_penguins.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin1" file="svargrond/dire_penguin1.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin2" file="svargrond/dire_penguin2.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin3" file="svargrond/dire_penguin3.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin4" file="svargrond/dire_penguin4.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin5" file="svargrond/dire_penguin5.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin6" file="svargrond/dire_penguin6.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin7" file="svargrond/dire_penguin7.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin8" file="svargrond/dire_penguin8.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin9" file="svargrond/dire_penguin9.xml" interval2="1440" margin="720" />
+	<raid name="svargrond.direpenguin10" file="svargrond/dire_penguin10.xml" interval2="1440" margin="720" />
 	<raid name="svargrond.ghazbaran" file="svargrond/ghazbaran.xml" interval2="1440" margin="360" />
 	<raid name="svargrond.hirintror" file="svargrond/hirintror.xml" interval2="1440" margin="360" />
 	<raid name="svargrond.icegolems" file="svargrond/ice_golems.xml" interval2="1440" margin="180" />
