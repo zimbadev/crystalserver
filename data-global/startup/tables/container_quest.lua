@@ -53,12 +53,14 @@ MapContainersQuest = {
 		itemId = 4073,
 		itemPos = { x = 32804, y = 31586, z = 0 },
 		contents = {
-			{ itemId = 6533, -- book
+			{
+				itemId = 6533, -- book
 				text = [[
 Guarded by fire and dark walls, a long forgotten secret lies.
 Never meant to be opened, yet now it awakes.
 Key to magic, wielded as a sword by those who fought.
-The first and the last tease, creation and destruction.]] },
+The first and the last tease, creation and destruction.]],
+			},
 		},
 	},
 	-- chest at 32753,31456,1
@@ -74,7 +76,8 @@ The first and the last tease, creation and destruction.]] },
 		itemId = 11810,
 		itemPos = { x = 33195, y = 31765, z = 1 },
 		contents = {
-			{ itemId = 28461, -- page from a mystic book
+			{
+				itemId = 28461, -- page from a mystic book
 				text = [[
 This page seems to be part of a book about ancient rituals, mystic incantations and far away places. Besides a very prominent symbol, embedded in the text, a spell can be deciphered from the strange script:
 
@@ -82,7 +85,8 @@ This page seems to be part of a book about ancient rituals, mystic incantations 
 ~ Draw with it a circle in the middle of the room ~
 ~ Stand in this sphere when drawing the symbol "Of Night And Day Intersecting Ostensum Est"
 ~ Utter all of the following words loudly with clear voice: CERTAGIA SALABANTHR DANNHE GENT'HO" ~
-~ Looking upward, repeat the incatation and you shall teleport the periphery of your body ~]] },
+~ Looking upward, repeat the incatation and you shall teleport the periphery of your body ~]],
+			},
 		},
 	},
 	-- chest at 33343,31610,1
@@ -106,7 +110,8 @@ This page seems to be part of a book about ancient rituals, mystic incantations 
 		itemId = 7757,
 		itemPos = { x = 32032, y = 32276, z = 5 },
 		contents = {
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
 					{ itemId = 3562 }, -- coat
 				},
@@ -118,7 +123,8 @@ This page seems to be part of a book about ancient rituals, mystic incantations 
 		itemId = 2472,
 		itemPos = { x = 33064, y = 32529, z = 5 },
 		contents = {
-			{ itemId = 11541, -- Jean Pierre's Cookbook II
+			{
+				itemId = 11541, -- Jean Pierre's Cookbook II
 				text = [[
 Famous Recipes by Maître Jean Pierre
 
@@ -148,7 +154,8 @@ Sweet Mangonaise Elixir
 - 50 mangoes
 - 10 honeycombs
 - 1 bottle of bug milk
-- 1 blessed wooden stake]] },
+- 1 blessed wooden stake]],
+			},
 		},
 	},
 	-- chest at 33064,32531,5
@@ -156,7 +163,8 @@ Sweet Mangonaise Elixir
 		itemId = 2472,
 		itemPos = { x = 33064, y = 32531, z = 5 },
 		contents = {
-			{ itemId = 9093, -- Jean Pierre's Cookbook I
+			{
+				itemId = 9093, -- Jean Pierre's Cookbook I
 				text = [[
 Famous Recipes by Maître Jean Pierre
 
@@ -242,7 +250,8 @@ Carrot Cake
 - 10 Ounces of flour
 - 2 Eggs
 - 10 Cookies
-- 2 Peanuts]] },
+- 2 Peanuts]],
+			},
 		},
 	},
 	-- bookcase at 33155,32840,6
@@ -250,7 +259,8 @@ Carrot Cake
 		itemId = 2438,
 		itemPos = { x = 33155, y = 32840, z = 6 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
 In ancient tombs beneath the burning endless sands
 
@@ -265,7 +275,8 @@ Uncurtained to the warriors of righteous mind
 
 Who well-prepared with magic, sharpened blade and eyes
 
-Step through the doors and leave their mortal fear behind.]] },
+Step through the doors and leave their mortal fear behind.]],
+			},
 		},
 	},
 	-- box at 31987,31223,7
@@ -297,16 +308,20 @@ Step through the doors and leave their mortal fear behind.]] },
 		itemId = 2469,
 		itemPos = { x = 32795, y = 31185, z = 7 },
 		contents = {
-			{ itemId = 2820, -- sheet of paper
+			{
+				itemId = 2820, -- sheet of paper
 				text = [[
 Manifest of the Yalahari, Part I
 The city has been neglected for far too long. We concentrated on our research and spiritual evolution and have turned a blind eye on the needs of the people that are our subjects. We have too strongly relied on the help of the Augur who in turn did little but the same routines for many generations. We have decided it is time to take initiative. The experiment to give people too much freedom and too little guidance has to be stopped before all is lost. We have a responsibility for this city and the people living here. Only with our help, they will be able to flourish and to overcome the shadows of the past. The city can be rebuilt and restored to at least some of its former glory when we diligently work for it. It will be hard and it will take the help of determined individuals to assist us in our efforts. However, in the long run, order will be completely re-established and Yalahar will once again be the magnificent city it used to be.
 Only with drastic decisions and changes, this great goal can be achieved. We will have to get through hard times and prepare for them as good as we can. Most importantly, a good city needs a solid base. For this reason we have to start at the bottom to clean things up. We have to be precise and consequent in our decisions and actions. This way we will be able to create a solid base for the city.
-To some extent, we have to work like a gardener. The rotten parts have to be cut off, and the healthy parts have to be cherished. The city has to be retaken. Then order can be restored and the actual rebuilding can begin. In the end, the city will once again be a centre of prosperity and a shining light in a dark world.]] },
-			{ itemId = 2820, -- sheet of paper
+To some extent, we have to work like a gardener. The rotten parts have to be cut off, and the healthy parts have to be cherished. The city has to be retaken. Then order can be restored and the actual rebuilding can begin. In the end, the city will once again be a centre of prosperity and a shining light in a dark world.]],
+			},
+			{
+				itemId = 2820, -- sheet of paper
 				text = [[
 Manifest of the Yalahari, Part II
-It is obvious that such greatness comes not without sacrifices, but we will make sure to keep them to a minimum. All of our decisions serve a greater good, of course. Even if this is not always obvious, in the end things will work out and provide us all with a better life and a bright future.\nBased on the ruins of our former glory, it is hard to imagine how magnificent this future will be, but we, the Yalahari, still carry the vision of what we want to accomplish in our hearts. To bring this vision to life is our greatest goal which we all work towards.\nThere are elements that see their power and influence waning in these days of change. They are afraid of the things to come, and in their ignorance they cling to the rotting reality they know all too well. They created their own little niches of power and influence and feel guilty for neglecting their duties, and with that also for the decay of the city. They are surely already approaching unsuspecting outsiders to poison their minds with selfish lies. For generations the Augur, once the pride of our people, have done things the same way they had known for generations, and everyone can see where it has taken Yalahar.]] },
+It is obvious that such greatness comes not without sacrifices, but we will make sure to keep them to a minimum. All of our decisions serve a greater good, of course. Even if this is not always obvious, in the end things will work out and provide us all with a better life and a bright future.\nBased on the ruins of our former glory, it is hard to imagine how magnificent this future will be, but we, the Yalahari, still carry the vision of what we want to accomplish in our hearts. To bring this vision to life is our greatest goal which we all work towards.\nThere are elements that see their power and influence waning in these days of change. They are afraid of the things to come, and in their ignorance they cling to the rotting reality they know all too well. They created their own little niches of power and influence and feel guilty for neglecting their duties, and with that also for the decay of the city. They are surely already approaching unsuspecting outsiders to poison their minds with selfish lies. For generations the Augur, once the pride of our people, have done things the same way they had known for generations, and everyone can see where it has taken Yalahar.]],
+			},
 		},
 	},
 	-- box at 32796,31226,7
@@ -314,19 +329,23 @@ It is obvious that such greatness comes not without sacrifices, but we will make
 		itemId = 2469,
 		itemPos = { x = 32796, y = 31226, z = 7 },
 		contents = {
-			{ itemId = 2820, -- sheet of paper
+			{
+				itemId = 2820, -- sheet of paper
 				text = [[
 History of the Augur, Part II
 They brought more and more people to Yalahar. Not all of them became Augur, a good part of them lived in Yalahar as ordinary citizens. At some point, the city had reached a much larger population than under the rule of the true Yalahari, and it became difficult to provide food and shelter for everyone. Time and overuse took it's toll on the city. Over the years, more and more parts of the city were lost due to ignorance, lack of resources, or catastrophes. The new Yalahari were unable to restore broken machines and devices, and their efforts to retake certain parts of the city with the help of the Augur caused only more disaster. So the new Yalahari decided to stay in the city's centre, letting the Augur care for the rest of the city as well as they could. Still, their image as Yalahari allowed them to claim supremacy and to rule over the whole city.
 This all did not matter too much to our ancestors. The new Yalahari were neither cruel nor overly abusive, and they still wielded the powerful weapons and armors of the true Yalahari. So they stuck to the status quo and continued to work for the Yalahari despite everything they had found out. This worked quite well although the city was still declining and great parts of it had been lost to chaos and anarchy.
-Lately, though, things started to change. It is not a dramatic change but it can be recognised gradually at many places. Some of the known routines in the orders of the Yalahari have altered. There are more and more orders who have a dubious purpose. The most frightening thing is that some orders obviously hint at a person with Yalahari knowledge that had been considered as lost for centuries. The overwhelming majority of the new Yalahari still clings to their ignorant and self-centred ways, but perhaps one of them or a small group has discovered some hidden secrets of their vanished masters. It is also possible that something completely different is happening, we simply don't know. But these new orders that seem to aim at restoring order in the city have some bitter taste. They are somewhat oppressive and destructive, not in an obvious way, though. Taken together, they paint a dark picture of Yalahar's future. A future of oppression, betrayal, and a much stricter rule by the Yalahari.]] },
-			{ itemId = 2820, -- sheet of paper
+Lately, though, things started to change. It is not a dramatic change but it can be recognised gradually at many places. Some of the known routines in the orders of the Yalahari have altered. There are more and more orders who have a dubious purpose. The most frightening thing is that some orders obviously hint at a person with Yalahari knowledge that had been considered as lost for centuries. The overwhelming majority of the new Yalahari still clings to their ignorant and self-centred ways, but perhaps one of them or a small group has discovered some hidden secrets of their vanished masters. It is also possible that something completely different is happening, we simply don't know. But these new orders that seem to aim at restoring order in the city have some bitter taste. They are somewhat oppressive and destructive, not in an obvious way, though. Taken together, they paint a dark picture of Yalahar's future. A future of oppression, betrayal, and a much stricter rule by the Yalahari.]],
+			},
+			{
+				itemId = 2820, -- sheet of paper
 				text = [[
 History of the Augur, Part I
 We, the families of the Augur, have been living here for many generations. In the course of time, we acquired certain insights in the ways of our masters, the Yalahari. Many years ago, things used to be very different in this city. Once it was a marvel to behold, but then it started to decay slowly and steadily. This process of deterioration begun in the far past, long before our ancestors came here. At the time they were brought here by the Yalahari as helpers and workers, the city already showed signs of decline. Despite their claim of having great power, the Yalahari could do little to stop the catastrophes that should occur. Neither did they do anything to restore the damaged parts of the city. Still, it took many centuries until the city had reached the pitiful state that you can witness today.
 Some decades ago, a group of Augur suspected that we all were lied to by our masters. They started to look for clues that proved their assumptions, and secretly gathered parts of the puzzle one by one. For all we know, there had been indeed a powerful race called the Yalahari that built this city to distance itself from the wars of some capricious gods. So far the tales that our masters had told us, have been true. These Yalahari were served by a group of Augur such as us. They were their helpers and workers, and the Yalahari shared some of their luxuries and achievements with them. The Yalahari concentrated on research and art, and left the more manual work to their servants, who often only knew what they had to do without understanding their tasks.
 At one far-away point in history, the Yalahari seemingly vanished. Certain clues that our ancestors gathered, hint that they locked themselves in the city's centre and cut off all contact to their helpers. When the Augur sometime later dared to enter the inner city, the Yalahari were all gone - vanished without a trace. After getting over the initial shock, the Augur assumed the role of the Yalahari themselves. For a while they tried to get familiar with some of the secrets of their lost masters, but they were only able to understand the most basic concepts of the Yalahari's knowledge. They stuck to their usual tasks to keep the city running. Still, they were too few to keep the enormous city, of which they understood so little, in shape.
-So they decided to recruit Augur on their own. This way most of our forefathers came to Yalahar. In the meanwhile, the former Augur retreated into the inner city.]] },
+So they decided to recruit Augur on their own. This way most of our forefathers came to Yalahar. In the meanwhile, the former Augur retreated into the inner city.]],
+			},
 		},
 	},
 	-- chest at 32030,31688,8
@@ -415,7 +434,8 @@ So they decided to recruit Augur on their own. This way most of our forefathers 
 		itemId = 2472,
 		itemPos = { x = 32084, y = 31062, z = 10 },
 		contents = {
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
 					{ itemId = 7440, count = 1 }, -- mastermind potion
 					{ itemId = 3031, count = 100 }, -- gold coin
@@ -447,7 +467,8 @@ So they decided to recruit Augur on their own. This way most of our forefathers 
 		itemId = 2435,
 		itemPos = { x = 32621, y = 31404, z = 10 },
 		contents = {
-			{ itemId = 2832, -- book
+			{
+				itemId = 2832, -- book
 				text = [[
 Tunnelling guide
 ----------------
@@ -469,7 +490,8 @@ To sum up
 If you are no dwarf don't even try to think that you have a chance of mastering the art of tunnelling. If you are a dwarf I wish you good luck and don't abandon faith. There is a light at the end of the tunnel.
 
 Yours
-Gromward Hammerfist]] },
+Gromward Hammerfist]],
+			},
 		},
 	},
 	-- unknown item at 33215,31413,10
@@ -485,7 +507,8 @@ Gromward Hammerfist]] },
 		itemId = 2473,
 		itemPos = { x = 32216, y = 31168, z = 11 },
 		contents = {
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
 					{ itemId = 7440, count = 1 }, -- mastermind potion
 					{ itemId = 3031, count = 78 }, -- gold coin
@@ -498,11 +521,13 @@ Gromward Hammerfist]] },
 		itemId = 4240,
 		itemPos = { x = 32262, y = 31861, z = 11 },
 		contents = {
-			{ itemId = 2854, -- backpack
+			{
+				itemId = 2854, -- backpack
 				inside = {
 					{ itemId = 19148 }, -- torn magic cape
 					{ itemId = 3123, count = 0 }, -- worn leather boots
-					{ itemId = 3212, -- monk's diary
+					{
+						itemId = 3212, -- monk's diary
 						text = [[
 <the text seems to be a mostly ruined diary of some sort, found on the body of a dead monk. Most passages make no sense at all to you>
 ... abbot still clueless abour my ...
@@ -516,7 +541,8 @@ After all those perils and puzzels I have located the throne of darkness at last
 ...
 ... still impossible! My wards are fading and the ancient spirits feel that they will soon claim another victory. I failed the brotherhood and will soon join the howling hords in their eternal torment and madness. ...
 ...
-has stoped. I KNOW they are coming after me now. I can see the flickering of the shadows as they aproach. THEY ARE COMING]] },
+has stoped. I KNOW they are coming after me now. I can see the flickering of the shadows as they aproach. THEY ARE COMING]],
+					},
 					{ itemId = 8275 }, -- torn book
 				},
 			},

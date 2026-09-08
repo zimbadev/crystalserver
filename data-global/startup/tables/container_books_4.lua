@@ -43,12 +43,14 @@ MapContainersBooks4 = {
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31598, z = 14 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
 The formulas of Titaina
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32421,31599,14
@@ -56,12 +58,14 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31599, z = 14 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
 The formulas of Urina
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32421,31600,14
@@ -69,12 +73,14 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31600, z = 14 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
 The formulas of Dokia
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32421,31602,14
@@ -82,12 +88,14 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31602, z = 14 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
 The formulas of Lexis - Energyflow of the life rings
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32421,31603,14
@@ -95,12 +103,14 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31603, z = 14 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
 The formulas of Lexis - Energyflow of the death rings
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32424,31590,14
@@ -108,12 +118,14 @@ Written by Herion
 		itemId = 2435,
 		itemPos = { x = 32424, y = 31590, z = 14 },
 		contents = {
-			{ itemId = 2830, -- book
+			{
+				itemId = 2830, -- book
 				text = [[
 The magic web - Maps - Book 1
 Written by Cartikus
 
-*You can see several maps of Tibia with red lines and golden points on it*]] },
+*You can see several maps of Tibia with red lines and golden points on it*]],
+			},
 		},
 	},
 	-- bookcase at 32425,31590,14
@@ -121,12 +133,14 @@ Written by Cartikus
 		itemId = 2436,
 		itemPos = { x = 32425, y = 31590, z = 14 },
 		contents = {
-			{ itemId = 2830, -- book
+			{
+				itemId = 2830, -- book
 				text = [[
 The magic web - Maps - Book 2
 Written by Cartikus
 
-*You can see several maps of Tibia with red lines and golden points on it.*]] },
+*You can see several maps of Tibia with red lines and golden points on it.*]],
+			},
 		},
 	},
 	-- bookcase at 32427,31590,14
@@ -134,12 +148,14 @@ Written by Cartikus
 		itemId = 2436,
 		itemPos = { x = 32427, y = 31590, z = 14 },
 		contents = {
-			{ itemId = 2832, -- book
+			{
+				itemId = 2832, -- book
 				text = [[
 The formulas of Janias
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32428,31590,14
@@ -147,12 +163,14 @@ Written by Herion
 		itemId = 2436,
 		itemPos = { x = 32428, y = 31590, z = 14 },
 		contents = {
-			{ itemId = 2832, -- book
+			{
+				itemId = 2832, -- book
 				text = [[
 The formulas of Konios
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32429,31590,14
@@ -160,12 +178,14 @@ Written by Herion
 		itemId = 2436,
 		itemPos = { x = 32429, y = 31590, z = 14 },
 		contents = {
-			{ itemId = 2832, -- book
+			{
+				itemId = 2832, -- book
 				text = [[
 The formulas of Loxenos
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32430,31590,14
@@ -173,12 +193,14 @@ Written by Herion
 		itemId = 2436,
 		itemPos = { x = 32430, y = 31590, z = 14 },
 		contents = {
-			{ itemId = 2832, -- book
+			{
+				itemId = 2832, -- book
 				text = [[
 The formulas of Minaja
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32435,31594,14
@@ -186,12 +208,14 @@ Written by Herion
 		itemId = 2438,
 		itemPos = { x = 32435, y = 31594, z = 14 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
 The formulas of Lineos
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32435,31595,14
@@ -199,12 +223,14 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32435, y = 31595, z = 14 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
 The formulas of Geran
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32435,31597,14
@@ -212,12 +238,14 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32435, y = 31597, z = 14 },
 		contents = {
-			{ itemId = 2831, -- book
+			{
+				itemId = 2831, -- book
 				text = [[
 The formulas of Lexis - Energyflow of the time rings
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32435,31598,14
@@ -225,13 +253,15 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32435, y = 31598, z = 14 },
 		contents = {
-			{ itemId = 2831, -- book
+			{
+				itemId = 2831, -- book
 				text = [[
 The formulas of Lexis - Energyflow of the time rings
 Book 2
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32435,31599,14
@@ -239,13 +269,15 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32435, y = 31599, z = 14 },
 		contents = {
-			{ itemId = 2831, -- book
+			{
+				itemId = 2831, -- book
 				text = [[
 The formulas of Lexis - Energyflow of the time rings
 Book 3
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32435,31600,14
@@ -253,13 +285,15 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32435, y = 31600, z = 14 },
 		contents = {
-			{ itemId = 2831, -- book
+			{
+				itemId = 2831, -- book
 				text = [[
 The formulas of Lexis - Energyflow of the time rings
 Book 4
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32435,31603,14
@@ -267,12 +301,14 @@ Written by Herion
 		itemId = 2439,
 		itemPos = { x = 32435, y = 31603, z = 14 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
 1001 ways to use energy beams.
 Written by Hrmumundus Grofrukle
 
-*After reading the whole book (which takes you almost an hour) you suffer from headaches. You remember only one thing and have to laugh as the memory returns. It's the 647th. way to use an energy beam: a venerable wizard who grills meat with his deadly spell.*]] },
+*After reading the whole book (which takes you almost an hour) you suffer from headaches. You remember only one thing and have to laugh as the memory returns. It's the 647th. way to use an energy beam: a venerable wizard who grills meat with his deadly spell.*]],
+			},
 			{ itemId = 3577, count = 3 }, -- meat
 		},
 	},
@@ -281,7 +317,8 @@ Written by Hrmumundus Grofrukle
 		itemId = 28274,
 		itemPos = { x = 32472, y = 32553, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
 The Ruthless Seven
 by unknown
@@ -289,7 +326,8 @@ by unknown
 This confusing text seems to
 describe the demonic rulers
 of a place called the Pits
-of Inferno.]] },
+of Inferno.]],
+			},
 		},
 	},
 	-- strong wooden gable at 32472,32556,14
@@ -297,9 +335,11 @@ of Inferno.]] },
 		itemId = 28274,
 		itemPos = { x = 32472, y = 32556, z = 14 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
-Immortality Made Easy]] },
+Immortality Made Easy]],
+			},
 		},
 	},
 	-- strong wooden gable at 32472,32563,14
@@ -307,10 +347,12 @@ Immortality Made Easy]] },
 		itemId = 28274,
 		itemPos = { x = 32472, y = 32563, z = 14 },
 		contents = {
-			{ itemId = 2827, -- book
+			{
+				itemId = 2827, -- book
 				text = [[
 Secrets of Zathroth
-The Forbidden Book!]] },
+The Forbidden Book!]],
+			},
 		},
 	},
 	-- strong wooden gable at 32472,32566,14
@@ -318,10 +360,12 @@ The Forbidden Book!]] },
 		itemId = 28274,
 		itemPos = { x = 32472, y = 32566, z = 14 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
 Tales from the Crypt
-by an unknown necromancer.]] },
+by an unknown necromancer.]],
+			},
 		},
 	},
 	-- strong wooden gable at 32472,32569,14
@@ -329,9 +373,11 @@ by an unknown necromancer.]] },
 		itemId = 28274,
 		itemPos = { x = 32472, y = 32569, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
-50 Shades Of Dark Magic]] },
+50 Shades Of Dark Magic]],
+			},
 		},
 	},
 	-- strong wooden gable at 32476,32553,14
@@ -339,9 +385,11 @@ by an unknown necromancer.]] },
 		itemId = 28274,
 		itemPos = { x = 32476, y = 32553, z = 14 },
 		contents = {
-			{ itemId = 2824, -- book
+			{
+				itemId = 2824, -- book
 				text = [[
-The Mysteries Of Yal'Rath Thah]] },
+The Mysteries Of Yal'Rath Thah]],
+			},
 		},
 	},
 	-- strong wooden gable at 32476,32556,14
@@ -349,9 +397,11 @@ The Mysteries Of Yal'Rath Thah]] },
 		itemId = 28274,
 		itemPos = { x = 32476, y = 32556, z = 14 },
 		contents = {
-			{ itemId = 2827, -- book
+			{
+				itemId = 2827, -- book
 				text = [[
-How To Become A God In 50 Comprehensive Steps - A Beginners Guide]] },
+How To Become A God In 50 Comprehensive Steps - A Beginners Guide]],
+			},
 		},
 	},
 	-- strong wooden gable at 32476,32563,14
@@ -359,9 +409,11 @@ How To Become A God In 50 Comprehensive Steps - A Beginners Guide]] },
 		itemId = 28274,
 		itemPos = { x = 32476, y = 32563, z = 14 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
-The Ultimate Truth of Ascencion]] },
+The Ultimate Truth of Ascencion]],
+			},
 		},
 	},
 	-- strong wooden gable at 32476,32566,14
@@ -369,9 +421,11 @@ The Ultimate Truth of Ascencion]] },
 		itemId = 28274,
 		itemPos = { x = 32476, y = 32566, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
-Willpower, the Greatest Weapon]] },
+Willpower, the Greatest Weapon]],
+			},
 		},
 	},
 	-- strong wooden gable at 32476,32569,14
@@ -379,9 +433,11 @@ Willpower, the Greatest Weapon]] },
 		itemId = 28274,
 		itemPos = { x = 32476, y = 32569, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
-A treatise on cosmic entitys]] },
+A treatise on cosmic entitys]],
+			},
 		},
 	},
 	-- strong wooden gable at 32480,32553,14
@@ -389,9 +445,11 @@ A treatise on cosmic entitys]] },
 		itemId = 28274,
 		itemPos = { x = 32480, y = 32553, z = 14 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
-How to Pick Up Demons]] },
+How to Pick Up Demons]],
+			},
 		},
 	},
 	-- strong wooden gable at 32480,32556,14
@@ -399,10 +457,12 @@ How to Pick Up Demons]] },
 		itemId = 28274,
 		itemPos = { x = 32480, y = 32556, z = 14 },
 		contents = {
-			{ itemId = 2829, -- book
+			{
+				itemId = 2829, -- book
 				text = [[
 The Magic of the Ghouls
-by Paramor.]] },
+by Paramor.]],
+			},
 		},
 	},
 	-- strong wooden gable at 32480,32563,14
@@ -410,9 +470,11 @@ by Paramor.]] },
 		itemId = 28274,
 		itemPos = { x = 32480, y = 32563, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
-I, Ferumbras]] },
+I, Ferumbras]],
+			},
 		},
 	},
 	-- strong wooden gable at 32480,32566,14
@@ -420,9 +482,11 @@ I, Ferumbras]] },
 		itemId = 28274,
 		itemPos = { x = 32480, y = 32566, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
-Travels Through The Dreamworld]] },
+Travels Through The Dreamworld]],
+			},
 		},
 	},
 	-- strong wooden gable at 32480,32569,14
@@ -430,9 +494,11 @@ Travels Through The Dreamworld]] },
 		itemId = 28274,
 		itemPos = { x = 32480, y = 32569, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
-How To Beat Dark Souls]] },
+How To Beat Dark Souls]],
+			},
 		},
 	},
 	-- strong wooden gable at 32484,32553,14
@@ -440,9 +506,11 @@ How To Beat Dark Souls]] },
 		itemId = 28274,
 		itemPos = { x = 32484, y = 32553, z = 14 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
-Beyond the Veils of Sanity]] },
+Beyond the Veils of Sanity]],
+			},
 		},
 	},
 	-- strong wooden gable at 32484,32556,14
@@ -450,9 +518,11 @@ Beyond the Veils of Sanity]] },
 		itemId = 28274,
 		itemPos = { x = 32484, y = 32556, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
-Forbidden Secrets of Magic!]] },
+Forbidden Secrets of Magic!]],
+			},
 		},
 	},
 	-- strong wooden gable at 32484,32563,14
@@ -460,9 +530,11 @@ Forbidden Secrets of Magic!]] },
 		itemId = 28274,
 		itemPos = { x = 32484, y = 32563, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
-The Death of the Gods]] },
+The Death of the Gods]],
+			},
 		},
 	},
 	-- strong wooden gable at 32484,32566,14
@@ -470,9 +542,11 @@ The Death of the Gods]] },
 		itemId = 28274,
 		itemPos = { x = 32484, y = 32566, z = 14 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
-Negation Of The Impossible]] },
+Negation Of The Impossible]],
+			},
 		},
 	},
 	-- strong wooden gable at 32484,32569,14
@@ -480,9 +554,11 @@ Negation Of The Impossible]] },
 		itemId = 28274,
 		itemPos = { x = 32484, y = 32569, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
-Minions of Morgulah]] },
+Minions of Morgulah]],
+			},
 		},
 	},
 	-- strong wooden gable at 32488,32553,14
@@ -490,9 +566,11 @@ Minions of Morgulah]] },
 		itemId = 28274,
 		itemPos = { x = 32488, y = 32553, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
-How To Cook For Forty Humans]] },
+How To Cook For Forty Humans]],
+			},
 		},
 	},
 	-- strong wooden gable at 32488,32556,14
@@ -500,9 +578,11 @@ How To Cook For Forty Humans]] },
 		itemId = 28274,
 		itemPos = { x = 32488, y = 32556, z = 14 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
-Hitchhikers Guide To The Planes]] },
+Hitchhikers Guide To The Planes]],
+			},
 		},
 	},
 	-- strong wooden gable at 32488,32563,14
@@ -510,10 +590,12 @@ Hitchhikers Guide To The Planes]] },
 		itemId = 28274,
 		itemPos = { x = 32488, y = 32563, z = 14 },
 		contents = {
-			{ itemId = 2827, -- book
+			{
+				itemId = 2827, -- book
 				text = [[
 Demons
-Book X.]] },
+Book X.]],
+			},
 		},
 	},
 	-- strong wooden gable at 32488,32566,14
@@ -521,9 +603,11 @@ Book X.]] },
 		itemId = 28274,
 		itemPos = { x = 32488, y = 32566, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
-The Secret Of Mana]] },
+The Secret Of Mana]],
+			},
 		},
 	},
 	-- strong wooden gable at 32488,32569,14
@@ -531,9 +615,11 @@ The Secret Of Mana]] },
 		itemId = 28274,
 		itemPos = { x = 32488, y = 32569, z = 14 },
 		contents = {
-			{ itemId = 2828, -- book
+			{
+				itemId = 2828, -- book
 				text = [[
-The Rise of the Seven]] },
+The Rise of the Seven]],
+			},
 		},
 	},
 	-- bookcase at 32573,32195,14
@@ -541,7 +627,8 @@ The Rise of the Seven]] },
 		itemId = 2435,
 		itemPos = { x = 32573, y = 32195, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 If you want to enter the crypt of a great mage, you should seek the answers to some of these questions.
 
@@ -552,7 +639,8 @@ What was his banner?
 What was the name of his favourite dragon?
 Who was his assistant?
 Which spell killed him?
-In which city he was born?]] },
+In which city he was born?]],
+			},
 		},
 	},
 	-- bookcase at 32576,32195,14
@@ -560,15 +648,19 @@ In which city he was born?]] },
 		itemId = 2435,
 		itemPos = { x = 32576, y = 32195, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 The most perplexed and purple way to see your world Tibia
 by Perplex
 
-...]] },
-			{ itemId = 2819, -- parchment
+...]],
+			},
+			{
+				itemId = 2819, -- parchment
 				text = [[
-<you cant read this strange glyphs>]] },
+<you cant read this strange glyphs>]],
+			},
 		},
 	},
 	-- bookcase at 32577,32195,14
@@ -576,17 +668,21 @@ by Perplex
 		itemId = 2436,
 		itemPos = { x = 32577, y = 32195, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 Don´t be surprised!
 You could also use a bow instead of runes.
 by Galadriel
 
-...]] },
-			{ itemId = 2815, -- scroll
+...]],
+			},
+			{
+				itemId = 2815, -- scroll
 				text = [[
 The rune "sudden death" - how to put it in which bag? - how powerful is it really? - And how to fire it as quick as possible?
-by Medrok]] },
+by Medrok]],
+			},
 		},
 	},
 	-- box at 32674,31989,14
@@ -594,9 +690,11 @@ by Medrok]] },
 		itemId = 2469,
 		itemPos = { x = 32674, y = 31989, z = 14 },
 		contents = {
-			{ itemId = 641, -- piece of paper
+			{
+				itemId = 641, -- piece of paper
 				text = [[
-Eventually we reached an island that was thoroughly evil. It took all our courage and bravery to make our way through the dangerous territory to the dominating structure of the evil tower that loomed over the whole isle. We were well aware that the master of that tower had to be the epitome of evil and we had to enter his tower, regardless of the dangers involved. Only few had ever reached the isle and none of them had ever returned to tell the tale. But we were there and knew that it was our destiny to face the master of the isle. Retreat was not an option. We braved all the dangers that the isle seemed to throw against us and finally stood in front of the tower. Who would carry on our work if we failed? We knew if we did not stop the master of this isle, it might take decades until somebody else would find this isle and then it might be too late to stop the fiendish plot that threatened the whole world.]] },
+Eventually we reached an island that was thoroughly evil. It took all our courage and bravery to make our way through the dangerous territory to the dominating structure of the evil tower that loomed over the whole isle. We were well aware that the master of that tower had to be the epitome of evil and we had to enter his tower, regardless of the dangers involved. Only few had ever reached the isle and none of them had ever returned to tell the tale. But we were there and knew that it was our destiny to face the master of the isle. Retreat was not an option. We braved all the dangers that the isle seemed to throw against us and finally stood in front of the tower. Who would carry on our work if we failed? We knew if we did not stop the master of this isle, it might take decades until somebody else would find this isle and then it might be too late to stop the fiendish plot that threatened the whole world.]],
+			},
 		},
 	},
 	-- bookcase at 32844,32226,14
@@ -604,24 +702,36 @@ Eventually we reached an island that was thoroughly evil. It took all our courag
 		itemId = 2435,
 		itemPos = { x = 32844, y = 32226, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
-What Dreams Are Made Of]] },
-			{ itemId = 2816, -- book
+What Dreams Are Made Of]],
+			},
+			{
+				itemId = 2816, -- book
 				text = [[
-What an irony, the necromancers' nectar is the key to our doom and to our victory. Only he who feeds those in need will gain entrance, which is ironic too, because the forces of evil will never consider to do such a thing, no matter how gruesome it truly is. There is no way that the entrance is revealed but by treachery. Therefore, we have to keep the number of people who know about the secret as low as possible. Only the most trusted members will learn about the ritual. I can only hope there is no other high ranking traitor like Goshnar.]] },
-			{ itemId = 2816, -- book
+What an irony, the necromancers' nectar is the key to our doom and to our victory. Only he who feeds those in need will gain entrance, which is ironic too, because the forces of evil will never consider to do such a thing, no matter how gruesome it truly is. There is no way that the entrance is revealed but by treachery. Therefore, we have to keep the number of people who know about the secret as low as possible. Only the most trusted members will learn about the ritual. I can only hope there is no other high ranking traitor like Goshnar.]],
+			},
+			{
+				itemId = 2816, -- book
 				text = [[
-In the realm of dream, dreams literally can become true. So mind your thoughts when entering the dream realm. A uncontrolled thought can easily bring disaster upon you. Self-control is most important for any dreamwalker. Calmness and clear thought will guide and shield the dreamer. You will encounter in the dreams what you take in there with you. Don't try to enforce a prophecy, it won't work. Wander the dreams and if a prophecy comes to you, take it as a gift.]] },
-			{ itemId = 2821, -- book
+In the realm of dream, dreams literally can become true. So mind your thoughts when entering the dream realm. A uncontrolled thought can easily bring disaster upon you. Self-control is most important for any dreamwalker. Calmness and clear thought will guide and shield the dreamer. You will encounter in the dreams what you take in there with you. Don't try to enforce a prophecy, it won't work. Wander the dreams and if a prophecy comes to you, take it as a gift.]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
-Sleepwalking for fools]] },
-			{ itemId = 2821, -- book
+Sleepwalking for fools]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
-Dreamwalking for Beginners]] },
-			{ itemId = 2821, -- book
+Dreamwalking for Beginners]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
-Dreamwalking for Experts]] },
+Dreamwalking for Experts]],
+			},
 		},
 	},
 	-- bookcase at 32845,32226,14
@@ -629,10 +739,13 @@ Dreamwalking for Experts]] },
 		itemId = 2436,
 		itemPos = { x = 32845, y = 32226, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
-Some of he ancients formed realms in the dreamland. They build mighty fortresses to seize control of everything that walks in the dreamland, conscious or not. It was then, when the mysterious Lord of Dreams revealed himself. His anger shook the foundation of the dreamland. Dreamers all over the world awakened screaming in fear and pain. When the void came to a rest and the first dreamwalkers returned to the dreamlands, the fortresses were gone - all of them and with them all the ancients who manned them. The Shaig'laar lost their best men in these days and never recovered from the loss. So weak, they became an easy prey for the other ancients and so the period of the first dream masters had come to an end. From this time on, all dreamwalkers manipulate the dreamland as little as possible, only as much as it is needed to fit their needs. Also they never use their power to endanger others in their dreams. Dreams are meant to be an instrument of self-finding and prophecy, not a weapon.]] },
-			{ itemId = 2821, -- book
+Some of he ancients formed realms in the dreamland. They build mighty fortresses to seize control of everything that walks in the dreamland, conscious or not. It was then, when the mysterious Lord of Dreams revealed himself. His anger shook the foundation of the dreamland. Dreamers all over the world awakened screaming in fear and pain. When the void came to a rest and the first dreamwalkers returned to the dreamlands, the fortresses were gone - all of them and with them all the ancients who manned them. The Shaig'laar lost their best men in these days and never recovered from the loss. So weak, they became an easy prey for the other ancients and so the period of the first dream masters had come to an end. From this time on, all dreamwalkers manipulate the dreamland as little as possible, only as much as it is needed to fit their needs. Also they never use their power to endanger others in their dreams. Dreams are meant to be an instrument of self-finding and prophecy, not a weapon.]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
 When they killed the youngster I didn't help him because I didn't know him.
 When they killed the young knight I didn't help him because I had not much in common with that guy.
@@ -640,20 +753,29 @@ When they killed the local hero I didn't help him because it was his business, n
 When they killed the monk, who just lived to help others, I didn't help him because he should have been more warily.
 When they killed my friend I didn't help him because I thought I should not risk my life for him.
 When they killed my brother I didn't help him because I hoped they would at least spare me for not interfering with their business.
-When they killed me, there was no one left alive who could help me.]] },
-			{ itemId = 2821, -- book
+When they killed me, there was no one left alive who could help me.]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
-Evil often seems invincible, but even the longest journey begins with a first little step. It is up to us to say 'NO' to evil and to deny it the space it needs to blossom. We might fear it, but it cannot scare us. We might be weaker, but in the end evil will lose. Evil is hollow and self-consuming. Nothing can warm up the cold hearts of evil beings, nothing can fill the loneliness. A life so centred on itself cannot be shared with others. If you do not share your life, you deny it. Life is sharing. No one can cope with life alone. You have to share your life to give birth. You have to share to feel your life. Evil beings do not feel life, so they destroy it. Evil cannot understand life, and things that cannot be understood are feared.]] },
-			{ itemId = 2816, -- book
+Evil often seems invincible, but even the longest journey begins with a first little step. It is up to us to say 'NO' to evil and to deny it the space it needs to blossom. We might fear it, but it cannot scare us. We might be weaker, but in the end evil will lose. Evil is hollow and self-consuming. Nothing can warm up the cold hearts of evil beings, nothing can fill the loneliness. A life so centred on itself cannot be shared with others. If you do not share your life, you deny it. Life is sharing. No one can cope with life alone. You have to share your life to give birth. You have to share to feel your life. Evil beings do not feel life, so they destroy it. Evil cannot understand life, and things that cannot be understood are feared.]],
+			},
+			{
+				itemId = 2816, -- book
 				text = [[
-Greed, selfishness and hate are the soil that gives birth to evil. You can't neglect these feelings since they are part of you. But you can understand them. To understand why you hate someone will give you a deeper understanding how to cease to hate. Sometimes, you may have to kill someone. Do never kill somebody out of hate. Only kill to prevent a greater evil. You also have to understand your positive feelings. They are your shield to protect you from the assaults of negative emotions. They are the blanket that keeps you warm in desperate times. As long as you follow the path that these positive emotions show you, there is nothing that can harm YOU. They can hurt your body but your immortal soul is beyond their grasp.]] },
-			{ itemId = 2816, -- book
+Greed, selfishness and hate are the soil that gives birth to evil. You can't neglect these feelings since they are part of you. But you can understand them. To understand why you hate someone will give you a deeper understanding how to cease to hate. Sometimes, you may have to kill someone. Do never kill somebody out of hate. Only kill to prevent a greater evil. You also have to understand your positive feelings. They are your shield to protect you from the assaults of negative emotions. They are the blanket that keeps you warm in desperate times. As long as you follow the path that these positive emotions show you, there is nothing that can harm YOU. They can hurt your body but your immortal soul is beyond their grasp.]],
+			},
+			{
+				itemId = 2816, -- book
 				text = [[
-It is important for a dreamwalker not to get lost in his dreams. To accomplish that you have to train your senses. You must become aware that you are dreaming without waking up. To train this, get accustomed to asking yourself : 'Am I awake?' Do this at daytime as often as possible. But be careful! Do not conclude too quickly that you are awake. Try to 'fly' just on your thoughts, try to change the world around you by sheer imagination. Take some time to test reality. At some point of that training you will use this routine in your sleep as well. Then it is essential to come to the conclusion that you are asleep! If you have accomplished that, you will have a hard time to balance between dreaming and awakening. At first you will often slip back in the dream state but that will change quickly. Then you can begin the art of dreamwalking.]] },
-			{ itemId = 2816, -- book
+It is important for a dreamwalker not to get lost in his dreams. To accomplish that you have to train your senses. You must become aware that you are dreaming without waking up. To train this, get accustomed to asking yourself : 'Am I awake?' Do this at daytime as often as possible. But be careful! Do not conclude too quickly that you are awake. Try to 'fly' just on your thoughts, try to change the world around you by sheer imagination. Take some time to test reality. At some point of that training you will use this routine in your sleep as well. Then it is essential to come to the conclusion that you are asleep! If you have accomplished that, you will have a hard time to balance between dreaming and awakening. At first you will often slip back in the dream state but that will change quickly. Then you can begin the art of dreamwalking.]],
+			},
+			{
+				itemId = 2816, -- book
 				text = [[
 Nightmares are not your enemies. Make them to your teachers. Learn about them. Understand them. If it is a repeated nightmare, think about it while awake. Think about a good ending for that dream, imagine this ending again and again, feel comfortable with this happy ending. Enjoy it. Have fun with it and the nightmare will lose its sting. This way you can train yourself to dream the positive ending.
-Sometimes it is helpful to write your dreams down. Don't try to analyse them. You will get used to understand them just by reading and reliving them. It's not necessary to force something. This could even be harmful! Understand them as a nice story someone told you. Enjoy them and think about how they could continue. Imagine what would have happened if something like this happens in real life. Your dreams are your friends. All of them!]] },
+Sometimes it is helpful to write your dreams down. Don't try to analyse them. You will get used to understand them just by reading and reliving them. It's not necessary to force something. This could even be harmful! Understand them as a nice story someone told you. Enjoy them and think about how they could continue. Imagine what would have happened if something like this happens in real life. Your dreams are your friends. All of them!]],
+			},
 		},
 	},
 	-- bookcase at 32846,32226,14
@@ -661,12 +783,15 @@ Sometimes it is helpful to write your dreams down. Don't try to analyse them. Yo
 		itemId = 2437,
 		itemPos = { x = 32846, y = 32226, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
 The weapon was hidden well. We ensured that only a hero of courage and an unstained soul can find it.
 The unholy place will be guarded by our order. If its necessary, we will guard it eternally. No magic will be able to discover the secrets now.
-We used powerful enchantments and all the tricks our brightest minds have came up with. There will be no way to trick our wards or to disenchant them. I am confident that, combined with the riddles and traps, our forces will fight back all evil that might challenge us. Even the Ruthless Seven themselves if necessary.]] },
-			{ itemId = 2816, -- book
+We used powerful enchantments and all the tricks our brightest minds have came up with. There will be no way to trick our wards or to disenchant them. I am confident that, combined with the riddles and traps, our forces will fight back all evil that might challenge us. Even the Ruthless Seven themselves if necessary.]],
+			},
+			{
+				itemId = 2816, -- book
 				text = [[
 When the tower falls,
 when the cold loses its sting,
@@ -682,15 +807,19 @@ when the names will be erased and the vanished return,
 when the forbidden twin no longer exists,
 when the one-eyed king dies in fire,
 when the traitor meets his fate,
-then excalibug will be reborn in the flame of justice.]] },
-			{ itemId = 2816, -- book
+then excalibug will be reborn in the flame of justice.]],
+			},
+			{
+				itemId = 2816, -- book
 				text = [[
 He, who commands those who should have left the world, will come and claim the lives of those who walk two worlds. The twice fallen will fall a last time to seal the secrets and the imminent doom. Evil beings will feast on weak ones, not knowing that this is just the beginning of their own destruction.
 Those that are sleeping will be awakened to dream again.
 Those that are dead will live longer than the killers do.
 Many eyes will see the coming of the light in the thickest darkness and the fisher will be the king.
-The unborn will cheer for the reborn. Where no way exists, the heroes must fall. Where blood runs red, destiny awaits the wanderer. Where many ways are obviously, the wise chooses another one. Where one falls, four are victorious. Where the forces meet, the path will be revealed. Hope only arises from the highs and lows of the true path and the warrior will die in agony.]] },
-			{ itemId = 2821, -- book
+The unborn will cheer for the reborn. Where no way exists, the heroes must fall. Where blood runs red, destiny awaits the wanderer. Where many ways are obviously, the wise chooses another one. Where one falls, four are victorious. Where the forces meet, the path will be revealed. Hope only arises from the highs and lows of the true path and the warrior will die in agony.]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
 The Nightmare Chronicles Volume VII
 
@@ -700,13 +829,18 @@ the place of his unlucky heir and the
 living will walk the paths of the old way.
 Death awaits the greedy and the brave
 alike and many will be mourned until
-the long lost treasure is unearthed...]] },
-			{ itemId = 2821, -- book
+the long lost treasure is unearthed...]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
-What an irony, the necromancers' nectar is the key to our doom and to our victory. Only he who feeds those in need will gain entrance, which is ironic too, because the forces of evil will never consider to do such a thing, no matter how gruesome it truly is. There is no way that the entrance is revealed but by treachery. Therefore, we have to keep the number of people who know about the secret as low as possible. Only the most trusted members will learn about the ritual. I can only hope there is no other high ranking traitor like Goshnar.]] },
-			{ itemId = 2821, -- book
+What an irony, the necromancers' nectar is the key to our doom and to our victory. Only he who feeds those in need will gain entrance, which is ironic too, because the forces of evil will never consider to do such a thing, no matter how gruesome it truly is. There is no way that the entrance is revealed but by treachery. Therefore, we have to keep the number of people who know about the secret as low as possible. Only the most trusted members will learn about the ritual. I can only hope there is no other high ranking traitor like Goshnar.]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
-Today the last of the elves returned to their home town. They left us alone to battle the undead hordes. What a cowardly race! Without their aid, many of our best men will die. I don't understand these sages that asked me to see also the elves' point of view. All I see are the the mothers and fathers that will ask me where their children are when they have died in the upcoming battle. It is almost certain that our messenger, who was sent to the dwarfs and the king, is dead. There will be no reinforcements. We will have to fight on our own. I am sure we will win, but at what cost?]] },
+Today the last of the elves returned to their home town. They left us alone to battle the undead hordes. What a cowardly race! Without their aid, many of our best men will die. I don't understand these sages that asked me to see also the elves' point of view. All I see are the the mothers and fathers that will ask me where their children are when they have died in the upcoming battle. It is almost certain that our messenger, who was sent to the dwarfs and the king, is dead. There will be no reinforcements. We will have to fight on our own. I am sure we will win, but at what cost?]],
+			},
 		},
 	},
 	-- chest at 32846,32285,14
@@ -714,14 +848,18 @@ Today the last of the elves returned to their home town. They left us alone to b
 		itemId = 2472,
 		itemPos = { x = 32846, y = 32285, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
 I wonder how Ronur is doing. I miss him.
 But its my duty as sorceress of the nightmare knights to protect our bases here far away from home. Soon I will visit him and we will be reunited again. If all works like planned our marriage will take place in the end to this year.
-I hope this bitch Shandra will be kept busy by her studies in the mage guild and does not try to use my absence for one of her dirty tricks. She does not deserve a man like Ronur.]] },
-			{ itemId = 2821, -- book
+I hope this bitch Shandra will be kept busy by her studies in the mage guild and does not try to use my absence for one of her dirty tricks. She does not deserve a man like Ronur.]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
-... we see the transplaner semimatter is polymorph and the time constant is a contradiction in cases of subliminal manafocusing of the first grade. This implies that the vector of interisomatic transfixture has a mana to semimatter ratio of t*m-RM. So if the hyperelasticity of NM is defined as shown in previous volumes, we derive a transpeherical aethertransfixion of t-RU. This is no surprise to even the most simple minded rune user but the real implication of this is ...]] },
+... we see the transplaner semimatter is polymorph and the time constant is a contradiction in cases of subliminal manafocusing of the first grade. This implies that the vector of interisomatic transfixture has a mana to semimatter ratio of t*m-RM. So if the hyperelasticity of NM is defined as shown in previous volumes, we derive a transpeherical aethertransfixion of t-RU. This is no surprise to even the most simple minded rune user but the real implication of this is ...]],
+			},
 		},
 	},
 	-- chest at 32846,32288,14
@@ -729,10 +867,12 @@ I hope this bitch Shandra will be kept busy by her studies in the mage guild and
 		itemId = 2472,
 		itemPos = { x = 32846, y = 32288, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
 Coalblack and the Seven Elves.
-Once upon a time, there lived a beautiful dwarven girl in a humble settlement. The girl was called Coalblack. She was so pretty that seven elven men travelled to the settlement to see her beauty. But the girl feared that the elves just wanted to steal her underwear to dance around in it in the morning mists. So she asked her friend, a big wolf, to help her. The wolf put on boots and a red cape and ate some chalk to smooth his voice. Impersonating little Coalblack, he lured the elves into the darkest woods. But the elves dropped their clothes in the woods to be able to trace back the way they had taken. In the middle of the forest the elves found a magic mirror. They asked the mirror: 'Mirror, mirror in the forest, tell us whom you most adorest' And the mirror spoke 'You naked elves are pathetic!' The elves turned around and were deeply offended. 'What a bunch of incredible bums!' the mirror said. The stupid elves misunderstood the mirror and felt so flattered and cajoled that they built a gingerbread house around it and lived there happily ever after.]] },
+Once upon a time, there lived a beautiful dwarven girl in a humble settlement. The girl was called Coalblack. She was so pretty that seven elven men travelled to the settlement to see her beauty. But the girl feared that the elves just wanted to steal her underwear to dance around in it in the morning mists. So she asked her friend, a big wolf, to help her. The wolf put on boots and a red cape and ate some chalk to smooth his voice. Impersonating little Coalblack, he lured the elves into the darkest woods. But the elves dropped their clothes in the woods to be able to trace back the way they had taken. In the middle of the forest the elves found a magic mirror. They asked the mirror: 'Mirror, mirror in the forest, tell us whom you most adorest' And the mirror spoke 'You naked elves are pathetic!' The elves turned around and were deeply offended. 'What a bunch of incredible bums!' the mirror said. The stupid elves misunderstood the mirror and felt so flattered and cajoled that they built a gingerbread house around it and lived there happily ever after.]],
+			},
 		},
 	},
 	-- chest at 32848,32285,14
@@ -740,19 +880,23 @@ Once upon a time, there lived a beautiful dwarven girl in a humble settlement. T
 		itemId = 2472,
 		itemPos = { x = 32848, y = 32285, z = 14 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
 Roll, roll, roll the barrel
 gently down the road!
 Drinking, drinking, drinking, drinking,
-drink until you're bloat.]] },
-			{ itemId = 2816, -- book
+drink until you're bloat.]],
+			},
+			{
+				itemId = 2816, -- book
 				text = [[
 Banor bless me with deafness!
 This snoring dwarf is driving me nuts. Will this ever stop? One day, I will kill either him or myself. I can't believe the others can sleep, dream training or not!
 I wonder if I would become deaf by putting my head in a cauldron and using an explosion rune. Then again, I should perhaps put HIM in a cauldron and use some explosions ...
 I am sure he will lure a dragon here that thinks this awful noise is a mating call.
-Tomorrow, I will try to get an assignment at Knightwatch Tower. Even that windy hole is better than THIS!]] },
+Tomorrow, I will try to get an assignment at Knightwatch Tower. Even that windy hole is better than THIS!]],
+			},
 		},
 	},
 	-- chest at 32856,32285,14
@@ -760,15 +904,19 @@ Tomorrow, I will try to get an assignment at Knightwatch Tower. Even that windy 
 		itemId = 2472,
 		itemPos = { x = 32856, y = 32285, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
-... we see the transplaner semimatter is polymorph and the time constant is a contradiction in cases of subliminal manafocusing of the first grade. This implies that the vector of interisomatic transfixture has a mana to semimatter ratio of t*m-RM. So if the hyperelasticity of NM is defined as shown in previous volumes, we derive a transpeherical aethertransfixion of t-RU. This is no surprise to even the most simple minded rune user but the real implication of this is ...]] },
-			{ itemId = 2821, -- book
+... we see the transplaner semimatter is polymorph and the time constant is a contradiction in cases of subliminal manafocusing of the first grade. This implies that the vector of interisomatic transfixture has a mana to semimatter ratio of t*m-RM. So if the hyperelasticity of NM is defined as shown in previous volumes, we derive a transpeherical aethertransfixion of t-RU. This is no surprise to even the most simple minded rune user but the real implication of this is ...]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
 How to Seduce Women in Seven Steps
 
 Chapter One:
-How to Become a Member of a Young Male Bard Group.]] },
+How to Become a Member of a Young Male Bard Group.]],
+			},
 		},
 	},
 	-- chest at 32858,32285,14
@@ -776,17 +924,21 @@ How to Become a Member of a Young Male Bard Group.]] },
 		itemId = 2472,
 		itemPos = { x = 32858, y = 32285, z = 14 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
-... we see the transplaner semimatter is polymorph and the time constant is a contradiction in cases of subliminal manafocusing of the first grade. This implies that the vector of interisomatic transfixture has a mana to semimatter ratio of t*m-RM. So if the hyperelasticity of NM is defined as shown in previous volumes, we derive a transpeherical aethertransfixion of t-RU. This is no surprise to even the most simple minded rune user but the real implication of this is ...]] },
-			{ itemId = 3506, -- stamped letter
+... we see the transplaner semimatter is polymorph and the time constant is a contradiction in cases of subliminal manafocusing of the first grade. This implies that the vector of interisomatic transfixture has a mana to semimatter ratio of t*m-RM. So if the hyperelasticity of NM is defined as shown in previous volumes, we derive a transpeherical aethertransfixion of t-RU. This is no surprise to even the most simple minded rune user but the real implication of this is ...]],
+			},
+			{
+				itemId = 3506, -- stamped letter
 				text = [[
 Telmur
 
 If you don't repay your debts 'something bad'
 will happen to your family.
 
-D.]] },
+D.]],
+			},
 		},
 	},
 	-- seashell bookcase at 33454,31188,14
@@ -794,7 +946,8 @@ D.]] },
 		itemId = 14069,
 		itemPos = { x = 33454, y = 31188, z = 14 },
 		contents = {
-			{ itemId = 14015, -- seashell book
+			{
+				itemId = 14015, -- seashell book
 				text = [[
 Exercises, Chapter II: Basic Vocabulary 1 (A-D)
 
@@ -822,7 +975,8 @@ defend=obu
 destruction/destroy=jakhn
 do=lh
 down=osk
-dweller/dwell=naumpi]] },
+dweller/dwell=naumpi]],
+			},
 		},
 	},
 	-- seashell bookcase at 33459,31186,14
@@ -830,14 +984,16 @@ dweller/dwell=naumpi]] },
 		itemId = 14066,
 		itemPos = { x = 33459, y = 31186, z = 14 },
 		contents = {
-			{ itemId = 14015, -- seashell book
+			{
+				itemId = 14015, -- seashell book
 				text = [[
 The Book of Qjell, The First Coming
 
 Edition II, Translation from 'Jekhr' (language of the Deeplings)
 By Lagatos, Chronicler and Scholar
 
-When the creatures of the deep were born under the eternal suns, a great evil befell the seas. An evil never described in writing nor mentioned by a scholar for it was blackness incarnate. Chaos and darkness reigned and the deep suffered direly. For centuries our world was shattered and occluded from light and warmth. Those born under a weak tide were abducted, captured, eaten by fiends of the void. The strongest would prevail, but their numbers were small. Our race was facing extinction before they were touched by even a single beam of light. It was in these darkest of nights and the deepest of depths that a Deepling would rise to face the unlight. It was Qjell who was the first, the one to stand against these vile odds. He lived as one of us, he suffered among us. He reached for the surface and brought the light, his gift, to undo the deeds of the wicked. To cleanse the deep and to wash our faces for we were to expect the twin suns. And he drove away the evil and was light incarnate. This was the time known as the First Coming. We shall await the Second Coming. And for we are given time on this world, we shall use it to erect walls and pillars, temples and towers, gardens and cities. For we shall prosper and grow to await the Coming of our God King Qjell.]] },
+When the creatures of the deep were born under the eternal suns, a great evil befell the seas. An evil never described in writing nor mentioned by a scholar for it was blackness incarnate. Chaos and darkness reigned and the deep suffered direly. For centuries our world was shattered and occluded from light and warmth. Those born under a weak tide were abducted, captured, eaten by fiends of the void. The strongest would prevail, but their numbers were small. Our race was facing extinction before they were touched by even a single beam of light. It was in these darkest of nights and the deepest of depths that a Deepling would rise to face the unlight. It was Qjell who was the first, the one to stand against these vile odds. He lived as one of us, he suffered among us. He reached for the surface and brought the light, his gift, to undo the deeds of the wicked. To cleanse the deep and to wash our faces for we were to expect the twin suns. And he drove away the evil and was light incarnate. This was the time known as the First Coming. We shall await the Second Coming. And for we are given time on this world, we shall use it to erect walls and pillars, temples and towers, gardens and cities. For we shall prosper and grow to await the Coming of our God King Qjell.]],
+			},
 		},
 	},
 	-- bookcase at 33595,30991,14
@@ -845,7 +1001,8 @@ When the creatures of the deep were born under the eternal suns, a great evil be
 		itemId = 2438,
 		itemPos = { x = 33595, y = 30991, z = 14 },
 		contents = {
-			{ itemId = 2831, -- book
+			{
+				itemId = 2831, -- book
 				text = [[
 My memoires as dictated by the First Dragon:
 When I arrived in the lands of the scaleless, I already had a life of adventures and excitement behind me and so I was looking for a cosy play to stay. Eventually I found a little cave that had just the right size to serve as a small but decent hoard. Also the cave's acoustic would enhance the screams of my victims in a most pleasing way. Young dragons usually prefer a volcanic and hot environment. At my age, however, the heat is relatively harmful for my scales and the sulphuric fumes may lead to spontaneous stomach combustions. The new cave, though, had all the gloom and dankness an old dragon could wish for. Despite the cave's closeness to one of the few human towns that awakened in these days, the younger dragons had passed on because the town lacked a princess who could be kidnapped for amusement. Since I had no nerves for weeping, screaming and sad love stories anyway, the cave was the perfect choice for me, and quite a bargain, I might add.
@@ -854,7 +1011,8 @@ Whenever I recognised the flow of adventurers was waning, I invented a new vulne
 However, too much tin food, like we call those armour-clad humans, is not very healthy for a dragon in the long run. Yes, it's temptingly delicious and easily prepared but molten cheap metal does not go well with stomach acid. Moreover, we all know that one gets fat while being on a human diet.
 And fat I got and the stomach problems started. Also my hoard had grown so much that it did not fit into my humble lair anymore. Moreover, all the fights had lost their fun and turned into a tedious chore. So I made up my mind and started looking for a retirement home. A former pal of mine hinted me at an affordable island cave - that was just the place I was looking for.
 I felt bad for my humans, though. Whom should they feed all those pesky heroes to when I was gone? So I asked a dragon clan to move into my cave when I was gone. Only later I learnt that they did a very lousy job. One by one they got killed. Well, the damage was done and it did not really bother me much.
-Since then I've been living a life in peace on a strict no-human diet and I feel healthy and energetic to last for several more centuries.]] },
+Since then I've been living a life in peace on a strict no-human diet and I feel healthy and energetic to last for several more centuries.]],
+			},
 		},
 	},
 	-- bookcase at 33737,32157,14
@@ -862,13 +1020,15 @@ Since then I've been living a life in peace on a strict no-human diet and I feel
 		itemId = 2438,
 		itemPos = { x = 33737, y = 32157, z = 14 },
 		contents = {
-			{ itemId = 2828, -- book
+			{
+				itemId = 2828, -- book
 				text = [[
 Report
 
 The dwarves did not heed our advice and headed straight into the danger we warned them about. They did surprisingly well - until they got into the inevitable mess we expected. Since they stubbornly insisted to remain in the midst of trouble, we had to come to their rescue of course. The dwarves proved astonishingly capable in fighting the threat but in the long run they would have succumbed to the constant onslaught unless we brought in our ingenuity and expertise. Since the dwarves were somewhat reluctant to let go of their proven tactics, we had to figure out how to reinforce them in the best way possible. Naturally we came up with some solutions that fused our expertise and equipment with those of the dwarves to a solid defence. Now we seem somewhat stuck in the fight, no side gaining the upper hand. Experience tells us, however, that those below won't be idle for long and the next waves of attacks will be more fierce and long. Eventually even the best defences will wear off.
 Furthermore, our sources tell us that the real threat is even more sinister. We located several sources of tremendous heat in the depths. We encountered something like that some time before: it always preceded the rise and eruption of large lava steams into a confined cave system. It seems that our old enemy is using old tricks once again. The location of the heat sources seems easy enough, yet to get to them and possibly destroy the mechanisms they use to raise the lava is the hard part.
-We do agree with the dwarves that only swift and decisive action can win the day. We have to strike at the heart of the invasion force.]] },
+We do agree with the dwarves that only swift and decisive action can win the day. We have to strike at the heart of the invasion force.]],
+			},
 		},
 	},
 	-- bookcase at 33737,32158,14
@@ -876,7 +1036,8 @@ We do agree with the dwarves that only swift and decisive action can win the day
 		itemId = 2438,
 		itemPos = { x = 33737, y = 32158, z = 14 },
 		contents = {
-			{ itemId = 2824, -- book
+			{
+				itemId = 2824, -- book
 				text = [[
 Those Below, What We Know (III)
 
@@ -891,7 +1052,8 @@ They can manipulate and transform individual beings somehow, perhaps even for br
 Their minions, like the lost, require crude, self-made weapons that rather rely on the little skill that race has left than outside sources. Other forms of equipment, as few as have been found so far, hint at even more alien origins and are dissimilar to commonly known tools or machinery. Even those objects, however, might be the remainder of a craft that one of their subjugated minion races once possessed and is probably only a mere shadow of the craftsmanship those races were previously capable of.
 
 Their forces show no regard to themselves or others. A retreat can only be enforced when they deem an effort no longer viable. What is viable or not follows no discernible pattern. Whereas sometimes a brimming ore mine was left in peace after a rag and tag band of defenders fended off some invaders, they sacrificed legions of minions to conquer some abandoned cave, far away from anything of importance.
-In this state of the war it has to be mentioned that 'those below', their origin, their look and their motives continue to be an enigma. As their attacks and the pressure they put on other races rises, the importance of such information becomes more and more a priority. How this information can be acquired though, is still something that is desperately debated upon.]] },
+In this state of the war it has to be mentioned that 'those below', their origin, their look and their motives continue to be an enigma. As their attacks and the pressure they put on other races rises, the importance of such information becomes more and more a priority. How this information can be acquired though, is still something that is desperately debated upon.]],
+			},
 		},
 	},
 	-- bookcase at 33751,32142,14
@@ -899,7 +1061,8 @@ In this state of the war it has to be mentioned that 'those below', their origin
 		itemId = 2435,
 		itemPos = { x = 33751, y = 32142, z = 14 },
 		contents = {
-			{ itemId = 2824, -- book
+			{
+				itemId = 2824, -- book
 				text = [[
 Research Notes of Dolis, Headmaster of the Planegazers
 
@@ -920,8 +1083,10 @@ We found evidence of what we assume to be visitors from another dimension. A who
 One specimen was found bound and half-dead on a ship. The captain abandoned the remainder of his crew on this floating coffin only shortly after it arrived in the Venore harbour so we do not know who captured it or how it got onto the ship. It must have been a truly daunting task, however, for as we tried to pull it out of the ship's hold, it came alive and started attacking us immediately, causing a lot of damage. We managed to contain it using one of the advanced holding cells our craftsmen designed. Studying this thing may bring us one step closer to the truth. What are these things and are they the origin of all this?
 
 #26/3,addendum: One Step Back
-While we can confirm the specimen from 26/2 is not from our dimension, it is not in any way connected to the being we're after. I conclude that the Planestrider may not even be a "being" in the actual sense. All things considered it may be more of a "concept" but to what end? What is the purpose and why this trail of unmistakable evidence on its existence? The words it offers us are a part of something it wants us to know. It must all be connected to form a meaning, a message. It is clear that we are close to decipher it but what if it is not even in our hands anymore, what if it never was? Note: I should keep trivial or personal thoughts in a diary or something, I will leave these in here for now.]] },
-			{ itemId = 2832, -- book
+While we can confirm the specimen from 26/2 is not from our dimension, it is not in any way connected to the being we're after. I conclude that the Planestrider may not even be a "being" in the actual sense. All things considered it may be more of a "concept" but to what end? What is the purpose and why this trail of unmistakable evidence on its existence? The words it offers us are a part of something it wants us to know. It must all be connected to form a meaning, a message. It is clear that we are close to decipher it but what if it is not even in our hands anymore, what if it never was? Note: I should keep trivial or personal thoughts in a diary or something, I will leave these in here for now.]],
+			},
+			{
+				itemId = 2832, -- book
 				text = [[
 Research Notes of Dolis (#28-#54), Headmaster of the Planegazers
 
@@ -942,20 +1107,25 @@ All cubes seem to be imperfect. I have yet to find a complete exemplar. They MUS
 
 #29/2, addendum: Missing Pieces We cannot find a complete exemplar. In a joint effort we managed to secure several more cubes to analyse but not a single one was perfect. I ordered every cube that is discovered to be brought directly to me. I keep one cube with me all the time now. We have (the writings go on about the necessity of a breakthrough and the cube's potential).
 
-(all other entries are studies of the cubes, all reaching the same conclusions)]] },
-			{ itemId = 2816, -- book
+(all other entries are studies of the cubes, all reaching the same conclusions)]],
+			},
+			{
+				itemId = 2816, -- book
 				text = [[
 Those Below, What We Know (I)
 
-Since the enemy that we know as 'those below' seem to only act through vassals, it is hard to say when they were encountered first. Seemingly random events in the past might have been more or less their doing unbeknown to anyone. In the light of recent events theories have spread that link disasters of the past and monster incursions to the doings of 'those below'. In fact, since no one was expecting a guiding hand behind those events, there is no evidence to support that. The great cave-in of the starsilver claim is cited the most amongst such instances. Indeed the few tunnels that remain from these mines are overrun by creatures that are counted to the forces of those below. Still, it's possible that they are simply lured by seismic activity and just moved in. The gnomes were the first to make out patterns in certain events and attacks on their deepest hold. When their counter efforts were met in kind and often countered, they began to suspect a guiding force behind all of this. Their concentrated efforts were answered by massive counterblows that required massive coordination and logistics, not available to the mostly primitive creatures they fought. Even countermeasures against cave-ins and volcanic activity were sabotaged. Despite all gnomish efforts the enemy activity just grew until the gnomes had to pull back when the effort and casualties were no longer worth the gain from those bases. At first only random holds in the deepest of regions were lost. The frequency of occurrences did rise and at some point establishing new outposts did no longer cover up the losses. The gnomes retreated from the deeper areas and put more efforts into new bases closer to the surface to compensate. With their somewhat nomadic lifestyle the gnomes were able to handle the new situation quite well but since the threat is spreading more and more, they see themselves under pressure. With the deep mining on the rise for the last several hundred years, the dwarfish forces on the other hand are beginning to encounter more and more of the minions from below on their own. Mining technology that was safe and reliable for millennia have started to fail, due to the unnatural seismic activity and rise of lava levels.]] },
-			{ itemId = 2821, -- book
+Since the enemy that we know as 'those below' seem to only act through vassals, it is hard to say when they were encountered first. Seemingly random events in the past might have been more or less their doing unbeknown to anyone. In the light of recent events theories have spread that link disasters of the past and monster incursions to the doings of 'those below'. In fact, since no one was expecting a guiding hand behind those events, there is no evidence to support that. The great cave-in of the starsilver claim is cited the most amongst such instances. Indeed the few tunnels that remain from these mines are overrun by creatures that are counted to the forces of those below. Still, it's possible that they are simply lured by seismic activity and just moved in. The gnomes were the first to make out patterns in certain events and attacks on their deepest hold. When their counter efforts were met in kind and often countered, they began to suspect a guiding force behind all of this. Their concentrated efforts were answered by massive counterblows that required massive coordination and logistics, not available to the mostly primitive creatures they fought. Even countermeasures against cave-ins and volcanic activity were sabotaged. Despite all gnomish efforts the enemy activity just grew until the gnomes had to pull back when the effort and casualties were no longer worth the gain from those bases. At first only random holds in the deepest of regions were lost. The frequency of occurrences did rise and at some point establishing new outposts did no longer cover up the losses. The gnomes retreated from the deeper areas and put more efforts into new bases closer to the surface to compensate. With their somewhat nomadic lifestyle the gnomes were able to handle the new situation quite well but since the threat is spreading more and more, they see themselves under pressure. With the deep mining on the rise for the last several hundred years, the dwarfish forces on the other hand are beginning to encounter more and more of the minions from below on their own. Mining technology that was safe and reliable for millennia have started to fail, due to the unnatural seismic activity and rise of lava levels.]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
 Those Below, What We Know (II)
 
 With all the efforts to scout the enemy, little could be learned. Especially since behind the enemy's frontline the earth temperature is rising at an alarming rate and former deep territory that was once settled by gnomes is now immersed by lava. It seems that whatever is leading the attacks is living behind or even in that lava.
 We do know that the enemy makes use of numerous creatures. Often the creatures they control are commonly dangerous but rare and display far less aggressive behaviour. They don't gather in hordes, let alone they'd attack with any coordination or in league with other creatures. It is unknown how exactly those creatures are controlled or guided but there seems to be a connection to the mighty leader-like creatures they employ amongst their minions. If they are eliminated, coordination and aggressiveness levels drop almost immediately.
 The fact that a lost tribe of dwarves has been enslaved and bred for war purposes hints how they might have attained control over other subterranean races, sentient or not. There is strong evidence that they actually breed their minions actively and there is some sort of indoctrination involved. Given that they breed the lost dwarves to creatures of low intelligence and high aggressiveness, it is likely they have similar procedures for other creatures as well.
-Their choice of generals gives other hints abut heir nature. In at least one case they employ the assistance of a fallen gnome. His mind and body were heavily altered in unknown ways. Though in charge of leading their troops he displayed behaviour that usually would be considered mad. Also even he was somehow linked to the coordination of the hostile forces. Although as a gnome he didn't previously display any kind of telepathic ability. So it can be assumed that the other so called generals they employ are also heavily altered specimens of their kind. They probably don't resemble the appearance of 'those below' which leaves us with no clue how they look.]] },
+Their choice of generals gives other hints abut heir nature. In at least one case they employ the assistance of a fallen gnome. His mind and body were heavily altered in unknown ways. Though in charge of leading their troops he displayed behaviour that usually would be considered mad. Also even he was somehow linked to the coordination of the hostile forces. Although as a gnome he didn't previously display any kind of telepathic ability. So it can be assumed that the other so called generals they employ are also heavily altered specimens of their kind. They probably don't resemble the appearance of 'those below' which leaves us with no clue how they look.]],
+			},
 		},
 	},
 	-- bookcase at 32402,31630,15
@@ -963,12 +1133,14 @@ Their choice of generals gives other hints abut heir nature. In at least one cas
 		itemId = 2439,
 		itemPos = { x = 32402, y = 31630, z = 15 },
 		contents = {
-			{ itemId = 2830, -- book
+			{
+				itemId = 2830, -- book
 				text = [[
 Maps of the magic web
 Written by Gargail
 
-*You see several maps with red lines and golden points on them*]] },
+*You see several maps with red lines and golden points on them*]],
+			},
 		},
 	},
 	-- bookcase at 32402,31645,15
@@ -976,12 +1148,14 @@ Written by Gargail
 		itemId = 2439,
 		itemPos = { x = 32402, y = 31645, z = 15 },
 		contents = {
-			{ itemId = 2829, -- book
+			{
+				itemId = 2829, -- book
 				text = [[
 Battletactics for Mages [IV]
 by Zun Su
 
-*The last Book of Zun Su's famous Battletactics for Mages deals with the combination of field runes, offensiv runes and spontanous spells (both offensive and defensive). All known spells which could (at least theoretically) be learnt by a mage are listed at the end of the book.*]] },
+*The last Book of Zun Su's famous Battletactics for Mages deals with the combination of field runes, offensiv runes and spontanous spells (both offensive and defensive). All known spells which could (at least theoretically) be learnt by a mage are listed at the end of the book.*]],
+			},
 		},
 	},
 	-- bookcase at 32415,31647,15
@@ -989,12 +1163,14 @@ by Zun Su
 		itemId = 2439,
 		itemPos = { x = 32415, y = 31647, z = 15 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
 Battletactics for Mages [II]
 by Zun Su
 
-*It deals with the proper usage of offensive runes like magic missiles, all kinds of fireballs, explosion or the mighty sudden death rune. It shows how to aim and fire at a quick rate. As usual it has an appendix where all the mentioned runes are listed with detailed description.*]] },
+*It deals with the proper usage of offensive runes like magic missiles, all kinds of fireballs, explosion or the mighty sudden death rune. It shows how to aim and fire at a quick rate. As usual it has an appendix where all the mentioned runes are listed with detailed description.*]],
+			},
 		},
 	},
 	-- bookcase at 32415,31648,15
@@ -1002,12 +1178,14 @@ by Zun Su
 		itemId = 2440,
 		itemPos = { x = 32415, y = 31648, z = 15 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
 Battletactics for Mages [III]
 by Zun Su
 
-*The book is about the various spontanous spells. It deals mostly with the destructive spells like fire wave, energy beam and the deadly energy wave. It shows how to hit a moving target with high precision. The various healing spells and the importance of the magic shield are also mentioned. It also has an appendix.*]] },
+*The book is about the various spontanous spells. It deals mostly with the destructive spells like fire wave, energy beam and the deadly energy wave. It shows how to hit a moving target with high precision. The various healing spells and the importance of the magic shield are also mentioned. It also has an appendix.*]],
+			},
 		},
 	},
 	-- bookcase at 32420,31630,15
@@ -1015,12 +1193,14 @@ by Zun Su
 		itemId = 2439,
 		itemPos = { x = 32420, y = 31630, z = 15 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
 The formulas of Lexis - Energyflow of the time rings
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32420,31631,15
@@ -1028,13 +1208,15 @@ Written by Herion
 		itemId = 2440,
 		itemPos = { x = 32420, y = 31631, z = 15 },
 		contents = {
-			{ itemId = 2825, -- book
+			{
+				itemId = 2825, -- book
 				text = [[
 The formulas of Lexis - Energyflow of the time rings
 Book 3
 Written by Herion
 
-*You see several strange formulas that you dont understand*]] },
+*You see several strange formulas that you dont understand*]],
+			},
 		},
 	},
 	-- bookcase at 32421,31593,15
@@ -1042,7 +1224,8 @@ Written by Herion
 		itemId = 2438,
 		itemPos = { x = 32421, y = 31593, z = 15 },
 		contents = {
-			{ itemId = 2832, -- book
+			{
+				itemId = 2832, -- book
 				text = [[
 Coordinates for the area around Dianscher
 Written by Mathemicus
@@ -1050,7 +1233,8 @@ Written by Mathemicus
 I think I found out some coordinates for the Island Dianscher.
 p3,q9,0o and p3,23,0t.
 
-Yet, we must wait until we can control the destination gates and open them without problems.]] },
+Yet, we must wait until we can control the destination gates and open them without problems.]],
+			},
 		},
 	},
 	-- bookcase at 32421,31596,15
@@ -1058,7 +1242,8 @@ Yet, we must wait until we can control the destination gates and open them witho
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31596, z = 15 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
 A teleportation through the magic web
 Written by Zuania
@@ -1069,7 +1254,8 @@ I could easily open the gate with the power of my will. But after I was in the m
 All others made the same experience.
 
 It went all so quickly when I was in the magic web. I could only see a red light and some other gates far away for some seconds. And then I was already in Carlin.
-Maybe one day we can just teleport into the magic web and stay there. I would love to investigate it.]] },
+Maybe one day we can just teleport into the magic web and stay there. I would love to investigate it.]],
+			},
 		},
 	},
 	-- bookcase at 32421,31597,15
@@ -1077,7 +1263,8 @@ Maybe one day we can just teleport into the magic web and stay there. I would lo
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31597, z = 15 },
 		contents = {
-			{ itemId = 2829, -- book
+			{
+				itemId = 2829, -- book
 				text = [[
 The magic city Demona
 Written by Danae, historian of the warlocks
@@ -1091,7 +1278,8 @@ They also realised, that it was necessary to be under the free sky to cast some 
 So they made a direct tunnel to the surface.
 All seem to work well. But after some years new problems appeared.
 
-<More on book Part4>]] },
+<More on book Part4>]],
+			},
 		},
 	},
 	-- bookcase at 32421,31598,15
@@ -1099,14 +1287,16 @@ All seem to work well. But after some years new problems appeared.
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31598, z = 15 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 The Dragonlords of Tibia
 Written by Tekvorian, Knight of Tibia
 
 We dont know much about the mighty leaders of the dragons. But we found out that they love mushrooms of all kind. Maybe the old dragonlord on Dracona can tell us more.
 
-Furthermore, we found out that many Dragonlords carry this strange book (with the big T on it) with them. We dont know why,yet, but we are working on it.]] },
+Furthermore, we found out that many Dragonlords carry this strange book (with the big T on it) with them. We dont know why,yet, but we are working on it.]],
+			},
 		},
 	},
 	-- bookcase at 32421,31599,15
@@ -1114,7 +1304,8 @@ Furthermore, we found out that many Dragonlords carry this strange book (with th
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31599, z = 15 },
 		contents = {
-			{ itemId = 2828, -- book
+			{
+				itemId = 2828, -- book
 				text = [[
 How to control the lava
 By Jonea, ancient council of the warlocks
@@ -1125,7 +1316,8 @@ But this ritual requires complete concentration and only with many warlocks it w
 
 Here is how it works:
 
-*The rest sheets of the book were pulled out.*]] },
+*The rest sheets of the book were pulled out.*]],
+			},
 		},
 	},
 	-- bookcase at 32421,31600,15
@@ -1133,7 +1325,8 @@ Here is how it works:
 		itemId = 2439,
 		itemPos = { x = 32421, y = 31600, z = 15 },
 		contents = {
-			{ itemId = 2829, -- book
+			{
+				itemId = 2829, -- book
 				text = [[
 The magic city Demona
 Written by Danae, historian of the warlocks
@@ -1145,7 +1338,8 @@ Our goal is to research into the magic web of our world and to control it, so we
 
 But before we could start with the research, our ancients had many problems to solve.
 
-<More on book Part3>]] },
+<More on book Part3>]],
+			},
 		},
 	},
 	-- bookcase at 32421,31601,15
@@ -1153,7 +1347,8 @@ But before we could start with the research, our ancients had many problems to s
 		itemId = 2440,
 		itemPos = { x = 32421, y = 31601, z = 15 },
 		contents = {
-			{ itemId = 2829, -- book
+			{
+				itemId = 2829, -- book
 				text = [[
 The magic city Demona
 Written by Danae, historian of the warlocks
@@ -1167,7 +1362,8 @@ Our ancients used their mighty magical power to control the lava down here. With
 
 A city only for serving one goal: The investigation of the magic in our world Tibia!
 
-<More on book Part2>]] },
+<More on book Part2>]],
+			},
 		},
 	},
 	-- bookcase at 32422,32144,15
@@ -1175,7 +1371,8 @@ A city only for serving one goal: The investigation of the magic in our world Ti
 		itemId = 2436,
 		itemPos = { x = 32422, y = 32144, z = 15 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 Chronicle of Mintwallin - the city of the Minotaurs
 written by Markwin, king of all Minotaurs
@@ -1202,7 +1399,8 @@ Some of my men blocked the way from the secret lab to my chambers with a big roc
 
 The outcasts made an alliance with a tribe of cyclops. Now our former brothers are our worst enemies. They are hiding somewhere in the labyrinth.
 
-The oldest Minotaur of the city told me that my written words have many mistakes and that I would write in a terrible form. I killed him. I am a fighter - not a teacher!]] },
+The oldest Minotaur of the city told me that my written words have many mistakes and that I would write in a terrible form. I killed him. I am a fighter - not a teacher!]],
+			},
 		},
 	},
 	-- bookcase at 32426,31591,15
@@ -1210,12 +1408,14 @@ The oldest Minotaur of the city told me that my written words have many mistakes
 		itemId = 2436,
 		itemPos = { x = 32426, y = 31591, z = 15 },
 		contents = {
-			{ itemId = 2830, -- book
+			{
+				itemId = 2830, -- book
 				text = [[
 *You see a collection of maps in this big book. Some have strange red lines on them. 
 You can read the words
 "known parts of the magic web in red and known gates in gold" 
-at the bottom of those pages*]] },
+at the bottom of those pages*]],
+			},
 		},
 	},
 	-- bookcase at 32430,31591,15
@@ -1223,14 +1423,16 @@ at the bottom of those pages*]] },
 		itemId = 2436,
 		itemPos = { x = 32430, y = 31591, z = 15 },
 		contents = {
-			{ itemId = 2832, -- book
+			{
+				itemId = 2832, -- book
 				text = [[
 The magic web around our world
 Written by Heronias
 
 For centuries we have been doing research into this magic web in our world of Tibia. And the more we try to understand how it works the more I think that we will never solve its mysteries.
 But we havent give up hope yet. Maybe we will find somehow someday by chance a key element that will help us to open many doors in the magic web.
-Until then we will keep on trying to solve as many riddles as we can.]] },
+Until then we will keep on trying to solve as many riddles as we can.]],
+			},
 		},
 	},
 	-- bookcase at 32431,31591,15
@@ -1238,7 +1440,8 @@ Until then we will keep on trying to solve as many riddles as we can.]] },
 		itemId = 2436,
 		itemPos = { x = 32431, y = 31591, z = 15 },
 		contents = {
-			{ itemId = 2831, -- book
+			{
+				itemId = 2831, -- book
 				text = [[
 Information about the might rings
 Written by Doneos
@@ -1248,7 +1451,8 @@ The magic power of those rings is incredible.
 We must be very careful while we investigate those rings.
 If we release the power of the might rings without being able to control it, then this power will destroy our whole city immediatly.
 
-But the progress goes well. Soon we will be able to control the power. And we will be then one step closer to our main goal.]] },
+But the progress goes well. Soon we will be able to control the power. And we will be then one step closer to our main goal.]],
+			},
 		},
 	},
 	-- bookcase at 32432,31591,15
@@ -1256,7 +1460,8 @@ But the progress goes well. Soon we will be able to control the power. And we wi
 		itemId = 2437,
 		itemPos = { x = 32432, y = 31591, z = 15 },
 		contents = {
-			{ itemId = 2828, -- book
+			{
+				itemId = 2828, -- book
 				text = [[
 The teleporter to the surface
 Written by Zhandramon
@@ -1270,7 +1475,8 @@ Now you only step in the teleporter, that is located near the resting rooms and 
 
 Of course we cant risk to build a teleporter on the surface because of our enemies. So you have to walk the way back through the maze. But since you know the right way it shouldnt take very long.
 
-Good luck!]] },
+Good luck!]],
+			},
 		},
 	},
 	-- bookcase at 32473,31614,15
@@ -1278,13 +1484,15 @@ Good luck!]] },
 		itemId = 2439,
 		itemPos = { x = 32473, y = 31614, z = 15 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 History of the ancients
 Book 5
 Written by Zhandramon
 
-*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]] },
+*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]],
+			},
 		},
 	},
 	-- bookcase at 32473,31615,15
@@ -1292,13 +1500,15 @@ Written by Zhandramon
 		itemId = 2439,
 		itemPos = { x = 32473, y = 31615, z = 15 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 History of the ancients
 Book 4
 Written by Zhandramon
 
-*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]] },
+*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]],
+			},
 		},
 	},
 	-- bookcase at 32473,31616,15
@@ -1306,13 +1516,15 @@ Written by Zhandramon
 		itemId = 2439,
 		itemPos = { x = 32473, y = 31616, z = 15 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 History of the ancients
 Book 3
 Written by Zhandramon
 
-*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]] },
+*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]],
+			},
 		},
 	},
 	-- bookcase at 32473,31617,15
@@ -1320,13 +1532,15 @@ Written by Zhandramon
 		itemId = 2439,
 		itemPos = { x = 32473, y = 31617, z = 15 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 History of the ancients
 Book 2
 Written by Zhandramon
 
-*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]] },
+*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]],
+			},
 		},
 	},
 	-- bookcase at 32473,31618,15
@@ -1334,12 +1548,14 @@ Written by Zhandramon
 		itemId = 2439,
 		itemPos = { x = 32473, y = 31618, z = 15 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 History of the ancients
 Written by Zhandramon
 
-*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]] },
+*You try to read and understand the words but it is written in an unknown strange language. Seems that this language is very very old.*]],
+			},
 		},
 	},
 	-- bookcase at 32487,31615,15
@@ -1347,13 +1563,15 @@ Written by Zhandramon
 		itemId = 2439,
 		itemPos = { x = 32487, y = 31615, z = 15 },
 		contents = {
-			{ itemId = 2832, -- book
+			{
+				itemId = 2832, -- book
 				text = [[
 Battle tactics for Demona - Mazeforces
 Written by Zhandramon
 
 *This book is......EMPTY! All sheets are blank!
-But you can feel a strange energy flowing through the book.*]] },
+But you can feel a strange energy flowing through the book.*]],
+			},
 		},
 	},
 	-- bookcase at 32487,31616,15
@@ -1361,13 +1579,15 @@ But you can feel a strange energy flowing through the book.*]] },
 		itemId = 2439,
 		itemPos = { x = 32487, y = 31616, z = 15 },
 		contents = {
-			{ itemId = 2832, -- book
+			{
+				itemId = 2832, -- book
 				text = [[
 Battle tactics for Demona
 Written by Zhandramon
 
 *This book is......EMPTY! All sheets are blank!
-But you can feel a strange energy flowing through the book.*]] },
+But you can feel a strange energy flowing through the book.*]],
+			},
 		},
 	},
 	-- bookcase at 32487,31617,15
@@ -1375,12 +1595,14 @@ But you can feel a strange energy flowing through the book.*]] },
 		itemId = 2439,
 		itemPos = { x = 32487, y = 31617, z = 15 },
 		contents = {
-			{ itemId = 2830, -- book
+			{
+				itemId = 2830, -- book
 				text = [[
 Maps of the maze
 Written by Zhandramon
 
-*You can see some maps of the maze. But unluckily you cant see the right way through it. Furthermore, the maps are incomplete. So it is impossible to make a whole map of the maze out of all small maps.*]] },
+*You can see some maps of the maze. But unluckily you cant see the right way through it. Furthermore, the maps are incomplete. So it is impossible to make a whole map of the maze out of all small maps.*]],
+			},
 		},
 	},
 	-- bookcase at 32487,31619,15
@@ -1388,9 +1610,11 @@ Written by Zhandramon
 		itemId = 2440,
 		itemPos = { x = 32487, y = 31619, z = 15 },
 		contents = {
-			{ itemId = 2826, -- book
+			{
+				itemId = 2826, -- book
 				text = [[
-*This book is made out of an odd leather and it's covered with strange symbols. You are not able to decipher the title but according to the pictures you guess it is about summoning creatures.*]] },
+*This book is made out of an odd leather and it's covered with strange symbols. You are not able to decipher the title but according to the pictures you guess it is about summoning creatures.*]],
+			},
 		},
 	},
 	-- bookcase at 32578,32177,15
@@ -1398,24 +1622,30 @@ Written by Zhandramon
 		itemId = 2435,
 		itemPos = { x = 32578, y = 32177, z = 15 },
 		contents = {
-			{ itemId = 2816, -- book
+			{
+				itemId = 2816, -- book
 				text = [[
 Alatar´s world of pure magic - the arcanic power.
 
-...]] },
-			{ itemId = 2821, -- book
+...]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
 How to combine your magic power with the sword?
 Ten ways to use the spell "invisibility"
 by Cipreii
 
-...]] },
-			{ itemId = 2821, -- book
+...]],
+			},
+			{
+				itemId = 2821, -- book
 				text = [[
 How to conjure monsters that you don't need?
 by Prophet
 
-...]] },
+...]],
+			},
 		},
 	},
 	-- bookcase at 32580,32177,15
@@ -1423,7 +1653,8 @@ by Prophet
 		itemId = 2437,
 		itemPos = { x = 32580, y = 32177, z = 15 },
 		contents = {
-			{ itemId = 2821, -- book
+			{
+				itemId = 2821, -- book
 				text = [[
 The riddle
 
@@ -1438,7 +1669,8 @@ dk-d-dp-
 and hmmmm nonono.
 
 Hmmmmmmmmmmmmmmmmmmm."
-"Got it!" the sorcerer screamed. "Let´s run!"]] },
+"Got it!" the sorcerer screamed. "Let´s run!"]],
+			},
 		},
 	},
 }

@@ -115,16 +115,20 @@ MapContainersMisc = {
 		itemId = 2440,
 		itemPos = { x = 33219, y = 32400, z = 5 },
 		contents = {
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
-					{ itemId = 2819, -- parchment
+					{
+						itemId = 2819, -- parchment
 						text = [[
 PAGE 1
 
 Famous inhabitants of Darashia
 
-<You have found this very old book that seems out of place among the other books. As you leaf through the yellowed pages you see the description of a person on each left side and the painted portrait of this person on the right side. One person catches your attention. Not only does he have an inappropriate title, also his appearance is strange - on the one hand, he looks friendly, almost funny - on the other hand, his eyes seem to look directly into your soul. Eye-catching is the amulet he is wearing. You read the following and feel very uncomfortable with the portrait staring at you. You tear out those two pages and take them with you after having made sure nobody is watching you.>]] },
-					{ itemId = 2819, -- parchment
+<You have found this very old book that seems out of place among the other books. As you leaf through the yellowed pages you see the description of a person on each left side and the painted portrait of this person on the right side. One person catches your attention. Not only does he have an inappropriate title, also his appearance is strange - on the one hand, he looks friendly, almost funny - on the other hand, his eyes seem to look directly into your soul. Eye-catching is the amulet he is wearing. You read the following and feel very uncomfortable with the portrait staring at you. You tear out those two pages and take them with you after having made sure nobody is watching you.>]],
+					},
+					{
+						itemId = 2819, -- parchment
 						text = [[
 PAGE 2
 
@@ -137,13 +141,16 @@ Hometown: unknown
 Date of death: unknown
 
 There are not many things known about this man. He appeared out of nowhere and lived here for nearly ten years. Even though he was communicative, he never told anything about his profession or what he did for a living. First he lived in Darashia 2, Flat 11 for about two years. During that time he was roaming around, travelling the lands of Darama and often visiting the Bath of Dreams and the minotaur pyramid in the North.
-Then it was discovered that he had built a tower south of the mountains. It is unexplained how he managed to do that because no one has been seen to help him. Anyway, the remains of his tower are still there. ...]] },
-					{ itemId = 2819, -- parchment
+Then it was discovered that he had built a tower south of the mountains. It is unexplained how he managed to do that because no one has been seen to help him. Anyway, the remains of his tower are still there. ...]],
+					},
+					{
+						itemId = 2819, -- parchment
 						text = [[
 PAGE 3
 
 ...He often paid Drefia a visit which was a blooming haven during this time. Rumour has it that he has something to do with it turning into an undead city. These rumours are mainly based on his interest in the pyramid to the north, which is known to have been created by the bonelord race. Needless to say that these creatures are also linked with the appearance of undead creatures.
-His interceders say that he was always a man of belief that never had anything evil in mind. He was often seen in the crypta of Darashia to pray to the gods. As quickly as he had come, as quickly he disappeared and was never seen again.]] },
+His interceders say that he was always a man of belief that never had anything evil in mind. He was often seen in the crypta of Darashia to pray to the gods. As quickly as he had come, as quickly he disappeared and was never seen again.]],
+					},
 				},
 			},
 		},
@@ -227,7 +234,8 @@ His interceders say that he was always a man of belief that never had anything e
 		itemId = 2434,
 		itemPos = { x = 32776, y = 32335, z = 6 },
 		contents = {
-			{ itemId = 2854, -- backpack
+			{
+				itemId = 2854, -- backpack
 				inside = {
 					{ itemId = 2920 }, -- torch
 					{ itemId = 3003 }, -- rope
@@ -340,11 +348,14 @@ His interceders say that he was always a man of belief that never had anything e
 		itemId = 2435,
 		itemPos = { x = 32180, y = 31934, z = 7 },
 		contents = {
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
-					{ itemId = 2815, -- scroll
+					{
+						itemId = 2815, -- scroll
 						text = [[
-I have to hide that key better. One of that greedy adventurers that came here seemingly out of nowhere and refused to tell me how he got here stole it and disturbed the contemplation of the brothers upstairs. Gladly they could defeat him. When will those people learn some respect. How could they think there would be anything valuable? The next intruders will pay a bitter price for such an act of evil!]] },
+I have to hide that key better. One of that greedy adventurers that came here seemingly out of nowhere and refused to tell me how he got here stole it and disturbed the contemplation of the brothers upstairs. Gladly they could defeat him. When will those people learn some respect. How could they think there would be anything valuable? The next intruders will pay a bitter price for such an act of evil!]],
+					},
 					{ itemId = 2969 }, -- silver key
 				},
 			},
@@ -409,7 +420,8 @@ I have to hide that key better. One of that greedy adventurers that came here se
 			{ itemId = 3371 }, -- knight legs
 			{ itemId = 3416 }, -- dragon shield
 			{ itemId = 3280 }, -- fire sword
-			{ itemId = 2854, -- backpack
+			{
+				itemId = 2854, -- backpack
 				inside = {
 					{ itemId = 3003 }, -- rope
 					{ itemId = 2920 }, -- torch
@@ -524,7 +536,8 @@ I have to hide that key better. One of that greedy adventurers that came here se
 		itemId = 2434,
 		itemPos = { x = 32386, y = 32180, z = 8 },
 		contents = {
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
 					{ itemId = 3533, count = 1 }, -- black token
 					{ itemId = 3533, count = 1 }, -- black token
@@ -533,7 +546,8 @@ I have to hide that key better. One of that greedy adventurers that came here se
 					{ itemId = 3533, count = 1 }, -- black token
 				},
 			},
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
 					{ itemId = 3533, count = 1 }, -- black token
 					{ itemId = 3533, count = 1 }, -- black token
@@ -548,7 +562,8 @@ I have to hide that key better. One of that greedy adventurers that came here se
 		itemId = 2434,
 		itemPos = { x = 32386, y = 32181, z = 8 },
 		contents = {
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
 					{ itemId = 3534, count = 1 }, -- white token
 					{ itemId = 3534, count = 1 }, -- white token
@@ -557,7 +572,8 @@ I have to hide that key better. One of that greedy adventurers that came here se
 					{ itemId = 3534, count = 1 }, -- white token
 				},
 			},
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
 					{ itemId = 3534, count = 1 }, -- white token
 					{ itemId = 3534, count = 1 }, -- white token
@@ -789,14 +805,17 @@ I have to hide that key better. One of that greedy adventurers that came here se
 		itemId = 2434,
 		itemPos = { x = 33220, y = 32858, z = 9 },
 		contents = {
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
 					{ itemId = 7527 }, -- jewel case
-					{ itemId = 2833, -- parchment
+					{
+						itemId = 2833, -- parchment
 						text = [[
 We are not far from revealing the greatest secret in the lands of Darama that was kept by a nomad tribe so far. They call themselves "true sons of the desert" and we managed to obtain their sacred casket by accident. What a great day for us. The right people will pay huge amounts of gold for it.
 
-So far I found out that the strange substance in the casket has something to do with the rotworm species. It is strongly advisable to keep the substance in the casket. I opened it once and minutes later it swarmed with rotworms and carrion worms. Many of my people died in this accident. We presume that we deal with an attractant of a rotworm queen. No one has ever seen one but we are pretty sure that this species is organised by a queen. Maybe it would be possible to lure a queen with this substance but we don't dare to use it again. We need more time to figure out how this all matches and how to use the substance without being overrun by rotworms.]] },
+So far I found out that the strange substance in the casket has something to do with the rotworm species. It is strongly advisable to keep the substance in the casket. I opened it once and minutes later it swarmed with rotworms and carrion worms. Many of my people died in this accident. We presume that we deal with an attractant of a rotworm queen. No one has ever seen one but we are pretty sure that this species is organised by a queen. Maybe it would be possible to lure a queen with this substance but we don't dare to use it again. We need more time to figure out how this all matches and how to use the substance without being overrun by rotworms.]],
+					},
 				},
 			},
 		},
@@ -1035,12 +1054,14 @@ So far I found out that the strange substance in the casket has something to do 
 			{ itemId = 3561 }, -- jacket
 			{ itemId = 3559 }, -- leather legs
 			{ itemId = 3572 }, -- scarf
-			{ itemId = 2854, -- backpack
+			{
+				itemId = 2854, -- backpack
 				inside = {
 					{ itemId = 3003 }, -- rope
 					{ itemId = 2920 }, -- torch
 					{ itemId = 3457 }, -- shovel
-					{ itemId = 2821, -- book
+					{
+						itemId = 2821, -- book
 						text = [[
 Expedition diary of Erin Cropwell
 
@@ -1055,7 +1076,8 @@ Day 4: Found a strange desert. In the middle there seems to be a ruin, I will ex
 Day 5: DAMN!!! I fell into the deep hole and broke both legs and a rib. All I can do is...
 climb up spider poison
 
-Tell my wife I lov...]] },
+Tell my wife I lov...]],
+					},
 				},
 			},
 		},
@@ -1081,7 +1103,8 @@ Tell my wife I lov...]] },
 		itemId = 2473,
 		itemPos = { x = 32135, y = 32111, z = 11 },
 		contents = {
-			{ itemId = 2853, -- bag
+			{
+				itemId = 2853, -- bag
 				inside = {
 					{ itemId = 3412 }, -- wooden shield
 					{ itemId = 3412 }, -- wooden shield
