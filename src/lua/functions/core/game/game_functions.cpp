@@ -18,6 +18,7 @@
 #include "lua/functions/core/game/game_functions.hpp"
 
 #include "core.hpp"
+#include "lua/creature/actions.hpp"
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/npcs/npc.hpp"
@@ -136,6 +137,7 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "setRankName", GameFunctions::luaGameSetRankName);
 	Lua::registerMethod(L, "Game", "createGuild", GameFunctions::luaGameCreateGuild);
 	Lua::registerMethod(L, "Game", "joinGuild", GameFunctions::luaGameJoinGuild);
+	Lua::registerMethod(L, "Game", "reportShadowedScripts", GameFunctions::luaGameReportShadowedScripts);
 }
 
 // Game
@@ -400,6 +402,14 @@ int GameFunctions::luaGameGetExperienceForLevel(lua_State* L) {
 		lua_pushnumber(L, Player::getExpForLevel(level));
 	}
 	return 1;
+}
+
+int GameFunctions::luaGameReportShadowedScripts(lua_State* L) {
+	// Game.reportShadowedScripts()
+	// Reports scripts registered by position that can never run, because an id on the
+	// same tile is checked first. Call it after the startup tables stamped the map.
+	g_actions().reportShadowedPositionScripts();
+	return 0;
 }
 
 int GameFunctions::luaGameGetMonsterCount(lua_State* L) {

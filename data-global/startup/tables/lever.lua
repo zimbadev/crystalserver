@@ -36,11 +36,50 @@ LeverAction = {
 			{ x = 33138, y = 31952, z = 15 },
 		},
 	},
+	-- lever
+	[5502] = {
+		itemId = 8911,
+		itemPos = { { x = 33162, y = 31892, z = 15 } },
+	},
+	-- lever
+	[5503] = {
+		itemId = 8911,
+		itemPos = { { x = 33127, y = 31891, z = 15 } },
+	},
+	-- lever
+	[5504] = {
+		itemId = 8911,
+		itemPos = { { x = 33164, y = 31858, z = 15 } },
+	},
+	-- lever
+	[5505] = {
+		itemId = 8911,
+		itemPos = { { x = 33507, y = 32227, z = 10 } },
+	},
+	-- lever
+	[5506] = {
+		itemId = 8911,
+		itemPos = { { x = 33074, y = 31883, z = 15 } },
+	},
 	[5520] = {
 		itemId = 9110,
 		itemPos = {
 			{ x = 33299, y = 32144, z = 10 },
+			{ x = 33302, y = 32139, z = 10 },
 		},
+	},
+	-- glowing switch
+	[5555] = {
+		itemId = 10145,
+		itemPos = {
+			{ x = 32300, y = 32267, z = 7 },
+			{ x = 32300, y = 32268, z = 7 },
+		},
+	},
+	-- lever
+	[5633] = {
+		itemId = 2772,
+		itemPos = { { x = 33152, y = 32866, z = 8 } },
 	},
 	-- The Pits of Inferno Quest
 	[7799] = {
@@ -67,6 +106,7 @@ LeverAction = {
 		itemId = 2772,
 		itemPos = {
 			{ x = 32836, y = 32278, z = 14 },
+			{ x = 32834, y = 32285, z = 14 },
 		},
 	},
 	-- The Ancient Tombs Quest
@@ -211,6 +251,23 @@ LeverAction = {
 			{ x = 32600, y = 32105, z = 14 },
 		},
 	},
+	-- lever  (was 11002)
+	[30038] = {
+		itemId = 2772,
+		itemPos = { { x = 32479, y = 31905, z = 6 } },
+	},
+	-- lever
+	[34000] = {
+		itemId = 2772,
+		itemPos = {
+			{ x = 33522, y = 31464, z = 15 },
+		},
+	},
+	-- lever
+	[34300] = {
+		itemId = 9110,
+		itemPos = { { x = 33476, y = 32700, z = 14 } },
+	},
 	-- Ferumbras' Ascension Quest
 	[34305] = {
 		itemId = 9125,
@@ -267,10 +324,73 @@ LeverAction = {
 			{ x = 33671, y = 32623, z = 11 },
 		},
 	},
+	-- lever
+	[50011] = {
+		itemId = 2773,
+		itemPos = { { x = 32637, y = 31881, z = 7 } },
+	},
+	-- lever
+	[50012] = {
+		itemId = 2772,
+		itemPos = { { x = 32637, y = 31881, z = 2 } },
+	},
+	-- lever
+	[50027] = {
+		itemId = 2772,
+		itemPos = { { x = 32625, y = 31698, z = 11 } },
+	},
 	-- The Pits of Inferno Quest
 	[50160] = {
 		itemId = 2772,
 		itemPos = { x = 32853, y = 32318, z = 9 },
+	},
+	-- lever
+	[50237] = {
+		itemId = 2772,
+		itemPos = { { x = 32604, y = 31908, z = 3 } },
+	},
+	-- lever
+	[50238] = {
+		itemId = 2772,
+		itemPos = { { x = 32603, y = 31901, z = 4 } },
+	},
+	-- lever
+	[50239] = {
+		itemId = 2772,
+		itemPos = {
+			{ x = 32098, y = 32204, z = 8 },
+			{ x = 32104, y = 32204, z = 8 },
+		},
+	},
+	-- lever
+	[54381] = {
+		itemId = 9125,
+		itemPos = { { x = 33451, y = 32779, z = 11 } },
+	},
+	-- lever
+	[54382] = {
+		itemId = 9125,
+		itemPos = { { x = 33448, y = 32804, z = 10 } },
+	},
+	-- lever
+	[54383] = {
+		itemId = 9125,
+		itemPos = { { x = 33450, y = 32804, z = 10 } },
+	},
+	-- lever
+	[54384] = {
+		itemId = 9125,
+		itemPos = { { x = 33452, y = 32804, z = 10 } },
+	},
+	-- lever
+	[54385] = {
+		itemId = 9125,
+		itemPos = { { x = 33454, y = 32804, z = 10 } },
+	},
+	-- lever
+	[55021] = {
+		itemId = 2772,
+		itemPos = { { x = 33080, y = 32582, z = 3 } },
 	},
 	-- The Pits of Inferno Quest
 	[57234] = {
@@ -299,6 +419,15 @@ LeverAction = {
 			{ x = 32756, y = 31469, z = 6 },
 		},
 	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- lever
+	[57605] = {
+		itemId = 2772,
+		itemPos = { { x = 33364, y = 31343, z = 9 } },
+	},
 }
 
 LeverUnique = {
@@ -319,10 +448,45 @@ LeverUnique = {
 		itemId = 2772,
 		itemPos = { x = 33240, y = 31734, z = 11 },
 	},
+	-- lever
+	[1010] = {
+		itemId = 2772,
+		itemPos = { x = 33269, y = 31835, z = 10 },
+	},
+	-- lever
+	[1011] = {
+		itemId = 2772,
+		itemPos = { x = 33273, y = 31831, z = 12 },
+	},
+	-- lever
+	[1012] = {
+		itemId = 2772,
+		itemPos = { x = 33262, y = 31831, z = 12 },
+	},
+	-- lever
+	[1013] = {
+		itemId = 2772,
+		itemPos = { x = 33262, y = 31840, z = 12 },
+	},
+	-- lever
+	[1014] = {
+		itemId = 2772,
+		itemPos = { x = 33273, y = 31840, z = 12 },
+	},
 	-- Against the Spider Cult Quest
 	[1017] = {
 		itemId = 2772,
 		itemPos = { x = 33172, y = 31896, z = 8 },
+	},
+	-- lever
+	[1020] = {
+		itemId = 8913,
+		itemPos = { x = 33664, y = 31936, z = 9 },
+	},
+	-- lever
+	[1021] = {
+		itemId = 8911,
+		itemPos = { x = 33270, y = 31476, z = 14 },
 	},
 	-- Ferumbras' Ascension Quest
 	[1022] = {
@@ -377,10 +541,20 @@ LeverUnique = {
 		itemId = 8911,
 		itemPos = { x = 33430, y = 32418, z = 14 },
 	},
+	-- lever
+	[1036] = {
+		itemId = 8911,
+		itemPos = { x = 33472, y = 32302, z = 14 },
+	},
 	-- The Pits of Inferno
 	[1037] = {
 		itemId = 2772,
 		itemPos = { x = 32800, y = 32339, z = 11 },
+	},
+	-- lever
+	[1039] = {
+		itemId = 9110,
+		itemPos = { x = 33637, y = 32562, z = 13 },
 	},
 	-- The Ape City Quest - levers
 	[1040] = {
@@ -396,15 +570,25 @@ LeverUnique = {
 		itemId = 2772,
 		itemPos = { x = 32801, y = 32640, z = 15 },
 	},
+	-- lever
+	[1084] = {
+		itemId = 9110,
+		itemPos = { x = 33251, y = 32039, z = 8 },
+	},
+	-- lever
+	[1088] = {
+		itemId = 9110,
+		itemPos = { x = 33218, y = 32096, z = 10 },
+	},
+	-- lever
+	[2003] = {
+		itemId = 8911,
+		itemPos = { x = 33259, y = 31061, z = 13 },
+	},
 	-- Dreamers Challenge Quest
 	[2004] = {
 		itemId = 2772,
 		itemPos = { x = 32873, y = 32263, z = 14 },
-	},
-	-- The Pits of Inferno Quest
-	[48887] = {
-		itemId = 2772,
-		itemPos = { x = 32813, y = 32329, z = 10 },
 	},
 	[2025] = {
 		itemId = 2772,
@@ -520,6 +704,21 @@ LeverUnique = {
 		itemId = 2772,
 		itemPos = { x = 32833, y = 32224, z = 14 },
 	},
+	-- lever
+	[3045] = {
+		itemId = 2772,
+		itemPos = { x = 32785, y = 32222, z = 14 },
+	},
+	-- lever
+	[3046] = {
+		itemId = 2772,
+		itemPos = { x = 32784, y = 32230, z = 14 },
+	},
+	-- lever
+	[3047] = {
+		itemId = 2772,
+		itemPos = { x = 32781, y = 32225, z = 14 },
+	},
 	-- Wrath of the Emperor Quest
 	[3184] = {
 		itemId = 2772,
@@ -528,6 +727,11 @@ LeverUnique = {
 	[3185] = {
 		itemId = 2772,
 		itemPos = { x = 33082, y = 31109, z = 2 },
+	},
+	-- lever
+	[3198] = {
+		itemId = 2772,
+		itemPos = { x = 33361, y = 31410, z = 9 },
 	},
 	-- The Pits of Inferno Quest
 	[3300] = {
@@ -545,6 +749,11 @@ LeverUnique = {
 	[3304] = {
 		itemId = 2772,
 		itemPos = { x = 32826, y = 32263, z = 11 },
+	},
+	-- lever
+	[9545] = {
+		itemId = 8911,
+		itemPos = { x = 33917, y = 31626, z = 8 },
 	},
 	-- Dark trails quest (The Ravager lever)
 	-- Path: data\scripts\actions\quests\dark_trails\lever_the_ravager.lua
@@ -630,76 +839,6 @@ LeverUnique = {
 	[30018] = {
 		itemId = 2772,
 		itemPos = { x = 32310, y = 31975, z = 13 },
-	},
-	[30019] = {
-		itemId = 2772,
-		itemPos = { x = 32310, y = 31976, z = 13 },
-	},
-	[30020] = {
-		itemId = 2772,
-		itemPos = { x = 32312, y = 31975, z = 13 },
-	},
-	[30021] = {
-		itemId = 2772,
-		itemPos = { x = 32312, y = 31976, z = 13 },
-	},
-	[30022] = {
-		itemId = 2772,
-		itemPos = { x = 32314, y = 31975, z = 13 },
-	},
-	[30023] = {
-		itemId = 2772,
-		itemPos = { x = 32314, y = 31976, z = 13 },
-	},
-	-- Path: data\scripts\quests\giant_smithhammer\lever.lua
-	[30024] = {
-		itemId = 2772,
-		itemPos = { x = 32778, y = 32232, z = 8 },
-	},
-	-- Path: data\scripts\quests\the_annihilator\lever.lua
-	[30025] = {
-		itemId = 2772,
-		itemPos = { x = 33226, y = 31671, z = 13 },
-	},
-	-- Path: data\scripts\quests\the_paradox_tower\action-3-third_floor_lever.lua
-	[30026] = {
-		itemId = 9125,
-		itemPos = { x = 32481, y = 31904, z = 5 },
-	},
-	-- Path: data\scripts\quests\the_paradox_tower\action-4-four_floor_lever.lua
-	[30027] = {
-		itemId = 2772,
-		itemPos = { x = 32479, y = 31905, z = 4 },
-	},
-	-- Path: data\scripts\quests\the_paradox_tower\action-5-fifth_floor_lever.lua
-	[30028] = {
-		itemId = 2772,
-		itemPos = { x = 32478, y = 31904, z = 3 },
-	},
-	-- The Pits of Inferno Quest
-	[50095] = {
-		itemId = 2772,
-		itemPos = { x = 32815, y = 32333, z = 15 },
-	},
-	[50097] = {
-		itemId = 2772,
-		itemPos = { x = 32811, y = 32357, z = 15 },
-	},
-	[50098] = {
-		itemId = 2772,
-		itemPos = { x = 32803, y = 32353, z = 15 },
-	},
-	[50104] = {
-		itemId = 2772,
-		itemPos = { x = 32821, y = 32341, z = 13 },
-	},
-	[50105] = {
-		itemId = 2772,
-		itemPos = { x = 32821, y = 32346, z = 13 },
-	},
-	[50106] = {
-		itemId = 2772,
-		itemPos = { x = 32915, y = 32215, z = 15 },
 	},
 	[Storage.ThaisExhibition.FriendshipAmulet] = {
 		itemId = 2772,
@@ -809,6 +948,51 @@ LeverUnique = {
 		itemId = 2772,
 		itemPos = { x = 32440, y = 32191, z = 10 },
 	},
+	[30019] = {
+		itemId = 2772,
+		itemPos = { x = 32310, y = 31976, z = 13 },
+	},
+	[30020] = {
+		itemId = 2772,
+		itemPos = { x = 32312, y = 31975, z = 13 },
+	},
+	[30021] = {
+		itemId = 2772,
+		itemPos = { x = 32312, y = 31976, z = 13 },
+	},
+	[30022] = {
+		itemId = 2772,
+		itemPos = { x = 32314, y = 31975, z = 13 },
+	},
+	[30023] = {
+		itemId = 2772,
+		itemPos = { x = 32314, y = 31976, z = 13 },
+	},
+	-- Path: data\scripts\quests\giant_smithhammer\lever.lua
+	[30024] = {
+		itemId = 2772,
+		itemPos = { x = 32778, y = 32232, z = 8 },
+	},
+	-- Path: data\scripts\quests\the_annihilator\lever.lua
+	[30025] = {
+		itemId = 2772,
+		itemPos = { x = 33226, y = 31671, z = 13 },
+	},
+	-- Path: data\scripts\quests\the_paradox_tower\action-3-third_floor_lever.lua
+	[30026] = {
+		itemId = 9125,
+		itemPos = { x = 32481, y = 31904, z = 5 },
+	},
+	-- Path: data\scripts\quests\the_paradox_tower\action-4-four_floor_lever.lua
+	[30027] = {
+		itemId = 2772,
+		itemPos = { x = 32479, y = 31905, z = 4 },
+	},
+	-- Path: data\scripts\quests\the_paradox_tower\action-5-fifth_floor_lever.lua
+	[30028] = {
+		itemId = 2772,
+		itemPos = { x = 32478, y = 31904, z = 3 },
+	},
 	-- Path: data\scripts\rookgaard\katana_quest\katana_quest_lever.lua
 	[30029] = {
 		itemId = 2772,
@@ -843,5 +1027,74 @@ LeverUnique = {
 	[30035] = {
 		itemId = 2772,
 		itemPos = { x = 32792, y = 31579, z = 7 },
+	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- The Pits of Inferno Quest
+	[48887] = {
+		itemId = 2772,
+		itemPos = { x = 32813, y = 32329, z = 10 },
+	},
+	-- The Pits of Inferno Quest
+	[50095] = {
+		itemId = 2772,
+		itemPos = { x = 32815, y = 32333, z = 15 },
+	},
+	-- lever
+	[50096] = {
+		itemId = 2772,
+		itemPos = { x = 32824, y = 32323, z = 15 },
+	},
+	[50097] = {
+		itemId = 2772,
+		itemPos = { x = 32811, y = 32357, z = 15 },
+	},
+	[50098] = {
+		itemId = 2772,
+		itemPos = { x = 32803, y = 32353, z = 15 },
+	},
+	-- lever
+	[50099] = {
+		itemId = 2772,
+		itemPos = { x = 32804, y = 32357, z = 15 },
+	},
+	-- lever
+	[50100] = {
+		itemId = 2772,
+		itemPos = { x = 32814, y = 32349, z = 15 },
+	},
+	-- lever
+	[50101] = {
+		itemId = 2772,
+		itemPos = { x = 32814, y = 32348, z = 15 },
+	},
+	-- lever
+	[50102] = {
+		itemId = 2772,
+		itemPos = { x = 32808, y = 32322, z = 15 },
+	},
+	-- lever
+	[50103] = {
+		itemId = 2772,
+		itemPos = { x = 32802, y = 32362, z = 15 },
+	},
+	[50104] = {
+		itemId = 2772,
+		itemPos = { x = 32821, y = 32341, z = 13 },
+	},
+	[50105] = {
+		itemId = 2772,
+		itemPos = { x = 32821, y = 32346, z = 13 },
+	},
+	[50106] = {
+		itemId = 2772,
+		itemPos = { x = 32915, y = 32215, z = 15 },
+	},
+	-- lever
+	[54424] = {
+		itemId = 8911,
+		itemPos = { x = 33892, y = 31388, z = 15 },
 	},
 }

@@ -87,6 +87,19 @@ private:
 
 #pragma pack()
 
+/**
+ * Action ids, unique ids and container contents belong in data-global/startup/tables/,
+ * not in the map file. Anything left in the map is invisible to whoever reads the
+ * tables, so the OTBM parser counts it and the load reports what it found.
+ *
+ * The counting happens during the parse because BasicItem objects are deduplicated
+ * right afterwards, and a shared object no longer knows which position it came from.
+ */
+namespace MapStoredAttributes {
+	void reset();
+	void report(const std::filesystem::path &mapPath);
+}
+
 class MapCache {
 public:
 	virtual ~MapCache() = default;

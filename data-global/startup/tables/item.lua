@@ -1,24 +1,11 @@
 -- Look README.md for see the reserved action/unique numbers
 
 ItemAction = {
-	[100] = {
-		itemId = false,
-		itemPos = {
-			-- In Service of Yalahar Quest
-			{ x = 32776, y = 31062, z = 7 },
-			{ x = 32884, y = 31248, z = 8 },
-			{ x = 32885, y = 31248, z = 8 },
-			-- Sea of Light Quest
-			{ x = 32011, y = 31709, z = 7 },
-		},
-	},
 	--Parchment room quest
 	-- data\scripts\quests\parchment_room\movement-parchment.lua
 	[102] = { -- downFloor
 		itemId = false,
 		itemPos = {
-			{ x = 32171, y = 32439, z = 7 }, -- fibula acess
-			{ x = 32172, y = 32439, z = 7 }, -- fibula acess
 			{ x = 32507, y = 32176, z = 13 },
 			{ x = 32508, y = 32176, z = 13 },
 			{ x = 32353, y = 32131, z = 8 }, -- scale armor quest
@@ -29,11 +16,57 @@ ItemAction = {
 		itemId = 2819,
 		itemPos = { { x = 33063, y = 31624, z = 15 } },
 	},
+	-- 6 itens diferentes com o mesmo action id
+	[1001] = {
+		{ itemId = 1676, itemPos = { { x = 32085, y = 32003, z = 8 } } }, -- closed door
+		{ itemId = 6203, itemPos = { { x = 32111, y = 32003, z = 8 } } }, -- closed door
+		{ itemId = 30034, itemPos = { { x = 32177, y = 32048, z = 13 } } }, -- gate of expertise
+		{ -- gate of expertise
+			itemId = 30033,
+			itemPos = {
+				{ x = 32179, y = 32051, z = 13 },
+				{ x = 32180, y = 32044, z = 13 },
+			},
+		},
+		{ -- gate of expertise
+			itemId = 30037,
+			itemPos = {
+				{ x = 32234, y = 32051, z = 13 },
+				{ x = 32235, y = 32044, z = 13 },
+				{ x = 32240, y = 32044, z = 13 },
+				{ x = 32240, y = 32051, z = 13 },
+			},
+		},
+		{ itemId = 30038, itemPos = { { x = 32241, y = 32048, z = 13 } } }, -- gate of expertise
+	},
 	-- The Inquisition Quest
 	[1004] = {
 		itemId = 5113,
 		itemPos = {
 			{ x = 33146, y = 31639, z = 11 },
+		},
+	},
+	-- 2 itens diferentes com o mesmo action id
+	[1075] = {
+		{ -- gate of expertise
+			itemId = 1666,
+			itemPos = {
+				{ x = 33083, y = 32620, z = 14 },
+				{ x = 33084, y = 32620, z = 14 },
+				{ x = 33149, y = 32871, z = 11 },
+				{ x = 33168, y = 32776, z = 15 },
+				{ x = 33206, y = 32958, z = 14 },
+				{ x = 33257, y = 32706, z = 13 },
+				{ x = 33262, y = 32706, z = 13 },
+				{ x = 33368, y = 32807, z = 14 },
+			},
+		},
+		{ -- gate of expertise
+			itemId = 1664,
+			itemPos = {
+				{ x = 33123, y = 32762, z = 14 },
+				{ x = 33192, y = 32665, z = 15 },
+			},
 		},
 	},
 	-- The Travelling Trader Quest
@@ -43,13 +76,256 @@ ItemAction = {
 	},
 	-- The Inquisition Quest
 	[2000] = {
-		itemId = false,
-		itemPos = {
-			{ x = 32657, y = 31927, z = 1 },
-			{ x = 32658, y = 31927, z = 1 },
-			{ x = 32657, y = 31928, z = 1 },
-			{ x = 32658, y = 31928, z = 1 },
+		{
+			itemId = false,
+			itemPos = {
+				{ x = 32657, y = 31927, z = 1 },
+				{ x = 32658, y = 31927, z = 1 },
+				{ x = 32657, y = 31928, z = 1 },
+				{ x = 32658, y = 31928, z = 1 },
+				-- Koshei The Deathless Quest
+				{ x = 33193, y = 32459, z = 7 },
+			},
 		},
+		{ -- chest
+			itemId = 2472,
+			itemPos = {
+				{ x = 31981, y = 32893, z = 0 },
+				{ x = 32027, y = 31104, z = 11 },
+				{ x = 32030, y = 31688, z = 8 },
+				{ x = 32053, y = 31939, z = 9 },
+				{ x = 32059, y = 31800, z = 10 },
+				{ x = 32078, y = 31976, z = 8 },
+				{ x = 32079, y = 31976, z = 8 },
+				{ x = 32084, y = 31062, z = 10 },
+				{ x = 32088, y = 32780, z = 11 },
+				{ x = 32091, y = 31976, z = 8 },
+				{ x = 32092, y = 31976, z = 8 },
+				{ x = 32138, y = 32171, z = 3 },
+				{ x = 32154, y = 31116, z = 9 },
+				{ x = 32172, y = 31602, z = 10 },
+				{ x = 32316, y = 32260, z = 8 },
+				{ x = 32369, y = 32795, z = 10 },
+				{ x = 32549, y = 31437, z = 14 },
+				{ x = 32582, y = 31405, z = 15 },
+				{ x = 32643, y = 32733, z = 7 },
+				{ x = 32649, y = 31932, z = 1 },
+				{ x = 32753, y = 31456, z = 1 },
+				{ x = 32754, y = 31462, z = 15 },
+				{ x = 32812, y = 32232, z = 11 },
+				{ x = 32814, y = 32232, z = 11 },
+				{ x = 32819, y = 32232, z = 11 },
+				{ x = 32824, y = 32232, z = 11 },
+				{ x = 32826, y = 32232, z = 11 },
+				{ x = 32828, y = 32340, z = 7 },
+				{ x = 32842, y = 32225, z = 8 },
+				{ x = 32850, y = 32285, z = 14 },
+				{ x = 32860, y = 32516, z = 11 },
+				{ x = 32867, y = 31909, z = 8 },
+				{ x = 32922, y = 32755, z = 7 },
+				{ x = 32970, y = 32646, z = 8 },
+				{ x = 32978, y = 31427, z = 2 },
+				{ x = 33009, y = 31251, z = 8 },
+				{ x = 33057, y = 31019, z = 2 },
+				{ x = 33064, y = 32529, z = 5 },
+				{ x = 33064, y = 32531, z = 5 },
+				{ x = 33074, y = 31169, z = 8 },
+				{ x = 33143, y = 31800, z = 11 },
+				{ x = 33150, y = 32862, z = 7 },
+				{ x = 33164, y = 31257, z = 10 },
+				{ x = 33212, y = 32081, z = 9 },
+				{ x = 33231, y = 32017, z = 8 },
+				{ x = 33247, y = 31161, z = 6 },
+				{ x = 33261, y = 32444, z = 12 },
+				{ x = 33264, y = 31130, z = 7 },
+				{ x = 33306, y = 31125, z = 9 },
+				{ x = 33342, y = 32120, z = 10 },
+				{ x = 33343, y = 31610, z = 1 },
+				{ x = 33409, y = 32278, z = 14 },
+				{ x = 33841, y = 32124, z = 14 },
+			},
+		},
+		{ -- box
+			itemId = 2469,
+			itemPos = {
+				{ x = 31987, y = 31223, z = 7 },
+				{ x = 32467, y = 31970, z = 5 },
+				{ x = 32551, y = 32652, z = 10 },
+				{ x = 32563, y = 32115, z = 4 },
+				{ x = 32636, y = 31985, z = 14 },
+				{ x = 32782, y = 32910, z = 8 },
+				{ x = 32783, y = 32224, z = 14 },
+				{ x = 32815, y = 32502, z = 8 },
+				{ x = 32835, y = 32223, z = 14 },
+				{ x = 32872, y = 31958, z = 11 },
+				{ x = 33004, y = 31530, z = 10 },
+				{ x = 33072, y = 32169, z = 2 },
+				{ x = 33073, y = 31169, z = 8 },
+				{ x = 33078, y = 32169, z = 2 },
+				{ x = 33273, y = 32470, z = 11 },
+				{ x = 33308, y = 32279, z = 12 },
+				{ x = 33449, y = 32796, z = 11 },
+				{ x = 33457, y = 32073, z = 8 },
+			},
+		},
+		{ -- box
+			itemId = 2473,
+			itemPos = {
+				{ x = 32015, y = 31409, z = 7 },
+				{ x = 32097, y = 32187, z = 8 },
+				{ x = 32146, y = 31430, z = 8 },
+				{ x = 32180, y = 31930, z = 11 },
+				{ x = 32216, y = 31168, z = 11 },
+				{ x = 32367, y = 31781, z = 8 },
+				{ x = 32576, y = 31572, z = 10 },
+				{ x = 32598, y = 31934, z = 15 },
+				{ x = 32757, y = 31953, z = 9 },
+				{ x = 32757, y = 31957, z = 9 },
+				{ x = 32907, y = 32012, z = 6 },
+				{ x = 32935, y = 32886, z = 7 },
+				{ x = 32967, y = 31719, z = 2 },
+				{ x = 33131, y = 32661, z = 7 },
+			},
+		},
+		{ -- sturdy chest
+			itemId = 7757,
+			itemPos = {
+				{ x = 32032, y = 32276, z = 5 },
+				{ x = 32033, y = 32278, z = 8 },
+				{ x = 32059, y = 32265, z = 7 },
+				{ x = 32067, y = 32264, z = 8 },
+			},
+		},
+		{ -- dead human
+			itemId = 4240,
+			itemPos = {
+				{ x = 32093, y = 32574, z = 8 },
+				{ x = 32262, y = 31861, z = 11 },
+				{ x = 32588, y = 31406, z = 14 },
+				{ x = 32773, y = 31582, z = 11 },
+				{ x = 32860, y = 32249, z = 9 },
+			},
+		},
+		{ -- slain skeleton
+			itemId = 4024,
+			itemPos = {
+				{ x = 32121, y = 31106, z = 12 },
+				{ x = 32490, y = 31192, z = 10 },
+				{ x = 32601, y = 31386, z = 14 },
+				{ x = 32650, y = 31467, z = 15 },
+			},
+		},
+		{ -- stone coffin
+			itemId = 1983,
+			itemPos = {
+				{ x = 32122, y = 31912, z = 14 },
+				{ x = 32156, y = 31954, z = 13 },
+				{ x = 32546, y = 31522, z = 11 },
+				{ x = 33049, y = 32399, z = 10 },
+				{ x = 33053, y = 32468, z = 11 },
+				{ x = 33305, y = 32277, z = 10 },
+				{ x = 33384, y = 32323, z = 12 },
+			},
+		},
+		{ -- drawers
+			itemId = 2433,
+			itemPos = {
+				{ x = 32311, y = 32177, z = 5 },
+				{ x = 32598, y = 32380, z = 10 },
+				{ x = 32902, y = 32143, z = 4 },
+				{ x = 33271, y = 31839, z = 3 },
+				{ x = 33444, y = 32605, z = 11 },
+			},
+		},
+		{ itemId = 3990, itemPos = { { x = 32406, y = 32764, z = 1 } } }, -- slain skeleton
+		{ -- drawers
+			itemId = 2434,
+			itemPos = {
+				{ x = 32414, y = 32148, z = 15 },
+				{ x = 32770, y = 32245, z = 8 },
+			},
+		},
+		{ -- barrel
+			itemId = 2523,
+			itemPos = {
+				{ x = 32431, y = 31235, z = 8 },
+				{ x = 32483, y = 31110, z = 8 },
+				{ x = 32786, y = 32254, z = 8 },
+			},
+		},
+		{ itemId = 28827, itemPos = { { x = 32475, y = 32493, z = 7 } } }, -- ?
+		{ itemId = 2481, itemPos = { { x = 32674, y = 31610, z = 8 } } }, -- chest
+		{ itemId = 4073, itemPos = { { x = 32804, y = 31586, z = 0 } } }, -- treasure chest
+		{ itemId = 23736, itemPos = { { x = 32825, y = 31664, z = 9 } } }, -- spider web
+		{ -- slain skeleton
+			itemId = 5972,
+			itemPos = {
+				{ x = 32832, y = 32277, z = 10 },
+				{ x = 32854, y = 32325, z = 11 },
+			},
+		},
+		{ itemId = 21858, itemPos = { { x = 32883, y = 31686, z = 10 } } }, -- debris
+		{ -- chest
+			itemId = 2480,
+			itemPos = {
+				{ x = 32939, y = 31776, z = 9 },
+				{ x = 33157, y = 31229, z = 15 },
+				{ x = 33261, y = 32448, z = 12 },
+			},
+		},
+		{ itemId = 9253, itemPos = { { x = 33026, y = 31662, z = 14 } } }, -- core dispenser
+		{ -- sarcophagus
+			itemId = 1994,
+			itemPos = {
+				{ x = 33041, y = 32772, z = 14 },
+				{ x = 33126, y = 32589, z = 15 },
+				{ x = 33145, y = 32663, z = 15 },
+				{ x = 33174, y = 32932, z = 15 },
+				{ x = 33182, y = 32712, z = 14 },
+				{ x = 33186, y = 33010, z = 14 },
+				{ x = 33235, y = 32803, z = 12 },
+				{ x = 33349, y = 32825, z = 14 },
+			},
+		},
+		{ itemId = 2438, itemPos = { { x = 33155, y = 32840, z = 6 } } }, -- bookcase
+		{ itemId = 2482, itemPos = { { x = 33167, y = 31600, z = 15 } } }, -- chest
+		{ itemId = 11591, itemPos = { { x = 33215, y = 31413, z = 10 } } }, -- unknown item
+		{ itemId = 1986, itemPos = { { x = 33393, y = 32373, z = 11 } } }, -- stone coffin
+		{ itemId = 21818, itemPos = { { x = 33408, y = 32396, z = 11 } } }, -- ashes
+		{ -- treasure chest
+			itemId = 2478,
+			itemPos = {
+				{ x = 33468, y = 32083, z = 8 },
+				{ x = 33487, y = 32085, z = 9 },
+			},
+		},
+		{ itemId = 8745, itemPos = { { x = 33755, y = 32163, z = 14 } } }, -- crate
+	},
+	-- 11 itens diferentes com o mesmo action id
+	[2001] = {
+		{ -- glimmer cap mushrooms
+			itemId = 3919,
+			itemPos = {
+				{ x = 32181, y = 32468, z = 10 },
+				{ x = 32659, y = 31493, z = 13 },
+			},
+		},
+		{ itemId = 7936, itemPos = { { x = 32359, y = 32791, z = 6 } } }, -- fishnapped goldfish
+		{ itemId = 8776, itemPos = { { x = 32613, y = 31386, z = 14 } } }, -- large crystal
+		{ itemId = 2435, itemPos = { { x = 32621, y = 31404, z = 10 } } }, -- bookcase
+		{ itemId = 2199, itemPos = { { x = 32754, y = 32559, z = 9 } } }, -- obelisk
+		{ itemId = 2753, itemPos = { { x = 32933, y = 32495, z = 7 } } }, -- giant footprint
+		{ itemId = 5676, itemPos = { { x = 32954, y = 32695, z = 8 } } }, -- hydra's nest
+		{ itemId = 4055, itemPos = { { x = 32957, y = 32834, z = 8 } } }, -- large amphora
+		{ -- gemmed lamp
+			itemId = 3263,
+			itemPos = {
+				{ x = 33048, y = 32630, z = 1 },
+				{ x = 33094, y = 32524, z = 1 },
+			},
+		},
+		{ itemId = 11810, itemPos = { { x = 33195, y = 31765, z = 1 } } }, -- wooden trunk
+		{ itemId = 10194, itemPos = { { x = 33281, y = 31219, z = 7 } } }, -- bamboo drawer
 	},
 	[2002] = {
 		itemId = false,
@@ -68,7 +344,7 @@ ItemAction = {
 	[2023] = {
 		itemId = 1982,
 		itemPos = {
-			{ x = 32791, y = 32333, z = 6 },
+			{ x = 32791, y = 32333, z = 9 },
 		},
 	},
 	-- The Explorer Society - Jump - Calassa
@@ -88,6 +364,7 @@ ItemAction = {
 			{ x = 32816, y = 32336, z = 9 },
 			{ x = 32816, y = 32337, z = 9 },
 			{ x = 32816, y = 32339, z = 9 },
+			{ x = 32816, y = 32338, z = 9 },
 		},
 	},
 	[2246] = {
@@ -98,12 +375,23 @@ ItemAction = {
 			{ x = 32820, y = 32332, z = 9 },
 			{ x = 32821, y = 32332, z = 9 },
 			{ x = 32822, y = 32332, z = 9 },
+			{ x = 32823, y = 32332, z = 9 },
 		},
 	},
 	-- Griffinclaw flower
 	[3152] = {
 		itemId = 5658,
 		itemPos = { x = 32024, y = 32830, z = 4 },
+	},
+	-- silver key
+	[3350] = {
+		itemId = 2969,
+		itemPos = { { x = 32180, y = 31934, z = 7 } },
+	},
+	-- silver key
+	[3650] = {
+		itemId = 2969,
+		itemPos = { { x = 32414, y = 32148, z = 15 } },
 	},
 	-- To Blind the Enemy Quest
 	[4001] = {
@@ -120,7 +408,34 @@ ItemAction = {
 	-- What a Foolish Quest
 	[4200] = {
 		itemId = 3656,
-		itemPos = { { x = 32349, y = 32361, z = 7 } },
+		itemPos = {
+			{ x = 32349, y = 32361, z = 7 },
+			{ x = 32340, y = 32360, z = 7 },
+			{ x = 32341, y = 32358, z = 6 },
+			{ x = 32341, y = 32366, z = 7 },
+			{ x = 32341, y = 32368, z = 6 },
+			{ x = 32342, y = 32361, z = 7 },
+			{ x = 32342, y = 32365, z = 7 },
+			{ x = 32344, y = 32359, z = 7 },
+			{ x = 32344, y = 32366, z = 7 },
+			{ x = 32345, y = 32356, z = 7 },
+			{ x = 32345, y = 32362, z = 5 },
+			{ x = 32345, y = 32364, z = 5 },
+			{ x = 32346, y = 32363, z = 5 },
+			{ x = 32346, y = 32369, z = 7 },
+			{ x = 32347, y = 32362, z = 5 },
+			{ x = 32347, y = 32364, z = 5 },
+			{ x = 32348, y = 32359, z = 7 },
+			{ x = 32348, y = 32366, z = 7 },
+			{ x = 32349, y = 32365, z = 7 },
+			{ x = 32350, y = 32358, z = 7 },
+			{ x = 32351, y = 32358, z = 6 },
+			{ x = 32351, y = 32368, z = 6 },
+			{ x = 32352, y = 32358, z = 7 },
+			{ x = 32352, y = 32361, z = 7 },
+			{ x = 32352, y = 32367, z = 7 },
+			{ x = 32354, y = 32362, z = 7 },
+		},
 	},
 	[4202] = {
 		itemId = 5916,
@@ -281,6 +596,26 @@ ItemAction = {
 		itemId = 19387,
 		itemPos = { { x = 32223, y = 32606, z = 15 } },
 	},
+	-- mystic flame
+	[4244] = {
+		itemId = 1959,
+		itemPos = { { x = 32856, y = 31056, z = 9 } },
+	},
+	-- mystic flame
+	[4245] = {
+		itemId = 1959,
+		itemPos = { { x = 32893, y = 31046, z = 9 } },
+	},
+	-- copper key
+	[4501] = {
+		itemId = 2970,
+		itemPos = { { x = 32172, y = 31602, z = 10 } },
+	},
+	-- 2 itens diferentes com o mesmo action id
+	[4503] = {
+		{ itemId = 2970, itemPos = { { x = 32030, y = 31688, z = 8 } } }, -- copper key
+		{ itemId = 7042, itemPos = { { x = 32035, y = 31642, z = 8 } } }, -- closed door
+	},
 	-- The Gravedigger of Drefia Quest
 	[4530] = {
 		itemId = 1949,
@@ -324,6 +659,14 @@ ItemAction = {
 		itemId = 1949,
 		itemPos = {
 			{ x = 33015, y = 32423, z = 11 },
+		},
+	},
+	-- closed door
+	[4602] = {
+		itemId = 5097,
+		itemPos = {
+			{ x = 32113, y = 32055, z = 12 },
+			{ x = 32114, y = 32047, z = 12 },
 		},
 	},
 	[4630] = {
@@ -394,11 +737,15 @@ ItemAction = {
 		},
 	},
 	[4638] = {
-		itemId = false,
-		itemPos = {
-			{ x = 32993, y = 32401, z = 11 },
-			{ x = 32994, y = 32401, z = 11 },
+		{
+			itemId = false,
+			itemPos = {
+				{ x = 32993, y = 32401, z = 11 },
+				{ x = 32994, y = 32401, z = 11 },
+			},
 		},
+		{ itemId = 3526, itemPos = { { x = 32993, y = 32406, z = 11 } } }, -- sacrificial stone
+		{ itemId = 3522, itemPos = { { x = 32994, y = 32406, z = 11 } } }, -- sacrificial stone
 	},
 	[4639] = {
 		itemId = 8708,
@@ -947,52 +1294,77 @@ ItemAction = {
 		itemId = 2930,
 		itemPos = {
 			{ x = 32400, y = 31793, z = 8 },
+			{ x = 32395, y = 31808, z = 8 },
 		},
 	},
 	[5530] = {
-		itemId = false,
-		itemPos = {
-			{ x = 32693, y = 31479, z = 8 },
-			{ x = 32680, y = 31485, z = 8 },
+		{
+			itemId = false,
+			itemPos = {
+				{ x = 32693, y = 31479, z = 8 },
+				{ x = 32680, y = 31485, z = 8 },
+			},
+		},
+		{ itemId = 15468, itemPos = { { x = 32664, y = 31504, z = 8 } } }, -- crystal glass floor
+		{ -- poison
+			itemId = 25740,
+			itemPos = {
+				{ x = 32717, y = 31443, z = 8 },
+				{ x = 32717, y = 31444, z = 8 },
+				{ x = 32717, y = 31445, z = 8 },
+			},
 		},
 	},
 	[5531] = {
-		itemId = false,
-		itemPos = {
-			{ x = 32748, y = 31489, z = 8 },
-			{ x = 32750, y = 31508, z = 8 },
+		{
+			itemId = false,
+			itemPos = {
+				{ x = 32748, y = 31489, z = 8 },
+				{ x = 32750, y = 31508, z = 8 },
+			},
 		},
+		{ itemId = 15468, itemPos = { { x = 32746, y = 31469, z = 8 } } }, -- crystal glass floor
 	},
 	[5532] = {
-		itemId = false,
-		itemPos = {
-			{ x = 32710, y = 31440, z = 8 },
-			{ x = 32709, y = 31440, z = 8 },
-			{ x = 32708, y = 31440, z = 8 },
-			{ x = 32698, y = 31405, z = 8 },
+		{
+			itemId = false,
+			itemPos = {
+				{ x = 32710, y = 31440, z = 8 },
+				{ x = 32709, y = 31440, z = 8 },
+				{ x = 32708, y = 31440, z = 8 },
+				{ x = 32698, y = 31405, z = 8 },
+			},
 		},
+		{ itemId = 6700, itemPos = { { x = 32706, y = 31440, z = 8 } } }, -- ice
+		{ itemId = 6699, itemPos = { { x = 32707, y = 31440, z = 8 } } }, -- ice
 	},
 	[5533] = {
-		itemId = false,
-		itemPos = {
-			{ x = 32683, y = 31412, z = 8 },
-			{ x = 32684, y = 31412, z = 8 },
+		{
+			itemId = false,
+			itemPos = {
+				{ x = 32683, y = 31412, z = 8 },
+				{ x = 32684, y = 31412, z = 8 },
+			},
 		},
+		{ itemId = 15468, itemPos = { { x = 32682, y = 31412, z = 8 } } }, -- crystal glass floor
 	},
 	[5535] = {
-		itemId = false,
-		itemPos = {
-			{ x = 32742, y = 31410, z = 8 },
-			{ x = 32685, y = 31430, z = 8 },
-			{ x = 32746, y = 31462, z = 8 },
-			{ x = 32731, y = 31531, z = 9 },
-			{ x = 32745, y = 31523, z = 9 },
-			{ x = 32761, y = 31518, z = 9 },
-			{ x = 32739, y = 31507, z = 9 },
-			{ x = 32739, y = 31489, z = 9 },
-			{ x = 32683, y = 31537, z = 9 },
-			{ x = 32720, y = 31545, z = 8 },
+		{
+			itemId = false,
+			itemPos = {
+				{ x = 32742, y = 31410, z = 8 },
+				{ x = 32685, y = 31430, z = 8 },
+				{ x = 32746, y = 31462, z = 8 },
+				{ x = 32731, y = 31531, z = 9 },
+				{ x = 32745, y = 31523, z = 9 },
+				{ x = 32761, y = 31518, z = 9 },
+				{ x = 32739, y = 31507, z = 9 },
+				{ x = 32739, y = 31489, z = 9 },
+				{ x = 32683, y = 31537, z = 9 },
+				{ x = 32720, y = 31545, z = 8 },
+			},
 		},
+		{ itemId = 25682, itemPos = { { x = 32745, y = 31423, z = 8 } } }, -- cult symbol
 	},
 	[5536] = {
 		itemId = false,
@@ -1002,16 +1374,25 @@ ItemAction = {
 		},
 	},
 	[5540] = {
-		itemId = 25761,
-		itemPos = {
-			{ x = 33135, y = 31859, z = 10 },
-			{ x = 33136, y = 31859, z = 10 },
-			{ x = 33128, y = 31885, z = 11 },
-			{ x = 33129, y = 31885, z = 11 },
-			{ x = 33175, y = 31923, z = 12 },
-			{ x = 33176, y = 31923, z = 12 },
-			{ x = 33177, y = 31923, z = 12 },
+		{
+			itemId = 25761,
+			itemPos = {
+				{ x = 33135, y = 31859, z = 10 },
+				{ x = 33136, y = 31859, z = 10 },
+				{ x = 33128, y = 31885, z = 11 },
+				{ x = 33129, y = 31885, z = 11 },
+				{ x = 33175, y = 31923, z = 12 },
+				{ x = 33176, y = 31923, z = 12 },
+				{ x = 33177, y = 31923, z = 12 },
+			},
 		},
+		{ itemId = 6381, itemPos = { { x = 33129, y = 31885, z = 11 } } }, -- debris
+	},
+	-- 3 itens diferentes com o mesmo action id
+	[5560] = {
+		{ itemId = 1867, itemPos = { { x = 33479, y = 32271, z = 10 } } }, -- stone
+		{ itemId = 1858, itemPos = { { x = 33479, y = 32285, z = 10 } } }, -- stones
+		{ itemId = 1866, itemPos = { { x = 33479, y = 32287, z = 10 } } }, -- stone
 	},
 	[5581] = {
 		itemId = 25726,
@@ -1037,6 +1418,81 @@ ItemAction = {
 			{ x = 32539, y = 32468, z = 10 },
 		},
 	},
+	-- torch bearer
+	[5632] = {
+		itemId = 2928,
+		itemPos = { { x = 33151, y = 32861, z = 7 } },
+	},
+	-- ancient shrine
+	[7101] = {
+		itemId = 50242,
+		itemPos = { { x = 32048, y = 31888, z = 6 } },
+	},
+	-- ancient shrine
+	[7102] = {
+		itemId = 50242,
+		itemPos = { { x = 32067, y = 31915, z = 6 } },
+	},
+	-- ancient shrine
+	[7103] = {
+		itemId = 50242,
+		itemPos = { { x = 32082, y = 31879, z = 5 } },
+	},
+	-- ancient shrine
+	[7104] = {
+		itemId = 50242,
+		itemPos = { { x = 32046, y = 31861, z = 5 } },
+	},
+	-- ancient shrine
+	[7105] = {
+		itemId = 50242,
+		itemPos = { { x = 32454, y = 32292, z = 7 } },
+	},
+	-- ancient shrine
+	[7106] = {
+		itemId = 50242,
+		itemPos = { { x = 32323, y = 32380, z = 6 } },
+	},
+	-- ancient shrine
+	[7107] = {
+		itemId = 50242,
+		itemPos = { { x = 32410, y = 31272, z = 3 } },
+	},
+	-- ancient shrine
+	[7108] = {
+		itemId = 50242,
+		itemPos = { { x = 32610, y = 31634, z = 7 } },
+	},
+	-- ancient shrine
+	[7109] = {
+		itemId = 50242,
+		itemPos = { { x = 32532, y = 31569, z = 13 } },
+	},
+	-- ancient shrine
+	[7110] = {
+		itemId = 50242,
+		itemPos = { { x = 32966, y = 32649, z = 8 } },
+	},
+	-- ancient shrine
+	[7111] = {
+		itemId = 50242,
+		itemPos = { { x = 32890, y = 32352, z = 15 } },
+	},
+	-- ancient shrine
+	[7112] = {
+		itemId = 50242,
+		itemPos = { { x = 33369, y = 31156, z = 8 } },
+	},
+	-- ancient shrine
+	[7113] = {
+		itemId = 50242,
+		itemPos = { { x = 32778, y = 31525, z = 9 } },
+	},
+	-- ancient shrine
+	[7114] = {
+		itemId = 50242,
+		itemPos = { { x = 33842, y = 31622, z = 3 } },
+	},
 	-- In Service of Yalahar Quest
 	[7812] = {
 		itemId = 7804,
@@ -1046,6 +1502,17 @@ ItemAction = {
 			{ x = 32950, y = 31183, z = 6 },
 			{ x = 32951, y = 31183, z = 6 },
 		},
+	},
+	-- 2 itens diferentes com o mesmo action id
+	[8000] = {
+		{ -- ramp
+			itemId = 1952,
+			itemPos = {
+				{ x = 33081, y = 31532, z = 7 },
+				{ x = 33081, y = 31533, z = 7 },
+			},
+		},
+		{ itemId = 21301, itemPos = { { x = 33755, y = 32163, z = 14 } } }, -- crude primitive printout
 	},
 	-- Children of the Revolution Quest
 	[8009] = {
@@ -1188,6 +1655,65 @@ ItemAction = {
 			{ x = 32933, y = 32270, z = 13 },
 		},
 	},
+	-- lift
+	[9700] = {
+		itemId = 19200,
+		itemPos = { { x = 32724, y = 31666, z = 6 } },
+	},
+	-- lift
+	[9701] = {
+		itemId = 19200,
+		itemPos = { { x = 32669, y = 31681, z = 6 } },
+	},
+	-- lift
+	[9702] = {
+		itemId = 19200,
+		itemPos = { { x = 32664, y = 31677, z = 6 } },
+	},
+	-- lift
+	[9703] = {
+		itemId = 19200,
+		itemPos = { { x = 32676, y = 31617, z = 6 } },
+	},
+	-- lift
+	[9704] = {
+		itemId = 19200,
+		itemPos = { { x = 32653, y = 31688, z = 6 } },
+	},
+	-- lift
+	[9705] = {
+		itemId = 19200,
+		itemPos = { { x = 32656, y = 31688, z = 8 } },
+	},
+	-- archway
+	[9715] = {
+		itemId = 776,
+		itemPos = { { x = 33290, y = 31785, z = 13 } },
+	},
+	-- Putefractory: Lever
+	[9804] = {
+		itemId = 8911,
+		itemPos = {
+			{ x = 32979, y = 32333, z = 15 },
+		},
+	},
+	-- closed door
+	[10111] = {
+		itemId = 22506,
+		itemPos = {
+			{ x = 33460, y = 32797, z = 11 },
+		},
+	},
+	-- not named in items.xml
+	[10536] = {
+		itemId = 44563,
+		itemPos = { { x = 32799, y = 32365, z = 8 } },
+	},
+	-- not named in items.xml
+	[10537] = {
+		itemId = 44563,
+		itemPos = { { x = 32874, y = 32374, z = 8 } },
+	},
 	-- The Djinn War Quest - Green - Water fountain
 	[12105] = {
 		itemId = 1928,
@@ -1292,6 +1818,26 @@ ItemAction = {
 			{ x = 31919, y = 32600, z = 10 },
 		},
 	},
+	-- slime slide
+	[13404] = {
+		itemId = 21046,
+		itemPos = { { x = 33562, y = 32522, z = 8 } },
+	},
+	-- slime slide
+	[13407] = {
+		itemId = 21046,
+		itemPos = { { x = 33392, y = 32086, z = 10 } },
+	},
+	-- mystic flame
+	[15999] = {
+		itemId = 9100,
+		itemPos = { { x = 32833, y = 32436, z = 7 } },
+	},
+	-- 2 itens diferentes com o mesmo action id
+	[16007] = {
+		{ itemId = 7062, itemPos = { { x = 32727, y = 31162, z = 14 } } }, -- rock
+		{ itemId = 7065, itemPos = { { x = 32727, y = 31168, z = 14 } } }, -- rock
+	},
 	-- The Pits of Inferno Quest
 	[16772] = {
 		itemId = 353,
@@ -1303,6 +1849,42 @@ ItemAction = {
 		itemId = 2576,
 		itemPos = {
 			{ x = 32741, y = 32382, z = 15 },
+		},
+	},
+	-- ventilation grille
+	[19049] = {
+		itemId = 4971,
+		itemPos = { { x = 33657, y = 31657, z = 7 } },
+	},
+	-- 2 itens diferentes com o mesmo action id
+	[23700] = {
+		{ -- mysterious machine
+			itemId = 8068,
+			itemPos = {
+				{ x = 32882, y = 31315, z = 10 },
+				{ x = 32882, y = 31317, z = 10 },
+				{ x = 32882, y = 31319, z = 10 },
+				{ x = 32882, y = 31322, z = 10 },
+			},
+		},
+		{ -- mysterious machine
+			itemId = 8069,
+			itemPos = {
+				{ x = 32882, y = 31316, z = 10 },
+				{ x = 32882, y = 31318, z = 10 },
+				{ x = 32882, y = 31320, z = 10 },
+				{ x = 32882, y = 31323, z = 10 },
+			},
+		},
+	},
+	-- mysterious machine
+	[23701] = {
+		itemId = 8066,
+		itemPos = {
+			{ x = 32869, y = 31316, z = 10 },
+			{ x = 32869, y = 31318, z = 10 },
+			{ x = 32869, y = 31320, z = 10 },
+			{ x = 32869, y = 31322, z = 10 },
 		},
 	},
 	-- Ferumbras' Ascension Quest
@@ -1366,10 +1948,60 @@ ItemAction = {
 			{ x = 33324, y = 31372, z = 14 },
 		},
 	},
+	-- strange machine
+	[24861] = {
+		itemId = 21743,
+		itemPos = {
+			{ x = 33598, y = 31929, z = 14 },
+			{ x = 33598, y = 31960, z = 14 },
+			{ x = 33614, y = 31989, z = 14 },
+			{ x = 33635, y = 31958, z = 14 },
+			{ x = 33661, y = 31937, z = 14 },
+			{ x = 33674, y = 31989, z = 14 },
+			{ x = 33693, y = 31929, z = 14 },
+			{ x = 33711, y = 31961, z = 14 },
+		},
+	},
+	-- strange machine
+	[24863] = {
+		itemId = 21743,
+		itemPos = {
+			{ x = 33582, y = 31960, z = 15 },
+			{ x = 33606, y = 31935, z = 15 },
+			{ x = 33636, y = 31932, z = 15 },
+			{ x = 33641, y = 31964, z = 15 },
+			{ x = 33650, y = 31945, z = 15 },
+			{ x = 33675, y = 31931, z = 15 },
+			{ x = 33679, y = 31949, z = 15 },
+			{ x = 33704, y = 31963, z = 15 },
+		},
+	},
+	-- strange machine
+	[24865] = {
+		itemId = 21743,
+		itemPos = {
+			{ x = 33375, y = 31981, z = 15 },
+			{ x = 33382, y = 31928, z = 15 },
+			{ x = 33427, y = 31948, z = 15 },
+			{ x = 33442, y = 31981, z = 15 },
+			{ x = 33455, y = 31932, z = 15 },
+			{ x = 33469, y = 31965, z = 15 },
+			{ x = 33514, y = 31957, z = 15 },
+			{ x = 33515, y = 31932, z = 15 },
+		},
+	},
+	-- slime slide
+	[24872] = {
+		itemId = 21046,
+		itemPos = { { x = 33714, y = 32101, z = 15 } },
+	},
 	-- Forgotten Knowledge Quest
 	[24875] = {
-		itemId = 23730,
-		itemPos = { x = 32860, y = 31644, z = 10 },
+		{
+			itemId = 23730,
+			itemPos = { x = 32860, y = 31644, z = 10 },
+		},
+		{ itemId = 2187, itemPos = { { x = 32859, y = 31644, z = 10 } } }, -- nothing special
 	},
 	[24876] = {
 		itemId = 1503,
@@ -1379,16 +2011,91 @@ ItemAction = {
 		itemId = 1503,
 		itemPos = { x = 32924, y = 31636, z = 14 },
 	},
+	-- 4 itens diferentes com o mesmo action id
+	[24999] = {
+		{ itemId = 158, itemPos = { { x = 33539, y = 32207, z = 7 } } }, -- earth shrine
+		{ itemId = 160, itemPos = { { x = 33539, y = 32208, z = 7 } } }, -- earth shrine
+		{ itemId = 159, itemPos = { { x = 33540, y = 32207, z = 7 } } }, -- earth shrine
+		{ itemId = 161, itemPos = { { x = 33540, y = 32208, z = 7 } } }, -- earth shrine
+	},
 	-- The Cursed Crystal
 	[25018] = {
-		itemId = false,
+		{
+			itemId = false,
+			itemPos = {
+				{ x = 31973, y = 32905, z = 11 },
+				{ x = 31973, y = 32905, z = 10 },
+				{ x = 32009, y = 32928, z = 9 },
+				{ x = 32017, y = 32917, z = 10 },
+				{ x = 32017, y = 32918, z = 10 },
+				{ x = 32009, y = 32928, z = 10 },
+			},
+		},
+		{ itemId = 39815, itemPos = { { x = 32728, y = 32878, z = 7 } } }, -- ?
+	},
+	-- large crystal
+	[28570] = {
+		itemId = 7807,
 		itemPos = {
-			{ x = 31973, y = 32905, z = 11 },
-			{ x = 31973, y = 32905, z = 10 },
-			{ x = 32009, y = 32928, z = 9 },
-			{ x = 32017, y = 32917, z = 10 },
-			{ x = 32017, y = 32918, z = 10 },
-			{ x = 32009, y = 32928, z = 10 },
+			{ x = 33353, y = 31271, z = 14 },
+			{ x = 33358, y = 31252, z = 14 },
+			{ x = 33358, y = 31277, z = 14 },
+			{ x = 33360, y = 31262, z = 14 },
+			{ x = 33364, y = 31243, z = 14 },
+			{ x = 33364, y = 31250, z = 14 },
+			{ x = 33365, y = 31273, z = 14 },
+			{ x = 33365, y = 31279, z = 14 },
+			{ x = 33365, y = 31280, z = 14 },
+			{ x = 33366, y = 31279, z = 14 },
+			{ x = 33367, y = 31256, z = 14 },
+			{ x = 33371, y = 31262, z = 14 },
+			{ x = 33372, y = 31243, z = 14 },
+			{ x = 33377, y = 31269, z = 14 },
+			{ x = 33378, y = 31237, z = 14 },
+			{ x = 33378, y = 31284, z = 14 },
+			{ x = 33379, y = 31240, z = 14 },
+			{ x = 33379, y = 31252, z = 14 },
+			{ x = 33380, y = 31277, z = 14 },
+			{ x = 33382, y = 31282, z = 14 },
+			{ x = 33384, y = 31252, z = 14 },
+			{ x = 33386, y = 31243, z = 14 },
+			{ x = 33386, y = 31254, z = 14 },
+			{ x = 33389, y = 31275, z = 14 },
+			{ x = 33392, y = 31256, z = 14 },
+			{ x = 33393, y = 31245, z = 14 },
+			{ x = 33394, y = 31259, z = 14 },
+			{ x = 33394, y = 31260, z = 14 },
+			{ x = 33394, y = 31269, z = 14 },
+			{ x = 33395, y = 31266, z = 14 },
+			{ x = 33395, y = 31267, z = 14 },
+			{ x = 33396, y = 31247, z = 14 },
+		},
+	},
+	-- fossilised coral
+	[28572] = {
+		itemId = 14163,
+		itemPos = {
+			{ x = 33522, y = 31194, z = 14 },
+			{ x = 33524, y = 31200, z = 14 },
+			{ x = 33525, y = 31216, z = 14 },
+			{ x = 33528, y = 31207, z = 14 },
+			{ x = 33529, y = 31209, z = 14 },
+			{ x = 33529, y = 31221, z = 14 },
+			{ x = 33531, y = 31188, z = 14 },
+			{ x = 33531, y = 31200, z = 14 },
+			{ x = 33533, y = 31194, z = 14 },
+			{ x = 33536, y = 31182, z = 14 },
+			{ x = 33536, y = 31189, z = 14 },
+			{ x = 33536, y = 31205, z = 14 },
+			{ x = 33536, y = 31219, z = 14 },
+			{ x = 33540, y = 31209, z = 14 },
+			{ x = 33546, y = 31208, z = 14 },
+			{ x = 33549, y = 31198, z = 14 },
+			{ x = 33551, y = 31204, z = 14 },
+			{ x = 33552, y = 31188, z = 14 },
+			{ x = 33557, y = 31192, z = 14 },
+			{ x = 33562, y = 31196, z = 14 },
+			{ x = 33571, y = 31189, z = 14 },
 		},
 	},
 	-- The Pits of Inferno Quest
@@ -1542,11 +2249,65 @@ ItemAction = {
 			{ x = 32858, y = 32321, z = 9 },
 		},
 	},
+	-- 4 itens diferentes com o mesmo action id
+	[29036] = {
+		{ -- ?
+			itemId = 50672,
+			itemPos = {
+				{ x = 32547, y = 32630, z = 11 },
+				{ x = 32630, y = 32559, z = 11 },
+				{ x = 32667, y = 32554, z = 11 },
+			},
+		},
+		{ -- ?
+			itemId = 50670,
+			itemPos = {
+				{ x = 32547, y = 32631, z = 11 },
+				{ x = 32630, y = 32560, z = 11 },
+				{ x = 32667, y = 32555, z = 11 },
+			},
+		},
+		{ -- ?
+			itemId = 50673,
+			itemPos = {
+				{ x = 32548, y = 32630, z = 11 },
+				{ x = 32631, y = 32559, z = 11 },
+				{ x = 32668, y = 32554, z = 11 },
+			},
+		},
+		{ -- ?
+			itemId = 50671,
+			itemPos = {
+				{ x = 32548, y = 32631, z = 11 },
+				{ x = 32631, y = 32560, z = 11 },
+				{ x = 32668, y = 32555, z = 11 },
+			},
+		},
+	},
 	-- Hunter Outfits Quest - piano
 	[33216] = {
 		itemId = 6123,
 		itemPos = {
 			{ x = 32406, y = 32794, z = 9 },
+		},
+	},
+	[34065] = {
+		itemId = 33017,
+		itemPos = {
+			{ x = 34065, y = 31716, z = 15 },
+		},
+	},
+	[34101] = {
+		itemId = 33017,
+		itemPos = {
+			{ x = 34101, y = 31677, z = 13 },
+		},
+	},
+	-- Putefractory: Teleport onClick
+	[34120] = {
+		itemId = 33017,
+		itemPos = {
+			{ x = 34120, y = 31978, z = 14 },
 		},
 	},
 	-- Ferumbras' Ascension Quest
@@ -1569,12 +2330,22 @@ ItemAction = {
 			{ x = 33629, y = 32621, z = 11 },
 		},
 	},
+	-- slime slide
+	[36489] = {
+		itemId = 21046,
+		itemPos = { { x = 33651, y = 31941, z = 7 } },
+	},
 	-- The Pits of Inferno
 	[39511] = {
 		itemId = 6433,
 		itemPos = {
 			{ x = 32739, y = 32392, z = 14 },
 		},
+	},
+	-- wall mirror
+	[39512] = {
+		itemId = 2634,
+		itemPos = { { x = 32739, y = 32392, z = 14 } },
 	},
 	[40002] = { -- The cursed crystal red crystal
 		itemId = 21572,
@@ -1611,10 +2382,10 @@ ItemAction = {
 	[40004] = {
 		itemId = 2126,
 		itemPos = {
-			{ x = 33915, y = 31635, z = 9 },
-			{ x = 33920, y = 31638, z = 9 },
-			{ x = 33909, y = 31642, z = 9 },
-			{ x = 33916, y = 31642, z = 9 },
+			{ x = 33906, y = 31628, z = 9 },
+			{ x = 33900, y = 31627, z = 9 },
+			{ x = 33898, y = 31623, z = 9 },
+			{ x = 33905, y = 31620, z = 9 },
 		},
 	},
 	-- The Rookie Guard Quest - Mission 02: Defence!
@@ -1817,7 +2588,9 @@ ItemAction = {
 		},
 	},
 	[40028] = { -- rubble
-		itemId = false,
+		-- 5709 and not false: the tile holds rubble, debris, rails and rock soil, and
+		-- ItemAction[40029] takes the rails right below
+		itemId = 5709,
 		itemPos = {
 			{ x = 32619, y = 31514, z = 9 },
 		},
@@ -1910,6 +2683,11 @@ ItemAction = {
 			{ x = 32862, y = 32495, z = 9 },
 		},
 	},
+	-- torch bearer  (was 19075)
+	[40115] = {
+		itemId = 19080,
+		itemPos = { { x = 32679, y = 31609, z = 8 } },
+	},
 	-- Rottin Wood and the Married Men Quest
 	[42501] = {
 		itemId = 12183,
@@ -1947,342 +2725,30 @@ ItemAction = {
 			{ x = 32679, y = 32210, z = 6 },
 		},
 	},
-	-- Tinder Box Quest - Event Chyllfroests
-	[50000] = {
-		itemId = false,
-		itemPos = {
-			{ x = 32056, y = 31088, z = 7 },
-			{ x = 32057, y = 31087, z = 7 },
-			{ x = 32058, y = 31086, z = 7 },
-			{ x = 32059, y = 31085, z = 7 },
-			{ x = 32060, y = 31084, z = 7 },
-			{ x = 32061, y = 31083, z = 7 },
-			{ x = 32060, y = 31083, z = 7 },
-			{ x = 32059, y = 31084, z = 7 },
-			{ x = 32058, y = 31085, z = 7 },
-			{ x = 32057, y = 31086, z = 7 },
-			{ x = 32056, y = 31087, z = 7 },
-		},
+	-- slime slide
+	[42626] = {
+		itemId = 21046,
+		itemPos = { { x = 33492, y = 31985, z = 7 } },
 	},
-	-- The Pits of Inferno
-	[50082] = {
-		itemId = 2576,
-		itemPos = {
-			{ x = 32745, y = 32383, z = 15 },
-		},
+	-- slime slide
+	[42627] = {
+		itemId = 21048,
+		itemPos = { { x = 33538, y = 32014, z = 6 } },
 	},
-	[50083] = {
-		itemId = 2576,
-		itemPos = {
-			{ x = 32745, y = 32392, z = 15 },
-		},
+	-- slime slide
+	[42628] = {
+		itemId = 21046,
+		itemPos = { { x = 33669, y = 31887, z = 5 } },
 	},
-	[50087] = {
-		itemId = 1949,
-		itemPos = {
-			{ x = 32732, y = 32264, z = 15 },
-		},
+	-- slime slide
+	[42630] = {
+		itemId = 21046,
+		itemPos = { { x = 33487, y = 31982, z = 7 } },
 	},
-	-- The Hidden City of Beregar Quest
-	[50090] = {
-		itemId = 6298,
-		itemPos = {
-			{ x = 32566, y = 31338, z = 9 },
-		},
-	},
-	[50091] = {
-		itemId = 7739,
-		itemPos = {
-			{ x = 32607, y = 31501, z = 13 },
-		},
-	},
-	[50092] = {
-		itemId = 1949,
-		itemPos = {
-			{ x = 32611, y = 31497, z = 14 },
-		},
-	},
-	[50093] = {
-		itemId = 1949,
-		itemPos = {
-			{ x = 32611, y = 31497, z = 15 },
-		},
-	},
-	[50127] = {
-		itemId = 8425,
-		itemPos = {
-			{ x = 32551, y = 31379, z = 15 },
-		},
-	},
-	-- Dreamers Challenge Quest
-	[50149] = {
-		itemId = 1949,
-		itemPos = {
-			{ x = 32840, y = 32226, z = 14 },
-		},
-	},
-	[50150] = {
-		itemId = 1949,
-		itemPos = {
-			{ x = 32788, y = 32227, z = 14 },
-		},
-	},
-	-- The Great Dragon Hunt Quest
-	[50808] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33010, y = 32638, z = 5 },
-			{ x = 33039, y = 32652, z = 6 },
-			{ x = 33010, y = 32687, z = 7 },
-			{ x = 33037, y = 32662, z = 7 },
-			{ x = 33078, y = 32657, z = 6 },
-			{ x = 32994, y = 32625, z = 6 },
-		},
-	},
-	-- Ferumbras' Ascension Quest
-	[53803] = {
-		itemId = 22872,
-		itemPos = {
-			{ x = 33388, y = 32358, z = 11 },
-		},
-	},
-	[53805] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33421, y = 32383, z = 12 },
-			{ x = 33422, y = 32383, z = 12 },
-			{ x = 33422, y = 32384, z = 12 },
-			{ x = 33421, y = 32384, z = 12 },
-		},
-	},
-	[53812] = {
-		itemId = 8646,
-		itemPos = {
-			{ x = 33626, y = 32621, z = 13 },
-		},
-	},
-	[53813] = {
-		itemId = 8647,
-		itemPos = {
-			{ x = 33635, y = 32682, z = 13 },
-		},
-	},
-	[53814] = {
-		itemId = 8649,
-		itemPos = {
-			{ x = 33660, y = 32627, z = 13 },
-		},
-	},
-	-- Roshamuul Quest
-	[55000] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33560, y = 32525, z = 7 },
-			{ x = 33554, y = 32545, z = 7 },
-			{ x = 33573, y = 32547, z = 7 },
-			{ x = 33543, y = 32562, z = 7 },
-			{ x = 33579, y = 32567, z = 7 },
-		},
-	},
-	-- Spike Tasks
-	[56421] = {
-		itemId = 1949,
-		itemPos = {
-			{ x = 32242, y = 32611, z = 11 },
-		},
-	},
-	-- Dangerous Depths Quest
-	[57231] = {
-		itemId = 7062,
-		itemPos = {
-			{ x = 33773, y = 32249, z = 14 },
-			{ x = 33774, y = 32249, z = 14 },
-		},
-	},
-	[57240] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33979, y = 32209, z = 14 },
-			{ x = 33979, y = 32208, z = 14 },
-			{ x = 33933, y = 32163, z = 14 },
-			{ x = 33925, y = 32217, z = 14 },
-			{ x = 33979, y = 32207, z = 14 },
-			{ x = 33979, y = 32206, z = 14 },
-			{ x = 33925, y = 32215, z = 14 },
-			{ x = 33925, y = 32216, z = 14 },
-			{ x = 33924, y = 32217, z = 14 },
-			{ x = 33924, y = 32218, z = 14 },
-			{ x = 33932, y = 32162, z = 14 },
-			{ x = 33933, y = 32162, z = 14 },
-		},
-	},
-	[57241] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33990, y = 32195, z = 14 },
-			{ x = 33983, y = 32207, z = 14 },
-			{ x = 33983, y = 32206, z = 14 },
-			{ x = 33983, y = 32208, z = 14 },
-			{ x = 33992, y = 32195, z = 14 },
-			{ x = 33983, y = 32209, z = 14 },
-			{ x = 33991, y = 32195, z = 14 },
-		},
-	},
-	[57242] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33863, y = 32177, z = 14 },
-			{ x = 33863, y = 32178, z = 14 },
-			{ x = 33863, y = 32179, z = 14 },
-			{ x = 33863, y = 32181, z = 14 },
-			{ x = 33863, y = 32182, z = 14 },
-			{ x = 33863, y = 32180, z = 14 },
-			{ x = 33863, y = 32175, z = 14 },
-			{ x = 33863, y = 32176, z = 14 },
-		},
-	},
-	[57300] = {
-		itemId = false,
-		itemPos = {
-			{ x = 34033, y = 32000, z = 14 },
-			{ x = 33982, y = 31982, z = 14 },
-			{ x = 34002, y = 31986, z = 14 },
-		},
-	},
-	[57301] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33993, y = 32264, z = 14 },
-			{ x = 33947, y = 32258, z = 14 },
-			{ x = 34027, y = 32245, z = 14 },
-		},
-	},
-	[57302] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33927, y = 32338, z = 14 },
-			{ x = 33898, y = 32338, z = 14 },
-			{ x = 33958, y = 32338, z = 14 },
-		},
-	},
-	[57350] = {
-		itemId = 27505,
-		itemPos = { x = 33214, y = 32280, z = 15 },
-	},
-	[57351] = {
-		itemId = 27503,
-		itemPos = { x = 33358, y = 32267, z = 15 },
-	},
-	[57352] = {
-		itemId = 27503,
-		itemPos = { x = 33275, y = 32310, z = 15 },
-	},
-	[57353] = {
-		itemId = 27505,
-		itemPos = { x = 33302, y = 32353, z = 15 },
-	},
-	[57354] = {
-		itemId = 27507,
-		itemPos = { x = 33330, y = 32290, z = 15 },
-	},
-	[57355] = {
-		itemId = 27507,
-		itemPos = { x = 33224, y = 32361, z = 15 },
-	},
-	[57356] = {
-		itemId = 27503,
-		itemPos = { x = 33212, y = 32147, z = 15 },
-	},
-	[57357] = {
-		itemId = 27505,
-		itemPos = { x = 33300, y = 32134, z = 15 },
-	},
-	[57358] = {
-		itemId = 27503,
-		itemPos = { x = 33277, y = 32172, z = 15 },
-	},
-	[57359] = {
-		itemId = 27505,
-		itemPos = { x = 33246, y = 32162, z = 15 },
-	},
-	[57360] = {
-		itemId = 27507,
-		itemPos = { x = 33222, y = 32182, z = 15 },
-	},
-	[57361] = {
-		itemId = 27507,
-		itemPos = { x = 33338, y = 32164, z = 15 },
-	},
-	[57362] = {
-		itemId = 27503,
-		itemPos = { x = 33428, y = 32181, z = 15 },
-	},
-	[57363] = {
-		itemId = 27505,
-		itemPos = { x = 33539, y = 32213, z = 15 },
-	},
-	[57364] = {
-		itemId = 27503,
-		itemPos = { x = 33501, y = 32255, z = 15 },
-	},
-	[57365] = {
-		itemId = 27505,
-		itemPos = { x = 33493, y = 32216, z = 15 },
-	},
-	[57366] = {
-		itemId = 27507,
-		itemPos = { x = 33490, y = 32180, z = 15 },
-	},
-	[57367] = {
-		itemId = 27507,
-		itemPos = { x = 33454, y = 32215, z = 15 },
-	},
-	-- The Ice Islands Quest, Nibelor 1: Breaking the Ice
-	[60000] = {
-		itemId = 7185,
-		itemPos = {
-			{ x = 32399, y = 31051, z = 7 },
-			{ x = 32394, y = 31062, z = 7 },
-			{ x = 32393, y = 31072, z = 7 },
-		},
-	},
-	-- Putefractory: Lever
-	[9804] = {
-		itemId = 8911,
-		itemPos = {
-			{ x = 32979, y = 32333, z = 15 },
-		},
-	},
-	-- Putefractory: Teleport onClick
-	[34120] = {
-		itemId = 33017,
-		itemPos = {
-			{ x = 34120, y = 31978, z = 14 },
-		},
-	},
-	[34101] = {
-		itemId = 33017,
-		itemPos = {
-			{ x = 34101, y = 31677, z = 13 },
-		},
-	},
-	[34065] = {
-		itemId = 33017,
-		itemPos = {
-			{ x = 34065, y = 31716, z = 15 },
-		},
-	},
-	-- Putrefactory: Reservoirs
-	[47953] = {
-		itemId = false,
-		itemPos = {
-			{ x = 34081, y = 31704, z = 14 },
-			{ x = 34013, y = 31744, z = 14 },
-			{ x = 34044, y = 31712, z = 14 },
-			{ x = 34051, y = 31706, z = 15 },
-			{ x = 34060, y = 31735, z = 15 },
-			{ x = 34095, y = 31684, z = 15 },
-		},
+	-- slime slide
+	[42631] = {
+		itemId = 21046,
+		itemPos = { { x = 33637, y = 31891, z = 6 } },
 	},
 	-- Putrefactory: Ichgahal Room
 	[47949] = {
@@ -2596,6 +3062,722 @@ ItemAction = {
 			{ x = 33016, y = 32342, z = 15 },
 		},
 	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- Putrefactory: Reservoirs
+	[47953] = {
+		itemId = false,
+		itemPos = {
+			{ x = 34081, y = 31704, z = 14 },
+			{ x = 34013, y = 31744, z = 14 },
+			{ x = 34044, y = 31712, z = 14 },
+			{ x = 34051, y = 31706, z = 15 },
+			{ x = 34060, y = 31735, z = 15 },
+			{ x = 34095, y = 31684, z = 15 },
+		},
+	},
+	-- 2 itens diferentes com o mesmo action id
+	[48003] = {
+		{ itemId = 51287, itemPos = { { x = 32952, y = 31417, z = 6 } } }, -- ?
+		{ itemId = 44756, itemPos = { { x = 33265, y = 31406, z = 15 } } }, -- ?
+	},
+	-- Tinder Box Quest - Event Chyllfroests
+	[50000] = {
+		itemId = false,
+		itemPos = {
+			{ x = 32056, y = 31088, z = 7 },
+			{ x = 32057, y = 31087, z = 7 },
+			{ x = 32058, y = 31086, z = 7 },
+			{ x = 32059, y = 31085, z = 7 },
+			{ x = 32060, y = 31084, z = 7 },
+			{ x = 32061, y = 31083, z = 7 },
+			{ x = 32060, y = 31083, z = 7 },
+			{ x = 32059, y = 31084, z = 7 },
+			{ x = 32058, y = 31085, z = 7 },
+			{ x = 32057, y = 31086, z = 7 },
+			{ x = 32056, y = 31087, z = 7 },
+		},
+	},
+	-- ornate canopic jar
+	[50006] = {
+		itemId = 12511,
+		itemPos = { { x = 32991, y = 32721, z = 8 } },
+	},
+	-- ornate canopic jar
+	[50007] = {
+		itemId = 12511,
+		itemPos = { { x = 32940, y = 32778, z = 9 } },
+	},
+	-- ornate canopic jar
+	[50008] = {
+		itemId = 12511,
+		itemPos = { { x = 32985, y = 32772, z = 10 } },
+	},
+	-- ornate canopic jar
+	[50009] = {
+		itemId = 12511,
+		itemPos = { { x = 32936, y = 32752, z = 11 } },
+	},
+	-- ornate canopic jar
+	[50010] = {
+		itemId = 12511,
+		itemPos = { { x = 32979, y = 32737, z = 12 } },
+	},
+	-- The Pits of Inferno
+	[50082] = {
+		itemId = 2576,
+		itemPos = {
+			{ x = 32745, y = 32383, z = 15 },
+		},
+	},
+	[50083] = {
+		itemId = 2576,
+		itemPos = {
+			{ x = 32745, y = 32392, z = 15 },
+		},
+	},
+	[50087] = {
+		itemId = 1949,
+		itemPos = {
+			{ x = 32732, y = 32264, z = 15 },
+		},
+	},
+	-- The Hidden City of Beregar Quest
+	[50090] = {
+		itemId = 6298,
+		itemPos = {
+			{ x = 32566, y = 31338, z = 9 },
+		},
+	},
+	[50091] = {
+		itemId = 7739,
+		itemPos = {
+			{ x = 32607, y = 31501, z = 13 },
+		},
+	},
+	[50092] = {
+		itemId = 1949,
+		itemPos = {
+			{ x = 32611, y = 31497, z = 14 },
+		},
+	},
+	[50093] = {
+		itemId = 1949,
+		itemPos = {
+			{ x = 32611, y = 31497, z = 15 },
+		},
+	},
+	[50127] = {
+		itemId = 8425,
+		itemPos = {
+			{ x = 32551, y = 31379, z = 15 },
+		},
+	},
+	-- ore wagon
+	[50136] = {
+		itemId = 7132,
+		itemPos = { { x = 32618, y = 31944, z = 7 } },
+	},
+	-- ore wagon
+	[50137] = {
+		itemId = 7131,
+		itemPos = { { x = 32553, y = 31931, z = 7 } },
+	},
+	-- ore wagon
+	[50138] = {
+		itemId = 7132,
+		itemPos = { { x = 32601, y = 31875, z = 7 } },
+	},
+	-- ore wagon
+	[50139] = {
+		itemId = 7131,
+		itemPos = { { x = 32577, y = 31928, z = 0 } },
+	},
+	-- ore wagon
+	[50140] = {
+		itemId = 7131,
+		itemPos = { { x = 32574, y = 31978, z = 9 } },
+	},
+	-- ore wagon
+	[50141] = {
+		itemId = 7131,
+		itemPos = { { x = 32574, y = 31975, z = 9 } },
+	},
+	-- ore wagon
+	[50142] = {
+		itemId = 7131,
+		itemPos = { { x = 32574, y = 31972, z = 9 } },
+	},
+	-- ore wagon
+	[50143] = {
+		itemId = 7131,
+		itemPos = { { x = 32574, y = 31969, z = 9 } },
+	},
+	-- ore wagon
+	[50144] = {
+		itemId = 7132,
+		itemPos = { { x = 32624, y = 31920, z = 11 } },
+	},
+	-- ore wagon
+	[50145] = {
+		itemId = 7132,
+		itemPos = { { x = 32627, y = 31920, z = 11 } },
+	},
+	-- ore wagon
+	[50146] = {
+		itemId = 7132,
+		itemPos = { { x = 32629, y = 31920, z = 11 } },
+	},
+	-- ore wagon
+	[50147] = {
+		itemId = 7132,
+		itemPos = { { x = 32632, y = 31920, z = 11 } },
+	},
+	-- ore wagon
+	[50148] = {
+		itemId = 7132,
+		itemPos = { { x = 32672, y = 31974, z = 15 } },
+	},
+	-- Dreamers Challenge Quest
+	[50149] = {
+		{
+			itemId = 1949,
+			itemPos = {
+				{ x = 32840, y = 32226, z = 14 },
+			},
+		},
+		{ itemId = 7132, itemPos = { { x = 32675, y = 31974, z = 15 } } }, -- ore wagon
+	},
+	[50150] = {
+		{
+			itemId = 1949,
+			itemPos = {
+				{ x = 32788, y = 32227, z = 14 },
+			},
+		},
+		{ itemId = 7132, itemPos = { { x = 32677, y = 31974, z = 15 } } }, -- ore wagon
+	},
+	-- ore wagon
+	[50151] = {
+		itemId = 7132,
+		itemPos = { { x = 32680, y = 31974, z = 15 } },
+	},
+	-- ore wagon
+	[50152] = {
+		itemId = 7132,
+		itemPos = { { x = 32653, y = 31901, z = 8 } },
+	},
+	-- ore wagon
+	[50153] = {
+		itemId = 7132,
+		itemPos = { { x = 32656, y = 31901, z = 8 } },
+	},
+	-- ore wagon
+	[50154] = {
+		itemId = 7132,
+		itemPos = { { x = 32658, y = 31901, z = 8 } },
+	},
+	-- ore wagon
+	[50155] = {
+		itemId = 7132,
+		itemPos = { { x = 32661, y = 31901, z = 8 } },
+	},
+	-- ore wagon
+	[50156] = {
+		itemId = 7131,
+		itemPos = { { x = 32604, y = 31909, z = 9 } },
+	},
+	-- ore wagon
+	[50157] = {
+		itemId = 7131,
+		itemPos = { { x = 32604, y = 31906, z = 9 } },
+	},
+	-- ore wagon
+	[50158] = {
+		itemId = 7131,
+		itemPos = { { x = 32604, y = 31904, z = 9 } },
+	},
+	-- ore wagon
+	[50159] = {
+		itemId = 7131,
+		itemPos = { { x = 32604, y = 31901, z = 9 } },
+	},
+	-- strange whirl
+	[50220] = {
+		itemId = 8193,
+		itemPos = { { x = 32950, y = 31552, z = 3 } },
+	},
+	-- strange whirl
+	[50221] = {
+		itemId = 8193,
+		itemPos = { { x = 32939, y = 31558, z = 1 } },
+	},
+	-- strange whirl
+	[50222] = {
+		itemId = 8193,
+		itemPos = { { x = 32941, y = 31578, z = 0 } },
+	},
+	-- strange whirl
+	[50223] = {
+		itemId = 8193,
+		itemPos = { { x = 32952, y = 31567, z = 1 } },
+	},
+	-- strange whirl
+	[50224] = {
+		itemId = 8193,
+		itemPos = { { x = 32962, y = 31551, z = 1 } },
+	},
+	-- strange whirl
+	[50225] = {
+		itemId = 8193,
+		itemPos = { { x = 32960, y = 31541, z = 4 } },
+	},
+	-- strange whirl
+	[50226] = {
+		itemId = 8193,
+		itemPos = { { x = 32960, y = 31560, z = 1 } },
+	},
+	-- strange whirl
+	[50227] = {
+		itemId = 8193,
+		itemPos = { { x = 32951, y = 31575, z = 1 } },
+	},
+	-- strange whirl
+	[50228] = {
+		itemId = 8193,
+		itemPos = { { x = 32937, y = 31573, z = 0 } },
+	},
+	-- strange whirl
+	[50229] = {
+		itemId = 8193,
+		itemPos = { { x = 32944, y = 31553, z = 1 } },
+	},
+	-- ore wagon
+	[50230] = {
+		itemId = 7132,
+		itemPos = { { x = 32615, y = 31899, z = 9 } },
+	},
+	-- ore wagon
+	[50231] = {
+		itemId = 7132,
+		itemPos = { { x = 32617, y = 31899, z = 9 } },
+	},
+	-- ore wagon
+	[50232] = {
+		itemId = 7132,
+		itemPos = { { x = 32619, y = 31899, z = 9 } },
+	},
+	-- ore wagon
+	[50233] = {
+		itemId = 7132,
+		itemPos = { { x = 32621, y = 31899, z = 9 } },
+	},
+	-- bridge
+	[50241] = {
+		itemId = 10904,
+		itemPos = {
+			{ x = 32063, y = 32192, z = 7 },
+			{ x = 32063, y = 32193, z = 7 },
+		},
+	},
+	-- slime slide
+	[50389] = {
+		itemId = 21047,
+		itemPos = { { x = 33558, y = 31970, z = 12 } },
+	},
+	-- dead explorer
+	[50806] = {
+		itemId = 21412,
+		itemPos = { { x = 33007, y = 32607, z = 8 } },
+	},
+	-- The Great Dragon Hunt Quest
+	[50808] = {
+		itemId = false,
+		itemPos = {
+			{ x = 33010, y = 32638, z = 5 },
+			{ x = 33039, y = 32652, z = 6 },
+			{ x = 33010, y = 32687, z = 7 },
+			{ x = 33037, y = 32662, z = 7 },
+			{ x = 33078, y = 32657, z = 6 },
+			{ x = 32994, y = 32625, z = 6 },
+		},
+	},
+	-- drawers
+	[51400] = {
+		itemId = 2434,
+		itemPos = {
+			{ x = 32309, y = 32209, z = 8 },
+			{ x = 32309, y = 32211, z = 8 },
+			{ x = 32309, y = 32213, z = 8 },
+		},
+	},
+	-- Ferumbras' Ascension Quest
+	[53803] = {
+		itemId = 22872,
+		itemPos = {
+			{ x = 33388, y = 32358, z = 11 },
+		},
+	},
+	[53805] = {
+		itemId = false,
+		itemPos = {
+			{ x = 33421, y = 32383, z = 12 },
+			{ x = 33422, y = 32383, z = 12 },
+			{ x = 33422, y = 32384, z = 12 },
+			{ x = 33421, y = 32384, z = 12 },
+		},
+	},
+	[53812] = {
+		itemId = 8646,
+		itemPos = {
+			{ x = 33626, y = 32621, z = 13 },
+		},
+	},
+	[53813] = {
+		itemId = 8647,
+		itemPos = {
+			{ x = 33635, y = 32682, z = 13 },
+		},
+	},
+	[53814] = {
+		itemId = 8649,
+		itemPos = {
+			{ x = 33660, y = 32627, z = 13 },
+		},
+	},
+	-- stone wall
+	[54386] = {
+		itemId = 22253,
+		itemPos = { { x = 33482, y = 32774, z = 11 } },
+	},
+	-- coal basin
+	[54387] = {
+		itemId = 22875,
+		itemPos = {
+			{ x = 33487, y = 32788, z = 11 },
+			{ x = 33487, y = 32789, z = 11 },
+			{ x = 33487, y = 32792, z = 11 },
+			{ x = 33487, y = 32793, z = 11 },
+			{ x = 33493, y = 32788, z = 11 },
+			{ x = 33493, y = 32789, z = 11 },
+			{ x = 33493, y = 32792, z = 11 },
+			{ x = 33493, y = 32793, z = 11 },
+		},
+	},
+	-- stone wall
+	[54388] = {
+		itemId = 22253,
+		itemPos = { { x = 33493, y = 32795, z = 11 } },
+	},
+	-- stone wall
+	[54389] = {
+		itemId = 22252,
+		itemPos = { { x = 33492, y = 32783, z = 10 } },
+	},
+	-- Roshamuul Quest
+	[55000] = {
+		itemId = false,
+		itemPos = {
+			{ x = 33560, y = 32525, z = 7 },
+			{ x = 33554, y = 32545, z = 7 },
+			{ x = 33573, y = 32547, z = 7 },
+			{ x = 33543, y = 32562, z = 7 },
+			{ x = 33579, y = 32567, z = 7 },
+		},
+	},
+	-- dead dragon
+	[55023] = {
+		itemId = 4025,
+		itemPos = { { x = 32827, y = 31493, z = 6 } },
+	},
+	-- Spike Tasks
+	[56421] = {
+		itemId = 1949,
+		itemPos = {
+			{ x = 32242, y = 32611, z = 11 },
+		},
+	},
+	-- Dangerous Depths Quest
+	[57231] = {
+		itemId = 7062,
+		itemPos = {
+			{ x = 33773, y = 32249, z = 14 },
+			{ x = 33774, y = 32249, z = 14 },
+		},
+	},
+	[57240] = {
+		itemId = false,
+		itemPos = {
+			{ x = 33979, y = 32209, z = 14 },
+			{ x = 33979, y = 32208, z = 14 },
+			{ x = 33933, y = 32163, z = 14 },
+			{ x = 33925, y = 32217, z = 14 },
+			{ x = 33979, y = 32207, z = 14 },
+			{ x = 33979, y = 32206, z = 14 },
+			{ x = 33925, y = 32215, z = 14 },
+			{ x = 33925, y = 32216, z = 14 },
+			{ x = 33924, y = 32217, z = 14 },
+			{ x = 33924, y = 32218, z = 14 },
+			{ x = 33932, y = 32162, z = 14 },
+			{ x = 33933, y = 32162, z = 14 },
+		},
+	},
+	[57241] = {
+		itemId = false,
+		itemPos = {
+			{ x = 33990, y = 32195, z = 14 },
+			{ x = 33983, y = 32207, z = 14 },
+			{ x = 33983, y = 32206, z = 14 },
+			{ x = 33983, y = 32208, z = 14 },
+			{ x = 33992, y = 32195, z = 14 },
+			{ x = 33983, y = 32209, z = 14 },
+			{ x = 33991, y = 32195, z = 14 },
+		},
+	},
+	[57242] = {
+		itemId = false,
+		itemPos = {
+			{ x = 33863, y = 32177, z = 14 },
+			{ x = 33863, y = 32178, z = 14 },
+			{ x = 33863, y = 32179, z = 14 },
+			{ x = 33863, y = 32181, z = 14 },
+			{ x = 33863, y = 32182, z = 14 },
+			{ x = 33863, y = 32180, z = 14 },
+			{ x = 33863, y = 32175, z = 14 },
+			{ x = 33863, y = 32176, z = 14 },
+		},
+	},
+	[57300] = {
+		itemId = false,
+		itemPos = {
+			{ x = 34033, y = 32000, z = 14 },
+			{ x = 33982, y = 31982, z = 14 },
+			{ x = 34002, y = 31986, z = 14 },
+		},
+	},
+	[57301] = {
+		itemId = false,
+		itemPos = {
+			{ x = 33993, y = 32264, z = 14 },
+			{ x = 33947, y = 32258, z = 14 },
+			{ x = 34027, y = 32245, z = 14 },
+		},
+	},
+	[57302] = {
+		itemId = false,
+		itemPos = {
+			{ x = 33927, y = 32338, z = 14 },
+			{ x = 33898, y = 32338, z = 14 },
+			{ x = 33958, y = 32338, z = 14 },
+		},
+	},
+	[57350] = {
+		itemId = 27505,
+		itemPos = { x = 33214, y = 32280, z = 15 },
+	},
+	[57351] = {
+		itemId = 27503,
+		itemPos = { x = 33358, y = 32267, z = 15 },
+	},
+	[57352] = {
+		itemId = 27503,
+		itemPos = { x = 33275, y = 32310, z = 15 },
+	},
+	[57353] = {
+		itemId = 27505,
+		itemPos = { x = 33302, y = 32353, z = 15 },
+	},
+	[57354] = {
+		itemId = 27507,
+		itemPos = { x = 33330, y = 32290, z = 15 },
+	},
+	[57355] = {
+		itemId = 27507,
+		itemPos = { x = 33224, y = 32361, z = 15 },
+	},
+	[57356] = {
+		itemId = 27503,
+		itemPos = { x = 33212, y = 32147, z = 15 },
+	},
+	[57357] = {
+		itemId = 27505,
+		itemPos = { x = 33300, y = 32134, z = 15 },
+	},
+	[57358] = {
+		itemId = 27503,
+		itemPos = { x = 33277, y = 32172, z = 15 },
+	},
+	[57359] = {
+		itemId = 27505,
+		itemPos = { x = 33246, y = 32162, z = 15 },
+	},
+	[57360] = {
+		itemId = 27507,
+		itemPos = { x = 33222, y = 32182, z = 15 },
+	},
+	[57361] = {
+		itemId = 27507,
+		itemPos = { x = 33338, y = 32164, z = 15 },
+	},
+	[57362] = {
+		itemId = 27503,
+		itemPos = { x = 33428, y = 32181, z = 15 },
+	},
+	[57363] = {
+		itemId = 27505,
+		itemPos = { x = 33539, y = 32213, z = 15 },
+	},
+	[57364] = {
+		itemId = 27503,
+		itemPos = { x = 33501, y = 32255, z = 15 },
+	},
+	[57365] = {
+		itemId = 27505,
+		itemPos = { x = 33493, y = 32216, z = 15 },
+	},
+	[57366] = {
+		itemId = 27507,
+		itemPos = { x = 33490, y = 32180, z = 15 },
+	},
+	[57367] = {
+		itemId = 27507,
+		itemPos = { x = 33454, y = 32215, z = 15 },
+	},
+	-- 3 itens diferentes com o mesmo action id
+	[57745] = {
+		{ itemId = 14133, itemPos = { { x = 33510, y = 31333, z = 8 } } }, -- stairs
+		{ itemId = 14134, itemPos = { { x = 33511, y = 31333, z = 8 } } }, -- stairs
+		{ itemId = 14135, itemPos = { { x = 33512, y = 31333, z = 8 } } }, -- stairs
+	},
+	-- The Ice Islands Quest, Nibelor 1: Breaking the Ice
+	[60000] = {
+		itemId = 7185,
+		itemPos = {
+			{ x = 32399, y = 31051, z = 7 },
+			{ x = 32394, y = 31062, z = 7 },
+			{ x = 32393, y = 31072, z = 7 },
+		},
+	},
+	-- something sparkling
+	[62221] = {
+		itemId = 1723,
+		itemPos = { { x = 33338, y = 32125, z = 7 } },
+	},
+	-- something sparkling
+	[62222] = {
+		itemId = 1722,
+		itemPos = { { x = 33339, y = 32125, z = 7 } },
+	},
+	-- something sparkling
+	[62223] = {
+		itemId = 1723,
+		itemPos = { { x = 33574, y = 32222, z = 7 } },
+	},
+	-- something sparkling
+	[62224] = {
+		itemId = 1722,
+		itemPos = { { x = 33575, y = 32222, z = 7 } },
+	},
+	-- 4 itens diferentes com o mesmo action id
+	[62378] = {
+		{ itemId = 2084, itemPos = { { x = 32887, y = 32633, z = 11 } } }, -- giant lizard head
+		{ itemId = 2086, itemPos = { { x = 32887, y = 32634, z = 11 } } }, -- giant lizard head
+		{ itemId = 2085, itemPos = { { x = 32888, y = 32633, z = 11 } } }, -- giant lizard head
+		{ itemId = 2087, itemPos = { { x = 32888, y = 32634, z = 11 } } }, -- giant lizard head
+	},
+	-- ruined stairs
+	[64103] = {
+		itemId = 20142,
+		itemPos = {
+			{ x = 33472, y = 32645, z = 9 },
+			{ x = 33473, y = 32645, z = 9 },
+		},
+	},
+	-- ruined stairs
+	[64104] = {
+		itemId = 20143,
+		itemPos = { { x = 33474, y = 32641, z = 10 } },
+	},
+	-- ruined stairs
+	[64105] = {
+		itemId = 20142,
+		itemPos = { { x = 33456, y = 32579, z = 8 } },
+	},
+	-- ruined stairs
+	[64106] = {
+		itemId = 20143,
+		itemPos = { { x = 33462, y = 32585, z = 8 } },
+	},
+	-- ruined stairs
+	[64107] = {
+		itemId = 20142,
+		itemPos = { { x = 33419, y = 32588, z = 10 } },
+	},
+	-- ruined stairs
+	[64108] = {
+		itemId = 20142,
+		itemPos = {
+			{ x = 33419, y = 32602, z = 10 },
+			{ x = 33420, y = 32602, z = 10 },
+		},
+	},
+	-- ruined stairs
+	[64109] = {
+		itemId = 20143,
+		itemPos = { { x = 33430, y = 32599, z = 10 } },
+	},
+	-- ruined stairs
+	[64121] = {
+		itemId = 20143,
+		itemPos = {
+			{ x = 33465, y = 32636, z = 10 },
+		},
+	},
+	-- ruined stairs
+	[64122] = {
+		itemId = 20142,
+		itemPos = { { x = 33416, y = 32625, z = 10 } },
+	},
+	-- ruined stairs
+	[64123] = {
+		itemId = 20143,
+		itemPos = { { x = 33434, y = 32631, z = 8 } },
+	},
+	-- ruined stairs
+	[64124] = {
+		itemId = 20142,
+		itemPos = { { x = 33429, y = 32633, z = 8 } },
+	},
+	-- ruined stairs
+	[64125] = {
+		itemId = 20142,
+		itemPos = { { x = 33483, y = 32628, z = 8 } },
+	},
+	-- ruined stairs
+	[64126] = {
+		itemId = 20142,
+		itemPos = { { x = 33478, y = 32622, z = 11 } },
+	},
+	-- ruined stairs
+	[64127] = {
+		itemId = 20142,
+		itemPos = { { x = 33453, y = 32628, z = 8 } },
+	},
+	-- ruined stairs
+	[64128] = {
+		itemId = 20142,
+		itemPos = { { x = 33420, y = 32582, z = 9 } },
+	},
+	-- closed door
+	[65535] = {
+		itemId = 9567,
+		itemPos = {
+			{ x = 33817, y = 31651, z = 9 },
+			{ x = 33824, y = 31596, z = 9 },
+		},
+	},
 }
 
 ItemUnique = {
@@ -2609,10 +3791,75 @@ ItemUnique = {
 		itemId = 8821,
 		itemPos = { x = 32682, y = 31242, z = 6 },
 	},
+	-- mechanism
+	[1018] = {
+		itemId = 8618,
+		itemPos = { x = 32775, y = 31118, z = 7 },
+	},
+	-- mechanism
+	[1019] = {
+		itemId = 8618,
+		itemPos = { x = 32778, y = 31118, z = 7 },
+	},
 	-- Ferumbras' Ascension Quest
 	[1035] = {
 		itemId = 4073,
 		itemPos = { x = 33388, y = 31409, z = 14 },
+	},
+	-- ore wagon
+	[1042] = {
+		itemId = 7132,
+		itemPos = { x = 32559, y = 31851, z = 7 },
+	},
+	-- ore wagon
+	[1043] = {
+		itemId = 7132,
+		itemPos = { x = 32527, y = 31840, z = 9 },
+	},
+	-- ore wagon
+	[1044] = {
+		itemId = 7131,
+		itemPos = { x = 32515, y = 31828, z = 9 },
+	},
+	-- ore wagon
+	[1045] = {
+		itemId = 7131,
+		itemPos = { x = 32519, y = 31825, z = 9 },
+	},
+	-- ore wagon
+	[1046] = {
+		itemId = 7131,
+		itemPos = { x = 32501, y = 31827, z = 9 },
+	},
+	-- ore wagon
+	[1047] = {
+		itemId = 7132,
+		itemPos = { x = 32494, y = 31834, z = 9 },
+	},
+	-- ore wagon
+	[1048] = {
+		itemId = 7132,
+		itemPos = { x = 32488, y = 31812, z = 9 },
+	},
+	-- ore wagon
+	[1049] = {
+		itemId = 7131,
+		itemPos = { x = 32499, y = 31806, z = 9 },
+	},
+	-- ore wagon
+	[1050] = {
+		itemId = 7131,
+		itemPos = { x = 32511, y = 31805, z = 9 },
+	},
+	-- ore wagon
+	[1051] = {
+		itemId = 7132,
+		itemPos = { x = 32516, y = 31808, z = 9 },
+	},
+	-- large crystal
+	[1052] = {
+		itemId = 7807,
+		itemPos = { x = 32982, y = 31431, z = 1 },
 	},
 	-- The Ice Islands Quest
 	[1061] = {
@@ -2624,18 +3871,108 @@ ItemUnique = {
 		itemId = 3657,
 		itemPos = { x = 33608, y = 31022, z = 14 },
 	},
+	-- unknown item
+	[1073] = {
+		itemId = 14072,
+		itemPos = { x = 32881, y = 32435, z = 8 },
+	},
+	-- broken idol
+	[1075] = {
+		itemId = 15895,
+		itemPos = { x = 33602, y = 31439, z = 13 },
+	},
+	-- broken idol
+	[1076] = {
+		itemId = 15895,
+		itemPos = { x = 33587, y = 31461, z = 14 },
+	},
+	-- broken idol
+	[1077] = {
+		itemId = 15895,
+		itemPos = { x = 33588, y = 31461, z = 14 },
+	},
+	-- broken idol
+	[1078] = {
+		itemId = 15895,
+		itemPos = { x = 33549, y = 31459, z = 14 },
+	},
+	-- broken idol
+	[1079] = {
+		itemId = 15895,
+		itemPos = { x = 33574, y = 31441, z = 15 },
+	},
+	-- broken idol
+	[1081] = {
+		itemId = 15895,
+		itemPos = { x = 33612, y = 31465, z = 15 },
+	},
+	-- broken idol
+	[1082] = {
+		itemId = 15895,
+		itemPos = { x = 33598, y = 31398, z = 14 },
+	},
+	-- bone claw
+	[1083] = {
+		itemId = 7570,
+		itemPos = { x = 33204, y = 32069, z = 8 },
+	},
+	-- empty coal basin
+	[1085] = {
+		itemId = 3514,
+		itemPos = { x = 33260, y = 32084, z = 9 },
+	},
+	-- empty coal basin
+	[1086] = {
+		itemId = 3514,
+		itemPos = { x = 33219, y = 32100, z = 9 },
+	},
+	-- empty coal basin
+	[1087] = {
+		itemId = 3514,
+		itemPos = { x = 33318, y = 32090, z = 9 },
+	},
+	-- empty coal basin
+	[1089] = {
+		itemId = 2114,
+		itemPos = { x = 33339, y = 32117, z = 10 },
+	},
+	-- skull
+	[1090] = {
+		itemId = 10876,
+		itemPos = { x = 33348, y = 32117, z = 10 },
+	},
+	-- writing desk
+	[1100] = {
+		itemId = 27878,
+		itemPos = { x = 32881, y = 32819, z = 11 },
+	},
+	-- ship's telescope
+	[1103] = {
+		itemId = 3489,
+		itemPos = { x = 32019, y = 32470, z = 7 },
+	},
+	-- raft
+	[1104] = {
+		itemId = 7272,
+		itemPos = { x = 32034, y = 32456, z = 7 },
+	},
+	-- ramp
+	[1106] = {
+		itemId = 14164,
+		itemPos = { x = 33509, y = 31189, z = 14 },
+	},
 	-- The Pits of Inferno Quest
 	[2000] = {
 		itemId = 599,
 		itemPos = { x = 32791, y = 32328, z = 10 },
 	},
-	[2002] = {
-		itemId = 431,
-		itemPos = { x = 32906, y = 32287, z = 12 },
-	},
 	[2001] = {
 		itemId = 599,
 		itemPos = { x = 32791, y = 32330, z = 10 },
+	},
+	[2002] = {
+		itemId = 431,
+		itemPos = { x = 32906, y = 32287, z = 12 },
 	},
 	[2080] = {
 		itemId = 5915,
@@ -2864,10 +4201,20 @@ ItemUnique = {
 		itemId = 5601,
 		itemPos = { x = 31978, y = 32887, z = 6 },
 	},
+	-- gemmed lamp
+	[2285] = {
+		itemId = 3263,
+		itemPos = { x = 33094, y = 32524, z = 1 },
+	},
 	-- The Explorer Society - The Rune Writings
 	[3010] = {
 		itemId = 2199,
 		itemPos = { x = 32754, y = 32559, z = 9 },
+	},
+	-- gemmed lamp
+	[3024] = {
+		itemId = 3263,
+		itemPos = { x = 33048, y = 32630, z = 1 },
 	},
 	-- Dreamers Challenge Quest
 	[3048] = {
@@ -2952,6 +4299,16 @@ ItemUnique = {
 		itemId = 8618,
 		itemPos = { x = 32743, y = 31161, z = 5 },
 	},
+	-- mechanism
+	[3093] = {
+		itemId = 8618,
+		itemPos = { x = 32832, y = 31266, z = 5 },
+	},
+	-- mechanism
+	[3094] = {
+		itemId = 8618,
+		itemPos = { x = 32832, y = 31269, z = 5 },
+	},
 	[3095] = {
 		itemId = 8615,
 		itemPos = { x = 32734, y = 31199, z = 5 },
@@ -2983,6 +4340,21 @@ ItemUnique = {
 	[3102] = {
 		itemId = 8618,
 		itemPos = { x = 32853, y = 31251, z = 5 },
+	},
+	-- dead human
+	[3118] = {
+		itemId = 4240,
+		itemPos = { x = 32514, y = 32248, z = 8 },
+	},
+	-- green crystal stalagmite
+	[3143] = {
+		itemId = 16168,
+		itemPos = { x = 33101, y = 31908, z = 10 },
+	},
+	-- blooming griffinclaw
+	[3152] = {
+		itemId = 5658,
+		itemPos = { x = 32024, y = 32830, z = 4 },
 	},
 	-- Children of the Revolution Quest
 	[3162] = {
@@ -3056,6 +4428,11 @@ ItemUnique = {
 		itemId = 431,
 		itemPos = { x = 32826, y = 32273, z = 11 },
 	},
+	-- unknown item
+	[3504] = {
+		itemId = 11591,
+		itemPos = { x = 33215, y = 31413, z = 10 },
+	},
 	-- The Ancient Tombs Quest
 	[3950] = {
 		itemId = 1949,
@@ -3094,6 +4471,11 @@ ItemUnique = {
 	[4663] = {
 		itemId = 2433,
 		itemPos = { x = 33017, y = 32358, z = 11 },
+	},
+	-- large seashell
+	[4924] = {
+		itemId = 197,
+		itemPos = { x = 32451, y = 32943, z = 8 },
 	},
 	-- In Service of Yalahar Quest
 	[7809] = {
@@ -3147,6 +4529,11 @@ ItemUnique = {
 		itemId = 2114,
 		itemPos = { x = 33161, y = 32831, z = 10 },
 	},
+	-- bookcase
+	[9135] = {
+		itemId = 2438,
+		itemPos = { x = 33155, y = 32840, z = 6 },
+	},
 	-- Dreamers Challenge Quest
 	[9234] = {
 		itemId = 1949,
@@ -3166,10 +4553,25 @@ ItemUnique = {
 		itemId = 1949,
 		itemPos = { x = 32839, y = 32533, z = 9 },
 	},
+	-- fishnapped goldfish
+	[9266] = {
+		itemId = 7936,
+		itemPos = { x = 32359, y = 32791, z = 6 },
+	},
 	-- Issavi town teleport
 	[9515] = {
 		itemId = 1949,
 		itemPos = { x = 33926, y = 31477, z = 5 },
+	},
+	-- stony pond
+	[33331] = {
+		itemId = 20318,
+		itemPos = { x = 33264, y = 32015, z = 7 },
+	},
+	-- stony pond
+	[33332] = {
+		itemId = 20318,
+		itemPos = { x = 33198, y = 32010, z = 11 },
 	},
 	-- The shattered isles
 	[40001] = {
@@ -3591,10 +4993,43 @@ ItemUnique = {
 		itemId = 5662,
 		itemPos = { x = 33024, y = 32672, z = 6 },
 	},
+	-- The Order of the Lion Quest
+	[47404] = {
+		itemId = 2824,
+		itemPos = { x = 32469, y = 32503, z = 7 },
+	},
+	[47405] = {
+		itemId = 28462,
+		itemPos = { x = 32483, y = 32495, z = 7 },
+	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- dead human
+	[50003] = {
+		itemId = 4240,
+		itemPos = { x = 32262, y = 31861, z = 11 },
+	},
+	-- glimmer cap mushrooms
+	[50112] = {
+		itemId = 3919,
+		itemPos = { x = 32659, y = 31493, z = 13 },
+	},
+	-- large crystal
+	[50125] = {
+		itemId = 8776,
+		itemPos = { x = 32613, y = 31386, z = 14 },
+	},
 	-- The Hidden City of Beregar Quest
 	[50127] = {
 		itemId = 1949,
 		itemPos = { x = 32598, y = 31402, z = 15 },
+	},
+	-- drawers
+	[50133] = {
+		itemId = 2434,
+		itemPos = { x = 32414, y = 32148, z = 15 },
 	},
 	-- The Ancient Tombs Quest
 	[50135] = {
@@ -3649,6 +5084,21 @@ ItemUnique = {
 	[50147] = {
 		itemId = 1949,
 		itemPos = { x = 32826, y = 32347, z = 9 },
+	},
+	-- slime slide
+	[50511] = {
+		itemId = 21046,
+		itemPos = { x = 33460, y = 31715, z = 9 },
+	},
+	-- slime slide
+	[50514] = {
+		itemId = 21046,
+		itemPos = { x = 31255, y = 32604, z = 9 },
+	},
+	-- slime slide
+	[50515] = {
+		itemId = 21046,
+		itemPos = { x = 31062, y = 32605, z = 9 },
 	},
 	-- Dangerous Depths Quest
 	[57234] = {
@@ -3708,6 +5158,11 @@ ItemUnique = {
 		itemId = 2472,
 		itemPos = { x = 34107, y = 32346, z = 14 },
 	},
+	-- soft green chair
+	[57744] = {
+		itemId = 14237,
+		itemPos = { x = 33517, y = 31306, z = 8 },
+	},
 	-- Wooden Mouthpiece
 	[58001] = {
 		itemId = 23740,
@@ -3723,13 +5178,19 @@ ItemUnique = {
 		itemId = 2472,
 		itemPos = { x = 32776, y = 31105, z = 10 },
 	},
-	-- The Order of the Lion Quest
-	[47404] = {
-		itemId = 2824,
-		itemPos = { x = 32469, y = 32503, z = 7 },
+	-- mystic flame
+	[60015] = {
+		itemId = 1959,
+		itemPos = { x = 34143, y = 32188, z = 5 },
 	},
-	[47405] = {
-		itemId = 28462,
-		itemPos = { x = 32483, y = 32495, z = 7 },
+	-- not named in items.xml
+	[62133] = {
+		itemId = 44569,
+		itemPos = { x = 32583, y = 31939, z = 5 },
+	},
+	-- not named in items.xml
+	[62135] = {
+		itemId = 44567,
+		itemPos = { x = 32364, y = 31602, z = 7 },
 	},
 }

@@ -52,6 +52,43 @@ ChestAction = {
 		reward = {{xxxx, 1}},
 		storage = storage
 	},]]
+	-- 3 itens diferentes com o mesmo action id
+	[2001] = {
+		{ itemId = 2473, itemPos = { { x = 31937, y = 32771, z = 13 } } }, -- box
+		{ -- box
+			itemId = 2469,
+			itemPos = {
+				{ x = 32259, y = 31949, z = 14 },
+				{ x = 32701, y = 31082, z = 8 },
+				{ x = 32795, y = 31185, z = 7 },
+				{ x = 32796, y = 31226, z = 7 },
+				{ x = 32869, y = 31264, z = 10 },
+				{ x = 32940, y = 31246, z = 9 },
+				{ x = 33152, y = 31640, z = 11 },
+			},
+		},
+		{ -- chest
+			itemId = 2472,
+			itemPos = {
+				{ x = 32356, y = 32196, z = 7 },
+				{ x = 32455, y = 31968, z = 14 },
+				{ x = 32567, y = 32024, z = 6 },
+				{ x = 32569, y = 32024, z = 6 },
+				{ x = 32661, y = 32192, z = 8 },
+				{ x = 32704, y = 31605, z = 14 },
+				{ x = 33154, y = 31297, z = 3 },
+			},
+		},
+	},
+	-- chest
+	[2215] = {
+		itemId = 2472,
+		itemPos = {
+			{ x = 33229, y = 31656, z = 13 },
+			{ x = 33231, y = 31656, z = 13 },
+			{ x = 33233, y = 31656, z = 13 },
+		},
+	},
 	-- Keys quest
 	[5000] = {
 		itemId = false,
@@ -79,9 +116,254 @@ ChestAction = {
 		reward = { { 2969, 1 } },
 		storage = Storage.Quest.Key.ID5010,
 	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- barrel
+	[8000] = {
+		itemId = 2523,
+		itemPos = {
+			{ x = 33578, y = 32527, z = 14 },
+		},
+	},
+	-- box
+	[51324] = {
+		itemId = 2473,
+		itemPos = {
+			{ x = 33076, y = 31170, z = 8 },
+			{ x = 33078, y = 31170, z = 8 },
+			{ x = 33079, y = 31173, z = 8 },
+			{ x = 33080, y = 31170, z = 8 },
+		},
+	},
+	-- 3 itens diferentes com o mesmo action id
+	[51715] = {
+		{ itemId = 2472, itemPos = { { x = 32231, y = 31065, z = 7 } } }, -- chest
+		{ itemId = 2480, itemPos = { { x = 32231, y = 31068, z = 7 } } }, -- chest
+		{ -- chest
+			itemId = 2482,
+			itemPos = {
+				{ x = 32235, y = 31064, z = 7 },
+				{ x = 32235, y = 31066, z = 7 },
+				{ x = 32235, y = 31068, z = 7 },
+			},
+		},
+	},
+	-- 3 itens diferentes com o mesmo action id
+	[51716] = {
+		{ itemId = 2472, itemPos = { { x = 32231, y = 31058, z = 7 } } }, -- chest
+		{ itemId = 2480, itemPos = { { x = 32231, y = 31061, z = 7 } } }, -- chest
+		{ -- chest
+			itemId = 2482,
+			itemPos = {
+				{ x = 32235, y = 31057, z = 7 },
+				{ x = 32235, y = 31059, z = 7 },
+				{ x = 32235, y = 31061, z = 7 },
+			},
+		},
+	},
+	-- 3 itens diferentes com o mesmo action id
+	[51717] = {
+		{ itemId = 2472, itemPos = { { x = 32231, y = 31051, z = 7 } } }, -- chest
+		{ itemId = 2480, itemPos = { { x = 32231, y = 31054, z = 7 } } }, -- chest
+		{ -- chest
+			itemId = 2482,
+			itemPos = {
+				{ x = 32235, y = 31050, z = 7 },
+				{ x = 32235, y = 31052, z = 7 },
+				{ x = 32235, y = 31054, z = 7 },
+			},
+		},
+	},
+	-- 2 itens diferentes com o mesmo action id
+	[52167] = {
+		{ -- box
+			itemId = 2469,
+			itemPos = {
+				{ x = 32749, y = 32341, z = 14 },
+				{ x = 32751, y = 32341, z = 14 },
+				{ x = 32753, y = 32341, z = 14 },
+				{ x = 32755, y = 32341, z = 14 },
+			},
+		},
+		{ -- chest
+			itemId = 2472,
+			itemPos = {
+				{ x = 32804, y = 32229, z = 11 },
+				{ x = 32806, y = 32229, z = 11 },
+				{ x = 32808, y = 32229, z = 11 },
+			},
+		},
+	},
 }
 
 ChestUnique = {
+	-- chest
+	[1002] = {
+		itemId = 2472,
+		itemPos = { x = 32710, y = 32393, z = 8 },
+	},
+	-- chest
+	[1003] = {
+		itemId = 2472,
+		itemPos = { x = 32712, y = 32393, z = 8 },
+	},
+	-- chest
+	[1004] = {
+		itemId = 2472,
+		itemPos = { x = 32714, y = 32393, z = 8 },
+	},
+	-- chest
+	[1005] = {
+		itemId = 2472,
+		itemPos = { x = 32716, y = 32393, z = 8 },
+	},
+	-- treasure chest
+	[1038] = {
+		itemId = 2478,
+		itemPos = { x = 32113, y = 31370, z = 14 },
+	},
+	-- treasure chest
+	[1105] = {
+		itemId = 4077,
+		itemPos = { x = 33604, y = 31369, z = 15 },
+	},
+	-- chest
+	[1300] = {
+		itemId = 2472,
+		itemPos = { x = 32330, y = 32245, z = 9 },
+	},
+	-- chest
+	[1301] = {
+		itemId = 2472,
+		itemPos = { x = 32318, y = 32245, z = 9 },
+	},
+	-- chest
+	[1302] = {
+		itemId = 2472,
+		itemPos = { x = 32328, y = 32245, z = 9 },
+	},
+	-- chest
+	[1303] = {
+		itemId = 2472,
+		itemPos = { x = 32326, y = 32245, z = 9 },
+	},
+	-- chest
+	[1304] = {
+		itemId = 2472,
+		itemPos = { x = 32314, y = 32245, z = 9 },
+	},
+	-- chest
+	[1305] = {
+		itemId = 2472,
+		itemPos = { x = 32322, y = 32245, z = 9 },
+	},
+	-- chest
+	[1306] = {
+		itemId = 2472,
+		itemPos = { x = 32324, y = 32245, z = 9 },
+	},
+	-- chest
+	[1307] = {
+		itemId = 2472,
+		itemPos = { x = 32320, y = 32245, z = 9 },
+	},
+	-- chest
+	[1308] = {
+		itemId = 2472,
+		itemPos = { x = 32316, y = 32245, z = 9 },
+	},
+	-- chest
+	[1309] = {
+		itemId = 2472,
+		itemPos = { x = 32332, y = 32245, z = 9 },
+	},
+	-- chest
+	[3020] = {
+		itemId = 2472,
+		itemPos = { x = 32661, y = 32192, z = 8 },
+	},
+	-- box
+	[3084] = {
+		itemId = 2469,
+		itemPos = { x = 32869, y = 31264, z = 10 },
+	},
+	-- box
+	[3085] = {
+		itemId = 2469,
+		itemPos = { x = 32940, y = 31246, z = 9 },
+	},
+	-- chest
+	[3088] = {
+		itemId = 2472,
+		itemPos = { x = 32776, y = 31204, z = 7 },
+	},
+	-- chest
+	[3089] = {
+		itemId = 2472,
+		itemPos = { x = 32776, y = 31208, z = 7 },
+	},
+	-- chest
+	[3090] = {
+		itemId = 2472,
+		itemPos = { x = 32776, y = 31206, z = 7 },
+	},
+	-- chest
+	[3116] = {
+		itemId = 2472,
+		itemPos = { x = 32569, y = 32024, z = 6 },
+	},
+	-- chest
+	[3120] = {
+		itemId = 2472,
+		itemPos = { x = 32567, y = 32024, z = 6 },
+	},
+	-- treasure chest
+	[3147] = {
+		itemId = 4073,
+		itemPos = { x = 32822, y = 31744, z = 10 },
+	},
+	-- treasure chest
+	[3148] = {
+		itemId = 16182,
+		itemPos = { x = 33016, y = 31872, z = 9 },
+	},
+	-- treasure chest
+	[3149] = {
+		itemId = 16183,
+		itemPos = { x = 33024, y = 31884, z = 9 },
+	},
+	-- treasure chest
+	[3150] = {
+		itemId = 16184,
+		itemPos = { x = 33028, y = 31900, z = 9 },
+	},
+	-- chest
+	[3164] = {
+		itemId = 2472,
+		itemPos = { x = 33318, y = 31410, z = 8 },
+	},
+	-- box
+	[3500] = {
+		itemId = 2469,
+		itemPos = { x = 31987, y = 31223, z = 7 },
+	},
+	-- box
+	[3501] = {
+		itemId = 2469,
+		itemPos = { x = 32636, y = 31985, z = 14 },
+	},
+	-- box
+	[3502] = {
+		itemId = 2469,
+		itemPos = { x = 32815, y = 32502, z = 8 },
+	},
+	-- chest
+	[4009] = {
+		itemId = 2472,
+		itemPos = { x = 33143, y = 31800, z = 11 },
+	},
 	-- Keys quest
 	-- data\scripts\actions\system\quest_reward_key.lua
 	-- Deeper fibula quest key 3496
@@ -161,13 +443,6 @@ ChestUnique = {
 		keyAction = Storage.Quest.Key.ID4502,
 	},
 	[5009] = {
-		isKey = true,
-		itemId = 2434,
-		itemPos = { x = 32411, y = 32155, z = 15 },
-		reward = { { 2969, 1 } },
-		storage = Storage.Quest.Key.ID3620,
-	},
-	[5010] = {
 		isKey = true,
 		itemId = 2434,
 		itemPos = { x = 32411, y = 32155, z = 15 },
@@ -284,6 +559,30 @@ ChestUnique = {
 		itemPos = { x = 32842, y = 32225, z = 8 },
 		reward = { { 2971, 1 } },
 		storage = Storage.Quest.Key.ID3700,
+	},
+	-- Combat Knife Quest
+	[5025] = {
+		useKV = true,
+		itemId = 2473,
+		itemPos = { x = 32102, y = 32235, z = 8 },
+		reward = { { 3292, 1 } }, -- Combat Knife
+		questName = "combatknife",
+	},
+	[5026] = {
+		useKV = true,
+		itemId = 2473,
+		itemPos = { x = 32124, y = 32064, z = 12 },
+		reward = { { 3283, 1 } }, -- carlin sword
+		questName = "minohell3",
+	},
+	-- Shadows of Yalahar Quest Mision 10
+	[5027] = {
+		useKV = true,
+		itemId = 2469,
+		itemPos = { x = 32629, y = 32446, z = 10 },
+		reward = { { 9237, 1 } }, -- shadow orb
+		weight = 4.00,
+		questName = "shadow-orb",
 	},
 	-- To add a reward inside a bag, you need to add the variable "container = bagId" before "reward"
 	-- Just duplicate the table and configure correctly, the scripts already register the entire table automatically
@@ -991,11 +1290,12 @@ ChestUnique = {
 		reward = { { 3073, 1 } },
 		storage = Storage.Quest.U7_24.TheParadoxTower.Reward.Wand,
 	},
+	-- Silver key 3002 (draconia quest), in a wooden coffin
 	[6093] = {
+		isKey = true,
 		itemId = 2474,
 		reward = { { 2969, 1 } },
-		keyAction = Storage.Quest.Key.ID3002,
-		storage = keyAction,
+		storage = Storage.Quest.Key.ID3002,
 		itemPos = { { x = 32802, y = 31576, z = 7 } },
 	},
 	-- Hidden Threats Quest
@@ -1186,14 +1486,6 @@ ChestUnique = {
 		reward = { { 3579, 1 } }, -- 2x Salmon
 		questName = "captainIglues",
 	},
-	-- Combat Knife Quest
-	[6117] = {
-		useKV = true,
-		itemId = 2473,
-		itemPos = { x = 32102, y = 32235, z = 8 },
-		reward = { { 3292, 1 } }, -- Combat Knife
-		questName = "combatknife",
-	},
 	-- Goblin Temple Quest
 	[6118] = {
 		useKV = true,
@@ -1229,13 +1521,6 @@ ChestUnique = {
 		weight = 19.00,
 		reward = { { 3447, 10 }, { 3448, 4 } }, -- 10 arrows, 4 poison arrow
 		questName = "minohell2",
-	},
-	[6121] = {
-		useKV = true,
-		itemId = 2473,
-		itemPos = { x = 32124, y = 32064, z = 12 },
-		reward = { { 3283, 1 } }, -- carlin sword
-		questName = "minohell3",
 	},
 	-- Circle Room Quest
 	[6122] = {
@@ -2068,7 +2353,7 @@ ChestUnique = {
 	},
 	[6226] = {
 		itemId = 2480,
-		itemPos = { x = 32231, y = 31068, z = 7 },
+		itemPos = { x = 32231, y = 31061, z = 7 },
 		container = 7342,
 		reward = { { 7365, 100 }, { 3450, 200 }, { 11605, 1 }, { 11615, 1 } },
 		weight = 270.40,
@@ -2327,14 +2612,6 @@ ChestUnique = {
 		weight = 22.00,
 		storage = Storage.Quest.U8_1.WhatAFoolishQuest.BagBookKnife,
 	},
-	-- The Inquisition Quest
-	[6500] = {
-		itemId = 2472,
-		itemPos = { x = 32316, y = 32260, z = 8 },
-		reward = { { 2821, 1 } },
-		weight = 13.00,
-		storage = Storage.Quest.U8_2.TheInquisitionQuest.RewardRoomText,
-	},
 	[6270] = {
 		itemId = 2472,
 		itemPos = { x = 32649, y = 31932, z = 1 },
@@ -2564,20 +2841,6 @@ ChestUnique = {
 		weight = 43.00,
 		storage = Storage.Quest.U8_6.WrathOfTheEmperor.ChestItems,
 	},
-	[6308] = {
-		itemId = 2473,
-		itemPos = { x = 33076, y = 31170, z = 8 },
-		reward = { { 11687, 1 } },
-		weight = 45.00,
-		storage = Storage.Quest.U8_6.WrathOfTheEmperor.ChestItems,
-	},
-	[7825] = {
-		itemId = 2473,
-		itemPos = { x = 33079, y = 31173, z = 8 },
-		reward = { { 50263, 1 } },
-		weight = 29.00,
-		storage = Storage.Quest.U8_6.WrathOfTheEmperor.ChestItems,
-	},
 	-- Rookgaard
 	-- 05 Brown Mushrooms
 	[6301] = {
@@ -2634,6 +2897,13 @@ ChestUnique = {
 		reward = { { 22158, 1 } },
 		weight = 15.00,
 		storage = Storage.Quest.U10_90.FerumbrasAscension.StoneCoffinsBones,
+	},
+	[6308] = {
+		itemId = 2473,
+		itemPos = { x = 33076, y = 31170, z = 8 },
+		reward = { { 11687, 1 } },
+		weight = 45.00,
+		storage = Storage.Quest.U8_6.WrathOfTheEmperor.ChestItems,
 	},
 	[6309] = {
 		itemId = 21818,
@@ -2842,15 +3112,6 @@ ChestUnique = {
 		questName = "dark-essence",
 	},
 	-- Shadows of Yalahar Quest Mision 10
-	[6335] = {
-		useKV = true,
-		itemId = 2469,
-		itemPos = { x = 32629, y = 32446, z = 10 },
-		reward = { { 9237, 1 } }, -- shadow orb
-		weight = 4.00,
-		questName = "shadow-orb",
-	},
-	-- Shadows of Yalahar Quest Mision 10
 	[6336] = {
 		useKV = true,
 		itemId = 3634,
@@ -2885,14 +3146,111 @@ ChestUnique = {
 		weight = 2.00,
 		questName = "golem-wrench",
 	},
-	[6340] = {
-		useKV = true,
-		itemId = 2473,
-		itemPos = { x = 32576, y = 31572, z = 110 },
-		reward = { { 9308, 1 } }, -- Nautical Map
-		weight = 8.19,
-		questName = "nautical-map",
+
+	-- The Inquisition Quest
+	[6500] = {
+		itemId = 2472,
+		itemPos = { x = 32316, y = 32260, z = 8 },
+		reward = { { 2821, 1 } },
+		weight = 13.00,
+		storage = Storage.Quest.U8_2.TheInquisitionQuest.RewardRoomText,
 	},
+	[7825] = {
+		itemId = 2473,
+		itemPos = { x = 33079, y = 31173, z = 8 },
+		reward = { { 50263, 1 } },
+		weight = 29.00,
+		storage = Storage.Quest.U8_6.WrathOfTheEmperor.ChestItems,
+	},
+	-- chest
+	[9206] = {
+		itemId = 2472,
+		itemPos = { x = 33343, y = 31610, z = 1 },
+	},
+	-- chest
+	[9214] = {
+		itemId = 2472,
+		itemPos = { x = 32030, y = 31688, z = 8 },
+	},
+	-- chest
+	[9226] = {
+		itemId = 2472,
+		itemPos = { x = 32455, y = 31968, z = 14 },
+	},
+	-- chest
+	[9230] = {
+		itemId = 2472,
+		itemPos = { x = 32172, y = 31602, z = 10 },
+	},
+	-- box
+	[9253] = {
+		itemId = 2473,
+		itemPos = { x = 32576, y = 31572, z = 10 },
+	},
+	-- chest
+	[9254] = {
+		itemId = 2472,
+		itemPos = { x = 32753, y = 31456, z = 1 },
+	},
+	-- chest
+	[9281] = {
+		itemId = 2481,
+		itemPos = { x = 32674, y = 31610, z = 8 },
+	},
+	-- chest
+	[9283] = {
+		itemId = 2472,
+		itemPos = { x = 31981, y = 32893, z = 0 },
+	},
+	-- chest
+	[9288] = {
+		itemId = 2472,
+		itemPos = { x = 32053, y = 31939, z = 9 },
+	},
+	-- treasure chest
+	[9298] = {
+		itemId = 4073,
+		itemPos = { x = 32804, y = 31586, z = 0 },
+	},
+	-- chest
+	[9299] = {
+		itemId = 2472,
+		itemPos = { x = 33707, y = 32096, z = 15 },
+	},
+	-- chest
+	[9302] = {
+		itemId = 2472,
+		itemPos = { x = 33579, y = 31297, z = 11 },
+	},
+	-- chest
+	[9303] = {
+		itemId = 2472,
+		itemPos = { x = 33632, y = 31259, z = 11 },
+	},
+	-- chest
+	[9304] = {
+		itemId = 2472,
+		itemPos = { x = 33414, y = 31235, z = 11 },
+	},
+	-- box
+	[9307] = {
+		itemId = 2469,
+		itemPos = { x = 33502, y = 32545, z = 7 },
+	},
+	-- chest
+	[9309] = {
+		itemId = 2472,
+		itemPos = { x = 33409, y = 32278, z = 14 },
+	},
+	-- box
+	[9312] = {
+		itemId = 2469,
+		itemPos = { x = 32783, y = 32224, z = 14 },
+	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
 	-- Reward of others scrips files (varied rewards)
 	-- The First dragon Quest
 	-- Treasure chests (data\scripts\actions\quests\first_dragon\treasure_chests.lua)
@@ -3055,10 +3413,6 @@ ChestUnique = {
 	},
 	-- Others uniques
 	-- Threatened Dreams Quest
-	[14036] = {
-		itemId = 12764,
-		itemPos = { x = 32787, y = 31975, z = 11 },
-	},
 	-- In Service of Yalahar Quest
 	[14037] = {
 		itemId = 2469,
@@ -3135,5 +3489,165 @@ ChestUnique = {
 		itemPos = { x = 31909, y = 31908, z = 9 },
 		reward = { { 3054, 1 } }, -- silver amulet
 		storage = Storage.Quest.U15_24.Targuna.SilverAmuletChest,
+	},
+	-- chest
+	[48886] = {
+		itemId = 2472,
+		itemPos = { x = 32776, y = 31210, z = 7 },
+	},
+	-- chest
+	[50029] = {
+		itemId = 2472,
+		itemPos = { x = 33064, y = 32531, z = 5 },
+	},
+	-- chest
+	[50053] = {
+		itemId = 2472,
+		itemPos = { x = 32084, y = 31062, z = 10 },
+	},
+	-- box
+	[50054] = {
+		itemId = 2473,
+		itemPos = { x = 32216, y = 31168, z = 11 },
+	},
+	-- box
+	[50058] = {
+		itemId = 2473,
+		itemPos = { x = 32757, y = 31953, z = 9 },
+	},
+	-- box
+	[50059] = {
+		itemId = 2473,
+		itemPos = { x = 32757, y = 31957, z = 9 },
+	},
+	-- sturdy chest
+	[50080] = {
+		itemId = 7757,
+		itemPos = { x = 32032, y = 32276, z = 5 },
+	},
+	-- sturdy chest
+	[50082] = {
+		itemId = 7757,
+		itemPos = { x = 32033, y = 32278, z = 8 },
+	},
+	-- sturdy chest
+	[50093] = {
+		itemId = 7757,
+		itemPos = { x = 32059, y = 32265, z = 7 },
+	},
+	-- sturdy chest
+	[50094] = {
+		itemId = 7757,
+		itemPos = { x = 32067, y = 32264, z = 8 },
+	},
+	-- box
+	[54380] = {
+		itemId = 2469,
+		itemPos = { x = 33449, y = 32796, z = 11 },
+	},
+	-- chest
+	[55731] = {
+		itemId = 2472,
+		itemPos = { x = 33064, y = 32529, z = 5 },
+	},
+	-- chest
+	[57743] = {
+		itemId = 2472,
+		itemPos = { x = 33519, y = 31308, z = 8 },
+	},
+	-- chest
+	[61900] = {
+		itemId = 2472,
+		itemPos = { x = 32078, y = 31976, z = 8 },
+	},
+	-- chest
+	[61901] = {
+		itemId = 2472,
+		itemPos = { x = 32079, y = 31976, z = 8 },
+	},
+	-- chest
+	[61902] = {
+		itemId = 2472,
+		itemPos = { x = 32091, y = 31976, z = 8 },
+	},
+	-- chest
+	[61903] = {
+		itemId = 2472,
+		itemPos = { x = 32092, y = 31976, z = 8 },
+	},
+	-- chest
+	[61907] = {
+		itemId = 2472,
+		itemPos = { x = 32110, y = 31976, z = 8 },
+	},
+	-- chest
+	[61908] = {
+		itemId = 2472,
+		itemPos = { x = 32112, y = 31976, z = 8 },
+	},
+	-- chest
+	[61909] = {
+		itemId = 2472,
+		itemPos = { x = 32111, y = 31977, z = 8 },
+	},
+	-- chest
+	[61910] = {
+		itemId = 2481,
+		itemPos = { x = 32105, y = 31978, z = 8 },
+	},
+	-- chest
+	[61911] = {
+		itemId = 2472,
+		itemPos = { x = 32083, y = 32012, z = 8 },
+	},
+	-- chest
+	[61912] = {
+		itemId = 2472,
+		itemPos = { x = 32087, y = 32012, z = 8 },
+	},
+	-- chest
+	[61913] = {
+		itemId = 2472,
+		itemPos = { x = 32081, y = 32007, z = 8 },
+	},
+	-- chest
+	[61914] = {
+		itemId = 2472,
+		itemPos = { x = 32089, y = 32007, z = 8 },
+	},
+	-- chest
+	[61915] = {
+		itemId = 2472,
+		itemPos = { x = 32114, y = 32008, z = 8 },
+	},
+	-- chest
+	[61916] = {
+		itemId = 2472,
+		itemPos = { x = 32117, y = 32008, z = 8 },
+	},
+	-- chest
+	[61917] = {
+		itemId = 2482,
+		itemPos = { x = 32119, y = 32011, z = 8 },
+	},
+	-- chest
+	[61918] = {
+		itemId = 2472,
+		itemPos = { x = 32108, y = 32007, z = 8 },
+	},
+	-- box
+	[64129] = {
+		itemId = 2473,
+		itemPos = { x = 32097, y = 32187, z = 8 },
+	},
+	-- chest
+	[64134] = {
+		itemId = 2472,
+		itemPos = { x = 32549, y = 31437, z = 14 },
+	},
+	-- chest
+	[65207] = {
+		itemId = 2472,
+		itemPos = { x = 32356, y = 32196, z = 7 },
 	},
 }
