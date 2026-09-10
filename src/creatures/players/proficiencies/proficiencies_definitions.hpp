@@ -51,89 +51,11 @@ enum WeaponProficiencyPerkType_t : uint16_t {
 	PROFICIENCY_PERK_ARMOR_PENETRATION = 30,
 	PROFICIENCY_PERK_ELEMENTAL_PIERCE = 31,
 	PROFICIENCY_PERK_ON_HIT_HOMING_MISSILE = 32,
-};
-
-// 15.25 (sommerrelease26) SHAPE system: the perkType sent in a modified slot / reshape offer (0xC4/0xBB) is an
-// INDEX into the client's shaping catalogue (1-323), NOT this server enum. UNIVERSAL = the per-vocation spell
-// augment OFFSETS (added to region*50 in rollWeaponProficiencyPerk): {1-5 crit-chance, 11-15 crit-extra,
-// 21-25 base-damage}. GENERAL = the vocation-agnostic 251-323 block (bestiary / leech-on-hit-on-kill /
-// alpha-omega / skill% / armor-pen / elemental-pierce / powerful-foe). See CLIENT_15.25_e2a4a1_PORT.md §8.1.
-inline constexpr WeaponProficiencyPerkType_t WEAPON_PROFICIENCY_UNIVERSAL_SHAPEABLE_PERKS[] = {
-	static_cast<WeaponProficiencyPerkType_t>(1),
-	static_cast<WeaponProficiencyPerkType_t>(2),
-	static_cast<WeaponProficiencyPerkType_t>(3),
-	static_cast<WeaponProficiencyPerkType_t>(4),
-	static_cast<WeaponProficiencyPerkType_t>(5),
-	static_cast<WeaponProficiencyPerkType_t>(11),
-	static_cast<WeaponProficiencyPerkType_t>(12),
-	static_cast<WeaponProficiencyPerkType_t>(13),
-	static_cast<WeaponProficiencyPerkType_t>(14),
-	static_cast<WeaponProficiencyPerkType_t>(15),
-	static_cast<WeaponProficiencyPerkType_t>(21),
-	static_cast<WeaponProficiencyPerkType_t>(22),
-	static_cast<WeaponProficiencyPerkType_t>(23),
-	static_cast<WeaponProficiencyPerkType_t>(24),
-	static_cast<WeaponProficiencyPerkType_t>(25),
-};
-
-// 15.25 (sommerrelease26): the GENERAL (vocation-agnostic) shapeable catalogue indices in the 251-323 block.
-//   251-271 = bestiary damage (250 + bestiaryId, 21 races)
-//   281-288 = mana/life leech, mana/life on-hit, mana/life on-kill, alpha strike, omega strike
-//   291-297 = skill% of auto-attacks (290 + skillSlot 1-7); 301-307 = skill% of spells; 311-317 = skill% of healing (313 omitted)
-//   321-323 = armor penetration, elemental pierce, powerful foe
-inline constexpr WeaponProficiencyPerkType_t WEAPON_PROFICIENCY_GENERAL_SHAPEABLE_PERKS[] = {
-	static_cast<WeaponProficiencyPerkType_t>(251),
-	static_cast<WeaponProficiencyPerkType_t>(252),
-	static_cast<WeaponProficiencyPerkType_t>(253),
-	static_cast<WeaponProficiencyPerkType_t>(254),
-	static_cast<WeaponProficiencyPerkType_t>(255),
-	static_cast<WeaponProficiencyPerkType_t>(256),
-	static_cast<WeaponProficiencyPerkType_t>(257),
-	static_cast<WeaponProficiencyPerkType_t>(258),
-	static_cast<WeaponProficiencyPerkType_t>(259),
-	static_cast<WeaponProficiencyPerkType_t>(260),
-	static_cast<WeaponProficiencyPerkType_t>(261),
-	static_cast<WeaponProficiencyPerkType_t>(262),
-	static_cast<WeaponProficiencyPerkType_t>(263),
-	static_cast<WeaponProficiencyPerkType_t>(264),
-	static_cast<WeaponProficiencyPerkType_t>(265),
-	static_cast<WeaponProficiencyPerkType_t>(266),
-	static_cast<WeaponProficiencyPerkType_t>(267),
-	static_cast<WeaponProficiencyPerkType_t>(268),
-	static_cast<WeaponProficiencyPerkType_t>(269),
-	static_cast<WeaponProficiencyPerkType_t>(270),
-	static_cast<WeaponProficiencyPerkType_t>(271),
-	static_cast<WeaponProficiencyPerkType_t>(281),
-	static_cast<WeaponProficiencyPerkType_t>(282),
-	static_cast<WeaponProficiencyPerkType_t>(283),
-	static_cast<WeaponProficiencyPerkType_t>(284),
-	static_cast<WeaponProficiencyPerkType_t>(285),
-	static_cast<WeaponProficiencyPerkType_t>(286),
-	static_cast<WeaponProficiencyPerkType_t>(287),
-	static_cast<WeaponProficiencyPerkType_t>(288),
-	static_cast<WeaponProficiencyPerkType_t>(291),
-	static_cast<WeaponProficiencyPerkType_t>(292),
-	static_cast<WeaponProficiencyPerkType_t>(293),
-	static_cast<WeaponProficiencyPerkType_t>(294),
-	static_cast<WeaponProficiencyPerkType_t>(295),
-	static_cast<WeaponProficiencyPerkType_t>(296),
-	static_cast<WeaponProficiencyPerkType_t>(297),
-	static_cast<WeaponProficiencyPerkType_t>(301),
-	static_cast<WeaponProficiencyPerkType_t>(302),
-	static_cast<WeaponProficiencyPerkType_t>(303),
-	static_cast<WeaponProficiencyPerkType_t>(304),
-	static_cast<WeaponProficiencyPerkType_t>(305),
-	static_cast<WeaponProficiencyPerkType_t>(306),
-	static_cast<WeaponProficiencyPerkType_t>(307),
-	static_cast<WeaponProficiencyPerkType_t>(311),
-	static_cast<WeaponProficiencyPerkType_t>(312),
-	static_cast<WeaponProficiencyPerkType_t>(314),
-	static_cast<WeaponProficiencyPerkType_t>(315),
-	static_cast<WeaponProficiencyPerkType_t>(316),
-	static_cast<WeaponProficiencyPerkType_t>(317),
-	static_cast<WeaponProficiencyPerkType_t>(321),
-	static_cast<WeaponProficiencyPerkType_t>(322),
-	static_cast<WeaponProficiencyPerkType_t>(323),
+	// 15.30 client perk kinds 33-35 (reachable only through the SHAPE catalogue entries 291-293): a percentage of the
+	// player's HIGHEST combat skill as extra auto-attack damage / spell damage / spell healing.
+	PROFICIENCY_PERK_HIGHEST_COMBAT_SKILL_PERCENTAGE_AS_EXTRA_DAMAGE_FOR_AUTOATTACK = 33,
+	PROFICIENCY_PERK_HIGHEST_COMBAT_SKILL_PERCENTAGE_AS_EXTRA_DAMAGE_FOR_SPELLS = 34,
+	PROFICIENCY_PERK_HIGHEST_COMBAT_SKILL_PERCENTAGE_AS_EXTRA_HEALING_FOR_SPELLS = 35,
 };
 
 enum WeaponProficiencyPerkSkills_t : int8_t {
@@ -178,4 +100,53 @@ enum WeaponProficiencyPerkDamageType_t : int32_t {
 	PROFICIENCY_DAMAGETYPE_HOLY = 128, // COMBAT_HOLYDAMAGE
 	PROFICIENCY_DAMAGETYPE_DEATH = 256, // COMBAT_DEATHDAMAGE
 	PROFICIENCY_DAMAGETYPE_HEALING = 1048576, // COMBAT_HEALING
+};
+
+// ---------------------------------------------------------------------------------------------------------------------
+// 15.30 SHAPE catalogue. Reverse-engineered from the official 15.30 client (index decoder FUN_140ef6410, the five
+// per-vocation option arrays at 0x141d81870.. and the rank curves in FUN_140ef7de0). The perkType carried by a modified
+// slot (0xC4) or a reshape offer (0xBB) is an INDEX 1-323 into this catalogue, NOT a WeaponProficiencyPerkType_t.
+//   1-250  : five 50-wide VOCATION regions (0 knight, 1 paladin, 2 sorcerer, 3 druid, 4 monk). Inside a region every
+//            row of 10 is one augment kind and columns 1-6 are the vocation's six shapeable spells:
+//              +1..+6 critical hit chance, +11..+16 critical extra damage, +21..+26 base damage,
+//              +31..+36 mana leech, +41..+46 life leech (columns 7-10 are unused by the client).
+//   251-271: bestiary damage, 250 + bestiaryId (21 creature classes)
+//   281-287: rune crit chance, auto-attack crit chance, rune crit extra damage, auto-attack crit extra damage,
+//            life gain on hit, mana gain on kill, life gain on kill
+//   291-293: highest combat skill percentage as extra auto-attack damage / spell damage / spell healing
+//   321-323: alpha strike, omega strike, armor penetration
+// The client shows every vocation exactly the 34 GENERAL entries plus its own 30 augment entries (64 options).
+// Rank curves (client value = rank0 + perRank * rank, rank 0..10) live in Proficiencies::decodeShapeIndex.
+inline constexpr uint16_t WEAPON_PROFICIENCY_SHAPE_REGION_SIZE = 50;
+inline constexpr uint8_t WEAPON_PROFICIENCY_SHAPE_REGION_COUNT = 5;
+inline constexpr uint8_t WEAPON_PROFICIENCY_SHAPE_AUGMENT_ROWS = 5;
+inline constexpr uint8_t WEAPON_PROFICIENCY_SHAPE_SPELLS_PER_REGION = 6;
+inline constexpr uint16_t WEAPON_PROFICIENCY_SHAPE_MAX_INDEX = 323;
+inline constexpr uint8_t WEAPON_PROFICIENCY_SHAPE_MAX_RANK = 10;
+inline constexpr uint8_t WEAPON_PROFICIENCY_SHAPE_NO_REGION = 0xFF;
+
+// Augment kind of each 10-wide row inside a vocation region (row 0 = +1..+6, row 4 = +41..+46).
+inline constexpr WeaponProficiencyPerkAugmentType_t WEAPON_PROFICIENCY_SHAPE_AUGMENT_ROW_TYPES[WEAPON_PROFICIENCY_SHAPE_AUGMENT_ROWS] = {
+	PROFICIENCY_AUGMENTTYPE_CRITICAL_HIT_CHANCE,
+	PROFICIENCY_AUGMENTTYPE_CRITICAL_EXTRA_DAMAGE,
+	PROFICIENCY_AUGMENTTYPE_BASE_DAMAGE,
+	PROFICIENCY_AUGMENTTYPE_MANA_LEECH,
+	PROFICIENCY_AUGMENTTYPE_LIFE_LEECH,
+};
+
+// Client spell ids of the six shapeable spells per vocation region, in catalogue column order.
+inline constexpr uint16_t WEAPON_PROFICIENCY_SHAPE_SPELLS[WEAPON_PROFICIENCY_SHAPE_REGION_COUNT][WEAPON_PROFICIENCY_SHAPE_SPELLS_PER_REGION] = {
+	{ 80, 105, 106, 59, 316, 261 }, // knight: Berserk, Fierce Berserk, Groundshaker, Front Sweep, Shield Slam, Executioner's Throw
+	{ 124, 302, 303, 258, 57, 122 }, // paladin: Divine Caldera, Divine Barrage, Ethereal Barrage, Divine Grenade, Strong Ethereal Spear, Divine Missile
+	{ 13, 24, 240, 260, 310, 23 }, // sorcerer: Energy Wave, Hell's Core, Great Fire Wave, Great Death Beam, Death Echo, Great Energy Beam
+	{ 43, 120, 263, 262, 317, 318 }, // druid: Strong Ice Wave, Terra Wave, Terra Burst, Ice Burst, Forked Glacier, Forked Thorns
+	{ 289, 288, 294, 287, 301, 290 }, // monk: Greater Flurry of Blows, Chained Penance, Sweeping Takedown, Flurry of Blows, Thousand Fist Blows, Mystic Repulse
+};
+
+// The 34 vocation-agnostic GENERAL catalogue indices offered to every vocation.
+inline constexpr uint16_t WEAPON_PROFICIENCY_SHAPE_GENERAL[] = {
+	251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, // bestiary
+	281, 282, 283, 284, 285, 286, 287, // crit (runes / auto-attack), life on hit, mana on kill, life on kill
+	291, 292, 293, // highest combat skill percentage
+	321, 322, 323, // alpha strike, omega strike, armor penetration
 };

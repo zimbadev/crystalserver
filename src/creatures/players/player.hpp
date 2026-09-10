@@ -1169,8 +1169,9 @@ public:
 	void removeEquippedWeaponProficiency(const uint16_t itemId);
 	void sendWeaponProficiencyExperience(const uint16_t itemId, const uint32_t addProficiencyExperience);
 	// 15.25 (sommerrelease26) SHAPE handlers + helpers (see CLIENT_15.25_e2a4a1_PORT.md §7.5 / §8).
-	uint8_t getWeaponProficiencyVocationRegion(const uint16_t itemId) const;
-	WeaponProficiencyPerkType_t rollWeaponProficiencyPerk(const uint16_t itemId) const;
+	uint8_t getWeaponProficiencyVocationRegion() const;
+	std::vector<WeaponProficiencyPerkType_t> rollWeaponProficiencyPerks(const size_t count, const std::vector<WeaponProficiencyPerkType_t> &exclude = {}) const;
+	void sanitizeWeaponProficiencyShapes(const uint16_t itemId);
 	void modifyWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition);
 	void refineWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition);
 	void maximiseWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition);

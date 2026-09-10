@@ -13085,49 +13085,57 @@ void Player::sendWeaponProficiencyReshapeOffers(const uint16_t itemId) const {
 	}
 }
 
-uint8_t Player::getWeaponProficiencyVocationRegion(const uint16_t itemId) const {
-	// 15.25 (sommerrelease26): the client shaping catalogue is laid out in 50-wide vocation regions
-	// (0 = knight 1-50, 1 = paladin 51-100, 2 = sorcerer 101-150, 3 = druid 151-200, 4 = monk 201-250).
-	// Derive the region from the WEAPON so a paladin bow always offers paladin augments. Wands (sorcerer)
-	// and rods (druid) share WEAPON_WAND, so disambiguate by the holder's CIP vocation.
-	const ItemType &itemType = Item::items[itemId];
-	switch (itemType.weaponType) {
-		case WEAPON_SWORD:
-		case WEAPON_CLUB:
-		case WEAPON_AXE:
-			return 0; // knight
-		case WEAPON_DISTANCE:
-		case WEAPON_AMMO:
-		case WEAPON_MISSILE:
-			return 1; // paladin
-		case WEAPON_FIST:
-			return 4; // monk
-		case WEAPON_WAND: {
-			return getPlayerVocationEnum() == Vocation_t::VOCATION_DRUID_CIP ? 3 : 2;
-		}
-		default: {
-			const uint16_t cip = getPlayerVocationEnum();
-			return cip > Vocation_t::VOCATION_NONE ? static_cast<uint8_t>(cip - 1) : 0;
-		}
-	}
+uint8_t Player::getWeaponProficiencyVocationRegion() const {
+	// 15.30: the client builds the shaping option list from the PLAYER'S vocation (its profession byte 1-5 selects one
+	// of five 64-entry option arrays), never from the weapon type. Promoted vocations already fold to their base.
+	return Proficiencies::getShapeRegionForVocation(getPlayerVocationEnum());
 }
 
-WeaponProficiencyPerkType_t Player::rollWeaponProficiencyPerk(const uint16_t itemId) const {
-	// 15.25 (sommerrelease26): roll one valid shapeable perk from the union of the weapon's per-vocation spell
-	// augments (region*50 + UNIVERSAL offsets) and the GENERAL vocation-agnostic pool. Both contain only valid
-	// catalogue indices, so the client never renders the "Attack Damage" fallback.
-	const uint8_t region = getWeaponProficiencyVocationRegion(itemId);
-	constexpr int32_t augmentPoolSize = static_cast<int32_t>(sizeof(WEAPON_PROFICIENCY_UNIVERSAL_SHAPEABLE_PERKS) / sizeof(WEAPON_PROFICIENCY_UNIVERSAL_SHAPEABLE_PERKS[0]));
-	constexpr int32_t generalPoolSize = static_cast<int32_t>(sizeof(WEAPON_PROFICIENCY_GENERAL_SHAPEABLE_PERKS) / sizeof(WEAPON_PROFICIENCY_GENERAL_SHAPEABLE_PERKS[0]));
-	const int32_t pick = uniform_random(0, augmentPoolSize + generalPoolSize - 1);
-	if (pick < augmentPoolSize) {
-		return static_cast<WeaponProficiencyPerkType_t>(region * 50 + static_cast<int32_t>(WEAPON_PROFICIENCY_UNIVERSAL_SHAPEABLE_PERKS[pick]));
+std::vector<WeaponProficiencyPerkType_t> Player::rollWeaponProficiencyPerks(const size_t count, const std::vector<WeaponProficiencyPerkType_t> &exclude) const {
+	// Roll `count` DISTINCT catalogue indices from exactly the option list the 15.30 client shows this vocation
+	// (34 general perks + the vocation's 30 spell augments), skipping `exclude` (e.g. the perk currently in the slot).
+	std::vector<uint16_t> pool = Proficiencies::getShapeableIndicesForVocation(getPlayerVocationEnum());
+	std::erase_if(pool, [&exclude](const uint16_t index) {
+		return std::find(exclude.begin(), exclude.end(), static_cast<WeaponProficiencyPerkType_t>(index)) != exclude.end();
+	});
+	std::vector<WeaponProficiencyPerkType_t> result;
+	result.reserve(count);
+	while (result.size() < count && !pool.empty()) {
+		const auto pick = static_cast<size_t>(uniform_random(0, static_cast<int32_t>(pool.size()) - 1));
+		result.push_back(static_cast<WeaponProficiencyPerkType_t>(pool[pick]));
+		pool.erase(pool.begin() + static_cast<std::ptrdiff_t>(pick));
 	}
-	return WEAPON_PROFICIENCY_GENERAL_SHAPEABLE_PERKS[pick - augmentPoolSize];
+	return result;
+}
+
+void Player::sanitizeWeaponProficiencyShapes(const uint16_t itemId) {
+	// Repair shaped slots holding an index the 15.30 client does not offer this vocation (data shaped before the
+	// catalogue fix, or a vocation change): re-roll them in place from the vocation's own list, keeping the rank.
+	auto it = weaponProficiencies.find(itemId);
+	if (it == weaponProficiencies.end()) {
+		return;
+	}
+	const uint16_t vocation = getPlayerVocationEnum();
+	for (auto &slot : it->second.modifiedSlots) {
+		const auto index = static_cast<uint16_t>(slot.perkType);
+		if (Proficiencies::isShapeIndexAllowedForVocation(index, vocation)) {
+			continue;
+		}
+		const auto rolled = rollWeaponProficiencyPerks(1);
+		if (rolled.empty()) {
+			break;
+		}
+		g_logger().info("[{}] Player {} weapon {} slot {}/{}: shaped perk index {} is not available to vocation {}, re-rolled to {}", __FUNCTION__, getName(), itemId, slot.proficiencyLevel, slot.perkPosition, index, vocation, static_cast<uint16_t>(rolled.front()));
+		slot.perkType = rolled.front();
+	}
 }
 
 void Player::modifyWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
-	static constexpr uint64_t MODIFY_DUST_COST = 250;
+	// 15.30 (official "Perk Shaping" rules): the first shaped slot of a weapon costs 250 dust, the second one 1000 dust
+	// (the client additionally requires mastery of the weapon for it) and a weapon never has more than two shaped slots.
+	static constexpr uint64_t MODIFY_FIRST_SLOT_DUST_COST = 250;
+	static constexpr uint64_t MODIFY_SECOND_SLOT_DUST_COST = 1000;
+	static constexpr size_t MAX_SHAPED_SLOTS = 2;
 	auto it = weaponProficiencies.find(itemId);
 	if (it == weaponProficiencies.end()) {
 		sendTextMessage(MESSAGE_FAILURE, "You have no proficiency progress on this weapon.");
@@ -13138,35 +13146,39 @@ void Player::modifyWeaponProficiencySlot(const uint16_t itemId, const uint8_t pr
 		sendTextMessage(MESSAGE_FAILURE, "You can only modify proficiency slots inside a protection zone.");
 		return;
 	}
-	if (getForgeDusts() < MODIFY_DUST_COST) {
-		sendTextMessage(MESSAGE_FAILURE, "You do not have enough dust to modify this slot.");
-		return;
-	}
-	removeForgeDusts(MODIFY_DUST_COST);
-	auto &proficiency = it->second;
-	const auto perkType = rollWeaponProficiencyPerk(itemId);
-	const uint8_t value = 1;
 	// Store 1-based; the wire request is 0-based.
 	const uint8_t storedLevel = static_cast<uint8_t>(proficiencyLevel + 1);
 	const uint8_t storedPosition = static_cast<uint8_t>(perkPosition + 1);
-	bool replaced = false;
-	for (auto &slot : proficiency.modifiedSlots) {
+	auto &proficiency = it->second;
+	for (const auto &slot : proficiency.modifiedSlots) {
 		if (slot.proficiencyLevel == storedLevel && slot.perkPosition == storedPosition) {
-			slot.perkType = perkType;
-			slot.value = value;
-			replaced = true;
-			break;
+			sendTextMessage(MESSAGE_FAILURE, "This slot is already shaped. Use Reshape to change its perk.");
+			return;
 		}
 	}
-	if (!replaced) {
-		proficiency.modifiedSlots.push_back({ storedLevel, storedPosition, perkType, value });
+	const size_t shapedCount = proficiency.modifiedSlots.size();
+	if (shapedCount >= MAX_SHAPED_SLOTS) {
+		sendTextMessage(MESSAGE_FAILURE, "You cannot shape more than two perks on the same weapon.");
+		return;
 	}
+	const uint64_t cost = shapedCount == 0 ? MODIFY_FIRST_SLOT_DUST_COST : MODIFY_SECOND_SLOT_DUST_COST;
+	if (getForgeDusts() < cost) {
+		sendTextMessage(MESSAGE_FAILURE, fmt::format("You need {} dust to shape this perk (you currently have {}).", cost, getForgeDusts()));
+		return;
+	}
+	const auto rolled = rollWeaponProficiencyPerks(1);
+	if (rolled.empty()) {
+		sendTextMessage(MESSAGE_FAILURE, "There is no perk available to shape for your vocation.");
+		return;
+	}
+	removeForgeDusts(cost);
+	// Rank 0 is the catalogue's base magnitude; Refine raises it up to rank 10.
+	proficiency.modifiedSlots.push_back({ storedLevel, storedPosition, rolled.front(), 0 });
 	applyEquippedWeaponProficiency(itemId);
 	sendWeaponProficiencyInfo(itemId);
 }
 
 void Player::refineWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
-	static constexpr uint64_t REFINE_DUST_COST = 200;
 	static constexpr uint8_t MAX_RANK = 10;
 	auto it = weaponProficiencies.find(itemId);
 	if (it == weaponProficiencies.end()) {
@@ -13196,11 +13208,13 @@ void Player::refineWeaponProficiencySlot(const uint16_t itemId, const uint8_t pr
 		sendTextMessage(MESSAGE_FAILURE, "This perk is already at its maximum rank.");
 		return;
 	}
-	if (getForgeDusts() < REFINE_DUST_COST) {
-		sendTextMessage(MESSAGE_FAILURE, fmt::format("You need {} dust to refine this perk (you currently have {}).", REFINE_DUST_COST, getForgeDusts()));
+	// 15.30 (official refine costs): rank 1 costs 125 dust and every further rank 75 more (200, 275, ... 800 for rank 10).
+	const uint64_t refineCost = 125 + 75 * static_cast<uint64_t>(slot->value);
+	if (getForgeDusts() < refineCost) {
+		sendTextMessage(MESSAGE_FAILURE, fmt::format("You need {} dust to refine this perk (you currently have {}).", refineCost, getForgeDusts()));
 		return;
 	}
-	removeForgeDusts(REFINE_DUST_COST);
+	removeForgeDusts(refineCost);
 	++slot->value;
 	applyEquippedWeaponProficiency(itemId);
 	sendWeaponProficiencyInfo(itemId);
@@ -13299,25 +13313,10 @@ void Player::reshapeWeaponProficiencySlot(const uint16_t itemId, const uint8_t p
 		return;
 	}
 	removeForgeDusts(RESHAPE_DUST_COST);
-	(void)slot;
-	std::vector<WeaponProficiencyPerkType_t> offers;
-	offers.reserve(RESHAPE_OFFER_COUNT);
-	for (int32_t guard = 0; offers.size() < RESHAPE_OFFER_COUNT && guard < 200; ++guard) {
-		const auto candidate = rollWeaponProficiencyPerk(itemId);
-		bool duplicate = false;
-		for (const auto existing : offers) {
-			if (existing == candidate) {
-				duplicate = true;
-				break;
-			}
-		}
-		if (!duplicate) {
-			offers.push_back(candidate);
-		}
-	}
 	proficiency.pendingReshapeLevel = storedLevel;
 	proficiency.pendingReshapePosition = storedPosition;
-	proficiency.pendingReshapeOffers = offers;
+	// Three distinct offers from this vocation's option list, never the perk already sitting in the slot.
+	proficiency.pendingReshapeOffers = rollWeaponProficiencyPerks(RESHAPE_OFFER_COUNT, { slot->perkType });
 	sendWeaponProficiencyReshapeOffers(itemId);
 }
 
@@ -13637,68 +13636,97 @@ void Player::applyEquippedWeaponProficiency(const uint16_t itemId) {
 		}
 	}
 
-	// 15.25 (sommerrelease26) SHAPE: apply the dust-modified slots on top of the tree perks. modSlot.perkType is
-	// a CLIENT CATALOGUE INDEX (1-323) from rollWeaponProficiencyPerk() -- NOT a server perk enum -- so decode the
-	// index range here into the SAME aggregate fields the tree-perk switch above uses (already-wired hooks pick
-	// them up). Magnitude is linear between the catalogue's rank-0 and rank-10 figures. See PORT.md §8.2.
+	// 15.30 SHAPE: apply the dust-shaped slots on top of the tree perks. modSlot.perkType is a CLIENT CATALOGUE INDEX
+	// (1-323, see WEAPON_PROFICIENCY_SHAPE_* in proficiencies_definitions.hpp) and modSlot.value its rank 0-10. Both
+	// decode exactly like the client (Proficiencies::decodeShapeIndex mirrors its index decoder and rank curves), so
+	// the bonus the player reads in the Shape dialog is the bonus the server applies.
+	sanitizeWeaponProficiencyShapes(itemId);
+	const auto highestCombatSkill = [this]() {
+		// "Highest combat skill" = the best of fist, club, sword, axe, distance and magic level.
+		skills_t best = SKILL_FIST;
+		uint16_t bestLevel = 0;
+		for (const skills_t skill : { SKILL_FIST, SKILL_CLUB, SKILL_SWORD, SKILL_AXE, SKILL_DISTANCE, SKILL_MAGLEVEL }) {
+			const uint16_t level = getSkillLevel(skill);
+			if (level > bestLevel) {
+				bestLevel = level;
+				best = skill;
+			}
+		}
+		return best;
+	};
 	for (const auto &modSlot : playerProficiencyData.modifiedSlots) {
-		const int32_t idx = static_cast<int32_t>(modSlot.perkType);
-		const float rankFraction = static_cast<float>(modSlot.value) / 10.0f;
-		const auto lerp = [rankFraction](float rank0, float rank10) {
-			return rank0 + (rank10 - rank0) * rankFraction;
-		};
-
-		// --- bestiary damage: 251-271 = 250 + bestiaryId (0.50% -> 2.50% vs that race) ---
-		if (idx >= 251 && idx <= 271) {
-			equippedWeaponProficiency.bestiaryRacePercentDamageGain += lerp(0.5f, 2.5f) / 100.0f;
-			equippedWeaponProficiency.bestiaryId = static_cast<uint8_t>(idx - 250); // single-slot: last decoded wins
+		const auto entry = Proficiencies::decodeShapeIndex(static_cast<uint16_t>(modSlot.perkType));
+		if (!entry.valid) {
+			g_logger().warn("[{}] Player {} weapon {}: unknown shaped perk index {}", __FUNCTION__, getName(), itemId, static_cast<uint16_t>(modSlot.perkType));
 			continue;
 		}
-
-		switch (idx) {
-			// --- leech / on-hit / on-kill / alpha / omega: 281-288 ---
-			case 281: // mana leech 1.00% -> 8.00% (stored as fraction * 10000 bp)
-				equippedWeaponProficiency.manaLeech += static_cast<uint16_t>((lerp(1.0f, 8.0f) / 100.0f) * 10000.0f);
+		const float value = entry.valueAtRank(modSlot.value);
+		switch (entry.perkType) {
+			case PROFICIENCY_PERK_AUGMENT_TYPE: {
+				WeaponProficiencyAugment augment;
+				augment.spellId = entry.spellId;
+				augment.augmentType = entry.augmentType;
+				augment.value = value;
+				equippedWeaponProficiency.spellAugments.push_back(augment);
 				break;
-			case 282: // life leech 1.00% -> 16.00%
-				equippedWeaponProficiency.lifeLeech += static_cast<uint16_t>((lerp(1.0f, 16.0f) / 100.0f) * 10000.0f);
+			}
+			case PROFICIENCY_PERK_BESTIARY_DAMAGE: {
+				equippedWeaponProficiency.bestiaryRacePercentDamageGain += value;
+				equippedWeaponProficiency.bestiaryId = entry.bestiaryId; // single-slot field: the last decoded race wins
 				break;
-			case 283: // +2 -> +12 mana on hit
-				equippedWeaponProficiency.manaGainOnHit += static_cast<uint8_t>(lerp(2.0f, 12.0f));
+			}
+			case PROFICIENCY_PERK_CRITICAL_HIT_CHANCE_FOR_OFFENSIVE_RUNES: {
+				equippedWeaponProficiency.critHitChanceForOffensiveRunes += static_cast<uint16_t>(value * 10000.0f);
 				break;
-			case 284: // +5 -> +25 HP on hit
-				equippedWeaponProficiency.lifeGainOnHit += static_cast<uint8_t>(lerp(5.0f, 25.0f));
+			}
+			case PROFICIENCY_PERK_CRITICAL_HIT_CHANCE_FOR_AUTOATTACK: {
+				equippedWeaponProficiency.critHitChanceForAutoAttack += static_cast<uint16_t>(value * 10000.0f);
 				break;
-			case 285: // +4 -> +24 mana on kill
-				equippedWeaponProficiency.manaGainOnKill += static_cast<uint8_t>(lerp(4.0f, 24.0f));
+			}
+			case PROFICIENCY_PERK_CRITICAL_EXTRA_DAMAGE_FOR_OFFENSIVE_RUNES: {
+				equippedWeaponProficiency.critExtraDamageForOffensiveRunes += static_cast<uint16_t>(value * 10000.0f);
 				break;
-			case 286: // +10 -> +50 HP on kill
-				equippedWeaponProficiency.lifeGainOnKill += static_cast<uint8_t>(lerp(10.0f, 50.0f));
+			}
+			case PROFICIENCY_PERK_CRITICAL_EXTRA_DAMAGE_FOR_AUTOATTACK: {
+				equippedWeaponProficiency.critExtraDamageForAutoAttack += static_cast<uint16_t>(value * 10000.0f);
 				break;
-			case 287: // alpha strike 2.00% -> 10.00% (vs targets above 95% HP)
-				equippedWeaponProficiency.alphaStrikeExtraDamage += lerp(2.0f, 10.0f) / 100.0f;
+			}
+			case PROFICIENCY_PERK_LIFE_GAIN_ONHIT: {
+				equippedWeaponProficiency.lifeGainOnHit += static_cast<uint8_t>(value);
 				break;
-			case 288: // omega strike 1.00% -> 4.00% (vs targets below 30% HP)
-				equippedWeaponProficiency.omegaStrikeExtraDamage += lerp(1.0f, 4.0f) / 100.0f;
+			}
+			case PROFICIENCY_PERK_MANA_GAIN_ONKILL: {
+				equippedWeaponProficiency.manaGainOnKill += static_cast<uint8_t>(value);
 				break;
-
-			// --- universals: 321 armor pen, 322 elemental pierce, 323 powerful foe ---
-			case 321: // armor penetration 5% -> 15%
-				equippedWeaponProficiency.armorPenetration += lerp(5.0f, 15.0f) / 100.0f;
+			}
+			case PROFICIENCY_PERK_LIFE_GAIN_ONKILL: {
+				equippedWeaponProficiency.lifeGainOnKill += static_cast<uint8_t>(value);
 				break;
-			case 322: // elemental pierce 5% -> 15% (no element sub-id -> all elements; curve estimated)
-				for (int element = 0; element < COMBAT_COUNT; ++element) {
-					equippedWeaponProficiency.elementalPierce[element] += lerp(5.0f, 15.0f) / 100.0f;
-				}
+			}
+			case PROFICIENCY_PERK_HIGHEST_COMBAT_SKILL_PERCENTAGE_AS_EXTRA_DAMAGE_FOR_AUTOATTACK: {
+				equippedWeaponProficiency.skillPercentageAsExtraDamageForAutoAttack[highestCombatSkill()] += value;
 				break;
-			case 323: // powerful foe (boss / sinister-embraced) 1% -> 5% (curve estimated)
-				equippedWeaponProficiency.damageGainBossAndSinisterEmbraced += lerp(1.0f, 5.0f) / 100.0f;
+			}
+			case PROFICIENCY_PERK_HIGHEST_COMBAT_SKILL_PERCENTAGE_AS_EXTRA_DAMAGE_FOR_SPELLS: {
+				equippedWeaponProficiency.skillPercentageAsExtraDamageForSpells[highestCombatSkill()] += value;
+			}
+			case PROFICIENCY_PERK_HIGHEST_COMBAT_SKILL_PERCENTAGE_AS_EXTRA_HEALING_FOR_SPELLS: {
+				equippedWeaponProficiency.skillPercentageAsExtraHealingForSpells[highestCombatSkill()] += value;
 				break;
-
+			}
+			case PROFICIENCY_PERK_ALPHA_STRIKE_EXTRA_DAMAGE: {
+				equippedWeaponProficiency.alphaStrikeExtraDamage += value;
+				break;
+			}
+			case PROFICIENCY_PERK_OMEGA_STRIKE_EXTRA_DAMAGE: {
+				equippedWeaponProficiency.omegaStrikeExtraDamage += value;
+				break;
+			}
+			case PROFICIENCY_PERK_ARMOR_PENETRATION: {
+				equippedWeaponProficiency.armorPenetration += value;
+				break;
+			}
 			default:
-				// 1-250 (per-vocation spell augments) and 291-317 (skill%) intentionally NOT applied yet (§8.3:
-				// augments need the authoritative (region, spellIndex) -> spellId map; skill% needs its real curve
-				// + the combat.cpp auto-attack sign fix). Decoded but parked until live data.
 				break;
 		}
 	}

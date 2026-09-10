@@ -67,6 +67,25 @@ struct WeaponProficiencyStruct {
 	std::vector<ProficiencyLevelStruct> proficiencyDataLevel;
 };
 
+// One decoded entry of the 15.30 SHAPE catalogue (see WEAPON_PROFICIENCY_SHAPE_* in proficiencies_definitions.hpp).
+struct WeaponProficiencyShapeEntry {
+	bool valid = false;
+	WeaponProficiencyPerkType_t perkType = PROFICIENCY_PERK_ATTACK_DAMAGE;
+	WeaponProficiencyPerkAugmentType_t augmentType = PROFICIENCY_AUGMENTTYPE_NONE;
+	uint16_t spellId = 0; // client spell id (augment entries)
+	uint8_t bestiaryId = 0; // bestiary entries
+	uint8_t region = WEAPON_PROFICIENCY_SHAPE_NO_REGION; // vocation region of augment entries, else NO_REGION
+	float rank0 = 0.0f; // magnitude at rank 0 (fractions for percentages, whole points for on-hit/on-kill gains)
+	float perRank = 0.0f; // magnitude added per rank; the client computes rank0 + perRank * rank
+
+	float valueAtRank(uint8_t rank) const {
+		if (rank > WEAPON_PROFICIENCY_SHAPE_MAX_RANK) {
+			rank = WEAPON_PROFICIENCY_SHAPE_MAX_RANK;
+		}
+		return rank0 + perRank * static_cast<float>(rank);
+	}
+};
+
 class Proficiencies {
 public:
 	Proficiencies() = default;
@@ -82,6 +101,13 @@ public:
 	const WeaponProficiencyStruct* getProficiencyByItemId(uint16_t itemId) const;
 	uint8_t getMaxProficiencyLevelForItem(uint16_t itemId) const;
 	uint8_t getMaxPerksPerProficiencyLevelForItem(uint16_t itemId, uint8_t level) const;
+
+	// 15.30 SHAPE catalogue helpers (pure functions over the constant tables, mirror the official client).
+	// cipVocation = Vocation_t client id (1 knight, 2 paladin, 3 sorcerer, 4 druid, 5 monk; promotions already folded).
+	static uint8_t getShapeRegionForVocation(uint16_t cipVocation);
+	static std::vector<uint16_t> getShapeableIndicesForVocation(uint16_t cipVocation);
+	static bool isShapeIndexAllowedForVocation(uint16_t index, uint16_t cipVocation);
+	static WeaponProficiencyShapeEntry decodeShapeIndex(uint16_t index);
 
 protected:
 	bool loaded = false;
