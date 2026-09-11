@@ -18,6 +18,7 @@
 #pragma once
 
 #include "declarations.hpp"
+#include "lua/scripts/script_binding.hpp"
 
 class MoveEvent;
 class LuaScriptInterface;
@@ -119,6 +120,16 @@ public:
 	bool registerLuaUniqueEvent(const std::shared_ptr<MoveEvent> &moveEvent);
 	bool registerLuaPositionEvent(const std::shared_ptr<MoveEvent> &moveEvent);
 	bool registerLuaEvent(const std::shared_ptr<MoveEvent> &event);
+
+	/**
+	 * @brief Every move event hooked to an item, and how each one got hooked.
+	 *
+	 * Unlike an action, several move events coexist on one item because each one
+	 * answers a different moment (stepping in, equipping, ...), so every match is
+	 * reported. Exposed to Lua through Item:getScriptBindings().
+	 */
+	[[nodiscard]] std::vector<ScriptBinding> getScriptBindings(const std::shared_ptr<Item> &item) const;
+
 	void clear();
 
 private:
