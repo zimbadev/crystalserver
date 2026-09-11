@@ -87,12 +87,9 @@ void Actions::reportShadowedPositionScripts() {
 
 			++shadowed;
 			if (shadowed <= maxExamples) {
-				std::string scriptName = "unknown script";
-				if (action && action->isLoadedScriptId()) {
-					// not named "interface": objbase.h defines it as a macro on Windows
-					if (auto* scriptInterface = action->getScriptInterface()) {
-						scriptName = scriptInterface->getFileById(action->getScriptId());
-					}
+				auto scriptName = ScriptBindings::fileOf(action);
+				if (scriptName.empty()) {
+					scriptName = "unknown script";
 				}
 
 				g_logger().warn(
@@ -347,6 +344,64 @@ std::shared_ptr<Action> Actions::getAction(const std::shared_ptr<Item> &item) {
 
 	// rune items
 	return g_spells().getRuneSpell(item->getID());
+}
+
+std::vector<ScriptBinding> Actions::getScriptBindings(const std::shared_ptr<Item> &item) const {
+	std::vector<ScriptBinding> bindings;
+	if (!item) {
+		return bindings;
+	}
+
+	// Same order getAction() walks, so the first entry is the script that really
+	// answers and everything found after it is dead weight on this item.
+	const auto add = [&bindings](std::string_view source, const std::shared_ptr<Action> &action) {
+		auto file = ScriptBindings::fileOf(action);
+		if (file.empty()) {
+			return;
+		}
+
+		ScriptBinding binding;
+		binding.kind = "Action";
+		binding.source = source;
+		binding.script = std::move(file);
+		binding.shadowed = !bindings.empty();
+		bindings.emplace_back(std::move(binding));
+	};
+
+	if (item->hasAttribute(ItemAttribute_t::UNIQUEID)) {
+		if (const auto it = uniqueItemMap.find(item->getAttribute<uint16_t>(ItemAttribute_t::UNIQUEID));
+		    it != uniqueItemMap.end()) {
+			add("unique id", it->second);
+		}
+	}
+
+	if (item->hasAttribute(ItemAttribute_t::ACTIONID)) {
+		if (const auto it = actionItemMap.find(item->getAttribute<uint16_t>(ItemAttribute_t::ACTIONID));
+		    it != actionItemMap.end()) {
+			add("action id", it->second);
+		}
+	}
+
+	if (const auto it = useItemMap.find(item->getID());
+	    it != useItemMap.end()) {
+		add("item id", it->second);
+	}
+
+	if (const auto it = actionPositionMap.find(item->getPosition());
+	    it != actionPositionMap.end()) {
+		// A position claims what lies on the map, never what a player carries, so
+		// an item in a backpack must not borrow the binding of the tile below it.
+		const auto &holdingPlayer = item->getHoldingPlayer();
+		if (item->getTile() && (!holdingPlayer || item->getTopParent() != holdingPlayer)) {
+			add("position", it->second);
+		}
+	}
+
+	if (const auto &runeSpell = g_spells().getRuneSpell(item->getID())) {
+		add("rune", runeSpell);
+	}
+
+	return bindings;
 }
 
 ReturnValue Actions::internalUseItem(const std::shared_ptr<Player> &player, const Position &pos, uint8_t index, const std::shared_ptr<Item> &item, bool isHotkey) {
