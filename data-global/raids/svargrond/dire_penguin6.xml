@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<raid>
+	<!--Single Spawns-->
+	<singlespawn delay="1000" name="Dire Penguin" x="32189" y="31245" z="7"/>
+</raid>
