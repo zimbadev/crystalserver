@@ -37,6 +37,91 @@ Actions &Actions::getInstance() {
 	return inject<Actions>();
 }
 
+void Actions::reportShadowedPositionScripts() {
+	// getAction() checks unique id, action id, item id and only then the position,
+	// so a position script loses to any id on that tile that another script claims.
+	// The base already warns about two scripts claiming the same id or the same
+	// position; this is the case that crosses the two and stays silent.
+	constexpr uint32_t maxExamples = 10;
+	uint32_t shadowed = 0;
+
+	for (const auto &[position, action] : actionPositionMap) {
+		const auto &tile = g_game().map.getTile(position);
+		if (!tile) {
+			continue;
+		}
+
+		for (size_t i = tile->getFirstIndex(), j = tile->getLastIndex(); i < j; ++i) {
+			const auto &thing = tile->getThing(i);
+			if (!thing) {
+				continue;
+			}
+
+			const auto &item = thing->getItem();
+			if (!item) {
+				continue;
+			}
+
+			const char* attribute = nullptr;
+			uint16_t value = 0;
+
+			if (item->hasAttribute(ItemAttribute_t::UNIQUEID)) {
+				const auto uniqueId = item->getAttribute<uint16_t>(ItemAttribute_t::UNIQUEID);
+				if (hasUniqueId(uniqueId)) {
+					attribute = "unique id";
+					value = uniqueId;
+				}
+			}
+
+			if (!attribute && item->hasAttribute(ItemAttribute_t::ACTIONID)) {
+				const auto actionId = item->getAttribute<uint16_t>(ItemAttribute_t::ACTIONID);
+				if (hasActionId(actionId)) {
+					attribute = "action id";
+					value = actionId;
+				}
+			}
+
+			if (!attribute) {
+				continue;
+			}
+
+			++shadowed;
+			if (shadowed <= maxExamples) {
+				std::string scriptName = "unknown script";
+				if (action && action->isLoadedScriptId()) {
+					// not named "interface": objbase.h defines it as a macro on Windows
+					if (auto* scriptInterface = action->getScriptInterface()) {
+						scriptName = scriptInterface->getFileById(action->getScriptId());
+					}
+				}
+
+				g_logger().warn(
+					"[{}] - the action registered for position {} never runs: item {} there carries {} {}, "
+					"which another script also registers, and ids are checked before the position. Script: {}",
+					__FUNCTION__,
+					position.toString(),
+					item->getID(),
+					attribute,
+					value,
+					scriptName
+				);
+			}
+		}
+	}
+
+	if (shadowed == 0) {
+		return;
+	}
+
+	if (shadowed > maxExamples) {
+		g_logger().warn(
+			"[{}] - and {} more position script(s) shadowed the same way.",
+			__FUNCTION__,
+			shadowed - maxExamples
+		);
+	}
+}
+
 void Actions::clear() {
 	useItemMap.clear();
 	uniqueItemMap.clear();

@@ -248,10 +248,6 @@ QuestDoorAction = {
 		itemId = false,
 		itemPos = { { x = 33482, y = 32786, z = 11 } },
 	},
-	[Storage.Quest.U10_90.FerumbrasAscension.TarbazDoor] = {
-		itemId = false,
-		itemPos = { { x = 33470, y = 32786, z = 11 } },
-	},
 	-- Wrath of the emperor door
 	[Storage.Quest.U8_6.WrathOfTheEmperor.Mission02] = {
 		itemId = false,
@@ -472,29 +468,24 @@ QuestDoorAction = {
 		},
 	},
 	[Storage.Quest.U8_4.BloodBrothers.LersatioDoor] = {
-		itemId = 8259,
+		-- two doors with different item ids on the same storage, hence the false
+		itemId = false,
 		itemPos = {
-			{ x = 32956, y = 31468, z = 6 },
-		},
-	},
-	[Storage.Quest.U8_4.BloodBrothers.LersatioDoor] = {
-		itemId = 8261,
-		itemPos = {
-			{ x = 32953, y = 31460, z = 7 },
+			{ x = 32956, y = 31468, z = 6 }, -- 8259
+			{ x = 32953, y = 31460, z = 7 }, -- 8261
 		},
 	},
 	[Storage.Quest.U8_4.BloodBrothers.Arthei_Marziel_Door] = {
-		itemId = 8259,
-		itemPos = {
-			{ x = 32950, y = 31464, z = 6 },
-			{ x = 32956, y = 31446, z = 8 },
+		{
+			-- two doors with different item ids on the same storage, hence the false
+			itemId = false,
+			itemPos = {
+				{ x = 32950, y = 31464, z = 6 },
+				{ x = 32956, y = 31446, z = 8 },
+				{ x = 32953, y = 31451, z = 4 },
+			},
 		},
-	},
-	[Storage.Quest.U8_4.BloodBrothers.Arthei_Marziel_Door] = {
-		itemId = 8261,
-		itemPos = {
-			{ x = 32953, y = 31451, z = 4 },
-		},
+		{ itemId = 8261, itemPos = { { x = 32953, y = 31450, z = 6 } } }, -- closed door
 	},
 	[Storage.Quest.U8_4.BloodBrothers.CastleHiddenEntrance] = {
 		itemId = 8261,
@@ -552,11 +543,6 @@ QuestDoorAction = {
 			{ x = 33284, y = 31791, z = 13 },
 			{ x = 33307, y = 32291, z = 7 },
 		},
-	},
-	-- The thieves guild door
-	[Storage.Quest.U8_2.TheThievesGuildQuest.Mission04] = {
-		itemId = false,
-		itemPos = { { x = 32359, y = 32787, z = 6 } },
 	},
 	[Storage.Quest.U8_2.TheThievesGuildQuest.Mission05] = {
 		itemId = false,
@@ -991,6 +977,11 @@ QuestDoorAction = {
 			{ x = 32953, y = 31460, z = 9 },
 		},
 	},
+	-- closed door
+	[1000] = {
+		itemId = 5122,
+		itemPos = { { x = 32226, y = 31049, z = 7 } },
+	},
 	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_02] = {
 		itemId = 8363,
 		itemPos = {
@@ -1081,6 +1072,52 @@ QuestDoorAction = {
 			{ x = 32681, y = 31992, z = 14 },
 		},
 	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- closed door
+	[1001] = {
+		itemId = 1644,
+		itemPos = {
+			{ x = 32085, y = 31988, z = 8 },
+			{ x = 32112, y = 31988, z = 8 },
+		},
+	},
+	-- closed door
+	[47952] = {
+		itemId = 42744,
+		itemPos = { { x = 32971, y = 32398, z = 9 } },
+	},
+	-- closed door
+	[47975] = {
+		itemId = 5122,
+		itemPos = { { x = 34072, y = 32345, z = 14 } },
+	},
+	-- Burning Heart (Emiliana) - the door to the portal, upstairs in Targuna.
+	-- It does NOT use Storage.Quest.U15_24.Targuna.BurningHeart.Mission (48061) as the
+	-- key: that value is already the action id of the Heart of Destruction teleport
+	-- somewhere else on the map (movements_teleport.lua) and the two would collide --
+	-- opening the door would send the player to Edron. It uses 48077 instead, free
+	-- inside Targuna's reserved range 48049-48090, as an action id of its own.
+	-- actions_burning_heart_door.lua registers an Action on that id and checks the
+	-- storage itself; the action id resolves before the item id (Actions::getAction), so
+	-- this Action wins over the generic data/scripts/actions/doors/quest_door.lua, which
+	-- also claims item id 7721 through QuestDoorTable.
+	[48077] = {
+		itemId = 7721,
+		itemPos = {
+			{ x = 31961, y = 31898, z = 5 },
+		},
+	},
+	-- closed door
+	[65535] = {
+		itemId = 9558,
+		itemPos = {
+			{ x = 33792, y = 31627, z = 9 },
+			{ x = 33812, y = 31655, z = 9 },
+		},
+	},
 }
 
 QuestDoorUnique = {
@@ -1115,5 +1152,14 @@ QuestDoorUnique = {
 	[22006] = {
 		itemId = 5107,
 		itemPos = { x = 32177, y = 32148, z = 11 },
+	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- closed door
+	[50085] = {
+		itemId = 6898,
+		itemPos = { x = 32058, y = 32266, z = 7 },
 	},
 }

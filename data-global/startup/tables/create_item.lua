@@ -1,42 +1,4 @@
 CreateItemOnMap = {
-	-- The Explorer Society - dwarven pickaxe in 6 locals
-	[4845] = {
-		itemPos = {
-			{ x = 32506, y = 31964, z = 12 },
-			{ x = 32427, y = 31900, z = 12 },
-			{ x = 32520, y = 31929, z = 10 },
-			{ x = 32503, y = 31922, z = 12 },
-			{ x = 32447, y = 31973, z = 11 },
-			{ x = 32425, y = 31948, z = 12 },
-		},
-	},
-	[11402] = {
-		itemPos = { { x = 33242, y = 31213, z = 10 } },
-	},
-	-- Missing Giant Cake
-	[12085] = {
-		itemPos = { { x = 33318, y = 32069, z = 7 } },
-	},
-	-- Extraction Machine - Liberty Bay (A Piece of Cake Quest)
-	[5307] = {
-		itemPos = {
-			{ x = 32372, y = 32799, z = 7 },
-			{ x = 32379, y = 32799, z = 7 },
-			{ x = 32372, y = 32803, z = 7 },
-			{ x = 32379, y = 32803, z = 7 },
-		},
-		removeItemId = 3639,
-	},
-	[2162] = {
-		itemPos = {
-			{ x = 32373, y = 32799, z = 7 },
-			{ x = 32374, y = 32799, z = 7 },
-			{ x = 32375, y = 32799, z = 7 },
-			{ x = 32376, y = 32799, z = 7 },
-			{ x = 32377, y = 32799, z = 7 },
-			{ x = 32378, y = 32799, z = 7 },
-		},
-	},
 	[429] = {
 		itemPos = {
 			{ x = 32373, y = 32800, z = 7 },
@@ -58,23 +20,12 @@ CreateItemOnMap = {
 		},
 		removeItemId = { 1855, 3888, 6217, 6218, 21935 },
 	},
-	[4971] = {
+	[564] = {
 		itemPos = {
-			{ x = 32374, y = 32801, z = 7 },
-			{ x = 32375, y = 32801, z = 7 },
-			{ x = 32376, y = 32801, z = 7 },
-			{ x = 32374, y = 32802, z = 7 },
-			{ x = 32375, y = 32802, z = 7 },
-			{ x = 32376, y = 32802, z = 7 },
+			{ x = 33271, y = 31797, z = 6 },
+			{ x = 33271, y = 31797, z = 11 },
 		},
-		removeItemId = { 1855, 1856, 1865 },
-	},
-	[8886] = {
-		itemPos = {
-			{ x = 32377, y = 32801, z = 7 },
-			{ x = 32377, y = 32802, z = 7 },
-		},
-		removeItemId = 3654,
+		removeItemId = 1949,
 	},
 	[846] = {
 		itemPos = {
@@ -88,23 +39,40 @@ CreateItemOnMap = {
 			{ x = 32378, y = 32800, z = 7 },
 		},
 	},
-	[5468] = {
+	-- Fibula wall + door + chest (Shadows of Yalahar Quest)
+	[1270] = { -- brick wall
 		itemPos = {
-			{ x = 32375, y = 32800, z = 7 },
-			{ x = 32376, y = 32800, z = 7 },
+			{ x = 32248, y = 32473, z = 10 },
+			{ x = 32248, y = 32474, z = 10 },
+			{ x = 32250, y = 32473, z = 10 },
 		},
 	},
-	[11814] = {
+	[1272] = { -- brick wall
 		itemPos = {
-			{ x = 32373, y = 32803, z = 7 },
-			{ x = 32378, y = 32803, z = 7 },
+			{ x = 32248, y = 32472, z = 10 },
 		},
 	},
-	[2342] = {
+	[1276] = { -- brick wall
 		itemPos = {
-			{ x = 32374, y = 32803, z = 7 },
-			{ x = 32377, y = 32803, z = 7 },
+			{ x = 32250, y = 32474, z = 10 },
 		},
+		removeItemId = 390,
+	},
+	[1642] = {
+		itemPos = { -- door
+			{ x = 33265, y = 31797, z = 11 }, -- Telas lab
+			{ x = 33249, y = 31797, z = 11 }, -- Telas lab
+			{ x = 32536, y = 31628, z = 8 }, -- Northport cave
+		},
+		removeItemId = { 8365, 1646, 1696 },
+	},
+	[1644] = {
+		itemPos = { -- closed door
+			{ x = 33271, y = 31798, z = 6 }, -- Telas (Edron)
+			{ x = 32249, y = 32474, z = 10 }, -- Fibula - Shadows of Yalahar Quest
+			{ x = 32681, y = 31992, z = 14 }, -- The Isle of Evil Door
+		},
+		removeItemId = { 1648, 7727 },
 	},
 	[1722] = {
 		itemPos = {
@@ -112,16 +80,14 @@ CreateItemOnMap = {
 			{ x = 32377, y = 32803, z = 7 },
 		},
 	},
-	[8971] = {
+	[2162] = {
 		itemPos = {
-			{ x = 32374, y = 32803, z = 7 },
-			{ x = 32377, y = 32803, z = 7 },
-		},
-	},
-	[5469] = {
-		itemPos = {
-			{ x = 32375, y = 32803, z = 7 },
-			{ x = 32376, y = 32803, z = 7 },
+			{ x = 32373, y = 32799, z = 7 },
+			{ x = 32374, y = 32799, z = 7 },
+			{ x = 32375, y = 32799, z = 7 },
+			{ x = 32376, y = 32799, z = 7 },
+			{ x = 32377, y = 32799, z = 7 },
+			{ x = 32378, y = 32799, z = 7 },
 		},
 	},
 	[2163] = {
@@ -134,6 +100,78 @@ CreateItemOnMap = {
 			{ x = 32378, y = 32804, z = 7 },
 		},
 		removeItemId = 3889,
+	},
+	[2342] = {
+		itemPos = {
+			{ x = 32374, y = 32803, z = 7 },
+			{ x = 32377, y = 32803, z = 7 },
+		},
+	},
+	[2469] = {
+		itemPos = { -- box
+			{ x = 32903, y = 31281, z = 11 },
+			{ x = 32548, y = 31244, z = 13 }, -- fenrock (Golem Head)-Shadows of Yalahar
+		},
+	},
+	[2472] = { -- chest
+		itemPos = {
+			{ x = 32249, y = 32473, z = 10 }, -- fibula Shadows of Yalahar Quest
+			{ x = 33239, y = 31798, z = 11 }, -- telas lab (Golem Wrench)
+		},
+	},
+	[2473] = { -- box
+		itemPos = {
+			{ x = 32944, y = 31195, z = 13 },
+		},
+	},
+	[4285] = { -- pile of bones (deep crystal reward)
+		itemPos = {
+			{ x = 32693, y = 31565, z = 13 },
+		},
+	},
+	-- The Explorer Society - dwarven pickaxe in 6 locals
+	[4845] = {
+		itemPos = {
+			{ x = 32506, y = 31964, z = 12 },
+			{ x = 32427, y = 31900, z = 12 },
+			{ x = 32520, y = 31929, z = 10 },
+			{ x = 32503, y = 31922, z = 12 },
+			{ x = 32447, y = 31973, z = 11 },
+			{ x = 32425, y = 31948, z = 12 },
+		},
+	},
+	[4971] = {
+		itemPos = {
+			{ x = 32374, y = 32801, z = 7 },
+			{ x = 32375, y = 32801, z = 7 },
+			{ x = 32376, y = 32801, z = 7 },
+			{ x = 32374, y = 32802, z = 7 },
+			{ x = 32375, y = 32802, z = 7 },
+			{ x = 32376, y = 32802, z = 7 },
+		},
+		removeItemId = { 1855, 1856, 1865 },
+	},
+	-- Extraction Machine - Liberty Bay (A Piece of Cake Quest)
+	[5307] = {
+		itemPos = {
+			{ x = 32372, y = 32799, z = 7 },
+			{ x = 32379, y = 32799, z = 7 },
+			{ x = 32372, y = 32803, z = 7 },
+			{ x = 32379, y = 32803, z = 7 },
+		},
+		removeItemId = 3639,
+	},
+	[5468] = {
+		itemPos = {
+			{ x = 32375, y = 32800, z = 7 },
+			{ x = 32376, y = 32800, z = 7 },
+		},
+	},
+	[5469] = {
+		itemPos = {
+			{ x = 32375, y = 32803, z = 7 },
+			{ x = 32376, y = 32803, z = 7 },
+		},
 	},
 	[8276] = {
 		itemPos = {
@@ -170,23 +208,17 @@ CreateItemOnMap = {
 			{ x = 32864, y = 31257, z = 11 },
 		},
 	},
-	[9628] = {
+	[8886] = {
 		itemPos = {
-			{ x = 32867, y = 31257, z = 11 },
-			{ x = 32869, y = 31257, z = 11 },
-			{ x = 32871, y = 31257, z = 11 },
-			{ x = 32873, y = 31257, z = 11 },
+			{ x = 32377, y = 32801, z = 7 },
+			{ x = 32377, y = 32802, z = 7 },
 		},
+		removeItemId = 3654,
 	},
-	[2469] = {
-		itemPos = { -- box
-			{ x = 32903, y = 31281, z = 11 },
-			{ x = 32548, y = 31244, z = 13 }, -- fenrock (Golem Head)-Shadows of Yalahar
-		},
-	},
-	[2473] = { -- box
+	[8971] = {
 		itemPos = {
-			{ x = 32944, y = 31195, z = 13 },
+			{ x = 32374, y = 32803, z = 7 },
+			{ x = 32377, y = 32803, z = 7 },
 		},
 	},
 	[9192] = { -- yalahari inkwell
@@ -195,36 +227,6 @@ CreateItemOnMap = {
 		},
 		removeItemId = 642,
 	},
-	[4285] = { -- pile of bones (deep crystal reward)
-		itemPos = {
-			{ x = 32693, y = 31565, z = 13 },
-		},
-	},
-	-- Fibula wall + door + chest (Shadows of Yalahar Quest)
-	[1270] = { -- brick wall
-		itemPos = {
-			{ x = 32248, y = 32473, z = 10 },
-			{ x = 32248, y = 32474, z = 10 },
-			{ x = 32250, y = 32473, z = 10 },
-		},
-	},
-	[1272] = { -- brick wall
-		itemPos = {
-			{ x = 32248, y = 32472, z = 10 },
-		},
-	},
-	[1276] = { -- brick wall
-		itemPos = {
-			{ x = 32250, y = 32474, z = 10 },
-		},
-		removeItemId = 390,
-	},
-	[2472] = { -- chest
-		itemPos = {
-			{ x = 32249, y = 32473, z = 10 }, -- fibula Shadows of Yalahar Quest
-			{ x = 33239, y = 31798, z = 11 }, -- telas lab (Golem Wrench)
-		},
-	},
 	[9236] = { -- animal fetish
 		itemPos = {
 			{ x = 32977, y = 31712, z = 7 },
@@ -232,27 +234,25 @@ CreateItemOnMap = {
 			{ x = 32979, y = 31712, z = 7 },
 		},
 	},
-	[1644] = {
-		itemPos = { -- closed door
-			{ x = 33271, y = 31798, z = 6 }, -- Telas (Edron)
-			{ x = 32249, y = 32474, z = 10 }, -- Fibula - Shadows of Yalahar Quest
-			{ x = 32681, y = 31992, z = 14 }, -- The Isle of Evil Door
-		},
-		removeItemId = { 1648, 7727 },
-	},
-	[564] = {
+	[9628] = {
 		itemPos = {
-			{ x = 33271, y = 31797, z = 6 },
-			{ x = 33271, y = 31797, z = 11 },
+			{ x = 32867, y = 31257, z = 11 },
+			{ x = 32869, y = 31257, z = 11 },
+			{ x = 32871, y = 31257, z = 11 },
+			{ x = 32873, y = 31257, z = 11 },
 		},
-		removeItemId = 1949,
 	},
-	[1642] = {
-		itemPos = { -- door
-			{ x = 33265, y = 31797, z = 11 }, -- Telas lab
-			{ x = 33249, y = 31797, z = 11 }, -- Telas lab
-			{ x = 32536, y = 31628, z = 8 }, -- Northport cave
+	[11402] = {
+		itemPos = { { x = 33242, y = 31213, z = 10 } },
+	},
+	[11814] = {
+		itemPos = {
+			{ x = 32373, y = 32803, z = 7 },
+			{ x = 32378, y = 32803, z = 7 },
 		},
-		removeItemId = { 8365, 1646, 1696 },
+	},
+	-- Missing Giant Cake
+	[12085] = {
+		itemPos = { { x = 33318, y = 32069, z = 7 } },
 	},
 }

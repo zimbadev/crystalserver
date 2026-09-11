@@ -169,6 +169,17 @@ public:
 	bool registerLuaActionEvent(const std::shared_ptr<Action> &action);
 	bool registerLuaPositionEvent(const std::shared_ptr<Action> &action);
 	bool registerLuaEvent(const std::shared_ptr<Action> &action);
+
+	/**
+	 * @brief Reports scripts registered by position that can never run.
+	 *
+	 * getAction() looks up unique id, then action id, then item id, and only then
+	 * the position. So a script registered for a position is dead whenever an item
+	 * on that tile carries an id another script also registered. Call it after the
+	 * startup tables have stamped the map, through Game.reportShadowedScripts().
+	 */
+	void reportShadowedPositionScripts();
+
 	// Clear maps for reloading
 	void clear();
 
