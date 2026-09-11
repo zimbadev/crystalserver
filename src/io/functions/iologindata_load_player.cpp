@@ -1281,6 +1281,41 @@ void IOLoginDataLoad::loadPlayerWeaponProficiency(const std::shared_ptr<Player> 
 
 		player->weaponProficiencies[itemId] = std::move(data);
 	}
+
+	// 15.25 (sommerrelease26) SHAPE: trailing modified-slots section. Old blobs end above, so a failed read
+	// simply means the player has no modified slots. See PORT.md §7.5.
+	uint16_t modifiedWeaponCount;
+	if (stream.read<uint16_t>(modifiedWeaponCount)) {
+		for (uint16_t i = 0; i < modifiedWeaponCount; ++i) {
+			uint16_t itemId;
+			if (!stream.read<uint16_t>(itemId)) {
+				break;
+			}
+
+			uint8_t slotCount;
+			if (!stream.read<uint8_t>(slotCount)) {
+				break;
+			}
+
+			auto &data = player->weaponProficiencies[itemId];
+			for (uint8_t j = 0; j < slotCount; ++j) {
+				uint8_t level;
+				uint8_t pos;
+				uint16_t perkTypeRaw;
+				uint8_t value;
+				if (!stream.read<uint8_t>(level) || !stream.read<uint8_t>(pos) || !stream.read<uint16_t>(perkTypeRaw) || !stream.read<uint8_t>(value)) {
+					break;
+				}
+
+				WeaponProficiencyModifiedSlot slot {};
+				slot.proficiencyLevel = level;
+				slot.perkPosition = pos;
+				slot.perkType = static_cast<WeaponProficiencyPerkType_t>(perkTypeRaw);
+				slot.value = value;
+				data.modifiedSlots.push_back(slot);
+			}
+		}
+	}
 }
 
 void IOLoginDataLoad::loadPlayerExivaRestrictions(const std::shared_ptr<Player> &player) {

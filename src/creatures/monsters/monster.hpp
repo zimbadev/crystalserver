@@ -231,6 +231,8 @@ public:
 
 	float getDefenseMultiplier() const;
 
+	bool applyEchoWarden(float hpMult, float atkMult);
+
 	bool isDead() const override;
 
 	void setDead(bool isDead);
@@ -315,6 +317,9 @@ private:
 	bool hazardDefenseBoost = false;
 
 	bool soulPit = false;
+
+	bool echoWarden = false;
+	float echoAtkMult = 1.0f;
 
 	bool m_isDead = false;
 	bool m_isImmune = false;

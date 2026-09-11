@@ -355,6 +355,29 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 		}
 	}
 
+	// 15.25 (sommerrelease26) SHAPE: trailing modified-slots section. Appended AFTER the main loop so old blobs
+	// (which lack it) still load — the loader treats a missing section as "no modified slots". See PORT.md §7.5.
+	uint16_t modifiedWeaponCount = 0;
+	for (const auto &entry : player->weaponProficiencies) {
+		if (!entry.second.modifiedSlots.empty()) {
+			++modifiedWeaponCount;
+		}
+	}
+	propWeaponProficiency.write<uint16_t>(modifiedWeaponCount);
+	for (const auto &[itemId, proficiency] : player->weaponProficiencies) {
+		if (proficiency.modifiedSlots.empty()) {
+			continue;
+		}
+		propWeaponProficiency.write<uint16_t>(itemId);
+		propWeaponProficiency.write<uint8_t>(static_cast<uint8_t>(proficiency.modifiedSlots.size()));
+		for (const auto &slot : proficiency.modifiedSlots) {
+			propWeaponProficiency.write<uint8_t>(slot.proficiencyLevel);
+			propWeaponProficiency.write<uint8_t>(slot.perkPosition);
+			propWeaponProficiency.write<uint16_t>(static_cast<uint16_t>(slot.perkType));
+			propWeaponProficiency.write<uint8_t>(slot.value);
+		}
+	}
+
 	size_t proficiencySize;
 	const char* proficiencyData = propWeaponProficiency.getStream(proficiencySize);
 

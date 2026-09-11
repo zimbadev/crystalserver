@@ -72,6 +72,7 @@ enum Resource_t : uint8_t {
 	RESOURCE_FORGE_DUST = 0x46,
 	RESOURCE_FORGE_SLIVER = 0x47,
 	RESOURCE_FORGE_CORES = 0x48,
+	RESOURCE_FORGE_DUST_LIMIT = 0x49, // 15.25 (sommerrelease26): forge dust cap, polled next to current dust
 	RESOURCE_LESSER_GEMS = 0x51,
 	RESOURCE_REGULAR_GEMS = 0x52,
 	RESOURCE_GREATER_GEMS = 0x53,
@@ -167,5 +168,11 @@ enum WeaponProficiency_t : uint8_t {
 	WEAPON_PROFICIENCY_ITEM_INFO = 0,
 	WEAPON_PROFICIENCY_LIST_INFO = 1,
 	WEAPON_PROFICIENCY_RESET_PERKS = 2,
-	WEAPON_PROFICIENCY_APPLY_PERKS = 3
+	WEAPON_PROFICIENCY_APPLY_PERKS = 3,
+	WEAPON_PROFICIENCY_MODIFY_SLOT = 4, // 15.25 sommerrelease26: dust-roll a custom effect onto a perk slot
+	WEAPON_PROFICIENCY_REFINE_SLOT = 5, // 15.25: raise a modified slot's rank by one (Refine button)
+	WEAPON_PROFICIENCY_MAXIMISE_SLOT = 6, // 15.25: push a modified slot to max rank (Maximise button)
+	WEAPON_PROFICIENCY_RESHAPE_SLOT = 7, // 15.25: re-roll — server offers 3 perks to pick from (Reshape)
+	WEAPON_PROFICIENCY_PICK_OFFER = 8, // 15.25: pick one of the reshape offers (replace the slot's perk)
+	WEAPON_PROFICIENCY_CLEAR_SLOT = 9 // 15.25: free — remove the modification, restore the tree perk (Clear)
 };
