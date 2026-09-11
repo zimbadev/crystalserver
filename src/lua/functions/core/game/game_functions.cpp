@@ -53,6 +53,7 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "getPlayers", GameFunctions::luaGameGetPlayers);
 	Lua::registerMethod(L, "Game", "loadMap", GameFunctions::luaGameLoadMap);
 	Lua::registerMethod(L, "Game", "loadMapChunk", GameFunctions::luaGameloadMapChunk);
+	Lua::registerMethod(L, "Game", "clearArea", GameFunctions::luaGameClearArea);
 
 	Lua::registerMethod(L, "Game", "getExperienceForLevel", GameFunctions::luaGameGetExperienceForLevel);
 	Lua::registerMethod(L, "Game", "getMonsterCount", GameFunctions::luaGameGetMonsterCount);
@@ -388,6 +389,18 @@ int GameFunctions::luaGameloadMapChunk(lua_State* L) {
 	const std::string &path = Lua::getString(L, 1);
 	const Position &position = Lua::getPosition(L, 2);
 	g_dispatcher().addEvent([path, position]() { g_game().loadMap(path, position); }, __FUNCTION__);
+	return 0;
+}
+
+int GameFunctions::luaGameClearArea(lua_State* L) {
+	// Game.clearArea(x1, y1, z1, x2, y2, z2)
+	const uint16_t x1 = Lua::getNumber<uint16_t>(L, 1);
+	const uint16_t y1 = Lua::getNumber<uint16_t>(L, 2);
+	const uint8_t z1 = Lua::getNumber<uint8_t>(L, 3);
+	const uint16_t x2 = Lua::getNumber<uint16_t>(L, 4);
+	const uint16_t y2 = Lua::getNumber<uint16_t>(L, 5);
+	const uint8_t z2 = Lua::getNumber<uint8_t>(L, 6);
+	g_dispatcher().addEvent([x1, y1, z1, x2, y2, z2]() { g_game().clearArea(x1, y1, z1, x2, y2, z2); }, __FUNCTION__);
 	return 0;
 }
 

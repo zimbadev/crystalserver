@@ -33,6 +33,7 @@ private:
 	static int luaGameGetPlayers(lua_State* L);
 	static int luaGameLoadMap(lua_State* L);
 	static int luaGameloadMapChunk(lua_State* L);
+	static int luaGameClearArea(lua_State* L);
 
 	static int luaGameGetExperienceForLevel(lua_State* L);
 	static int luaGameGetMonsterCount(lua_State* L);
