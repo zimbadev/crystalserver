@@ -52,7 +52,7 @@ QuestDoorAction = {
 	},
 	-- Edron
 	[Storage.Kilmaresh.Sixth.Favor] = {
-		itemId = false,
+		itemId = 9558,
 		itemPos = {
 			{ x = 33855, y = 31450, z = 9 },
 			{ x = 33855, y = 31496, z = 9 },
@@ -838,17 +838,6 @@ QuestDoorAction = {
 	[Storage.Kilmaresh.AccessDoor] = {
 		itemId = false,
 		itemPos = { { x = 33886, y = 31476, z = 7 } },
-	},
-	[Storage.Kilmaresh.CatacombDoors] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33855, y = 31450, z = 9 },
-			{ x = 33912, y = 31466, z = 9 },
-			{ x = 33855, y = 31496, z = 9 },
-			{ x = 33911, y = 31496, z = 9 },
-			{ x = 33884, y = 31510, z = 9 },
-			{ x = 33884, y = 31536, z = 9 },
-		},
 	},
 	[Storage.Quest.U12_60.APiratesTail.TentuglyDoor] = {
 		itemId = false,
