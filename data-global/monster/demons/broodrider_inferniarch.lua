@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Broodrider Inferniarch")
 local monster = {}
 
 monster.description = "a broodrider inferniarch"
-monster.experience = 7850
+monster.experience = 7400
 monster.outfit = {
 	lookType = 1796,
 	lookHead = 0,
@@ -106,8 +106,8 @@ monster.defenses = {
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = -5 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = -10 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = -5 },
 	{ type = COMBAT_EARTHDAMAGE, percent = 10 },
 	{ type = COMBAT_FIREDAMAGE, percent = 20 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },

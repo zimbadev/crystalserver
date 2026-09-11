@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Twisted Shaper")
 local monster = {}
 
 monster.description = "a twisted shaper"
-monster.experience = 1750
+monster.experience = 2050
 monster.outfit = {
 	lookType = 932,
 	lookHead = 105,
@@ -105,7 +105,7 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 25,
-	armor = 25,
+	armor = 35,
 	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_HEALING, minDamage = 400, maxDamage = 500, effect = CONST_ME_MAGIC_BLUE, target = false },
 }
 

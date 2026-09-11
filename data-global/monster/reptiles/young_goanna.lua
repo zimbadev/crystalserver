@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Young Goanna")
 local monster = {}
 
 monster.description = "a young goanna"
-monster.experience = 6100
+monster.experience = 5250
 monster.outfit = {
 	lookType = 1196,
 	lookHead = 0,
@@ -26,8 +26,8 @@ monster.Bestiary = {
 	Locations = "Kilmaresh Central Steppe, Kilmaresh Southern Steppe, Green Belt.",
 }
 
-monster.health = 6200
-monster.maxHealth = 6200
+monster.health = 6950
+monster.maxHealth = 6950
 monster.race = "blood"
 monster.corpse = 31409
 monster.speed = 190
