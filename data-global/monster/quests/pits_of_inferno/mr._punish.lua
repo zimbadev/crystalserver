@@ -72,6 +72,21 @@ monster.voices = {
 
 monster.loot = {
 	{ id = 6537, chance = 100000 }, -- mr. punish's handcuffs
+	{ id = 6499, chance = 93000 }, -- demonic essence
+	{ id = 5944, chance = 93000 }, -- soul orb
+	{ id = 3031, chance = 100000, maxCount = 129 }, -- gold coin
+	{ id = 3275, chance = 29000 }, -- steel axe
+	{ id = 5801, chance = 21000 }, -- jewelled backpack
+	{ id = 239, chance = 14000 }, -- great health potion
+	{ id = 3035, chance = 14300, maxCount = 2 }, -- platinum coin
+	{ id = 9058, chance = 14300 }, -- gold ingot	
+	{ id = 5479, chance = 14300 }, -- cat's paw
+	{ id = 7368, chance = 14300, maxCount = 3 }, -- assassin star
+	{ id = 3331, chance = 7100 }, -- ravager's axe
+	{ id = 238, chance = 7100 }, -- great mana potion
+	{ id = 6491, chance = 7100 }, -- bat decoration
+	{ id = 3028, chance = 7100 }, -- small diamond
+	{ id = 7435, chance = 5000 }, -- impaler
 }
 
 monster.attacks = {
