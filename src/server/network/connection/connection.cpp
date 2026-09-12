@@ -67,9 +67,7 @@ Connection::Connection(asio::io_service &initIoService, ConstServicePort_ptr ini
 }
 
 void Connection::close(bool force) {
-	ConnectionManager::getInstance().releaseConnection(shared_from_this());
-
-	std::scoped_lock lock(connectionLock);
+	std::unique_lock lock(connectionLock);
 	ip = 0;
 
 	if (connectionState == CONNECTION_STATE_CLOSED) {
@@ -84,6 +82,9 @@ void Connection::close(bool force) {
 	if (messageQueue.empty() || force) {
 		closeSocket();
 	}
+
+	lock.unlock();
+	ConnectionManager::getInstance().releaseConnection(shared_from_this());
 }
 
 void Connection::closeSocket() {
