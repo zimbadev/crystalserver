@@ -91,6 +91,12 @@ public:
 	void loadHouseInfo();
 
 	/**
+	 * Clear all tiles in a rectangular area.
+	 * Removes all items and resets tiles/cache to nullptr.
+	 */
+	void clearArea(uint16_t x1, uint16_t y1, uint8_t z1, uint16_t x2, uint16_t y2, uint8_t z2);
+
+	/**
 	 * Save a map.
 	 * \returns true if the map was saved successfully
 	 */

@@ -890,6 +890,10 @@ void Game::loadMap(const std::string &path, const Position &pos) {
 	}
 }
 
+void Game::clearArea(uint16_t x1, uint16_t y1, uint8_t z1, uint16_t x2, uint16_t y2, uint8_t z2) {
+	map.clearArea(x1, y1, z1, x2, y2, z2);
+}
+
 std::shared_ptr<Cylinder> Game::internalGetCylinder(const std::shared_ptr<Player> &player, const Position &pos) {
 	if (pos.x != 0xFFFF) {
 		return map.getTile(pos);
