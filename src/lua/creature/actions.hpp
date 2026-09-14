@@ -18,6 +18,7 @@
 #pragma once
 
 #include "declarations.hpp"
+#include "lua/scripts/script_binding.hpp"
 
 class Action;
 class LuaScriptInterface;
@@ -179,6 +180,15 @@ public:
 	 * startup tables have stamped the map, through Game.reportShadowedScripts().
 	 */
 	void reportShadowedPositionScripts();
+
+	/**
+	 * @brief Every action script hooked to an item, and how each one got hooked.
+	 *
+	 * Walks the same order getAction() does, so the first entry is the script that
+	 * actually answers; anything after it is flagged as shadowed. Exposed to Lua
+	 * through Item:getScriptBindings() so a look can name the file.
+	 */
+	[[nodiscard]] std::vector<ScriptBinding> getScriptBindings(const std::shared_ptr<Item> &item) const;
 
 	// Clear maps for reloading
 	void clear();
