@@ -372,8 +372,9 @@ void Connection::internalWorker() {
 	}
 
 	const auto &outputMessage = messageQueue.front();
+	auto currentProtocol = protocol;
 	lock.unlock();
-	protocol->onSendMessage(outputMessage);
+	currentProtocol->onSendMessage(outputMessage);
 	lock.lock();
 
 	internalSend(outputMessage);
