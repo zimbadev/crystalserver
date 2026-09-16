@@ -18,6 +18,7 @@
 #include "lua/functions/core/game/game_functions.hpp"
 
 #include "core.hpp"
+#include "lua/creature/actions.hpp"
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/npcs/npc.hpp"
@@ -67,7 +68,6 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "setGameState", GameFunctions::luaGameSetGameState);
 
 	Lua::registerMethod(L, "Game", "getWorldType", GameFunctions::luaGameGetWorldType);
-	Lua::registerMethod(L, "Game", "setWorldType", GameFunctions::luaGameSetWorldType);
 
 	Lua::registerMethod(L, "Game", "getReturnMessage", GameFunctions::luaGameGetReturnMessage);
 
@@ -137,6 +137,7 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "setRankName", GameFunctions::luaGameSetRankName);
 	Lua::registerMethod(L, "Game", "createGuild", GameFunctions::luaGameCreateGuild);
 	Lua::registerMethod(L, "Game", "joinGuild", GameFunctions::luaGameJoinGuild);
+	Lua::registerMethod(L, "Game", "reportShadowedScripts", GameFunctions::luaGameReportShadowedScripts);
 }
 
 // Game
@@ -403,6 +404,14 @@ int GameFunctions::luaGameGetExperienceForLevel(lua_State* L) {
 	return 1;
 }
 
+int GameFunctions::luaGameReportShadowedScripts(lua_State* L) {
+	// Game.reportShadowedScripts()
+	// Reports scripts registered by position that can never run, because an id on the
+	// same tile is checked first. Call it after the startup tables stamped the map.
+	g_actions().reportShadowedPositionScripts();
+	return 0;
+}
+
 int GameFunctions::luaGameGetMonsterCount(lua_State* L) {
 	// Game.getMonsterCount()
 	lua_pushnumber(L, g_game().getMonstersOnline());
@@ -478,20 +487,7 @@ int GameFunctions::luaGameSetGameState(lua_State* L) {
 
 int GameFunctions::luaGameGetWorldType(lua_State* L) {
 	// Game.getWorldType()
-	lua_pushnumber(L, g_game().getWorldType());
-	return 1;
-}
-
-int GameFunctions::luaGameSetWorldType(lua_State* L) {
-	// Game.setWorldType(type)
-	const WorldType_t type = Lua::getNumber<WorldType_t>(L, 1);
-	if (type >= WORLDTYPE_FIRST && type <= WORLDTYPE_LAST) {
-		g_game().setWorldType(type);
-		Lua::pushBoolean(L, true);
-	} else {
-		Lua::pushBoolean(L, false);
-	}
-
+	lua_pushnumber(L, g_game().worlds().getCurrentWorld()->type);
 	return 1;
 }
 

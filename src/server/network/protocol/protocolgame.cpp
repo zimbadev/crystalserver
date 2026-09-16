@@ -2435,14 +2435,14 @@ void ProtocolGame::parseHighscores(NetworkMessage &msg) {
 	uint8_t category = msg.getByte();
 	auto vocation = msg.get<uint32_t>();
 	uint16_t page = 1;
-	const std::string worldName = msg.getString();
+	auto worldName = msg.getString();
 	msg.getByte(); // Game World Category
 	msg.getByte(); // BattlEye World Type
 	if (type == HIGHSCORE_GETENTRIES) {
 		page = std::max<uint16_t>(1, msg.get<uint16_t>());
 	}
 	uint8_t entriesPerPage = std::min<uint8_t>(30, std::max<uint8_t>(5, msg.getByte()));
-	g_game().playerHighscores(player, type, category, vocation, worldName, page, entriesPerPage);
+	g_game().playerHighscores(player, type, category, vocation, worldName == "OWN" || type == HIGHSCORE_OURRANK ? g_game().worlds().getCurrentWorld()->name : worldName, page, entriesPerPage);
 }
 
 void ProtocolGame::parseSoulSeals(NetworkMessage &msg) {
@@ -2465,7 +2465,7 @@ void ProtocolGame::sendHighscoresNoData() {
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::sendHighscores(const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationBaseId, uint16_t page, uint16_t pages, uint32_t updateTimer) {
+void ProtocolGame::sendHighscores(const std::string &selectedWorld, const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationBaseId, uint16_t page, uint16_t pages, uint32_t updateTimer) {
 	if (oldProtocol) {
 		return;
 	}
@@ -2474,10 +2474,14 @@ void ProtocolGame::sendHighscores(const std::vector<HighscoreCharacter> &charact
 	msg.addByte(0xB1);
 	msg.addByte(0x00); // All data available
 
-	msg.addByte(1); // Worlds
+	const auto &worlds = g_game().worlds().getWorlds();
+	msg.addByte(worlds.size()); // Worlds
 	auto serverName = g_configManager().getString(SERVER_NAME);
-	msg.addString(serverName); // First World
-	msg.addString(serverName); // Selected World
+	for (const auto &world : worlds) {
+		msg.addString(world->name); // Worlds
+	}
+
+	msg.addString(selectedWorld); // Selected World
 
 	msg.addByte(0); // Game World Category: 0xFF(-1) - Selected World
 	msg.addByte(0); // BattlEye World Type
@@ -2522,12 +2526,12 @@ void ProtocolGame::sendHighscores(const std::vector<HighscoreCharacter> &charact
 	msg.add<uint16_t>(pages); // Pages
 
 	msg.addByte(characters.size()); // Character Count
-	for (const HighscoreCharacter &character : characters) {
+	for (const auto &character : characters) {
 		msg.add<uint32_t>(character.rank); // Rank
 		msg.addString(character.name); // Character Name
 		msg.addString(character.loyaltyTitle); // Character Loyalty Title
 		msg.addByte(character.vocation); // Vocation Id
-		msg.addString(serverName); // World
+		msg.addString(character.worldName); // World
 		msg.add<uint16_t>(character.level); // Level
 		msg.addByte((player->getGUID() == character.id)); // Player Indicator Boolean
 		msg.add<uint64_t>(character.points); // Points
@@ -3947,7 +3951,7 @@ void ProtocolGame::sendCreatureEmblem(const std::shared_ptr<Creature> &creature)
 }
 
 void ProtocolGame::sendCreatureSkull(const std::shared_ptr<Creature> &creature) {
-	if (g_game().getWorldType() != WORLDTYPE_OPEN) {
+	if (g_game().worlds().getCurrentWorld()->type != WORLDTYPE_OPEN) {
 		return;
 	}
 
@@ -5102,7 +5106,7 @@ void ProtocolGame::sendBlessingWindow() {
 	NetworkMessage msg;
 	msg.addByte(0x9B);
 
-	bool isRetro = g_configManager().getBoolean(TOGGLE_SERVER_IS_RETRO);
+	bool isRetro = g_game().isRetroPVP();
 
 	msg.addByte(isRetro ? 0x07 : 0x08);
 	for (auto blessing : magic_enum::enum_values<Blessings>()) {
@@ -7638,7 +7642,7 @@ void ProtocolGame::sendPartyCreatureShield(const std::shared_ptr<Creature> &targ
 }
 
 void ProtocolGame::sendPartyCreatureSkull(const std::shared_ptr<Creature> &target) {
-	if (g_game().getWorldType() != WORLDTYPE_OPEN) {
+	if (g_game().worlds().getCurrentWorld()->type != WORLDTYPE_OPEN) {
 		return;
 	}
 
@@ -7928,7 +7932,7 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 	msg.add<uint16_t>(static_cast<uint16_t>(g_configManager().getNumber(STORE_COIN_PACKET)));
 
 	if (!oldProtocol) {
-		const bool exivaEnabled = g_game().getWorldType() == WORLDTYPE_OPTIONAL || !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS);
+		const bool exivaEnabled = g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL || !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS);
 		msg.addByte(exivaEnabled ? 0x01 : 0x00); // exiva button enabled
 		if (exivaEnabled) {
 			sendExivaRestrictions(true);
@@ -11354,7 +11358,7 @@ void ProtocolGame::sendWeaponProficiencyInfo(const uint16_t itemId) {
 }
 
 void ProtocolGame::parseExivaRestrictions(NetworkMessage &msg) {
-	if (!player || (g_game().getWorldType() == WORLDTYPE_OPTIONAL && !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS))) {
+	if (!player || (g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL && !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS))) {
 		return;
 	}
 

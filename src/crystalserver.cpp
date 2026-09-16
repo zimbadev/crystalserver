@@ -88,7 +88,8 @@ int CrystalServer::run() {
 				rsa.start();
 				initializeDatabase();
 				loadModules();
-				setWorldType();
+				g_game().worlds().load();
+				loadThisWorld();
 				loadMaps();
 
 				logger.info("Initializing gamestate...");
@@ -149,7 +150,8 @@ int CrystalServer::run() {
 		return EXIT_FAILURE;
 	}
 
-	logger.info("{} {}", g_configManager().getString(SERVER_NAME), "server online!");
+	const auto &curWorld = g_game().worlds().getCurrentWorld();
+	logger.info("World [{} - {} - {}] on port [{}] is online!", curWorld->id, curWorld->name, g_game().getWorldTypeNames().at(curWorld->type), curWorld->port);
 	g_logger().setLevel(g_configManager().getString(LOGLEVEL));
 
 	serviceManager.run();
@@ -158,24 +160,28 @@ int CrystalServer::run() {
 	return EXIT_SUCCESS;
 }
 
-void CrystalServer::setWorldType() {
-	const std::string worldType = asLowerCaseString(g_configManager().getString(WORLD_TYPE));
-	if (worldType == "open" || worldType == "2" || worldType == "openpvp" || worldType == "pvp" || worldType == "normal") {
-		g_game().setWorldType(WORLDTYPE_OPEN);
-	} else if (worldType == "optional" || worldType == "1" || worldType == "optionalpvp" || worldType == "safe" || worldType == "nopvp" || worldType == "no-pvp" || worldType == "secure") {
-		g_game().setWorldType(WORLDTYPE_OPTIONAL);
-	} else if (worldType == "hardcore" || worldType == "3" || worldType == "hardcorepvp" || worldType == "war" || worldType == "pvp-enforced" || worldType == "enforced") {
-		g_game().setWorldType(WORLDTYPE_HARDCORE);
-	} else {
+void CrystalServer::loadThisWorld() {
+	auto worldId = g_configManager().getNumber(WORLD_ID);
+	auto world = g_game().worlds().getWorldConfigsById(worldId);
+	if (!world) {
+		throw FailedToInitializeCrystalServer(fmt::format("Unknown world with ID {}", worldId));
+	}
+
+	if (world->type == WORLDTYPE_NONE) {
 		throw FailedToInitializeCrystalServer(
-			fmt::format(
-				"Unknown world type: {}, valid world types are: open, optional and hardcore",
-				g_configManager().getString(WORLD_TYPE)
-			)
+			fmt::format("Unknown world type: {}, valid world types are: no-pvp, pvp, retro-pvp, pvp-enforced and retro-hardcore", world->type)
 		);
 	}
 
-	logger.info("World type set as {}", asUpperCaseString(worldType));
+	const auto location = Worlds::getWorldLocationByKey(world->locationName);
+	if (location == Location_t::None) {
+		throw FailedToInitializeCrystalServer(
+			fmt::format("Unknown world location: {}, valid world locations are: Europe, North America, South America and Oceania", world->locationName)
+		);
+	}
+
+	g_game().worlds().setCurrentWorld(world);
+	logger.info("World ID: {}, Name: {}, Type: {}, Location: {}, Port {}", world->id, world->name, g_game().getWorldTypeNames().at(world->type), world->locationName, world->port);
 }
 
 void CrystalServer::loadMaps() const {

@@ -26,6 +26,7 @@
 #include "map/map.hpp"
 #include "modal_window/modal_window.hpp"
 #include "movement/position.hpp"
+#include "game/worlds/gameworlds.hpp"
 #include "creatures/creatures_definitions.hpp"
 #include "items/items_classification.hpp"
 
@@ -111,6 +112,11 @@ public:
 
 	static Game &getInstance();
 
+	// Game worlds interface
+	Worlds &worlds();
+	[[nodiscard]] const Worlds &worlds() const;
+	[[nodiscard]] const std::unordered_map<uint8_t, std::string> &getWorldTypeNames() const;
+
 	void resetMonsters() const;
 	void resetNpcs() const;
 
@@ -142,11 +148,6 @@ public:
 	void getMapDimensions(uint32_t &width, uint32_t &height) const {
 		width = map.width;
 		height = map.height;
-	}
-
-	void setWorldType(WorldType_t type);
-	WorldType_t getWorldType() const {
-		return worldType;
 	}
 
 	const std::map<uint32_t, std::unique_ptr<TeamFinder>> &getTeamFinderList() const {
@@ -228,6 +229,7 @@ public:
 	LightInfo getWorldLightInfo() const;
 
 	bool gameIsDay();
+	bool isRetroPVP() const;
 
 	ReturnValue internalMoveCreature(const std::shared_ptr<Creature> &creature, Direction direction, uint32_t flags = 0);
 	ReturnValue internalMoveCreature(const std::shared_ptr<Creature> &creature, const std::shared_ptr<Tile> &toTile, uint32_t flags = 0);
@@ -809,6 +811,8 @@ public:
 	void refreshItem(const std::shared_ptr<Item> &item);
 
 private:
+	std::unordered_map<uint8_t, std::string> m_worldTypesNames;
+
 	std::map<uint16_t, Achievement> m_achievements;
 	std::map<std::string, uint16_t> m_achievementsNameToId;
 
@@ -956,7 +960,6 @@ private:
 	bool browseField = false;
 
 	GameState_t gameState = GAME_STATE_NORMAL;
-	WorldType_t worldType = WORLDTYPE_OPEN;
 
 	LightState_t lightState = LIGHT_STATE_DAY;
 	LightState_t currentLightState = lightState;
@@ -1023,16 +1026,17 @@ private:
 
 	// Variable members (m_)
 	std::unique_ptr<IOWheel> m_IOWheel;
+	Worlds m_worlds = {};
 
 	std::unique_ptr<AttachedEffects> m_attachedEffects;
 
 	void cacheQueryHighscore(const std::string &key, const std::string &query, uint32_t page, uint8_t entriesPerPage);
-	void processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage);
+	void processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage, const std::string &selectedWorld);
 
 	std::string generateVocationConditionHighscore(uint32_t searchVocationBaseId);
-	std::string generateHighscoreQueryForEntries(const std::string &categoryName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
-	std::string generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation);
-	std::string generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
+	std::string generateHighscoreQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
+	std::string generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation, const std::string &selectedWorld);
+	std::string generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
 	std::string generateHighscoreOrGetCachedQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation);
 
 	bool hasPartyMembersNearby(const std::shared_ptr<Player> &player);

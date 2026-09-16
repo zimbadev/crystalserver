@@ -1,5 +1,5 @@
 local statusTime = TalkAction("!time")
-function timeTalkAction.onSay(player, words, param)
+function statusTime.onSay(player, words, param)
 	local period = getTibiaTimerDayOrNight()
 	local message = string.format("The time is " .. getFormattedWorldTime() .. ". It is %s.", period)
 

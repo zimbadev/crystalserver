@@ -103,6 +103,18 @@ local function refreeIceHole(position)
 	end
 end
 
+local SKELETON_OUTFIT = { lookType = 33 }
+local SKELETON_OUTFIT_DURATION = 4000
+local SKELETON_ZAP_CHANCE = 10 -- %
+local SKELETON_ZAP_DAMAGE = 35
+
+local function revertPlayerOutfit(playerId, outfit)
+	local player = Player(playerId)
+	if player then
+		player:setOutfit(outfit)
+	end
+end
+
 local function handleDirtyWaterFishing(player, target, toPosition)
 	local targetId = target.itemid
 
@@ -209,6 +221,16 @@ function mechanicalFishing.onUse(player, item, fromPosition, target, toPosition,
 
 		local successChance = math.min(math.max(10 + (player:getEffectiveSkillLevel(SKILL_FISHING) - 10) * 0.597, 10), 50)
 		if math.random(100) > successChance then
+			if math.random(100) <= SKELETON_ZAP_CHANCE then
+				local previousOutfit = player:getOutfit()
+
+				player:addHealth(-SKELETON_ZAP_DAMAGE)
+				toPosition:sendMagicEffect(CONST_ME_ENERGYHIT)
+				player:say("Yikes! That DID hurt!", TALKTYPE_MONSTER_SAY)
+
+				player:setOutfit(SKELETON_OUTFIT)
+				addEvent(revertPlayerOutfit, SKELETON_OUTFIT_DURATION, player:getId(), previousOutfit)
+			end
 			return true
 		end
 
@@ -223,6 +245,7 @@ function mechanicalFishing.onUse(player, item, fromPosition, target, toPosition,
 		end
 
 		player:addItem(MECHANICAL_FISH_ID, 1)
+		player:say("You have caught one of the elusive mechanical fishes!", TALKTYPE_MONSTER_SAY)
 		return true
 	end
 

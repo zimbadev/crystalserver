@@ -25,11 +25,24 @@ end
 
 local function loadMapAttributes()
 	logger.debug("Loading map attributes")
+	-- Before BookDocumentTable: it adds a book into a container without checking whether
+	-- one is already there, and the container loader only fills what is empty.
+	loadMapContainers(MapContainersQuest)
+	loadMapContainers(MapContainersBooks1)
+	loadMapContainers(MapContainersBooks2)
+	loadMapContainers(MapContainersBooks3)
+	loadMapContainers(MapContainersBooks4)
+	loadMapContainers(MapContainersMisc)
 	loadLuaMapSign(SignTable)
 	loadLuaMapBookDocument(BookDocumentTable)
 
 	loadMapActionsAndUniques()
 	logger.debug("Loaded all actions and uniques in the map")
+
+	-- Last, with the ids already stamped: a script registered by position never runs
+	-- when an item on that tile carries an id another script registered, because
+	-- getAction() checks the ids first.
+	Game.reportShadowedScripts()
 end
 
 local function resetGlobalStorages()

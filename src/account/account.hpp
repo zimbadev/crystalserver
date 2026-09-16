@@ -17,7 +17,6 @@
 
 #pragma once
 
-struct AccountInfo;
 #include "account/account_info.hpp"
 
 class Account {
@@ -124,7 +123,7 @@ public:
 
 	uint32_t getHouseBidId() const;
 
-	std::tuple<phmap::flat_hash_map<std::string, uint64_t>, uint8_t> getAccountPlayers() const;
+	std::tuple<phmap::flat_hash_map<std::string, Character>, uint8_t> getAccountPlayers() const;
 
 	// Old protocol compat
 	void setProtocolCompat(bool toggle);

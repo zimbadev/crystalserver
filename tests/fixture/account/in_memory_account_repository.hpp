@@ -40,6 +40,19 @@ namespace tests {
 		}
 
 		void addAccount(const std::string &descriptor, const AccountInfo &acc) {
+			// `accounts`.`id` is the primary key in AccountRepositoryDB, which reads a
+			// row back with WHERE `id` = ?, so at most one account can ever carry a
+			// given id. Mirror that here: a write reusing an id replaces the entry
+			// holding it, rather than leaving two for loadByID to pick between by
+			// unspecified iteration order.
+			for (auto it = accounts.begin(); it != accounts.end();) {
+				if (it->first != descriptor && it->second.id == acc.id) {
+					it = accounts.erase(it);
+				} else {
+					++it;
+				}
+			}
+
 			accounts[descriptor] = acc;
 		}
 

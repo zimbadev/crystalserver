@@ -282,7 +282,7 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	const char* animusMastery = propAnimusMasteryStream.getStream(animusMasterySize);
 	query << "`animus_mastery` = " << db.escapeBlob(animusMastery, static_cast<uint32_t>(animusMasterySize)) << ",";
 
-	if (g_game().getWorldType() != WORLDTYPE_HARDCORE) {
+	if (g_game().worlds().getCurrentWorld()->type != WORLDTYPE_HARDCORE) {
 		int64_t skullTime = 0;
 
 		if (player->skullTicks > 0) {

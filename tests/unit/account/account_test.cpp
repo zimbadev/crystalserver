@@ -98,6 +98,23 @@ suite<"account"> accountTest = [] {
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
 		expect(eqEnum(acc.getAccountType(), AccountType::ACCOUNT_TYPE_GOD));
 
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GAMEMASTER });
+
+		expect(eqEnum(acc.reload(), AccountErrors_t::Ok));
+		expect(eqEnum(acc.getAccountType(), AccountType::ACCOUNT_TYPE_GAMEMASTER));
+	};
+
+	test("Account::reload sees an account rewritten under another descriptor") = [&injectionFixture] {
+		auto [accountRepository] = injectionFixture.get<AccountRepository>();
+
+		Account acc { 1 };
+		accountRepository.addAccount("crystal@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD });
+
+		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
+
+		// Reusing id 1 must replace the stored account rather than leave a second
+		// one behind, which loadByID would then resolve by unspecified iteration
+		// order — passing on one platform and failing on another.
 		accountRepository.addAccount("crystal2@test.com", AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GAMEMASTER });
 
 		expect(eqEnum(acc.reload(), AccountErrors_t::Ok));
@@ -605,7 +622,7 @@ suite<"account"> accountTest = [] {
 		Account acc { 1 };
 		accountRepository.addAccount(
 			"crystal@test.com",
-			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, {{ "Crystal", 1 }, { "Crystal2", 2 }} }
+			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, {{ "Crystal", Character { 1, 1 } }, { "crystal2", Character { 2, 1 } } } }
  		);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -613,8 +630,8 @@ suite<"account"> accountTest = [] {
 
 		expect(eqEnum(error, AccountErrors_t::Ok));
 		expect(eq(players.size(), 2));
-		expect(eq(players["Crystal"], 1));
-		expect(eq(players["Crystal2"], 2));
+		expect(eq(players["Crystal"].deletion, 1));
+		expect(eq(players["crystal2"].deletion, 2));
 	};
 
 	test("Account::authenticate password using sha1") = [&injectionFixture] {
@@ -623,7 +640,7 @@ suite<"account"> accountTest = [] {
 		Account acc { 1 };
 		accountRepository.addAccount(
 			"crystal@test.com",
-			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, { { "Crystal", 1 }, { "Crystal2", 2 } } }
+			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, { { "Crystal", Character { 1, 1 } }, { "crystal2", Character { 2, 1 } } } }
 		);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -637,7 +654,7 @@ suite<"account"> accountTest = [] {
 		Account acc { 1 };
 		accountRepository.addAccount(
 			"session-key",
-			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, { { "Crystal", 1 }, { "Crystal2", 2 } }, false, getTimeNow() + 24 * 60 * 60 * 1000 }
+			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, { { "Crystal", Character { 1, 1 } }, { "crystal2", Character { 2, 1 } } }, false, getTimeNow() + 24 * 60 * 60 * 1000 }
 		);
 
 		expect(eqEnum(acc.load(), AccountErrors_t::Ok));
@@ -650,7 +667,7 @@ suite<"account"> accountTest = [] {
 		Account acc { 1 };
 		accountRepository.addAccount(
 			"session-key",
-			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, { { "Crystal", 1 }, { "Crystal2", 2 } }, false, getTimeNow() + 24 * 60 * 60 * 1000 }
+			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, { { "Crystal", Character { 1, 1 } }, { "crystal2", Character { 2, 1 } } }, false, getTimeNow() + 24 * 60 * 60 * 1000 }
 		);
 
 		const auto hasCharacter = accountRepository.getCharacterByAccountIdAndName(1, "Crystal");
@@ -664,7 +681,7 @@ suite<"account"> accountTest = [] {
 		Account acc { 1 };
 		accountRepository.addAccount(
 			"session-key",
-			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, { { "Crystal", 1 }, { "Crystal2", 2 } }, false, getTimeNow() + 24 * 60 * 60 * 1000 }
+			AccountInfo { 1, 1, 1, AccountType::ACCOUNT_TYPE_GOD, { { "Crystal", Character { 1, 1 } }, { "crystal2", Character { 2, 1 } } }, false, getTimeNow() + 24 * 60 * 60 * 1000 }
 		);
 
 		const auto hasCharacter = accountRepository.getCharacterByAccountIdAndName(1, "Invalid");

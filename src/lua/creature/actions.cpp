@@ -37,6 +37,88 @@ Actions &Actions::getInstance() {
 	return inject<Actions>();
 }
 
+void Actions::reportShadowedPositionScripts() {
+	// getAction() checks unique id, action id, item id and only then the position,
+	// so a position script loses to any id on that tile that another script claims.
+	// The base already warns about two scripts claiming the same id or the same
+	// position; this is the case that crosses the two and stays silent.
+	constexpr uint32_t maxExamples = 10;
+	uint32_t shadowed = 0;
+
+	for (const auto &[position, action] : actionPositionMap) {
+		const auto &tile = g_game().map.getTile(position);
+		if (!tile) {
+			continue;
+		}
+
+		for (size_t i = tile->getFirstIndex(), j = tile->getLastIndex(); i < j; ++i) {
+			const auto &thing = tile->getThing(i);
+			if (!thing) {
+				continue;
+			}
+
+			const auto &item = thing->getItem();
+			if (!item) {
+				continue;
+			}
+
+			const char* attribute = nullptr;
+			uint16_t value = 0;
+
+			if (item->hasAttribute(ItemAttribute_t::UNIQUEID)) {
+				const auto uniqueId = item->getAttribute<uint16_t>(ItemAttribute_t::UNIQUEID);
+				if (hasUniqueId(uniqueId)) {
+					attribute = "unique id";
+					value = uniqueId;
+				}
+			}
+
+			if (!attribute && item->hasAttribute(ItemAttribute_t::ACTIONID)) {
+				const auto actionId = item->getAttribute<uint16_t>(ItemAttribute_t::ACTIONID);
+				if (hasActionId(actionId)) {
+					attribute = "action id";
+					value = actionId;
+				}
+			}
+
+			if (!attribute) {
+				continue;
+			}
+
+			++shadowed;
+			if (shadowed <= maxExamples) {
+				auto scriptName = ScriptBindings::fileOf(action);
+				if (scriptName.empty()) {
+					scriptName = "unknown script";
+				}
+
+				g_logger().warn(
+					"[{}] - the action registered for position {} never runs: item {} there carries {} {}, "
+					"which another script also registers, and ids are checked before the position. Script: {}",
+					__FUNCTION__,
+					position.toString(),
+					item->getID(),
+					attribute,
+					value,
+					scriptName
+				);
+			}
+		}
+	}
+
+	if (shadowed == 0) {
+		return;
+	}
+
+	if (shadowed > maxExamples) {
+		g_logger().warn(
+			"[{}] - and {} more position script(s) shadowed the same way.",
+			__FUNCTION__,
+			shadowed - maxExamples
+		);
+	}
+}
+
 void Actions::clear() {
 	useItemMap.clear();
 	uniqueItemMap.clear();
@@ -262,6 +344,64 @@ std::shared_ptr<Action> Actions::getAction(const std::shared_ptr<Item> &item) {
 
 	// rune items
 	return g_spells().getRuneSpell(item->getID());
+}
+
+std::vector<ScriptBinding> Actions::getScriptBindings(const std::shared_ptr<Item> &item) const {
+	std::vector<ScriptBinding> bindings;
+	if (!item) {
+		return bindings;
+	}
+
+	// Same order getAction() walks, so the first entry is the script that really
+	// answers and everything found after it is dead weight on this item.
+	const auto add = [&bindings](std::string_view source, const std::shared_ptr<Action> &action) {
+		auto file = ScriptBindings::fileOf(action);
+		if (file.empty()) {
+			return;
+		}
+
+		ScriptBinding binding;
+		binding.kind = "Action";
+		binding.source = source;
+		binding.script = std::move(file);
+		binding.shadowed = !bindings.empty();
+		bindings.emplace_back(std::move(binding));
+	};
+
+	if (item->hasAttribute(ItemAttribute_t::UNIQUEID)) {
+		if (const auto it = uniqueItemMap.find(item->getAttribute<uint16_t>(ItemAttribute_t::UNIQUEID));
+		    it != uniqueItemMap.end()) {
+			add("unique id", it->second);
+		}
+	}
+
+	if (item->hasAttribute(ItemAttribute_t::ACTIONID)) {
+		if (const auto it = actionItemMap.find(item->getAttribute<uint16_t>(ItemAttribute_t::ACTIONID));
+		    it != actionItemMap.end()) {
+			add("action id", it->second);
+		}
+	}
+
+	if (const auto it = useItemMap.find(item->getID());
+	    it != useItemMap.end()) {
+		add("item id", it->second);
+	}
+
+	if (const auto it = actionPositionMap.find(item->getPosition());
+	    it != actionPositionMap.end()) {
+		// A position claims what lies on the map, never what a player carries, so
+		// an item in a backpack must not borrow the binding of the tile below it.
+		const auto &holdingPlayer = item->getHoldingPlayer();
+		if (item->getTile() && (!holdingPlayer || item->getTopParent() != holdingPlayer)) {
+			add("position", it->second);
+		}
+	}
+
+	if (const auto &runeSpell = g_spells().getRuneSpell(item->getID())) {
+		add("rune", runeSpell);
+	}
+
+	return bindings;
 }
 
 ReturnValue Actions::internalUseItem(const std::shared_ptr<Player> &player, const Position &pos, uint8_t index, const std::shared_ptr<Item> &item, bool isHotkey) {

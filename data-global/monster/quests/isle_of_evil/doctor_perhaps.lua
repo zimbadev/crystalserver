@@ -21,7 +21,7 @@ monster.bosstiary = {
 monster.health = 475
 monster.maxHealth = 475
 monster.race = "blood"
-monster.corpse = 18158
+monster.corpse = 9402
 monster.speed = 100
 monster.manaCost = 0
 
@@ -78,14 +78,7 @@ monster.voices = {
 	{ text = "You can't beat what you can't comprehend!", yell = false },
 }
 
-monster.loot = {
-	{ id = 3031, chance = 2000, maxCount = 95 }, -- gold coin
-	{ id = 3035, chance = 30000, maxCount = 9 }, -- platinum coin
-	{ id = 9399, chance = 1000 }, -- mighty helm of green sparks
-	{ id = 9372, chance = 1000 }, -- meat shield
-	{ id = 9373, chance = 1000 }, -- glutton's mace
-	{ id = 9383, chance = 1000 }, -- trousers of the ancients
-}
+monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -43 },
