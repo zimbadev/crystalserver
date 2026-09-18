@@ -4423,22 +4423,59 @@ std::shared_ptr<Item> Player::getCorpse(const std::shared_ptr<Creature> &lastHit
 	} else {
 		descriptionStream << fmt::format("You recognize {}. {} was killed by ", getNameDescription(), subjectPronoun);
 
-		std::vector<std::string> killers;
-		std::string firstMonster;
+		// Only attackers of the fight that ended in this death count. damageMap is cleared only
+		// when the player goes idle, so during a long hunt it still holds every creature that has
+		// hit the player since the hunt began. Same in-fight window as Creature::onDeath.
+		const int64_t timeNow = OTSYS_TIME();
+		const uint32_t inFightTicks = g_configManager().getNumber(PZ_LOCKED);
+		const auto isRecentAttacker = [timeNow, inFightTicks](const CountBlock_t &damageInfo) {
+			return damageInfo.total > 0 && damageInfo.ticks > 0 && timeNow - damageInfo.ticks <= inFightTicks;
+		};
 
+		// The monster named is the one that landed the killing blow - the creature the death list
+		// (player_deaths.killed_by) is derived from. damageMap is ordered by creature id, so taking
+		// its first monster named whichever attacker had been alive the longest, e.g. a monster that
+		// hit the player on the way into a hunting area instead of the one that killed them there.
+		// Only when the last hit was not a monster of this fight (a player, an ownerless field) the
+		// monster with the most damage in it is named.
+		// Not the mostDamageCreature argument: Creature::onDeath has already replaced it with the
+		// summon's master and, under shared experience, with the party leader.
+		std::shared_ptr<Creature> killerMonster;
+		if (lastHitCreature && lastHitCreature->isMonster()) {
+			const auto it = damageMap.find(lastHitCreature->getID());
+			if (it != damageMap.end() && isRecentAttacker(it->second)) {
+				killerMonster = lastHitCreature;
+			}
+		}
+		const bool killerIsLastHit = killerMonster != nullptr;
+		int32_t killerMonsterDamage = 0;
+
+		std::vector<std::string> killers;
 		for (const auto &[creatureId, damageInfo] : damageMap) {
-			auto damageDealer = g_game().getCreatureByID(creatureId);
-			if (damageDealer) {
-				if (damageDealer->isPlayer()) {
-					killers.push_back(damageDealer->getNameDescription());
-				} else if (damageDealer->isMonster() && firstMonster.empty()) {
-					auto master = damageDealer->getMaster();
-					if (master && master->isPlayer()) {
-						firstMonster = fmt::format("{} summoned by {}", damageDealer->getNameDescription(), master->getNameDescription());
-					} else {
-						firstMonster = damageDealer->getNameDescription();
-					}
-				}
+			if (creatureId == 0 || creatureId == getID() || !isRecentAttacker(damageInfo)) {
+				continue;
+			}
+
+			const auto damageDealer = g_game().getCreatureByID(creatureId);
+			if (!damageDealer) {
+				continue;
+			}
+
+			if (damageDealer->isPlayer()) {
+				killers.push_back(damageDealer->getNameDescription());
+			} else if (!killerIsLastHit && damageDealer->isMonster() && damageInfo.total > killerMonsterDamage) {
+				killerMonster = damageDealer;
+				killerMonsterDamage = damageInfo.total;
+			}
+		}
+
+		std::string monsterKiller;
+		if (killerMonster) {
+			const auto master = killerMonster->getMaster();
+			if (master && master->isPlayer()) {
+				monsterKiller = fmt::format("{} summoned by {}", killerMonster->getNameDescription(), master->getNameDescription());
+			} else {
+				monsterKiller = killerMonster->getNameDescription();
 			}
 		}
 
@@ -4449,11 +4486,11 @@ std::shared_ptr<Item> Player::getCorpse(const std::shared_ptr<Creature> &lastHit
 				}
 				descriptionStream << killers[i];
 			}
-			if (!firstMonster.empty()) {
-				descriptionStream << " and " << firstMonster;
+			if (!monsterKiller.empty()) {
+				descriptionStream << " and " << monsterKiller;
 			}
-		} else if (!firstMonster.empty()) {
-			descriptionStream << firstMonster;
+		} else if (!monsterKiller.empty()) {
+			descriptionStream << monsterKiller;
 		} else {
 			descriptionStream << "an unknown attacker";
 		}
