@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Rootthing Bug Tracker")
 local monster = {}
 
 monster.description = "a rootthing bug tracker"
-monster.experience = 9650
+monster.experience = 10420
 monster.outfit = {
 	lookType = 1763,
 	lookHead = 0,
@@ -94,7 +94,7 @@ monster.loot = {
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -300 },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -600 },
 	{ name = "rotthligholyulus", interval = 2000, chance = 14, minDamage = -630, maxDamage = -840 },
 	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_PHYSICALDAMAGE, minDamage = -530, maxDamage = -720, radius = 4, effect = CONST_ME_EXPLOSIONHIT, target = true },
 	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_EARTHDAMAGE, minDamage = -460, maxDamage = -740, range = 6, radius = 2, shootEffect = CONST_ANI_POISON, effect = CONST_ME_POISONAREA, target = true },
