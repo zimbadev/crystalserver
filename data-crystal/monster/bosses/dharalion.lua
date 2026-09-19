@@ -89,7 +89,7 @@ monster.loot = {
 	{ name = "melon", chance = 22390 },
 	{ name = "bread", chance = 16420 },
 	{ name = "elven amulet", chance = 14930 },
-	{ name = "great mana potion", chance = 13430 },
+	{ id = 238, chance = 13430 }, -- great mana potion
 	{ name = "life crystal", chance = 13430 },
 	{ name = "sling herb", chance = 8960 },
 	{ id = 3257, chance = 7460 }, -- cornucopia

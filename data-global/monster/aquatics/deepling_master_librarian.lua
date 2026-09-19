@@ -83,7 +83,7 @@ monster.loot = {
 	{ name = "deepling filet", chance = 20780 },
 	{ name = "key to the drowned library", chance = 19920 },
 	{ name = "eye of a deepling", chance = 10130 },
-	{ id = 3578, chance = 9040, maxCount = 2  }, -- fish
+	{ id = 3578, chance = 9040, maxCount = 2 }, -- fish
 	{ name = "small sapphire", chance = 7730, maxCount = 3 },
 	{ name = "deepling staff", chance = 3030 },
 	{ id = 3052, chance = 2690 }, -- life ring

@@ -84,7 +84,7 @@ monster.loot = {
 	{ name = "fire sword", chance = 56250 },
 	{ name = "great spirit potion", chance = 54170, maxCount = 18 },
 	{ name = "magic sulphur", chance = 45830 },
-	{ name = "great mana potion", chance = 43750, maxCount = 18 },
+	{ id = 238, chance = 43750, maxCount = 18 }, -- great mana potion
 	{ name = "crystal mace", chance = 37500 },
 	{ name = "silver token", chance = 15220 },
 	{ name = "small emerald", chance = 20830 },

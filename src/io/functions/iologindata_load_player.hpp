@@ -51,7 +51,11 @@ public:
 	static void loadPlayerForgeHistory(const std::shared_ptr<Player> &player, DBResult_ptr result);
 	static void loadPlayerBosstiary(const std::shared_ptr<Player> &player, DBResult_ptr result);
 	static void loadPlayerInitializeSystem(const std::shared_ptr<Player> &player);
+	static void loadPlayerBountyTasks(const std::shared_ptr<Player> &player, DBResult_ptr result);
+	static void loadPlayerWeeklyTasks(const std::shared_ptr<Player> &player, DBResult_ptr result);
 	static void loadPlayerUpdateSystem(const std::shared_ptr<Player> &player);
+	static void loadPlayerWeaponProficiency(const std::shared_ptr<Player> &player, const DBResult_ptr &result);
+	static void loadPlayerExivaRestrictions(const std::shared_ptr<Player> &player);
 
 private:
 	using ItemsMap = std::map<uint32_t, std::pair<std::shared_ptr<Item>, uint32_t>>;

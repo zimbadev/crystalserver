@@ -88,7 +88,7 @@ monster.loot = {
 	{ name = "iron ore", chance = 5280 },
 	{ name = "chaos mace", chance = 160 },
 	{ name = "spiked squelcher", chance = 420 },
-	{ name = "great mana potion", chance = 11240 },
+	{ id = 238, chance = 11240 }, -- great mana potion
 	{ name = "terra boots", chance = 780 },
 	{ name = "ultimate health potion", chance = 10250 },
 	{ name = "small topaz", chance = 10200 },
@@ -97,7 +97,7 @@ monster.loot = {
 	{ name = "lost basher's spike", chance = 17260 },
 	{ name = "lost basher's spike", chance = 14380 },
 	{ name = "bloody dwarven beard", chance = 1730 },
-	{ name = "pair of iron fists", chance = 1410 },
+	{ name = "pair of iron fists", chance = 1500 },
 	{ name = "buckle", chance = 10930 },
 	{ name = "bonecarving knife", chance = 7320 },
 	{ name = "basalt fetish", chance = 8800 },

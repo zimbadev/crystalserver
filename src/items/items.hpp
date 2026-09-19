@@ -16,7 +16,8 @@
 ////////////////////////////////////////////////////////////////////////
 
 #pragma once
-
+#include <memory>
+class MonsterType;
 #include "creatures/creatures_definitions.hpp"
 #include "game/movement/position.hpp"
 #include "items/items_definitions.hpp"
@@ -317,9 +318,9 @@ public:
 	uint16_t wareId = 0;
 	uint16_t bedPartOf = 0;
 	uint16_t m_transformOnUse = 0;
-	uint16_t preventLoss = 0;
 
 	MagicEffectClasses magicEffect = CONST_ME_NONE;
+	MagicEffectClasses meleeAttackEffect = CONST_ME_NONE;
 	Direction bedPartnerDir = DIRECTION_NONE;
 	BedItemPart_t bedPart = BED_NONE_PART;
 	WeaponType_t weaponType = WEAPON_NONE;
@@ -382,8 +383,12 @@ public:
 	bool isWrapKit = false;
 	bool m_canBeUsedByGuests = false;
 
+	bool isDualWielding = false;
+
 	std::string elementalBond;
 	int16_t mantra = 0;
+
+	uint32_t proficiencyId = 0;
 };
 
 class Items {
@@ -396,6 +401,12 @@ public:
 		uint32_t maxAmount = 1;
 		std::string monsterClass = "";
 		uint32_t monsterRaceId = 0;
+		bool bossOnly = false;
+	};
+
+	struct SurpriseBagDrop {
+		uint16_t itemId = 0;
+		uint16_t count = 0;
 	};
 
 	using NameMap = std::unordered_multimap<std::string, uint16_t>;
@@ -483,7 +494,8 @@ public:
 		return allBagItems;
 	}
 
-	void setItemBag(uint16_t itemId, const std::string &itemName, double chance, uint32_t minAmount, uint32_t maxAmount, const std::string &monsterClass, uint32_t monsterRaceId);
+	void setItemBag(uint16_t itemId, const std::string &itemName, double chance, uint32_t minAmount, uint32_t maxAmount, const std::string &monsterClass, uint32_t monsterRaceId, bool bossOnly);
+	std::vector<SurpriseBagDrop> rollSurpriseBagLoot(const std::shared_ptr<MonsterType> &monsterType) const;
 
 private:
 	std::vector<ItemType> items;

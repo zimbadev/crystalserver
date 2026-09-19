@@ -3,7 +3,7 @@ local config = {
 		name = "Sugar Daddy",
 		position = Position(33369, 32220, 9),
 	},
-	timeToFightAgain = 60 * 60 * 20,
+	timeToFightAgain = 60 * 60 * 2,
 	playerPositions = {
 		{ pos = Position(33339, 32221, 9), teleport = Position(33372, 32234, 9) },
 		{ pos = Position(33339, 32222, 9), teleport = Position(33372, 32234, 9) },

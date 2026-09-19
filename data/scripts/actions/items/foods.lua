@@ -83,7 +83,6 @@ local foods = {
 	[8019] = { 11, "Yum." }, -- chocolate cake
 	[8177] = { 7, "Slurp." }, -- yummy gummy worm
 	[8197] = { 5, "Crunch." }, -- bulb of garlic
-	[9537] = { 0, "Your head begins to feel better." }, -- headache pill
 	[10329] = { 15, "Yum." }, -- rice ball
 	[10453] = { 3, "Urgh." }, -- terramite eggs
 	[10219] = { 10, "Mmmm." }, -- crocodile steak

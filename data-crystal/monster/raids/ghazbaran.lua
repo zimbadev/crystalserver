@@ -111,7 +111,7 @@ monster.loot = {
 	{ name = "assassin star", chance = 12500, maxCount = 44 },
 	{ name = "havoc blade", chance = 16666 },
 	{ name = "ravenwing", chance = 14285 },
-	{ name = "great mana potion", chance = 20000 },
+	{ id = 238, chance = 20000 }, -- great mana potion
 	{ name = "great health potion", chance = 20000 },
 	{ name = "glacier kilt", chance = 8333 },
 	{ name = "great spirit potion", chance = 25000 },

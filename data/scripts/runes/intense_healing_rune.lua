@@ -32,6 +32,13 @@ function rune.onCastSpell(creature, var, isHotkey)
 		return false
 	end
 
+	-- Vocation Adjustment: healing runes can no longer be used on other characters
+	if target:getId() ~= creature:getId() then
+		creature:sendCancelMessage("You may only use this rune on yourself.")
+		creature:getPosition():sendMagicEffect(CONST_ME_POFF)
+		return false
+	end
+
 	return healingCombat:execute(creature, Variant(target:getId()))
 end
 

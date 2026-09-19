@@ -20,7 +20,25 @@
 #include "creatures/creatures_definitions.hpp"
 #include "utils/utils_definitions.hpp"
 
+#include <cstdint>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+#include <vector>
+
 class LuaScriptInterface;
+
+struct NpcDialogOption {
+	uint8_t optionId;
+	std::string optionText;
+};
+
+struct NpcDialogOptions {
+	uint16_t conversationId;
+	uint32_t npcId;
+	std::vector<NpcDialogOption> options;
+};
 
 class Shop {
 public:
@@ -79,6 +97,7 @@ class NpcType final : public SharedObject {
 		// We need to keep the order of scripts, so we use a set isntead of an unordered_set
 		std::set<std::string> scripts;
 		std::vector<ShopBlock> shopItemVector;
+		std::vector<NpcDialogOption> dialogOptions;
 
 		NpcsEvent_t eventType = NPCS_EVENT_NONE;
 	};

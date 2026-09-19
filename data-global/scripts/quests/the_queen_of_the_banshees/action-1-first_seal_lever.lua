@@ -7,7 +7,7 @@ function leverFirstSeal.onUse(player, item, fromPosition, target, toPosition, is
 	end
 
 	if item.uid == 30012 then
-		if item.itemid == 27260 then
+		if item.itemid == 2772 then
 			Position(wall.position):removeItem(2129)
 			Position(wall.position):createItem(369)
 			item:transform(2773)
@@ -15,7 +15,7 @@ function leverFirstSeal.onUse(player, item, fromPosition, target, toPosition, is
 		elseif item.itemid == 2773 then
 			Position(wall.position):removeItem(369)
 			Position(wall.position):createItem(2129)
-			item:transform(32400)
+			item:transform(2772)
 			return true
 		end
 		return false

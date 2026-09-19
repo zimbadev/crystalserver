@@ -101,7 +101,7 @@ monster.loot = {
 	{ name = "flask of demonic blood", chance = 30000, maxCount = 4 },
 	{ name = "assassin star", chance = 7692, maxCount = 5 },
 	{ name = "abyss hammer", chance = 495 },
-	{ name = "great mana potion", chance = 19990, maxCount = 2 },
+	{ id = 238, chance = 19990, maxCount = 2 }, -- great mana potion
 	{ name = "ultimate health potion", chance = 18000 },
 	{ name = "gold ingot", chance = 700 },
 }
@@ -109,7 +109,7 @@ monster.loot = {
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -520, condition = { type = CONDITION_POISON, totalDamage = 380, interval = 4000 } },
 	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_MANADRAIN, minDamage = 0, maxDamage = -620, range = 1, target = false },
-	{ name = "drunk", interval = 2000, chance = 10, radius = 4, effect = CONST_ME_SMALLCLOUDS, target = false, duration = 3000 },
+	{ name = "drunk", interval = 2000, chance = 10, radius = 4, effect = CONST_ME_SMALLCLOUDS, target = false, duration = 8000 },
 	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_LIFEDRAIN, minDamage = -220, maxDamage = -880, range = 1, effect = CONST_ME_SMALLCLOUDS, target = false },
 }
 

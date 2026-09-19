@@ -70,12 +70,29 @@ local runes = {
 	{ runeid = 24959 },
 }
 
-local function getTable()
-	local itemsList = {
-		{ name = "heavy old tome", id = 23986, sell = 30 },
-	}
-	return itemsList
-end
+npcConfig.shop = {
+	{
+		itemName = "heavy old tome",
+		clientId = 23986,
+		sell = 30,
+		storageKey = Storage.Quest.U11_02.ForgottenKnowledge.Tomes,
+		storageValue = 1,
+	},
+	{
+		itemName = "etcher",
+		clientId = 51443,
+		buy = 30000,
+		storageKey = Storage.Quest.U11_02.ForgottenKnowledge.Tomes,
+		storageValue = 1,
+	},
+	{
+		itemName = "blank imbuement scroll",
+		clientId = 51442,
+		buy = 25000,
+		storageKey = Storage.Quest.U11_02.ForgottenKnowledge.Tomes,
+		storageValue = 1,
+	},
+}
 
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
@@ -274,5 +291,8 @@ keywordHandler:addKeyword({ "time" }, StdModule.say, { npcHandler = npcHandler, 
 keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I find ways to unveil the secrets of the stars. Judging by this question, I doubt you follow my weekly publications concerning this research." })
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

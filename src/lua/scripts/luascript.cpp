@@ -18,6 +18,8 @@
 #include "lua/scripts/luascript.hpp"
 
 #include "lua/scripts/lua_environment.hpp"
+#include "lua/scripts/script_binding.hpp"
+#include "config/configmanager.hpp"
 #include "lib/metrics/metrics.hpp"
 
 ScriptEnvironment::DBResultMap ScriptEnvironment::tempResults;
@@ -157,6 +159,35 @@ int32_t LuaScriptInterface::getMetaEvent(const std::string &globalName, const st
 
 	cacheFiles[runningEventId] = loadingFile + ":" + globalName + "@" + eventName;
 	return runningEventId++;
+}
+
+std::string ScriptBindings::trimPath(std::string_view path) {
+	auto start = std::string_view::npos;
+
+	// dataPackDirectory first: it is the deeper of the two by default, and a path
+	// under it would otherwise be cut at the shorter coreDirectory match.
+	for (const auto &key : { DATA_DIRECTORY, CORE_DIRECTORY }) {
+		const auto &root = g_configManager().getString(key);
+		if (root.empty()) {
+			continue;
+		}
+
+		for (auto at = path.find(root); at != std::string_view::npos; at = path.find(root, at + 1)) {
+			// Guard against matching a folder whose name merely starts with the root.
+			const auto after = at + root.size();
+			if (after < path.size() && (path[after] == '/' || path[after] == '\\')) {
+				start = at;
+			}
+		}
+
+		if (start != std::string_view::npos) {
+			break;
+		}
+	}
+
+	std::string trimmed(start == std::string_view::npos ? path : path.substr(start));
+	std::ranges::replace(trimmed, '\\', '/');
+	return trimmed;
 }
 
 const std::string &LuaScriptInterface::getFileById(int32_t scriptId) {

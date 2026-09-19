@@ -1,11 +1,11 @@
 local childrenGrease = Action()
 
 function childrenGrease.onUse(player, item, fromPosition, target, toPosition, isHotkey)
-	if target.actionid ~= 8013 then
+	if not target.actionid == 8013 then
 		return false
 	end
 
-	if player:getStorageValue(Storage.Quest.U8_54.ChildrenOfTheRevolution.Questline) == 13 then
+	if player:getStorageValue(Storage.Quest.U8_54.ChildrenOfTheRevolution.Mission04) == 3 then
 		player:setStorageValue(Storage.Quest.U8_54.ChildrenOfTheRevolution.Questline, 14)
 		player:setStorageValue(Storage.Quest.U8_54.ChildrenOfTheRevolution.Mission04, 4) --Questlog, Children of the Revolution "Mission 4: Zze Way of Zztonezz"
 		item:remove()

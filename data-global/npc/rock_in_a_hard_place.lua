@@ -69,7 +69,7 @@ local itemsTable = {
 		{ itemName = "fireball rune", clientId = 3189, buy = 30 },
 		{ itemName = "great fireball rune", clientId = 3191, buy = 64 },
 		{ itemName = "great health potion", clientId = 239, buy = 225 },
-		{ itemName = "great mana potion", clientId = 238, buy = 158 },
+		{ itemid = 238, clientId = 238, buy = 158 },
 		{ itemName = "great spirit potion", clientId = 7642, buy = 254 },
 		{ itemName = "health potion", clientId = 266, buy = 50 },
 		{ itemName = "heavy magic missile rune", clientId = 3198, buy = 12 },
@@ -173,6 +173,9 @@ local itemsTable = {
 		{ itemName = "throwing knife", clientId = 3298, buy = 25, sell = 2 },
 		{ itemName = "two handed sword", clientId = 3265, buy = 950, sell = 450 },
 		{ itemName = "war hammer", clientId = 3279, buy = 10000, sell = 470 },
+		{ itemName = "pair of monk fists", clientId = 50181, buy = 270, sell = 90 },
+		{ itemName = "nunchaku", clientId = 50182, buy = 405, sell = 135 },
+		{ itemName = "sai", clientId = 50183, buy = 540, sell = 180 },
 	},
 	["armor"] = {
 		{ itemName = "battle shield", clientId = 3413, sell = 95 },

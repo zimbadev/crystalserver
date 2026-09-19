@@ -51,6 +51,7 @@ local itemsTable = {
 	},
 	["others"] = {
 		{ itemName = "spellwand", clientId = 651, sell = 299 },
+		{ itemName = "life ring", clientId = 3052, buy = 900 },
 	},
 	["runes"] = {
 		{ itemName = "animate dead rune", clientId = 3203, buy = 375 },
@@ -184,5 +185,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

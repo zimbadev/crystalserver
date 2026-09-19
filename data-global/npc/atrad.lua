@@ -60,12 +60,12 @@ local function greetCallback(npc, creature)
 	local player = Player(creature)
 	local fire = player:getCondition(CONDITION_FIRE)
 
-	if fire and (player:hasOutfit(156) or player:hasOutfit(152)) then
-		return true
+	if not fire then
+		endConversationWithDelay(npcHandler, npc, creature)
+		return false
 	end
-
-	endConversationWithDelay(npcHandler, npc, creature)
-	return false
+	npcHandler:setMessage(MESSAGE_GREET, "Hehe. That's a good show, player. With all the pyrotechnical effects, you got my {attention} - for a minute at least.")
+	return true
 end
 
 local function creatureSayCallback(npc, creature, type, message)
@@ -107,6 +107,8 @@ local function creatureSayCallback(npc, creature, type, message)
 end
 
 npcHandler:setCallback(CALLBACK_GREET, greetCallback)
+npcHandler:setMessage(MESSAGE_FAREWELL, "I guess someone blew out the candle.")
+npcHandler:setMessage(MESSAGE_WALKAWAY, "I guess someone blew out the candle.")
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
@@ -124,5 +126,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

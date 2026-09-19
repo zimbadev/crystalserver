@@ -1554,14 +1554,6 @@ GameStore.Categories = {
 				type = GameStore.OfferTypes.OFFER_TYPE_MOUNT,
 			},
 			{
-				icons = { "Foxmouse.png" },
-				name = "Foxmouse",
-				price = 750,
-				id = 218,
-				description = "{character}\n{speedboost}\n\n<i>A wild, ancient creature, which had been hiding in the depths of the shadows for a very long time, has been spotted in Tibia again! The almighty Shadow Draptor has returned and only the bravest Tibians can control such a beast!</i>",
-				type = GameStore.OfferTypes.OFFER_TYPE_MOUNT,
-			},
-			{
 				icons = { "Frostbringer.png" },
 				name = "Frostbringer",
 				price = 750,
@@ -2113,14 +2105,6 @@ GameStore.Categories = {
 				price = 870,
 				id = 128,
 				description = "{character}\n{speedboost}\n\n<i>Owls have always been a symbol of mystery, magic and wisdom in Tibian myths and fairy tales. Having one of these enigmatic creatures of the night as a trustworthy companion provides you with a silent guide whose ever-watchful eyes will cut through the shadows, help you navigate the darkness and unravel great secrets.</i>",
-				type = GameStore.OfferTypes.OFFER_TYPE_MOUNT,
-			},
-			{
-				icons = { "Spirit_of_Purity.png" },
-				name = "Spirit of Purity",
-				price = 1000,
-				id = 217,
-				description = "{character}\n{speedboost}\n\n<i>A wild, ancient creature, which had been hiding in the depths of the shadows for a very long time, has been spotted in Tibia again! The almighty Shadow Draptor has returned and only the bravest Tibians can control such a beast!</i>",
 				type = GameStore.OfferTypes.OFFER_TYPE_MOUNT,
 			},
 			{
@@ -6583,11 +6567,11 @@ GameStore.Categories = {
 			},
 			{
 				icons = { "Permanent_Hunting_Task_Slot.png" },
-				name = "Permanent Hunting Task Slot",
-				price = 900,
-				id = GameStore.SubActions.TASKHUNTING_THIRDSLOT,
-				description = "<i>Get an additional hunting tasks slot to activate additional hunting task!</i>\n\n{character}\n{info} maximum amount that can be owned by character: 3\n{info} added directly to Hunting Task dialog",
-				type = GameStore.OfferTypes.OFFER_TYPE_HUNTINGSLOT,
+				name = "Permanent Weekly Task Expansion",
+				price = 450,
+				id = GameStore.SubActions.WEEKLY_TASK_EXPANSION,
+				description = "<i>Permanently expands your weekly tasks from 6 to 9 task slots for both kill and delivery tasks!</i>\n\n{character}\n{once}\n{info} added directly to Task Board",
+				type = GameStore.OfferTypes.OFFER_TYPE_WEEKLYTASKEXPANSION,
 			},
 			{
 				icons = { "Gold_Converter.png" },
@@ -7002,7 +6986,13 @@ for k, category in ipairs(GameStore.Categories) do
 				offer.type = GameStore.OfferTypes.OFFER_TYPE_NONE
 			end
 			if not offer.coinType then
-				offer.coinType = GameStore.CoinType.Transferable
+				-- Coin (0): client checks combined store balance (transferable + regular).
+				-- Transferable (1): client only checks transferable balance (e.g. casks with {transferableprice}).
+				if offer.description and offer.description:find("{transferableprice}") then
+					offer.coinType = GameStore.CoinType.Transferable
+				else
+					offer.coinType = GameStore.CoinType.Coin
+				end
 			end
 		end
 	end

@@ -66,6 +66,8 @@ private:
 	static int luaNpcTypeCurrency(lua_State* L);
 
 	static int luaNpcTypeAddShopItem(lua_State* L);
+	static int luaNpcTypeAddDialogOption(lua_State* L);
+	static int luaNpcTypeAddDialogOptions(lua_State* L);
 
 	static int luaNpcTypeSoundChance(lua_State* L);
 	static int luaNpcTypeSoundSpeedTicks(lua_State* L);

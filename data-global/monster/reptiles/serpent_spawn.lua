@@ -97,7 +97,7 @@ monster.loot = {
 	{ name = "charmer's tiara", chance = 180 },
 	{ name = "mercenary sword", chance = 2070 },
 	{ name = "noble axe", chance = 750 },
-	{ name = "great mana potion", chance = 2000 },
+	{ id = 238, chance = 2000 }, -- great mana potion
 	{ name = "swamplair armor", chance = 90 },
 	{ name = "spellbook of mind control", chance = 90 },
 	{ name = "snake skin", chance = 14800 },

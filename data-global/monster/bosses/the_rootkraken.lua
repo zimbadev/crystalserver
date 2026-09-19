@@ -74,7 +74,7 @@ monster.loot = {
 	{ name = "platinum coin", chance = 100000, maxCount = 93 },
 	{ name = "ultimate health potion", chance = 42590, maxCount = 19 },
 	{ name = "great spirit potion", chance = 42590, maxCount = 7 },
-	{ name = "great mana potion", chance = 31480, maxCount = 14 },
+	{ id = 238, chance = 31480, maxCount = 14 }, -- great mana potion
 	{ name = "supreme health potion", chance = 31480, maxCount = 4 },
 	{ name = "ultimate spirit potion", chance = 25930, maxCount = 14 },
 	{ id = 3037, chance = 24070 }, -- yellow gem

@@ -20,6 +20,11 @@ monster.corpse = 30013
 monster.speed = 125
 monster.manaCost = 0
 
+monster.events = {
+	"dreamCourtsDeath",
+	"facelessThink",
+}
+
 monster.changeTarget = {
 	interval = 4000,
 	chance = 20,
@@ -144,5 +149,14 @@ monster.immunities = {
 	{ type = "invisible", condition = true },
 	{ type = "bleed", condition = false },
 }
+
+mType.onSpawn = function(monster, spawnPosition)
+	if monster:getType():isRewardBoss() then
+		Game.setStorageValue(Storage.Quest.U12_00.TheDreamCourts.BurriedCatedralGlobal.FacelessTiles, -1)
+		Game.setStorageValue(Storage.Quest.U12_00.TheDreamCourts.BurriedCatedral.FacelessLifes, 0)
+		monster:setStorageValue(Storage.Quest.U12_00.TheDreamCourts.BurriedCatedral.FacelessLifes, -1)
+		monster:setReward(true)
+	end
+end
 
 mType:register(monster)

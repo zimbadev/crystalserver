@@ -102,7 +102,7 @@ monster.loot = {
 	{ name = "demonbone", chance = 1234 },
 	{ name = "berserk potion", chance = 16666 },
 	{ name = "mastermind potion", chance = 14285 },
-	{ name = "great mana potion", chance = 11111 },
+	{ id = 238, chance = 11111 }, -- great mana potion
 	{ name = "great health potion", chance = 14285 },
 	{ id = 281, chance = 33333, maxCount = 2 }, -- giant shimmering pearl (green)
 	{ name = "flaming arrow", chance = 20000, maxCount = 46 },

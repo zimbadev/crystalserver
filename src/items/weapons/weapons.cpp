@@ -34,6 +34,30 @@ Weapons &Weapons::getInstance() {
 	return inject<Weapons>();
 }
 
+namespace {
+	// Map the weapon attack effect (CONST_ME_*_ATTACK 304-309) to the client's CreatureMark
+	// weaponType (1-6). The client jump-table is NOT contiguous: sword 304->1, club 305->2,
+	// axe 306->3, fist 309->4, monk staff 307->5, monk daggers 308->6.
+	uint8_t markWeaponType(uint16_t attackEffect) {
+		switch (attackEffect) {
+			case CONST_ME_SWORD_ATTACK:
+				return 1;
+			case CONST_ME_CLUB_ATTACK:
+				return 2;
+			case CONST_ME_AXE_ATTACK:
+				return 3;
+			case CONST_ME_FIST_ATTACK:
+				return 4;
+			case CONST_ME_MONK_STAFF_ATTACK:
+				return 5;
+			case CONST_ME_MONK_DAGGERS_ATTACK:
+				return 6;
+			default:
+				return 0;
+		}
+	}
+} // namespace
+
 WeaponShared_ptr Weapons::getWeapon(const std::shared_ptr<Item> &item) const {
 	if (!item) {
 		return nullptr;
@@ -132,6 +156,12 @@ int32_t Weapon::playerWeaponCheck(const std::shared_ptr<Player> &player, const s
 		return 0;
 	}
 
+	// Proficiency Perk: attackRange
+	const uint8_t attackRange = player->getEquippedWeaponProficiency().attackRange;
+	if (attackRange > 0) {
+		shootRange += attackRange;
+	}
+
 	if (std::max<uint32_t>(Position::getDistanceX(playerPos, targetPos), Position::getDistanceY(playerPos, targetPos)) > shootRange) {
 		return 0;
 	}
@@ -224,12 +254,14 @@ bool Weapon::useFist(const std::shared_ptr<Player> &player, const std::shared_pt
 	params.blockedByArmor = true;
 	params.blockedByShield = true;
 	params.soundImpactEffect = SoundEffect_t::HUMAN_CLOSE_ATK_FIST;
+	params.impactEffect = CONST_ME_NONE;
 
 	CombatDamage damage;
 	damage.origin = ORIGIN_MELEE;
 	damage.primary.type = params.combatType;
 	damage.primary.value = -normal_random(0, maxDamage);
 
+	player->sendCreatureSquare(target, SQ_PLAYER_ATTACK, SQ_FIST);
 	Combat::doCombatHealth(player, target, damage, params);
 	if (!player->hasFlag(PlayerFlags_t::NotGainSkill) && player->getAddAttackSkill()) {
 		player->addSkillAdvance(SKILL_FIST, 1);
@@ -238,12 +270,49 @@ bool Weapon::useFist(const std::shared_ptr<Player> &player, const std::shared_pt
 	return true;
 }
 
+uint16_t Weapon::getWeaponAttackEffect(const std::shared_ptr<Item> &item, const std::shared_ptr<Player> &player) const {
+	if (!item) {
+		return CONST_ME_FIST_ATTACK; // Fist attack when no weapon
+	}
+
+	const ItemType &it = Item::items[item->getID()];
+	if (it.meleeAttackEffect != CONST_ME_NONE) {
+		return it.meleeAttackEffect;
+	}
+
+	switch (item->getWeaponType()) {
+		case WEAPON_SWORD:
+			return CONST_ME_SWORD_ATTACK;
+
+		case WEAPON_CLUB:
+			return CONST_ME_CLUB_ATTACK;
+
+		case WEAPON_AXE:
+			return CONST_ME_AXE_ATTACK;
+
+		case WEAPON_FIST:
+			return CONST_ME_FIST_ATTACK;
+
+		default:
+			return CONST_ME_NONE;
+	}
+}
+
 void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, const std::shared_ptr<Creature> &target, int32_t damageModifier, int32_t cleavePercent) const {
 	if (player) {
 		if (params.soundCastEffect == SoundEffect_t::SILENCE) {
 			g_game().sendDoubleSoundEffect(player->getPosition(), player->getHitSoundEffect(), player->getAttackSoundEffect(), player);
 		} else {
 			g_game().sendDoubleSoundEffect(player->getPosition(), params.soundCastEffect, params.soundImpactEffect, player);
+		}
+	}
+
+	// 15.x: directional melee swing for melee weapons (CreatureMark IsAttacked + per-weapon weaponType).
+	// Non-melee weapons (distance, wands) have no melee swing — skip.
+	if (cleavePercent == 0) {
+		const uint16_t attackEffect = getWeaponAttackEffect(item, player);
+		if (attackEffect != CONST_ME_NONE) {
+			player->sendCreatureSquare(target, SQ_PLAYER_ATTACK, static_cast<SquareColor_t>(markWeaponType(attackEffect)));
 		}
 	}
 
@@ -270,7 +339,12 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		damage.secondary.type = getElementType();
 
 		const int32_t totalDamage = (getWeaponDamage(player, target, item) * damageModifier) / 100;
-		const int32_t physicalAttack = item->getAttack();
+		int32_t physicalAttack = item->getAttack();
+		const uint8_t extraProficiencyAttack = player->getEquippedWeaponProficiency().attack;
+		if (extraProficiencyAttack > 0) {
+			physicalAttack += extraProficiencyAttack;
+		}
+
 		const int32_t elementalAttack = getElementDamageValue();
 		const int32_t combinedAttack = physicalAttack + elementalAttack;
 		if (elementalAttack > 0) {
@@ -297,9 +371,13 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		}
 
 		// Handle chain system
-		if (player->checkChainSystem() && params.chainCallback) {
-			m_combat->doCombatChain(player, target, params.aggressive);
-			g_logger().debug("Weapon::internalUseWeapon - Chain callback executed.");
+		if (player->checkChainSystem()) {
+			const auto &selfWeapon = g_weapons().getWeapon(item);
+			if (selfWeapon) {
+				m_combat->setupChain(selfWeapon);
+			}
+			Combat::doCombatHealth(player, target, damage, params);
+			m_combat->doCombatChain(player, target, params.aggressive, true);
 		} else {
 			Combat::doCombatHealth(player, target, damage, params);
 		}
@@ -333,12 +411,10 @@ void Weapon::onUsedWeapon(const std::shared_ptr<Player> &player, const std::shar
 
 	const uint32_t manaCost = getManaCost(player);
 	if (manaCost != 0) {
+		// Vocation Adjustment: wand/rod attacks GENERATE mana instead of consuming it -- the per-shot
+		// mana cost (the only weapons with one are wands/rods) is added back to the caster's mana pool.
 		player->addManaSpent(manaCost);
-		player->changeMana(-static_cast<int32_t>(manaCost));
-
-		if (g_configManager().getBoolean(REFUND_BEGINNING_WEAPON_MANA) && (item->getName() == "wand of vortex" || item->getName() == "snakebite rod")) {
-			player->changeMana(static_cast<int32_t>(manaCost));
-		}
+		player->changeMana(static_cast<int32_t>(manaCost));
 	}
 
 	const uint32_t healthCost = getHealthCost(player);
@@ -556,7 +632,7 @@ bool WeaponMelee::useWeapon(const std::shared_ptr<Player> &player, const std::sh
 			if (firstTile) {
 				if (const CreatureVector* tileCreatures = firstTile->getCreatures()) {
 					for (const auto &tileCreature : *tileCreatures) {
-						if (tileCreature->getMonster() || (tileCreature->getPlayer() && !player->hasSecureMode())) {
+						if (tileCreature && tileCreature->isAlive() && (tileCreature->getMonster() || (tileCreature->getPlayer() && !player->hasSecureMode()))) {
 							internalUseWeapon(player, item, tileCreature, damageModifier, cleavePercent);
 						}
 					}
@@ -565,7 +641,7 @@ bool WeaponMelee::useWeapon(const std::shared_ptr<Player> &player, const std::sh
 			if (secondTile) {
 				if (const CreatureVector* tileCreatures = secondTile->getCreatures()) {
 					for (const auto &tileCreature : *tileCreatures) {
-						if (tileCreature->getMonster() || (tileCreature->getPlayer() && !player->hasSecureMode())) {
+						if (tileCreature && tileCreature->isAlive() && (tileCreature->getMonster() || (tileCreature->getPlayer() && !player->hasSecureMode()))) {
 							internalUseWeapon(player, item, tileCreature, damageModifier, cleavePercent);
 						}
 					}
@@ -635,7 +711,12 @@ int16_t WeaponMelee::getElementDamageValue() const {
 
 int32_t WeaponMelee::getWeaponDamage(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &, const std::shared_ptr<Item> &item, bool maxDamage /*= false*/) const {
 	const int32_t attackSkill = player->getWeaponSkill(item);
-	const int32_t physicalAttack = std::max<int32_t>(0, item->getAttack());
+	int32_t physicalAttack = std::max<int32_t>(0, item->getAttack());
+	const uint8_t extraProficiencyAttack = player->getEquippedWeaponProficiency().attack;
+	if (extraProficiencyAttack > 0) {
+		physicalAttack += extraProficiencyAttack;
+	}
+
 	const int32_t elementalAttack = getElementDamageValue();
 	const int32_t combinedAttack = physicalAttack + elementalAttack;
 
@@ -821,6 +902,16 @@ bool WeaponDistance::useWeapon(const std::shared_ptr<Player> &player, const std:
 		}
 	}
 
+	if (player->getLevel() < 20) {
+		chance += 50;
+	}
+
+	// Proficiency Perk: rangedHitChance
+	const float rangedHitChance = player->getEquippedWeaponProficiency().rangedHitChance;
+	if (rangedHitChance > 0) {
+		chance += static_cast<int32_t>(std::ceil(chance * rangedHitChance));
+	}
+
 	if (chance >= uniform_random(1, 100)) {
 		Weapon::internalUseWeapon(player, item, target, damageModifier);
 	} else {
@@ -902,6 +993,11 @@ int32_t WeaponDistance::getWeaponDamage(const std::shared_ptr<Player> &player, c
 		}
 	}
 
+	const uint8_t extraProficiencyAttack = player->getEquippedWeaponProficiency().attack;
+	if (extraProficiencyAttack > 0) {
+		attackValue += extraProficiencyAttack;
+	}
+
 	const int32_t attackSkill = player->getSkillLevel(SKILL_DISTANCE);
 	const float attackFactor = player->getAttackFactor();
 
@@ -963,47 +1059,7 @@ void WeaponWand::configureWeapon(const ItemType &it) {
 }
 
 int32_t WeaponWand::getWeaponDamage(const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &, const std::shared_ptr<Item> &, bool maxDamage /* = false*/) const {
-	if (!player->checkChainSystem()) {
-		float multiplier = 1.0f;
-		auto vocation = player->getVocation();
-		if (vocation) {
-			multiplier = vocation->wandRodDamageMultiplier;
-		}
-
-		auto maxValue = static_cast<int32_t>(maxChange * multiplier);
-
-		// Returns maximum damage or a random value between minChange and maxChange
-		return maxDamage ? -maxValue : -normal_random(minChange, maxValue);
-	}
-
-	if (!g_configManager().getBoolean(CHAIN_SYSTEM_MODIFY_MAGIC)) {
-		return maxDamage ? -maxChange : -normal_random(minChange, maxChange);
-	}
-
-	// If chain system is enabled, calculates magic-based damage
-	int32_t attackSkill = 0;
-	int32_t attackValue = 0;
-	float attackFactor = 0.0;
-	[[maybe_unused]] int16_t elementAttack = 0;
-	[[maybe_unused]] CombatDamage combatDamage;
-	calculateSkillFormula(player, attackSkill, attackValue, attackFactor, elementAttack, combatDamage);
-
-	const auto magLevel = player->getMagicLevel();
-	const auto level = player->getLevel();
-
-	// Check if level is greater than zero before performing division
-	const auto levelDivision = level > 0 ? level / 5.0 : 0.0;
-
-	const auto totalAttackValue = magLevel + attackValue;
-
-	// Check if magLevel is greater than zero before performing division
-	const auto magicLevelDivision = totalAttackValue > 0 ? totalAttackValue / 3.0 : 0.0;
-
-	const double min = levelDivision + magicLevelDivision;
-	const double max = levelDivision + totalAttackValue;
-
-	// Returns the calculated maximum damage or a random value between the calculated minimum and maximum
-	return maxDamage ? -max : -normal_random(min, max);
+	return maxDamage ? -maxChange : -normal_random(minChange, maxChange);
 }
 
 int16_t WeaponWand::getElementDamageValue() const {

@@ -153,6 +153,12 @@ public:
 		return getCorpseOwner() == static_cast<uint32_t>(std::numeric_limits<int32_t>::max());
 	}
 
+	void setShader(const std::string &shaderName);
+
+	bool hasShader() const;
+
+	std::string getShader() const;
+
 protected:
 	std::unique_ptr<ItemAttribute> &initAttributePtr() {
 		if (!attributePtr) {
@@ -631,6 +637,19 @@ public:
 	virtual void startDecaying();
 	virtual void stopDecaying();
 
+	/**
+	 * @brief Send "AddItem" update to the specified player or to all nearby players if none specified.
+	 *
+	 * This function sends updates about the item's state to a client. If a specific player is provided,
+	 * the update is directed to that player and possibly their party members depending on the game logic.
+	 * If no player is specified, the update is broadcast to all nearby players who are capable of viewing
+	 * the item update, such as spectators around the item's location.
+	 *
+	 * @param player Optional shared pointer to a Player object. If provided, the update is directed to this player
+	 * and their associated viewers or party members. If nullptr, the update goes to all nearby spectators.
+	 */
+	void sendUpdateToClient(const std::shared_ptr<Player> &player = nullptr);
+
 	std::shared_ptr<Item> transform(uint16_t itemId, uint16_t itemCount = -1);
 
 	bool isLoadedFromMap() const {
@@ -679,7 +698,7 @@ public:
 	 * @return false
 	 */
 	bool getImbuementInfo(uint8_t slot, ImbuementInfo* imbuementInfo) const;
-	bool addImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration);
+	bool canAddImbuement(uint8_t slot, const std::shared_ptr<Player> &player, const Imbuement* imbuement);
 	/**
 	 * @brief Decay imbuement time duration, only use this for decay the imbuement time
 	 *
@@ -693,6 +712,7 @@ public:
 	void clearImbuement(uint8_t slot, uint16_t imbuementId) {
 		return setImbuement(slot, imbuementId, 0);
 	}
+	void setImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration);
 	bool hasImbuementType(ImbuementTypes_t imbuementType, uint16_t imbuementTier) const {
 		const auto it = items[id].imbuementTypes.find(imbuementType);
 		if (it != items[id].imbuementTypes.end()) {
@@ -733,6 +753,14 @@ public:
 	bool canBeMoved() const;
 	void checkDecayMapItemOnMove();
 
+	void setActor(bool value) {
+		m_hasActor = value;
+	}
+
+	bool hasActor() const {
+		return m_hasActor;
+	}
+
 protected:
 	std::weak_ptr<Cylinder> m_parent;
 
@@ -742,9 +770,9 @@ protected:
 	bool loadedFromMap = false;
 	bool isLootTrackeable = false;
 	bool decayDisabled = false;
+	bool m_hasActor = false;
 
 private:
-	void setImbuement(uint8_t slot, uint16_t imbuementId, uint32_t duration);
 	// Don't add variables here, use the ItemAttribute class.
 	std::string getWeightDescription(uint32_t weight) const;
 

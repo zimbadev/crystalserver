@@ -95,7 +95,7 @@ monster.loot = {
 	{ name = "red rose", chance = 30100 },
 	{ name = "strong mana potion", chance = 6800 },
 	{ name = "wild flowers", chance = 5155 },
-	{ name = "great mana potion", chance = 591 },
+	{ id = 238, chance = 591 }, -- great mana potion
 	{ name = "dandelion seeds", chance = 5800 },
 	{ name = "fresh fruit", chance = 3400, maxCount = 2 },
 }

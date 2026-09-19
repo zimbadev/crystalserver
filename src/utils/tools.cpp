@@ -17,6 +17,8 @@
 
 #include "utils/tools.hpp"
 
+#include <cmath>
+
 #include "core.hpp"
 #include "enums/object_category.hpp"
 #include "items/item.hpp"
@@ -207,10 +209,15 @@ std::string transformToSHA1(const std::string &input) {
 	return std::string(hexstring, 40);
 }
 
-uint16_t getStashSize(const std::map<uint16_t, uint32_t> &itemList) {
+uint16_t getStashSize(const std::unordered_map<uint16_t, uint32_t> &itemList) {
 	uint16_t size = 0;
 	for (const auto &[itemId, itemCount] : itemList) {
-		size += ceil(itemCount / static_cast<float_t>(Item::items[itemId].stackSize));
+		const auto &it = Item::items[itemId];
+		if (it.stackable && it.stackSize > 0) {
+			size += (itemCount + it.stackSize - 1) / it.stackSize;
+		} else {
+			size += itemCount;
+		}
 	}
 	return size;
 }
@@ -224,7 +231,8 @@ std::string generateToken(const std::string &key, uint32_t ticks) {
 
 	// hmac key pad generation
 	std::string iKeyPad(64, 0x36), oKeyPad(64, 0x5C);
-	for (uint8_t i = 0; i < key.length(); ++i) {
+	const std::string::size_type keyPadLimit = std::min(key.length(), iKeyPad.length());
+	for (std::string::size_type i = 0; i < keyPadLimit; ++i) {
 		iKeyPad[i] ^= key[i];
 		oKeyPad[i] ^= key[i];
 	}
@@ -238,7 +246,7 @@ std::string generateToken(const std::string &key, uint32_t ticks) {
 	message.assign(transformToSHA1(iKeyPad));
 
 	// hmac concat outer pad with message, conversion from hex to int needed
-	for (uint8_t i = 0; i < message.length(); i += 2) {
+	for (std::string::size_type i = 0; i < message.length(); i += 2) {
 		oKeyPad.push_back(static_cast<char>(std::stol(message.substr(i, 2), nullptr, 16)));
 	}
 
@@ -415,6 +423,11 @@ std::mt19937 &getRandomGenerator() {
 	return generator;
 }
 
+int32_t getBaseDamageHealing(uint32_t level) {
+	const auto step = static_cast<int32_t>(std::floor((std::sqrt(2.0 * static_cast<double>(level) + 2025.0) + 5.0) / 10.0));
+	return static_cast<int32_t>(std::floor(static_cast<double>(level + 1000) / step)) + 50 * step - 450;
+}
+
 int32_t uniform_random(int32_t minNumber, int32_t maxNumber) {
 	static std::uniform_int_distribution<int32_t> uniformRand;
 	if (minNumber == maxNumber) {
@@ -482,6 +495,48 @@ std::string formatDateShort(time_t time) {
 
 std::string formatTime(time_t time) {
 	return formatTimeString(time, "%H:%M:%S");
+}
+
+std::string formatTimeUntilReset(uint32_t now, uint32_t targetTimestamp) {
+	if (targetTimestamp <= now) {
+		return "0d 0h 0m";
+	}
+
+	uint32_t remainingSeconds = targetTimestamp - now;
+	const uint32_t days = remainingSeconds / 86400;
+	remainingSeconds %= 86400;
+	const uint32_t hours = remainingSeconds / 3600;
+	remainingSeconds %= 3600;
+	const uint32_t minutes = remainingSeconds / 60;
+
+	return fmt::format("{} days {} hours {} minutes", days, hours, minutes);
+}
+
+int parseDayOfWeek(const std::string &dayStr) {
+	const std::string day = asLowerCaseString(dayStr);
+	if (day == "sunday") {
+		return 0;
+	}
+	if (day == "monday") {
+		return 1;
+	}
+	if (day == "tuesday") {
+		return 2;
+	}
+	if (day == "wednesday") {
+		return 3;
+	}
+	if (day == "thursday") {
+		return 4;
+	}
+	if (day == "friday") {
+		return 5;
+	}
+	if (day == "saturday") {
+		return 6;
+	}
+	g_logger().warn("Invalid weekly day '{}', defaulting to monday", dayStr);
+	return 1;
 }
 
 std::string formatEnumName(std::string_view name) {
@@ -818,6 +873,11 @@ ShootTypeNames shootTypeNames = {
 	{ "diamondarrow", CONST_ANI_DIAMONDARROW },
 	{ "spectralbolt", CONST_ANI_SPECTRALBOLT },
 	{ "royalstar", CONST_ANI_ROYALSTAR },
+	{ "shatterstormarrow", CONST_ANI_SHATTERSTORMARROW },
+	{ "firestormarrow", CONST_ANI_FIRESTORMARROW },
+	{ "terrastormarrow", CONST_ANI_TERRASTORMARROW },
+	{ "froststormarrow", CONST_ANI_FROSTSTORMARROW },
+	{ "thunderstormarrow", CONST_ANI_THUNDERSTORMARROW },
 };
 
 CombatTypeNames combatTypeNames = {
@@ -900,8 +960,8 @@ const ImbuementTypeNames imbuementTypeNames = {
 	{ "skillboost distance", IMBUEMENT_SKILLBOOST_DISTANCE },
 	{ "skillboost magic level", IMBUEMENT_SKILLBOOST_MAGIC_LEVEL },
 	{ "increase capacity", IMBUEMENT_INCREASE_CAPACITY },
-	{ "paralysis removal", IMBUEMENT_PARALYSIS_REMOVAL },
 	{ "skillboost fist", IMBUEMENT_SKILLBOOST_FIST },
+	{ "paralysis removal", IMBUEMENT_PARALYSIS_REMOVAL },
 };
 
 /**
@@ -1616,6 +1676,9 @@ SpellGroup_t stringToSpellGroup(const std::string &value) {
 	if (tmpStr == "greatbeams" || tmpStr == "10") {
 		return SPELLGROUP_GREAT_BEAMS;
 	}
+	if (tmpStr == "stance" || tmpStr == "11") {
+		return SPELLGROUP_STANCE;
+	}
 
 	return SPELLGROUP_NONE;
 }
@@ -1958,35 +2021,6 @@ std::vector<std::string> split(const std::string &str, char delimiter /* = ','*/
 	return tokens;
 }
 
-std::string getFormattedTimeRemaining(uint32_t time) {
-	const time_t timeRemaining = time - getTimeNow();
-
-	const int days = static_cast<int>(std::floor(timeRemaining / 86400));
-
-	std::stringstream output;
-	if (days > 1) {
-		output << days << " days";
-		return output.str();
-	}
-
-	const auto hours = static_cast<int>(std::floor((timeRemaining % 86400) / 3600));
-	const auto minutes = static_cast<int>(std::floor((timeRemaining % 3600) / 60));
-	const auto seconds = static_cast<int>(timeRemaining % 60);
-
-	if (hours == 0 && minutes == 0 && seconds > 0) {
-		output << " less than 1 minute";
-	} else {
-		if (hours > 0) {
-			output << hours << " hour" << (hours != 1 ? "s" : "");
-		}
-		if (minutes > 0) {
-			output << (hours > 0 ? " and " : "") << minutes << " minute" << (minutes != 1 ? "s" : "");
-		}
-	}
-
-	return output.str();
-}
-
 unsigned int getNumberOfCores() {
 	static auto cores = std::thread::hardware_concurrency();
 	return cores;
@@ -2167,7 +2201,7 @@ std::string convertToUTF8(const std::string &input) {
 const std::unordered_set<std::string_view> harmonySpells = {
 	"Devastating Knockout",
 	"Greater Tiger Clash",
-	"Mass Spirit Mend",
+	// Vocation Adjustment: Mass Spirit Mend is no longer a spender (removed from the harmony set).
 	"Spiritual Outburst",
 	"Sweeping Takedown",
 	"Tiger Clash"

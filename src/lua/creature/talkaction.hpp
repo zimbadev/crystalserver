@@ -20,6 +20,7 @@
 #include "account/account.hpp"
 #include "utils/utils_definitions.hpp"
 #include "declarations.hpp"
+#include <parallel_hashmap/phmap.h>
 
 class Player;
 class LuaScriptInterface;
@@ -56,8 +57,16 @@ public:
 		separator = std::move(sep);
 	}
 
+	int32_t setChannel(int32_t newChannel) {
+		return m_channel = newChannel;
+	}
+
+	int32_t getChannel() const {
+		return m_channel;
+	}
+
 	// scripting
-	bool executeSay(const std::shared_ptr<Player> &player, const std::string &words, const std::string &param, SpeakClasses type) const;
+	bool executeSay(const std::shared_ptr<Player> &player, const std::string &words, const std::string &param, SpeakClasses type, uint16_t channel) const;
 	//
 
 	void setGroupType(uint8_t newGroupType);
@@ -76,6 +85,8 @@ private:
 	std::string m_description;
 	std::string separator = "\"";
 	uint8_t m_groupType = 0;
+	int32_t m_channel = -1;
+	;
 };
 
 class TalkActions {
@@ -89,18 +100,18 @@ public:
 
 	static TalkActions &getInstance();
 
-	bool checkWord(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &words, std::string_view word, const TalkAction_ptr &talkActionPtr) const;
-	TalkActionResult_t checkPlayerCanSayTalkAction(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &words) const;
+	bool checkWord(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &words, std::string_view word, const TalkAction_ptr &talkActionPtr, uint16_t channelId) const;
+	TalkActionResult_t checkPlayerCanSayTalkAction(const std::shared_ptr<Player> &player, SpeakClasses type, const std::string &words, uint16_t channelId) const;
 
 	bool registerLuaEvent(const TalkAction_ptr &talkAction);
 	void clear();
 
-	const std::map<std::string, std::shared_ptr<TalkAction>> &getTalkActionsMap() const {
+	const phmap::flat_hash_map<std::string, std::shared_ptr<TalkAction>> &getTalkActionsMap() const {
 		return talkActions;
 	};
 
 private:
-	std::map<std::string, std::shared_ptr<TalkAction>> talkActions;
+	phmap::flat_hash_map<std::string, std::shared_ptr<TalkAction>> talkActions;
 };
 
 constexpr auto g_talkActions = TalkActions::getInstance;

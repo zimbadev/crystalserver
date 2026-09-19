@@ -67,9 +67,6 @@ local function loadMapEmpty()
 						creature:teleportTo(teleportPosition)
 						logger.trace("Teleporting player to down.")
 					end
-					if player then
-						player:sendCreatureAppear()
-					end
 				end
 			end
 		end
@@ -142,9 +139,6 @@ local function loadMapInundate()
 						logger.trace("Teleporting player to wait position and updating tile.")
 					end
 					creaturePosition:sendMagicEffect(CONST_ME_TELEPORT)
-				end
-				if player then
-					player:sendCreatureAppear()
 				end
 			end
 		end

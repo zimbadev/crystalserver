@@ -80,6 +80,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:say("You have honored our legacy! On behalf of all Merudri, I thank you, venerable traveler.", npc, creature)
 				kv:set("questline", 4)
 				kv:set("questlog", 4)
+				kv:set("boolPointsWheel", true)
 				player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questline, 4)
 				player:setStorageValue(Storage.Quest.U15_00.TheWayOfTheMonk.Questlog, 4)
 				local title = Game.getTitleByName("Pensive Wanderer")
@@ -88,6 +89,9 @@ local function creatureSayCallback(npc, creature, type, message)
 				end
 				player:addAchievement("Hope of the Merudri")
 			else
+				if not kv:get("boolPointsWheel") then
+					kv:set("boolPointsWheel", true)
+				end
 				npcHandler:say("You have already completed the pilgrimage and honored our legacy.", npc, creature)
 			end
 		else
@@ -129,7 +133,9 @@ npcConfig.shop = {
 	{ itemName = "robe of enlightenment", clientId = 50268, buy = 150000, sell = 150 },
 	{ itemName = "sai of enlightenment", clientId = 50272, buy = 100000, sell = 100 },
 	{ itemName = "harmony amulet", clientId = 50195, buy = 1000 },
+	{ itemName = "light jo staff", clientId = 50166, buy = 250 },
 	{ itemName = "jo staff", clientId = 50171, buy = 500 },
+	{ itemName = "plain monk robe", clientId = 50257, buy = 450 },
 }
 
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
@@ -149,5 +155,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

@@ -27,16 +27,14 @@ class Imbuement;
 constexpr int32_t maxSkillOrStatId = std::max<int32_t>(STAT_LAST, SKILL_LAST);
 
 struct BaseImbuement {
-	BaseImbuement(uint16_t initId, std::string initName, uint32_t initPrice, uint32_t initProtectionPrice, uint32_t initRemoveCost, uint32_t initDuration, uint8_t initPercent) :
-		id(initId), name(std::move(initName)), price(initPrice), protectionPrice(initProtectionPrice), removeCost(initRemoveCost), duration(initDuration), percent(initPercent) { }
+	BaseImbuement(uint16_t initId, std::string initName, uint32_t initPrice, uint32_t initRemoveCost, uint32_t initDuration) :
+		id(initId), name(std::move(initName)), price(initPrice), removeCost(initRemoveCost), duration(initDuration) { }
 
 	uint16_t id;
 	std::string name;
 	uint32_t price;
-	uint32_t protectionPrice;
 	uint32_t removeCost;
 	uint32_t duration;
-	uint8_t percent;
 };
 
 struct CategoryImbuement {
@@ -66,6 +64,7 @@ public:
 	BaseImbuement* getBaseByID(uint16_t id);
 	CategoryImbuement* getCategoryByID(uint16_t id);
 	std::vector<Imbuement*> getImbuements(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item);
+	std::vector<Imbuement*> getAllImbuementsIntricateAndPowerful(const std::shared_ptr<Player> &player);
 
 protected:
 	friend class Imbuement;
@@ -92,6 +91,8 @@ public:
 	uint16_t getBaseID() const;
 
 	uint32_t getStorage() const;
+
+	uint16_t getScrollId() const;
 
 	bool isPremium() const;
 	std::string getName() const;
@@ -128,6 +129,8 @@ private:
 	uint16_t id {};
 	uint16_t baseid {};
 	uint16_t category {};
+	uint16_t scrollid = 0;
+
 	std::string name;
 	std::string description;
 	std::string subgroup;

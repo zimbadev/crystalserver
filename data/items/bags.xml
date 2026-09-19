@@ -10,10 +10,12 @@
 	- `maxAmount`: (Optional) Sets the maximum quantity of the item that can drop, if applicable.
 	- `class`: (Optional) Restricts the item drop to certain monster classes.
 	- `raceId`: (Optional) Links the drop to a specific race or creature.
+	- `bossOnly`: (Optional) Set to "true" to make the drop available exclusively on boss monsters.
 	-->
 	<bag itemid="6571" name="Red Surprise Bag" chance="5" />
 	<bag itemid="6570" name="Blue Surprise Bag" chance="10" />
 	<bag itemid="3079" name="Boots of Haste" chance="15" class="Dragon" />
 	<bag itemid="6578" name="Party Hat" chance="100" raceId="1938" /> <!-- Infernal Demon -->
+	<bag itemid="6578" name="Party Hat" chance="100" bossOnly="true" />
 	<bag itemid="3043" name="Crystal Coin" chance="100" maxAmount="100" />
 </bags>

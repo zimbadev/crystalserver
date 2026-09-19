@@ -79,7 +79,7 @@ monster.loot = {
 	{ name = "stone skin amulet", chance = 100000 },
 	{ id = 27713, chance = 100000 }, -- heavy crystal fragment
 	{ name = "wand of inferno", chance = 75000 },
-	{ name = "great mana potion", chance = 64580, maxCount = 18 },
+	{ id = 238, chance = 64580, maxCount = 18 }, -- great mana potion
 	{ name = "blue crystal shard", chance = 60420 },
 	{ name = "fire axe", chance = 58330 },
 	{ name = "ultimate health potion", chance = 52080, maxCount = 18 },

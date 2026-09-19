@@ -227,9 +227,7 @@ public:
 	const HouseBedItemList &getBeds() const {
 		return bedsList;
 	}
-	uint32_t getBedCount() const {
-		return static_cast<uint32_t>(std::floor(static_cast<double>(bedsList.size()) / 2.));
-	}
+	uint32_t getBedCount() const;
 
 	void setMaxBeds(int32_t count) {
 		maxBeds = count;

@@ -74,6 +74,8 @@ void NpcTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "NpcType", "currency", NpcTypeFunctions::luaNpcTypeCurrency);
 
 	Lua::registerMethod(L, "NpcType", "addShopItem", NpcTypeFunctions::luaNpcTypeAddShopItem);
+	Lua::registerMethod(L, "NpcType", "addDialogOption", NpcTypeFunctions::luaNpcTypeAddDialogOption);
+	Lua::registerMethod(L, "NpcType", "addDialogOptions", NpcTypeFunctions::luaNpcTypeAddDialogOptions);
 
 	Lua::registerMethod(L, "NpcType", "soundChance", NpcTypeFunctions::luaNpcTypeSoundChance);
 	Lua::registerMethod(L, "NpcType", "soundSpeedTicks", NpcTypeFunctions::luaNpcTypeSoundSpeedTicks);
@@ -265,6 +267,83 @@ int NpcTypeFunctions::luaNpcTypeAddShopItem(lua_State* L) {
 	} else {
 		lua_pushnil(L);
 	}
+	return 1;
+}
+
+int NpcTypeFunctions::luaNpcTypeAddDialogOption(lua_State* L) {
+	// npcType:addDialogOption(optionId, optionText)
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	if (!npcType) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const auto optionId = Lua::getNumber<uint8_t>(L, 2);
+	const auto optionText = Lua::getString(L, 3);
+
+	if (optionId > 0 && !optionText.empty()) {
+		NpcDialogOption option;
+		option.optionId = optionId;
+		option.optionText = optionText;
+		npcType->info.dialogOptions.push_back(option);
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int NpcTypeFunctions::luaNpcTypeAddDialogOptions(lua_State* L) {
+	// npcType:addDialogOptions("trade", "passage", "deposit all", "withdraw", "balance", "yes", "no", "bye")
+	const auto &npcType = Lua::getUserdataShared<NpcType>(L, 1);
+	if (!npcType) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	static const std::unordered_map<std::string, uint8_t> optionIdMap = {
+		// Trade option
+		{ "trade", 0 },
+		//{"trade", 1},
+		//{"trade", 2},
+		// Travel option
+		{ "passage", 3 },
+		// Bank options
+		{ "deposit all", 4 },
+		{ "withdraw", 5 },
+		{ "balance", 6 },
+		// Standard options
+		{ "yes", 7 },
+		{ "no", 8 },
+		{ "bye", 9 },
+	};
+
+	const int args = lua_gettop(L) - 1;
+
+	for (int i = 2; i <= args + 1; ++i) {
+		const auto optionText = Lua::getString(L, i);
+		if (optionText.empty()) {
+			continue;
+		}
+
+		std::string lowerText = optionText;
+		std::transform(lowerText.begin(), lowerText.end(), lowerText.begin(), ::tolower);
+
+		uint8_t optionId = 0;
+		auto it = optionIdMap.find(lowerText);
+		if (it != optionIdMap.end()) {
+			optionId = it->second;
+		} else {
+			optionId = 20 + (i - 2);
+		}
+
+		NpcDialogOption option;
+		option.optionId = optionId;
+		option.optionText = optionText;
+		npcType->info.dialogOptions.push_back(option);
+	}
+
+	Lua::pushBoolean(L, true);
 	return 1;
 }
 

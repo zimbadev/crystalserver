@@ -64,13 +64,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			if headItem and headItem.itemid == 3576 and player:getStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Rank) == 5 then
 				player:addItem(7934, 1)
 				player:setStorageValue(Storage.Quest.U8_2.TheThievesGuildQuest.Mission06, 2)
-				npcHandler:say(
-					"Oh my! You look so great in your uniform! \z
-				You archpostwomen are not only daring but also beautiful. \z
-				Here take it, that's the key you wanted. Just promise to visit me now and then!",
-					npc,
-					creature
-				)
+				npcHandler:say("Oh my! You look so great in your uniform! You archpostwomen are not only daring but also beautiful. Here take it, that's the key you wanted. Just promise to visit me now and then!", npc, creature)
 			end
 		end
 	end

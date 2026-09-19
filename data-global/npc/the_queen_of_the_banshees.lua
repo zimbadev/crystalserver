@@ -176,14 +176,16 @@ local function creatureSayCallback(npc, creature, type, message)
 	end
 	return true
 end
-
+keywordHandler:addKeyword({ "name" }, StdModule.say, { npcHandler = npcHandler, text = "It hurts me to even think about my mortal past. Its long lost and forgotten. So don't ask me about it!" })
+keywordHandler:addKeyword({ "destruction" }, StdModule.say, { npcHandler = npcHandler, text = "This ancient race was annihilated by its own doings, that's all I know. Aeons have passed since then, but the sheer presence of this complex is still defiling and desecrating this area." })
+keywordHandler:addKeyword({ "last" }, StdModule.say, { npcHandler = npcHandler, text = "If you have passed the first six seals and entered the blue fires leading to the seals' chambers, you are ready to receive my kiss ... It will open the last seal. Do you think you are ready?" })
 keywordHandler:addKeyword({ "stay" }, StdModule.say, {
 	npcHandler = npcHandler,
 	text = "It's my curse to be the eternal {guardian} of this ancient {place}.",
 })
 keywordHandler:addKeyword({ "guardian" }, StdModule.say, {
 	npcHandler = npcHandler,
-	text = "I'm the {guardian} of the {SEVENTH} and final seal. The seal to open the last door before ... but perhaps it's better to see it with your own eyes.",
+	text = "I'm the {guardian} of the {SEVENTH} and final seal. The seal to open the {last} door before ... but perhaps it's better to see it with your own eyes.",
 })
 keywordHandler:addKeyword({ "place" }, StdModule.say, {
 	npcHandler = npcHandler,
@@ -191,7 +193,7 @@ keywordHandler:addKeyword({ "place" }, StdModule.say, {
 })
 keywordHandler:addKeyword({ "race" }, StdModule.say, {
 	npcHandler = npcHandler,
-	text = "The race that built this edifice came to this place from the stars. They ran from an enemy even more horrible than themselves. But they carried the {seed} of their own destruction in them.",
+	text = "The race that built this edifice came to this place from the stars. They ran from an enemy even more horrible than themselves. But they carried the {seed} of their own {destruction} in them.",
 })
 keywordHandler:addKeyword({ "seed" }, StdModule.say, {
 	npcHandler = npcHandler,
@@ -203,7 +205,7 @@ keywordHandler:addKeyword({ "complex" }, StdModule.say, {
 })
 keywordHandler:addKeyword({ "ghostlands" }, StdModule.say, {
 	npcHandler = npcHandler,
-	text = "The place you know as the Ghostlands had a different name once ... and many names after. Too many to remember them all.",
+	text = "The place you know as the Ghostlands had a different {name} once ... and many names after. Too many to remember them all.",
 })
 keywordHandler:addKeyword({ "banshee" }, StdModule.say, {
 	npcHandler = npcHandler,

@@ -832,4 +832,7 @@ npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:setCallback(CALLBACK_ON_TRADE_REQUEST, onTradeRequest)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("passage", "bye")
+
 npcType:register(npcConfig)

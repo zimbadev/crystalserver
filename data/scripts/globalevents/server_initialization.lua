@@ -3,7 +3,13 @@ local function cleanupDatabase()
 	db.query("TRUNCATE TABLE `players_online`")
 
 	local currentTime = os.time()
-	db.asyncQuery("DELETE FROM `guild_wars` WHERE `status` IN (0, 2, 3) OR (`status` = 0 AND (`started` + 72 * 60 * 60) <= " .. currentTime .. ")")
+	-- delete canceled and rejected guilds
+	db.asyncQuery("DELETE FROM `guild_wars` WHERE `status` = 2")
+	db.asyncQuery("DELETE FROM `guild_wars` WHERE `status` = 3")
+
+	-- Delete guilds that are pending for 3 days
+	db.asyncQuery("DELETE FROM `guild_wars` WHERE `status` = 0 AND (`started` + 72 * 60 * 60) <= " .. currentTime)
+
 	db.asyncQuery("DELETE FROM `players` WHERE `deletion` != 0 AND `deletion` < " .. currentTime)
 	db.asyncQuery("DELETE FROM `ip_bans` WHERE `expires_at` != 0 AND `expires_at` <= " .. currentTime)
 	db.asyncQuery("DELETE FROM `market_history` WHERE `inserted` <= " .. (currentTime - configManager.getNumber(configKeys.MARKET_OFFER_DURATION)))
@@ -102,9 +108,45 @@ local function updateEventRates()
 		SCHEDULE_SPAWN_RATE = spawnRate
 	end
 
+	local fiendishRate = EventsScheduler.getEventSFiendish()
+	if fiendishRate ~= 100 then
+		SCHEDULE_FIENDISH_RATE = fiendishRate
+	end
+
+	local influencedRate = EventsScheduler.getEventSInfluenced()
+	if influencedRate ~= 100 then
+		SCHEDULE_INFLUENCED_RATE = influencedRate
+	end
+
+	local rates = {
+		{ name = "Exp", value = expRate },
+		{ name = "Loot", value = lootRate },
+		{ name = "Spawn", value = spawnRate },
+		{ name = "Skill", value = skillRate },
+		{ name = "Boss loot", value = bossLootRate },
+		{ name = "Fiendish", value = fiendishRate },
+		{ name = "Influenced", value = influencedRate },
+	}
+
 	-- Log information if any of the rates are not 100%
-	if expRate ~= 100 or lootRate ~= 100 or spawnRate ~= 100 or skillRate ~= 100 or bossLootRate ~= 100 then
-		logger.info("[Events] Exp: {}%, Loot: {}%, Spawn: {}%, Skill: {}%, Boss loot: {}%", expRate, lootRate, spawnRate, skillRate, bossLootRate)
+	local events = ""
+	local boostedEvents = {}
+
+	for _, rate in ipairs(rates) do
+		if rate.value ~= 100 then
+			table.insert(boostedEvents, rate)
+		end
+	end
+	for index, rate in ipairs(boostedEvents) do
+		events = events .. string.format("%s: %d%%", rate.name, rate.value)
+		if index < #boostedEvents then
+			events = events .. ", "
+		else
+			events = events .. "."
+		end
+	end
+	if events ~= "" then
+		logger.info("[Events]: {}", events)
 	end
 end
 
@@ -119,6 +161,15 @@ local function resetAccountSessions()
 	end
 end
 
+-- Function to report NPC shop prices that let a player buy an item and sell it back at a profit
+local function checkNpcShopPrices()
+	for clientId, entry in pairs(NpcPriceChecker or {}) do
+		if entry.buy and entry.sell and entry.sell > entry.buy then
+			logger.warn("The item {} ({}) can be bought from {} for {} gold and sold to {} for {} gold, letting players profit {} gold per trade.", entry.itemName or "unknown", clientId, entry.buyNpc, entry.buy, entry.sellNpc, entry.sell, entry.sell - entry.buy)
+		end
+	end
+end
+
 local serverInitialization = GlobalEvent("Server Initialization")
 
 function serverInitialization.onStartup()
@@ -129,6 +180,7 @@ function serverInitialization.onStartup()
 	moveExpiredBansToHistory()
 	storeTownsInDatabase()
 	checkAndLogDuplicateValues({ "Global", "GlobalStorage", "Storage" })
+	checkNpcShopPrices()
 	updateEventRates()
 	HirelingsInit()
 	resetAccountSessions()

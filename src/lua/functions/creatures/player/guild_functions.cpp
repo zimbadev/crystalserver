@@ -19,6 +19,7 @@
 
 #include "game/game.hpp"
 #include "creatures/players/grouping/guild.hpp"
+#include "io/ioguild.hpp"
 #include "lua/functions/lua_functions_loader.hpp"
 
 void GuildFunctions::init(lua_State* L) {
@@ -35,9 +36,6 @@ void GuildFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Guild", "addRank", GuildFunctions::luaGuildAddRank);
 	Lua::registerMethod(L, "Guild", "getRankById", GuildFunctions::luaGuildGetRankById);
 	Lua::registerMethod(L, "Guild", "getRankByLevel", GuildFunctions::luaGuildGetRankByLevel);
-
-	Lua::registerMethod(L, "Guild", "getMotd", GuildFunctions::luaGuildGetMotd);
-	Lua::registerMethod(L, "Guild", "setMotd", GuildFunctions::luaGuildSetMotd);
 }
 
 int GuildFunctions::luaGuildCreate(lua_State* L) {
@@ -171,29 +169,5 @@ int GuildFunctions::luaGuildGetRankByLevel(lua_State* L) {
 	} else {
 		lua_pushnil(L);
 	}
-	return 1;
-}
-
-int GuildFunctions::luaGuildGetMotd(lua_State* L) {
-	// guild:getMotd()
-	const auto &guild = Lua::getUserdataShared<Guild>(L, 1);
-	if (!guild) {
-		lua_pushnil(L);
-		return 1;
-	}
-	Lua::pushString(L, guild->getMotd());
-	return 1;
-}
-
-int GuildFunctions::luaGuildSetMotd(lua_State* L) {
-	// guild:setMotd(motd)
-	const auto &guild = Lua::getUserdataShared<Guild>(L, 1);
-	if (!guild) {
-		lua_pushnil(L);
-		return 1;
-	}
-	const std::string &motd = Lua::getString(L, 2);
-	guild->setMotd(motd);
-	Lua::pushBoolean(L, true);
 	return 1;
 }

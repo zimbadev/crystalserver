@@ -51,6 +51,7 @@ zone:blockFamiliars()
 zone:setRemoveDestination(config.exitPosition)
 
 local locked = false
+local monstersSpawned = false
 
 function encounter:onReset()
 	locked = false
@@ -59,27 +60,23 @@ end
 
 encounter:addRemoveMonsters():autoAdvance()
 encounter:addBroadcast("You've entered the Brain Head's lair."):autoAdvance()
+
 encounter
-	:addSpawnMonsters({
-		{
-			name = "Brain Head",
-			positions = {
-				Position(31954, 32325, 10),
-			},
-		},
-		{
-			name = "Cerebellum",
-			positions = {
-				Position(31953, 32324, 10),
-				Position(31955, 32324, 10),
-				Position(31953, 32326, 10),
-				Position(31955, 32326, 10),
-				Position(31960, 32320, 10),
-				Position(31960, 32330, 10),
-				Position(31947, 32320, 10),
-				Position(31947, 32330, 10),
-			},
-		},
+	:addStage({
+		start = function()
+			if not monstersSpawned then
+				local brainHeadPos = Position(31954, 32325, 10)
+				Game.createMonster("Brain Head", brainHeadPos)
+
+				local cerebellumPositions = { Position(31953, 32324, 10), Position(31955, 32324, 10), Position(31953, 32326, 10), Position(31955, 32326, 10), Position(31960, 32320, 10), Position(31960, 32330, 10), Position(31947, 32320, 10), Position(31947, 32330, 10) }
+
+				for _, pos in ipairs(cerebellumPositions) do
+					Game.createMonster("Cerebellum", pos)
+				end
+
+				monstersSpawned = true
+			end
+		end,
 	})
 	:autoAdvance("30s")
 

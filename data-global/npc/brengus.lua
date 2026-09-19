@@ -160,7 +160,7 @@ npcConfig.shop = {
 	{ itemName = "tarsal arrow", clientId = 14251, buy = 6 },
 	{ itemName = "throwing knife", clientId = 3298, buy = 25 },
 	{ itemName = "throwing star", clientId = 3287, buy = 42 },
-	{ itemName = "tribal mask", clientId = 3403, buy = 250 },
+	{ itemName = "tribal mask", clientId = 3403, sell = 250 },
 	{ itemName = "tusk shield", clientId = 3443, sell = 850 },
 	{ itemName = "two handed sword", clientId = 3265, buy = 950 },
 	{ itemName = "viking helmet", clientId = 3367, buy = 265 },
@@ -168,6 +168,9 @@ npcConfig.shop = {
 	{ itemName = "vortex bolt", clientId = 14252, buy = 6 },
 	{ itemName = "war hammer", clientId = 3279, buy = 10000 },
 	{ itemName = "wooden shield", clientId = 3412, buy = 15 },
+	{ itemName = "pair of monk fists", clientId = 50181, buy = 270, sell = 90 },
+	{ itemName = "nunchaku", clientId = 50182, buy = 405, sell = 135 },
+	{ itemName = "sai", clientId = 50183, buy = 540, sell = 180 },
 }
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
@@ -179,5 +182,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

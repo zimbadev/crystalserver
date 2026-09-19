@@ -77,7 +77,10 @@ enum Resource_t : uint8_t {
 	RESOURCE_GREATER_GEMS = 0x53,
 	RESOURCE_LESSER_FRAGMENT = 0x54,
 	RESOURCE_GREATER_FRAGMENT = 0x55,
-	RESOURCE_WHEEL_OF_DESTINY = 0x56
+	RESOURCE_BOUNTY_POINTS = 0x56,
+	RESOURCE_SOULSEALS_POINTS = 0x57,
+	RESOURCE_COIN_NORMAL = 0x5A,
+	RESOURCE_COIN_TRANSFERRABLE = 0x5B
 };
 
 enum CharmResource_t : uint8_t {
@@ -91,7 +94,8 @@ enum InspectObjectTypes : uint8_t {
 	INSPECT_NORMALOBJECT = 0,
 	INSPECT_NPCTRADE = 1,
 	INSPECT_PLAYERTRADE = 2,
-	INSPECT_CYCLOPEDIA = 3
+	INSPECT_CYCLOPEDIA = 3,
+	INSPECT_PROFICIENCY = 4,
 };
 
 enum CyclopediaCharacterInfo_OutfitType_t : uint8_t {
@@ -107,15 +111,15 @@ enum MagicEffectsType_t : uint8_t {
 	MAGIC_EFFECTS_DELTA = 1,
 	// needs uint16_t delay after type to delay in miliseconds effect display
 	MAGIC_EFFECTS_DELAY = 2,
-	// needs uint8_t effectid after type
+	// needs uint16_t effectid and uint8_t actor after type
 	MAGIC_EFFECTS_CREATE_EFFECT = 3,
-	// needs uint8_t and deltaX(int8_t), deltaY(int8_t) after type
+	// needs uint16_t effectid, deltaX(int8_t), deltaY(int8_t) and uint8_t actor after type
 	MAGIC_EFFECTS_CREATE_DISTANCEEFFECT = 4,
-	// needs uint8_t and deltaX(int8_t), deltaY(int8_t) after type
+	// needs uint16_t effectid, deltaX(int8_t), deltaY(int8_t) and uint8_t actor after type
 	MAGIC_EFFECTS_CREATE_DISTANCEEFFECT_REVERSED = 5,
-	// needs uint16_t after type
+	// needs uint8_t soundSourceType and uint16_t soundId after type
 	MAGIC_EFFECTS_CREATE_SOUND_MAIN_EFFECT = 6,
-	// needs uint8_t and uint16_t after type
+	// needs uint8_t soundSourceType, uint16_t soundId after type
 	MAGIC_EFFECTS_CREATE_SOUND_SECONDARY_EFFECT = 7,
 };
 
@@ -133,13 +137,14 @@ enum Stash_Actions_t : uint8_t {
 };
 
 struct HighscoreCharacter {
-	HighscoreCharacter(std::string name, uint64_t points, uint32_t id, uint32_t rank, uint16_t level, uint8_t vocation, std::string loyaltyTitle) :
+	HighscoreCharacter(std::string name, uint64_t points, uint32_t id, uint32_t rank, uint16_t level, uint8_t vocation, std::string worldName, std::string loyaltyTitle) :
 		name(std::move(name)),
 		points(points),
 		id(id),
 		rank(rank),
 		level(level),
 		vocation(vocation),
+		worldName(std::move(worldName)),
 		loyaltyTitle(std::move(loyaltyTitle)) { }
 
 	std::string name;
@@ -148,5 +153,19 @@ struct HighscoreCharacter {
 	uint32_t rank;
 	uint16_t level;
 	uint8_t vocation;
+	std::string worldName;
 	std::string loyaltyTitle;
+};
+
+enum Imbuement_Window_t : uint8_t {
+	IMBUEMENT_WINDOW_CHOICE = 0,
+	IMBUEMENT_WINDOW_SELECT_ITEM = 1,
+	IMBUEMENT_WINDOW_SCROLL = 2
+};
+
+enum WeaponProficiency_t : uint8_t {
+	WEAPON_PROFICIENCY_ITEM_INFO = 0,
+	WEAPON_PROFICIENCY_LIST_INFO = 1,
+	WEAPON_PROFICIENCY_RESET_PERKS = 2,
+	WEAPON_PROFICIENCY_APPLY_PERKS = 3
 };

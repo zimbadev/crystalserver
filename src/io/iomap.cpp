@@ -20,6 +20,7 @@
 #include "game/movement/teleport.hpp"
 #include "game/game.hpp"
 #include "io/filestream.hpp"
+#include "map/mapcache.hpp"
 
 /*
     OTBM_ROOTV1
@@ -45,14 +46,94 @@
     |--- OTBM_ITEM_DEF (not implemented)
 */
 
+namespace {
+	constexpr OTB::Identifier OTBM_IDENTIFIER { { 'O', 'T', 'B', 'M' } };
+
+	bool isGzipFile(const std::string &path) {
+		FILE* file = fopen(path.c_str(), "rb");
+		if (!file) {
+			return false;
+		}
+
+		uint8_t header[2] = { 0, 0 };
+		const size_t read = fread(header, 1, sizeof(header), file);
+		fclose(file);
+		return read == sizeof(header) && header[0] == 0x1f && header[1] == 0x8b;
+	}
+
+	bool gzipDecompressFile(const std::string &path, std::vector<uint8_t> &out) {
+		gzFile gz = gzopen(path.c_str(), "rb");
+		if (!gz) {
+			return false;
+		}
+
+		out.clear();
+		out.reserve(64 * 1024 * 1024);
+
+		uint8_t buffer[64 * 1024];
+		while (true) {
+			const int bytesRead = gzread(gz, buffer, sizeof(buffer));
+			if (bytesRead < 0) {
+				gzclose(gz);
+				return false;
+			}
+			if (bytesRead == 0) {
+				break;
+			}
+			out.insert(out.end(), buffer, buffer + bytesRead);
+		}
+
+		return gzclose(gz) == Z_OK;
+	}
+
+	bool hasValidMapHeader(const std::vector<uint8_t> &data) {
+		if (data.size() < OTBM_IDENTIFIER.size() + 1) {
+			return false;
+		}
+
+		if (std::memcmp(data.data(), OTBM_IDENTIFIER.data(), OTBM_IDENTIFIER.size()) == 0) {
+			return true;
+		}
+
+		// RME may save maps with a four-byte null identifier instead of "OTBM".
+		return data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 0;
+	}
+} // namespace
+
 void IOMap::loadMap(Map* map, const Position &pos) {
 	Benchmark bm_mapLoad;
 
-	const auto &fileByte = mio::mmap_source(map->path.string());
+	const std::string mapPath = map->path.string();
+	const bool compressedMapEnabled = g_configManager().getBoolean(TOGGLE_COMPRESSED_MAP);
+	const bool gzipMap = isGzipFile(mapPath);
 
-	const auto begin = fileByte.begin() + sizeof(OTB::Identifier { { 'O', 'T', 'B', 'M' } });
+	if (gzipMap && !compressedMapEnabled) {
+		throw IOMapException("Map file is compressed. Enable toggleCompressedMap in config.lua to load it.");
+	}
 
-	FileStream stream { begin, fileByte.end() };
+	std::vector<uint8_t> decompressedData;
+	const char* begin = nullptr;
+	const char* end = nullptr;
+	mio::mmap_source fileByte;
+
+	if (gzipMap) {
+		if (!gzipDecompressFile(mapPath, decompressedData)) {
+			throw IOMapException("Could not decompress compressed map file: " + mapPath);
+		}
+		if (!hasValidMapHeader(decompressedData)) {
+			throw IOMapException("Decompressed map file does not contain a valid map header.");
+		}
+
+		begin = reinterpret_cast<const char*>(decompressedData.data() + OTBM_IDENTIFIER.size());
+		end = reinterpret_cast<const char*>(decompressedData.data() + decompressedData.size());
+		g_logger().info("Loaded compressed map {}", map->path.filename().string());
+	} else {
+		fileByte = mio::mmap_source(mapPath);
+		begin = fileByte.begin() + OTBM_IDENTIFIER.size();
+		end = fileByte.end();
+	}
+
+	FileStream stream { begin, end };
 
 	if (!stream.startNode()) {
 		throw IOMapException("Could not read map node.");
@@ -70,6 +151,10 @@ void IOMap::loadMap(Map* map, const Position &pos) {
 		throw IOMapException("This map need to be upgraded by using the latest map editor version to be able to load correctly.");
 	}
 
+	// Reset before parsing so the bounds always describe this load only.
+	map->lastLoadedArea = {};
+	MapStoredAttributes::reset();
+
 	if (stream.startNode(OTBM_MAP_DATA)) {
 		parseMapDataAttributes(stream, map);
 		parseTileArea(stream, *map, pos);
@@ -80,6 +165,9 @@ void IOMap::loadMap(Map* map, const Position &pos) {
 	parseWaypoints(stream, *map);
 
 	map->flush();
+
+	// The counters stay for Map::loadMap to report, which is where it is known whether
+	// this was the main map.
 
 	g_logger().debug("Map Loaded {} ({}x{}) in {} milliseconds", map->path.filename().string(), map->width, map->height, bm_mapLoad.duration());
 }
@@ -140,6 +228,23 @@ void IOMap::parseTileArea(FileStream &stream, Map &map, const Position &pos) {
 			const uint16_t x = base_x + tileCoordsX + pos.x;
 			const uint16_t y = base_y + tileCoordsY + pos.y;
 			const auto z = static_cast<uint8_t>(base_z + pos.z);
+
+			// Bounds are kept in int32_t so callers can pad them by the client
+			// viewport without wrapping around near the map edges.
+			auto &area = map.lastLoadedArea;
+			if (!area.valid) {
+				area.valid = true;
+				area.minX = area.maxX = x;
+				area.minY = area.maxY = y;
+				area.minZ = area.maxZ = z;
+			} else {
+				area.minX = std::min<int32_t>(area.minX, x);
+				area.maxX = std::max<int32_t>(area.maxX, x);
+				area.minY = std::min<int32_t>(area.minY, y);
+				area.maxY = std::max<int32_t>(area.maxY, y);
+				area.minZ = std::min<int32_t>(area.minZ, z);
+				area.maxZ = std::max<int32_t>(area.maxZ, z);
+			}
 
 			if (tileType == OTBM_HOUSETILE) {
 				tile->houseId = stream.getU32();

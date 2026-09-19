@@ -19,6 +19,9 @@
 
 #include "game/game.hpp"
 #include "utils/tools.hpp"
+#include "lib/di/container.hpp"
+
+#include <csignal>
 
 /**
  * Regardless of how many cores your computer have, we want at least
@@ -31,8 +34,15 @@
 	#define DEFAULT_NUMBER_OF_THREADS 4
 #endif
 
+ThreadPool &ThreadPool::getInstance() {
+	return inject<ThreadPool>();
+}
+
 ThreadPool::ThreadPool(Logger &logger, const uint32_t threadCount /*= std::thread::hardware_concurrency()*/) :
-	BS::thread_pool<BS::tp::none>(threadCount > 0 ? threadCount : std::max<int>(getNumberOfCores(), DEFAULT_NUMBER_OF_THREADS)), logger(logger) {
+	logger(logger),
+	pool { std::make_unique<BS::thread_pool<BS::tp::none>>(
+		threadCount > 0 ? threadCount : std::max<int>(getNumberOfCores(), DEFAULT_NUMBER_OF_THREADS)
+	) } {
 	start();
 }
 
@@ -45,13 +55,13 @@ void ThreadPool::shutdown() {
 		return;
 	}
 
-	logger.info("Shutting down thread pool...");
-	{
-		std::unique_lock<std::mutex> lock(mutex);
-		stopped = true;
-		condition.notify_all();
-	}
+	stopped = true;
 
-	wait();
+	logger.info("Shutting down thread pool...");
+	pool.reset();
+
+	std::signal(SIGINT, SIG_DFL);
+	std::signal(SIGTERM, SIG_DFL);
+
 	logger.info("Thread pool shutdown complete.");
 }

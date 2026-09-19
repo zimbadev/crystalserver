@@ -444,6 +444,10 @@ keywordHandler:addKeyword({ "wentworth" }, StdModule.say, {
 	npcHandler = npcHandler,
 	text = "Arrr. We go wayyyy back, Keeran an' me. Best you ask him, I'm no good at details.",
 })
+keywordHandler:addKeyword({ "key" }, StdModule.say, {
+	npcHandler = npcHandler,
+	text = "I'm a clerk now. I have better stuff to look after than just a simple key, friend.",
+})
 
 npcHandler:setMessage(
 	MESSAGE_GREET,

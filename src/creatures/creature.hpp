@@ -225,7 +225,11 @@ public:
 	}
 
 	bool isAlive() const {
-		return !isDead();
+		return !checkLessHealth();
+	}
+
+	bool checkLessHealth() const {
+		return health <= 0;
 	}
 
 	virtual int32_t getMaxHealth() const {
@@ -313,6 +317,9 @@ public:
 	}
 	const Outfit_t getDefaultOutfit() const {
 		return defaultOutfit;
+	}
+	void setDefaultOutfit(Outfit_t outfit) {
+		defaultOutfit = outfit;
 	}
 	bool isWearingSupportOutfit() const {
 		auto outfit = currentOutfit.lookType;
@@ -711,6 +718,18 @@ public:
 		charmChanceModifier = value;
 	}
 
+	std::string getShader() const {
+		return shader;
+	}
+	void setShader(const std::string_view shaderName) {
+		shader = shaderName;
+	}
+	void attachEffectById(uint16_t id);
+	void detachEffectById(uint16_t id);
+	std::vector<uint16_t> getAttachedEffectList() const {
+		return attachedEffectList;
+	}
+
 	void setCombatDamage(const CombatDamage &damage);
 	CombatDamage getCombatDamage() const;
 
@@ -883,7 +902,6 @@ private:
 	void updateCalculatedStepSpeed() {
 		const auto stepSpeed = getStepSpeed();
 		walk.calculatedStepSpeed = 1;
-		const auto tileFriction = walk.groundSpeed;
 		if (stepSpeed > -Creature::speedB) {
 			const auto formula = std::floor((Creature::speedA * log(stepSpeed + Creature::speedB) + Creature::speedC) + .5);
 			walk.calculatedStepSpeed = static_cast<uint16_t>(std::max(formula, 1.));
@@ -894,4 +912,6 @@ private:
 
 	uint8_t m_flagAsyncTask = 0;
 	CombatDamage m_combatDamage;
+	std::vector<uint16_t> attachedEffectList;
+	std::string shader;
 };

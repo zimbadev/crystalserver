@@ -85,19 +85,11 @@ public:
 	GuildRank_ptr getRankByLevel(uint8_t level) const;
 	void addRank(uint32_t id, const std::string &name, uint8_t level);
 
-	const std::string &getMotd() const {
-		return motd;
-	}
-	void setMotd(const std::string &newMotd) {
-		this->motd = newMotd;
-	}
-
 private:
 	std::list<std::shared_ptr<Player>> membersOnline;
 	std::vector<GuildRank_ptr> ranks;
 	std::string name;
 	uint64_t bankBalance = 0;
-	std::string motd;
 	uint32_t id;
 	uint32_t memberCount = 0;
 	bool online = true;

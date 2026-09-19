@@ -18,13 +18,10 @@ function Player:sendNormalIcons(icons)
 	msg:sendToPlayer(self)
 end
 
-function Player:sendIconBakragore(specialIcon)
-	local msg = NetworkMessage()
-	msg:addByte(0xA2)
-	msg:addU64(0)
-	msg:addByte(specialIcon)
-	msg:sendToPlayer(self)
-end
+-- Player:sendIconBakragore now delegates to the engine's sendIcons()
+-- which reads current normal icons + Bakragore condition and sends
+-- the combined 0xA2 packet without wiping normal icons.
+-- Use /bakragoreicon <N> to set a persistent Bakragore taint icon.
 
 --[[
 

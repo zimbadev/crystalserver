@@ -129,9 +129,15 @@ std::shared_ptr<Container> Container::getTopParentContainer() {
 		return prevThing->getContainer();
 	}
 
+	size_t depth = 0;
+	const size_t maxDepth = static_cast<size_t>(g_configManager().getNumber(MAX_CONTAINER_DEPTH));
 	while (thing->getParent() != nullptr && thing->getParent()->getContainer()) {
 		prevThing = thing;
 		thing = thing->getParent();
+		if (++depth >= maxDepth) {
+			g_logger().error("Container::getTopParentContainer: max container depth reached, possible cycle");
+			break;
+		}
 	}
 
 	if (prevThing) {
@@ -160,21 +166,14 @@ void Container::addItem(const std::shared_ptr<Item> &item) {
 	item->setParent(getContainer());
 }
 
-StashContainerList Container::getStowableItems() const {
-	StashContainerList toReturnList;
+void Container::getStowableItems(StashContainerList &items) const {
 	for (const auto &item : itemlist) {
-		if (item->getContainer() != nullptr) {
-			const auto &subContainer = item->getContainer()->getStowableItems();
-			for (const auto &key : subContainer | std::views::keys) {
-				const auto &containerItem = key;
-				toReturnList.emplace_back(containerItem, static_cast<uint32_t>(containerItem->getItemCount()));
-			}
+		if (const auto &subContainer = item->getContainer()) {
+			subContainer->getStowableItems(items);
 		} else if (item->isItemStorable()) {
-			toReturnList.emplace_back(item, static_cast<uint32_t>(item->getItemCount()));
+			items.emplace_back(item, static_cast<uint32_t>(item->getItemCount()));
 		}
 	}
-
-	return toReturnList;
 }
 
 Attr_ReadValue Container::readAttr(AttrTypes_t attr, PropStream &propStream) {
@@ -240,8 +239,14 @@ bool Container::countsToLootAnalyzerBalance() const {
 void Container::updateItemWeight(int32_t diff) {
 	totalWeight += diff;
 	std::shared_ptr<Container> parentContainer = getContainer();
+	size_t depth = 0;
+	const size_t maxDepth = static_cast<size_t>(g_configManager().getNumber(MAX_CONTAINER_DEPTH));
 	while ((parentContainer = parentContainer->getParentContainer()) != nullptr) {
 		parentContainer->totalWeight += diff;
+		if (++depth >= maxDepth) {
+			g_logger().error("Container::updateItemWeight: max container depth reached, possible cycle");
+			break;
+		}
 	}
 }
 
@@ -811,7 +816,7 @@ void Container::removeThing(const std::shared_ptr<Thing> &thing, uint32_t count)
 		return /*RETURNVALUE_NOTPOSSIBLE*/;
 	}
 
-	if (item->isStackable() && count != item->getItemCount()) {
+	if (item->isStackable() && count < item->getItemCount()) {
 		const auto newCount = static_cast<uint8_t>(std::max<int32_t>(0, item->getItemCount() - count));
 		const int32_t oldWeight = item->getWeight();
 		item->setItemCount(newCount);
@@ -831,6 +836,10 @@ void Container::removeThing(const std::shared_ptr<Thing> &thing, uint32_t count)
 
 		item->resetParent();
 		itemlist.erase(itemlist.begin() + index);
+
+		if (isCorpse() && empty()) {
+			clearLootHighlight();
+		}
 	}
 }
 
@@ -970,7 +979,23 @@ void Container::removeItem(const std::shared_ptr<Thing> &thing, bool sendUpdateT
 
 		itemlist.erase(it);
 		itemToRemove->resetParent();
+
+		if (isCorpse() && empty()) {
+			clearLootHighlight();
+		}
 	}
+}
+void Container::clearLootHighlight(const std::shared_ptr<Player> &player) {
+	if (!isCorpse()) {
+		return;
+	}
+
+	if (!m_lootHighlightActive) {
+		return;
+	}
+
+	m_lootHighlightActive = false;
+	sendUpdateToClient(player);
 }
 
 uint32_t Container::getOwnerId() const {
@@ -1094,4 +1119,63 @@ size_t ContainerIterator::getCurrentIndex() const {
 	}
 	const auto &top = states.back();
 	return top.index;
+}
+
+ContainerSpecial_t Container::getSpecialCategory(const std::shared_ptr<Player> &player) {
+	const auto &holdingPlayer = getHoldingPlayer();
+	using enum ContainerSpecial_t;
+
+	if (isCorpse() && hasLootHighlight() && !isRewardCorpse() && !empty() && (getCorpseOwner() == static_cast<uint32_t>(std::numeric_limits<int32_t>::max()) || (getCorpseOwner() == 0 || player->canOpenCorpse(getCorpseOwner())))) {
+		return LootHighlight;
+	}
+
+	if (holdingPlayer == player) {
+		if (isQuiver() && getSlotPosition() & SLOTP_RIGHT) {
+			return QuiverLoot;
+		}
+
+		auto [lootFlags, obtainFlags] = getObjectCategoryFlags(player);
+		if (lootFlags != 0 || obtainFlags != 0) {
+			return Manager;
+		}
+	}
+
+	return None;
+}
+
+std::pair<uint32_t, uint32_t> Container::getObjectCategoryFlags(const std::shared_ptr<Player> &player) const {
+	uint32_t lootFlags = 0;
+	uint32_t obtainFlags = 0;
+	// Cycle through all containers managed by the player
+	for (const auto &[category, containerPair] : player->getManagedContainers()) {
+		// Check if the category is valid before continuing
+		if (!isValidObjectCategory(category)) {
+			continue;
+		}
+
+		// containerPair.first refers to loot containers
+		if (containerPair.first == static_self_cast<Container>()) {
+			lootFlags |= 1 << category;
+		}
+
+		// containerPair.second refers to the obtain containers
+		if (containerPair.second == static_self_cast<Container>()) {
+			obtainFlags |= 1 << category;
+		}
+	}
+
+	return { lootFlags, obtainFlags };
+}
+
+uint32_t Container::getAmmoAmount(const std::shared_ptr<Player> &player) const {
+	uint32_t ammoTotal = 0;
+	if (isQuiver()) {
+		for (const auto &listItem : getItemList()) {
+			if (player->getLevel() >= Item::items[listItem->getID()].minReqLevel) {
+				ammoTotal += listItem->getItemAmount();
+			}
+		}
+	}
+
+	return ammoTotal;
 }

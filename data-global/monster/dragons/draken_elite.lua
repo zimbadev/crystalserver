@@ -81,7 +81,7 @@ monster.loot = {
 	{ name = "broken draken mail", chance = 25000 },
 	{ name = "broken slicer", chance = 25000 },
 	{ name = "ultimate health potion", chance = 12040, maxCount = 3 },
-	{ name = "great mana potion", chance = 9260, maxCount = 3 },
+	{ id = 238, chance = 9260, maxCount = 3 }, -- great mana potion
 	{ name = "draken sulphur", chance = 6480 },
 	{ name = "draken wristbands", chance = 6480 },
 	{ name = "small diamond", chance = 1850, maxCount = 2 },

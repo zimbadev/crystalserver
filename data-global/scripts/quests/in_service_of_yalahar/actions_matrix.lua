@@ -1,6 +1,6 @@
 local inServiceYalaharMatrix = Action()
 function inServiceYalaharMatrix.onUse(player, item, fromPosition, target, toPosition, isHotkey)
-	if table.contains({ 842, 843 }, target.itemid) and target.actionid == 100 then
+	if table.contains({ 846, 847 }, target.itemid) and target.actionid == 100 then
 		if table.contains({ 8828, 8829 }, item.itemid) and player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.MatrixState) < 1 then
 			player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.MatrixState, 1)
 			item:remove(1)

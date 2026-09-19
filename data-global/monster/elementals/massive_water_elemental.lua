@@ -85,7 +85,7 @@ monster.loot = {
 	{ id = 3578, chance = 40000, maxCount = 2 }, -- fish
 	{ name = "rainbow trout", chance = 1340 },
 	{ name = "green perch", chance = 1590 },
-	{ name = "great mana potion", chance = 10400 },
+	{ id = 238, chance = 10400 }, -- great mana potion
 	{ name = "great health potion", chance = 10000 },
 }
 

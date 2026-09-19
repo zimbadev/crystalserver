@@ -165,14 +165,14 @@ function Player.addFamePoint(self)
 end
 
 function Player.getFamePoints(self)
-	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Constants.Spike_Fame_Points)
+	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Spike_Fame_Points)
 	return math.max(0, points)
 end
 
 function Player.removeFamePoints(self, amount)
-	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Constants.Spike_Fame_Points)
+	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Spike_Fame_Points)
 	local current = math.max(0, points)
-	self:setStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Constants.Spike_Fame_Points, current - amount)
+	self:setStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Spike_Fame_Points, current - amount)
 end
 
 function Player.depositMoney(self, amount)
@@ -349,6 +349,10 @@ function Player:CreateFamiliarSpell(spellId)
 
 	local createdSuccessfully = self:createFamiliar(familiarName, summonDuration)
 	if createdSuccessfully then
+		local summons = self:getSummons()
+		for _, summon in ipairs(summons) do
+			summon:registerEvent("PartyProtection")
+		end
 		condition:setTicks(1000 * cooldown / configManager.getFloat(configKeys.RATE_SPELL_COOLDOWN))
 		self:addCondition(condition)
 		return true
@@ -947,4 +951,31 @@ function Player.findItemInInbox(self, itemId, name)
 		end
 	end
 	return nil
+end
+
+function Player.saveLoginLog(self)
+	local timestamp = os.date("%Y-%m-%d %H:%M:%S")
+	local ipAddress = Game.convertIpToString(self:getIp())
+	local protocolVersion = self:getClient().version
+	local playerName = self:getName()
+	local playerLevel = self:getLevel()
+	local playerVocation = self:getVocation():getName()
+
+	local filePath = string.format("%s/logs/logins/%s.txt", CORE_DIRECTORY, playerName)
+	local file = io.open(filePath, "a")
+	if not file then
+		return true
+	end
+
+	io.output(file)
+	io.write(string.format("Timestamp: %s\n", timestamp))
+	io.write(string.format("IP: %s\n", ipAddress or "unknown"))
+	io.write(string.format("Protocol Version: %s\n", protocolVersion or "unknown"))
+	io.write(string.format("Level: %d\n", playerLevel))
+	io.write(string.format("Vocation: %s\n", playerVocation))
+	io.write("------------------------------\n")
+	io.close(file)
+
+	logger.info("Player {} logged in (IP: {} | Protocol: {} | Level: {} | Vocation: {})", playerName, ipAddress, protocolVersion, playerLevel, playerVocation)
+	return true
 end

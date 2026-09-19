@@ -43,6 +43,7 @@ private:
 	static int luaItemGetUniqueId(lua_State* L);
 	static int luaItemGetActionId(lua_State* L);
 	static int luaItemSetActionId(lua_State* L);
+	static int luaItemGetScriptBindings(lua_State* L);
 	static int luaItemSetLoadedFromMap(lua_State* L);
 
 	static int luaItemGetCount(lua_State* L);
@@ -98,4 +99,9 @@ private:
 	static int luaItemIsOwner(lua_State* L);
 	static int luaItemGetOwnerName(lua_State* L);
 	static int luaItemHasOwner(lua_State* L);
+	static int luaItemActor(lua_State* L);
+
+	static int luaItemSetShader(lua_State* L);
+	static int luaItemGetShader(lua_State* L);
+	static int luaItemHasShader(lua_State* L);
 };

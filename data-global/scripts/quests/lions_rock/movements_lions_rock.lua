@@ -6,7 +6,7 @@ local signs = {
 		message2 = "As a sign of victory he tooks its eye, yellow as envy and malevolence, and out of a foul creature created a precious treasure.",
 	},
 	{
-		pos = { x = 33128, y = 32300, z = 9 },
+		pos = { x = 33130, y = 32300, z = 9 },
 		storage = Storage.Quest.U10_70.LionsRock.InnerSanctum.LizardSign,
 		message1 = "With the aid of the old scroll you translate the inscriptions on the floor: And the mighty lion defeated the lazy lizard.",
 		message2 = "As a sign of victory he tooks its egg, blue as sloth and conceit, and out of a foul creature created a precious treasure.",

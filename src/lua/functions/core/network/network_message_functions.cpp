@@ -33,6 +33,8 @@ void NetworkMessageFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "NetworkMessage", "getU64", NetworkMessageFunctions::luaNetworkMessageGetU64);
 	Lua::registerMethod(L, "NetworkMessage", "getString", NetworkMessageFunctions::luaNetworkMessageGetString);
 	Lua::registerMethod(L, "NetworkMessage", "getPosition", NetworkMessageFunctions::luaNetworkMessageGetPosition);
+	Lua::registerMethod(L, "NetworkMessage", "getLength", NetworkMessageFunctions::luaNetworkMessageGetLength);
+	Lua::registerMethod(L, "NetworkMessage", "getBufferPosition", NetworkMessageFunctions::luaNetworkMessageGetBufferPosition);
 
 	Lua::registerMethod(L, "NetworkMessage", "addByte", NetworkMessageFunctions::luaNetworkMessageAddByte);
 	Lua::registerMethod(L, "NetworkMessage", "addU16", NetworkMessageFunctions::luaNetworkMessageAddU16);
@@ -119,6 +121,28 @@ int NetworkMessageFunctions::luaNetworkMessageGetPosition(lua_State* L) {
 	const auto &message = Lua::getUserdataShared<NetworkMessage>(L, 1);
 	if (message) {
 		Lua::pushPosition(L, message->getPosition());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int NetworkMessageFunctions::luaNetworkMessageGetLength(lua_State* L) {
+	// networkMessage:getLength()
+	const auto &message = Lua::getUserdataShared<NetworkMessage>(L, 1);
+	if (message) {
+		lua_pushnumber(L, message->getLength());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int NetworkMessageFunctions::luaNetworkMessageGetBufferPosition(lua_State* L) {
+	// networkMessage:getBufferPosition()
+	const auto &message = Lua::getUserdataShared<NetworkMessage>(L, 1);
+	if (message) {
+		lua_pushnumber(L, message->getBufferPosition());
 	} else {
 		lua_pushnil(L);
 	}

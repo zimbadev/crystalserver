@@ -15,6 +15,7 @@ monster.outfit = {
 
 monster.events = {
 	"GraveDangerBossDeath",
+	"DukeKruleTransform",
 }
 
 monster.health = 75000

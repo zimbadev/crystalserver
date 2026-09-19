@@ -54,23 +54,30 @@ local HiddenThreats = Storage.Quest.U11_50.HiddenThreats
 local function greetCallback(npc, creature, message)
 	local player = Player(creature)
 
-	if player:getStorageValue(HiddenThreats.CorymRescued06) < 0 then
+	if player:getStorageValue(HiddenThreats.CorymRescued04) < 0 then
 		npcHandler:setMessage(MESSAGE_GREET, {
-			"Every man is the architect of his own fortune. I want to see the daylight again! Just smell fresh air.",
+			"Every man is the architect of his own fortune. The times of {repression} are finally over.",
 		})
-		player:setStorageValue(HiddenThreats.CorymRescueMission, player:getStorageValue(HiddenThreats.CorymRescueMission) + 1)
-		player:setStorageValue(HiddenThreats.CorymRescued06, 1)
 	else
-		npcHandler:setMessage(MESSAGE_GREET, "Every man is the architect of his own fortune. I want to see the daylight again! Just smell fresh air.")
+		npcHandler:setMessage(MESSAGE_GREET, "We need weapons to overcome our situation.")
 	end
 	return true
 end
 
 local function creatureSayCallback(npc, creature, type, message)
-	--local player = Player(creature)
+	local player = Player(creature)
 
 	if not npcHandler:checkInteraction(npc, creature) then
 		return false
+	end
+
+	if MsgContains(message, "repression") then
+		npcHandler:say({
+			"We need weapons to overcome our situation.",
+		}, npc, creature)
+		if player:getStorageValue(HiddenThreats.CorymRescued04) < 0 then
+			player:setStorageValue(HiddenThreats.CorymRescued04, 1)
+		end
 	end
 	return true
 end

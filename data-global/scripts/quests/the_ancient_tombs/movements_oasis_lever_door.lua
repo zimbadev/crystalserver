@@ -11,5 +11,5 @@ function theAncientOasisMovement.onStepIn(creature, item, position, fromPosition
 	return true
 end
 
-theAncientOasisMovement:aid(12107)
+theAncientOasisMovement:aid(12108)
 theAncientOasisMovement:register()

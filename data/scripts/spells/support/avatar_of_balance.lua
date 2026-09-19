@@ -37,7 +37,7 @@ spell:words("uteta res tio")
 spell:level(300)
 spell:mana(1200)
 spell:isPremium(false)
-spell:needLearn(false)
+
 spell:groupCooldown(2000)
 spell:cooldown(7200000)
 spell:vocation("monk;true", "exalted monk;true")

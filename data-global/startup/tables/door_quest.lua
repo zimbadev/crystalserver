@@ -52,7 +52,7 @@ QuestDoorAction = {
 	},
 	-- Edron
 	[Storage.Kilmaresh.Sixth.Favor] = {
-		itemId = false,
+		itemId = 9558,
 		itemPos = {
 			{ x = 33855, y = 31450, z = 9 },
 			{ x = 33855, y = 31496, z = 9 },
@@ -247,10 +247,6 @@ QuestDoorAction = {
 	[Storage.Quest.U10_90.FerumbrasAscension.MonsterDoor] = {
 		itemId = false,
 		itemPos = { { x = 33482, y = 32786, z = 11 } },
-	},
-	[Storage.Quest.U10_90.FerumbrasAscension.TarbazDoor] = {
-		itemId = false,
-		itemPos = { { x = 33470, y = 32786, z = 11 } },
 	},
 	-- Wrath of the emperor door
 	[Storage.Quest.U8_6.WrathOfTheEmperor.Mission02] = {
@@ -452,6 +448,51 @@ QuestDoorAction = {
 			{ x = 32780, y = 31208, z = 7 },
 		},
 	},
+	-- Blood Brothers Quest
+	[Storage.Quest.U8_4.BloodBrothers.BloodCrystalDoor] = {
+		itemId = false,
+		itemPos = { { x = 32776, y = 31107, z = 10 } },
+	},
+	[Storage.Quest.U8_4.BloodBrothers.LibraryDoor] = {
+		itemId = 8259,
+		itemPos = {
+			{ x = 32956, y = 31481, z = 6 },
+			{ x = 32948, y = 31465, z = 7 },
+		},
+	},
+	[Storage.Quest.U8_4.BloodBrothers.BorethDoor] = {
+		itemId = 8259,
+		itemPos = {
+			{ x = 32950, y = 31474, z = 6 },
+			{ x = 32958, y = 31465, z = 7 },
+		},
+	},
+	[Storage.Quest.U8_4.BloodBrothers.LersatioDoor] = {
+		-- two doors with different item ids on the same storage, hence the false
+		itemId = false,
+		itemPos = {
+			{ x = 32956, y = 31468, z = 6 }, -- 8259
+			{ x = 32953, y = 31460, z = 7 }, -- 8261
+		},
+	},
+	[Storage.Quest.U8_4.BloodBrothers.Arthei_Marziel_Door] = {
+		{
+			-- two doors with different item ids on the same storage, hence the false
+			itemId = false,
+			itemPos = {
+				{ x = 32950, y = 31464, z = 6 },
+				{ x = 32956, y = 31446, z = 8 },
+				{ x = 32953, y = 31451, z = 4 },
+			},
+		},
+		{ itemId = 8261, itemPos = { { x = 32953, y = 31450, z = 6 } } }, -- closed door
+	},
+	[Storage.Quest.U8_4.BloodBrothers.CastleHiddenEntrance] = {
+		itemId = 8261,
+		itemPos = {
+			{ x = 32953, y = 31469, z = 7 },
+		},
+	},
 	-- Children of the revolution door
 	[Storage.Quest.U8_54.ChildrenOfTheRevolution.Mission03] = {
 		itemId = false,
@@ -502,11 +543,6 @@ QuestDoorAction = {
 			{ x = 33284, y = 31791, z = 13 },
 			{ x = 33307, y = 32291, z = 7 },
 		},
-	},
-	-- The thieves guild door
-	[Storage.Quest.U8_2.TheThievesGuildQuest.Mission04] = {
-		itemId = false,
-		itemPos = { { x = 32359, y = 32787, z = 6 } },
 	},
 	[Storage.Quest.U8_2.TheThievesGuildQuest.Mission05] = {
 		itemId = false,
@@ -668,7 +704,7 @@ QuestDoorAction = {
 		},
 	},
 	-- The dream courts door (Andrew Lyze npc)
-	[Storage.Quest.U12_00.TheDreamCourts.AndrewDoor] = {
+	[Storage.Quest.U12_00.TheDreamCourts.UnsafeRelease.Questline] = {
 		itemId = 20450,
 		itemPos = { { x = 32761, y = 32630, z = 7 } },
 	},
@@ -803,22 +839,11 @@ QuestDoorAction = {
 		itemId = false,
 		itemPos = { { x = 33886, y = 31476, z = 7 } },
 	},
-	[Storage.Kilmaresh.CatacombDoors] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33855, y = 31450, z = 9 },
-			{ x = 33912, y = 31466, z = 9 },
-			{ x = 33855, y = 31496, z = 9 },
-			{ x = 33911, y = 31496, z = 9 },
-			{ x = 33884, y = 31510, z = 9 },
-			{ x = 33884, y = 31536, z = 9 },
-		},
-	},
 	[Storage.Quest.U12_60.APiratesTail.TentuglyDoor] = {
 		itemId = false,
 		itemPos = { { x = 33793, y = 31388, z = 6 } },
 	},
-	[Storage.Quest.U12_00.TheDreamCourts.HauntedHouseAccess] = {
+	[Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Questline] = {
 		itemId = false,
 		itemPos = {
 			{ x = 32700, y = 32244, z = 9 },
@@ -829,30 +854,47 @@ QuestDoorAction = {
 			{ x = 32606, y = 32629, z = 9 },
 		},
 	},
-	[Storage.Quest.U12_00.TheDreamCourts.BuriedCathedralAccess] = {
+	[Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Cellar] = {
 		itemId = false,
 		itemPos = {
 			{ x = 32719, y = 32264, z = 8 },
+		},
+	},
+	[Storage.Quest.U12_00.TheDreamCourts.BurriedCatedral.WordCount] = {
+		itemId = false,
+		itemPos = {
 			{ x = 32728, y = 32280, z = 8 },
 		},
 	},
-	[Storage.Quest.U12_00.TheDreamCourts.DreamScarAccess] = {
+	[Storage.Quest.U12_00.TheDreamCourts.TheSevenKeys.Questline] = {
 		itemId = false,
 		itemPos = {
 			{ x = 31983, y = 32000, z = 14 },
 		},
 	},
-	[Storage.Quest.U12_40.TheOrderOfTheLion.AccessEastSide] = {
+	[Storage.Quest.U12_40.TheOrderOfTheLion.AccessEasternSide] = {
 		itemId = false,
 		itemPos = {
 			{ x = 32429, y = 32461, z = 7 },
 			{ x = 32430, y = 32461, z = 8 },
+			{ x = 32447, y = 32494, z = 7 },
 		},
 	},
 	[Storage.Quest.U12_40.TheOrderOfTheLion.AccessSouthernSide] = {
 		itemId = false,
 		itemPos = {
 			{ x = 32422, y = 32499, z = 8 },
+			{ x = 32441, y = 32469, z = 7 },
+			{ x = 32385, y = 32457, z = 7 },
+			{ x = 32391, y = 32456, z = 7 },
+			{ x = 32400, y = 32457, z = 7 },
+			{ x = 32368, y = 32482, z = 6 },
+		},
+	},
+	[Storage.Quest.U12_40.TheOrderOfTheLion.AugustinDoor] = {
+		itemId = false,
+		itemPos = {
+			{ x = 32395, y = 32475, z = 4 },
 		},
 	},
 	[Storage.Quest.U13_10.CradleOfMonsters.Access.LowerIngol] = {
@@ -924,6 +966,147 @@ QuestDoorAction = {
 			{ x = 32953, y = 31460, z = 9 },
 		},
 	},
+	-- closed door
+	[1000] = {
+		itemId = 5122,
+		itemPos = { { x = 32226, y = 31049, z = 7 } },
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_02] = {
+		itemId = 8363,
+		itemPos = {
+			{ x = 32885, y = 31259, z = 10 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_05] = {
+		itemId = 8361,
+		itemPos = {
+			{ x = 32699, y = 31184, z = 9 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_06] = {
+		itemId = 8363,
+		itemPos = {
+			{ x = 32902, y = 31292, z = 10 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_07] = {
+		itemId = 8363,
+		itemPos = {
+			{ x = 32649, y = 31113, z = 10 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_08] = {
+		itemId = false,
+		itemPos = {
+			{ x = 32950, y = 31203, z = 13 },
+			{ x = 32950, y = 31207, z = 13 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_09] = {
+		itemId = 1674,
+		itemPos = {
+			{ x = 32787, y = 31195, z = 8 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_10] = {
+		itemId = false,
+		itemPos = {
+			{ x = 32693, y = 31564, z = 13 }, -- hellgate
+			{ x = 32993, y = 32405, z = 12 }, -- drefia
+			{ x = 32628, y = 32446, z = 10 }, -- dark cathedral
+			{ x = 33038, y = 32184, z = 9 }, -- shadowthorn
+			{ x = 32249, y = 32474, z = 10 }, -- fibula
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.Door_11] = {
+		itemId = 8363,
+		itemPos = {
+			{ x = 32894, y = 31302, z = 9 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.DoorLab] = {
+		itemId = 1644,
+		itemPos = {
+			{ x = 33271, y = 31798, z = 6 },
+		},
+	},
+	[Storage.Quest.U8_5.ShadowsOfYalahar.DoorFinal] = {
+		itemId = 1642,
+		itemPos = {
+			{ x = 33265, y = 31797, z = 11 },
+			{ x = 33249, y = 31797, z = 11 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Questline] = {
+		itemId = 7721,
+		itemPos = {
+			{ x = 32678, y = 31990, z = 14 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Door_04] = {
+		itemId = 7723,
+		itemPos = {
+			{ x = 32576, y = 31923, z = 12 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Door_05] = {
+		itemId = 1642,
+		itemPos = {
+			{ x = 32536, y = 31628, z = 8 },
+		},
+	},
+	[Storage.Quest.U8_5.TheIsleOfEvil.Door_06] = {
+		itemId = 1644,
+		itemPos = {
+			{ x = 32681, y = 31992, z = 14 },
+		},
+	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- closed door
+	[1001] = {
+		itemId = 1644,
+		itemPos = {
+			{ x = 32085, y = 31988, z = 8 },
+			{ x = 32112, y = 31988, z = 8 },
+		},
+	},
+	-- closed door
+	[47952] = {
+		itemId = 42744,
+		itemPos = { { x = 32971, y = 32398, z = 9 } },
+	},
+	-- closed door
+	[47975] = {
+		itemId = 5122,
+		itemPos = { { x = 34072, y = 32345, z = 14 } },
+	},
+	-- Burning Heart (Emiliana) - the door to the portal, upstairs in Targuna.
+	-- It does NOT use Storage.Quest.U15_24.Targuna.BurningHeart.Mission (48061) as the
+	-- key: that value is already the action id of the Heart of Destruction teleport
+	-- somewhere else on the map (movements_teleport.lua) and the two would collide --
+	-- opening the door would send the player to Edron. It uses 48077 instead, free
+	-- inside Targuna's reserved range 48049-48090, as an action id of its own.
+	-- actions_burning_heart_door.lua registers an Action on that id and checks the
+	-- storage itself; the action id resolves before the item id (Actions::getAction), so
+	-- this Action wins over the generic data/scripts/actions/doors/quest_door.lua, which
+	-- also claims item id 7721 through QuestDoorTable.
+	[48077] = {
+		itemId = 7721,
+		itemPos = {
+			{ x = 31961, y = 31898, z = 5 },
+		},
+	},
+	-- closed door
+	[65535] = {
+		itemId = 9558,
+		itemPos = {
+			{ x = 33792, y = 31627, z = 9 },
+			{ x = 33812, y = 31655, z = 9 },
+		},
+	},
 }
 
 QuestDoorUnique = {
@@ -958,5 +1141,14 @@ QuestDoorUnique = {
 	[22006] = {
 		itemId = 5107,
 		itemPos = { x = 32177, y = 32148, z = 11 },
+	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- closed door
+	[50085] = {
+		itemId = 6898,
+		itemPos = { x = 32058, y = 32266, z = 7 },
 	},
 }

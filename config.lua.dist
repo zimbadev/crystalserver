@@ -11,7 +11,9 @@ coreDirectory = "data"
 -- It can be trace, debug, info, warning, error, critical, off (default: info).
 -- NOTE: It will only be valid after the server starts up and only display logs with level higher or equal the one set.
 -- NOTE: Debug and trace logs are only available if compiled in debug mode.
+-- NOTE: logPlayerIP will create a log file of characters and their IP, this can be useful to enforce your server rules.
 logLevel = "info"
+logPlayerIP = false
 
 --- Toggles the server's maintenance mode.
 -- When enabled, it restricts user access and indicates maintenance operations.
@@ -22,29 +24,17 @@ toggleMaintainMode = false
 -- @field [parent=#global] #string maintainModeMessage an empty string by default, set a custom message if needed.
 maintainModeMessage = ""
 
--- Rook system
--- NOTE: Town ids: Dawnport = 2, Rookgaard = 3
-toggleRookSystem = false
-rookTownId = 3
-rookedLevel = 2
-levelToRook = 5
-minLevelToLeaveRook = 8
-maxLevelToLeaveRook = 10
-toggleAddRookItems = true
-rookSlotBackpack = 2853
-rookSlotHead = 0
-rookSlotArmor = 0
-rookSlotLegs = 0
-rookSlotFeet = 0
-rookSlotRight = 3270
-rookSlotLeft = 0
-rookSlotAmmo = 0
+-- World settings (This information will be loaded from the 'worlds' database table as well)
+-- NOTE: World id is 1 as default, new worlds must have different ids always greater than 1
+-- NOTE: valid values for worldType are: "pvp", "no-pvp", "pvp-enforced", "retro-pvp" and "retro-hardcore"
+-- NOTE: valid values for worldLocation are: "Europe", "North America", "South America" and "Oceania"
+worldId = 1
+worldType = "pvp"
+worldLocation = "South America"
 
 -- Combat settings
--- NOTE: valid values for worldType are: "pvp", "no-pvp" and "pvp-enforced"
 -- NOTE: removeBeginningWeaponAmmunition: spears, arrows, bolt have endless ammo (allows training for paladins)
 -- NOTE: refundManaOnBeginningWeapons: wand of vortex and snakebite refund mana used (allows training for mages)
-worldType = "pvp"
 hotkeyAimbotEnabled = true
 protectionLevel = 7
 pzLocked = 60 * 1000
@@ -70,6 +60,20 @@ blackSkulledDeathMana = 0
 fieldOwnershipDuration = 5 * 1000
 loginProtectionPeriod = 10 * 1000
 
+-- Guilds
+-- ingameGuildManagement: set true to enable in-game guild commands.
+-- guildWarsDefaultFrags: Default frags for guild war invitations if not specified.
+-- guildWarsMinimunFrags: Minimum frags required to initiate a guild war.
+-- levelToFormGuild: Minimum level required to create a guild.
+-- createGuildOnlyPremium: Only premium players can create guilds.
+ingameGuildManagement = true
+toggleGuildWars = false
+guildWarsDefaultFrags = 100
+guildWarsMinimunFrags = 10
+levelToFormGuild = 8
+createGuildOnlyPremium = true
+
+-- Clean system
 cleanProtectionZones = false
 
 -- Connection Config
@@ -82,7 +86,7 @@ allowOldProtocol = false
 bindOnlyGlobalAddress = false
 loginProtocolPort = 7171
 gameProtocolPort = 7172
-statusProtocolPort = 7171
+statusProtocolPort = 97172
 maxPlayers = 0
 serverName = "Crystal"
 serverMotd = "Welcome to the Crystal Server!"
@@ -93,6 +97,12 @@ maxPlayersOnlinePerAccount = 1
 maxPlayersOutsidePZPerAccount = 1
 toggleMaxConnectionsByIP = false
 maxIPConnections = 3
+
+-- Player Concurrency Lock
+-- NOTE: togglePlayerLock blocks character logins during web transactions (marketplace, admin changes, character bazaar)
+-- NOTE: playerLockTimeout defines the lock expiry in seconds to prevent deadlock if a web request fails
+togglePlayerLock = true
+playerLockTimeout = 60
 
 -- Packet Compression
 -- Minimize network bandwith and reduce ping
@@ -158,6 +168,20 @@ taskHuntingSelectListPrice = 5
 taskHuntingBonusRerollPrice = 1
 taskHuntingFreeRerollTime = 20 * 60 * 60
 
+-- Bounty Tasks system
+-- NOTE: bountyTasksFreeRerollTime: Time in seconds that players will have to wait to get a free bounty tasks reroll.
+bountyTasksEnabled = true
+bountyTasksExpMultiplier = 1
+bountyTasksPointsMultiplier = 1
+bountyTasksRerollMultiplier = 1
+bountyTasksKillMultiplier = 1
+bountyTasksFreeRerollTime = 20 * 60 * 60
+
+-- Wweekly Tasks system
+-- Day of week for weekly tasks reset (monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+weeklyTasksEnabled = true
+weeklyTasksResetDay = "monday"
+
 -- Forge system
 -- NOTE: forgeAmountMultiplier, amount dusts multiplies of influenced monsters, default 3
 -- NOTE: forgeMinSlivers, min slivers from influenced monsters
@@ -165,6 +189,7 @@ taskHuntingFreeRerollTime = 20 * 60 * 60
 -- NOTE: forgeInfluencedLimit, limit of influenced monsters that will be created in interval type and time
 -- NOTE: forgeFiendishLimit, limit of diabolic monsters that will be created in interval type and time, less than forgeInfluencedLimit
 -- NOTE: forgeFiendishIntervalType: "hour", "minute" or "second"
+-- NOTE forgeInfluencedIntervalTime and forgeInfluencedIntervalType: time and type of interval to limit the influenced monsters, for example, if you set forgeInfluencedIntervalTime to 1 and forgeInfluencedIntervalType to "hour", only 1 influenced monster will be created per hour, if the limit is reached, no more influenced monsters will be created until the next hour.
 forgeMaxItemTier = 10
 forgeCostOneSliver = 20
 forgeSliverAmount = 3
@@ -184,6 +209,8 @@ forgeInfluencedLimit = 300
 forgeFiendishLimit = 4
 forgeFiendishIntervalType = "hour"
 forgeFiendishIntervalTime = "1"
+forgeInfluencedIntervalType = "minute"
+forgeInfluencedIntervalTime = "30"
 
 ruseChanceFormulaA = 0.0307576
 ruseChanceFormulaB = 0.440697
@@ -268,12 +295,16 @@ familiarTime = 30
 
 -- Party
 -- NOTE: partyShareRangeMultiplier: the range of the party share experience, default 3/2 (1.5)
+-- NOTE: advancedPartyProtection will nullfy the damage along your party members and their summons
+-- NOTE partyListMaxDistance set to 0 means no limit
 leavePartyOnDeath = false
 partyAutoShareExperience = true
 partyShareRangeMultiplier = 1.5
 partyShareLootBoosts = false
 partyShareLootBoostsDimishingFactor = 0.7
 experienceShareActivity = 2 * 60 * 1000
+advancedPartyProtection = false
+partyListMaxDistance = 30
 
 -- Tibiadrome concoctions
 tibiadromeConcoctionCooldown = 24 * 60 * 60 -- 24 hours
@@ -287,7 +318,6 @@ onlyPremiumAccount = false
 -- NOTE: autoBank = true, the dropped coins from monsters will be automatically deposited to your bank account.
 -- NOTE: toggleGoldPouchAllowAnything will allow players to move items or gold to gold pouch
 -- NOTE: toggleGoldPouchQuickLootOnly will ONLY allow quickloot to move items to gold pouch
--- NOTE: toggleServerIsRetroPVP will make this server as retro, setting PARTY_PROTECTION and ADVANCED_SECURE_MODE to 0
 -- NOTE: toggleTravelsFree will make all travels from boat free
 -- NOTE: buyAolCommandFee will add fee when player buy aol by command (!aol), active changing value more than 0 (fee value. ex: 1 = 1gp  aol will be 50001)
 -- NOTE: teleportPlayerToVocationRoom will enable oressa to teleport player to his/her room vocation
@@ -297,11 +327,13 @@ onlyPremiumAccount = false
 -- NOTE: startStreakLevel will make a reward streak level for new players who never logged in
 -- NOTE: if showLootsInBestiary is true, will cause all loots to be shown in the bestiary even if the player has not reached the required number of kills
 -- NOTE: minTownIdToBankTransferFromMain blocks towns less than defined from receiving money transfers
+-- NOTE: allowLureCreatures if true monsters can be lured far from spawn, if false they will despawn
+-- NOTE: blockRespawn if true players block monster respawns on their spot
+-- NOTE: enableOfflineTraining if false will disable offline training from beds only, set false at skill_trainer.lua if you want to completly disable the system
 autoLoot = false
 autoBank = false
 toggleGoldPouchAllowAnything = false
 toggleGoldPouchQuickLootOnly = false
-toggleServerIsRetroPVP = false
 toggleTravelsFree = false
 buyAolCommandFee = 0
 teleportPlayerToVocationRoom = true
@@ -313,6 +345,10 @@ enablePlayerPutItemInAmmoSlot = false
 startStreakLevel = 0
 showLootsInBestiary = false
 minTownIdToBankTransferFromMain = 4
+allowLureCreatures = false
+blockRespawn = false
+enableOfflineTraining = true
+walkThroughPlayers = true
 
 -- Stash
 -- NOTE: stashMoving = true, stow an container inside your stash
@@ -412,10 +448,14 @@ houseLoseAfterInactivity = 30 -- days; 0 = never
 onlyInvitedCanMoveHouseItems = true
 togglehouseTransferOnRestart = true
 bedsOnlyPremium = true
+maxHousesLimit = 3
 
 -- Item Usage
 timeBetweenActions = 200
 timeBetweenExActions = 1000
+timeBetweenNecklace = 500
+timeBetweenRing = 500
+timeAfterParalyze = 500
 
 -- Push
 -- NOTE: pushDelay: interval for every push
@@ -435,25 +475,30 @@ imbueActionsDelay = 1500
 mapName = "world"
 mapAuthor = ""
 
--- Party List limitations
--- max distance in which players in party list are visible
--- NOTE partyListMaxDistance set to 0 means no limit
-partyListMaxDistance = 30
-
 -- Custom Map
 -- NOTE: toggleMapCustom set to true will load all maps in custom map folder
 toggleMapCustom = false
 
+-- Compressed Map
+-- NOTE: toggleCompressedMap must be true to load compressed .otbm maps (RME "Optimized map save")
+toggleCompressedMap = true
+
 -- Market
 -- NOTE: marketRefreshPricesInterval (in minutes, minimum is 1 minute)
 -- NOTE: set it to 0 for disable, is the time in which the task will run updating the prices of the items that will be sent to the client
+enableMarket = true
 marketOfferDuration = 30 * 24 * 60 * 60
 marketRefreshPricesInterval = 30
 premiumToCreateMarketOffer = true
 checkExpiredMarketOffersEachMinutes = 60
 maxMarketOffersAtATimePerPlayer = 100
+toggleWebMarketOrders = true
+webMarketOrdersInterval = 2000
 
 -- MySQL
+-- NOTE: mysqlPoolSize 4 (default) — small to medium servers
+-- 8–16 — high-traffic servers with heavy market usage
+-- 1 — equivalent to the old single-connection behavior
 mysqlHost = "127.0.0.1"
 mysqlUser = "root"
 mysqlPass = "root"
@@ -462,6 +507,7 @@ mysqlPort = 3306
 mysqlSock = ""
 passwordType = "sha1"
 mysqlDatabaseBackup = false
+mysqlPoolSize = 4
 
 -- NOTE: memoryConst: This is the memory cost for the Argon2 hash algorithm. It specifies the amount of memory that the algorithm will use when calculating a hash.
 --The memory cost is measured in units of KiB (1024 bytes). A higher memory cost makes the algorithm more resistant to brute-force and hash-table attacks, but also consumes more memory.
@@ -486,9 +532,6 @@ allowChangeOutfit = true
 freePremium = false
 kickIdlePlayerAfterMinutes = 15
 maxMessageBuffer = 4
-allowWalkthrough = true
-coinPacketSize = 25
-coinImagesURL = "http://127.0.0.1/images/store/"
 classicAttackSpeed = false
 showScriptsLogInConsole = false
 -- time to suppress negative conditions after being affected by them (ms)
@@ -497,12 +540,6 @@ minDelayBetweenConditions = 0
 criticalChance = 10
 skulledDeathLoseStoreItem = false
 experienceDisplayRates = true
--- configure attack base on Fist Fighting skill/experience
--- multiplierSpeedOnFist * 5  (multiplies the value obtained from the player fist skill and multiplies it * 5) max 25 is recommended due minTicks limits else player stop attack
--- maxSpeedOnFist 500 miliseconds  (The maximum attack speed that can be obtained no matter how high the player has the Fist Fighting skill.)
-toggleAttackSpeedOnFist = false
-multiplierSpeedOnFist = 5
-maxSpeedOnFist = 500
 disableLegacyRaids = false
 disableMonsterArmor = false
 minElementalResistance = -200
@@ -510,12 +547,18 @@ maxElementalResistance = 200
 maxDamageReflection = 200
 logPlayersStatements = false
 
+-- Store
+-- NOTE: storeCombinedCoins = true uses transferable coins first, then regular coins for store purchases.
+-- NOTE: When storeCombinedCoins = false, storeCoinType selects which coin type is used (0 = regular, 1 = transferable).
+coinPacketSize = 25
+coinImagesURL = "http://127.0.0.1/images/store/"
+storeCombinedCoins = true
+storeCoinType = 0
+
 -- Chain system
 -- NOTE: combatChainDelay: set to minimum 50 miliseconds
--- NOTE: chainSystemModifyMagic will increase power of wands and rods based on player magic level
 toggleChainSystem = false
 chainSystemVipOnly = true
-chainSystemModifyMagic = false
 combatChainDelay = 50
 combatChainTargets = 5
 combatChainSkillFormulaFist = 1.0
@@ -527,8 +570,15 @@ combatChainSkillFormulaMissile = 0.9
 combatChainSkillFormulaWandsAndRods = 1.0
 
 -- Spells
+toggleLearnSpells = false
 emoteSpells = false
 spellNameInsteadOfWords = false
+
+-- Exiva Restrictions
+-- NOTE: exivaRestrictionsOnlyOptionalWorlds = true to enable exiva restrictions only on optional worlds
+-- NOTE: maxExivaWhitelist = maximum number of players that can be whitelisted for exiva
+exivaRestrictionsOnlyOptionalWorlds = true
+maxExivaWhitelist = 100
 
 -- Global server Save
 -- NOTE: globalServerSaveNotifyDuration in minutes
@@ -546,12 +596,9 @@ globalServerSaveTime = "06:00:00"
 -- the monster can drop
 sortLootByChance = false
 
--- Screenshots
--- Set enableScreenshots to true to anable game screenshots.
-enableScreenshots = false
-
 -- Rates
 -- NOTE: rateExp, rateSkill and rateMagic is used when 'rateUseStages = false' - or a fallback only
+-- NOTE: rateWeaponProficiency multiplies Weapon Proficiency experience gained from kills
 -- To configure rates see file data/stages.lua
 -- lowLevelBonusExp works up to level 50
 rateUseStages = false
@@ -561,6 +608,7 @@ rateSkill = 1
 rateLoot = 1
 rateMagic = 1
 rateSpawn = 1
+rateWeaponProficiency = 1
 
 -- Killing in the name of Quest
 rateKillingInTheNameOfPoints = 1
@@ -575,6 +623,7 @@ rateSoulRegen = 1.0
 rateSoulRegenSpeed = 1.0
 
 rateSpellCooldown = 1.0
+
 rateAttackSpeed = 1.0
 rateOfflineTrainingSpeed = rateAttackSpeed
 rateExerciseTrainingSpeed = rateAttackSpeed
@@ -622,12 +671,15 @@ staminaGreenDelay = 5
 staminaPzGain = 1
 
 -- Mounts
+-- NOTE: set mountSounds to true will display onomatopoeia creature message from your selected mount
 playerAlwaysLoginMounted = false
 toggleMountInProtectionZone = false
+mountSounds = false
 
 -- Scripts
 warnUnsafeScripts = true
 convertUnsafeScripts = true
+luaDebugHook = false
 
 -- Startup
 -- NOTE: defaultPriority only works on Windows and sets process
@@ -639,7 +691,6 @@ startupDatabaseOptimization = true
 ownerName = "Tryller"
 ownerEmail = "@gmail.com"
 url = "https://github.com/zimbadev/crystalserver"
-location = "South America"
 
 -- Sends Discord webhook notifications on startup, raids and shutdown.
 -- The URL layout is https://discord.com/api/webhooks/:id/:token
@@ -683,3 +734,17 @@ metricsPrometheusAddress = "0.0.0.0:9464"
 --- OStream
 metricsEnableOstream = false
 metricsOstreamInterval = 1000
+
+-- OTC Features
+-- NOTE: Features added in this list will be forced to be used on OTCR
+-- These features can be found in "modules/gamelib/const.lua"
+OTCRFeatures = {
+    enableFeature = { 
+        101, -- g_game.enableFeature(GameItemShader)
+        102, -- g_game.enableFeature(GameCreatureAttachedEffect)
+        103, -- g_game.enableFeature(GameCreatureShader)
+        118  -- g_game.enableFeature(GameWingsAurasEffectsShader)
+    },
+    disableFeature = {
+    }
+}

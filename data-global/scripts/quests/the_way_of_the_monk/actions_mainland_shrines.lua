@@ -65,7 +65,7 @@ function shrineAction.onUse(player, item, fromPosition, target, toPosition, isHo
 	local newCount = math.max(1, (kv:get(shrineConfig.counterKey) or 0) + 1)
 	kv:set(shrineConfig.counterKey, newCount)
 
-	if newCount == 14 then
+	if newCount == 14 or shrine.order == 10 then
 		kv:set("boolPointsWheel", true)
 		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Your pilgrimage is complete. Report to Enpa-Deia Pema for a reward.")
 		toPosition:sendMagicEffect(CONST_ME_HOLYAREA)

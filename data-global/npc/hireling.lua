@@ -216,6 +216,9 @@ function createHirelingType(HirelingName)
 			{ itemName = "viking shield", clientId = 3431, buy = 260, sell = 85 },
 			{ itemName = "war hammer", clientId = 3279, buy = 10000, sell = 470 },
 			{ itemName = "wooden shield", clientId = 3412, buy = 15, sell = 5 },
+			{ itemName = "pair of monk fists", clientId = 50181, buy = 270, sell = 90 },
+			{ itemName = "nunchaku", clientId = 50182, buy = 405, sell = 135 },
+			{ itemName = "sai", clientId = 50183, buy = 540, sell = 180 },
 		},
 		["distance"] = {
 			{ itemName = "arrow", clientId = 3447, buy = 2 },
@@ -267,7 +270,7 @@ function createHirelingType(HirelingName)
 		},
 		["potions"] = {
 			{ itemName = "great health potion", clientId = 239, buy = 225 },
-			{ itemName = "great mana potion", clientId = 238, buy = 158 },
+			{ itemid = 238, clientId = 238, buy = 158 },
 			{ itemName = "great spirit potion", clientId = 7642, buy = 254 },
 			{ itemName = "health potion", clientId = 266, buy = 50 },
 			{ itemName = "mana potion", clientId = 268, buy = 56 },
@@ -1714,7 +1717,7 @@ function createHirelingType(HirelingName)
 			{ itemName = "gold nugget", clientId = 3040, sell = 850 },
 			{ itemName = "golden figurine", clientId = 5799, sell = 3000 },
 			{ itemName = "great health potion", clientId = 239, buy = 225 },
-			{ itemName = "great mana potion", clientId = 238, buy = 144 },
+			{ itemid = 238, clientId = 238, buy = 144 },
 			{ itemName = "great spirit potion", clientId = 7642, buy = 228 },
 			{ itemName = "green crystal fragment", clientId = 16127, sell = 800 },
 			{ itemName = "green crystal shard", clientId = 16121, sell = 1500 },
@@ -2435,6 +2438,10 @@ function createHirelingType(HirelingName)
 	npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 	-- npcType registering the npcConfig table
+
+	-- Dialog options (interactive icons in the NPC conversation window)
+	npcType:addDialogOptions("deposit all", "withdraw", "balance", "bye")
+
 	npcType:register(npcConfig)
 end
 

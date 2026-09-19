@@ -24,6 +24,6 @@ end
 spell:name("Heal Malice")
 spell:words("#####462")
 spell:blockWalls(true)
-spell:needLearn(true)
+
 spell:needDirection(true)
 spell:register()

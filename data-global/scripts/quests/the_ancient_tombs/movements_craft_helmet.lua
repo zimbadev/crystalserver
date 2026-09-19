@@ -1,4 +1,4 @@
-local helmetIds = { 3236, 3241, 3235, 3239, 3240, 3238, 3237 }
+local helmetIds = { 3222, 3223, 3224, 3225, 3226, 3227, 3228 }
 
 local craftHelmet = MoveEvent()
 

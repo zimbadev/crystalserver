@@ -43,7 +43,6 @@ accessBlood:type("stepin")
 accessBlood:position(config.entrance)
 accessBlood:register()
 
------------ Leave from Rotten -----------
 local leaveBlood = MoveEvent()
 function leaveBlood.onStepIn(creature, item, position, fromPosition)
 	local player = creature:getPlayer()

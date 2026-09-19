@@ -233,7 +233,6 @@ local setting = {
 	28830, -- energized demonbone
 	28831, -- unliving demonbone
 	28832, -- sulphurous demonbone
-	29286, -- golden axe
 	29419, -- resizer
 	29421, -- summerblade
 	29422, -- winterblade
@@ -245,6 +244,10 @@ local setting = {
 	31614, -- tagralt blade
 	32093, -- meat hammer
 	32616, -- phantasmal axe
+	50163, -- crude umbral katar
+	50164, -- umbral katar
+	50165, -- umbral master katar
+	50168, -- nunchaku of destruction
 }
 
 local destroy = Action()

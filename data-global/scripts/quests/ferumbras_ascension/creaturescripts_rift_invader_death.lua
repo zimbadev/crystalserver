@@ -37,7 +37,7 @@ function riftInvaderDeath.onDeath(creature, corpse, lasthitkiller, mostdamagekil
 				creature:say("FERUMBRAS BURSTS INTO SOUL SPLINTERS!", TALKTYPE_MONSTER_YELL, nil, nil, Position(33392, 31475, 14))
 				creature:remove()
 				for a = 1, #crystals do
-					local crystalEffect = crystals[i]
+					local crystalEffect = crystals[a]
 					crystalEffect.crystalPosition:sendMagicEffect(CONST_ME_FERUMBRAS)
 					Game.createMonster("Ferumbras Soul Splinter", Position(33392, 31473, 14), false, true)
 				end

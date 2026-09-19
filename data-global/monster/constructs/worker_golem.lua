@@ -92,7 +92,7 @@ monster.loot = {
 	{ name = "bonebreaker", chance = 130 },
 	{ name = "berserk potion", chance = 820 },
 	{ name = "spiked squelcher", chance = 1003 },
-	{ name = "great mana potion", chance = 1470 },
+	{ id = 238, chance = 1470 }, -- great mana potion
 	{ name = "great health potion", chance = 2100 },
 	{ name = "nail", chance = 5000, maxCount = 5 },
 	{ name = "great spirit potion", chance = 830 },

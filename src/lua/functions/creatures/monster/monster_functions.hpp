@@ -70,6 +70,7 @@ private:
 	static int luaMonsterSetForgeStack(lua_State* L);
 	static int luaMonsterConfigureForgeSystem(lua_State* L);
 	static int luaMonsterClearFiendishStatus(lua_State* L);
+	static int luaMonsterClearInfluencedStatus(lua_State* L);
 	static int luaMonsterIsForgeable(lua_State* L);
 
 	static int luaMonsterGetName(lua_State* L);
@@ -92,6 +93,8 @@ private:
 
 	static int luaMonsterIsDead(lua_State* L);
 	static int luaMonsterImmune(lua_State* L);
+
+	static int luaMonsterWalkTo(lua_State* L);
 
 	friend class CreatureFunctions;
 };

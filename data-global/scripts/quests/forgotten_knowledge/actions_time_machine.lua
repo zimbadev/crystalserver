@@ -18,18 +18,6 @@ function timeMachine.onUse(player, item, fromPosition, target, toPosition, isHot
 		end
 	end
 
-	if player:getPosition() == Position(33453, 31029, 8) then
-		player:teleportTo(Position(32430, 32167, 8))
-		player:getPosition():sendMagicEffect(CONST_ME_ENERGYHIT)
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The mechanism takes you back in time.")
-		return true
-	elseif player:getPosition() == Position(32430, 32166, 8) then
-		player:teleportTo(Position(33453, 31030, 8))
-		player:getPosition():sendMagicEffect(CONST_ME_ENERGYHIT)
-		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The mechanism takes you back in time.")
-		return true
-	end
-
 	return false
 end
 

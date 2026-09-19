@@ -75,6 +75,10 @@ keywordHandler:addKeyword({ "alori mort" }, StdModule.say, { npcHandler = npcHan
 	return player:getStorageValue(Storage.Quest.U8_4.BloodBrothers.Mission03) == 1
 end)
 
+keywordHandler:addKeyword({ "blood crystal" }, StdModule.say, { npcHandler = npcHandler, text = "This is a fruit store. No slaughterhouse." }, function(player)
+	return player:getStorageValue(Storage.Quest.U8_4.BloodBrothers.Mission05) == 1
+end)
+
 npcHandler:setMessage(MESSAGE_GREET, "Welcome to my fruit and vegetable store, |PLAYERNAME|! Ask me for a {trade} if you'd like to see my wares.")
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
@@ -107,5 +111,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

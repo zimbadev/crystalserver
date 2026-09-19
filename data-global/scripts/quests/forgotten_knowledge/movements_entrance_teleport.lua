@@ -121,5 +121,5 @@ function entranceTeleport.onStepIn(creature, item, position, fromPosition)
 end
 
 entranceTeleport:type("stepin")
-entranceTeleport:aid(24873)
+entranceTeleport:aid(24873, 24874, 24875, 24876, 24877, 24878, 24879, 24880, 24881, 24882, 24883, 24884, 24885, 24886)
 entranceTeleport:register()

@@ -60,7 +60,6 @@ local config = {
 	["50 yellow cloth"] = { storageValue = 5, text = { "Brought the 50 pieces of yellow cloth?", "Good. Get me 50 pieces of white cloth now." }, itemId = 5914, count = 50 },
 	["50 white cloth"] = { storageValue = 6, text = { "Brought the 50 pieces of white cloth?", "Good. Get me 10 spools of yarn now." }, itemId = 5909, count = 50 },
 	["10 spools of yarn"] = { storageValue = 7, text = { "Brought the 10 spools of yarn?", "Thanks. That's it, you're done. Good job, |PLAYERNAME|. I keep my promise. Here's my old assassin head piece." }, itemId = 5886, count = 10 },
-	["10 yarn"] = { storageValue = 7, text = { "Brought the 10 spools of yarn?", "Thanks. That's it, you're done. Good job, |PLAYERNAME|. I keep my promise. Here's my old assassin head piece." }, itemId = 5886, count = 10 },
 }
 
 local function creatureSayCallback(npc, creature, type, message)

@@ -25,6 +25,13 @@
 #include "game/movement/position.hpp"
 #include "creatures/creatures_definitions.hpp"
 #include "creatures/players/animus_mastery/animus_mastery.hpp"
+#include "server/server_definitions.hpp"
+#include "creatures/players/proficiencies/proficiencies.hpp"
+#include "creatures/players/proficiencies/proficiencies_definitions.hpp"
+#include "creatures/players/attached_effects/player_attached_effects.hpp"
+
+#include "io/iobountytasks.hpp"
+#include "io/ioweeklytasks.hpp"
 
 class AnimusMastery;
 class House;
@@ -58,11 +65,16 @@ class Container;
 class KV;
 class BedItem;
 class Npc;
+class Charm;
 
 struct ModalWindow;
 struct Achievement;
 struct VIPGroup;
 struct Mount;
+struct Wing;
+struct Effect;
+struct Shader;
+struct Aura;
 struct OutfitEntry;
 struct Outfit;
 struct FamiliarEntry;
@@ -71,6 +83,7 @@ struct Group;
 struct Outfit_t;
 struct TextMessage;
 struct HighscoreCharacter;
+struct NpcDialogOptions;
 
 enum class PlayerIcon : uint8_t;
 enum class IconBakragore : uint8_t;
@@ -78,6 +91,8 @@ enum class HouseAuctionType : uint8_t;
 enum class BidErrorMessage : uint8_t;
 enum class TransferErrorMessage : uint8_t;
 enum class AcceptTransferErrorMessage : uint8_t;
+enum class ForgeClassifications_t : uint8_t;
+enum class BosstiaryRarity_t : uint8_t;
 enum ObjectCategory_t : uint8_t;
 enum PreySlot_t : uint8_t;
 enum SpeakClasses : uint8_t;
@@ -128,6 +143,96 @@ struct OpenContainer {
 	uint16_t index;
 };
 
+struct WeaponProficiencyPerk {
+	uint8_t proficiencyLevel = 0;
+	uint8_t perkPosition = 0;
+};
+
+struct WeaponProficiencyData {
+	uint32_t experience = 0;
+	std::vector<WeaponProficiencyPerk> activePerks;
+};
+
+struct WeaponProficiencyAugment {
+	uint16_t spellId = 0;
+	WeaponProficiencyPerkAugmentType_t augmentType = PROFICIENCY_AUGMENTTYPE_NONE;
+	float value = 0;
+};
+
+struct EquippedWeaponProficiencyBonuses {
+	uint8_t attack = 0;
+	uint8_t defense = 0;
+	uint8_t weaponShieldMod = 0;
+	std::map<skills_t, uint8_t> skillBonus;
+	int32_t specialMagicLevel[COMBAT_COUNT] = { 0 };
+	std::vector<WeaponProficiencyAugment> spellAugments;
+	float bestiaryRacePercentDamageGain = 0;
+	float damageGainBossAndSinisterEmbraced = 0;
+	uint16_t critHitChance = 0;
+	int32_t critHitChanceForElementIdToSpellsAndRunes[COMBAT_COUNT] = { 0 };
+	uint16_t critHitChanceForOffensiveRunes = 0;
+	uint16_t critHitChanceForAutoAttack = 0;
+	uint16_t critExtraDamage = 0;
+	int32_t critExtraDamageForElementIdToSpellsAndRunes[COMBAT_COUNT] = { 0 };
+	uint16_t critExtraDamageForOffensiveRunes = 0;
+	uint16_t critExtraDamageForAutoAttack = 0;
+	uint16_t manaLeech = 0;
+	uint16_t lifeLeech = 0;
+	uint8_t manaGainOnHit = 0;
+	uint8_t lifeGainOnHit = 0;
+	uint8_t manaGainOnKill = 0;
+	uint8_t lifeGainOnKill = 0;
+	std::map<uint8_t, uint8_t> gainDamageAtRange;
+	float rangedHitChance = 0;
+	uint8_t attackRange = 0;
+	std::map<skills_t, float> skillPercentageAsExtraDamageForAutoAttack;
+	std::map<skills_t, float> skillPercentageAsExtraDamageForSpells;
+	std::map<skills_t, float> skillPercentageAsExtraHealingForSpells;
+	float alphaStrikeExtraDamage = 0; // +X% damage vs targets above 95% HP
+	float omegaStrikeExtraDamage = 0; // +Y% damage vs targets below 30% HP
+	float armorPenetration = 0; // ignores X% of target's physical armor
+	float elementalPierce[COMBAT_COUNT] = { 0 }; // ignores X% of target's elemental resistance per combat type
+
+	uint8_t bestiaryId = 0;
+
+	void reset() {
+		attack = 0;
+		defense = 0;
+		weaponShieldMod = 0;
+		skillBonus.clear();
+		std::fill(std::begin(specialMagicLevel), std::end(specialMagicLevel), 0);
+		spellAugments.clear();
+		bestiaryRacePercentDamageGain = 0;
+		damageGainBossAndSinisterEmbraced = 0;
+		critHitChance = 0;
+		std::fill(std::begin(critHitChanceForElementIdToSpellsAndRunes), std::end(critHitChanceForElementIdToSpellsAndRunes), 0);
+		critHitChanceForOffensiveRunes = 0;
+		critHitChanceForAutoAttack = 0;
+		critExtraDamage = 0;
+		std::fill(std::begin(critExtraDamageForElementIdToSpellsAndRunes), std::end(critExtraDamageForElementIdToSpellsAndRunes), 0);
+		critExtraDamageForOffensiveRunes = 0;
+		critExtraDamageForAutoAttack = 0;
+		manaLeech = 0;
+		lifeLeech = 0;
+		manaGainOnHit = 0;
+		lifeGainOnHit = 0;
+		manaGainOnKill = 0;
+		lifeGainOnKill = 0;
+		gainDamageAtRange.clear();
+		rangedHitChance = 0;
+		attackRange = 0;
+		skillPercentageAsExtraDamageForAutoAttack.clear();
+		skillPercentageAsExtraDamageForSpells.clear();
+		skillPercentageAsExtraHealingForSpells.clear();
+		alphaStrikeExtraDamage = 0;
+		omegaStrikeExtraDamage = 0;
+		armorPenetration = 0;
+		std::fill(std::begin(elementalPierce), std::end(elementalPierce), 0.0f);
+
+		bestiaryId = 0;
+	}
+};
+
 using MuteCountMap = std::map<uint32_t, uint32_t>;
 
 static constexpr uint16_t PLAYER_MAX_SPEED = std::numeric_limits<uint16_t>::max();
@@ -137,6 +242,18 @@ static constexpr int32_t NOTIFY_DEPOT_BOX_RANGE = 1;
 
 class Player final : public Creature, public Cylinder, public Bankable {
 public:
+	struct ExivaRestrictions {
+		bool allowAll = false;
+		bool allowOwnGuild = true;
+		bool allowOwnParty = true;
+		bool allowVipList = true;
+		bool allowPlayerWhitelist = true;
+		bool allowGuildWhitelist = true;
+
+		std::vector<uint32_t> playerWhitelist;
+		std::vector<uint32_t> guildWhitelist;
+	};
+
 	class PlayerLock {
 	public:
 		explicit PlayerLock(const std::shared_ptr<Player> &p) :
@@ -168,6 +285,9 @@ public:
 		return static_self_cast<Player>();
 	}
 
+	ExivaRestrictions &getExivaRestrictions();
+	const ExivaRestrictions &getExivaRestrictions() const;
+
 	static std::shared_ptr<Task> createPlayerTask(uint32_t delay, std::function<void(void)> f, const std::string &context);
 
 	void setID() override;
@@ -177,6 +297,10 @@ public:
 	}
 	bool isOnline() const override {
 		return online;
+	}
+
+	uint8_t getWorldId() {
+		return worldId;
 	}
 
 	static uint32_t getFirstID();
@@ -202,7 +326,6 @@ public:
 		return CREATURETYPE_PLAYER;
 	}
 
-	uint16_t getLastMount() const;
 	uint16_t getCurrentMount() const;
 	void setCurrentMount(uint16_t mountId);
 	bool isMounted() const {
@@ -223,8 +346,8 @@ public:
 
 	uint16_t getDodgeChance() const;
 
-	uint8_t isRandomMounted() const;
-	void setRandomMount(uint8_t isMountRandomized);
+	bool isRandomMounted() const;
+	void setRandomMount(bool randomizeMount);
 
 	void sendFYIBox(const std::string &message) const;
 
@@ -288,6 +411,9 @@ public:
 		return guildWarVector;
 	}
 
+	// Reload active wars from database into guildWarVector
+	void reloadGuildWarList();
+
 	const std::unordered_set<std::shared_ptr<MonsterType>> &getCyclopediaMonsterTrackerSet(bool isBoss) const;
 
 	void addMonsterToCyclopediaTrackerList(const std::shared_ptr<MonsterType> &mtype, bool isBoss, bool reloadClient = false);
@@ -304,6 +430,8 @@ public:
 
 	bool isBossOnBosstiaryTracker(const std::shared_ptr<MonsterType> &monsterType) const;
 
+	bool isMonsterOnBestiaryTracker(const std::shared_ptr<MonsterType> &monsterType) const;
+
 	std::shared_ptr<Vocation> getVocation() const;
 
 	OperatingSystem_t getOperatingSystem() const;
@@ -314,6 +442,8 @@ public:
 	uint32_t getProtocolVersion() const;
 
 	bool hasSecureMode() const;
+
+	uint8_t getOpenedContainersLimit() const;
 
 	void setParty(std::shared_ptr<Party> newParty);
 	std::shared_ptr<Party> getParty() const;
@@ -473,7 +603,7 @@ public:
 	void setLevel(uint32_t newLevel) {
 		level = newLevel;
 	}
-	uint8_t getLevelPercent() const {
+	double_t getLevelPercent() const {
 		return levelPercent;
 	}
 	uint32_t getMagicLevel() const;
@@ -531,6 +661,37 @@ public:
 	const Position &getLoginPosition() const {
 		return loginPosition;
 	}
+
+	// Spell crosshair/cursor aim tile (sent by the 15.25 client in the say packet tail).
+	void setSpellAimPosition(const Position &pos) {
+		m_spellAimPosition = pos;
+		m_hasSpellAim = true;
+	}
+	void clearSpellAimPosition() {
+		m_hasSpellAim = false;
+	}
+	bool hasSpellAimPosition() const {
+		return m_hasSpellAim;
+	}
+	const Position &getSpellAimPosition() const {
+		return m_spellAimPosition;
+	}
+
+	// Vocation Adjustment: Mana Buffer (Sorcerer/Druid) -- gates the 25% max-mana tax to once per 2s.
+	int64_t getManaBufferTaxTime() const {
+		return m_manaBufferTaxTime;
+	}
+	void setManaBufferTaxTime(int64_t t) {
+		m_manaBufferTaxTime = t;
+	}
+	void setManaBufferSurvived(bool value) {
+		m_manaBufferSurvived = value;
+	}
+	bool consumeManaBufferSurvived() {
+		const bool survived = m_manaBufferSurvived;
+		m_manaBufferSurvived = false;
+		return survived;
+	}
 	const Position &getTemplePosition() const;
 	std::shared_ptr<Town> getTown() const;
 	void setTown(const std::shared_ptr<Town> &newTown);
@@ -557,7 +718,7 @@ public:
 	void addItemOnStash(uint16_t itemId, uint32_t amount);
 	uint32_t getStashItemCount(uint16_t itemId) const;
 	bool withdrawItem(uint16_t itemId, uint32_t amount);
-	StashItemList getStashItems() const;
+	const StashItemList &getStashItems() const;
 
 	uint32_t getBaseCapacity() const;
 
@@ -655,6 +816,7 @@ public:
 	bool isImmune(CombatType_t type) const override;
 	bool isImmune(ConditionType_t type) const override;
 	bool hasShield() const;
+	bool hasRealShield() const;
 	bool isAttackable() const override;
 	static bool lastHitIsPlayer(const std::shared_ptr<Creature> &lastHitCreature);
 
@@ -814,7 +976,7 @@ public:
 	void sendCreatureSay(const std::shared_ptr<Creature> &creature, SpeakClasses type, const std::string &text, const Position* pos = nullptr) const;
 	void sendCreatureReload(const std::shared_ptr<Creature> &creature) const;
 	void sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakClasses type, const std::string &text) const;
-	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t color) const;
+	void sendCreatureSquare(const std::shared_ptr<Creature> &creature, SquareColor_t markType, SquareColor_t weaponType = SQ_CREATURE_SQUARE_LEGACY) const;
 	void sendCreatureChangeOutfit(const std::shared_ptr<Creature> &creature, const Outfit_t &outfit) const;
 	void sendCreatureChangeVisible(const std::shared_ptr<Creature> &creature, bool visible);
 	void sendCreatureLight(const std::shared_ptr<Creature> &creature) const;
@@ -828,6 +990,7 @@ public:
 	void sendUseItemCooldown(uint32_t time) const;
 	void reloadCreature(const std::shared_ptr<Creature> &creature) const;
 	void sendModalWindow(const ModalWindow &modalWindow);
+	void sendMultiOfflineTrainingDialog();
 
 	// container
 	void closeAllExternalContainers();
@@ -836,6 +999,8 @@ public:
 	void sendUpdateContainerItem(const std::shared_ptr<Container> &container, uint16_t slot, const std::shared_ptr<Item> &newItem);
 	void sendRemoveContainerItem(const std::shared_ptr<Container> &container, uint16_t slot);
 	void sendContainer(uint8_t cid, const std::shared_ptr<Container> &container, bool hasParent, uint16_t firstIndex) const;
+
+	void sendExivaRestrictions();
 
 	// inventory
 	void sendDepotItems(const ItemsTierCountList &itemMap, uint16_t count) const;
@@ -850,9 +1015,15 @@ public:
 	// Quickloot
 	void sendLootContainers() const;
 
+	void sendSpellCooldowns();
+
 	void sendSingleSoundEffect(const Position &pos, SoundEffect_t id, SourceEffect_t source) const;
 
 	void sendDoubleSoundEffect(const Position &pos, SoundEffect_t mainSoundId, SourceEffect_t mainSource, SoundEffect_t secondarySoundId, SourceEffect_t secondarySource) const;
+
+	void sendAmbientSoundEffect(const SoundAmbientEffect_t id) const;
+
+	void sendMusicSoundEffect(const SoundMusicEffect_t id) const;
 
 	SoundEffect_t getAttackSoundEffect() const;
 	SoundEffect_t getHitSoundEffect() const;
@@ -883,7 +1054,6 @@ public:
 	void autoCloseContainers(const std::shared_ptr<Container> &container);
 
 	// inventory
-	// inventory
 	void onUpdateInventoryItem(const std::shared_ptr<Item> &oldItem, const std::shared_ptr<Item> &newItem);
 	void onRemoveInventoryItem(const std::shared_ptr<Item> &item);
 
@@ -901,17 +1071,17 @@ public:
 	void sendPartyCreatureShowStatus(const std::shared_ptr<Creature> &creature, bool showStatus) const;
 	void sendPartyPlayerVocation(const std::shared_ptr<Player> &player) const;
 	void sendPlayerVocation(const std::shared_ptr<Player> &player) const;
-	void sendDistanceShoot(const Position &from, const Position &to, uint16_t type) const;
+	void sendDistanceShoot(const Position &from, const Position &to, uint16_t type, SourceEffect_t source = SourceEffect_t::GLOBAL) const;
 	void sendHouseWindow(const std::shared_ptr<House> &house, uint32_t listId) const;
 	void sendCreatePrivateChannel(uint16_t channelId, const std::string &channelName) const;
 	void sendClosePrivate(uint16_t channelId);
 	void sendIcons();
-	void sendIconBakragore(IconBakragore icon) const;
+	void sendIconBakragore(IconBakragore icon);
 	void removeBakragoreIcons();
 	void removeBakragoreIcon(const IconBakragore icon);
 	void sendClientCheck() const;
 	void sendGameNews() const;
-	void sendMagicEffect(const Position &pos, uint16_t type) const;
+	void sendMagicEffect(const Position &pos, uint16_t type, SourceEffect_t source = SourceEffect_t::GLOBAL) const;
 	void removeMagicEffect(const Position &pos, uint16_t type) const;
 	void sendPing();
 	void sendPingBack() const;
@@ -927,6 +1097,7 @@ public:
 	void sendShop(const std::shared_ptr<Npc> &npc) const;
 	void sendSaleItemList(const std::map<uint16_t, uint16_t> &inventoryMap) const;
 	void sendCloseShop() const;
+	void sendNpcDialogOptions(const NpcDialogOptions &dialogOptions) const;
 	void sendMarketEnter(uint32_t depotId) const;
 	void sendMarketLeave();
 	void sendMarketBrowseItem(uint16_t itemId, const MarketOfferList &buyOffers, const MarketOfferList &sellOffers, uint8_t tier) const;
@@ -953,18 +1124,34 @@ public:
 	void sendHouseAuctionMessage(uint32_t houseId, HouseAuctionType type, uint8_t index, bool bidSuccess = false) const;
 
 	// Imbuements
-	void onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<Item> &item, uint8_t slot, bool protectionCharm);
+	void onApplyImbuement(const Imbuement* imbuement, const std::shared_ptr<Item> &item, uint8_t slot);
 	void onClearImbuement(const std::shared_ptr<Item> &item, uint8_t slot);
-	void openImbuementWindow(const std::shared_ptr<Item> &item);
+	void openImbuementWindow(const Imbuement_Window_t type, const std::shared_ptr<Item> &item = nullptr) const;
 	void sendImbuementResult(const std::string &message) const;
 	void closeImbuementWindow() const;
+	void onApplyImbuementOnScroll(const Imbuement* imbuement);
+	void onClearAllImbuementsOnEtcher(const std::shared_ptr<Item> &item);
+	void applyImbuementScrollToItem(const uint16_t scrollId, const std::shared_ptr<Item> &item);
+
+	// Weapon Proficiency
+	EquippedWeaponProficiencyBonuses &getEquippedWeaponProficiency();
+	void sendWeaponProficiencyInfo(const uint16_t itemId) const;
+	void resetAllWeaponProficiencyPerks(const uint16_t itemId);
+	void applyEquippedWeaponProficiency(const uint16_t itemId);
+	void removeEquippedWeaponProficiency(const uint16_t itemId);
+	void sendWeaponProficiencyExperience(const uint16_t itemId, const uint32_t addProficiencyExperience);
+
+	std::unordered_map<uint16_t, WeaponProficiencyData> weaponProficiencies;
+
+	bool canExiva(const std::string &spellParam) const;
+
 	void sendPodiumWindow(const std::shared_ptr<Item> &podium, const Position &position, uint16_t itemId, uint8_t stackpos) const;
 	void sendCloseContainer(uint8_t cid) const;
 
 	void sendChannel(uint16_t channelId, const std::string &channelName, const UsersMap* channelUsers, const InvitedMap* invitedUsers) const;
 	void sendTutorial(uint8_t tutorialId) const;
 	void sendAddMarker(const Position &pos, uint8_t markType, const std::string &desc) const;
-	void sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, bool cyclopedia) const;
+	void sendItemInspection(uint16_t itemId, uint8_t itemCount, const std::shared_ptr<Item> &item, uint8_t inspectionType) const;
 	void sendCyclopediaCharacterNoData(CyclopediaCharacterInfoType_t characterInfoType, uint8_t errorCode) const;
 	void sendCyclopediaCharacterBaseInformation() const;
 	void sendCyclopediaCharacterGeneralStats() const;
@@ -981,11 +1168,12 @@ public:
 	void sendCyclopediaCharacterDefenceStats() const;
 	void sendCyclopediaCharacterMiscStats() const;
 	void sendHighscoresNoData() const;
-	void sendHighscores(const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationId, uint16_t page, uint16_t pages, uint32_t updateTimer) const;
+	void sendHighscores(const std::string &selectedWorld, const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationId, uint16_t page, uint16_t pages, uint32_t updateTimer) const;
 	void addAsyncOngoingTask(uint64_t flags);
 	bool hasAsyncOngoingTask(uint64_t flags) const;
 	void resetAsyncOngoingTask(uint64_t flags);
 	void sendEnterWorld() const;
+	void sendMapDescription(const Position &pos) const;
 	void sendFightModes() const;
 	void sendNetworkMessage(NetworkMessage &message) const;
 
@@ -993,7 +1181,20 @@ public:
 
 	void sendOpenStash(bool isNpc = false) const;
 
-	void sendTakeScreenshot(Screenshot_t screenshotType) const;
+	void sendBannerType(Banner_t bannerType) const;
+	void sendScreenshotAndBannerUnlockedAchievement(const uint16_t achievementId) const;
+	void sendScreenshotAndBannerUnlockedTitle(const uint8_t titleId) const;
+	void sendScreenshotAndBannerUnlockedCosmetic(const std::string &skinName, uint16_t lookType, uint8_t skinType) const;
+	void sendScreenshotAndBannerUpLevel(const uint16_t levelUp) const;
+	void sendScreenshotAndBannerUpSkill(skills_t skill, const uint16_t skillLevel) const;
+	void sendScreenshotAndBannerProgressRace(uint16_t raceId, uint8_t progressLevel, bool isBoss) const;
+	void sendScreenshotAndBannerProgressQuest(const std::string &questName, bool isCompleted) const;
+	void sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message) const;
+	void sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) const;
+
+	void checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, uint32_t oldMagLevel, uint32_t newMagLevel) const;
+	void sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId) const;
+	void sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId) const;
 
 	void onThink(uint32_t interval) override;
 
@@ -1005,6 +1206,12 @@ public:
 
 	void setNextPotionAction(int64_t time);
 	bool canDoPotionAction() const;
+
+	void setNextNecklaceAction(int64_t time);
+	bool canEquipNecklace() const;
+
+	void setNextRingAction(int64_t time);
+	bool canEquipRing() const;
 
 	void setNextExAction(int64_t time);
 	bool canDoExAction() const;
@@ -1101,8 +1308,8 @@ public:
 	void setMaxCharmPoints(uint32_t points);
 	uint32_t getMaxMinorCharmEchoes() const;
 	void setMaxMinorCharmEchoes(uint32_t points);
-	uint8_t getCharmTier(charmRune_t charmId) const;
-	void setCharmTier(charmRune_t charmId, uint8_t newTier);
+	uint8_t getTierByCharmsArray(charmRune_t charmId) const;
+	void setRaceIdByCharmsArray(charmRune_t charmId, uint16_t newRaceId);
 	bool hasCharmExpansion() const;
 	void setCharmExpansion(bool onOff);
 	void setUsedRunesBit(int32_t bit);
@@ -1115,7 +1322,9 @@ public:
 	bool isImmuneFear() const;
 	void setImmuneRoot();
 	bool isImmuneRoot() const;
-	uint16_t parseRacebyCharm(charmRune_t charmId, bool set = false, uint16_t newRaceid = 0);
+	uint16_t getRaceIdByCharmsArray(charmRune_t charmId) const;
+	void setTierByCharmsArray(charmRune_t charmId, uint8_t newTier);
+	std::shared_ptr<Charm> isApplyCharm(charmRune_t charmId, const std::string &monsterName);
 
 	uint64_t getItemCustomPrice(uint16_t itemId, bool buyPrice = false) const;
 	uint16_t getFreeBackpackSlots() const;
@@ -1175,6 +1384,39 @@ public:
 	bool useTaskHuntingPoints(uint64_t amount);
 
 	uint64_t getTaskHuntingPoints() const;
+
+	/*******************************************************************************
+	 * Bounty Tasks / Weekly Tasks (Task Board)
+	 ******************************************************************************/
+	BountyTaskData &getBountyTaskData();
+	const BountyTaskData &getBountyTaskData() const;
+
+	void sendBountyTaskData() const;
+	void refreshTaskIcons();
+	void sendWeeklyTaskData();
+	void sendHuntingTaskShopData() const;
+
+	void addBountyPoints(uint32_t amount);
+	void removeBountyPoints(uint32_t amount);
+	uint32_t getBountyPoints() const;
+
+	void addRerollTasks(uint32_t amount);
+	void removeRerollTasks(uint32_t amount);
+	uint32_t getRerollTasks() const;
+
+	bool isBountyTalismanEquipped() const;
+
+	void sendTaskBoardResourceBalance() const;
+
+	uint32_t getSoulsealsPoints() const;
+	void addSoulsealsPoints(uint32_t amount);
+	void removeSoulsealsPoints(uint32_t amount);
+
+	WeeklyTaskData &getWeeklyTaskData();
+	const WeeklyTaskData &getWeeklyTaskData() const;
+
+	bool hasWeeklyTaskExpansion() const;
+	void setWeeklyTaskExpansion(bool onOff);
 
 	uint32_t getTaskHuntingRerollPrice() const;
 
@@ -1263,6 +1505,7 @@ public:
 	void sendMonsterPodiumWindow(const std::shared_ptr<Item> &podium, const Position &position, uint16_t itemId, uint8_t stackpos) const;
 
 	void sendBosstiaryEntryChanged(uint32_t bossid) const;
+	void sendSoulSealsWindow() const;
 
 	void sendInventoryImbuements(const std::map<Slots_t, std::shared_ptr<Item>> &items) const;
 
@@ -1286,8 +1529,6 @@ public:
 
 	bool checkAutoLoot(bool isBoss) const;
 	bool checkChainSystem() const;
-	bool checkEmoteSpells() const;
-	bool checkSpellNameInsteadOfWords() const;
 	bool checkMute() const;
 
 	QuickLootFilter_t getQuickLootFilter() const;
@@ -1357,6 +1598,10 @@ public:
 	AnimusMastery &animusMastery();
 	const AnimusMastery &animusMastery() const;
 
+	// Player attached effects interface
+	PlayerAttachedEffects &attachedEffects();
+	const PlayerAttachedEffects &attachedEffects() const;
+
 	void sendLootMessage(const std::string &message) const;
 
 	std::shared_ptr<Container> getLootPouch();
@@ -1369,8 +1614,10 @@ public:
 
 	uint16_t getPlayerVocationEnum() const;
 
+	void sendPlayerTyping(const std::shared_ptr<Creature> &creature, uint8_t typing) const;
+
 	void resetOldCharms();
-	bool isFirstOnStack() const;
+	[[nodiscard]] bool isFirstOnStack() const;
 
 	/*******************************************************************************
 	 * Deflect Condition
@@ -1409,12 +1656,42 @@ public:
 	void setSerene(const bool isSerene);
 	uint64_t getSereneCooldown();
 	void setSereneCooldown(const uint64_t addTime);
-	void sendVirtueProtocol() const;
+	void resyncSpellCooldowns() const;
 	void setVirtue(const VirtueMonk_t virtue);
 	VirtueMonk_t getVirtue() const;
 	uint16_t getMantraTotal() const;
 
+	// Stance system (persistent vocation toggle)
+	void sendStanceProtocol() const;
+	std::vector<uint16_t> buildActiveStanceSpellIds() const;
+	Stance_t getStance() const {
+		return m_stancePrimary;
+	}
+	Stance_t getElementalStance() const {
+		return m_stanceElemental;
+	}
+	CombatType_t getPendingElementConversion() const {
+		return m_pendingElementConversion;
+	}
+	void setPendingElementConversion(CombatType_t type) {
+		m_pendingElementConversion = type;
+	}
+	uint8_t getMonkAuraVocMask() const;
+	void setMonkAuraVocMask(uint8_t mask);
+	uint8_t getMonkShrineCount() const;
+	bool setStance(Stance_t stance);
+	bool setElementalStance(Stance_t stance);
+	void persistStances();
+	static bool isStanceCompatibleWithVocation(Stance_t stance, uint16_t vocationBaseId);
+	static uint16_t getStanceSpellId(Stance_t stance);
+	static bool isElementalStance(Stance_t stance);
+
 	std::unordered_map<uint16_t, uint8_t> spellActivedAimMap;
+
+	using ManagedContainerMap = std::map<ObjectCategory_t, std::pair<std::shared_ptr<Container>, std::shared_ptr<Container>>>;
+	[[nodiscard]] const ManagedContainerMap &getManagedContainers() const {
+		return m_managedContainers;
+	}
 
 private:
 	friend class PlayerLock;
@@ -1448,7 +1725,6 @@ private:
 	void setNextPotionActionTask(const std::shared_ptr<Task> &task);
 
 	void death(const std::shared_ptr<Creature> &lastHitCreature) override;
-	void sendToRook();
 	bool spawn();
 	void despawn();
 	bool dropCorpse(const std::shared_ptr<Creature> &lastHitCreature, const std::shared_ptr<Creature> &mostDamageCreature, bool lastHitUnjustified, bool mostDamageUnjustified) override;
@@ -1501,7 +1777,7 @@ private:
 
 	std::map<uint64_t, std::shared_ptr<Reward>> rewardMap;
 
-	std::map<ObjectCategory_t, std::pair<std::shared_ptr<Container>, std::shared_ptr<Container>>> m_managedContainers;
+	ManagedContainerMap m_managedContainers;
 	std::vector<ForgeHistory> forgeHistoryVector;
 
 	std::vector<uint16_t> quickLootListItemIds;
@@ -1513,11 +1789,16 @@ private:
 	std::vector<std::unique_ptr<PreySlot>> preys;
 	std::vector<std::unique_ptr<TaskHuntingSlot>> taskHunting;
 
+	BountyTaskData bountyTaskData;
+	WeeklyTaskData weeklyTaskData;
+	bool weeklyTaskExpansion = false;
+
 	GuildWarVector guildWarVector;
 
 	std::vector<std::shared_ptr<Party>> invitePartyList;
 	std::vector<uint32_t> modalWindows;
-	std::vector<std::string> learnedInstantSpellList;
+	std::unordered_set<std::string> learnedInstantSpellList;
+
 	// TODO: This variable is only temporarily used when logging in, get rid of it somehow.
 	std::vector<std::shared_ptr<Condition>> storedConditionList;
 
@@ -1532,6 +1813,10 @@ private:
 	LightInfo itemsLight;
 	Position loginPosition;
 	Position lastWalkthroughPosition;
+	Position m_spellAimPosition;
+	bool m_hasSpellAim = false;
+	int64_t m_manaBufferTaxTime = 0;
+	bool m_manaBufferSurvived = false; // transient: Mana Buffer absorbed a lethal hit this combatChangeHealth pass
 
 	time_t lastLoginSaved = 0;
 	time_t lastLogout = 0;
@@ -1545,6 +1830,7 @@ private:
 	uint64_t lastQuestlogUpdate = 0;
 	uint64_t preyCards = 0;
 	uint64_t taskHuntingPoints = 0;
+	uint32_t bountyPoints = 0;
 	uint32_t bossPoints = 0;
 	uint32_t bossIdSlotOne = 0;
 	uint32_t bossIdSlotTwo = 0;
@@ -1562,6 +1848,8 @@ private:
 	int64_t nextExAction = 0;
 	int64_t nextImbuementAction = 0;
 	int64_t nextPotionAction = 0;
+	int64_t nextNecklaceAction = 0;
+	int64_t nextRingAction = 0;
 	int64_t nextMarketAction = 0;
 	int64_t lastQuickLootNotification = 0;
 	int64_t lastWalking = 0;
@@ -1589,7 +1877,7 @@ private:
 	std::shared_ptr<RewardChest> rewardChest = nullptr;
 
 	uint32_t inventoryWeight = 0;
-	uint32_t capacity = 40000;
+	uint32_t capacity = 60000;
 	uint32_t bonusCapacity = 0;
 
 	std::bitset<CombatType_t::COMBAT_COUNT> m_damageImmunities;
@@ -1624,7 +1912,9 @@ private:
 	uint32_t coinBalance = 0;
 	uint32_t coinTransferableBalance = 0;
 	uint16_t xpBoostTime = 0;
-	uint8_t randomMount = 0;
+	uint8_t worldId = 1;
+
+	bool randomMount = false;
 
 	uint16_t lastStatsTrainingTime = 0;
 	uint16_t staminaMinutes = 2520;
@@ -1664,7 +1954,7 @@ private:
 	std::pair<ConditionType_t, uint64_t> m_rootCondition = { CONDITION_NONE, 0 };
 
 	uint8_t soul = 0;
-	uint8_t levelPercent = 0;
+	double_t levelPercent = 0;
 	uint16_t loyaltyBonusPercent = 0;
 	double_t magLevelPercent = 0;
 
@@ -1676,6 +1966,8 @@ private:
 	Faction_t faction = FACTION_PLAYER;
 	QuickLootFilter_t quickLootFilter {};
 	PlayerPronoun_t pronoun = PLAYERPRONOUN_THEY;
+
+	ExivaRestrictions exivaRestrictions;
 
 	bool chaseMode = false;
 	bool secureMode = true;
@@ -1738,12 +2030,8 @@ private:
 	uint16_t getLookCorpse() const override;
 	void getPathSearchParams(const std::shared_ptr<Creature> &creature, FindPathParams &fpp) override;
 
-	void setDead(bool isDead) {
-		m_isDead = isDead;
-	}
-	bool isDead() const override {
-		return m_isDead;
-	}
+	void setDead(bool isDead);
+	bool isDead() const override;
 
 	void triggerMomentum();
 	void clearCooldowns();
@@ -1753,6 +2041,12 @@ private:
 	bool m_serene = false;
 	uint64_t m_serene_cooldown = 0;
 	VirtueMonk_t m_virtue = VIRTUE_NONE;
+
+	Stance_t m_stancePrimary = STANCE_NONE; // single stance for non-sorc; crippling stance for sorc
+	Stance_t m_stanceElemental = STANCE_NONE; // sorcerer-only (Master of Flames/Thunder/Decay)
+	CombatType_t m_pendingElementConversion = COMBAT_NONE; // Master-of-*: convert the NEXT off-element spell
+	uint8_t m_monkAuraVocMask = 0; // monk virtue aura: bitmask (1<<baseId) of vocation bonuses active here
+	int64_t m_monkAuraExpiry = 0; // OTSYS_TIME() until which m_monkAuraVocMask is valid
 
 	friend class Game;
 	friend class SaveManager;
@@ -1768,11 +2062,14 @@ private:
 	friend class PlayerWheel;
 	friend class IOLoginDataLoad;
 	friend class IOLoginDataSave;
+	friend class IOWeeklyTasks;
+	friend class IOBountyTasks;
 	friend class PlayerAchievement;
 	friend class PlayerBadge;
 	friend class PlayerCyclopedia;
 	friend class PlayerTitle;
 	friend class PlayerVIP;
+	friend class PlayerAttachedEffects;
 
 	std::unique_ptr<PlayerWheel> m_wheelPlayer;
 	std::unique_ptr<PlayerAchievement> m_playerAchievement;
@@ -1781,6 +2078,7 @@ private:
 	std::unique_ptr<PlayerTitle> m_playerTitle;
 	std::unique_ptr<PlayerVIP> m_playerVIP;
 	AnimusMastery m_animusMastery;
+	PlayerAttachedEffects m_playerAttachedEffects;
 
 	std::mutex quickLootMutex;
 
@@ -1820,4 +2118,7 @@ private:
 	std::vector<DeflectCondition> deflectConditions;
 
 	int16_t getMantraAbsorbPercent(int16_t mantraAbsorbValue) const;
+
+	void addWeaponProficiencyExperience(const std::shared_ptr<MonsterType> &mType, const ForgeClassifications_t classification, const bool bossSoulpit);
+	EquippedWeaponProficiencyBonuses equippedWeaponProficiency;
 };

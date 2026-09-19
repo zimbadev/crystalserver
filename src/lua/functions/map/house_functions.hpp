@@ -30,6 +30,7 @@ private:
 	static int luaHouseGetExitPosition(lua_State* L);
 	static int luaHouseGetRent(lua_State* L);
 	static int luaHouseGetPrice(lua_State* L);
+	static int luaHouseIsGuildhall(lua_State* L);
 
 	static int luaHouseGetOwnerGuid(lua_State* L);
 	static int luaHouseSetHouseOwner(lua_State* L);

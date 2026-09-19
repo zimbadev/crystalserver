@@ -124,6 +124,7 @@ void LuaEnums::init(lua_State* L) {
 	initGuildsEnum(L);
 	initWorldTypeEnums(L);
 	initVirtueEnums(L);
+	initStanceEnums(L);
 }
 
 void LuaEnums::initOthersEnums(lua_State* L) {
@@ -141,8 +142,8 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 	registerEnum(L, CHARM_PASSIVE);
 	registerEnum(L, CHARM_MAJOR);
 	registerEnum(L, CHARM_MINOR);
-	registerEnum(L, CHARM_GUT);
-	registerEnum(L, CHARM_SCAVENGE);
+	registerEnum(L, CHARM_MINOR_GUT);
+	registerEnum(L, CHARM_MINOR_SCAVENGE);
 
 	// Use with container:addItem, container:addItemEx and possibly other functions.
 	registerEnum(L, FLAG_NOLIMIT);
@@ -227,26 +228,47 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 	registerEnum(L, WEAPON_MISSILE);
 	registerEnum(L, WEAPON_FIST);
 
-	registerEnum(L, SCREENSHOT_TYPE_NONE);
-	registerEnum(L, SCREENSHOT_TYPE_ACHIEVEMENT);
-	registerEnum(L, SCREENSHOT_TYPE_BESTIARYENTRYCOMPLETED);
-	registerEnum(L, SCREENSHOT_TYPE_BESTIARYENTRYUNLOCKED);
-	registerEnum(L, SCREENSHOT_TYPE_BOSSDEFEATED);
-	registerEnum(L, SCREENSHOT_TYPE_DEATHPVE);
-	registerEnum(L, SCREENSHOT_TYPE_DEATHPVP);
-	registerEnum(L, SCREENSHOT_TYPE_LEVELUP);
-	registerEnum(L, SCREENSHOT_TYPE_PLAYERKILLASSIST);
-	registerEnum(L, SCREENSHOT_TYPE_PLAYERKILL);
-	registerEnum(L, SCREENSHOT_TYPE_PLAYERATTACKING);
-	registerEnum(L, SCREENSHOT_TYPE_TREASUREFOUND);
-	registerEnum(L, SCREENSHOT_TYPE_SKILLUP);
-	registerEnum(L, SCREENSHOT_TYPE_GIFTOFLIFE);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_NONE);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_BANNER_INFO);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_ACHIEVEMENT);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_TITLE);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_LEVEL);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_SKILL);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_BESTIARY_PROGRESS);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_BOSSTIARY_PROGRESS);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_QUEST);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_COSMETIC);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_PROFICIENCY);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_BOUNTY_TASK);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_WEEKLY_TASK_SPECIFIC);
+	registerEnum(L, SCREENSHOT_AND_BANNER_TYPE_SPELL);
+
+	registerEnum(L, BANNER_TYPE_NONE);
+	registerEnum(L, BANNER_TYPE_BOSSDEFEATED);
+	registerEnum(L, BANNER_TYPE_DEATHPVE);
+	registerEnum(L, BANNER_TYPE_DEATHPVP);
+	registerEnum(L, BANNER_TYPE_PLAYERKILLASSIST);
+	registerEnum(L, BANNER_TYPE_PLAYERKILL);
+	registerEnum(L, BANNER_TYPE_PLAYERATTACKING);
+	registerEnum(L, BANNER_TYPE_TREASUREFOUND);
+	registerEnum(L, BANNER_TYPE_GIFTOFLIFE);
+	registerEnum(L, BANNER_TYPE_ATTACKSTOPPED);
+	registerEnum(L, BANNER_TYPE_CAPACITYLIMIT);
+	registerEnum(L, BANNER_TYPE_OUTOFAMMO);
+	registerEnum(L, BANNER_TYPE_TARGETTOOCLOSE);
+	registerEnum(L, BANNER_TYPE_OUTOFSOULPOINTS);
+	registerEnum(L, BANNER_TYPE_TUTORIALCOMPLETE);
+	registerEnum(L, BANNER_TYPE_WEEKLY_TASK_ANY_CREATURE);
+	registerEnum(L, BANNER_TYPE_PROMOTION_GRANTED);
 }
 
 void LuaEnums::initWorldTypeEnums(lua_State* L) {
-	registerEnum(L, WORLDTYPE_OPTIONAL);
+	registerEnum(L, WORLDTYPE_NONE);
 	registerEnum(L, WORLDTYPE_OPEN);
+	registerEnum(L, WORLDTYPE_OPTIONAL);
 	registerEnum(L, WORLDTYPE_HARDCORE);
+	registerEnum(L, WORLDTYPE_RETRO_PVP);
+	registerEnum(L, WORLDTYPE_RETRO_HARDCORE);
 	registerEnum(L, WORLDTYPE_FIRST);
 	registerEnum(L, WORLDTYPE_LAST);
 }
@@ -667,6 +689,26 @@ void LuaEnums::initConstMeEnums(lua_State* L) {
 	registerEnum(L, CONST_ME_WHITE_ENERGYSHOCK);
 	registerEnum(L, CONST_ME_GREEN_ENERGYSHOCK);
 	registerEnum(L, CONST_ME_YELLOW_ENERGYSHOCK);
+	registerEnum(L, CONST_ME_INK_SPLASH);
+	registerEnum(L, CONST_ME_PAPER_PLANE);
+	registerEnum(L, CONST_ME_SPIKES);
+	registerEnum(L, CONST_ME_BLOOD_RAIN);
+	registerEnum(L, CONST_ME_OPEN_BOOKMACHINE);
+	registerEnum(L, CONST_ME_OPEN_BOOKSPELL);
+	registerEnum(L, CONST_ME_SMALL_WHITE_ENERGYSHOCK);
+	registerEnum(L, CONST_ME_SMALL_GREEN_ENERGYSHOCK);
+	registerEnum(L, CONST_ME_SMALL_PINK_ENERGYSHOCK);
+	registerEnum(L, CONST_ME_SMALLWHITE_ENERGY_SPARK);
+	registerEnum(L, CONST_ME_SMALLGREEN_ENERGY_SPARK);
+	registerEnum(L, CONST_ME_SMALLPINK_ENERGY_SPARK);
+
+	// 15.12 - Weapon Attack Effects
+	registerEnum(L, CONST_ME_SWORD_ATTACK);
+	registerEnum(L, CONST_ME_CLUB_ATTACK);
+	registerEnum(L, CONST_ME_AXE_ATTACK);
+	registerEnum(L, CONST_ME_MONK_STAFF_ATTACK);
+	registerEnum(L, CONST_ME_MONK_DAGGERS_ATTACK);
+	registerEnum(L, CONST_ME_FIST_ATTACK);
 }
 
 void LuaEnums::initConstAniEnums(lua_State* L) {
@@ -727,6 +769,11 @@ void LuaEnums::initConstAniEnums(lua_State* L) {
 	registerEnum(L, CONST_ANI_ROYALSTAR);
 	registerEnum(L, CONST_ANI_CANDYCANE);
 	registerEnum(L, CONST_ANI_CHERRYBOMB);
+	registerEnum(L, CONST_ANI_SHATTERSTORMARROW);
+	registerEnum(L, CONST_ANI_FIRESTORMARROW);
+	registerEnum(L, CONST_ANI_TERRASTORMARROW);
+	registerEnum(L, CONST_ANI_FROSTSTORMARROW);
+	registerEnum(L, CONST_ANI_THUNDERSTORMARROW);
 	registerEnum(L, CONST_ANI_WEAPONTYPE);
 }
 
@@ -1088,6 +1135,7 @@ void LuaEnums::initBestiaryEnums(lua_State* L) {
 	registerEnum(L, BESTY_RACE_GIANT);
 	registerEnum(L, BESTY_RACE_HUMAN);
 	registerEnum(L, BESTY_RACE_HUMANOID);
+	registerEnum(L, BESTY_RACE_INKBORN);
 	registerEnum(L, BESTY_RACE_LYCANTHROPE);
 	registerEnum(L, BESTY_RACE_MAGICAL);
 	registerEnum(L, BESTY_RACE_MAMMAL);
@@ -1154,6 +1202,7 @@ void LuaEnums::initSpeechBubbleEnums(lua_State* L) {
 	registerEnum(L, SPEECHBUBBLE_TRADE);
 	registerEnum(L, SPEECHBUBBLE_QUEST);
 	registerEnum(L, SPEECHBUBBLE_QUESTTRADER);
+	registerEnum(L, SPEECHBUBBLE_TRAVELER);
 	registerEnum(L, SPEECHBUBBLE_HIRELING);
 }
 
@@ -1876,4 +1925,19 @@ void LuaEnums::initVirtueEnums(lua_State* L) {
 	registerEnum(L, VIRTUE_HARMONY);
 	registerEnum(L, VIRTUE_JUSTICE);
 	registerEnum(L, VIRTUE_SUSTAIN);
+}
+
+void LuaEnums::initStanceEnums(lua_State* L) {
+	registerEnum(L, STANCE_NONE);
+	registerEnum(L, STANCE_PROTECTOR);
+	registerEnum(L, STANCE_BLOOD_RAGE);
+	registerEnum(L, STANCE_DIVINE_DEFIANCE);
+	registerEnum(L, STANCE_SHARPSHOOTER);
+	registerEnum(L, STANCE_EXPOSE_WEAKNESS);
+	registerEnum(L, STANCE_SAP_STRENGTH);
+	registerEnum(L, STANCE_MASTER_OF_FLAMES);
+	registerEnum(L, STANCE_MASTER_OF_THUNDER);
+	registerEnum(L, STANCE_MASTER_OF_DECAY);
+	registerEnum(L, STANCE_SHARED_CONSERVATION);
+	registerEnum(L, STANCE_ELEMENTAL_SYNTHESIS);
 }

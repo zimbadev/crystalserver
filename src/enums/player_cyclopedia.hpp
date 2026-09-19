@@ -97,6 +97,7 @@ enum class BidErrorMessage : uint8_t {
 	Premium = 5,
 	Guildhall = 6,
 	OnlyOneBid = 7,
+	OnlyOneHouseSameTime = 11,
 	NotEnoughMoney = 17,
 	NotEnoughGuildMoney = 21,
 	Internal = 24,

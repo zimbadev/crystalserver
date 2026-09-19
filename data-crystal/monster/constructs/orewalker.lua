@@ -89,7 +89,7 @@ monster.loot = {
 	{ name = "glorious axe", chance = 1870 },
 	{ name = "strong health potion", chance = 15600, maxCount = 2 },
 	{ name = "strong mana potion", chance = 14000, maxCount = 2 },
-	{ name = "great mana potion", chance = 14000, maxCount = 2 },
+	{ id = 238, chance = 14000, maxCount = 2 }, -- great mana potion
 	{ name = "mana potion", chance = 14000, maxCount = 4 },
 	{ name = "ultimate health potion", chance = 9500, maxCount = 2 },
 	{ name = "crystalline armor", chance = 560 },

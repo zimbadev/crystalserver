@@ -76,9 +76,9 @@ function grimvaleSpectators()
 	for i = 1, #specs do
 		spec = specs[i]
 		if spec and spec:isPlayer() then
-			oldpos = spec:getPosition()
+			local oldpos = spec:getPosition()
+			addEvent(teleportPlayer, 60 * 1000, spec:getId(), oldpos)
 		end
-		addEvent(teleportPlayer, 1, 60 * 1000, spec:getId(), oldpos)
 	end
 	if Game.getStorageValue(GlobalStorage.Feroxa.Active) == 2 then
 		addEvent(removeItems, 15 * 60 * 1000)

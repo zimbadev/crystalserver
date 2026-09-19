@@ -67,7 +67,7 @@ encounter:addBroadcast("The whole Volcano starts to vibrate! Prepare yourself!")
 encounter:addSpawnMonsters({
 	{
 		name = "The End of Days",
-		amount = 8,
+		amount = 6,
 		event = "fight.magma-bubble.TheEndOfDaysDeath",
 	},
 })
@@ -87,7 +87,7 @@ encounter
 
 for i = 0, 4 do
 	local stage = encounter:addSpawnMonsters({
-		{ name = "Unchained Fire", amount = 5 },
+		{ name = "Unchained Fire", amount = 4 },
 	})
 
 	if i < 4 then
@@ -271,7 +271,7 @@ theEndOfDaysHealth:register()
 local magmaCrystalDeath = CreatureEvent("fight.magma-bubble.MagmaCrystalDeath")
 function magmaCrystalDeath.onDeath()
 	local crystals = encounter:countMonsters("magma crystal")
-	if crystals == 0 then
+	if crystals <= 1 then
 		encounter:nextStage()
 	else
 		encounter:broadcast(MESSAGE_EVENT_ADVANCE, "A magma crystal has been destroyed! " .. crystals .. " remaining.")
@@ -283,7 +283,7 @@ magmaCrystalDeath:register()
 local endOfDaysDeath = CreatureEvent("fight.magma-bubble.TheEndOfDaysDeath")
 function endOfDaysDeath.onDeath()
 	local monsters = encounter:countMonsters("the end of days")
-	if monsters == 0 then
+	if monsters <= 1 then
 		encounter:nextStage()
 	end
 end

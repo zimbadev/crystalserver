@@ -68,6 +68,10 @@ local function creatureSayCallback(npc, creature, type, message)
 	return true
 end
 
+keywordHandler:addKeyword({ "blood crystal" }, StdModule.say, { npcHandler = npcHandler, text = "Oooooooooh shiny shiny shiny shiny!! Give me!!" }, function(player)
+	return player:getStorageValue(Storage.Quest.U8_4.BloodBrothers.Mission05) == 1
+end)
+
 npcHandler:setMessage(MESSAGE_GREET, "Yes? What may I do for you, |PLAYERNAME|? Bank business, perhaps?")
 npcHandler:setMessage(MESSAGE_FAREWELL, "Have a nice day.")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Have a nice day.")
@@ -76,4 +80,8 @@ npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 -- npcType registering the npcConfig table
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("deposit all", "withdraw", "balance", "bye")
+
 npcType:register(npcConfig)

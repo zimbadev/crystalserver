@@ -35,6 +35,10 @@ goshnarsMaliceReflection:register()
 local soulCageReflection = CreatureEvent("SoulCageHealthChange")
 
 function soulCageReflection.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
+	if not attacker then
+		return primaryDamage, primaryType, secondaryDamage, secondaryType
+	end
+
 	local player = attacker:getPlayer()
 	if player then
 		if primaryDamage > 0 then
@@ -112,8 +116,6 @@ function bossesDeath.onDeath(creature, corpse, killer, mostDamageKiller, lastHit
 end
 
 bossesDeath:register()
-
-fourthTaintBossesDeath:register()
 
 local lastUse = 0
 local cooldown = 30
@@ -206,6 +208,16 @@ end
 
 greedMonsterDeath:register()
 
+local soulSphereDeath = CreatureEvent("SoulSphereDeath")
+
+function soulSphereDeath.onDeath(creature, corpse, killer, mostDamageKiller, lastHitUnjustified, mostDamageUnjustified)
+	if creature:getName() == "Soul Sphere" then
+		SoulSphereKills = SoulSphereKills + 1
+	end
+end
+
+soulSphereDeath:register()
+
 local checkTaint = TalkAction("!checktaint")
 
 function checkTaint.onSay(player, words, param)
@@ -231,6 +243,11 @@ function setTaint.onSay(player, words, param)
 	if not target then
 		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Player is offline")
 		return false
+	end
+
+	if not split[2] then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Usage: /settaint PlayerName, taintLevel")
+		return true
 	end
 
 	local taintLevel = split[2]:trim():lower()
@@ -284,6 +301,11 @@ function setTaint.onSay(player, words, param)
 		return false
 	end
 
+	if not split[2] then
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "Usage: /removetaint PlayerName, taintLevel")
+		return true
+	end
+
 	local taintLevel = split[2]:trim():lower()
 	local taintName = player:getTaintNameByNumber(tonumber(taintLevel))
 	if taintName ~= nil then
@@ -305,7 +327,7 @@ function changeMap.onSay(player, words, param)
 	elseif param == "inundate" then
 		Game.loadMap(SoulWarQuest.ebbAndFlow.mapsPath.inundate)
 	elseif param == "ebb" then
-		Game.loadMap(SoulWarQuest.ebbAndFlowmapsPath.ebbFlow)
+		Game.loadMap(SoulWarQuest.ebbAndFlow.mapsPath.ebbFlow)
 	end
 end
 

@@ -71,7 +71,7 @@ monster.loot = {
 	{ name = "gold coin", chance = 100000, maxCount = 200 },
 	{ name = "platinum coin", chance = 80000, maxCount = 5 },
 	{ name = "great health potion", chance = 40000, maxCount = 5 },
-	{ name = "great mana potion", chance = 40000, maxCount = 5 },
+	{ id = 238, chance = 40000, maxCount = 5 }, -- great mana potion
 	{ name = "great spirit potion", chance = 40000, maxCount = 5 },
 	{ name = "ham", chance = 35250, maxCount = 5 },
 	{ name = "meat", chance = 35250, maxCount = 5 },

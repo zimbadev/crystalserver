@@ -18,6 +18,7 @@
 #include "lua/functions/core/game/game_functions.hpp"
 
 #include "core.hpp"
+#include "lua/creature/actions.hpp"
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/npcs/npc.hpp"
@@ -67,7 +68,6 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "setGameState", GameFunctions::luaGameSetGameState);
 
 	Lua::registerMethod(L, "Game", "getWorldType", GameFunctions::luaGameGetWorldType);
-	Lua::registerMethod(L, "Game", "setWorldType", GameFunctions::luaGameSetWorldType);
 
 	Lua::registerMethod(L, "Game", "getReturnMessage", GameFunctions::luaGameGetReturnMessage);
 
@@ -121,6 +121,23 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "getMonstersByRace", GameFunctions::luaGameGetMonstersByRace);
 	Lua::registerMethod(L, "Game", "getMonstersByBestiaryStars", GameFunctions::luaGameGetMonstersByBestiaryStars);
 	Lua::registerMethod(L, "Game", "getTitleByName", GameFunctions::luaGameGetTitleByName);
+
+	Lua::registerMethod(L, "Game", "getHouseCountByAccount", GameFunctions::luaHouseGetHouseCountByAccount);
+
+	Lua::registerMethod(L, "Game", "setGuildMotd", GameFunctions::luaGameSetGuildMotd);
+
+	// Guild management functions
+	Lua::registerMethod(L, "Game", "disbandGuild", GameFunctions::luaGameDisbandGuild);
+	Lua::registerMethod(L, "Game", "invitePlayerToGuild", GameFunctions::luaGameInvitePlayerToGuild);
+	Lua::registerMethod(L, "Game", "removePlayerFromGuild", GameFunctions::luaGameRemovePlayerFromGuild);
+	Lua::registerMethod(L, "Game", "promotePlayer", GameFunctions::luaGamePromotePlayer);
+	Lua::registerMethod(L, "Game", "demotePlayer", GameFunctions::luaGameDemotePlayer);
+	Lua::registerMethod(L, "Game", "passLeadership", GameFunctions::luaGamePassLeadership);
+	Lua::registerMethod(L, "Game", "setPlayerGuildNick", GameFunctions::luaGameSetPlayerGuildNick);
+	Lua::registerMethod(L, "Game", "setRankName", GameFunctions::luaGameSetRankName);
+	Lua::registerMethod(L, "Game", "createGuild", GameFunctions::luaGameCreateGuild);
+	Lua::registerMethod(L, "Game", "joinGuild", GameFunctions::luaGameJoinGuild);
+	Lua::registerMethod(L, "Game", "reportShadowedScripts", GameFunctions::luaGameReportShadowedScripts);
 }
 
 // Game
@@ -132,12 +149,6 @@ int GameFunctions::luaGameCreateMonsterType(lua_State* L) {
 		auto variant = Lua::getString(L, 2, "");
 		const auto alternateName = Lua::getString(L, 3, "");
 		std::set<std::string> names;
-		const auto monsterType = std::make_shared<MonsterType>(name);
-		if (!monsterType) {
-			lua_pushstring(L, "MonsterType is nullptr");
-			lua_error(L);
-			return 1;
-		}
 
 		// if variant starts with !, then it's the only variant for this monster, so we register it with both names
 		if (variant.starts_with("!")) {
@@ -149,20 +160,38 @@ int GameFunctions::luaGameCreateMonsterType(lua_State* L) {
 		}
 		names.insert(uniqueName);
 
-		monsterType->name = name;
 		if (!alternateName.empty()) {
 			names.insert(alternateName);
+		}
+
+		for (const auto &checkName : names) {
+			if (g_monsters().getMonsterType(checkName, true)) {
+				lua_pushnil(L);
+				lua_pushstring(L, fmt::format("The monster with name {} already registered", checkName).c_str());
+				return 2;
+			}
+		}
+
+		const auto monsterType = std::make_shared<MonsterType>(name);
+		if (!monsterType) {
+			lua_pushnil(L);
+			lua_pushstring(L, "MonsterType is nullptr");
+			return 2;
+		}
+
+		monsterType->name = name;
+		if (!alternateName.empty()) {
 			monsterType->name = alternateName;
 		}
 
 		monsterType->variantName = variant;
 		monsterType->nameDescription = "a " + name;
 
-		for (const auto &alternateName : names) {
-			if (!g_monsters().tryAddMonsterType(alternateName, monsterType)) {
-				lua_pushstring(L, fmt::format("The monster with name {} already registered", alternateName).c_str());
-				lua_error(L);
-				return 1;
+		for (const auto &registerName : names) {
+			if (!g_monsters().tryAddMonsterType(registerName, monsterType)) {
+				lua_pushnil(L);
+				lua_pushstring(L, fmt::format("The monster with name {} already registered", registerName).c_str());
+				return 2;
 			}
 		}
 
@@ -375,6 +404,14 @@ int GameFunctions::luaGameGetExperienceForLevel(lua_State* L) {
 	return 1;
 }
 
+int GameFunctions::luaGameReportShadowedScripts(lua_State* L) {
+	// Game.reportShadowedScripts()
+	// Reports scripts registered by position that can never run, because an id on the
+	// same tile is checked first. Call it after the startup tables stamped the map.
+	g_actions().reportShadowedPositionScripts();
+	return 0;
+}
+
 int GameFunctions::luaGameGetMonsterCount(lua_State* L) {
 	// Game.getMonsterCount()
 	lua_pushnumber(L, g_game().getMonstersOnline());
@@ -450,20 +487,7 @@ int GameFunctions::luaGameSetGameState(lua_State* L) {
 
 int GameFunctions::luaGameGetWorldType(lua_State* L) {
 	// Game.getWorldType()
-	lua_pushnumber(L, g_game().getWorldType());
-	return 1;
-}
-
-int GameFunctions::luaGameSetWorldType(lua_State* L) {
-	// Game.setWorldType(type)
-	const WorldType_t type = Lua::getNumber<WorldType_t>(L, 1);
-	if (type >= WORLDTYPE_FIRST && type <= WORLDTYPE_LAST) {
-		g_game().setWorldType(type);
-		Lua::pushBoolean(L, true);
-	} else {
-		Lua::pushBoolean(L, false);
-	}
-
+	lua_pushnumber(L, g_game().worlds().getCurrentWorld()->type);
 	return 1;
 }
 
@@ -746,7 +770,7 @@ int GameFunctions::luaGameStartRaid(lua_State* L) {
 		return 1;
 	}
 
-	if (g_game().raids.getRunning()) {
+	if (g_game().raids.getRunning() || raid->getState() == RAIDSTATE_EXECUTING) {
 		lua_pushnumber(L, RETURNVALUE_ANOTHERRAIDISALREADYEXECUTING);
 		return 1;
 	}
@@ -1121,5 +1145,136 @@ int GameFunctions::luaGameGetTitleByName(lua_State* L) {
 
 	Lua::pushString(L, title.m_description);
 	lua_setfield(L, -2, "description");
+	return 1;
+}
+
+int GameFunctions::luaHouseGetHouseCountByAccount(lua_State* L) {
+	// Game:getHouseCountByAccount(accountId)
+	const auto &houses = g_game().map.houses.getHouses();
+	if (houses.empty()) {
+		Lua::reportErrorFunc("Houses not found");
+		lua_pushnil(L);
+		return 1;
+	}
+
+	uint32_t accountId = Lua::getNumber<uint32_t>(L, 2);
+	uint16_t count = 0;
+	for (const auto &[id, house] : houses) {
+		if (house->getOwnerAccountId() == accountId) {
+			++count;
+		}
+	}
+	lua_pushnumber(L, count);
+	return 1;
+}
+
+int GameFunctions::luaGameSetGuildMotd(lua_State* L) {
+	// Game:setGuildMotd(guildId, newMotd)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string newMotd = Lua::getString(L, 2);
+
+	g_game().setGuildMotd(guildId, newMotd);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameDisbandGuild(lua_State* L) {
+	// Game:disbandGuild(guildId)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+
+	g_game().disbandGuild(guildId);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameInvitePlayerToGuild(lua_State* L) {
+	// Game:invitePlayerToGuild(guildId, playerName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	g_game().invitePlayerToGuild(guildId, playerName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameRemovePlayerFromGuild(lua_State* L) {
+	// Game:removePlayerFromGuild(guildId, playerName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	g_game().removePlayerFromGuild(guildId, playerName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGamePromotePlayer(lua_State* L) {
+	// Game:promotePlayer(guildId, playerName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	g_game().promotePlayer(guildId, playerName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameDemotePlayer(lua_State* L) {
+	// Game:demotePlayer(guildId, playerName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	g_game().demotePlayer(guildId, playerName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGamePassLeadership(lua_State* L) {
+	// Game:passLeadership(guildId, newLeaderName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string newLeaderName = Lua::getString(L, 2);
+
+	g_game().passLeadership(guildId, newLeaderName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameSetPlayerGuildNick(lua_State* L) {
+	// Game:setPlayerGuildNick(guildId, playerName, nick)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+	const std::string nick = Lua::getString(L, 3);
+
+	g_game().setPlayerGuildNick(guildId, playerName, nick);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameSetRankName(lua_State* L) {
+	// Game:setRankName(guildId, rankLevel, newName)
+	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
+	uint8_t rankLevel = Lua::getNumber<uint8_t>(L, 2);
+	const std::string newName = Lua::getString(L, 3);
+
+	g_game().setRankName(guildId, rankLevel, newName);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int GameFunctions::luaGameCreateGuild(lua_State* L) {
+	// Game:createGuild(guildName, leaderName)
+	const std::string guildName = Lua::getString(L, 1);
+	const std::string leaderName = Lua::getString(L, 2);
+
+	uint32_t guildId = g_game().createGuild(guildName, leaderName);
+	Lua::pushNumber(L, guildId);
+	return 1;
+}
+
+int GameFunctions::luaGameJoinGuild(lua_State* L) {
+	// Game:joinGuild(guildName, playerName)
+	const std::string guildName = Lua::getString(L, 1);
+	const std::string playerName = Lua::getString(L, 2);
+
+	bool success = g_game().joinGuild(guildName, playerName);
+	Lua::pushBoolean(L, success);
 	return 1;
 }

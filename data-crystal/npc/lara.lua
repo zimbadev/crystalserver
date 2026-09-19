@@ -76,4 +76,7 @@ npcHandler:setMessage(MESSAGE_GREET, "Hello |PLAYERNAME|. I sell ham, dragon ham
 npcHandler:setMessage(MESSAGE_FAREWELL, "Use your knowledge wisely, |PLAYERNAME|.")
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
+
 npcType:register(npcConfig)

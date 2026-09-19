@@ -24,7 +24,7 @@ local itemsTable = {
 		{ itemName = "empty potion flask", clientId = 284, sell = 5 },
 		{ itemName = "empty potion flask", clientId = 285, sell = 5 },
 		{ itemName = "great health potion", clientId = 239, buy = 225 },
-		{ itemName = "great mana potion", clientId = 238, buy = 158 },
+		{ itemid = 238, clientId = 238, buy = 158 },
 		{ itemName = "great spirit potion", clientId = 7642, buy = 254 },
 		{ itemName = "health potion", clientId = 266, buy = 50 },
 		{ itemName = "mana potion", clientId = 268, buy = 56 },
@@ -145,6 +145,10 @@ local function creatureSayCallback(npc, creature, type, message)
 	return true
 end
 
+keywordHandler:addKeyword({ "blood crystal" }, StdModule.say, { npcHandler = npcHandler, text = "Oooh, you're playing with fire. <chuckles>" }, function(player)
+	return player:getStorageValue(Storage.Quest.U8_4.BloodBrothers.Mission05) == 1
+end)
+
 npcHandler:setMessage(MESSAGE_SENDTRADE, "Of course, just browse through my wares. Or do you want to look only at " .. GetFormattedShopCategoryNames(itemsTable) .. ".")
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
@@ -159,5 +163,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

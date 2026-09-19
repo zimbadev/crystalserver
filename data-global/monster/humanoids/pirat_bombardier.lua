@@ -76,7 +76,7 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "great mana potion", chance = 30000, maxCount = 2 },
+	{ id = 238, chance = 30000, maxCount = 2 }, -- great mana potion
 	{ name = "pirate coin", chance = 7000, maxCount = 10 },
 	{ name = "terra boots", chance = 6000 },
 	{ name = "pirat's tail", chance = 4000 },

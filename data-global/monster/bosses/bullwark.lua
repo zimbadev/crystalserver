@@ -71,7 +71,7 @@ monster.loot = {
 	{ name = "gold coin", chance = 100000, maxCount = 375 },
 	{ name = "platinum coin", chance = 100000, maxCount = 9 },
 	{ name = "great health potion", chance = 25930, maxCount = 9 },
-	{ name = "great mana potion", chance = 33950, maxCount = 9 },
+	{ id = 238, chance = 33950, maxCount = 9 }, -- great mana potion
 	{ name = "great spirit potion", chance = 40120, maxCount = 9 },
 	{ name = "ham", chance = 53700, maxCount = 9 },
 	{ name = "meat", chance = 46300, maxCount = 9 },
@@ -80,13 +80,13 @@ monster.loot = {
 	{ name = "small diamond", chance = 14200, maxCount = 9 },
 	{ name = "small emerald", chance = 14810, maxCount = 9 },
 	{ name = "small ruby", chance = 16670, maxCount = 9 },
-	{ name = "small sapphire", chance = 13580, maxCount = 9 }, 
+	{ name = "small sapphire", chance = 13580, maxCount = 9 },
 	{ name = "mooh'tah plate", chance = 7410 },
 	{ name = "red piece of cloth", chance = 5560 },
 	{ name = "yellow gem", chance = 3700 },
 	{ name = "one hit wonder", chance = 1850 },
 	{ name = "moohtant cudgel", chance = 1800 },
-	{ name = "giant pacifier", chance = 100000 },	
+	{ name = "giant pacifier", chance = 100000 },
 }
 
 monster.attacks = {

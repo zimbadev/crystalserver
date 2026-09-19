@@ -85,7 +85,7 @@ monster.loot = {
 	{ name = "brown mushroom", chance = 7500, maxCount = 3 },
 	{ name = "mastermind potion", chance = 310 },
 	{ name = "crystal sword", chance = 2000 },
-	{ name = "great mana potion", chance = 8000 },
+	{ id = 238, chance = 8000 }, -- great mana potion
 	{ name = "great health potion", chance = 5000 },
 	{ name = "spitter nose", chance = 18000 },
 	{ name = "compound eye", chance = 15000 },

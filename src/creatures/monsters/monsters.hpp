@@ -158,6 +158,9 @@ class MonsterType {
 		bool isPreyable = true;
 		bool isPreyExclusive = false;
 
+		bool canWalk = true;
+		bool canTarget = true;
+
 		MonstersEvent_t eventType = MONSTERS_EVENT_NONE;
 	};
 

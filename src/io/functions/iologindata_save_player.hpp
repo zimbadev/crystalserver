@@ -35,6 +35,8 @@ public:
 	static bool savePlayerInbox(const std::shared_ptr<Player> &player);
 	static bool savePlayerPreyClass(const std::shared_ptr<Player> &player);
 	static bool savePlayerTaskHuntingClass(const std::shared_ptr<Player> &player);
+	static bool savePlayerBountyTasks(const std::shared_ptr<Player> &player);
+	static bool savePlayerWeeklyTasks(const std::shared_ptr<Player> &player);
 	static bool savePlayerForgeHistory(const std::shared_ptr<Player> &player);
 	static bool savePlayerBosstiary(const std::shared_ptr<Player> &player);
 	static bool savePlayerStorage(const std::shared_ptr<Player> &player);
@@ -42,6 +44,7 @@ public:
 	static bool savePlayerNamesAndChangeName(const std::shared_ptr<Player> &player, const std::string &newName, const std::string &oldName);
 	static bool savePlayerOutfits(const std::shared_ptr<Player> &player);
 	static bool savePlayerMounts(const std::shared_ptr<Player> &player);
+	static void savePlayerExivaRestrictions(const std::shared_ptr<Player> &player);
 
 protected:
 	using ItemBlockList = std::list<std::pair<int32_t, std::shared_ptr<Item>>>;

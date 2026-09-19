@@ -22,6 +22,7 @@
 #include "creatures/npcs/npcs.hpp"
 #include "creatures/players/grouping/familiars.hpp"
 #include "creatures/players/imbuements/imbuements.hpp"
+#include "creatures/players/proficiencies/proficiencies.hpp"
 #include "creatures/players/storages/storages.hpp"
 #include "database/databasemanager.hpp"
 #include "declarations.hpp"
@@ -32,6 +33,8 @@
 #include "io/io_bosstiary.hpp"
 #include "io/iomarket.hpp"
 #include "io/ioprey.hpp"
+#include "io/iobountytasks.hpp"
+#include "io/ioweeklytasks.hpp"
 #include "lib/thread/thread_pool.hpp"
 #include "lua/creature/events.hpp"
 #include "lua/modules/modules.hpp"
@@ -85,7 +88,8 @@ int CrystalServer::run() {
 				rsa.start();
 				initializeDatabase();
 				loadModules();
-				setWorldType();
+				g_game().worlds().load();
+				loadThisWorld();
 				loadMaps();
 
 				logger.info("Initializing gamestate...");
@@ -95,7 +99,13 @@ int CrystalServer::run() {
 				g_game().transferHouseItemsToDepot();
 
 				IOMarket::checkExpiredOffers();
+				IOMarket::checkWebOrders();
 				IOMarket::getInstance().updateStatistics();
+
+				g_ioweeklytasks().initializeShopOffers(); // Winter Update 2025 - Task Board Shop (after mounts/outfits are loaded)
+				g_ioweeklytasks().initializeDeliveryItems(); // Winter Update 2025 - Load delivery items from Lua
+				g_ioweeklytasks().initializeResetTimestamp(); // Winter Update 2025 - Calculate global weekly reset timestamp
+				g_ioweeklytasks().checkWeeklyResetOnStartup(); // Winter Update 2025 - Mark players for reward distribution if reset day
 
 				logger.info("Loaded all modules, server starting up...");
 
@@ -106,6 +116,7 @@ int CrystalServer::run() {
 #endif
 
 				g_game().start(&serviceManager);
+
 				if (g_configManager().getBoolean(TOGGLE_MAINTAIN_MODE)) {
 					g_game().setGameState(GAME_STATE_CLOSED);
 					g_logger().warn("Initialized in maintain mode!");
@@ -140,7 +151,8 @@ int CrystalServer::run() {
 		return EXIT_FAILURE;
 	}
 
-	logger.info("{} {}", g_configManager().getString(SERVER_NAME), "server online!");
+	const auto &curWorld = g_game().worlds().getCurrentWorld();
+	logger.info("World [{} - {} - {}] on port [{}] is online!", curWorld->id, curWorld->name, g_game().getWorldTypeNames().at(curWorld->type), curWorld->port);
 	g_logger().setLevel(g_configManager().getString(LOGLEVEL));
 
 	serviceManager.run();
@@ -149,24 +161,28 @@ int CrystalServer::run() {
 	return EXIT_SUCCESS;
 }
 
-void CrystalServer::setWorldType() {
-	const std::string worldType = asLowerCaseString(g_configManager().getString(WORLD_TYPE));
-	if (worldType == "open" || worldType == "2" || worldType == "openpvp" || worldType == "pvp" || worldType == "normal") {
-		g_game().setWorldType(WORLDTYPE_OPEN);
-	} else if (worldType == "optional" || worldType == "1" || worldType == "optionalpvp" || worldType == "safe" || worldType == "nopvp" || worldType == "no-pvp" || worldType == "secure") {
-		g_game().setWorldType(WORLDTYPE_OPTIONAL);
-	} else if (worldType == "hardcore" || worldType == "3" || worldType == "hardcorepvp" || worldType == "war" || worldType == "pvp-enforced" || worldType == "enforced") {
-		g_game().setWorldType(WORLDTYPE_HARDCORE);
-	} else {
+void CrystalServer::loadThisWorld() {
+	auto worldId = g_configManager().getNumber(WORLD_ID);
+	auto world = g_game().worlds().getWorldConfigsById(worldId);
+	if (!world) {
+		throw FailedToInitializeCrystalServer(fmt::format("Unknown world with ID {}", worldId));
+	}
+
+	if (world->type == WORLDTYPE_NONE) {
 		throw FailedToInitializeCrystalServer(
-			fmt::format(
-				"Unknown world type: {}, valid world types are: open, optional and hardcore",
-				g_configManager().getString(WORLD_TYPE)
-			)
+			fmt::format("Unknown world type: {}, valid world types are: no-pvp, pvp, retro-pvp, pvp-enforced and retro-hardcore", world->type)
 		);
 	}
 
-	logger.info("World type set as {}", asUpperCaseString(worldType));
+	const auto location = Worlds::getWorldLocationByKey(world->locationName);
+	if (location == Location_t::None) {
+		throw FailedToInitializeCrystalServer(
+			fmt::format("Unknown world location: {}, valid world locations are: Europe, North America, South America and Oceania", world->locationName)
+		);
+	}
+
+	g_game().worlds().setCurrentWorld(world);
+	logger.info("World ID: {}, Name: {}, Type: {}, Location: {}, Port {}", world->id, world->name, g_game().getWorldTypeNames().at(world->type), world->locationName, world->port);
 }
 
 void CrystalServer::loadMaps() const {
@@ -218,7 +234,7 @@ void CrystalServer::logInfos() {
 	logger.debug("Linked with {} for Lua support", LUAJIT_VERSION);
 #endif
 
-	logger.info("A server developed by: {}", SOFTWARE_DEVELOPERS);
+	logger.info("Game Update: {}", GAME_UPDATE);
 	logger.info("Visit our GitHub:  https://github.com/zimbadev/crystalserver");
 }
 
@@ -343,9 +359,11 @@ void CrystalServer::loadModules() {
 	// Load XML folder dependencies (order matters)
 	modulesLoadHelper(g_vocations().loadFromXml(), "XML/vocations.xml");
 	modulesLoadHelper(g_eventsScheduler().loadScheduleEventFromXml(), "XML/events.xml");
+	modulesLoadHelper(g_eventsScheduler().loadScheduleEventFromJson(), "json/eventscheduler/events.json");
 	modulesLoadHelper(Outfits::getInstance().loadFromXml(), "XML/outfits.xml");
 	modulesLoadHelper(Familiars::getInstance().loadFromXml(), "XML/familiars.xml");
 	modulesLoadHelper(g_imbuements().loadFromXml(), "XML/imbuements.xml");
+	modulesLoadHelper(g_proficiencies().loadFromJson(), "json/proficiencies.json");
 	modulesLoadHelper(g_storages().loadFromXML(), "XML/storages.xml");
 
 	modulesLoadHelper(Item::items.loadFromXml(), "items.xml");

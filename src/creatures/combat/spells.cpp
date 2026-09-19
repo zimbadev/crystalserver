@@ -31,10 +31,13 @@
 #include "lua/scripts/scripts.hpp"
 #include "lib/di/container.hpp"
 
-Spells::Spells() = default;
+Spells::Spells() {
+	instants.reserve(1000);
+}
+
 Spells::~Spells() = default;
 
-TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player, std::string &words) {
+TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player, std::string &words, const std::string &lowerWords) {
 	auto maxOnline = g_configManager().getNumber(MAX_PLAYERS_PER_ACCOUNT);
 	const auto &tile = player->getTile();
 	if (maxOnline > 1 && player->getAccountType() < ACCOUNT_TYPE_GAMEMASTER && tile && !tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
@@ -61,45 +64,35 @@ TalkActionResult_t Spells::playerSaySpell(const std::shared_ptr<Player> &player,
 		return TALKACTION_FAILED;
 	}
 
-	// strip trailing spaces
 	trimString(str_words);
 
-	const auto &instantSpell = getInstantSpell(str_words);
-	if (!instantSpell) {
-		return TALKACTION_CONTINUE;
-	}
-
 	std::string param;
-
-	if (instantSpell->getHasParam()) {
-		size_t spellLen = instantSpell->getWords().length();
-		size_t paramLen = str_words.length() - spellLen;
-		std::string paramText = str_words.substr(spellLen, paramLen);
-		if (!paramText.empty() && paramText.front() == ' ') {
-			size_t loc1 = paramText.find('"', 1);
-			if (loc1 != std::string::npos) {
-				size_t loc2 = paramText.find('"', loc1 + 1);
-				if (loc2 == std::string::npos) {
-					loc2 = paramText.length();
-				} else if (paramText.find_last_not_of(' ') != loc2) {
-					return TALKACTION_CONTINUE;
-				}
-
-				param = paramText.substr(loc1 + 1, loc2 - loc1 - 1);
-			} else {
-				trimString(paramText);
-				loc1 = paramText.find(' ', 0);
-				if (loc1 == std::string::npos) {
-					param = paramText;
-				} else {
-					return TALKACTION_CONTINUE;
-				}
+	std::string instantWords = lowerWords;
+	if (instantWords.size() >= 4 && instantWords.front() != '"') {
+		size_t qpos = instantWords.find('"');
+		if (qpos != std::string::npos && qpos > 0 && instantWords[qpos - 1] == ' ') {
+			param = words.substr(qpos + 1);
+			instantWords = instantWords.substr(0, qpos);
+			trim_right(instantWords, ' ');
+			if (!param.empty() && param.back() == '"') {
+				param.pop_back();
 			}
 		}
 	}
 
-	if (instantSpell->playerCastInstant(player, param)) {
-		if (!player->checkSpellNameInsteadOfWords()) {
+	const auto &instantSpell = getInstantSpell(instantWords);
+	if (!instantSpell || (!param.empty() && !instantSpell->getHasParam()) || (param.empty() && instantSpell->getHasParam())) {
+		return TALKACTION_CONTINUE;
+	}
+
+	if (instantSpell->getName() == "Find Person" && !player->canExiva(param)) {
+		player->sendTextMessage(MESSAGE_TRADE, "The character you are trying to find with Exiva is currently protected from your spell.");
+		return TALKACTION_FAILED;
+	}
+
+	const Position spellAimPos = player->hasSpellAimPosition() ? player->getSpellAimPosition() : Position();
+	if (instantSpell->playerCastInstant(player, param, spellAimPos)) {
+		if (!g_configManager().getBoolean(SPELL_NAME_INSTEAD_WORDS)) {
 			words = instantSpell->getWords();
 		} else {
 			words = instantSpell->getName();
@@ -193,7 +186,7 @@ std::list<uint16_t> Spells::getSpellsByVocation(uint16_t vocationId) {
 	return spellsList;
 }
 
-const std::map<std::string, std::shared_ptr<InstantSpell>> &Spells::getInstantSpells() const {
+const phmap::flat_hash_map<std::string, std::shared_ptr<InstantSpell>> &Spells::getInstantSpells() const {
 	return instants;
 }
 
@@ -232,35 +225,9 @@ std::shared_ptr<RuneSpell> Spells::getRuneSpellByName(const std::string &name) {
 }
 
 std::shared_ptr<InstantSpell> Spells::getInstantSpell(const std::string &words) {
-	std::shared_ptr<InstantSpell> result = nullptr;
-
-	for (auto &it : instants) {
-		const std::string &instantSpellWords = it.second->getWords();
-		size_t spellLen = instantSpellWords.length();
-		if (strncasecmp(instantSpellWords.c_str(), words.c_str(), spellLen) == 0) {
-			if (!result || spellLen > result->getWords().length()) {
-				result = it.second;
-				if (words.length() == spellLen) {
-					break;
-				}
-			}
-		}
-	}
-
-	if (result) {
-		const std::string &resultWords = result->getWords();
-		if (words.length() > resultWords.length()) {
-			if (!result->getHasParam()) {
-				return nullptr;
-			}
-
-			size_t spellLen = resultWords.length();
-			size_t paramLen = words.length() - spellLen;
-			if (paramLen < 2 || words[spellLen] != ' ') {
-				return nullptr;
-			}
-		}
-		return result;
+	auto it = instants.find(words);
+	if (it != instants.end()) {
+		return it->second;
 	}
 	return nullptr;
 }
@@ -514,16 +481,28 @@ bool Spell::playerSpellCheck(const std::shared_ptr<Player> &player) const {
 		return false;
 	}
 
-	if (isInstant() && getNeedLearn()) {
-		if (!player->hasLearnedInstantSpell(getName())) {
-			player->sendCancelMessage(RETURNVALUE_YOUNEEDTOLEARNTHISSPELL);
+	if (g_configManager().getBoolean(LEARN_SPELLS)) {
+
+		if (isInstant()) {
+			if (!player->hasLearnedInstantSpell(getName())) {
+				player->sendCancelMessage(RETURNVALUE_YOUNEEDTOLEARNTHISSPELL);
+				g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
+				return false;
+			}
+		}
+	} else {
+
+		if (isInstant() && getNeedLearn()) {
+			if (!player->hasLearnedInstantSpell(getName())) {
+				player->sendCancelMessage(RETURNVALUE_YOUNEEDTOLEARNTHISSPELL);
+				g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
+				return false;
+			}
+		} else if (!vocSpellMap.empty() && !vocSpellMap.contains(player->getVocationId()) && player->getGroup()->id < GROUP_TYPE_GAMEMASTER) {
+			player->sendCancelMessage(RETURNVALUE_YOURVOCATIONCANNOTUSETHISSPELL);
 			g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
 			return false;
 		}
-	} else if (!vocSpellMap.empty() && !vocSpellMap.contains(player->getVocationId()) && player->getGroup()->id < GROUP_TYPE_GAMEMASTER) {
-		player->sendCancelMessage(RETURNVALUE_YOURVOCATIONCANNOTUSETHISSPELL);
-		g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
-		return false;
 	}
 
 	if (needWeapon) {
@@ -713,19 +692,56 @@ void Spell::getCombatDataAugment(const std::shared_ptr<Player> &player, CombatDa
 				if (
 					augment->type == Augment_t::IncreasedDamage || augment->type == Augment_t::PowerfulImpact || augment->type == Augment_t::StrongImpact || augment->type == Augment_t::Base
 				) {
-					const float augmentPercent = augment->value / 100.0;
+					const float augmentPercent = augment->value / 10000.0f;
 					damage.primary.value += static_cast<int32_t>(damage.primary.value * augmentPercent);
 					damage.secondary.value += static_cast<int32_t>(damage.secondary.value * augmentPercent);
 				} else if (augment->type != Augment_t::Cooldown) {
-					const int32_t augmentValue = augment->value * 100;
-					damage.lifeLeech += augment->type == Augment_t::LifeLeech ? augmentValue : 0;
-					damage.manaLeech += augment->type == Augment_t::ManaLeech ? augmentValue : 0;
-					damage.criticalDamage += augment->type == Augment_t::CriticalExtraDamage ? augmentValue : 0;
+					damage.lifeLeech += augment->type == Augment_t::LifeLeech ? augment->value : 0;
+					damage.manaLeech += augment->type == Augment_t::ManaLeech ? augment->value : 0;
+					damage.criticalDamage += augment->type == Augment_t::CriticalExtraDamage ? augment->value : 0;
+					damage.criticalChance += augment->type == Augment_t::CriticalHitChance ? augment->value : 0;
+				}
+			}
+		}
+
+		for (const auto &playerProficiencyAugment : player->getEquippedWeaponProficiency().spellAugments) {
+			if (playerProficiencyAugment.spellId == getSpellId()) {
+				if (playerProficiencyAugment.value == 0) {
+					continue;
+				}
+
+				switch (playerProficiencyAugment.augmentType) {
+					case PROFICIENCY_AUGMENTTYPE_BASE_DAMAGE: {
+						const float augmentPercent = playerProficiencyAugment.value;
+						damage.primary.value += static_cast<int32_t>(damage.primary.value * augmentPercent);
+						damage.secondary.value += static_cast<int32_t>(damage.secondary.value * augmentPercent);
+						break;
+					}
+					case PROFICIENCY_AUGMENTTYPE_LIFE_LEECH: {
+						const int32_t augmentValueLifeLeech = playerProficiencyAugment.value * 1000;
+						damage.lifeLeech += augmentValueLifeLeech;
+						break;
+					}
+					case PROFICIENCY_AUGMENTTYPE_MANA_LEECH: {
+						const int32_t augmentValueManaLeech = playerProficiencyAugment.value * 1000;
+						damage.manaLeech += augmentValueManaLeech;
+						break;
+					}
+					case PROFICIENCY_AUGMENTTYPE_CRITICAL_EXTRA_DAMAGE: {
+						const int32_t augmentValueCriticalDamage = playerProficiencyAugment.value * 1000;
+						damage.criticalDamage += augmentValueCriticalDamage;
+						break;
+					}
+					case PROFICIENCY_AUGMENTTYPE_CRITICAL_HIT_CHANCE: {
+						const int32_t augmentValueCriticalChance = playerProficiencyAugment.value * 1000;
+						damage.criticalChance += augmentValueCriticalChance;
+						break;
+					}
 				}
 			}
 		}
 	}
-};
+}
 
 int32_t Spell::calculateAugmentSpellCooldownReduction(const std::shared_ptr<Player> &player) const {
 	int32_t spellCooldown = 0;
@@ -734,6 +750,15 @@ int32_t Spell::calculateAugmentSpellCooldownReduction(const std::shared_ptr<Play
 		const auto augments = item->getAugmentsBySpellNameAndType(getName(), Augment_t::Cooldown);
 		for (const auto &augment : augments) {
 			spellCooldown += augment->value;
+		}
+	}
+
+	for (const auto &playerProficiencyAugment : player->getEquippedWeaponProficiency().spellAugments) {
+		if (playerProficiencyAugment.spellId == getSpellId()) {
+			if (playerProficiencyAugment.augmentType == PROFICIENCY_AUGMENTTYPE_COOLDOWN) {
+				const int32_t augmentValue = static_cast<int32_t>(playerProficiencyAugment.value * -1000.0f);
+				spellCooldown += augmentValue;
+			}
 		}
 	}
 
@@ -748,13 +773,12 @@ void Spell::applyCooldownConditions(const std::shared_ptr<Player> &player) const
 	if (std::abs(rateCooldown) < std::numeric_limits<float>::epsilon()) {
 		rateCooldown = 0.1; // Safe minimum value
 	}
-
+	int32_t augmentCooldownReduction = calculateAugmentSpellCooldownReduction(player);
 	if (cooldown > 0) {
 		int32_t spellCooldown = cooldown;
 		if (isUpgraded) {
 			spellCooldown -= getWheelOfDestinyBoost(WheelSpellBoost_t::COOLDOWN, spellGrade);
 		}
-		int32_t augmentCooldownReduction = calculateAugmentSpellCooldownReduction(player);
 		g_logger().debug("[{}] spell name: {}, spellCooldown: {}, bonus: {}, augment {}", __FUNCTION__, name, spellCooldown, player->wheel()->getSpellBonus(name, WheelSpellBoost_t::COOLDOWN), augmentCooldownReduction);
 		spellCooldown -= player->wheel()->getSpellBonus(name, WheelSpellBoost_t::COOLDOWN);
 		spellCooldown -= augmentCooldownReduction;
@@ -784,6 +808,11 @@ void Spell::applyCooldownConditions(const std::shared_ptr<Player> &player) const
 			spellSecondaryGroupCooldown -= getWheelOfDestinyBoost(WheelSpellBoost_t::SECONDARY_GROUP_COOLDOWN, spellGrade);
 		}
 		spellSecondaryGroupCooldown -= player->wheel()->getSpellBonus(name, WheelSpellBoost_t::SECONDARY_GROUP_COOLDOWN);
+		spellSecondaryGroupCooldown -= augmentCooldownReduction;
+		// Vocation Adjustment: Focus Mastery additionally reduces the focus-spell group cooldown by 2s.
+		if (secondaryGroup == SPELLGROUP_FOCUS && player->wheel()->getInstant("Focus Mastery")) {
+			spellSecondaryGroupCooldown -= 2000;
+		}
 		if (spellSecondaryGroupCooldown > 0) {
 			player->wheel()->handleBeamMasteryCooldown(player, name, spellSecondaryGroupCooldown, rateCooldown);
 			const auto &condition = Condition::createCondition(CONDITIONID_DEFAULT, CONDITION_SPELLGROUPCOOLDOWN, spellSecondaryGroupCooldown / rateCooldown, 0, false, secondaryGroup);
@@ -891,6 +920,14 @@ uint32_t Spell::getLevel() const {
 
 void Spell::setLevel(uint32_t lvl) {
 	level = lvl;
+}
+
+uint16_t Spell::getBasePower() const {
+	return basePower;
+}
+
+void Spell::setBasePower(uint16_t power) {
+	basePower = power;
 }
 
 uint32_t Spell::getMagicLevel() const {
@@ -1102,7 +1139,7 @@ static Direction getStraightDirectionTo(const Position &from, const Position &to
 	return DIRECTION_NONE;
 }
 
-bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std::string &param) const {
+bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std::string &param, const Position &to) const {
 	if (!playerSpellCheck(player)) {
 		return false;
 	}
@@ -1211,6 +1248,11 @@ bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std:
 			} else {
 				var.pos = Spells::getCasterPosition(player, player->getDirection());
 			}
+		}
+		// Vocation Adjustment 15.25: crossHairTarget spells cast at the clicked tile (cursor/crosshair).
+		// The client sends the aimed tile in the say packet tail; parseSay forwards it here as `to`.
+		else if (needPosition && to.x != 0) {
+			var.pos = to;
 		} else {
 			var.pos = player->getPosition();
 		}
@@ -1225,7 +1267,7 @@ bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std:
 		return false;
 	}
 
-	auto worldType = g_game().getWorldType();
+	auto worldType = g_game().worlds().getCurrentWorld()->type;
 	if (pzLocked && (worldType == WORLDTYPE_OPEN || worldType == WORLDTYPE_HARDCORE)) {
 		player->addInFightTicks(true);
 		player->updateLastAggressiveAction();
@@ -1339,6 +1381,14 @@ void InstantSpell::setNeedDirection(bool n) {
 	needDirection = n;
 }
 
+bool InstantSpell::getNeedPosition() const {
+	return needPosition;
+}
+
+void InstantSpell::setNeedPosition(bool n) {
+	needPosition = n;
+}
+
 bool InstantSpell::getNeedCasterTargetOrDirection() const {
 	return casterTargetOrDirection;
 }
@@ -1362,6 +1412,10 @@ bool InstantSpell::canCast(const std::shared_ptr<Player> &player) const {
 
 	if (player->hasFlag(PlayerFlags_t::IgnoreSpellCheck)) {
 		return true;
+	}
+
+	if (g_configManager().getBoolean(LEARN_SPELLS)) {
+		return player->hasLearnedInstantSpell(getName());
 	}
 
 	if (getNeedLearn()) {
@@ -1482,7 +1536,7 @@ bool RuneSpell::executeUse(const std::shared_ptr<Player> &player, const std::sha
 		}
 	}
 
-	auto worldType = g_game().getWorldType();
+	auto worldType = g_game().worlds().getCurrentWorld()->type;
 	if (pzLocked && (worldType == WORLDTYPE_OPEN || worldType == WORLDTYPE_HARDCORE)) {
 		player->addInFightTicks(true);
 		player->updateLastAggressiveAction();

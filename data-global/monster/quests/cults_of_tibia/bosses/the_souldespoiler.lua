@@ -110,7 +110,7 @@ monster.loot = {
 	{ name = "odd organ", chance = 100000 },
 	{ name = "energy bar", chance = 16872, maxCount = 3 },
 	{ name = "ultimate health potion", chance = 27652, maxCount = 10 },
-	{ name = "great mana potion", chance = 33721, maxCount = 10 },
+	{ id = 238, chance = 33721, maxCount = 10 }, -- great mana potion
 	{ name = "great spirit potion", chance = 25690, maxCount = 10 },
 	{ name = "blade of corruption", chance = 3775 },
 	{ name = "magma boots", chance = 15890 },

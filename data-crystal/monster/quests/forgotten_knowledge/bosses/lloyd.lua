@@ -80,7 +80,7 @@ monster.loot = {
 	{ name = "great spirit potion", chance = 61540, maxCount = 10 },
 	{ name = "ultimate health potion", chance = 56410, maxCount = 10 },
 	{ name = "green crystal shard", chance = 56410, maxCount = 5 },
-	{ name = "great mana potion", chance = 46150, maxCount = 10 },
+	{ id = 238, chance = 46150, maxCount = 10 }, -- great mana potion
 	{ name = "luminous orb", chance = 41030 },
 	{ id = 23542, chance = 38460 }, -- collar of blue plasma
 	{ name = "gold token", chance = 3103 },

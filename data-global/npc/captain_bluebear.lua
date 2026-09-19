@@ -85,6 +85,7 @@ addTravelKeyword("yalahar", 200, Position(32816, 31272, 6), nil, function(player
 end)
 addTravelKeyword("oramond", 150, Position(33479, 31985, 7))
 addTravelKeyword("krailos", 230, Position(33492, 31712, 6))
+addTravelKeyword("targuna", 110, Position(31974, 31893, 6))
 
 -- Kick
 keywordHandler:addKeyword({ "kick" }, StdModule.kick, { npcHandler = npcHandler, destination = { Position(32320, 32219, 6), Position(32321, 32210, 6) } })
@@ -122,4 +123,8 @@ npcHandler:setMessage(MESSAGE_WALKAWAY, "Good bye then.")
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 -- npcType registering the npcConfig table
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("passage", "bye")
+
 npcType:register(npcConfig)

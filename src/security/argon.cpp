@@ -95,8 +95,7 @@ std::vector<uint8_t> Argon2::base64_decode(const std::string &input) {
 		const size_t pos = base64_chars.find(c);
 		if (pos == std::string::npos) {
 			g_logger().warn("Invalid character in base64 string");
-		} else if (pos > std::numeric_limits<uint32_t>::max()) {
-			g_logger().warn("Position too large for uint32_t");
+			return {};
 		} else {
 			val = (val << 6) + static_cast<uint32_t>(pos);
 		}

@@ -273,32 +273,32 @@
 		<monster name="Nightmare" x="-3" y="30" z="3" spawntime="60" />
 	</monster>
 	<monster centerx="3122" centery="4143" centerz="3" radius="12">
-		<monster name="Hand Of Cursed Fate" x="3" y="-11" z="3" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="3" y="-11" z="3" spawntime="60" />
 		<monster name="Dark Torturer" x="8" y="-10" z="3" spawntime="60" />
 		<monster name="Dark Torturer" x="-11" y="-8" z="3" spawntime="60" />
 		<monster name="Lost Soul" x="0" y="-8" z="3" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="7" y="-8" z="3" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="-10" y="-7" z="3" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="7" y="-8" z="3" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="-10" y="-7" z="3" spawntime="60" />
 		<monster name="Dark Torturer" x="-2" y="-7" z="3" spawntime="60" />
 		<monster name="Lost Soul" x="0" y="-7" z="3" spawntime="60" />
 		<monster name="Dark Torturer" x="-9" y="-2" z="3" spawntime="60" />
 		<monster name="Dark Torturer" x="0" y="-2" z="3" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="-11" y="-1" z="3" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="10" y="-1" z="3" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="-11" y="-1" z="3" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="10" y="-1" z="3" spawntime="60" />
 		<monster name="Lost Soul" x="-10" y="1" z="3" spawntime="60" />
 		<monster name="Lost Soul" x="-2" y="1" z="3" spawntime="60" />
 		<monster name="Lost Soul" x="9" y="1" z="3" spawntime="60" />
 		<monster name="Dark Torturer" x="0" y="2" z="3" spawntime="60" />
 		<monster name="Lost Soul" x="8" y="4" z="3" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="-3" y="6" z="3" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="-3" y="6" z="3" spawntime="60" />
 		<monster name="Dark Torturer" x="-10" y="7" z="3" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="9" y="7" z="3" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="9" y="7" z="3" spawntime="60" />
 		<monster name="Lost Soul" x="-4" y="8" z="3" spawntime="60" />
 		<monster name="Lost Soul" x="6" y="8" z="3" spawntime="60" />
 		<monster name="Lost Soul" x="-11" y="10" z="3" spawntime="60" />
 		<monster name="Dark Torturer" x="-11" y="11" z="3" spawntime="60" />
 		<monster name="Dark Torturer" x="0" y="11" z="3" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="-6" y="12" z="3" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="-6" y="12" z="3" spawntime="60" />
 	</monster>
 	<monster centerx="3213" centery="4151" centerz="3" radius="30">
 		<monster name="Nightmare" x="0" y="-14" z="3" spawntime="60" />
@@ -517,14 +517,14 @@
 		<monster name="Phantasm" x="22" y="23" z="4" spawntime="60" />
 	</monster>
 	<monster centerx="3122" centery="4142" centerz="4" radius="12">
-		<monster name="Hand Of Cursed Fate" x="2" y="-10" z="4" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="2" y="-10" z="4" spawntime="60" />
 		<monster name="Dark Torturer" x="9" y="-8" z="4" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="1" y="-6" z="4" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="1" y="-6" z="4" spawntime="60" />
 		<monster name="Dark Torturer" x="-7" y="-4" z="4" spawntime="60" />
 		<monster name="Lost Soul" x="-3" y="-3" z="4" spawntime="60" />
 		<monster name="Lost Soul" x="8" y="-3" z="4" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="5" y="-2" z="4" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="-8" y="-1" z="4" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="5" y="-2" z="4" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="-8" y="-1" z="4" spawntime="60" />
 		<monster name="Dark Torturer" x="1" y="0" z="4" spawntime="60" />
 		<monster name="Dark Torturer" x="9" y="0" z="4" spawntime="60" />
 		<monster name="Lost Soul" x="-11" y="1" z="4" spawntime="60" />
@@ -778,10 +778,10 @@
 		<monster name="Cyclops" x="0" y="-1" z="5" spawntime="90" />
 	</monster>
 	<monster centerx="494" centery="608" centerz="5" radius="1">
-		<monster name="Giant Spider" x="0" y="0" z="5" spawntime="86400" />
+		<monster name="Giant Spider" x="0" y="0" z="5" spawntime="20864" />
 	</monster>
 	<monster centerx="533" centery="614" centerz="5" radius="1">
-		<monster name="Dragon" x="1" y="0" z="5" spawntime="86400" />
+		<monster name="Dragon" x="1" y="0" z="5" spawntime="20864" />
 	</monster>
 	<monster centerx="236" centery="625" centerz="5" radius="3">
 		<monster name="Cobra Scout" x="-1" y="-3" z="5" spawntime="60" />
@@ -944,8 +944,8 @@
 	<monster centerx="3233" centery="4123" centerz="5" radius="5">
 		<monster name="Spectre" x="-1" y="-2" z="5" spawntime="60" />
 		<monster name="Crystal Spider" x="-3" y="-1" z="5" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="2" y="2" z="5" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="3" y="2" z="5" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="2" y="2" z="5" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="3" y="2" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="3206" centery="4124" centerz="5" radius="5">
 		<monster name="Crystal Spider" x="2" y="-4" z="5" spawntime="60" />
@@ -964,7 +964,7 @@
 		<monster name="Crystal Spider" x="-3" y="1" z="5" spawntime="60" />
 		<monster name="Spectre" x="1" y="2" z="5" spawntime="60" />
 		<monster name="Crystal Spider" x="3" y="3" z="5" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="4" y="4" z="5" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="4" y="4" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="3209" centery="4132" centerz="5" radius="5">
 		<monster name="Spectre" x="3" y="-1" z="5" spawntime="60" />
@@ -972,18 +972,18 @@
 	</monster>
 	<monster centerx="3119" centery="4142" centerz="5" radius="12">
 		<monster name="Dark Torturer" x="12" y="-9" z="5" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="-9" y="-8" z="5" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="-9" y="-8" z="5" spawntime="60" />
 		<monster name="Lost Soul" x="4" y="-8" z="5" spawntime="60" />
 		<monster name="Betrayed Wraith" x="-1" y="-6" z="5" spawntime="60" />
 		<monster name="Dark Torturer" x="5" y="-6" z="5" spawntime="60" />
 		<monster name="Lost Soul" x="-6" y="-5" z="5" spawntime="60" />
 		<monster name="Betrayed Wraith" x="3" y="-4" z="5" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="11" y="-4" z="5" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="11" y="-4" z="5" spawntime="60" />
 		<monster name="Betrayed Wraith" x="12" y="-2" z="5" spawntime="60" />
 		<monster name="Lost Soul" x="6" y="0" z="5" spawntime="60" />
 		<monster name="Lost Soul" x="-4" y="1" z="5" spawntime="60" />
 		<monster name="Lost Soul" x="-4" y="2" z="5" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="5" y="2" z="5" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="5" y="2" z="5" spawntime="60" />
 		<monster name="Dark Torturer" x="9" y="4" z="5" spawntime="60" />
 		<monster name="Lost Soul" x="8" y="6" z="5" spawntime="60" />
 		<monster name="Betrayed Wraith" x="10" y="6" z="5" spawntime="60" />
@@ -1010,7 +1010,7 @@
 	<monster centerx="3185" centery="4143" centerz="5" radius="5">
 		<monster name="Ice Golem" x="1" y="-5" z="5" spawntime="60" />
 		<monster name="Crystal Spider" x="1" y="-3" z="5" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="2" y="-1" z="5" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="2" y="-1" z="5" spawntime="60" />
 		<monster name="Spectre" x="2" y="1" z="5" spawntime="60" />
 		<monster name="Crystal Spider" x="1" y="3" z="5" spawntime="60" />
 		<monster name="Crystal Spider" x="2" y="3" z="5" spawntime="60" />
@@ -1028,7 +1028,7 @@
 	<monster centerx="3213" centery="4149" centerz="5" radius="5">
 		<monster name="Spectre" x="3" y="-1" z="5" spawntime="60" />
 		<monster name="Spectre" x="-2" y="1" z="5" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="2" y="1" z="5" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="2" y="1" z="5" spawntime="60" />
 		<monster name="Ice Golem" x="4" y="1" z="5" spawntime="60" />
 		<monster name="Crystal Spider" x="-4" y="2" z="5" spawntime="60" />
 		<monster name="Crystal Spider" x="1" y="3" z="5" spawntime="60" />
@@ -1060,31 +1060,31 @@
 		<monster name="Zugurosh" x="1" y="1" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="3106" centery="4218" centerz="5" radius="5">
-		<monster name="Eye Of The Seven" x="1" y="-5" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="3" y="-5" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="5" y="-5" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="-1" y="-4" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="-3" y="-3" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="1" y="-5" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="3" y="-5" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="5" y="-5" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="-1" y="-4" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="-3" y="-3" z="5" spawntime="60" />
 		<monster name="Ushuriel" x="4" y="1" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="-3" y="5" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="-3" y="5" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="3110" centery="4218" centerz="5" radius="5">
-		<monster name="Eye Of The Seven" x="3" y="-5" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="5" y="-5" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="3" y="-5" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="5" y="-5" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="3116" centery="4219" centerz="5" radius="5">
-		<monster name="Eye Of The Seven" x="1" y="-5" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="1" y="5" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="1" y="-5" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="1" y="5" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="3105" centery="4222" centerz="5" radius="5">
-		<monster name="Eye Of The Seven" x="0" y="2" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="2" y="3" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="4" y="3" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="0" y="2" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="2" y="3" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="4" y="3" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="3113" centery="4222" centerz="5" radius="5">
-		<monster name="Eye Of The Seven" x="-2" y="3" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="0" y="3" z="5" spawntime="60" />
-		<monster name="Eye Of The Seven" x="2" y="3" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="-2" y="3" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="0" y="3" z="5" spawntime="60" />
+		<monster name="Eye of the Seven" x="2" y="3" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="3196" centery="4250" centerz="5" radius="5">
 		<monster name="Dreadbeast" x="3" y="-1" z="5" spawntime="60" />
@@ -1132,11 +1132,11 @@
 	<monster centerx="3253" centery="4281" centerz="5" radius="30">
 		<monster name="Juggernaut" x="6" y="0" z="5" spawntime="60" />
 		<monster name="Juggernaut" x="-8" y="2" z="5" spawntime="60" />
-		<monster name="Son Of Verminor" x="-4" y="3" z="5" spawntime="60" />
-		<monster name="Son Of Verminor" x="6" y="6" z="5" spawntime="60" />
-		<monster name="Son Of Verminor" x="-8" y="8" z="5" spawntime="60" />
-		<monster name="Son Of Verminor" x="-7" y="8" z="5" spawntime="60" />
-		<monster name="Son Of Verminor" x="-2" y="13" z="5" spawntime="60" />
+		<monster name="Son of Verminor" x="-4" y="3" z="5" spawntime="60" />
+		<monster name="Son of Verminor" x="6" y="6" z="5" spawntime="60" />
+		<monster name="Son of Verminor" x="-8" y="8" z="5" spawntime="60" />
+		<monster name="Son of Verminor" x="-7" y="8" z="5" spawntime="60" />
+		<monster name="Son of Verminor" x="-2" y="13" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="271" centery="234" centerz="6" radius="3">
 		<monster name="Ice Golem" x="3" y="3" z="6" spawntime="90" />
@@ -1678,11 +1678,11 @@
 	</monster>
 	<monster centerx="3055" centery="4136" centerz="6" radius="30">
 		<monster name="Destroyer" x="-1" y="-4" z="6" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="12" y="-4" z="6" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="12" y="-3" z="6" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="23" y="-1" z="6" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="12" y="-4" z="6" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="12" y="-3" z="6" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="23" y="-1" z="6" spawntime="60" />
 		<monster name="Destroyer" x="26" y="-1" z="6" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="-4" y="0" z="6" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="-4" y="0" z="6" spawntime="60" />
 		<monster name="Juggernaut" x="8" y="3" z="6" spawntime="60" />
 		<monster name="Juggernaut" x="30" y="3" z="6" spawntime="60" />
 		<monster name="Destroyer" x="16" y="10" z="6" spawntime="60" />
@@ -1692,18 +1692,18 @@
 		<monster name="Juggernaut" x="-2" y="-8" z="6" spawntime="60" />
 		<monster name="Destroyer" x="3" y="-5" z="6" spawntime="60" />
 		<monster name="Destroyer" x="26" y="-4" z="6" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="7" y="0" z="6" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="7" y="0" z="6" spawntime="60" />
 		<monster name="Juggernaut" x="15" y="1" z="6" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="24" y="2" z="6" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="24" y="2" z="6" spawntime="60" />
 		<monster name="Destroyer" x="10" y="3" z="6" spawntime="60" />
 		<monster name="Destroyer" x="24" y="8" z="6" spawntime="60" />
 	</monster>
 	<monster centerx="3129" centery="4139" centerz="6" radius="30">
 		<monster name="Destroyer" x="5" y="-4" z="6" spawntime="60" />
-		<monster name="Hand Of Cursed Fate" x="-5" y="5" z="6" spawntime="60" />
+		<monster name="Hand of Cursed Fate" x="-5" y="5" z="6" spawntime="60" />
 	</monster>
 	<monster centerx="3258" centery="4160" centerz="6" radius="30">
-		<monster name="A Carved Stone Tile" x="-13" y="-17" z="6" spawntime="60" />
+		<monster name="a carved stone tile" x="-13" y="-17" z="6" spawntime="60" />
 		<monster name="Spectre" x="-11" y="-12" z="6" spawntime="60" />
 		<monster name="Betrayed Wraith" x="0" y="-12" z="6" spawntime="60" />
 		<monster name="Phantasm" x="2" y="-12" z="6" spawntime="60" />
@@ -1777,9 +1777,9 @@
 		<monster name="Plaguesmith" x="-9" y="-15" z="6" spawntime="60" />
 		<monster name="Defiler" x="-1" y="-14" z="6" spawntime="60" />
 		<monster name="Plaguesmith" x="13" y="-12" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="24" y="-12" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="24" y="-12" z="6" spawntime="60" />
 		<monster name="Defiler" x="26" y="-6" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="4" y="-5" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="4" y="-5" z="6" spawntime="60" />
 		<monster name="Blightwalker" x="16" y="-5" z="6" spawntime="60" />
 		<monster name="Plaguesmith" x="-2" y="-4" z="6" spawntime="60" />
 		<monster name="Blightwalker" x="-14" y="-3" z="6" spawntime="60" />
@@ -1788,7 +1788,7 @@
 		<monster name="Plaguesmith" x="17" y="0" z="6" spawntime="60" />
 		<monster name="Blightwalker" x="25" y="0" z="6" spawntime="60" />
 		<monster name="Defiler" x="12" y="1" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="-14" y="3" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="-14" y="3" z="6" spawntime="60" />
 		<monster name="Defiler" x="-11" y="5" z="6" spawntime="60" />
 		<monster name="Plaguesmith" x="29" y="5" z="6" spawntime="60" />
 		<monster name="Defiler" x="-15" y="6" z="6" spawntime="60" />
@@ -1796,8 +1796,8 @@
 		<monster name="Blightwalker" x="10" y="7" z="6" spawntime="60" />
 		<monster name="Plaguesmith" x="22" y="8" z="6" spawntime="60" />
 		<monster name="Plaguesmith" x="23" y="8" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="-4" y="10" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="-3" y="10" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="-4" y="10" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="-3" y="10" z="6" spawntime="60" />
 		<monster name="Blightwalker" x="17" y="10" z="6" spawntime="60" />
 		<monster name="Blightwalker" x="-9" y="13" z="6" spawntime="60" />
 		<monster name="Defiler" x="2" y="13" z="6" spawntime="60" />
@@ -1809,23 +1809,23 @@
 	<monster centerx="3068" centery="4190" centerz="6" radius="30">
 		<monster name="Blightwalker" x="29" y="-16" z="6" spawntime="60" />
 		<monster name="Plaguesmith" x="28" y="-5" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="28" y="5" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="28" y="5" z="6" spawntime="60" />
 	</monster>
 	<monster centerx="3114" centery="4194" centerz="6" radius="30">
 		<monster name="Defiler" x="-8" y="-21" z="6" spawntime="60" />
 		<monster name="Blightwalker" x="-13" y="-13" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="-15" y="-6" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="-14" y="-6" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="-15" y="-6" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="-14" y="-6" z="6" spawntime="60" />
 		<monster name="Plaguesmith" x="-8" y="-5" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="1" y="-5" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="1" y="-5" z="6" spawntime="60" />
 		<monster name="Defiler" x="-4" y="-3" z="6" spawntime="60" />
 		<monster name="Blightwalker" x="3" y="5" z="6" spawntime="60" />
 		<monster name="Defiler" x="9" y="9" z="6" spawntime="60" />
 		<monster name="Blightwalker" x="-14" y="10" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="-4" y="11" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="-4" y="11" z="6" spawntime="60" />
 		<monster name="Defiler" x="-9" y="12" z="6" spawntime="60" />
 		<monster name="Blightwalker" x="-8" y="16" z="6" spawntime="60" />
-		<monster name="Son Of Verminor" x="2" y="20" z="6" spawntime="60" />
+		<monster name="Son of Verminor" x="2" y="20" z="6" spawntime="60" />
 	</monster>
 	<monster centerx="3277" centery="4216" centerz="6" radius="30">
 		<monster name="Betrayed Wraith" x="-11" y="-19" z="6" spawntime="60" />
@@ -2863,7 +2863,7 @@
 		<monster name="Giant Spider" x="0" y="0" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="504" centery="652" centerz="7" radius="5">
-		<monster name="Giant Spider" x="0" y="0" z="7" spawntime="86400" />
+		<monster name="Giant Spider" x="0" y="0" z="7" spawntime="20864" />
 	</monster>
 	<monster centerx="208" centery="653" centerz="7" radius="3">
 		<monster name="Cobra Scout" x="-1" y="2" z="7" spawntime="60" />
@@ -2901,8 +2901,8 @@
 		<monster name="Tortoise" x="-2" y="0" z="7" spawntime="800" />
 	</monster>
 	<monster centerx="584" centery="679" centerz="7" radius="5">
-		<monster name="Deer" x="3" y="-2" z="7" spawntime="84600" />
-		<monster name="Deer" x="-1" y="3" z="7" spawntime="84600" />
+		<monster name="Deer" x="3" y="-2" z="7" spawntime="19064" />
+		<monster name="Deer" x="-1" y="3" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="622" centery="685" centerz="7" radius="5">
 		<monster name="Tortoise" x="0" y="-5" z="7" spawntime="60" />
@@ -2915,11 +2915,11 @@
 		<monster name="Hunter" x="-10" y="12" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="600" centery="687" centerz="7" radius="5">
-		<monster name="Wolf" x="2" y="-2" z="7" spawntime="84600" />
-		<monster name="Wolf" x="-1" y="1" z="7" spawntime="84600" />
+		<monster name="Wolf" x="2" y="-2" z="7" spawntime="19064" />
+		<monster name="Wolf" x="-1" y="1" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="625" centery="693" centerz="7" radius="5">
-		<monster name="Deer" x="0" y="0" z="7" spawntime="84600" />
+		<monster name="Deer" x="0" y="0" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="436" centery="694" centerz="7" radius="5">
 		<monster name="Wolf" x="2" y="3" z="7" spawntime="40" />
@@ -2928,11 +2928,11 @@
 		<monster name="Wolf" x="4" y="0" z="7" spawntime="40" />
 	</monster>
 	<monster centerx="582" centery="698" centerz="7" radius="5">
-		<monster name="Deer" x="4" y="-3" z="7" spawntime="84600" />
-		<monster name="Wolf" x="0" y="1" z="7" spawntime="84600" />
+		<monster name="Deer" x="4" y="-3" z="7" spawntime="19064" />
+		<monster name="Wolf" x="0" y="1" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="612" centery="698" centerz="7" radius="5">
-		<monster name="Wolf" x="-1" y="-1" z="7" spawntime="84600" />
+		<monster name="Wolf" x="-1" y="-1" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="422" centery="699" centerz="7" radius="5">
 		<monster name="Wolf" x="-2" y="-2" z="7" spawntime="40" />
@@ -2941,11 +2941,11 @@
 		<monster name="Wolf" x="-2" y="2" z="7" spawntime="40" />
 	</monster>
 	<monster centerx="609" centery="706" centerz="7" radius="5">
-		<monster name="Deer" x="0" y="0" z="7" spawntime="84600" />
+		<monster name="Deer" x="0" y="0" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="596" centery="711" centerz="7" radius="5">
-		<monster name="Wolf" x="-3" y="0" z="7" spawntime="84600" />
-		<monster name="Wolf" x="0" y="3" z="7" spawntime="84600" />
+		<monster name="Wolf" x="-3" y="0" z="7" spawntime="19064" />
+		<monster name="Wolf" x="0" y="3" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="389" centery="716" centerz="7" radius="30">
 		<monster name="Hunter" x="15" y="-12" z="7" spawntime="60" />
@@ -2969,35 +2969,35 @@
 		<monster name="Hero" x="1" y="2" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="578" centery="721" centerz="7" radius="5">
-		<monster name="Wolf" x="0" y="0" z="7" spawntime="84600" />
+		<monster name="Wolf" x="0" y="0" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="612" centery="729" centerz="7" radius="5">
-		<monster name="Deer" x="2" y="-4" z="7" spawntime="84600" />
-		<monster name="Deer" x="0" y="0" z="7" spawntime="84600" />
+		<monster name="Deer" x="2" y="-4" z="7" spawntime="19064" />
+		<monster name="Deer" x="0" y="0" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="583" centery="736" centerz="7" radius="5">
-		<monster name="Wolf" x="0" y="-4" z="7" spawntime="84600" />
-		<monster name="Wolf" x="0" y="0" z="7" spawntime="84600" />
+		<monster name="Wolf" x="0" y="-4" z="7" spawntime="19064" />
+		<monster name="Wolf" x="0" y="0" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="560" centery="738" centerz="7" radius="5">
-		<monster name="Deer" x="0" y="0" z="7" spawntime="84600" />
+		<monster name="Deer" x="0" y="0" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="547" centery="743" centerz="7" radius="5">
 		<monster name="Pirate Skeleton" x="0" y="-2" z="7" spawntime="800" />
 		<monster name="Pirate Skeleton" x="-2" y="3" z="7" spawntime="800" />
 	</monster>
 	<monster centerx="603" centery="746" centerz="7" radius="5">
-		<monster name="Wolf" x="3" y="-4" z="7" spawntime="84600" />
-		<monster name="Wolf" x="0" y="0" z="7" spawntime="84600" />
+		<monster name="Wolf" x="3" y="-4" z="7" spawntime="19064" />
+		<monster name="Wolf" x="0" y="0" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="587" centery="750" centerz="7" radius="5">
-		<monster name="Wolf" x="3" y="-1" z="7" spawntime="84600" />
+		<monster name="Wolf" x="3" y="-1" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="397" centery="751" centerz="7" radius="5">
 		<monster name="Hunter" x="-1" y="-2" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="554" centery="751" centerz="7" radius="5">
-		<monster name="Deer" x="0" y="0" z="7" spawntime="84600" />
+		<monster name="Deer" x="0" y="0" z="7" spawntime="19064" />
 	</monster>
 	<monster centerx="375" centery="753" centerz="7" radius="5">
 		<monster name="Hunter" x="1" y="0" z="7" spawntime="60" />
@@ -3015,7 +3015,7 @@
 		<monster name="Spider" x="0" y="0" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="617" centery="765" centerz="7" radius="1">
-		<monster name="Spider" x="-1" y="0" z="7" spawntime="691007488" />
+		<monster name="Spider" x="-1" y="0" z="7" spawntime="61440" />
 		<monster name="Spider" x="0" y="0" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="574" centery="766" centerz="7" radius="5">
@@ -3037,7 +3037,7 @@
 		<monster name="Hunter" x="-4" y="1" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="619" centery="781" centerz="7" radius="1">
-		<monster name="Spider" x="-1" y="0" z="7" spawntime="691007488" />
+		<monster name="Spider" x="-1" y="0" z="7" spawntime="61440" />
 		<monster name="Spider" x="0" y="0" z="7" spawntime="60" />
 	</monster>
 	<monster centerx="624" centery="782" centerz="7" radius="1">
@@ -3069,7 +3069,7 @@
 	</monster>
 	<monster centerx="622" centery="811" centerz="7" radius="1">
 		<monster name="Spider" x="0" y="0" z="7" spawntime="60" />
-		<monster name="Spider" x="0" y="1" z="7" spawntime="691007488" />
+		<monster name="Spider" x="0" y="1" z="7" spawntime="61440" />
 	</monster>
 	<monster centerx="630" centery="818" centerz="7" radius="1">
 		<monster name="Spider" x="0" y="0" z="7" spawntime="60" />
@@ -3169,32 +3169,32 @@
 		<monster name="Bulltaur Forgepriest" x="2" y="2" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="699" centery="224" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="702" centery="225" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="701" centery="228" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="701" centery="232" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="696" centery="236" centerz="8" radius="3">
-		<monster name="Bulltaur brute" x="0" y="-2" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="-2" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="703" centery="239" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="699" centery="242" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="698" centery="247" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="701" centery="252" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="708" centery="253" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
@@ -3205,11 +3205,11 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="713" centery="254" centerz="8" radius="3">
-		<monster name="Bulltaur brute" x="3" y="-3" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="3" y="-3" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="0" y="-2" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="2" y="-2" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="3" y="1" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="3" y="1" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="1" y="2" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="197" centery="255" centerz="8" radius="29">
@@ -3229,13 +3229,13 @@
 		<monster name="Frost Troll" x="29" y="28" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="718" centery="255" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="722" centery="255" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="674" centery="258" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="718" centery="259" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
@@ -3257,29 +3257,29 @@
 		<monster name="Rotworm" x="-10" y="19" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="766" centery="267" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="769" centery="267" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="1" y="-1" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="1" y="-1" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="670" centery="268" centerz="8" radius="6">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="-4" y="1" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="-4" y="2" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="1" y="2" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="-2" y="4" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="1" y="2" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="-2" y="4" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="728" centery="269" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="741" centery="269" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="643" centery="270" centerz="8" radius="5">
-		<monster name="Bulltaur brute" x="-2" y="-3" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="-2" y="-3" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="4" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="4" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="-2" y="2" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="1" y="4" z="8" spawntime="60" />
 	</monster>
@@ -3290,25 +3290,25 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="656" centery="271" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="737" centery="271" centerz="8" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="0" y="1" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="751" centery="272" centerz="8" radius="3">
-		<monster name="Bulltaur brute" x="-3" y="-3" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="-3" y="-3" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="3" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="756" centery="272" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="721" centery="274" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="767" centery="274" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="772" centery="275" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
@@ -3326,18 +3326,18 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="678" centery="281" centerz="8" radius="2">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="1" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="-1" y="1" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="740" centery="281" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="642" centery="282" centerz="8" radius="5">
 		<monster name="Bulltaur Forgepriest" x="-2" y="-1" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="0" y="4" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="-1" y="5" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="4" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="-1" y="5" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="656" centery="282" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
@@ -3346,9 +3346,9 @@
 		<monster name="Bulltaur Forgepriest" x="1" y="-5" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="-2" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="-4" y="1" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="-5" y="3" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="3" y="3" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="-4" y="1" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="-5" y="3" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="3" y="3" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="-4" y="5" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="5" z="8" spawntime="60" />
 	</monster>
@@ -3356,19 +3356,19 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="762" centery="283" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="766" centery="283" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="652" centery="284" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="661" centery="284" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="708" centery="284" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="673" centery="285" centerz="8" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
@@ -3377,7 +3377,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="736" centery="285" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="657" centery="286" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
@@ -3393,21 +3393,21 @@
 	</monster>
 	<monster centerx="674" centery="288" centerz="8" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="-1" y="1" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="-1" y="1" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="703" centery="288" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="708" centery="288" centerz="8" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="755" centery="288" centerz="8" radius="2">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="0" y="1" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="1" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="2" y="1" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="767" centery="288" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="238" centery="289" centerz="8" radius="14">
 		<monster name="Frost Troll" x="8" y="0" z="8" spawntime="60" />
@@ -3430,7 +3430,7 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="721" centery="291" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="404" centery="292" centerz="8" radius="1">
 		<monster name="Slime" x="0" y="0" z="8" spawntime="40" />
@@ -3439,7 +3439,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="763" centery="293" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="529" centery="294" centerz="8" radius="100">
 		<monster name="Scorpion" x="-35" y="-29" z="8" spawntime="60" />
@@ -3505,15 +3505,15 @@
 		<monster name="Bulltaur Forgepriest" x="90" y="31" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="94" y="31" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="85" y="32" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="100" y="32" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="100" y="32" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="88" y="34" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="82" y="35" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="82" y="35" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="85" y="36" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="82" y="39" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="87" y="40" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="87" y="40" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="83" y="43" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="98" y="45" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="86" y="46" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="98" y="45" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="86" y="46" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="91" y="46" z="8" spawntime="60" />
 		<monster name="Fire Devil" x="-9" y="55" z="8" spawntime="40" />
 		<monster name="Ghoul" x="-13" y="58" z="8" spawntime="40" />
@@ -3567,7 +3567,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="694" centery="295" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="710" centery="295" centerz="8" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
@@ -3576,13 +3576,13 @@
 		<monster name="Bulltaur Forgepriest" x="-4" y="-3" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="4" y="-3" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="3" y="-2" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="692" centery="300" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="749" centery="301" centerz="8" radius="2">
-		<monster name="Bulltaur brute" x="1" y="-1" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="1" y="-1" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="755" centery="301" centerz="8" radius="2">
@@ -3621,11 +3621,11 @@
 		<monster name="Slime" x="0" y="0" z="8" spawntime="40" />
 	</monster>
 	<monster centerx="638" centery="305" centerz="8" radius="2">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="2" y="1" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="2" y="1" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="671" centery="305" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="676" centery="305" centerz="8" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
@@ -3661,7 +3661,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="735" centery="307" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="646" centery="308" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
@@ -3708,7 +3708,7 @@
 	</monster>
 	<monster centerx="629" centery="326" centerz="8" radius="3">
 		<monster name="Bulltaur Alchemist" x="3" y="0" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="2" y="1" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="2" y="1" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="696" centery="326" centerz="8" radius="3">
 		<monster name="Deathling Spellsinger" x="2" y="-2" z="8" spawntime="60" />
@@ -3720,7 +3720,7 @@
 		<monster name="Deathling Scout" x="-2" y="2" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="640" centery="328" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="643" centery="328" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
@@ -3739,14 +3739,14 @@
 		<monster name="Deathling Spellsinger" x="3" y="2" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="634" centery="334" centerz="8" radius="2">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="-2" y="2" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="643" centery="335" centerz="8" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="640" centery="336" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="684" centery="336" centerz="8" radius="3">
 		<monster name="Deathling Scout" x="2" y="-2" z="8" spawntime="60" />
@@ -3757,11 +3757,11 @@
 		<monster name="Deathling Spellsinger" x="0" y="-1" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="634" centery="340" centerz="8" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="640" centery="340" centerz="8" radius="2">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="8" spawntime="60" />
-		<monster name="Bulltaur brute" x="2" y="1" z="8" spawntime="60" />
+		<monster name="Bulltaur Brute" x="2" y="1" z="8" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="2" z="8" spawntime="60" />
 	</monster>
 	<monster centerx="703" centery="340" centerz="8" radius="3">
@@ -5240,13 +5240,13 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="699" centery="227" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="702" centery="232" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="706" centery="232" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="712" centery="232" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5255,7 +5255,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="705" centery="238" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="705" centery="243" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5264,16 +5264,16 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="724" centery="248" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="702" centery="251" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="705" centery="253" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="714" centery="253" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="671" centery="254" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5291,16 +5291,16 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="684" centery="256" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="707" centery="256" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="667" centery="257" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="724" centery="257" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="538" centery="259" centerz="9" radius="35">
 		<monster name="Cyclops Smith" x="24" y="-17" z="9" spawntime="60" />
@@ -5325,17 +5325,17 @@
 		<monster name="Cyclops Drone" x="-27" y="22" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="652" centery="260" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="697" centery="260" centerz="9" radius="2">
 		<monster name="Bulltaur Alchemist" x="-2" y="0" z="9" spawntime="60" />
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="724" centery="260" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="626" centery="261" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="657" centery="261" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5350,19 +5350,19 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="636" centery="264" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="725" centery="265" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="642" centery="266" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="650" centery="266" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="669" centery="266" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="637" centery="268" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5371,13 +5371,13 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="691" centery="268" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="640" centery="269" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="657" centery="269" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="696" centery="269" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5386,13 +5386,13 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="650" centery="270" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="664" centery="270" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="653" centery="271" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="685" centery="271" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5401,16 +5401,16 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="625" centery="272" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="629" centery="272" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="633" centery="272" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="724" centery="272" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="617" centery="274" centerz="9" radius="2">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5423,26 +5423,26 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="695" centery="275" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="711" centery="275" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="-1" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="721" centery="275" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="724" centery="275" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="692" centery="276" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="699" centery="276" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="669" centery="277" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="677" centery="277" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5451,7 +5451,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="706" centery="278" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="721" centery="278" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5466,7 +5466,7 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="710" centery="279" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="727" centery="279" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5490,19 +5490,19 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="702" centery="282" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="723" centery="282" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="729" centery="282" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="617" centery="283" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="673" centery="283" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="693" centery="283" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5511,7 +5511,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="710" centery="283" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="649" centery="284" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5520,13 +5520,13 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="665" centery="284" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="705" centery="284" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="626" centery="285" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="630" centery="285" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="-1" y="-1" z="9" spawntime="60" />
@@ -5540,25 +5540,25 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="681" centery="286" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="710" centery="286" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="649" centery="287" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="651" centery="287" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="690" centery="287" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="695" centery="287" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="617" centery="288" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="626" centery="288" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5596,10 +5596,10 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="665" centery="290" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="1" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="1" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="725" centery="290" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="692" centery="291" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5611,19 +5611,19 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="656" centery="292" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="634" centery="293" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="651" centery="293" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="695" centery="293" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="656" centery="295" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="724" centery="295" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5635,10 +5635,10 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="693" centery="296" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="633" centery="297" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="666" centery="297" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5672,7 +5672,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="607" centery="301" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="695" centery="301" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5684,34 +5684,34 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="599" centery="302" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="623" centery="302" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="640" centery="302" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="649" centery="302" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="663" centery="302" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="669" centery="302" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="682" centery="302" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="691" centery="302" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="703" centery="302" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="721" centery="302" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="590" centery="303" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5720,7 +5720,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="677" centery="303" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="687" centery="303" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5732,7 +5732,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="635" centery="304" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="642" centery="307" centerz="9" radius="3">
 		<monster name="Bulltaur Forgepriest" x="2" y="-2" z="9" spawntime="60" />
@@ -5745,13 +5745,13 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="607" centery="308" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="611" centery="310" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="606" centery="311" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="626" centery="311" centerz="9" radius="1">
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
@@ -5797,14 +5797,14 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="641" centery="318" centerz="9" radius="5">
-		<monster name="Bulltaur brute" x="1" y="-5" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="1" y="-5" z="9" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="-5" y="-2" z="9" spawntime="60" />
 		<monster name="Bulltaur Forgepriest" x="-1" y="-2" z="9" spawntime="60" />
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="3" y="2" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="603" centery="319" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="689" centery="319" centerz="9" radius="3">
 		<monster name="Deathling Spellsinger" x="0" y="3" z="9" spawntime="60" />
@@ -5813,7 +5813,7 @@
 		<monster name="Deathling Spellsinger" x="1" y="3" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="613" centery="320" centerz="9" radius="3">
-		<monster name="Bulltaur brute" x="-2" y="-1" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="-2" y="-1" z="9" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="591" centery="321" centerz="9" radius="1">
@@ -5845,7 +5845,7 @@
 		<monster name="Deathling Scout" x="-2" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="593" centery="327" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="627" centery="327" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5857,14 +5857,14 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="644" centery="328" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="269" centery="329" centerz="9" radius="5">
 		<monster name="Quara Pincher" x="3" y="-2" z="9" spawntime="60" />
 		<monster name="Quara Pincher" x="-4" y="3" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="601" centery="329" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="625" centery="330" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5879,10 +5879,10 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="622" centery="331" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="590" centery="332" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="642" centery="333" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5919,7 +5919,7 @@
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="612" centery="340" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="682" centery="340" centerz="9" radius="3">
 		<monster name="Deepling Warrior" x="0" y="-2" z="9" spawntime="60" />
@@ -5937,11 +5937,11 @@
 	</monster>
 	<monster centerx="597" centery="341" centerz="9" radius="3">
 		<monster name="Bulltaur Forgepriest" x="0" y="-3" z="9" spawntime="60" />
-		<monster name="Bulltaur brute" x="-2" y="1" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="-2" y="1" z="9" spawntime="60" />
 		<monster name="Bulltaur Alchemist" x="0" y="1" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="604" centery="341" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="608" centery="341" centerz="9" radius="1">
 		<monster name="Bulltaur Alchemist" x="0" y="0" z="9" spawntime="60" />
@@ -5956,10 +5956,10 @@
 		<monster name="Bulltaur Forgepriest" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="626" centery="342" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="641" centery="342" centerz="9" radius="1">
-		<monster name="Bulltaur brute" x="0" y="0" z="9" spawntime="60" />
+		<monster name="Bulltaur Brute" x="0" y="0" z="9" spawntime="60" />
 	</monster>
 	<monster centerx="675" centery="344" centerz="9" radius="3">
 		<monster name="Deathling Spellsinger" x="-1" y="-3" z="9" spawntime="60" />
@@ -7998,16 +7998,16 @@
 	</monster>
 	<monster centerx="569" centery="89" centerz="12" radius="9">
 		<monster name="Plaguesmith" x="1" y="-8" z="12" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="2" y="-6" z="12" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="2" y="-6" z="12" spawntime="90" />
 		<monster name="Blightwalker" x="3" y="-6" z="12" spawntime="90" />
 		<monster name="Betrayed Wraith" x="-2" y="-4" z="12" spawntime="90" />
 		<monster name="Betrayed Wraith" x="1" y="-4" z="12" spawntime="90" />
 		<monster name="Betrayed Wraith" x="-3" y="-2" z="12" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="-1" y="-2" z="12" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="-1" y="-2" z="12" spawntime="90" />
 		<monster name="Blightwalker" x="1" y="-2" z="12" spawntime="90" />
 		<monster name="Dark Torturer" x="5" y="-2" z="12" spawntime="90" />
 		<monster name="Dark Torturer" x="-2" y="0" z="12" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="2" y="0" z="12" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="2" y="0" z="12" spawntime="90" />
 		<monster name="Plaguesmith" x="0" y="1" z="12" spawntime="90" />
 		<monster name="Phantasm" x="-3" y="2" z="12" spawntime="90" />
 		<monster name="Plaguesmith" x="-5" y="4" z="12" spawntime="90" />
@@ -8858,16 +8858,16 @@
 	<monster centerx="530" centery="129" centerz="15" radius="5">
 		<monster name="Demon" x="3" y="-4" z="15" spawntime="90" />
 		<monster name="Demon" x="-2" y="-3" z="15" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="2" y="-2" z="15" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="2" y="-2" z="15" spawntime="90" />
 		<monster name="Betrayed Wraith" x="5" y="-2" z="15" spawntime="90" />
 		<monster name="Betrayed Wraith" x="-2" y="0" z="15" spawntime="90" />
 		<monster name="Demon" x="1" y="1" z="15" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="5" y="1" z="15" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="-4" y="2" z="15" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="5" y="1" z="15" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="-4" y="2" z="15" spawntime="90" />
 		<monster name="Betrayed Wraith" x="3" y="2" z="15" spawntime="90" />
 		<monster name="Betrayed Wraith" x="-1" y="3" z="15" spawntime="90" />
 		<monster name="Betrayed Wraith" x="-5" y="5" z="15" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="0" y="5" z="15" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="0" y="5" z="15" spawntime="90" />
 		<monster name="Betrayed Wraith" x="5" y="5" z="15" spawntime="90" />
 	</monster>
 	<monster centerx="573" centery="129" centerz="15" radius="2">
@@ -8901,9 +8901,9 @@
 		<monster name="Betrayed Wraith" x="0" y="-2" z="15" spawntime="90" />
 		<monster name="Spectre" x="-3" y="-1" z="15" spawntime="90" />
 		<monster name="Spectre" x="6" y="-1" z="15" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="3" y="0" z="15" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="-4" y="2" z="15" spawntime="90" />
-		<monster name="Hand Of Cursed Fate" x="-2" y="5" z="15" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="3" y="0" z="15" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="-4" y="2" z="15" spawntime="90" />
+		<monster name="Hand of Cursed Fate" x="-2" y="5" z="15" spawntime="90" />
 		<monster name="Spectre" x="3" y="6" z="15" spawntime="90" />
 	</monster>
 	<monster centerx="577" centery="147" centerz="15" radius="2">
@@ -8952,10 +8952,10 @@
 		<monster name="Destroyer" x="2" y="1" z="15" spawntime="90" />
 	</monster>
 	<monster centerx="590" centery="173" centerz="15" radius="3">
-		<monster name="Son Of Verminor" x="-2" y="0" z="15" spawntime="90" />
-		<monster name="Son Of Verminor" x="2" y="0" z="15" spawntime="90" />
-		<monster name="Son Of Verminor" x="-1" y="2" z="15" spawntime="90" />
-		<monster name="Son Of Verminor" x="1" y="2" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="-2" y="0" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="2" y="0" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="-1" y="2" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="1" y="2" z="15" spawntime="90" />
 	</monster>
 	<monster centerx="599" centery="175" centerz="15" radius="2">
 		<monster name="Plaguesmith" x="-2" y="-2" z="15" spawntime="90" />
@@ -8994,8 +8994,8 @@
 		<monster name="Blightwalker" x="-2" y="-3" z="15" spawntime="90" />
 		<monster name="Blightwalker" x="2" y="-3" z="15" spawntime="90" />
 		<monster name="Plaguesmith" x="0" y="-1" z="15" spawntime="90" />
-		<monster name="Son Of Verminor" x="2" y="0" z="15" spawntime="90" />
-		<monster name="Son Of Verminor" x="1" y="1" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="2" y="0" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="1" y="1" z="15" spawntime="90" />
 		<monster name="Plaguesmith" x="-1" y="2" z="15" spawntime="90" />
 	</monster>
 	<monster centerx="631" centery="182" centerz="15" radius="2">
@@ -9046,10 +9046,10 @@
 		<monster name="Plaguesmith" x="1" y="-4" z="15" spawntime="90" />
 		<monster name="Blightwalker" x="4" y="-4" z="15" spawntime="90" />
 		<monster name="Blightwalker" x="-1" y="-3" z="15" spawntime="90" />
-		<monster name="Son Of Verminor" x="-1" y="-2" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="-1" y="-2" z="15" spawntime="90" />
 		<monster name="Blightwalker" x="1" y="-2" z="15" spawntime="90" />
-		<monster name="Son Of Verminor" x="2" y="-1" z="15" spawntime="90" />
-		<monster name="Son Of Verminor" x="1" y="2" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="2" y="-1" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="1" y="2" z="15" spawntime="90" />
 		<monster name="Plaguesmith" x="-1" y="3" z="15" spawntime="90" />
 		<monster name="Plaguesmith" x="4" y="3" z="15" spawntime="90" />
 	</monster>
@@ -9093,7 +9093,7 @@
 	</monster>
 	<monster centerx="582" centery="217" centerz="15" radius="3">
 		<monster name="Defiler" x="-3" y="-2" z="15" spawntime="90" />
-		<monster name="Son Of Verminor" x="-2" y="0" z="15" spawntime="90" />
+		<monster name="Son of Verminor" x="-2" y="0" z="15" spawntime="90" />
 		<monster name="Plaguesmith" x="2" y="0" z="15" spawntime="90" />
 		<monster name="Defiler" x="0" y="2" z="15" spawntime="90" />
 	</monster>

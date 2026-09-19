@@ -35,6 +35,7 @@ void TalkActionFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "TalkAction", "getDescription", TalkActionFunctions::luaTalkActionGetDescription);
 	Lua::registerMethod(L, "TalkAction", "setDescription", TalkActionFunctions::luaTalkActionSetDescription);
 	Lua::registerMethod(L, "TalkAction", "getGroupType", TalkActionFunctions::luaTalkActionGetGroupType);
+	Lua::registerMethod(L, "TalkAction", "channel", TalkActionFunctions::luaTalkActionChannel);
 }
 
 int TalkActionFunctions::luaCreateTalkAction(lua_State* L) {
@@ -149,7 +150,22 @@ int TalkActionFunctions::luaTalkActionSeparator(lua_State* L) {
 		return 1;
 	}
 
-	talkactionSharedPtr->setSeparator(Lua::getString(L, 2));
+	std::string sep = Lua::getString(L, 2);
+	talkactionSharedPtr->setSeparator(sep.empty() ? std::string("\"") : sep);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int TalkActionFunctions::luaTalkActionChannel(lua_State* L) {
+	// talkAction:channel(channel)
+	const auto &talkactionSharedPtr = Lua::getUserdataShared<TalkAction>(L, 1);
+	if (!talkactionSharedPtr) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_TALK_ACTION_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	talkactionSharedPtr->setChannel(Lua::getNumber<int32_t>(L, 2));
 	Lua::pushBoolean(L, true);
 	return 1;
 }

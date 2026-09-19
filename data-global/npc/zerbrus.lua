@@ -62,22 +62,21 @@ end
 
 -- Greeting and Farewell
 keywordHandler:addGreetKeyword({ "hi" }, { npcHandler = npcHandler, text = "Greetings, |PLAYERNAME|! You're looking really bad. Let me heal your wounds." }, function(player)
-	return player:getHealth() < 65 or player:getCondition(CONDITION_POISON) ~= nil
+	return player:getHealth() < 65 or player:getCondition(CONDITION_POISON) ~= nil or player:getCondition(CONDITION_FIRE) ~= nil
 end, function(player)
 	local health = player:getHealth()
 	if health < 65 then
 		player:addHealth(65 - health)
 	end
 	player:removeCondition(CONDITION_POISON)
+	player:removeCondition(CONDITION_FIRE)
 	player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
 end)
 keywordHandler:addAliasKeyword({ "hello" })
-
 keywordHandler:addGreetKeyword({ "hi" }, { npcHandler = npcHandler, text = "<nods> At your service, |PLAYERNAME|, protecting the {village} from {monsters}." }, function(player)
 	return player:getSex() == PLAYERSEX_FEMALE
 end)
 keywordHandler:addAliasKeyword({ "hello" })
-
 keywordHandler:addFarewellKeyword({ "bye" }, { npcHandler = npcHandler, text = "Bye, |PLAYERNAME|." })
 keywordHandler:addAliasKeyword({ "farewell" })
 
@@ -186,6 +185,16 @@ keywordHandler:addKeyword({ "billy" }, StdModule.say, { npcHandler = npcHandler,
 keywordHandler:addKeyword({ "willie" }, StdModule.say, { npcHandler = npcHandler, text = "He's quite rude. Also, he buys and sells {food}." })
 
 -- Healing
+keywordHandler:addKeyword({ "heal" }, StdModule.say, { npcHandler = npcHandler, text = "You are burning. Let me quench those flames." }, function(player)
+	return player:getCondition(CONDITION_FIRE) ~= nil
+end, function(player)
+	local health = player:getHealth()
+	if health < 65 then
+		player:addHealth(65 - health)
+	end
+	player:removeCondition(CONDITION_FIRE)
+	player:getPosition():sendMagicEffect(CONST_ME_MAGIC_GREEN)
+end)
 keywordHandler:addKeyword({ "heal" }, StdModule.say, { npcHandler = npcHandler, text = "You are poisoned. I will help you." }, function(player)
 	return player:getCondition(CONDITION_POISON) ~= nil
 end, function(player)

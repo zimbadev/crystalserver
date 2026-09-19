@@ -25,6 +25,6 @@ function onUpdateDatabase()
 		`rune_void` INT(250) NULL ,
 		`UsedRunesBit` VARCHAR(250) NULL ,
 		`UnlockedRunesBit` VARCHAR(250) NULL,
-		`tracker list` BLOB NULL ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+		`tracker_list` BLOB NULL ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 	]])
 end

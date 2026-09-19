@@ -34,7 +34,4 @@ private:
 	static int luaGuildAddRank(lua_State* L);
 	static int luaGuildGetRankById(lua_State* L);
 	static int luaGuildGetRankByLevel(lua_State* L);
-
-	static int luaGuildGetMotd(lua_State* L);
-	static int luaGuildSetMotd(lua_State* L);
 };

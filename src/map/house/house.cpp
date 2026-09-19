@@ -44,11 +44,10 @@ void House::setNewOwnerGuid(int32_t newOwnerGuid, bool serverStartup) {
 		return;
 	}
 
-	std::ostringstream query;
-	query << "UPDATE `houses` SET `new_owner` = " << newOwnerGuid << " WHERE `id` = " << id;
+	std::string query = fmt::format("UPDATE `houses` SET `new_owner` = {} WHERE `id` = {} AND `world_id` = {}", newOwnerGuid, id, g_game().worlds().getCurrentWorld()->id);
 
 	Database &db = Database::getInstance();
-	db.executeQuery(query.str());
+	db.executeQuery(query);
 	if (!serverStartup) {
 		setNewOwnership();
 	}
@@ -99,11 +98,13 @@ bool House::tryTransferOwnership(const std::shared_ptr<Player> &player, bool ser
 }
 
 void House::setOwner(uint32_t guid, bool updateDatabase /* = true*/, const std::shared_ptr<Player> &player /* = nullptr*/) {
+	const auto worldId = g_game().worlds().getCurrentWorld()->id;
+
 	if (updateDatabase && owner != guid) {
 		Database &db = Database::getInstance();
 
 		std::ostringstream query;
-		query << "UPDATE `houses` SET `owner` = " << guid << ", `new_owner` = -1, `paid` = 0, `bidder` = 0, `bidder_name` = '', `highest_bid` = 0, `internal_bid` = 0, `bid_end_date` = 0, `state` = " << (guid > 0 ? 2 : 0) << " WHERE `id` = " << id;
+		query << "UPDATE `houses` SET `owner` = " << guid << ", `new_owner` = -1, `paid` = 0, `bidder` = 0, `bidder_name` = '', `highest_bid` = 0, `internal_bid` = 0, `bid_end_date` = 0, `state` = " << (guid > 0 ? 2 : 0) << " WHERE `id` = " << id << " AND `world_id` = " << worldId;
 		db.executeQuery(query.str());
 	}
 
@@ -141,9 +142,8 @@ void House::setOwner(uint32_t guid, bool updateDatabase /* = true*/, const std::
 
 	if (guid != 0) {
 		Database &db = Database::getInstance();
-		std::ostringstream query;
-		query << "SELECT `name`, `account_id` FROM `players` WHERE `id` = " << guid;
-		const DBResult_ptr result = db.storeQuery(query.str());
+		std::string query = fmt::format("SELECT `name`, `account_id` FROM `players` WHERE `id` = {} AND `world_id` = {}", guid, worldId);
+		DBResult_ptr result = db.storeQuery(query);
 		if (!result) {
 			return;
 		}
@@ -163,9 +163,17 @@ void House::setOwner(uint32_t guid, bool updateDatabase /* = true*/, const std::
 void House::updateDoorDescription() const {
 	std::ostringstream ss;
 	if (owner != 0) {
-		ss << "It belongs to house '" << houseName << "'. " << ownerName << " owns this house.";
+		if (isGuildhall()) {
+			ss << "It belongs to guildhall '" << houseName << "'. " << ownerName << " owns this guildhall.";
+		} else {
+			ss << "It belongs to house '" << houseName << "'. " << ownerName << " owns this house.";
+		}
 	} else {
-		ss << "It belongs to house '" << houseName << "'. Nobody owns this house.";
+		if (isGuildhall()) {
+			ss << "It belongs to guildhall '" << houseName << "'. Nobody owns this guildhall.";
+		} else {
+			ss << "It belongs to house '" << houseName << "'. Nobody owns this house.";
+		}
 	}
 
 	if (!g_configManager().getBoolean(CYCLOPEDIA_HOUSE_AUCTION)) {
@@ -470,9 +478,21 @@ void House::removeDoor(const std::shared_ptr<Door> &door) {
 	}
 }
 
+uint32_t House::getBedCount() const {
+	uint32_t count = 0;
+	for (const auto &bed : bedsList) {
+		if (bed->isBedComplete(bed->getNextBedItem())) {
+			count++;
+		}
+	}
+	return count / 2;
+}
+
 void House::addBed(const std::shared_ptr<BedItem> &bed) {
-	bedsList.push_back(bed);
-	bed->setHouse(static_self_cast<House>());
+	if (std::ranges::find(bedsList, bed) == bedsList.end()) {
+		bedsList.push_back(bed);
+		bed->setHouse(static_self_cast<House>());
+	}
 }
 
 void House::removeBed(const std::shared_ptr<BedItem> &bed) {
@@ -925,6 +945,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 		if (!player) {
 			// Player doesn't exist, reset house owner
 			house->tryTransferOwnership(nullptr, true);
+			house->setState(CyclopediaHouseState::Available);
 			continue;
 		}
 
@@ -939,6 +960,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 			} else if (!vipKeep && !activityKeep) {
 				g_logger().info("Player {} has not logged in for {} days, so the house will be reset.", player->getName(), daysToReset);
 				house->setOwner(0, true, player);
+				house->setState(CyclopediaHouseState::Available);
 				g_saveManager().savePlayer(player);
 				continue;
 			}
@@ -1008,6 +1030,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 				house->setPayRentWarnings(house->getPayRentWarnings() + 1);
 			} else {
 				house->setOwner(0, true, player);
+				house->setState(CyclopediaHouseState::Available);
 			}
 		}
 

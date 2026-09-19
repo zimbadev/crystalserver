@@ -24,6 +24,7 @@ function promotion.onSay(player, words, param)
 	else
 		player:sendTextMessage(MESSAGE_LOOK, "You received a promotion!")
 		player:setVocation(promotion)
+		player:sendBannerType(BANNER_TYPE_PROMOTION_GRANTED)
 		player:getPosition():sendMagicEffect(CONST_ME_HOLYDAMAGE)
 	end
 

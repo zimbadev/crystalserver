@@ -53,6 +53,6 @@ spell:isSelfTarget(true)
 spell:isAggressive(false)
 spell:cooldown(32 * 1000)
 spell:groupCooldown(2 * 1000)
-spell:needLearn(true)
+
 spell:vocation("paladin;true", "royal paladin;true")
 spell:register()

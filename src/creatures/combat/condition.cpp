@@ -598,10 +598,19 @@ void ConditionAttributes::addCondition(std::shared_ptr<Creature> creature, const
 
 bool ConditionAttributes::unserializeProp(ConditionAttr_t attr, PropStream &propStream) {
 	if (attr == CONDITIONATTR_SKILLS) {
+		if (currentSkill > SKILL_LAST) {
+			return false;
+		}
 		return propStream.read<int32_t>(skills[currentSkill++]);
 	} else if (attr == CONDITIONATTR_STATS) {
+		if (currentStat > STAT_LAST) {
+			return false;
+		}
 		return propStream.read<int32_t>(stats[currentStat++]);
 	} else if (attr == CONDITIONATTR_BUFFS) {
+		if (currentBuff > BUFF_LAST) {
+			return false;
+		}
 		return propStream.read<int32_t>(buffs[currentBuff++]);
 	} else if (attr == CONDITIONATTR_ABSORBS) {
 		for (int32_t i = 0; i < CombatType_t::COMBAT_COUNT; ++i) {
@@ -1287,10 +1296,6 @@ void ConditionRegeneration::addCondition(std::shared_ptr<Creature> creature, con
 		healthGain = conditionRegen->healthGain;
 		manaGain = conditionRegen->manaGain;
 	}
-
-	if (const auto &player = creature->getPlayer()) {
-		player->sendStats();
-	}
 }
 
 bool ConditionRegeneration::unserializeProp(ConditionAttr_t attr, PropStream &propStream) {
@@ -1325,6 +1330,11 @@ void ConditionRegeneration::serialize(PropWriteStream &propWriteStream) {
 bool ConditionRegeneration::executeCondition(const std::shared_ptr<Creature> &creature, int32_t interval) {
 	internalHealthTicks += interval;
 	internalManaTicks += interval;
+
+	if (const auto &player = creature->getPlayer()) {
+		player->sendStats();
+	}
+
 	const auto &player = creature->getPlayer();
 	int32_t dailyStreak = 0;
 	if (player) {
@@ -1333,16 +1343,19 @@ bool ConditionRegeneration::executeCondition(const std::shared_ptr<Creature> &cr
 			dailyStreak = static_cast<int32_t>(optStreak->getNumber());
 		}
 	}
-	if (creature->getZoneType() != ZONE_PROTECTION || dailyStreak >= DAILY_REWARD_HP_REGENERATION) {
+
+	bool inProtectionZone = creature->getZoneType() == ZONE_PROTECTION;
+	if (!inProtectionZone || dailyStreak >= DAILY_REWARD_HP_REGENERATION) {
 		if (internalHealthTicks >= getHealthTicks(creature)) {
 			internalHealthTicks = 0;
 
 			int32_t realHealthGain = creature->getHealth();
-			if (creature->getZoneType() == ZONE_PROTECTION && dailyStreak >= DAILY_REWARD_DOUBLE_HP_REGENERATION) {
+			if (inProtectionZone && dailyStreak >= DAILY_REWARD_DOUBLE_HP_REGENERATION) {
 				creature->changeHealth(healthGain * 2); // Double regen from daily reward
 			} else {
 				creature->changeHealth(healthGain);
 			}
+
 			realHealthGain = creature->getHealth() - realHealthGain;
 
 			if (isBuff && realHealthGain > 0) {
@@ -1409,20 +1422,16 @@ bool ConditionRegeneration::setParam(ConditionParam_t param, int32_t value) {
 }
 
 uint32_t ConditionRegeneration::getHealthTicks(const std::shared_ptr<Creature> &creature) const {
-	const auto &player = creature->getPlayer();
-
-	if (player != nullptr && isBuff) {
-		return healthTicks / g_configManager().getFloat(RATE_SPELL_COOLDOWN);
+	if (isBuff) {
+		return static_cast<uint32_t>(static_cast<double>(healthTicks) / g_configManager().getFloat(RATE_SPELL_COOLDOWN));
 	}
 
 	return healthTicks;
 }
 
 uint32_t ConditionRegeneration::getManaTicks(const std::shared_ptr<Creature> &creature) const {
-	const auto &player = creature->getPlayer();
-
-	if (player != nullptr && isBuff) {
-		return manaTicks / g_configManager().getFloat(RATE_SPELL_COOLDOWN);
+	if (isBuff) {
+		return static_cast<uint32_t>(static_cast<double>(manaTicks) / g_configManager().getFloat(RATE_SPELL_COOLDOWN));
 	}
 
 	return manaTicks;
@@ -2626,7 +2635,7 @@ bool ConditionLight::startCondition(std::shared_ptr<Creature> creature) {
 	}
 
 	internalLightTicks = 0;
-	lightChangeInterval = ticks / lightInfo.level;
+	lightChangeInterval = ticks / std::max<uint8_t>(1, lightInfo.level);
 	creature->setCreatureLight(lightInfo);
 	g_game().changeLight(creature);
 	return true;
@@ -2711,7 +2720,7 @@ bool ConditionLight::unserializeProp(ConditionAttr_t attr, PropStream &propStrea
 			return false;
 		}
 
-		lightInfo.level = value;
+		lightInfo.level = std::max<uint32_t>(1, value);
 		return true;
 	} else if (attr == CONDITIONATTR_LIGHTTICKS) {
 		return propStream.read<uint32_t>(internalLightTicks);

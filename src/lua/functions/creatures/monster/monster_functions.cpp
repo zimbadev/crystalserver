@@ -63,6 +63,7 @@ void MonsterFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Monster", "setForgeStack", MonsterFunctions::luaMonsterSetForgeStack);
 	Lua::registerMethod(L, "Monster", "configureForgeSystem", MonsterFunctions::luaMonsterConfigureForgeSystem);
 	Lua::registerMethod(L, "Monster", "clearFiendishStatus", MonsterFunctions::luaMonsterClearFiendishStatus);
+	Lua::registerMethod(L, "Monster", "clearInfluencedStatus", MonsterFunctions::luaMonsterClearInfluencedStatus);
 	Lua::registerMethod(L, "Monster", "isForgeable", MonsterFunctions::luaMonsterIsForgeable);
 
 	Lua::registerMethod(L, "Monster", "getName", MonsterFunctions::luaMonsterGetName);
@@ -87,6 +88,8 @@ void MonsterFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Monster", "criticalDamage", MonsterFunctions::luaMonsterCriticalDamage);
 	Lua::registerMethod(L, "Monster", "addAttackSpell", MonsterFunctions::luaMonsterAddAttackSpell);
 	Lua::registerMethod(L, "Monster", "addDefenseSpell", MonsterFunctions::luaMonsterAddDefenseSpell);
+
+	Lua::registerMethod(L, "Monster", "walkTo", MonsterFunctions::luaMonsterWalkTo);
 
 	CharmFunctions::init(L);
 	LootFunctions::init(L);
@@ -586,6 +589,19 @@ int MonsterFunctions::luaMonsterClearFiendishStatus(lua_State* L) {
 	return 1;
 }
 
+int MonsterFunctions::luaMonsterClearInfluencedStatus(lua_State* L) {
+	// monster:clearInfluencedStatus()
+	const auto &monster = Lua::getUserdataShared<Monster>(L, 1);
+	if (!monster) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_MONSTER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 0;
+	}
+
+	monster->clearInfluencedStatus();
+	return 1;
+}
+
 int MonsterFunctions::luaMonsterIsForgeable(lua_State* L) {
 	// monster:isForgeable()
 	const auto &monster = Lua::getUserdataShared<Monster>(L, 1);
@@ -880,5 +896,21 @@ int MonsterFunctions::luaMonsterAddDefenseSpell(lua_State* L) {
 	} else {
 		lua_pushnil(L);
 	}
+	return 1;
+}
+
+int MonsterFunctions::luaMonsterWalkTo(lua_State* L) {
+	// monster:walkTo(position)
+	const auto &monster = Lua::getUserdataShared<Monster>(L, 1);
+	if (!monster) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_MONSTER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 0;
+	}
+
+	const Position &position = Lua::getPosition(L, 2);
+
+	monster->walkTo(position);
+	Lua::pushBoolean(L, true);
 	return 1;
 }

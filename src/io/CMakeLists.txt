@@ -4,6 +4,7 @@ target_sources(${PROJECT_NAME}_lib PRIVATE
     io_wheel.cpp
     iobestiary.cpp
     io_bosstiary.cpp
+    iobountytasks.cpp
     ioguild.cpp
     iologindata.cpp
     functions/iologindata_load_player.cpp
@@ -12,4 +13,5 @@ target_sources(${PROJECT_NAME}_lib PRIVATE
     iomapserialize.cpp
     iomarket.cpp
     ioprey.cpp
+    ioweeklytasks.cpp
 )

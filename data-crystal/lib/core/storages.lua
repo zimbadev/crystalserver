@@ -23,6 +23,7 @@ Reserved player action storage key ranges (const.hpp)
 
 Storage = {
 	-- Crystal Server storages
+	FreeQuests = 30057,
 	CrystalServer = {
 		Citizen = {
 			DesertCity = 9056,
@@ -86,7 +87,6 @@ Storage = {
 			S2 = 4559,
 		},
 	},
-
 	Quest = {
 		Key = {
 			ID1000 = 103,

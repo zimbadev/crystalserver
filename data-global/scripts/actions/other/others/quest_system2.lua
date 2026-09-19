@@ -204,8 +204,8 @@ So they decided to recruit Augur on their own. This way most of our forefathers 
 			},
 		},
 		storage = Storage.Quest.U8_4.InServiceOfYalahar.NotesPalimuth,
-		formerValue = 0,
-		newValue = 1,
+		formerValue = 1,
+		newValue = 2,
 	},
 	[14038] = {
 		items = {
@@ -235,8 +235,8 @@ To some extent, we have to work like a gardener. The rotten parts have to be cut
 			},
 		},
 		storage = Storage.Quest.U8_4.InServiceOfYalahar.NotesAzerus,
-		formerValue = 0,
-		newValue = 1,
+		formerValue = 1,
+		newValue = 2,
 	},
 	[14039] = {
 		items = {
@@ -309,7 +309,7 @@ This page seems to be part of a book about ancient rituals, mystic incantations 
 				name = "Falcon Bastion Access",
 			},
 		},
-		storage = Storage.Quest.U11_80.TheSecretLibrary.FalconBastionAccess,
+		storage = Storage.Quest.U11_80.TheSecretLibrary.FalconBastion.Access,
 	},
 	[20002] = {
 		items = {

@@ -27,12 +27,23 @@ enum StackPosType_t {
 	STACKPOS_FIND_THING,
 };
 
-enum WorldType_t {
-	WORLDTYPE_FIRST = 1,
-	WORLDTYPE_OPTIONAL = WORLDTYPE_FIRST,
-	WORLDTYPE_OPEN = 2,
-	WORLDTYPE_HARDCORE = 3,
-	WORLDTYPE_LAST = WORLDTYPE_HARDCORE
+enum WorldType_t : int8_t {
+	WORLDTYPE_NONE = -1,
+	WORLDTYPE_FIRST = 0,
+	WORLDTYPE_OPEN = WORLDTYPE_FIRST,
+	WORLDTYPE_OPTIONAL = 1,
+	WORLDTYPE_HARDCORE = 2,
+	WORLDTYPE_RETRO_PVP = 3,
+	WORLDTYPE_RETRO_HARDCORE = 4,
+	WORLDTYPE_LAST = WORLDTYPE_RETRO_HARDCORE
+};
+
+enum class Location_t {
+	None = 0,
+	Europe = 1,
+	NorthAmerica = 2,
+	SouthAmerica = 3,
+	Oceania = 4,
 };
 
 enum GameState_t {
@@ -114,6 +125,8 @@ enum class HighscoreCategories_t : uint8_t {
 	DROME = 12,
 	GOSHNAR = 13,
 	BOSS_POINTS = 14,
+	BOUNTY_POINTS_EARNED = 15,
+	WEEKLY_TASKS_COMPLETED = 16,
 };
 
 enum HighscoreType_t : uint8_t {

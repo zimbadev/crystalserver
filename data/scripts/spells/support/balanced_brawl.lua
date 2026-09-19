@@ -62,7 +62,7 @@ spell:mana(80)
 spell:needDirection(true)
 spell:isAggressive(false)
 spell:isPremium(true)
-spell:needLearn(false)
+
 spell:groupCooldown(2000)
 spell:cooldown(10000)
 spell:vocation("monk;true", "exalted monk;true")

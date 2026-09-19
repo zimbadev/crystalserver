@@ -22,7 +22,7 @@
     <CRYSTAL_LIBDEPS>
       $(CRYSTAL_COMMON_LIBDEPS);
       libprotobuf.lib;
-      zlib.lib;
+      z.lib;
       libcurl.lib;
       fmt.lib;
       spdlog.lib;
@@ -30,7 +30,7 @@
     <CRYSTAL_LIBDEPS_D>
       $(CRYSTAL_COMMON_LIBDEPS);
       libprotobufd.lib;
-      zlibd.lib;
+      z.lib;
       libcurl-d.lib;
       fmtd.lib;
       spdlogd.lib;

@@ -66,20 +66,26 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
 			npcHandler:say("Ahh. So Duncan sent you, eh? You must have done something really impressive. Okay, take this fine sabre from me, mate.", npc, creature)
 		end
-	elseif MsgContains(message, "mission") then
-		if player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 6 then
+		return true
+	end
+
+	if MsgContains(message, "mission") then
+		if player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 5 then
 			npcHandler:say({
 				"Hm, if you are that eager to work I have an idea how you could help me out. A distant relative of mine, the old sage Eremo lives on the isle Cormaya, near Edron. ...",
 				"He has not heard from me since ages. He might assume that I am dead. Since I don't want him to get into trouble for receiving a letter from a pirate I ask you to deliver it personally. ...",
 				"Of course it's a long journey but you asked for it. You will have to prove us your worth. Are you up to that?",
 			}, npc, creature)
 			npcHandler:setTopic(playerId, 2)
-		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 8 then
+		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 7 then
 			npcHandler:say("Thank you for delivering my letter to Eremo. I have no more missions for you.", npc, creature)
-			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 9)
+			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 8)
 			npcHandler:setTopic(playerId, 0)
 		end
-	elseif MsgContains(message, "warrior's sword") then
+		return true
+	end
+
+	if MsgContains(message, "warrior's sword") then
 		if player:hasOutfit(player:getSex() == PLAYERSEX_FEMALE and 142 or 134, 2) then
 			npcHandler:say("You already have this outfit!", npc, creature)
 			return true
@@ -104,7 +110,10 @@ local function creatureSayCallback(npc, creature, type, message)
 			end
 			npcHandler:setTopic(playerId, 0)
 		end
-	elseif MsgContains(message, "knight's sword") then
+		return true
+	end
+
+	if MsgContains(message, "knight's sword") then
 		if player:hasOutfit(player:getSex() == PLAYERSEX_FEMALE and 139 or 131, 1) then
 			npcHandler:say("You already have this outfit!", npc, creature)
 			return true
@@ -127,19 +136,27 @@ local function creatureSayCallback(npc, creature, type, message)
 			end
 			npcHandler:setTopic(playerId, 0)
 		end
-	elseif MsgContains(message, "forge") then
+		return true
+	end
+
+	if MsgContains(message, "forge") then
 		npcHandler:say("What would you like me to forge for you? A {knight's sword} or a {warrior's sword}?", npc, creature)
 		npcHandler:setTopic(playerId, 1)
-	elseif MsgContains(message, "yes") then
+		return true
+	end
+
+	if MsgContains(message, "yes") then
 		if npcHandler:getTopic(playerId) == 2 then
-			if player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 6 then
+			if player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 5 then
 				npcHandler:say("Alright, we will see. Here, take this letter and deliver it safely to old Eremo on Cormaya.", npc, creature)
-				player:addItem(3506, 1)
-				player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 7)
+				player:addItem(6113, 1)
+				player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 6)
 				npcHandler:setTopic(playerId, 0)
 			end
 		end
+		return true
 	end
+
 	return true
 end
 
@@ -147,6 +164,7 @@ keywordHandler:addKeyword({ "addon" }, StdModule.say, {
 	npcHandler = npcHandler,
 	text = "I can forge the finest {weapons} for knights and warriors. They may wear them proudly and visible to everyone.",
 })
+
 keywordHandler:addKeyword({ "weapons" }, StdModule.say, {
 	npcHandler = npcHandler,
 	text = "Would you rather be interested in a {knight's sword} or in a {warrior's sword}?",

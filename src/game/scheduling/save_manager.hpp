@@ -17,6 +17,9 @@
 
 #pragma once
 
+#include <vector>
+#include <mutex>
+
 #include "lib/thread/thread_pool.hpp"
 
 class KVStore;
@@ -35,6 +38,7 @@ public:
 	static SaveManager &getInstance();
 
 	void saveAll();
+	void saveAll(const std::vector<std::shared_ptr<Player>> &players, const std::vector<std::shared_ptr<Guild>> &guilds);
 	void scheduleAll();
 
 	bool savePlayer(std::shared_ptr<Player> player);
@@ -47,6 +51,7 @@ private:
 	void schedulePlayer(std::weak_ptr<Player> player);
 	bool doSavePlayer(std::shared_ptr<Player> player);
 
+	std::mutex m_mapMutex;
 	std::atomic<std::chrono::steady_clock::time_point> m_scheduledAt;
 	phmap::parallel_flat_hash_map<uint32_t, std::chrono::steady_clock::time_point> m_playerMap;
 

@@ -28,7 +28,17 @@ function callback.monsterOnDropLoot(monster, corpse)
 			msgSuffix = msgSuffix .. (string.len(msgSuffix) > 0 and ", gut charm" or "gut charm")
 		end
 	end
-	corpse:setAttribute(ITEM_ATTRIBUTE_LOOTMESSAGE_SUFFIX, existingSuffix .. msgSuffix)
+
+	local finalSuffix = ""
+	if string.len(existingSuffix) > 0 and string.len(msgSuffix) > 0 then
+		finalSuffix = existingSuffix .. " + " .. msgSuffix
+	elseif string.len(msgSuffix) > 0 then
+		finalSuffix = msgSuffix
+	else
+		finalSuffix = existingSuffix
+	end
+
+	corpse:setAttribute(ITEM_ATTRIBUTE_LOOTMESSAGE_SUFFIX, finalSuffix)
 end
 
 callback:register()

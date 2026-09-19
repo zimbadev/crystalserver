@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 #pragma once
 
+#include <algorithm>
 #include <vector>
 #include <string>
 #include <utility>
@@ -24,6 +25,7 @@
 #include "lib/di/container.hpp"
 
 #include "enums/account_coins.hpp"
+#include "enums/account_errors.hpp"
 #include "account/account_info.hpp"
 #include "account/account_repository.hpp"
 
@@ -38,13 +40,26 @@ namespace tests {
 		}
 
 		void addAccount(const std::string &descriptor, const AccountInfo &acc) {
+			// `accounts`.`id` is the primary key in AccountRepositoryDB, which reads a
+			// row back with WHERE `id` = ?, so at most one account can ever carry a
+			// given id. Mirror that here: a write reusing an id replaces the entry
+			// holding it, rather than leaving two for loadByID to pick between by
+			// unspecified iteration order.
+			for (auto it = accounts.begin(); it != accounts.end();) {
+				if (it->first != descriptor && it->second.id == acc.id) {
+					it = accounts.erase(it);
+				} else {
+					++it;
+				}
+			}
+
 			accounts[descriptor] = acc;
 		}
 
-		bool loadByID(const uint32_t &id, std::unique_ptr<AccountInfo> &acc) final {
+		bool loadByID(const uint32_t &id, AccountInfo &acc) final {
 			for (const auto &account : accounts) {
 				if (account.second.id == id) {
-					acc = std::make_unique<AccountInfo>(account.second);
+					acc = account.second;
 					return true;
 				}
 			}
@@ -52,29 +67,29 @@ namespace tests {
 			return false;
 		}
 
-		bool loadByEmailOrName(bool oldProtocol, const std::string &email, std::unique_ptr<AccountInfo> &acc) final {
+		bool loadByEmailOrName(bool oldProtocol, const std::string &email, AccountInfo &acc) final {
 			auto account = accounts.find(email);
 
 			if (account == accounts.end()) {
 				return false;
 			}
 
-			acc = std::make_unique<AccountInfo>(account->second);
+			acc = account->second;
 			return true;
 		}
 
-		bool loadBySession(const std::string &sessionKey, std::unique_ptr<AccountInfo> &acc) final {
+		bool loadBySession(const std::string &sessionKey, AccountInfo &acc) final {
 			auto account = accounts.find(sessionKey);
 
 			if (account == accounts.end()) {
 				return false;
 			}
 
-			acc = std::make_unique<AccountInfo>(account->second);
+			acc = account->second;
 			return true;
 		}
 
-		bool save(const std::unique_ptr<AccountInfo> &accInfo) final {
+		bool save(const AccountInfo &accInfo) final {
 			return !failSave;
 		}
 
@@ -83,7 +98,7 @@ namespace tests {
 			return !failGetPassword;
 		}
 
-		bool getCoins(const uint32_t &id, CoinType type, uint32_t &coins) final {
+		bool getCoins(const uint32_t &id, const uint8_t &type, uint32_t &coins) final {
 			auto accountCoins = coins_.find(id);
 
 			if (accountCoins == coins_.end()) {
@@ -100,28 +115,79 @@ namespace tests {
 			return true;
 		}
 
-		bool setCoins(const uint32_t &id, CoinType type, const uint32_t &amount) final {
+		bool setCoins(const uint32_t &id, const uint8_t &type, const uint32_t &amount) final {
 			auto accountCoins = coins_.find(id);
 
 			if (accountCoins == coins_.end()) {
-				coins_[id] = phmap::flat_hash_map<CoinType, uint32_t>();
+				coins_[id] = phmap::flat_hash_map<uint8_t, uint32_t>();
 			}
 
 			coins_[id][type] = amount;
 			return !failAddCoins;
 		}
 
+		uint8_t removeCoins(
+			const uint32_t &id,
+			const uint8_t &primaryType,
+			const uint8_t &secondaryType,
+			const uint32_t &amount,
+			const std::string &detail,
+			uint32_t &primaryCoinsRemoved,
+			uint32_t &secondaryCoinsRemoved
+		) final {
+			if (primaryType == secondaryType) {
+				return enumToValue(AccountErrors_t::Storage);
+			}
+
+			if (failAddCoins) {
+				primaryCoinsRemoved = 0;
+				secondaryCoinsRemoved = 0;
+				return enumToValue(AccountErrors_t::Storage);
+			}
+
+			auto accountCoins = coins_.find(id);
+			if (accountCoins == coins_.end()) {
+				return enumToValue(AccountErrors_t::RemoveCoins);
+			}
+
+			const auto primaryIt = accountCoins->second.find(primaryType);
+			const auto secondaryIt = accountCoins->second.find(secondaryType);
+			const uint32_t primaryCoins = primaryIt == accountCoins->second.end() ? 0 : primaryIt->second;
+			const uint32_t secondaryCoins = secondaryIt == accountCoins->second.end() ? 0 : secondaryIt->second;
+
+			if (static_cast<uint64_t>(primaryCoins) + static_cast<uint64_t>(secondaryCoins) < amount) {
+				return enumToValue(AccountErrors_t::RemoveCoins);
+			}
+
+			primaryCoinsRemoved = std::min(primaryCoins, amount);
+			secondaryCoinsRemoved = amount - primaryCoinsRemoved;
+
+			coins_[id][primaryType] = primaryCoins - primaryCoinsRemoved;
+			coins_[id][secondaryType] = secondaryCoins - secondaryCoinsRemoved;
+
+			if (!detail.empty()) {
+				if (primaryCoinsRemoved > 0) {
+					registerCoinsTransaction(id, enumToValue(CoinTransactionType::Remove), primaryCoinsRemoved, primaryType, detail);
+				}
+				if (secondaryCoinsRemoved > 0) {
+					registerCoinsTransaction(id, enumToValue(CoinTransactionType::Remove), secondaryCoinsRemoved, secondaryType, detail);
+				}
+			}
+
+			return enumToValue(AccountErrors_t::Ok);
+		}
+
 		bool registerCoinsTransaction(
 			const uint32_t &id,
-			CoinTransactionType type,
+			uint8_t type,
 			uint32_t coins,
-			CoinType coinType,
+			const uint8_t &coinType,
 			const std::string &description
 		) final {
 			auto accountCoins = coinsTransactions_.find(id);
 
 			if (accountCoins == coinsTransactions_.end()) {
-				coinsTransactions_[id] = std::vector<std::tuple<CoinTransactionType, uint32_t, CoinType, std::string>>();
+				coinsTransactions_[id] = std::vector<std::tuple<uint8_t, uint32_t, uint8_t, std::string>>();
 			}
 
 			coinsTransactions_[id].emplace_back(type, coins, coinType, description);
@@ -158,8 +224,8 @@ namespace tests {
 		bool failAuthenticateFromSession = false;
 		std::string password_ = "123456";
 		phmap::flat_hash_map<std::string, AccountInfo> accounts;
-		phmap::flat_hash_map<uint32_t, phmap::flat_hash_map<CoinType, uint32_t>> coins_;
-		phmap::flat_hash_map<uint32_t, std::vector<std::tuple<CoinTransactionType, uint32_t, CoinType, std::string>>> coinsTransactions_;
+		phmap::flat_hash_map<uint32_t, phmap::flat_hash_map<uint8_t, uint32_t>> coins_;
+		phmap::flat_hash_map<uint32_t, std::vector<std::tuple<uint8_t, uint32_t, uint8_t, std::string>>> coinsTransactions_;
 	};
 }
 

@@ -91,6 +91,8 @@ monster.loot = {
 	{ name = "green gem", chance = 8348, maxCount = 1 },
 	{ name = "ultimate spirit potion", chance = 10934, maxCount = 18 },
 	{ name = "white gem", chance = 9600, maxCount = 3 },
+	{ id = 43895, chance = 360 }, -- Bag you covet
+	{ name = "darklight geode", chance = 500 },
 }
 
 monster.attacks = {

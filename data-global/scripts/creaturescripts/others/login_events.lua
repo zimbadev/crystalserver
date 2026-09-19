@@ -6,6 +6,7 @@ function loginEvents.onLogin(player)
 		--Cults Of Tibia Quest
 		"HealthPillar",
 		"YalahariHealth",
+		"RottenBloodLogin",
 	}
 
 	for i = 1, #events do

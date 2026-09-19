@@ -251,7 +251,7 @@ function Hireling:setOutfit(outfit)
 	self.lookhead = outfit.lookHead
 	self.lookbody = outfit.lookBody
 	self.looklegs = outfit.lookLegs
-	self.lookfeet = outfit.lookHead
+	self.lookfeet = outfit.lookFeet
 	self.lookAddons = outfit.lookAddons
 end
 
@@ -438,6 +438,17 @@ function GetHirelingSkillNameById(id)
 	return nil
 end
 
+function getHirelingByCid(cid)
+	local hireling
+	for i = 1, #HIRELINGS do
+		hireling = HIRELINGS[i]
+		if hireling.cid == cid then
+			return hireling
+		end
+	end
+	return nil
+end
+
 function GetHirelingOutfitNameById(id)
 	local outfitName = nil
 	for _, outfit in pairs(HIRELING_OUTFITS) do
@@ -452,7 +463,8 @@ function GetHirelingOutfitNameById(id)
 end
 
 function HirelingsInit()
-	local rows = db.storeQuery("SELECT * FROM `player_hirelings`")
+	local query = string.format("SELECT `ph`.* FROM `player_hirelings` AS `ph` INNER JOIN `players` as `p` ON `p`.`id` = `ph`.`player_id` WHERE `p`.`world_id` = %d", configManager.getNumber(configKeys.WORLD_ID))
+	local rows = db.storeQuery(query)
 	if rows then
 		local player_id, hireling
 		repeat

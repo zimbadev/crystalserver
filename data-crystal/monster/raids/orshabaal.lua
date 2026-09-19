@@ -121,7 +121,7 @@ monster.loot = {
 	{ id = 6299, chance = 50000 }, -- death ring
 	{ name = "demonic essence", chance = 100000 },
 	{ name = "assassin star", chance = 12500, maxCount = 42 },
-	{ name = "great mana potion", chance = 33333 },
+	{ id = 238, chance = 33333 }, -- great mana potion
 	{ name = "great health potion", chance = 20000 },
 	{ name = "great spirit potion", chance = 12500 },
 	{ name = "ultimate health potion", chance = 33333 },

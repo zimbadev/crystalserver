@@ -44,5 +44,5 @@ spell:groupCooldown(2 * 1000)
 spell:vocation("paladin;true", "royal paladin;true")
 spell:hasParams(true)
 spell:isAggressive(false)
-spell:needLearn(true)
+
 spell:register()

@@ -83,7 +83,7 @@ monster.loot = {
 	{ name = "platinum coin", chance = 80540, maxCount = 10 },
 	{ name = "small enchanted sapphire", chance = 6730, maxCount = 5 },
 	{ name = "combat knife", chance = 5710 },
-	{ name = "great mana potion", chance = 5690 },
+	{ id = 238, chance = 5690 }, -- great mana potion
 	{ name = "rainbow quartz", chance = 3810, maxCount = 3 },
 	{ name = "small sapphire", chance = 3590, maxCount = 2 },
 	{ id = 3039, chance = 2660 }, -- red gem

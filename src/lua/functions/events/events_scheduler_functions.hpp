@@ -25,6 +25,8 @@ private:
 	static int luaEventsSchedulergetEventSLoot(lua_State* L);
 	static int luaEventsSchedulergetEventSBossLoot(lua_State* L);
 	static int luaEventsSchedulergetEventSSkill(lua_State* L);
+	static int luaEventsSchedulergetEventSFiendish(lua_State* L);
+	static int luaEventsSchedulergetEventSInfluenced(lua_State* L);
 	static int luaEventsSchedulergetEventSExp(lua_State* L);
 	static int luaEventsSchedulergetSpawnMonsterSchedule(lua_State* L);
 };

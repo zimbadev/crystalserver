@@ -80,7 +80,7 @@ monster.loot = {
 	{ id = 3115, chance = 39690, maxCount = 1 }, -- bone
 	{ name = "carnisylvan finger", chance = 17490, maxCount = 4 },
 	{ name = "carnisylvan bark", chance = 11490, maxCount = 5 },
-	{ name = "great mana potion", chance = 9660, maxCount = 4 },
+	{ id = 238, chance = 9660, maxCount = 4 }, -- great mana potion
 	{ name = "underworld rod", chance = 4440 },
 	{ name = "wand of starstorm", chance = 3660 },
 	{ name = "hailstorm rod", chance = 3660 },

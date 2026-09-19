@@ -21,6 +21,7 @@
 #include "creatures/combat/spells.hpp"
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
+#include "items/items.hpp"
 #include "game/game.hpp"
 #include "io/io_bosstiary.hpp"
 #include "lua/scripts/scripts.hpp"
@@ -103,6 +104,7 @@ void MonsterTypeFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "MonsterType", "getLoot", MonsterTypeFunctions::luaMonsterTypeGetLoot);
 	Lua::registerMethod(L, "MonsterType", "addLoot", MonsterTypeFunctions::luaMonsterTypeAddLoot);
+	Lua::registerMethod(L, "MonsterType", "getSurpriseBagLoot", MonsterTypeFunctions::luaMonsterTypeGetSurpriseBagLoot);
 
 	Lua::registerMethod(L, "MonsterType", "getCreatureEvents", MonsterTypeFunctions::luaMonsterTypeGetCreatureEvents);
 	Lua::registerMethod(L, "MonsterType", "registerEvent", MonsterTypeFunctions::luaMonsterTypeRegisterEvent);
@@ -162,6 +164,9 @@ void MonsterTypeFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "MonsterType", "variant", MonsterTypeFunctions::luaMonsterTypeVariant);
 	Lua::registerMethod(L, "MonsterType", "getMonstersByRace", MonsterTypeFunctions::luaMonsterTypeGetMonstersByRace);
 	Lua::registerMethod(L, "MonsterType", "getMonstersByBestiaryStars", MonsterTypeFunctions::luaMonsterTypeGetMonstersByBestiaryStars);
+
+	Lua::registerMethod(L, "MonsterType", "canWalk", MonsterTypeFunctions::luaMonsterTypeCanWalk);
+	Lua::registerMethod(L, "MonsterType", "canTarget", MonsterTypeFunctions::luaMonsterTypeCanTarget);
 }
 
 void MonsterTypeFunctions::createMonsterTypeLootLuaTable(lua_State* L, const std::vector<LootBlock> &lootList) {
@@ -959,6 +964,7 @@ int MonsterTypeFunctions::luaMonsterTypeConditionImmunities(lua_State* L) {
 		                "Unknown immunity name: {} for monster: {}",
 		                immunity, monsterType->name);
 		lua_pushnil(L);
+		return 1;
 	}
 
 	monsterType->info.m_conditionImmunities[static_cast<size_t>(conditionType)] = true;
@@ -1179,6 +1185,25 @@ int MonsterTypeFunctions::luaMonsterTypeGetLoot(lua_State* L) {
 	}
 
 	createMonsterTypeLootLuaTable(L, monsterType->info.lootItems);
+	return 1;
+}
+
+int MonsterTypeFunctions::luaMonsterTypeGetSurpriseBagLoot(lua_State* L) {
+	// monsterType:getSurpriseBagLoot()
+	const auto &monsterType = Lua::getUserdataShared<MonsterType>(L, 1);
+	if (!monsterType) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const auto drops = Item::items.rollSurpriseBagLoot(monsterType);
+	lua_createtable(L, 0, drops.size());
+	for (const auto &drop : drops) {
+		lua_pushnumber(L, drop.itemId);
+		lua_createtable(L, 0, 1);
+		Lua::setField(L, "count", drop.count);
+		lua_settable(L, -3);
+	}
 	return 1;
 }
 
@@ -1412,6 +1437,10 @@ int MonsterTypeFunctions::luaMonsterTypeRace(lua_State* L) {
 				monsterType->info.race = RACE_ENERGY;
 			} else if (race == "ink") {
 				monsterType->info.race = RACE_INK;
+			} else if (race == "chocolate") {
+				monsterType->info.race = RACE_CHOCOLATE;
+			} else if (race == "candy") {
+				monsterType->info.race = RACE_CANDY;
 			} else {
 				g_logger().warn("[MonsterTypeFunctions::luaMonsterTypeRace] - "
 				                "Unknown race type {}",
@@ -1927,6 +1956,42 @@ int MonsterTypeFunctions::luaMonsterTypeGetMonstersByBestiaryStars(lua_State* L)
 		Lua::pushUserdata<MonsterType>(L, monsterType);
 		Lua::setMetatable(L, -1, "MonsterType");
 		lua_rawseti(L, -2, ++index);
+	}
+	return 1;
+}
+
+int MonsterTypeFunctions::luaMonsterTypeCanWalk(lua_State* L) {
+	// get: monsterType:canWalk() set: monsterType:canWalk(bool)
+	const auto &monsterType = Lua::getUserdataShared<MonsterType>(L, 1);
+	if (!monsterType) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_CREATURE_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	if (lua_gettop(L) == 1) {
+		Lua::pushBoolean(L, monsterType->info.canWalk);
+	} else {
+		monsterType->info.canWalk = Lua::getBoolean(L, 2);
+		Lua::pushBoolean(L, true);
+	}
+	return 1;
+}
+
+int MonsterTypeFunctions::luaMonsterTypeCanTarget(lua_State* L) {
+	// get: monsterType:canTarget() set: monsterType:canTarget(bool)
+	const auto &monsterType = Lua::getUserdataShared<MonsterType>(L, 1);
+	if (!monsterType) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_CREATURE_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	if (lua_gettop(L) == 1) {
+		Lua::pushBoolean(L, monsterType->info.canTarget);
+	} else {
+		monsterType->info.canTarget = Lua::getBoolean(L, 2);
+		Lua::pushBoolean(L, true);
 	}
 	return 1;
 }

@@ -1,17 +1,39 @@
--- Table structure `server_config`
-CREATE TABLE IF NOT EXISTS `server_config` (
-    `config` varchar(50) NOT NULL,
-    `value` varchar(256) NOT NULL DEFAULT '',
-    CONSTRAINT `server_config_pk` PRIMARY KEY (`config`)
+-- Table structure `worlds`
+CREATE TABLE IF NOT EXISTS `worlds` (
+    `id` int(3) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name` varchar(80) NOT NULL,
+    `type` enum('no-pvp','pvp','retro-pvp','pvp-enforced','retro-hardcore') NOT NULL,
+    `motd` varchar(255) NOT NULL DEFAULT '',
+    `location` enum('Europe','North America','South America','Oceania') NOT NULL,
+    `ip` varchar(15) NOT NULL,
+    `port` int(5) UNSIGNED NOT NULL,
+    `port_status` int(6) UNSIGNED NOT NULL,
+    `creation` int(11) NOT NULL DEFAULT 0,
+    CONSTRAINT `worlds_pk` PRIMARY KEY (`id`),
+    CONSTRAINT `worlds_unique` UNIQUE (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`) VALUES ('db_version', '55'), ('motd_hash', ''), ('motd_num', '0'), ('players_record', '0');
+INSERT INTO `worlds` (`name`, `type`, `motd`, `location`, `ip`, `port`, `port_status`, `creation`)
+VALUES ('Crystal', 'pvp', 'Welcome to the Crystal Server!', 'South America', '127.0.0.1', 7172, 7173, UNIX_TIMESTAMP());
+
+-- Table structure `server_config`
+CREATE TABLE IF NOT EXISTS `server_config` (
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
+    `config` varchar(50) NOT NULL,
+    `value` varchar(256) NOT NULL DEFAULT '',
+    CONSTRAINT `server_config_pk` PRIMARY KEY (`world_id`, `config`),
+    CONSTRAINT `server_config_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ('db_version', '67', 1), ('motd_hash', '', 1), ('motd_num', '0', 1), ('players_record', '0', 1);
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `name` varchar(32) NOT NULL,
-    `password` TEXT NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
     `email` varchar(255) NOT NULL DEFAULT '',
     `premdays` int(11) NOT NULL DEFAULT '0',
     `premdays_purchased` int(11) NOT NULL DEFAULT '0',
@@ -24,7 +46,9 @@ CREATE TABLE IF NOT EXISTS `accounts` (
     `recruiter` INT(6) DEFAULT 0,
     `house_bid_id` int(11) NOT NULL DEFAULT '0',
     CONSTRAINT `accounts_pk` PRIMARY KEY (`id`),
-    CONSTRAINT `accounts_unique` UNIQUE (`name`)
+    CONSTRAINT `accounts_unique` UNIQUE (`name`),
+    INDEX `accounts_email` (`email`),
+    INDEX `accounts_password` (`password`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `coins_transactions`
@@ -135,6 +159,7 @@ CREATE TABLE IF NOT EXISTS `players` (
     `bonus_rerolls` bigint(21) NOT NULL DEFAULT '0',
     `prey_wildcard` bigint(21) NOT NULL DEFAULT '0',
     `task_points` bigint(21) NOT NULL DEFAULT '0',
+    `soulseals_points` int unsigned NOT NULL DEFAULT '0',
     `quickloot_fallback` tinyint(1) DEFAULT '0',
     `lookmountbody` tinyint(3) unsigned NOT NULL DEFAULT '0',
     `lookmountfeet` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -148,16 +173,27 @@ CREATE TABLE IF NOT EXISTS `players` (
     `forge_dust_level` bigint(21) NOT NULL DEFAULT '100',
     `randomize_mount` tinyint(1) NOT NULL DEFAULT '0',
     `boss_points` int NOT NULL DEFAULT '0',
+    `loyalty_points` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `animus_mastery` mediumblob DEFAULT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     `virtue` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `harmony` int(10) UNSIGNED NOT NULL DEFAULT '0',
+    `weapon_proficiencies` mediumblob DEFAULT NULL,
+    `charbazaar` tinyint(1) NOT NULL DEFAULT '0',
+    `is_locked` tinyint(1) NOT NULL DEFAULT '0',
+    `locked_at` bigint(20) NOT NULL DEFAULT '0',
+    `lock_reason` varchar(64) NOT NULL DEFAULT '',
     INDEX `account_id` (`account_id`),
     INDEX `vocation` (`vocation`),
+    INDEX `idx_players_concurrency_lock` (`is_locked`, `locked_at`),
     CONSTRAINT `players_pk` PRIMARY KEY (`id`),
     CONSTRAINT `players_unique` UNIQUE (`name`),
     CONSTRAINT `players_account_fk`
-    FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
-    ON DELETE CASCADE
+        FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
+        ON DELETE CASCADE,
+    CONSTRAINT `players_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `account_bans`
@@ -207,6 +243,7 @@ CREATE TABLE IF NOT EXISTS `account_viplist` (
     `description` varchar(128) NOT NULL DEFAULT '',
     `icon` tinyint(2) UNSIGNED NOT NULL DEFAULT '0',
     `notify` tinyint(1) NOT NULL DEFAULT '0',
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `account_id` (`account_id`),
     INDEX `player_id` (`player_id`),
     CONSTRAINT `account_viplist_unique` UNIQUE (`account_id`, `player_id`),
@@ -214,8 +251,11 @@ CREATE TABLE IF NOT EXISTS `account_viplist` (
     FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
     ON DELETE CASCADE,
     CONSTRAINT `account_viplist_player_fk`
-    FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
-    ON DELETE CASCADE
+        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE,
+    CONSTRAINT `account_viplist_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `account_vipgroup`
@@ -224,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `account_vipgroups` (
     `account_id` int(11) UNSIGNED NOT NULL COMMENT 'id of account whose vip group entry it is',
     `name` varchar(128) NOT NULL,
     `customizable` BOOLEAN NOT NULL DEFAULT '1',
-    CONSTRAINT `account_vipgroups_pk` PRIMARY KEY (`id`, `account_id`),
+    CONSTRAINT `account_vipgroups_pk` PRIMARY KEY (`id`),
     CONSTRAINT `account_vipgroups_accounts_fk`
         FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
         ON DELETE CASCADE
@@ -354,11 +394,15 @@ CREATE TABLE IF NOT EXISTS `guilds` (
     `residence` int(11) NOT NULL DEFAULT '0',
     `balance` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
     `points` int(11) NOT NULL DEFAULT '0',
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     CONSTRAINT `guilds_pk` PRIMARY KEY (`id`),
     CONSTRAINT `guilds_name_unique` UNIQUE (`name`),
     CONSTRAINT `guilds_owner_unique` UNIQUE (`ownerid`),
     CONSTRAINT `guilds_ownerid_fk`
         FOREIGN KEY (`ownerid`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE,
+    CONSTRAINT `guilds_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -479,9 +523,13 @@ CREATE TABLE IF NOT EXISTS `houses` (
     `bid_end_date` int(11) NOT NULL DEFAULT '0',
     `state` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
     `transfer_status` tinyint(1) DEFAULT '0',
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `owner` (`owner`),
     INDEX `town_id` (`town_id`),
-    CONSTRAINT `houses_pk` PRIMARY KEY (`id`)
+    CONSTRAINT `houses_pk` PRIMARY KEY (`id`, `world_id`),
+    CONSTRAINT `houses_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -489,21 +537,27 @@ CREATE TABLE IF NOT EXISTS `houses` (
 --
 DELIMITER //
 CREATE TRIGGER `ondelete_players` BEFORE DELETE ON `players` FOR EACH ROW BEGIN
-    UPDATE `houses` SET `owner` = 0 WHERE `owner` = OLD.`id`;
+    UPDATE `houses` SET `owner` = 0 WHERE `owner` = OLD.`id` AND `world_id` = OLD.`world_id`;
 END
 //
 DELIMITER ;
 
 -- Table structure `house_lists`
 CREATE TABLE IF NOT EXISTS `house_lists` (
-  `house_id` int NOT NULL,
-  `listid` int NOT NULL,
-  `version` bigint NOT NULL DEFAULT '0',
-  `list` text NOT NULL,
-  PRIMARY KEY (`house_id`, `listid`),
-  KEY `house_id_index` (`house_id`),
-  KEY `version` (`version`),
-  CONSTRAINT `houses_list_house_fk` FOREIGN KEY (`house_id`) REFERENCES `houses` (`id`) ON DELETE CASCADE
+    `house_id` int NOT NULL,
+    `listid` int NOT NULL,
+    `version` bigint NOT NULL DEFAULT '0',
+    `list` text NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
+    PRIMARY KEY (`house_id`, `listid`),
+    KEY `house_id_index` (`house_id`),
+    KEY `version` (`version`),
+    CONSTRAINT `houses_list_house_fk`
+        FOREIGN KEY (`house_id`) REFERENCES `houses` (`id`)
+        ON DELETE CASCADE,
+    CONSTRAINT `house_lists_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Table structure `ip_bans`
@@ -533,10 +587,14 @@ CREATE TABLE IF NOT EXISTS `market_history` (
     `inserted` bigint(20) UNSIGNED NOT NULL,
     `state` tinyint(1) UNSIGNED NOT NULL,
     `tier` tinyint UNSIGNED NOT NULL DEFAULT '0',
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `player_id` (`player_id`,`sale`),
     CONSTRAINT `market_history_pk` PRIMARY KEY (`id`),
     CONSTRAINT `market_history_players_fk`
         FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE,
+    CONSTRAINT `market_history_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -551,36 +609,41 @@ CREATE TABLE IF NOT EXISTS `market_offers` (
     `anonymous` tinyint(1) NOT NULL DEFAULT '0',
     `price` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
     `tier` tinyint UNSIGNED NOT NULL DEFAULT '0',
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `sale` (`sale`,`itemtype`),
     INDEX `created` (`created`),
     INDEX `player_id` (`player_id`),
     CONSTRAINT `market_offers_pk` PRIMARY KEY (`id`),
     CONSTRAINT `market_offers_players_fk`
         FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE,
+    CONSTRAINT `market_offers_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Table structure `players_online`
 CREATE TABLE IF NOT EXISTS `players_online` (
     `player_id` int(11) NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     CONSTRAINT `players_online_pk` PRIMARY KEY (`player_id`),
-    CONSTRAINT `players_online_players_fk`
-        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+    CONSTRAINT `players_online_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
         ON DELETE CASCADE
 ) ENGINE=MEMORY DEFAULT CHARSET=utf8;
 
 -- Table structure `player_charm`
 CREATE TABLE IF NOT EXISTS `player_charms` (
     `player_id` int(11) NOT NULL,
-    `charm_points` SMALLINT NOT NULL DEFAULT '0',
-    `minor_charm_echoes` SMALLINT NOT NULL DEFAULT '0',
-    `max_charm_points` SMALLINT NOT NULL DEFAULT '0',
-    `max_minor_charm_echoes` SMALLINT NOT NULL DEFAULT '0',
+    `charm_points` int(10) UNSIGNED NOT NULL DEFAULT 0,
+    `minor_charm_echoes` int(10) UNSIGNED NOT NULL DEFAULT 0,
+    `max_charm_points` int(10) UNSIGNED NOT NULL DEFAULT 0,
+    `max_minor_charm_echoes` int(10) UNSIGNED NOT NULL DEFAULT 0,
     `charm_expansion` BOOLEAN NOT NULL DEFAULT FALSE,
     `UsedRunesBit` INT NOT NULL DEFAULT '0',
     `UnlockedRunesBit` INT NOT NULL DEFAULT '0',
     `charms` BLOB NULL,
-    `tracker list` BLOB NULL,
+    `tracker_list` BLOB NULL,
     CONSTRAINT `player_charms_players_fk`
         FOREIGN KEY (`player_id`) REFERENCES `players` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
@@ -758,6 +821,58 @@ CREATE TABLE IF NOT EXISTS `player_taskhunt` (
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+-- Table structure `player_bounty_tasks` (Winter Update 2025)
+CREATE TABLE IF NOT EXISTS `player_bounty_tasks` (
+    `player_id` int NOT NULL,
+    `state` tinyint NOT NULL DEFAULT 0,
+    `difficulty` tinyint NOT NULL DEFAULT 0,
+    `bounty_points` int NOT NULL DEFAULT 0,
+    `reroll_tokens` tinyint NOT NULL DEFAULT 0,
+    `free_reroll` bigint NOT NULL DEFAULT 0,
+    `active_raceid` int NOT NULL DEFAULT 0,
+    `active_kills` int NOT NULL DEFAULT 0,
+    `active_required_kills` int NOT NULL DEFAULT 0,
+    `active_reward_exp` int NOT NULL DEFAULT 0,
+    `active_reward_points` tinyint NOT NULL DEFAULT 0,
+    `active_task_grade` tinyint NOT NULL DEFAULT 0,
+    `active_task_difficulty` tinyint NOT NULL DEFAULT 0,
+    `talisman_damage_level` tinyint NOT NULL DEFAULT 0,
+    `talisman_lifeleech_level` tinyint NOT NULL DEFAULT 0,
+    `talisman_loot_level` tinyint NOT NULL DEFAULT 0,
+    `talisman_bestiary_level` tinyint NOT NULL DEFAULT 0,
+    `preferred_lists` BLOB NULL,
+    `current_creatures_list` BLOB NULL,
+    CONSTRAINT `player_bounty_tasks_pk` PRIMARY KEY (`player_id`),
+    CONSTRAINT `player_bounty_tasks_players_fk`
+        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table structure `player_weekly_tasks` (Winter Update 2025)
+CREATE TABLE IF NOT EXISTS `player_weekly_tasks` (
+    `player_id` int NOT NULL,
+    `has_expansion` BOOLEAN NOT NULL DEFAULT FALSE,
+    `difficulty` tinyint NOT NULL DEFAULT 0,
+    `any_creature_total_kills` int NOT NULL DEFAULT 0,
+    `any_creature_current_kills` int NOT NULL DEFAULT 0,
+    `completed_kill_tasks` tinyint NOT NULL DEFAULT 0,
+    `completed_delivery_tasks` tinyint NOT NULL DEFAULT 0,
+    `kill_task_reward_exp` int NOT NULL DEFAULT 0,
+    `delivery_task_reward_exp` int NOT NULL DEFAULT 0,
+    `reward_hunting_points` int NOT NULL DEFAULT 0,
+    `reward_soulseals` int NOT NULL DEFAULT 0,
+    `soulseals_points` int NOT NULL DEFAULT 0,
+    `needs_reward` tinyint NOT NULL DEFAULT 0,
+    `weekly_progress_finished` tinyint NOT NULL DEFAULT 0,
+    `kill_tasks` BLOB NULL,
+    `delivery_tasks` BLOB NULL,
+    CONSTRAINT `player_weekly_tasks_pk` PRIMARY KEY (`player_id`),
+    CONSTRAINT `player_weekly_tasks_players_fk`
+        FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
+        ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Table structure `player_bosstiary`
 CREATE TABLE IF NOT EXISTS `player_bosstiary` (
     `player_id` int NOT NULL,
@@ -860,9 +975,13 @@ CREATE TABLE IF NOT EXISTS `store_history` (
 CREATE TABLE IF NOT EXISTS `tile_store` (
     `house_id` int(11) NOT NULL,
     `data` longblob NOT NULL,
+    `world_id` int(3) UNSIGNED NOT NULL DEFAULT 1,
     INDEX `house_id` (`house_id`),
     CONSTRAINT `tile_store_account_fk`
         FOREIGN KEY (`house_id`) REFERENCES `houses` (`id`)
+        ON DELETE CASCADE,
+    CONSTRAINT `tile_store_worlds_fk`
+        FOREIGN KEY (`world_id`) REFERENCES `worlds` (`id`)
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -894,6 +1013,31 @@ CREATE TABLE IF NOT EXISTS `kv_store` (
   PRIMARY KEY (`key_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Table structure `market_web_orders`
+CREATE TABLE IF NOT EXISTS `market_web_orders` (
+  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `offer_id` INT(11) NOT NULL,
+  `buyer_id` INT(11) NOT NULL,
+  `buyer_account_id` INT(11) NOT NULL,
+  `seller_id` INT(11) NOT NULL,
+  `seller_account_id` INT(11) NOT NULL,
+  `itemtype` INT(11) NOT NULL,
+  `amount` INT(11) NOT NULL,
+  `price` BIGINT(20) UNSIGNED NOT NULL,
+  `tier` TINYINT(3) UNSIGNED NOT NULL DEFAULT 0,
+  `currency_type` VARCHAR(16) NOT NULL DEFAULT 'gold',
+  `world_id` INT(11) NOT NULL DEFAULT 0,
+  `status` ENUM('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
+  `fail_reason` VARCHAR(255) NOT NULL DEFAULT '',
+  `created_at` BIGINT(20) NOT NULL,
+  `processed_at` BIGINT(20) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  INDEX `idx_mwo_world_status_created` (`world_id`, `status`, `created_at`),
+  INDEX `idx_mwo_buyer` (`buyer_id`),
+  INDEX `idx_mwo_seller` (`seller_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 -- Create Account god/god
 INSERT INTO `accounts`
 (`id`, `name`, `email`, `password`, `type`) VALUES
@@ -902,11 +1046,11 @@ INSERT INTO `accounts`
 -- Create player on GOD account
 -- Create sample characters
 INSERT INTO `players`
-(`id`, `name`, `group_id`, `account_id`, `level`, `vocation`, `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `maglevel`, `mana`, `manamax`, `manaspent`, `town_id`, `conditions`, `cap`, `sex`, `skill_club`, `skill_club_tries`, `skill_sword`, `skill_sword_tries`, `skill_axe`, `skill_axe_tries`, `skill_dist`, `skill_dist_tries`) VALUES
-(1, 'Rook Sample', 1, 1, 2, 0, 155, 155, 100, 113, 115, 95, 39, 128, 2, 60, 60, 5936, 1, '', 410, 1, 12, 155, 12, 155, 12, 155, 12, 93),
-(2, 'Sorcerer Sample', 1, 1, 8, 1, 185, 185, 4200, 113, 115, 95, 39, 130, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
-(3, 'Druid Sample', 1, 1, 8, 2, 185, 185, 4200, 113, 115, 95, 39, 144, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
-(4, 'Paladin Sample', 1, 1, 8, 3, 185, 185, 4200, 113, 115, 95, 39, 129, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
-(5, 'Knight Sample', 1, 1, 8, 4, 185, 185, 4200, 113, 115, 95, 39, 131, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
-(6, 'Monk Sample', 1, 1, 8, 9, 185, 185, 4200, 113, 115, 95, 39, 1824, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0),
-(7, 'GOD', 6, 1, 2, 0, 155, 155, 100, 113, 115, 95, 39, 75, 0, 60, 60, 0, 8, '', 410, 1, 10, 0, 10, 0, 10, 0, 10, 0);
+(`id`, `name`, `group_id`, `account_id`, `level`, `vocation`, `health`, `healthmax`, `experience`, `lookbody`, `lookfeet`, `lookhead`, `looklegs`, `looktype`, `maglevel`, `mana`, `manamax`, `manaspent`, `town_id`, `conditions`, `cap`, `sex`, `skill_club`, `skill_club_tries`, `skill_sword`, `skill_sword_tries`, `skill_axe`, `skill_axe_tries`, `skill_dist`, `skill_dist_tries`, `world_id`) VALUES
+(1, 'Rook Sample', 1, 1, 2, 0, 155, 155, 100, 113, 115, 95, 39, 128, 2, 60, 60, 5936, 1, '', 410, 1, 12, 155, 12, 155, 12, 155, 12, 93, 1),
+(2, 'Sorcerer Sample', 1, 1, 8, 1, 185, 185, 4200, 113, 115, 95, 39, 130, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0, 1),
+(3, 'Druid Sample', 1, 1, 8, 2, 185, 185, 4200, 113, 115, 95, 39, 144, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0, 1),
+(4, 'Paladin Sample', 1, 1, 8, 3, 185, 185, 4200, 113, 115, 95, 39, 129, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0, 1),
+(5, 'Knight Sample', 1, 1, 8, 4, 185, 185, 4200, 113, 115, 95, 39, 131, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0, 1),
+(6, 'Monk Sample', 1, 1, 8, 9, 185, 185, 4200, 113, 115, 95, 39, 1824, 0, 90, 90, 0, 8, '', 470, 1, 10, 0, 10, 0, 10, 0, 10, 0, 1),
+(7, 'GOD', 6, 1, 2, 0, 155, 155, 100, 113, 115, 95, 39, 75, 0, 60, 60, 0, 8, '', 410, 1, 10, 0, 10, 0, 10, 0, 10, 0, 1);

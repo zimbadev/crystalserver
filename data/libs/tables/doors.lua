@@ -69,8 +69,12 @@ KeyDoorTable = {
 	{ lockedDoor = 28366, closedDoor = 28367, openDoor = 28369 },
 	{ lockedDoor = 30772, closedDoor = 30773, openDoor = 30776 },
 	{ lockedDoor = 30774, closedDoor = 30775, openDoor = 30777 },
+	{ lockedDoor = 33633, closedDoor = 33632, openDoor = 33636 },
+	{ lockedDoor = 33635, closedDoor = 33634, openDoor = 33637 },
 	{ lockedDoor = 37982, closedDoor = 37981, openDoor = 37985 },
 	{ lockedDoor = 37984, closedDoor = 37983, openDoor = 37986 },
+	{ lockedDoor = 39935, closedDoor = 39934, openDoor = 39938 },
+	{ lockedDoor = 39937, closedDoor = 39936, openDoor = 39939 },
 	{ lockedDoor = 44914, closedDoor = 44913, openDoor = 44917 },
 	{ lockedDoor = 44916, closedDoor = 44915, openDoor = 44918 },
 	{ lockedDoor = 49731, closedDoor = 49732, openDoor = 49735 },
@@ -158,8 +162,6 @@ CustomDoorTable = {
 	--{ closedDoor = 33336}, -- it's probably door of a quest
 	--{ closedDoor = 33632}, -- it's probably door of a quest
 	--{ closedDoor = 33634}, -- it's probably door of a quest
-	{ closedDoor = 33633, openDoor = 33636 },
-	{ closedDoor = 33635, openDoor = 33637 },
 	{ closedDoor = 34221, openDoor = 34222 },
 	{ closedDoor = 34223, openDoor = 34224 },
 	{ closedDoor = 15890, openDoor = 15891 },
@@ -176,6 +178,15 @@ CustomDoorTable = {
 	{ closedDoor = 48522, openDoor = 48526 },
 	{ closedDoor = 48528, openDoor = 48530 },
 	{ closedDoor = 48529, openDoor = 48531 },
+	-- AZZILON DOORS
+	{ closedDoor = 49678, openDoor = 49682 },
+	{ closedDoor = 49679, openDoor = 49682 },
+	{ closedDoor = 49680, openDoor = 49683 },
+	{ closedDoor = 49681, openDoor = 49683 },
+	{ closedDoor = 49684, openDoor = 49688 },
+	{ closedDoor = 49685, openDoor = 49688 },
+	{ closedDoor = 49686, openDoor = 49689 },
+	{ closedDoor = 49687, openDoor = 49689 },
 }
 
 -- These are the doors for missions, they need access from some mission (storage) to be able to enter. Put the storage value in the action id of the door and it will open only to the player who has the storage value.
@@ -194,6 +205,7 @@ QuestDoorTable = {
 	{ closedDoor = 5131, openDoor = 5132 },
 	{ closedDoor = 5287, openDoor = 5288 },
 	{ closedDoor = 5289, openDoor = 5290 },
+	{ closedDoor = 5745, openDoor = 5746 },
 	{ closedDoor = 5749, openDoor = 5748 },
 	{ closedDoor = 6201, openDoor = 6202 },
 	{ closedDoor = 6203, openDoor = 6204 },
@@ -240,7 +252,8 @@ QuestDoorTable = {
 	{ closedDoor = 39351, openDoor = 39353 },
 	{ closedDoor = 39352, openDoor = 39354 },
 	{ closedDoor = 42744, openDoor = 42745 },
-	{ closedDoor = 5745, openDoor = 5746 },
+	{ closedDoor = 51285, openDoor = 51286 },
+	{ closedDoor = 51287, openDoor = 51288 },
 }
 
 -- Level doors.

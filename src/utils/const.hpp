@@ -28,6 +28,7 @@ static constexpr int32_t INPUTMESSAGE_MAXSIZE = 4096;
 static constexpr int32_t CHANNEL_GUILD = 0x00;
 static constexpr int32_t CHANNEL_PARTY = 0x01;
 static constexpr int32_t CHANNEL_PRIVATE = 0xFFFF;
+static constexpr int32_t CHANNEL_DEFAULT = 0xFFFE; // internal usage only, there is no such channel
 
 // This is in miliseconds
 static constexpr int32_t EVENT_IMBUEMENT_AND_SERENE_STATUS_INTERVAL = 1000;
@@ -50,6 +51,26 @@ static constexpr int32_t SWIMMING_OUTFIT = 267;
 // [10000000 - 20000000];
 static constexpr int32_t PSTRG_RESERVED_RANGE_START = 10000000;
 static constexpr int32_t PSTRG_RESERVED_RANGE_SIZE = 10000000;
+
+//[2012 - 2022];
+static constexpr int32_t PSTRG_WING_RANGE_START = (PSTRG_RESERVED_RANGE_START + 2012);
+static constexpr int32_t PSTRG_WING_RANGE_SIZE = 10;
+static constexpr int32_t PSTRG_WING_CURRENTWING = (PSTRG_WING_RANGE_START + 10);
+
+//[2023 - 2033];
+static constexpr int32_t PSTRG_EFFECT_RANGE_START = (PSTRG_RESERVED_RANGE_START + 2023);
+static constexpr int32_t PSTRG_EFFECT_RANGE_SIZE = 10;
+static constexpr int32_t PSTRG_EFFECT_CURRENTEFFECT = (PSTRG_EFFECT_RANGE_START + 10);
+
+//[2034 - 2044];
+static constexpr int32_t PSTRG_AURA_RANGE_START = (PSTRG_RESERVED_RANGE_START + 2034);
+static constexpr int32_t PSTRG_AURA_RANGE_SIZE = 10;
+static constexpr int32_t PSTRG_AURA_CURRENTAURA = (PSTRG_AURA_RANGE_START + 10);
+
+//[2045 - 2055];
+static constexpr int32_t PSTRG_SHADER_RANGE_START = (PSTRG_RESERVED_RANGE_START + 2045);
+static constexpr int32_t PSTRG_SHADER_RANGE_SIZE = 10;
+static constexpr int32_t PSTRG_SHADER_CURRENTSHADER = (PSTRG_SHADER_RANGE_START + 10);
 
 // [3000 - 3500];
 static constexpr int32_t PSTRG_FAMILIARS_RANGE_START = (PSTRG_RESERVED_RANGE_START + 3000);

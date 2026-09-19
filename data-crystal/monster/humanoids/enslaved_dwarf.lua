@@ -96,7 +96,7 @@ monster.loot = {
 	{ name = "sapphire hammer", chance = 80 },
 	{ name = "spiked squelcher", chance = 80 },
 	{ name = "glorious axe", chance = 1940 },
-	{ name = "great mana potion", chance = 6660, maxCount = 2 },
+	{ id = 238, chance = 6660, maxCount = 2 }, -- great mana potion
 	{ name = "great health potion", chance = 7960 },
 	{ name = "shiny stone", chance = 4660 },
 	{ id = 12600, chance = 780 }, -- coal

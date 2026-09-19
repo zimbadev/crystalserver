@@ -84,10 +84,26 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ id = 3031, chance = 100000, maxCount = 100 }, -- gold coin
-	{ id = 3035, chance = 10000, maxCount = 3 }, -- platinum coin
-	{ id = 6499, chance = 2857 }, -- demonic essence
-	{ id = 5944, chance = 2500 }, -- soul orb
+	{ name = "gold coin", chance = 74230, maxCount = 10 },
+	{ name = "bullseye potion", chance = 74230, maxCount = 10 },
+	{ name = "mastermind potion", chance = 74230, maxCount = 10 },
+	{ name = "berserk potion", chance = 74230, maxCount = 17 },
+	{ name = "ultimate mana potion", chance = 74230, maxCount = 20 },
+	{ name = "ultimate spirit potion", chance = 74230, maxCount = 8 },
+	{ name = "supreme health potion", chance = 74230, maxCount = 8 },
+	{ name = "goblet of gloom", chance = 7000, maxCount = 1 },
+	{ name = "violet gem", chance = 7000, maxCount = 1 },
+	{ name = "gruesome fan", chance = 7000, maxCount = 1 },
+	{ name = "crystal coin", chance = 7000, maxCount = 200 },
+	{ name = "amber with a dragonfly", chance = 7000, maxCount = 1 },
+	{ name = "abomination's tongue", chance = 7000, maxCount = 1 },
+	{ name = "abomination's eye", chance = 7000, maxCount = 1 },
+	{ name = "abomination's tail", chance = 7000, maxCount = 1 },
+	{ name = "brooch of embracement", chance = 7000, maxCount = 1 },
+	{ name = "giant amethyst", chance = 7000, maxCount = 1 },
+	{ name = "giant topaz", chance = 7000, maxCount = 1 },
+	{ name = "raw watermelon tourmaline", chance = 7000, maxCount = 1 },
+	{ name = "fiery horseshoe", chance = 5990, maxCount = 1 },
 }
 
 monster.attacks = {

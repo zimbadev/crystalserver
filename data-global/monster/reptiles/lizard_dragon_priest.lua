@@ -93,7 +93,7 @@ monster.loot = {
 	{ name = "lizard leather", chance = 980 },
 	{ name = "lizard scale", chance = 1130 },
 	{ name = "strong mana potion", chance = 12110 },
-	{ name = "great mana potion", chance = 7940 },
+	{ id = 238, chance = 7940 }, -- great mana potion
 	{ name = "focus cape", chance = 660 },
 	{ name = "bunch of ripe rice", chance = 960 },
 	{ name = "zaoan shoes", chance = 450 },

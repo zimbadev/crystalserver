@@ -205,11 +205,11 @@ do
 	end
 
 	function MonsterType.getBossReward(self, lootFactor, topScore, equipmentOnly, lootTable, player)
-		if configManager.getNumber(configKeys.RATE_LOOT) <= 0 then
+		if configManager.getFloat(configKeys.RATE_LOOT) <= 0 then
 			return lootTable or {}
 		end
 
-		return self:generateLootRoll({
+		local bossLoot = self:generateLootRoll({
 			factor = lootFactor,
 			gut = false,
 			filter = function(itemType, unique)
@@ -222,5 +222,15 @@ do
 				return true
 			end,
 		}, lootTable, player)
+
+		local bagLoot = self:getSurpriseBagLoot() or {}
+		for itemId, info in pairs(bagLoot) do
+			if info.count and info.count > 0 then
+				bossLoot[itemId] = bossLoot[itemId] or { count = 0, gut = false }
+				bossLoot[itemId].count = (bossLoot[itemId].count or 0) + info.count
+			end
+		end
+
+		return bossLoot
 	end
 end

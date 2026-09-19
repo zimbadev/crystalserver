@@ -54,6 +54,10 @@ public:
 
 	void append(const NetworkMessage &msg) {
 		auto msgLen = msg.getLength();
+		if (!canAdd(msgLen)) {
+			g_logger().error("[OutputMessage::append]: Insufficient buffer space for NetworkMessage of size {}", msgLen);
+			return;
+		}
 		std::span<const unsigned char> sourceSpan(msg.getBuffer() + INITIAL_BUFFER_POSITION, msgLen);
 		std::span<unsigned char> destSpan(buffer.data() + info.position, msgLen);
 		std::ranges::copy(sourceSpan, destSpan.begin());
@@ -63,6 +67,10 @@ public:
 
 	void append(const OutputMessage_ptr &msg) {
 		auto msgLen = msg->getLength();
+		if (!canAdd(msgLen)) {
+			g_logger().error("[OutputMessage::append]: Insufficient buffer space for OutputMessage of size {}", msgLen);
+			return;
+		}
 		std::span<const unsigned char> sourceSpan(msg->getBuffer() + INITIAL_BUFFER_POSITION, msgLen);
 		std::span<unsigned char> destSpan(buffer.data() + info.position, msgLen);
 		std::ranges::copy(sourceSpan, destSpan.begin());

@@ -77,6 +77,15 @@ void BedItem::serializeAttr(PropWriteStream &propWriteStream) const {
 		// FIXME: should be stored as 64-bit, but we need to retain backwards compatibility
 		propWriteStream.write<uint32_t>(static_cast<uint32_t>(sleepStart));
 	}
+
+	Item::serializeAttr(propWriteStream);
+}
+
+void BedItem::onRemoved() {
+	Item::onRemoved();
+	if (house) {
+		house->removeBed(static_self_cast<BedItem>());
+	}
 }
 
 std::shared_ptr<BedItem> BedItem::getNextBedItem() {

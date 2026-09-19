@@ -23,7 +23,7 @@ npcConfig.flags = {
 	floorchange = false,
 }
 npcConfig.shop = {
-	{ itemName = "shovel", clientId = 3457, count = 1 },
+	{ itemName = "shovel", clientId = 3457, count = 50 },
 }
 
 -- On buy npc shop message
@@ -318,6 +318,9 @@ npcHandler:setMessage(MESSAGE_WALKAWAY, "Have a nice day.")
 
 npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 -- npcType registering the npcConfig table
 npcType:register(npcConfig)

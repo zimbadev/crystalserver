@@ -36,6 +36,8 @@ private:
 
 	static int luaGameGetExperienceForLevel(lua_State* L);
 	static int luaGameGetMonsterCount(lua_State* L);
+
+	static int luaGameReportShadowedScripts(lua_State* L);
 	static int luaGameGetPlayerCount(lua_State* L);
 	static int luaGameGetNpcCount(lua_State* L);
 	static int luaGameGetMonsterTypes(lua_State* L);
@@ -47,7 +49,6 @@ private:
 	static int luaGameSetGameState(lua_State* L);
 
 	static int luaGameGetWorldType(lua_State* L);
-	static int luaGameSetWorldType(lua_State* L);
 
 	static int luaGameGetReturnMessage(lua_State* L);
 
@@ -103,4 +104,19 @@ private:
 	static int luaGameGetMonstersByBestiaryStars(lua_State* L);
 
 	static int luaGameGetTitleByName(lua_State* L);
+
+	static int luaHouseGetHouseCountByAccount(lua_State* L);
+	static int luaGameSetGuildMotd(lua_State* L);
+
+	// Guild management functions
+	static int luaGameDisbandGuild(lua_State* L);
+	static int luaGameInvitePlayerToGuild(lua_State* L);
+	static int luaGameRemovePlayerFromGuild(lua_State* L);
+	static int luaGamePromotePlayer(lua_State* L);
+	static int luaGameDemotePlayer(lua_State* L);
+	static int luaGamePassLeadership(lua_State* L);
+	static int luaGameSetPlayerGuildNick(lua_State* L);
+	static int luaGameSetRankName(lua_State* L);
+	static int luaGameCreateGuild(lua_State* L);
+	static int luaGameJoinGuild(lua_State* L);
 };

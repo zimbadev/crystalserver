@@ -247,7 +247,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Mission06, 1)
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 18 then
-			npcHandler:say("Good. Go there and find out what taste he dislikes most: mouldy cheese, a piece of fur or abananaskin. Tell him to SNIFF, then the object. Show him the object and ask 'Do you like that?'.DONT let the guards know what you are doing.", npc, creature)
+			npcHandler:say("Good. Go there and find out what taste he dislikes most: mouldy cheese, a piece of fur or a banana skin. Tell him to SNIFF, then the object. Show him the object and ask 'Do you like that?'. DONT let the guards know what you are doing.", npc, creature)
 			player:setStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Mission06, 7)
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 19 then
@@ -276,7 +276,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		elseif npcHandler:getTopic(playerId) == 24 then
 			npcHandler:say("From now on you are a grand postman for special operations. You are an honoured member of our guild and earned the privilege of your own post horn. Here, take it.", npc, creature)
 			player:setStorageValue(Storage.Quest.U7_24.ThePostmanMissions.Rank, 4)
-			player:addItem(3252, 1)
+			player:addItem(2957, 1)
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 25 then
 			npcHandler:say("So listen well. Behind the lower left door you will find a bag. The letters in the bag are for none other than Santa Claus! Deliver them to his house on the isle of Vega, {use} thebag on his mailbox and report back here.", npc, creature)

@@ -28,17 +28,15 @@ Dispatcher &Dispatcher::getInstance() {
 }
 
 void Dispatcher::init() {
-	UPDATE_OTSYS_TIME();
-
 	threadPool.detach_task([this] {
 		std::unique_lock asyncLock(dummyMutex);
 
 		while (!threadPool.isStopped()) {
 			UPDATE_OTSYS_TIME();
 
+			mergeEvents();
 			executeEvents();
 			executeScheduledEvents();
-			mergeEvents();
 
 			if (!hasPendingTasks) {
 				signalSchedule.wait_for(asyncLock, timeUntilNextScheduledTask());
@@ -122,12 +120,8 @@ void Dispatcher::asyncWait(size_t requestSize, std::function<void(size_t i)> &&f
 
 void Dispatcher::executeEvents(const TaskGroup startGroup) {
 	for (uint_fast8_t groupId = static_cast<uint8_t>(startGroup); groupId < static_cast<uint8_t>(TaskGroup::Last); ++groupId) {
-		const auto isWalk = groupId == static_cast<uint8_t>(TaskGroup::Walk);
-
-		if (groupId == static_cast<uint8_t>(TaskGroup::Serial) || isWalk) {
-			mergeEvents();
+		if (groupId == static_cast<uint8_t>(TaskGroup::Serial) || groupId == static_cast<uint8_t>(TaskGroup::Walk)) {
 			executeSerialEvents(groupId);
-			mergeAsyncEvents();
 		} else {
 			executeParallelEvents(groupId);
 		}
@@ -163,17 +157,18 @@ void Dispatcher::executeScheduledEvents() {
 	}
 
 	dispacherContext.reset();
-
-	mergeAsyncEvents(); // merge async events requested by scheduled events
-	executeEvents(TaskGroup::GenericParallel); // execute async events requested by scheduled events
 }
 
-void Dispatcher::__mergeEvents(const std::array<uint8_t, 2> &groups, const bool mergeScheduledEvents) {
+void Dispatcher::__mergeEvents() {
 	for (const auto &thread : threads) {
 		std::scoped_lock lock(thread->mutex);
-		for (const auto group : groups) {
+		for (uint8_t group = 0; group < static_cast<uint8_t>(TaskGroup::Last); ++group) {
 			auto &threadTasks = thread->tasks[group];
 			auto &tasks = m_tasks[group];
+
+			if (threadTasks.empty()) {
+				continue;
+			}
 
 			if (threadTasks.size() > tasks.size()) {
 				tasks.swap(threadTasks);
@@ -185,24 +180,22 @@ void Dispatcher::__mergeEvents(const std::array<uint8_t, 2> &groups, const bool 
 			}
 		}
 
-		if (mergeScheduledEvents && !thread->scheduledTasks.empty()) {
+		if (!thread->scheduledTasks.empty()) {
 			scheduledTasks.insert(make_move_iterator(thread->scheduledTasks.begin()), make_move_iterator(thread->scheduledTasks.end()));
 			thread->scheduledTasks.clear();
 		}
 	}
+	checkPendingTasks();
 }
 
 // Merge only async thread events with main dispatch events
 void Dispatcher::mergeAsyncEvents() {
-	static constexpr auto groups = std::to_array({ static_cast<uint8_t>(TaskGroup::WalkParallel), static_cast<uint8_t>(TaskGroup::GenericParallel) });
-	__mergeEvents(groups, false);
+	__mergeEvents();
 }
 
 // Merge thread events with main dispatch events
 void Dispatcher::mergeEvents() {
-	static constexpr auto groups = std::to_array({ static_cast<uint8_t>(TaskGroup::Walk), static_cast<uint8_t>(TaskGroup::Serial) });
-	__mergeEvents(groups, true);
-	checkPendingTasks();
+	__mergeEvents();
 }
 
 std::chrono::milliseconds Dispatcher::timeUntilNextScheduledTask() const {

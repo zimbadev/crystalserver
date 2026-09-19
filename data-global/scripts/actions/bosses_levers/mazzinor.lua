@@ -11,6 +11,12 @@ local config = {
 		{ pos = Position(32724, 32773, 10), teleport = Position(32726, 32726, 10), effect = CONST_ME_TELEPORT },
 		{ pos = Position(32725, 32773, 10), teleport = Position(32726, 32726, 10), effect = CONST_ME_TELEPORT },
 	},
+	monsters = {
+		{ name = "wild knowledge", pos = Position(32719, 32718, 10) },
+		{ name = "wild knowledge", pos = Position(32723, 32719, 10) },
+		{ name = "wild knowledge", pos = Position(32728, 32718, 10) },
+		{ name = "wild knowledge", pos = Position(32724, 32724, 10) },
+	},
 	specPos = {
 		from = Position(32716, 32713, 10),
 		to = Position(32732, 32728, 10),

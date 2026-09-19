@@ -99,6 +99,7 @@ monster.loot = {
 	{ name = "ichgahal's fungal infestation", chance = 7902, maxCount = 1 },
 	{ name = "white gem", chance = 13559, maxCount = 3 },
 	{ id = 43895, chance = 360 }, -- Bag you covet
+	{ id = 43899, chance = 500 }, -- cursed wood
 }
 
 monster.attacks = {

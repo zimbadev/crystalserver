@@ -54,24 +54,14 @@ local HiddenThreats = Storage.Quest.U11_50.HiddenThreats
 local function greetCallback(npc, creature, message)
 	local player = Player(creature)
 
-	if player:getStorageValue(HiddenThreats.CorymRescued07) < 0 then
+	if player:getStorageValue(HiddenThreats.CorymRescued05) < 0 then
 		npcHandler:setMessage(MESSAGE_GREET, {
 			"My hero! A friend of mine sent you to liberate me? A true friend! I am poor but nevertheless I give you this as little reward.",
 		})
-		player:setStorageValue(HiddenThreats.CorymRescueMission, player:getStorageValue(HiddenThreats.CorymRescueMission) + 1)
-		player:setStorageValue(HiddenThreats.CorymRescued07, 1)
+		player:setStorageValue(HiddenThreats.CorymRescued05, 1)
 		player:addItem(3029, 1)
 	else
 		npcHandler:setMessage(MESSAGE_GREET, "My hero! A friend of mine sent you to liberate me? A true friend!")
-	end
-	return true
-end
-
-local function creatureSayCallback(npc, creature, type, message)
-	--local player = Player(creature)
-
-	if not npcHandler:checkInteraction(npc, creature) then
-		return false
 	end
 	return true
 end

@@ -28,6 +28,8 @@ void EventsSchedulerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "EventsScheduler", "getEventSSkill", EventsSchedulerFunctions::luaEventsSchedulergetEventSSkill);
 	Lua::registerMethod(L, "EventsScheduler", "getEventSExp", EventsSchedulerFunctions::luaEventsSchedulergetEventSExp);
 	Lua::registerMethod(L, "EventsScheduler", "getSpawnMonsterSchedule", EventsSchedulerFunctions::luaEventsSchedulergetSpawnMonsterSchedule);
+	Lua::registerMethod(L, "EventsScheduler", "getEventSFiendish", EventsSchedulerFunctions::luaEventsSchedulergetEventSFiendish);
+	Lua::registerMethod(L, "EventsScheduler", "getEventSInfluenced", EventsSchedulerFunctions::luaEventsSchedulergetEventSInfluenced);
 }
 
 int EventsSchedulerFunctions::luaEventsSchedulergetEventSLoot(lua_State* L) {
@@ -57,5 +59,17 @@ int EventsSchedulerFunctions::luaEventsSchedulergetEventSExp(lua_State* L) {
 int EventsSchedulerFunctions::luaEventsSchedulergetSpawnMonsterSchedule(lua_State* L) {
 	// EventsScheduler.getSpawnMonsterSchedule
 	lua_pushnumber(L, g_eventsScheduler().getSpawnMonsterSchedule());
+	return 1;
+}
+
+int EventsSchedulerFunctions::luaEventsSchedulergetEventSFiendish(lua_State* L) {
+	// EventsScheduler.getEventSFiendish
+	lua_pushnumber(L, g_eventsScheduler().getFiendishSchedule());
+	return 1;
+}
+
+int EventsSchedulerFunctions::luaEventsSchedulergetEventSInfluenced(lua_State* L) {
+	// EventsScheduler.getEventSInfluenced
+	lua_pushnumber(L, g_eventsScheduler().getInfluencedSchedule());
 	return 1;
 }

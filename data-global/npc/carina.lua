@@ -60,7 +60,7 @@ local function creatureSayCallback(npc, creature, type, message)
 
 	if MsgContains(message, "precious necklace") then
 		if player:getItemCount(7940) > 0 then
-			npcHandler:say("Would you like to buy my precious necklace for 5000 gold?", npc, creature)
+			npcHandler:say("Oh, so you want to buy that rare and precious necklace for 5000 gold?", npc, creature)
 			npcHandler:setTopic(playerId, 1)
 		end
 	elseif MsgContains(message, "mouse") then
@@ -71,7 +71,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			if player:removeMoneyBank(5000) then
 				player:removeItem(7940, 1)
 				player:addItem(7939, 1)
-				npcHandler:say("Here you go kind sir.", npc, creature)
+				npcHandler:say("Here it is. A friend of mine will be quite sad about that sale but business is business.", npc, creature)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif npcHandler:getTopic(playerId) == 2 then
@@ -105,6 +105,7 @@ npcConfig.shop = {
 	{ itemName = "precious necklace", clientId = 7939, buy = 5000 },
 	{ itemName = "ruby necklace", clientId = 3016, buy = 3560 },
 	{ itemName = "wedding ring", clientId = 3004, buy = 990, sell = 100 },
+	{ itemName = "bounty talisman", clientId = 51978, buy = 5000 },
 }
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
@@ -116,5 +117,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

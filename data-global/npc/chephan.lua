@@ -53,7 +53,7 @@ end
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 npcConfig.shop = {
-	{ itemName = "baking tray", clientId = 8020, buy = 20 },
+	{ itemName = "baking tray", clientId = 3464, buy = 20 },
 	{ itemName = "bottle", clientId = 2875, buy = 3 },
 	{ itemName = "bucket", clientId = 7142, buy = 4 },
 	{ itemName = "cleaver", clientId = 3471, buy = 15 },
@@ -80,5 +80,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)

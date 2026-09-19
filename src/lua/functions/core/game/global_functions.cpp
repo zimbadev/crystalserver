@@ -71,7 +71,6 @@ void GlobalFunctions::init(lua_State* L) {
 	Lua::registerGlobalMethod(L, "rawgetmetatable", GlobalFunctions::luaRawGetMetatable);
 	Lua::registerGlobalMethod(L, "createTable", GlobalFunctions::luaCreateTable);
 	Lua::registerGlobalMethod(L, "systemTime", GlobalFunctions::luaSystemTime);
-	Lua::registerGlobalMethod(L, "getFormattedTimeRemaining", GlobalFunctions::luaGetFormattedTimeRemaining);
 	Lua::registerGlobalMethod(L, "reportError", GlobalFunctions::luaReportError);
 }
 
@@ -882,13 +881,6 @@ int GlobalFunctions::luaCreateTable(lua_State* L) {
 int GlobalFunctions::luaSystemTime(lua_State* L) {
 	// systemTime()
 	lua_pushnumber(L, OTSYS_TIME());
-	return 1;
-}
-
-int GlobalFunctions::luaGetFormattedTimeRemaining(lua_State* L) {
-	// getFormattedTimeRemaining(time)
-	const time_t time = Lua::getNumber<uint32_t>(L, 1);
-	lua_pushstring(L, getFormattedTimeRemaining(time).c_str());
 	return 1;
 }
 

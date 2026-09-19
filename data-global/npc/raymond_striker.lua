@@ -70,7 +70,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.APoemForTheMermaid) == 3 and player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) < 1 then
 			npcHandler:say("Ask around in the settlement where you can help out. If you have proven your worth I might have some missions for you.", npc, creature)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 1)
-		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 13 and player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission1) < 1 then
+		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 12 and player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission1) < 1 then
 			npcHandler:say({
 				"Indeed, I could use some help. The evil pirates of Nargor have convinced an alchemist from Edron to supply them with a substance called Fafnar's Fire ...",
 				"It can burn even on water and is a threat to us all. I need you to travel to Edron and pretend to the alchemist Sandra that you are the one whom the other pirates sent to get the fire ...",
@@ -79,7 +79,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission1, 1)
 		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission1) == 2 then
 			npcHandler:say("I think that means 'mission accomplished'. Hehe. I guess that will put an end to their efforts to buy any alchemical substance from Edron.", npc, creature)
-			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 15)
+			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 13)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission1, 3)
 		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission1) == 3 and player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission2) < 1 then
 			npcHandler:say({
@@ -93,9 +93,9 @@ local function creatureSayCallback(npc, creature, type, message)
 			}, npc, creature)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.AccessToNargor, 1)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission2, 1)
-		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission2) == 2 and player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven) == 16 then
+		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission2) == 2 then
 			npcHandler:say("You did it! Excellent!", npc, creature)
-			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 18)
+			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 15)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission2, 3)
 		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission2) == 3 and player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission3) < 1 then
 			npcHandler:say({
@@ -113,7 +113,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				"If we could convince him that you fulfilled that mission, the pirates will have the party of their lives. This would beour chance for a sneak attack to damage their boats and steal their plunder! ...",
 				"Obtain this mission from him and learn what he needs as a proof. Then return to me and report to me about yourmission so we can formulate an appropriate plan.",
 			}, npc, creature)
-			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 20)
+			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 16)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission3, 3)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission4, 1)
 		elseif player:getStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission4) == 2 then
@@ -127,7 +127,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				"So take this as your very own ship. Oh, and remind me about the pirate outfit sometime.",
 			}, npc, creature)
 			player:addItem(2994, 1)
-			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 21)
+			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven, 17)
 			player:setStorageValue(Storage.Quest.U7_8.TheShatteredIsles.RaysMission4, 5)
 		end
 	elseif MsgContains(message, "mermaid") then

@@ -219,6 +219,7 @@ public:
 	std::shared_ptr<MonsterType> getMonsterType() const;
 
 	void clearFiendishStatus();
+	void clearInfluencedStatus();
 	bool canDropLoot() const;
 
 	bool isImmune(ConditionType_t conditionType) const override;
@@ -240,6 +241,9 @@ public:
 	void setCriticalDamage(uint16_t damage);
 	uint16_t getCriticalDamage() const;
 	bool checkCanApplyCharm(const std::shared_ptr<Player> &player, charmRune_t charmRune) const;
+
+	bool canWalk() const;
+	bool canTarget() const;
 
 protected:
 	void onExecuteAsyncTasks() override;
@@ -372,4 +376,8 @@ private:
 	void doRandomStep(Direction &nextDirection, bool &result);
 
 	void onConditionStatusChange(ConditionType_t type);
+
+	bool isWalkingTo = false;
+	void walkTo(const Position &walkToPosition);
+	void doWalkTo(uint32_t &flags, Direction &nextDirection, bool &result);
 };

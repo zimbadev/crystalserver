@@ -30,7 +30,7 @@ function addMoney.onSay(player, words, param)
 	end
 
 	-- Check if the coins is valid
-	if amount <= 0 or amount == nil then
+	if amount == nil or amount <= 0 then
 		player:sendCancelMessage("Invalid amount.")
 		return true
 	end

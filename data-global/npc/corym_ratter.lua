@@ -60,7 +60,7 @@ local function greetCallback(npc, creature, message)
 			"We dig up all what mother earth delivers to us, valuable natural resources. But the yield is getting worse and here I need your {help}.",
 		})
 	else
-		npcHandler:setMessage(MESSAGE_GREET, "We dig up all what mother earth delivers to us, valuable natural resources.")
+		npcHandler:setMessage(MESSAGE_GREET, "You say the work takes place in a common way? The decreasing amount of ores is just unlucky. I can't believe that. I have to look for reinforcements and 'motivate' my workers a bit.")
 	end
 	return true
 end
@@ -73,7 +73,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		return false
 	end
 
-	if MsgContains(message, "help") then
+	if MsgContains(message, "help") and player:getStorageValue(HiddenThreats.RatterDoor) < 1 then
 		npcHandler:say("Recently the amount of delivered ores is decreasing. Could you find out the reason, why the situation has become worse?", npc, creature)
 		npcHandler:setTopic(playerId, 1)
 	elseif MsgContains(message, "yes") then

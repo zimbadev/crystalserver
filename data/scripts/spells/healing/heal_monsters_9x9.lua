@@ -29,6 +29,6 @@ end
 spell:name("Heal Monster 9x9")
 spell:words("#####459")
 spell:blockWalls(true)
-spell:needLearn(true)
+
 spell:needDirection(true)
 spell:register()

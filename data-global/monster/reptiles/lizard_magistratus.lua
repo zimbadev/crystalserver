@@ -86,7 +86,7 @@ monster.loot = {
 	{ name = "lizard leather", chance = 220 },
 	{ name = "lizard scale", chance = 450 },
 	{ name = "strong mana potion", chance = 6280 },
-	{ name = "great mana potion", chance = 4480 },
+	{ id = 238, chance = 4480 }, -- great mana potion
 }
 
 monster.attacks = {

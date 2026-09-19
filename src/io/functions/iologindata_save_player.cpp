@@ -28,6 +28,9 @@
 #include "items/containers/inbox/inbox.hpp"
 #include "items/containers/rewards/reward.hpp"
 #include "creatures/players/player.hpp"
+#include "io/iobountytasks.hpp"
+#include "io/ioweeklytasks.hpp"
+#include "kv/kv.hpp"
 
 bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const ItemBlockList &itemList, DBInsert &query_insert, PropWriteStream &propWriteStream) {
 	if (!player) {
@@ -35,7 +38,7 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 		return false;
 	}
 
-	const Database &db = Database::getInstance();
+	Database &db = Database::getInstance();
 	std::ostringstream ss;
 
 	// Initialize variables
@@ -172,6 +175,8 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 		player->changeHealth(1);
 	}
 
+	savePlayerExivaRestrictions(player);
+
 	Database &db = Database::getInstance();
 
 	std::ostringstream query;
@@ -191,6 +196,18 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	// First, an UPDATE query to write the player itself
 	query.str("");
 	query << "UPDATE `players` SET ";
+
+	time_t updatedLastLoginSaved = player->lastLoginSaved;
+	int64_t onlineTimeDelta = 0;
+	bool advanceLastLoginSaved = false;
+	if (!player->isOffline() && player->lastLoginSaved != 0) {
+		const auto now = std::chrono::system_clock::now();
+		const auto lastLoginSaved = std::chrono::system_clock::from_time_t(player->lastLoginSaved);
+		onlineTimeDelta = std::max<int64_t>(0, std::chrono::duration_cast<std::chrono::seconds>(now - lastLoginSaved).count());
+		updatedLastLoginSaved = std::chrono::system_clock::to_time_t(now);
+		advanceLastLoginSaved = true;
+	}
+
 	query << "`name` = " << db.escapeString(player->name) << ",";
 	query << "`level` = " << player->level << ",";
 	query << "`group_id` = " << player->group->id << ",";
@@ -208,7 +225,7 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`lookmountfeet` = " << static_cast<uint32_t>(player->defaultOutfit.lookMountFeet) << ",";
 	query << "`lookmounthead` = " << static_cast<uint32_t>(player->defaultOutfit.lookMountHead) << ",";
 	query << "`lookmountlegs` = " << static_cast<uint32_t>(player->defaultOutfit.lookMountLegs) << ",";
-	query << "`currentmount` = " << static_cast<uint32_t>(player->defaultOutfit.currentMount) << ",";
+	query << "`currentmount` = " << static_cast<uint32_t>(player->currentMount) << ",";
 	query << "`lookfamiliarstype` = " << player->defaultOutfit.lookFamiliarsType << ",";
 	query << "`isreward` = " << static_cast<uint16_t>(player->isDailyReward) << ",";
 	query << "`maglevel` = " << player->magLevel << ",";
@@ -228,6 +245,7 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`prey_wildcard` = " << player->getPreyCards() << ",";
 	query << "`task_points` = " << player->getTaskHuntingPoints() << ",";
 	query << "`boss_points` = " << player->getBossPoints() << ",";
+	query << "`loyalty_points` = " << player->getLoyaltyPoints() << ",";
 	query << "`forge_dusts` = " << player->getForgeDusts() << ",";
 	query << "`forge_dust_level` = " << player->getForgeDustLevel() << ",";
 	query << "`randomize_mount` = " << static_cast<uint16_t>(player->isRandomMounted()) << ",";
@@ -235,8 +253,8 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`cap` = " << (player->capacity / 100) << ",";
 	query << "`sex` = " << static_cast<uint16_t>(player->sex) << ",";
 
-	if (player->lastLoginSaved != 0) {
-		query << "`lastlogin` = " << player->lastLoginSaved << ",";
+	if (updatedLastLoginSaved != 0) {
+		query << "`lastlogin` = " << updatedLastLoginSaved << ",";
 	}
 
 	if (player->lastIP != 0) {
@@ -264,7 +282,7 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	const char* animusMastery = propAnimusMasteryStream.getStream(animusMasterySize);
 	query << "`animus_mastery` = " << db.escapeBlob(animusMastery, static_cast<uint32_t>(animusMasterySize)) << ",";
 
-	if (g_game().getWorldType() != WORLDTYPE_HARDCORE) {
+	if (g_game().worlds().getCurrentWorld()->type != WORLDTYPE_HARDCORE) {
 		int64_t skullTime = 0;
 
 		if (player->skullTicks > 0) {
@@ -322,10 +340,28 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	query << "`virtue` = " << static_cast<uint16_t>(player->getVirtue()) << ",";
 	query << "`harmony` = " << static_cast<uint16_t>(player->getHarmony()) << ",";
 
+	// Weapon Proficiency
+	PropWriteStream propWeaponProficiency;
+
+	propWeaponProficiency.write<uint16_t>(player->weaponProficiencies.size());
+	for (const auto &[itemId, proficiency] : player->weaponProficiencies) {
+		propWeaponProficiency.write<uint16_t>(itemId);
+		propWeaponProficiency.write<uint32_t>(proficiency.experience);
+
+		propWeaponProficiency.write<uint8_t>(proficiency.activePerks.size());
+		for (const auto &perk : proficiency.activePerks) {
+			propWeaponProficiency.write<uint8_t>(perk.proficiencyLevel);
+			propWeaponProficiency.write<uint8_t>(perk.perkPosition);
+		}
+	}
+
+	size_t proficiencySize;
+	const char* proficiencyData = propWeaponProficiency.getStream(proficiencySize);
+
+	query << "`weapon_proficiencies` = " << db.escapeBlob(proficiencyData, static_cast<uint32_t>(proficiencySize)) << ",";
+
 	if (!player->isOffline()) {
-		auto now = std::chrono::system_clock::now();
-		auto lastLoginSaved = std::chrono::system_clock::from_time_t(player->lastLoginSaved);
-		query << "`onlinetime` = `onlinetime` + " << std::chrono::duration_cast<std::chrono::seconds>(now - lastLoginSaved).count() << ",";
+		query << "`onlinetime` = `onlinetime` + " << onlineTimeDelta << ",";
 	}
 
 	for (int i = 1; i <= 8; i++) {
@@ -336,6 +372,10 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 
 	if (!db.executeQuery(query.str())) {
 		return false;
+	}
+
+	if (advanceLastLoginSaved) {
+		player->lastLoginSaved = updatedLastLoginSaved;
 	}
 	return true;
 }
@@ -462,7 +502,7 @@ bool IOLoginDataSave::savePlayerBestiarySystem(const std::shared_ptr<Player> &pl
 	}
 	size_t trackerSize;
 	const char* trackerList = propBestiaryStream.getStream(trackerSize);
-	query << " `tracker list` = " << db.escapeBlob(trackerList, static_cast<uint32_t>(trackerSize));
+	query << " `tracker_list` = " << db.escapeBlob(trackerList, static_cast<uint32_t>(trackerSize));
 	query << " WHERE `player_id` = " << player->getGUID();
 
 	if (!db.executeQuery(query.str())) {
@@ -707,6 +747,196 @@ bool IOLoginDataSave::savePlayerTaskHuntingClass(const std::shared_ptr<Player> &
 	return true;
 }
 
+bool IOLoginDataSave::savePlayerBountyTasks(const std::shared_ptr<Player> &player) {
+	if (!player) {
+		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
+		return false;
+	}
+
+	if (!g_configManager().getBoolean(BOUNTY_TASKS_ENABLED)) {
+		return true;
+	}
+
+	Database &db = Database::getInstance();
+	const auto &bountyData = player->getBountyTaskData();
+
+	// Serialize list slots to blob
+	PropWriteStream propStream;
+	for (const auto &slot : bountyData.preferredLists) {
+		propStream.write<uint8_t>(slot.activedList);
+		propStream.write<uint16_t>(slot.preferredRaceId);
+		propStream.write<uint16_t>(slot.unwantedRaceId);
+	}
+
+	size_t listSlotsSize;
+	const char* listSlotsBlob = propStream.getStream(listSlotsSize);
+
+	// Serialize current creatures list to blob
+	// Each creature: raceId(2) + requiredKills(2) + rewardExp(4) + rewardBountyPoints(1) + currentKills(2) + claimRewardType(1) + taskGrade(1) + taskIndex(1) = 14 bytes
+	PropWriteStream creaturesStream;
+	for (const auto &creature : bountyData.currentCreaturesList) {
+		creaturesStream.write<uint16_t>(creature.raceId);
+		creaturesStream.write<uint16_t>(creature.requiredKills);
+		creaturesStream.write<uint32_t>(creature.rewardExp);
+		creaturesStream.write<uint8_t>(creature.rewardBountyPoints);
+		creaturesStream.write<uint16_t>(creature.currentKills);
+		creaturesStream.write<uint8_t>(static_cast<uint8_t>(creature.claimRewardType));
+		creaturesStream.write<uint8_t>(static_cast<uint8_t>(creature.taskGrade));
+		creaturesStream.write<uint8_t>(creature.taskIndex);
+	}
+
+	size_t creaturesSize;
+	const char* creaturesBlob = creaturesStream.getStream(creaturesSize);
+
+	std::ostringstream query;
+	query << "INSERT INTO `player_bounty_tasks` ("
+		  << "`player_id`, `state`, `difficulty`, `bounty_points`, `reroll_tokens`, "
+		  << "`free_reroll`, "
+		  << "`active_raceid`, `active_kills`, `active_required_kills`, "
+		  << "`active_reward_exp`, `active_reward_points`, `active_task_grade`, `active_task_difficulty`, "
+		  << "`talisman_damage_level`, `talisman_lifeleech_level`, "
+		  << "`talisman_loot_level`, `talisman_bestiary_level`, "
+		  << "`preferred_lists`, `current_creatures_list`"
+		  << ") VALUES ("
+		  << player->getGUID() << ", "
+		  << static_cast<uint16_t>(bountyData.state) << ", "
+		  << static_cast<uint16_t>(bountyData.selectedDifficulty) << ", "
+		  << bountyData.bountyPoints << ", "
+		  << static_cast<uint16_t>(bountyData.rerollTasks) << ", "
+		  << bountyData.freeRerollTimeStamp << ", "
+		  << bountyData.activeTask.raceId << ", "
+		  << bountyData.activeTask.currentKills << ", "
+		  << bountyData.activeTask.requiredKills << ", "
+		  << bountyData.activeTask.rewardExp << ", "
+		  << static_cast<uint16_t>(bountyData.activeTask.rewardBountyPoints) << ", "
+		  << static_cast<uint16_t>(bountyData.activeTask.taskGrade) << ", "
+		  << static_cast<uint16_t>(bountyData.activeTask.difficulty) << ", "
+		  << static_cast<uint16_t>(bountyData.talismanTiers[0].level) << ", "
+		  << static_cast<uint16_t>(bountyData.talismanTiers[1].level) << ", "
+		  << static_cast<uint16_t>(bountyData.talismanTiers[2].level) << ", "
+		  << static_cast<uint16_t>(bountyData.talismanTiers[3].level) << ", "
+		  << db.escapeBlob(listSlotsBlob, static_cast<uint32_t>(listSlotsSize)) << ", "
+		  << db.escapeBlob(creaturesBlob, static_cast<uint32_t>(creaturesSize))
+		  << ") ON DUPLICATE KEY UPDATE "
+		  << "`state` = VALUES(`state`), "
+		  << "`difficulty` = VALUES(`difficulty`), "
+		  << "`bounty_points` = VALUES(`bounty_points`), "
+		  << "`reroll_tokens` = VALUES(`reroll_tokens`), "
+		  << "`free_reroll` = VALUES(`free_reroll`), "
+		  << "`active_raceid` = VALUES(`active_raceid`), "
+		  << "`active_kills` = VALUES(`active_kills`), "
+		  << "`active_required_kills` = VALUES(`active_required_kills`), "
+		  << "`active_reward_exp` = VALUES(`active_reward_exp`), "
+		  << "`active_reward_points` = VALUES(`active_reward_points`), "
+		  << "`active_task_grade` = VALUES(`active_task_grade`), "
+		  << "`active_task_difficulty` = VALUES(`active_task_difficulty`), "
+		  << "`talisman_damage_level` = VALUES(`talisman_damage_level`), "
+		  << "`talisman_lifeleech_level` = VALUES(`talisman_lifeleech_level`), "
+		  << "`talisman_loot_level` = VALUES(`talisman_loot_level`), "
+		  << "`talisman_bestiary_level` = VALUES(`talisman_bestiary_level`), "
+		  << "`preferred_lists` = VALUES(`preferred_lists`), "
+		  << "`current_creatures_list` = VALUES(`current_creatures_list`)";
+
+	if (!db.executeQuery(query.str())) {
+		g_logger().warn("[IOLoginData::savePlayer] - Error saving bounty tasks from player: {}", player->getName());
+		return false;
+	}
+
+	return true;
+}
+
+bool IOLoginDataSave::savePlayerWeeklyTasks(const std::shared_ptr<Player> &player) {
+	if (!player) {
+		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
+		return false;
+	}
+
+	if (!g_configManager().getBoolean(WEEKLY_TASKS_ENABLED)) {
+		return true;
+	}
+
+	Database &db = Database::getInstance();
+	const auto &weeklyData = player->getWeeklyTaskData();
+
+	// Serialize kill tasks
+	PropWriteStream killTasksStream;
+	for (const auto &task : weeklyData.killTasks) {
+		killTasksStream.write<uint16_t>(task.raceId);
+		killTasksStream.write<uint16_t>(task.totalKills);
+		killTasksStream.write<uint16_t>(task.currentKills);
+	}
+
+	size_t killTasksSize;
+	const char* killTasksBlob = killTasksStream.getStream(killTasksSize);
+
+	// Serialize delivery tasks
+	// Format per task: U8 index, U16 itemId, U8 unknown1, U8 unknown2, U32 totalItems, U32 collectedItems, U8 delivered = 14 bytes
+	PropWriteStream deliveryTasksStream;
+	for (const auto &task : weeklyData.deliveryTasks) {
+		deliveryTasksStream.write<uint8_t>(task.index);
+		deliveryTasksStream.write<uint16_t>(task.itemId);
+		deliveryTasksStream.write<uint8_t>(task.unknown1);
+		deliveryTasksStream.write<uint8_t>(task.unknown2);
+		deliveryTasksStream.write<uint32_t>(task.totalItems);
+		deliveryTasksStream.write<uint32_t>(task.collectedItems);
+		deliveryTasksStream.write<uint8_t>(task.delivered);
+	}
+
+	size_t deliveryTasksSize;
+	const char* deliveryTasksBlob = deliveryTasksStream.getStream(deliveryTasksSize);
+
+	std::ostringstream query;
+	query << "INSERT INTO `player_weekly_tasks` ("
+		  << "`player_id`, `has_expansion`, `difficulty`, "
+		  << "`any_creature_total_kills`, `any_creature_current_kills`, "
+		  << "`completed_kill_tasks`, `completed_delivery_tasks`, "
+		  << "`kill_task_reward_exp`, `delivery_task_reward_exp`, "
+		  << "`reward_hunting_points`, `reward_soulseals`, "
+		  << "`soulseals_points`, "
+		  << "`needs_reward`, `weekly_progress_finished`, "
+		  << "`kill_tasks`, `delivery_tasks`"
+		  << ") VALUES ("
+		  << player->getGUID() << ", "
+		  << static_cast<uint16_t>(player->hasWeeklyTaskExpansion()) << ", "
+		  << static_cast<uint16_t>(weeklyData.weeklyDifficulty) << ", "
+		  << weeklyData.anyCreatureTotalKills << ", "
+		  << weeklyData.anyCreatureCurrentKills << ", "
+		  << static_cast<uint16_t>(weeklyData.completedKillTasks) << ", "
+		  << static_cast<uint16_t>(weeklyData.completedDeliveryTasks) << ", "
+		  << weeklyData.killTaskRewardExp << ", "
+		  << weeklyData.deliveryTaskRewardExp << ", "
+		  << weeklyData.rewardHuntingTasksPoints << ", "
+		  << weeklyData.rewardSoulseals << ", "
+		  << weeklyData.soulsealsPoints << ", "
+		  << static_cast<uint16_t>(weeklyData.needsRewardDistribution ? 1 : 0) << ", "
+		  << static_cast<uint16_t>(weeklyData.weeklyProgressFinished) << ", "
+		  << db.escapeBlob(killTasksBlob, static_cast<uint32_t>(killTasksSize)) << ", "
+		  << db.escapeBlob(deliveryTasksBlob, static_cast<uint32_t>(deliveryTasksSize))
+		  << ") ON DUPLICATE KEY UPDATE "
+		  << "`has_expansion` = VALUES(`has_expansion`), "
+		  << "`difficulty` = VALUES(`difficulty`), "
+		  << "`any_creature_total_kills` = VALUES(`any_creature_total_kills`), "
+		  << "`any_creature_current_kills` = VALUES(`any_creature_current_kills`), "
+		  << "`completed_kill_tasks` = VALUES(`completed_kill_tasks`), "
+		  << "`completed_delivery_tasks` = VALUES(`completed_delivery_tasks`), "
+		  << "`kill_task_reward_exp` = VALUES(`kill_task_reward_exp`), "
+		  << "`delivery_task_reward_exp` = VALUES(`delivery_task_reward_exp`), "
+		  << "`reward_hunting_points` = VALUES(`reward_hunting_points`), "
+		  << "`reward_soulseals` = VALUES(`reward_soulseals`), "
+		  << "`soulseals_points` = VALUES(`soulseals_points`), "
+		  << "`needs_reward` = VALUES(`needs_reward`), "
+		  << "`weekly_progress_finished` = VALUES(`weekly_progress_finished`), "
+		  << "`kill_tasks` = VALUES(`kill_tasks`), "
+		  << "`delivery_tasks` = VALUES(`delivery_tasks`)";
+
+	if (!db.executeQuery(query.str())) {
+		g_logger().warn("[IOLoginData::savePlayer] - Error saving weekly tasks from player: {}", player->getName());
+		return false;
+	}
+
+	return true;
+}
+
 bool IOLoginDataSave::savePlayerForgeHistory(const std::shared_ptr<Player> &player) {
 	if (!player) {
 		g_logger().warn("[IOLoginData::savePlayer] - Player nullptr: {}", __FUNCTION__);
@@ -830,12 +1060,10 @@ bool IOLoginDataSave::savePlayerStatement(const std::shared_ptr<Player> &player,
 		  << player->getGUID() << ", " << db.escapeString(receiver) << ", " << channelId << ", "
 		  << db.escapeString(utf8Text) << ", " << time(nullptr) << ")";
 
-	if (!db.executeQuery(query.str())) {
-		return false;
-	}
-
-	statementId = db.getLastInsertId();
-	return true;
+	// Pool-safe: pin the connection for INSERT + LAST_INSERT_ID so a concurrent INSERT
+	// on another connection in the pool can't return a foreign id here.
+	statementId = db.insertAndGetId(query.str());
+	return statementId != 0;
 }
 
 bool IOLoginDataSave::savePlayerNamesAndChangeName(const std::shared_ptr<Player> &player, const std::string &newName, const std::string &oldName) {
@@ -920,4 +1148,35 @@ bool IOLoginDataSave::savePlayerMounts(const std::shared_ptr<Player> &player) {
 
 	player->setMountsModified(false);
 	return true;
+}
+
+void IOLoginDataSave::savePlayerExivaRestrictions(const std::shared_ptr<Player> &player) {
+	if (!player) {
+		return;
+	}
+
+	const auto &restrictions = player->getExivaRestrictions();
+
+	const auto &scope = player->kv()->scoped("exiva-restrictions");
+
+	scope->set("allowAll", restrictions.allowAll);
+	scope->set("allowOwnGuild", restrictions.allowOwnGuild);
+	scope->set("allowOwnParty", restrictions.allowOwnParty);
+	scope->set("allowVipList", restrictions.allowVipList);
+	scope->set("allowPlayerWhitelist", restrictions.allowPlayerWhitelist);
+	scope->set("allowGuildWhitelist", restrictions.allowGuildWhitelist);
+
+	ArrayType playerArrayWrapper;
+	for (const auto &playerGuid : restrictions.playerWhitelist) {
+		playerArrayWrapper.push_back(ValueWrapper(static_cast<int>(playerGuid)));
+	}
+
+	scope->set("playerWhitelist", ValueWrapper(playerArrayWrapper));
+
+	ArrayType guildArrayWrapper;
+	for (const auto &guildId : restrictions.guildWhitelist) {
+		guildArrayWrapper.push_back(ValueWrapper(static_cast<int>(guildId)));
+	}
+
+	scope->set("guildWhitelist", ValueWrapper(guildArrayWrapper));
 }

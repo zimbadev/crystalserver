@@ -197,6 +197,7 @@ void IOBosstiary::addBosstiaryKill(const std::shared_ptr<Player> &player, const 
 		return;
 	}
 	player->sendBosstiaryEntryChanged(bossId);
+	player->sendScreenshotAndBannerProgressRace(bossId, newBossLevel, true);
 
 	auto bossRace = mtype->info.bosstiaryRace;
 	const std::vector<LevelInfo> &infoForCurrentRace = levelInfos.at(bossRace);

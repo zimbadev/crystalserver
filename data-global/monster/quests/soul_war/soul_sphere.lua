@@ -53,6 +53,10 @@ monster.light = {
 	color = 0,
 }
 
+monster.events = {
+	"SoulSphereDeath",
+}
+
 monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = -500, maxDamage = -1000 },
 }

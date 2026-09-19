@@ -104,4 +104,8 @@ npcHandler:setMessage(MESSAGE_GREET, "Welcome, Sir.")
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
 -- npcType registering the npcConfig table
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("passage", "bye")
+
 npcType:register(npcConfig)

@@ -47,7 +47,12 @@ Bank::~Bank() {
 }
 
 bool Bank::credit(uint64_t amount) {
-	return balance(balance() + amount);
+	const uint64_t current = balance();
+	if (amount > UINT64_MAX - current) {
+		g_logger().error("Bank::credit: overflow prevented for amount {}", amount);
+		return false;
+	}
+	return balance(current + amount);
 }
 
 bool Bank::debit(uint64_t amount) {
@@ -133,7 +138,11 @@ bool Bank::transferTo(const std::shared_ptr<Bank> &destination, uint64_t amount)
 		}
 	}
 
-	if (!(debit(amount) && destination->credit(amount))) {
+	if (!debit(amount)) {
+		return false;
+	}
+	if (!destination->credit(amount)) {
+		balance(balance() + amount);
 		return false;
 	}
 
@@ -183,8 +192,12 @@ bool Bank::deposit(const std::shared_ptr<Bank> &destination, uint64_t amount) {
 	if (!g_game().removeMoney(bankable->getPlayer(), amount)) {
 		return false;
 	}
+	if (!destination->credit(amount)) {
+		g_game().addMoney(bankable->getPlayer(), amount);
+		return false;
+	}
 	if (bankable->getPlayer() != nullptr) {
 		g_metrics().addCounter("balance_decrease", amount, { { "player", bankable->getPlayer()->getName() }, { "context", "bank_deposit" } });
 	}
-	return destination->credit(amount);
+	return true;
 }

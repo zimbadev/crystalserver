@@ -18,6 +18,9 @@ local rewardBags = {
 		{ id = 34091, name = "soulhexer" },
 		{ id = 34093, name = "soulstrider" },
 		{ id = 34096, name = "soulshroud" },
+		{ id = 50254, name = "soulgarb" },
+		{ id = 50240, name = "soulsoles" },
+		{ id = 50159, name = "soulkamas" },
 	},
 
 	[PRIMAL_BAG] = {
@@ -33,6 +36,8 @@ local rewardBags = {
 		{ id = 39153, name = "arboreal crown" },
 		{ id = 39154, name = "arboreal tome" },
 		{ id = 39186, name = "charged arboreal ring" },
+		{ id = 50149, name = "charged ethereal ring" },
+		{ id = 50188, name = "ethereal coned hat" },
 	},
 
 	[BAG_YOU_COVET] = {
@@ -50,6 +55,18 @@ local rewardBags = {
 		{ id = 43884, name = "sanguine boots" },
 		{ id = 43885, name = "sanguine rod" },
 		{ id = 43887, name = "sanguine galoshes" },
+		{ id = 43865, name = "grand sanguine blade" },
+		{ id = 43867, name = "grand sanguine cudgel" },
+		{ id = 43869, name = "grand sanguine hatchet" },
+		{ id = 43871, name = "grand sanguine razor" },
+		{ id = 43873, name = "grand sanguine bludgeon" },
+		{ id = 43875, name = "grand sanguine battleaxe" },
+		{ id = 43878, name = "grand sanguine bow" },
+		{ id = 43880, name = "grand sanguine crossbow" },
+		{ id = 43883, name = "grand sanguine coil" },
+		{ id = 43886, name = "grand sanguine rod" },
+		{ id = 50146, name = "sanguine trousers" },
+		{ id = 50157, name = "sanguine claws" },
 	},
 }
 

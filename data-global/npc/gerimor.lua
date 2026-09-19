@@ -353,7 +353,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		return false
 	end
 
-	if MsgContains(message, "missions") then
+	if MsgContains(message, "mission") then
 		if player:getStorageValue(Storage.Quest.U11_40.CultsOfTibia.FinalBoss.Mission) > 2 then
 			npcHandler:say("You have already fulfilled your job to my full satisfaction. The cults are investigated and the final boss is eliminated. I have nothing more for you to do. Fare you well!", npc, creature)
 			npcHandler:setTopic(playerId, 0)
@@ -384,6 +384,9 @@ local function creatureSayCallback(npc, creature, type, message)
 				"You have undoubtedly bought your world some valuable time and weakened the enemy. Take my thanks in behalf of the world and keep up your heroic work. For your reward you must have two free slots. Are you ready to receive it?",
 			}, npc, creature)
 			npcHandler:setTopic(playerId, 4)
+		else
+			npcHandler:say("In which of the following topics are you interested in? Cult of {Life}, Cult of {Prosperity}, Cult of the {Minotaurs}, Cult of the {Barkless}, Cult of the {Misguided}, Cult of the {Orcs}, Cult of the {Humans}?", npc, creature)
+			npcHandler:setTopic(playerId, 2)
 		end
 	elseif npcHandler:getTopic(playerId) == 2 then
 		local missionsTable = config.missions[message:lower()]

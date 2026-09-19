@@ -17,21 +17,25 @@
 
 #pragma once
 
+#include "enums/account_type.hpp"
+
 #ifndef USE_PRECOMPILED_HEADERS
 	#include <parallel_hashmap/phmap.h>
 	#include <cstdint>
 #endif
 
-#include "enums/account_type.hpp"
+struct Character {
+	uint64_t deletion = 0;
+	uint8_t worldId = 0;
+};
 
 struct AccountInfo {
-	~AccountInfo() = default;
 
 	uint32_t id = 0;
 	uint32_t premiumRemainingDays = 0;
 	time_t premiumLastDay = 0;
-	AccountType accountType = ACCOUNT_TYPE_NONE;
-	phmap::flat_hash_map<std::string, uint64_t> players;
+	uint8_t accountType = 0;
+	phmap::flat_hash_map<std::string, Character> players;
 	bool oldProtocol = false;
 	time_t sessionExpires = 0;
 	uint32_t premiumDaysPurchased = 0;

@@ -97,6 +97,7 @@ private:
 
 	static int luaMonsterTypeGetLoot(lua_State* L);
 	static int luaMonsterTypeAddLoot(lua_State* L);
+	static int luaMonsterTypeGetSurpriseBagLoot(lua_State* L);
 
 	static int luaMonsterTypeGetCreatureEvents(lua_State* L);
 	static int luaMonsterTypeRegisterEvent(lua_State* L);
@@ -151,4 +152,7 @@ private:
 	static int luaMonsterTypeGetMonstersByBestiaryStars(lua_State* L);
 
 	static int luaMonsterTypeVariant(lua_State* L);
+
+	static int luaMonsterTypeCanWalk(lua_State* L);
+	static int luaMonsterTypeCanTarget(lua_State* L);
 };

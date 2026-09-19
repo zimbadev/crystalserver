@@ -132,6 +132,10 @@ bool PlayerVIP::edit(uint32_t vipGuid, const std::string &description, uint32_t 
 	return true;
 }
 
+bool PlayerVIP::exists(uint32_t vipGuid) const {
+	return vipGuids.contains(vipGuid);
+}
+
 std::shared_ptr<VIPGroup> PlayerVIP::getGroupByID(uint8_t groupId) const {
 	auto it = std::ranges::find_if(vipGroups, [groupId](const auto &vipGroup) {
 		return vipGroup->id == groupId;
@@ -215,6 +219,11 @@ void PlayerVIP::editGroup(uint8_t groupId, const std::string &newName, bool cust
 	}
 
 	const auto &vipGroup = getGroupByID(groupId);
+	if (!vipGroup) {
+		g_logger().warn("Player {} tried to edit non-existent VIP group ID {}", m_player.getName(), groupId);
+		return;
+	}
+
 	vipGroup->name = newName;
 	vipGroup->customizable = customizable;
 

@@ -20,7 +20,7 @@ function getChainValue(creature)
 	if creature and player then
 		targets = targets + player:getWheelSpellAdditionalTarget("Divine Dazzle")
 	end
-	return targets, 6, false
+	return targets, 7, false
 end
 
 combat:setCallback(CALLBACK_PARAM_CHAINVALUE, "getChainValue")
@@ -73,5 +73,5 @@ spell:isPremium(true)
 spell:cooldown(16 * 1000)
 spell:groupCooldown(2 * 1000)
 spell:vocation("paladin;true", "royal paladin;true")
-spell:needLearn(false)
+
 spell:register()

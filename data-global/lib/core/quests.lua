@@ -713,7 +713,7 @@ if not Quests then
 					storageId = Storage.Quest.U8_5.HotCuisineQuest.QuestLog,
 					missionId = 1070,
 					startValue = 1,
-					endValue = 16,
+					endValue = 17,
 					states = {
 						[1] = "You've become the apprentice of Maltre Jean Pierre. \z
 							The first dish he will teach you to prepare is Rotworm Stew. Bring him the ingredients he told you.",
@@ -745,7 +745,9 @@ if not Quests then
 							prepare is Demonic Candy Balls. Bring him the ingredients he told you.",
 						[15] = "You have completed the thirteenth dish, the fourteenth dish he will teach you to \z
 							prepare is Sweet Mangonaise Elixir. Bring him the ingredients he told you.",
-						[16] = "You have completed all the dishes. You are now able to make all the dishes in any order you want.",
+						[16] = "You have completed the fourteenth dish, the fifteenth dish he will teach you to \z
+							prepare is Zaoan Sauce. Bring him the ingredients he told you.",
+						[17] = "You have completed all the dishes. You are now able to make all the dishes in any order you want.",
 					},
 				},
 			},
@@ -3789,42 +3791,42 @@ if not Quests then
 					storageId = Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven,
 					missionId = 10273,
 					startValue = 2,
-					endValue = 13,
+					endValue = 12,
 					states = {
 						[2] = "Ariella asked you for a few days of adequate supply. \z
 						Help her and improve your reputation in Sabrehaven.",
-						[3] = "You have finished one mission. Ask around in Sabrehaven and surroundings whether the \z
-						people there might have missions for you. This will improve your reputation and earn their trust.",
-						[4] = "Morgan asked you to deliver a letter safely to old Eremo on Cormaya. \z
-						Help him and improve your reputation in Sabrehaven.",
-						[5] = "You delivered the letter safely to old Eremo. Report back to Morgan and \z
-						improve your reputation in Sabrehaven.",
-						[6] = "You have finished two missions. Ask around in Sabrehaven and surroundings \z
-						whether the people there might have missions for you. This will improve your reputation and earn their trust.",
-						[7] = "Duncan requested an atlas of the explorers society. Help him and improve your reputation in Sabrehaven.",
-						[8] = "You have finished three missions. Ask around in Sabrehaven and surroundings whether the \z
-						people there might have missions for you. This will improve your reputation and earn their trust.",
-						[9] = "Chondur asked at least five pirate voodoo dolls to lift the curse. Help him and improve \z
-						your reputation in Sabrehaven.",
-						[10] = "You have finished four missions. Ask around in Sabrehaven and surroundings whether the \z
-						people there might have missions for you. This will improve your reputation and earn their trust.",
-						[11] = "Ariella asked you to bring a sample of whisper beer from a secret whisper bar in Carlin. \z
+						[3] = "You have finished one mission. Ask Arelia again for another mission \z
+						This will improve your reputation in Sabrehaven.",
+						[4] = "Ariella asked you to bring a sample of whisper beer from a secret whisper bar in Carlin. \z
 						Help her and improve your reputation in Sabrehaven.",
-						[12] = "Take the sample of whisper beer to Ariella. Help her and improve your reputation in Sabrehaven.",
+						[5] = "You have finished two missions. Ask Morgan in Sabrehaven for another mission \z
+						This will improve your reputation in Sabrehaven.",
+						[6] = "Morgan asked you to deliver a letter safely to old Eremo on Cormaya. \z
+						Help him and improve your reputation in Sabrehaven.",
+						[7] = "You delivered the letter safely to old Eremo. Report back to Morgan and \z
+						improve your reputation in Sabrehaven.",
+						[8] = "You have finished three missions. Ask Duncan in Sabrehaven for another mission \z
+						This will improve your reputation and earn his trust.",
+						[9] = "Duncan requested an atlas of the explorers society. Help him and improve your reputation in Sabrehaven.",
+						[10] = "You have finished four missions. Ask Chondur in Sabrehaven for another mission \z
+						This will improve your reputation in Sabrehaven.",
+						[11] = "Chondur asked at least five pirate voodoo dolls to lift the curse. Help him and improve \z
+						your reputation in Sabrehaven.",
+						[12] = "You have finished five missions. You are now a friend of Sabrehaven.",
 					},
 				},
 				[12] = {
 					name = "Reputation in Sabrehaven: Friendly",
 					storageId = Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven,
 					missionId = 10274,
-					startValue = 14,
-					endValue = 17,
+					startValue = 12,
+					endValue = 14,
 					states = {
-						[14] = "You have finished five missions. People in Sabrehaven seem to start trusting you. \z
+						[12] = "You have finished five missions. People in Sabrehaven seem to start trusting you. \z
 						Maybe this is a good time for some more difficult missions.",
-						[15] = "You have finished six missions. People in Sabrehaven seem to start trusting you. \z
+						[13] = "You have finished six missions. People in Sabrehaven seem to start trusting you. \z
 						Maybe this is a good time for some more difficult missions.",
-						[16] = "You have finished seven missions. People in Sabrehaven seem to start trusting you. \z
+						[14] = "You have finished seven missions. People in Sabrehaven seem to start trusting you. \z
 						Maybe this is a good time for some more difficult missions.",
 					},
 				},
@@ -3832,8 +3834,8 @@ if not Quests then
 					name = "Reputation in Sabrehaven: Cordial",
 					storageId = Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven,
 					missionId = 10275,
-					startValue = 18,
-					endValue = 19,
+					startValue = 15,
+					endValue = 15,
 					description = "You have finished eight missions. \z
 					People in Sabrehaven seem to trust you, but there is still one last mission left.",
 				},
@@ -3841,11 +3843,11 @@ if not Quests then
 					name = "Reputation in Sabrehaven: Loyal",
 					storageId = Storage.Quest.U7_8.TheShatteredIsles.ReputationInSabrehaven,
 					missionId = 10276,
-					startValue = 20,
-					endValue = 22,
+					startValue = 16,
+					endValue = 17,
 					states = {
-						[20] = "You have finished nine missions. People in Sabrehaven are considering you as one of them.",
-						[21] = "You have finished all missions. \z
+						[16] = "You have finished nine missions. People in Sabrehaven are considering you as one of them.",
+						[17] = "You have finished all missions. \z
 						People in Sabrehaven are considering you as one of them and you earned their full trust.",
 					},
 				},
@@ -3944,7 +3946,7 @@ if not Quests then
 						[2] = "Snake Eye told you to visit Ahmet in Ankrahmun.",
 						[3] = "Ahmet told you that he will only help a friend and asked you to kill at least one Nomad.",
 						[4] = "You have killed a Nomad, go back to Ahmet!",
-						[5] = "You have received the forged documents from Ahmet, next is to get a disguise from Percybald in Venore!",
+						[5] = "You have received the forged documents from Ahmet, next is to get a disguise from Percybald in Carlin!",
 						[6] = "You have received the dwarf disguise from Percybald. Now go do the deal with Nurik.",
 						[7] = "You have traded the forged documents for the painting, report back to Dorian.",
 						[8] = "You have delivered the painting to Dorian, ask him for a new mission!",
@@ -4392,7 +4394,7 @@ if not Quests then
 					startValue = 1,
 					endValue = 2,
 					states = {
-						[1] = "You are a friend of Dalbrect. \z
+						[2] = "You are a friend of Dalbrect. \z
 						Since you returned his family brooch he will sail you to the Isle of Kings unless you do something stupid.",
 					},
 				},
@@ -4675,7 +4677,7 @@ if not Quests then
 				},
 				[14] = {
 					name = "To Outfox a Fox",
-					storageId = Storage.Quest.U8_1.ToOutfoxAFoxQuest,
+					storageId = Storage.Quest.U8_1.ToOutfoxAFoxQuest.Questline,
 					missionId = 10432,
 					startValue = 1,
 					endValue = 2,
@@ -5649,8 +5651,8 @@ if not Quests then
 					endValue = 3,
 					states = {
 						[1] = "Mr Morris tasked you to find an ancient amulet that was lost somewhere on Dawnport - probably next to a corpse somewhere.",
-						[2] = "Come back to Mr Morris.",
-						[3] = "Mr Morris thanks for you the help.",
+						[2] = "Deliver the ancient amulet back to Mr Morris.",
+						[3] = "You returned the lost amulet to Mr Morris and received your reward.",
 					},
 				},
 				[3] = {
@@ -5661,7 +5663,7 @@ if not Quests then
 					endValue = 2,
 					states = {
 						[1] = "Mr Morris urged you to find a log book that was stolen by trolls.",
-						[2] = "Mr Morris thanks you for the help.",
+						[2] = "You got the log book back from the troll caves and received a reward for your efforts.",
 					},
 				},
 				[4] = {
@@ -5672,8 +5674,8 @@ if not Quests then
 					endValue = 3,
 					states = {
 						[1] = "Mr Morris needs the rare Dawnfire herb harvested and brought to him. It grows on gray sand only, he said.",
-						[2] = "Come back to Mr Morris.",
-						[3] = "Mr Morris thanks you for the help.",
+						[2] = "You harvested a sample of the rare Dawnfire herb. Bring the sample to Mr Morris.",
+						[3] = "You managed to find the rare Dawnfire herb and were rewarded by Mr Morris. Nice job!",
 					},
 				},
 				[5] = {
@@ -5684,10 +5686,10 @@ if not Quests then
 					endValue = 5,
 					states = {
 						[1] = "The key to the adventurer's dormitory has disappeared. Maybe you can find it. Ask around to find out who was the last to have seen it.",
-						[2] = "Use the fishing rod in the nearby lake to fish Old Nasty.",
-						[3] = "Come back to Woblin with Old Nasty",
-						[4] = "Come back to Mr Morris with Key 0010",
-						[5] = "Mr Morris thanks for the help",
+						[2] = "Use a fishing rod in the pond to catch Old Nasty, you also requiere worms to use as bait.",
+						[3] = "You did it! You caught Old Nasty, you should inform Woblin about your catch.",
+						[4] = "Woblin was pleased about your catch his arch enemy Old Nasty. He gave you the lost adventurer's dormitory key as reward, hurry and delivery the key back to Mr Morris.",
+						[5] = "You found the key to the adventurers' dormitory and received a little reward on top of the thanks of everyone.",
 					},
 				},
 				[6] = {
@@ -6200,7 +6202,7 @@ if not Quests then
 			missions = {
 				[1] = {
 					name = "Troubled Animals",
-					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission01[1],
+					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission01.TroubledAnimals,
 					missionId = 10429,
 					startValue = 1,
 					endValue = 16,
@@ -6240,7 +6242,7 @@ if not Quests then
 				},
 				[2] = {
 					name = "Nightmare Intruders",
-					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission02[1],
+					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission02.NightmareIntruders,
 					missionId = 10430,
 					startValue = 1,
 					endValue = 8,
@@ -6271,7 +6273,7 @@ if not Quests then
 				},
 				[3] = {
 					name = "An Unlikely Couple",
-					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission03[1],
+					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission03.AnUnlikelyCouple,
 					missionId = 10431,
 					startValue = 1,
 					endValue = 4,
@@ -6286,11 +6288,85 @@ if not Quests then
 						You may also ask Aurita for the starlight vial now.",
 					},
 				},
+				[4] = {
+					name = "The Fairy Treasure",
+					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission04.ToothFairy,
+					missionId = 10432,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "The Tooth Fairy asked you to deliver presents to three children who recently lost a milk tooth. \z
+						Visit Quero's daughter's room in Thais, Allen's son's room in Venore and Rowenna's daughter's room in Carlin. \z
+						Place a present on each bed and collect the milk tooth from under the pillow. \z
+						Return to the Tooth Fairy with the three milk teeth.",
+						[2] = "You delivered the presents and collected the milk teeth. \z
+						The Tooth Fairy rewarded you with the first part of an old map. \z
+						Now find the Tired Tree north of the Fields of Glory and ask it for a mission.",
+					},
+				},
+				[5] = {
+					name = "Tired Trees",
+					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission04.TiredTree,
+					missionId = 10481,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "The Tired Tree north of the Fields of Glory asked for a bedtime story about Dryads. \z
+						Find the book 'The Seeds of Life' and recite its name to the tree.",
+						[2] = "You told the Tired Tree the story of 'The Seeds of Life' and received the second part of the old map. \z
+						Now find the Grumpy Stone between Kazordoon and Femor Hills and ask it for a mission.",
+					},
+				},
+				[6] = {
+					name = "Beset Stones",
+					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission04.GrumpyStone,
+					missionId = 10482,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "The Grumpy Stone between Kazordoon and Femor Hills asked you to scratch the backs of its five siblings. \z
+						Use a rake (no metal!) on all five sentient stones around it, then report back.",
+						[2] = "You scratched the backs of all five stones and received the third part of the old map. \z
+						The Grumpy Stone told you the fourth part is hidden in a Big Fly Agaric in the Fields of Glory, \z
+						south of the Tired Tree.",
+						[3] = "You found the fourth map part hidden between the gills of the Big Fly Agaric in the Fields of Glory. \z
+						Use any of the four map parts to combine them into the complete Old Map.",
+						[4] = "You assembled the Old Map. It tells you to search for a stone sun mosaic in the very south of Thais.",
+						[5] = "You discovered the fairy treasure hidden beneath the stones of the sun mosaic: \z
+						a Butterfly Ring, 5 Rainbow Quartz and 5 Ancient Coins.",
+					},
+				},
+				[7] = {
+					name = "Tooth Collection",
+					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission04.TeethCollection,
+					missionId = 10483,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "The Tooth Fairy asked you to complete her collection. Bring her: an Orc Tooth, Shark Teeth, \z
+						Vampire Teeth, a Perfect Behemoth Fang, a Carrion Worm Fang and Werewolf Fangs.",
+						[2] = "You delivered all the teeth for the Tooth Fairy's collection and received \z
+						the Toothfairy Assistant achievement.",
+					},
+				},
+				[8] = {
+					name = "The Swan Feather Cloak",
+					storageId = Storage.Quest.U11_40.ThreatenedDreams.Mission05.SwanFeatherCloak,
+					missionId = 10484,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Valindara agreed to craft a Swan Feather Cloak for you. \z
+						Collect 100 Swan Feathers from the eight spots around Feyrist near the swans \z
+						Once you have them all, return to Valindara.",
+						[2] = "You delivered 100 Swan Feathers to Valindara and received your Swan Feather Cloak.",
+					},
+				},
 			},
 		},
 		[46] = {
 			name = "Blood Brothers",
-			startStorageId = Storage.Quest.U8_4.BloodBrothers.QuestLine,
+			startStorageId = Storage.Quest.U8_4.BloodBrothers.Trust,
 			startStorageValue = 1,
 			missions = {
 				[1] = {
@@ -6300,10 +6376,10 @@ if not Quests then
 					startValue = 1,
 					endValue = 4,
 					states = {
-						[1] = "Think of a way to earn Julius' trust and prove that you are not a vampire. Once you thought of something, talk to him again about your mission.",
-						[2] = "",
-						[3] = "",
-						[4] = "You have Julius' trust.",
+						[1] = "Think of a way to earn Julius' trust and prove that you are not a vampire. Once you have thought of something, talk to him again about your mission.",
+						[2] = "Julius wants more proof. He asked if you have ever baked garlic bread. Confirm whether you know how to bake it.",
+						[3] = "Bake a garlic bread by using holy water on flour, then use the dough on garlic, and bake it in an oven. Bring it back to Julius and eat it in front of him.",
+						[4] = "You have earned Julius' trust.",
 					},
 				},
 				[2] = {
@@ -6313,8 +6389,8 @@ if not Quests then
 					startValue = 1,
 					endValue = 2,
 					states = {
-						[1] = "Bake garlic cookies by using the garlic dough on a baking tray before you put it on the oven. Hand out cookies to the citizens and watch their reactions. Report any suspicious people to Julius.",
-						[2] = "You have reported five suspects - probably vamires - to Julius.",
+						[1] = "Bake garlic cookies by using the garlic dough on a baking tray before putting it in the oven. Hand out cookies to the citizens and watch their reactions. Report any suspicious people to Julius.",
+						[2] = "You have reported five suspects — probably vampires — to Julius.",
 					},
 				},
 				[3] = {
@@ -6324,8 +6400,8 @@ if not Quests then
 					startValue = 1,
 					endValue = 3,
 					states = {
-						[1] = "Use the magic words 'alori mort' in front of the suspicious citizens you discovered to hopefully reveal who among them is their leader.",
-						[2] = "",
+						[1] = "Use the magic words 'alori mort' in front of the five suspicious citizens to reveal who among them is their leader.",
+						[2] = "You used the spell on all five suspects. Report your findings to Julius.",
 						[3] = "You reported the incident with Armenius to Julius.",
 					},
 				},
@@ -6334,9 +6410,78 @@ if not Quests then
 					storageId = Storage.Quest.U8_4.BloodBrothers.Mission04,
 					missionId = 10436,
 					startValue = 1,
-					endValue = 1,
+					endValue = 2,
 					states = {
-						[1] = "Your task is to find someone to bring you to Vengoth. Explore the island and use Julius' map whenever you find an unusual spot to mark it. Mark at least 5 spots including the castle and report back.",
+						[1] = "Find someone to bring you to Vengoth. Explore the island and use Julius' map whenever you find an unusual spot to mark it. Mark at least 5 spots including the castle and report back to Julius.",
+						[2] = "You have successfully mapped Vengoth and reported back to Julius.",
+					},
+				},
+				[5] = {
+					name = "Mission 05: Into the Castle",
+					storageId = Storage.Quest.U8_4.BloodBrothers.Mission05,
+					missionId = 10467,
+					startValue = 1,
+					endValue = 4,
+					states = {
+						[1] = "Find a blood crystal somewhere in Yalahar. Ask around to find out where you could get one.",
+						[2] = "Charge the blood crystal by finding someone who has lost something or someone dear to them. Their grief emits powerful energy.",
+						[3] = "Gather three more adventurers with charged blood crystals. Stand together on the four symbols around Vengoth castle to attune yourselves and unlock the gate. Report back to Julius.",
+						[4] = "You entered the castle but were blocked by invulnerable ghosts. Search for documents and books inside that reveal the history of the castle and its masters.",
+					},
+				},
+				[6] = {
+					name = "Mission 06: A Black History",
+					storageId = Storage.Quest.U8_4.BloodBrothers.Mission06,
+					missionId = 10468,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Explore the castle further. Search for hidden passages and look for documents or books that reveal the dark history of the castle and its masters.",
+						[2] = "You have uncovered the black history of the vampire brothers. Report your findings to Julius and explore deeper to find Boreth, the first of the four brothers.",
+					},
+				},
+				[7] = {
+					name = "Mission 07: Boreth",
+					storageId = Storage.Quest.U8_4.BloodBrothers.Mission07,
+					missionId = 10469,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Find Boreth, the first of the four vampire brothers, hidden somewhere in the castle. Defeat him and bring Julius proof of his death.",
+						[2] = "You have defeated Boreth, the first of the four vampire brothers.",
+					},
+				},
+				[8] = {
+					name = "Mission 08: Lersatio",
+					storageId = Storage.Quest.U8_4.BloodBrothers.Mission08,
+					missionId = 10470,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Defeat Lersatio, the second vampire brother. He lurks in another tower of the castle. Use his mirrors to shatter them and lure him out. Bring Julius proof of his death.",
+						[2] = "You have defeated Lersatio, the second vampire brother.",
+					},
+				},
+				[9] = {
+					name = "Mission 09: Marziel",
+					storageId = Storage.Quest.U8_4.BloodBrothers.Mission09,
+					missionId = 10471,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Defeat Marziel, the third vampire brother. Find access to his tower. A female character must step onto the throne carrying a vial of blood to awaken him. Bring Julius proof of his death.",
+						[2] = "You have defeated Marziel, the third vampire brother.",
+					},
+				},
+				[10] = {
+					name = "Mission 10: Arthei",
+					storageId = Storage.Quest.U8_4.BloodBrothers.Mission10,
+					missionId = 10472,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Defeat Arthei, the master vampire brother. Find him in the deepest part of the castle and bring Julius proof of his death.",
+						[2] = "You have defeated all four vampire brothers and freed Yalahar from their curse. Julius rewarded you with a special crest.",
 					},
 				},
 			},
@@ -6507,7 +6652,7 @@ if not Quests then
 				},
 				[14] = {
 					name = "The Order of the Cobra",
-					storageId = Storage.Quest.U12_20.GraveDanger.Cobra,
+					storageId = Storage.Quest.U12_20.GraveDanger.CobraBastion.Access,
 					missionId = 10450,
 					startValue = 1,
 					endValue = 2,
@@ -6634,6 +6779,74 @@ if not Quests then
 			},
 		},
 		[50] = {
+			name = "The Dream Courts",
+			startStorageId = Storage.Quest.U12_00.TheDreamCourts.Main.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "The Dream Courts",
+					storageId = Storage.Quest.U12_00.TheDreamCourts.WardStones.Questline,
+					missionId = 10457,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = function(player)
+							return string.format("You already got %d/8 energized ward stones.", math.max(player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.WardStones.Count), 0))
+						end,
+						[2] = "You must kill the Nightmare Beast.",
+						[3] = "By defeating the dreadful Nightmare Beast you did the Winter Court and the Summer Court alike a great favor. From now on, the dream elves will regard you as a friend.",
+					},
+				},
+				[2] = {
+					name = "Unsafe Release",
+					storageId = Storage.Quest.U12_00.TheDreamCourts.UnsafeRelease.Questline,
+					missionId = 10458,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "Part I",
+						[2] = "Part II",
+						[3] = "Andre was happy to hear that the compass works as intendend. From now on it is possible that he will charge your compass again. It can be used to give acess to mystical chests once a day.",
+					},
+				},
+				[3] = {
+					name = "Haunted House",
+					storageId = Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Questline,
+					missionId = 10459,
+					startValue = 1,
+					endValue = 6,
+					states = {
+						[1] = function(player)
+							return string.format(
+								"A tormented soul trusted you with the secret of this house: join the passages to the three dungeons it connects to reveal a hidden portal within!\n\nCellar %d/1\nTemple %d/1\nTomb %d/1",
+								math.max(player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Cellar), 0),
+								math.max(player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Temple), 0),
+								math.max(player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.HauntedHouse.Tomb), 0)
+							)
+						end,
+						[2] = "Part I - burried catedral",
+						[3] = "Part II - puzzle dos livros",
+						[4] = "Part III - bosses",
+						[5] = "Part IV - last stone",
+						[6] = "Activating the ward stone after defeating the Faceless Bane has gained you acess to the deepest mysteries of the dream courts.",
+					},
+				},
+				[4] = {
+					name = "The Seven Keys",
+					storageId = Storage.Quest.U12_00.TheDreamCourts.TheSevenKeys.Questline,
+					missionId = 10460,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							return string.format("You already got %d/7 secret keys.", math.max(player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.TheSevenKeys.Count), 0))
+						end,
+						[2] = "You found the seven keys to unlock the Seven Dream Doors in the Labyrinth of Summer's and Winter's Dreams.",
+					},
+				},
+			},
+		},
+		[51] = {
 			name = "No Rest for the Wicked",
 			startStorageId = Storage.Quest.U14_10.NoRestForTheWicked.Questlog,
 			startStorageValue = 1,
@@ -6641,7 +6854,7 @@ if not Quests then
 				[1] = {
 					name = "With friends like these...",
 					storageId = Storage.Quest.U14_10.NoRestForTheWicked.KillArbaziloth.Questline,
-					missionId = 10457,
+					missionId = 10601,
 					startValue = 1,
 					endValue = 2,
 					states = {
@@ -6652,7 +6865,7 @@ if not Quests then
 				[2] = {
 					name = "The Doomforge",
 					storageId = Storage.Quest.U14_10.NoRestForTheWicked.ForgemasterDoor.Questline,
-					missionId = 10458,
+					missionId = 10602,
 					startValue = 1,
 					endValue = 3,
 					states = {
@@ -6663,7 +6876,7 @@ if not Quests then
 				},
 			},
 		},
-		[50] = {
+		[52] = {
 			name = "The Way of the Monk",
 			startStorageId = Storage.Quest.U15_00.TheWayOfTheMonk.Questlog,
 			startStorageValue = 1,
@@ -6799,6 +7012,638 @@ if not Quests then
 					endValue = 1,
 					states = {
 						[1] = "You have honored the Shrine of Eternity and learned the spell 'Focus Harmony'.",
+					},
+				},
+			},
+		},
+		[53] = {
+			name = "Bloody Tusks Quest",
+			startStorageId = Storage.Quest.U15_10.BloodyTusks.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Into the grave",
+					storageId = Storage.Quest.U15_10.BloodyTusks.IntoTheGrave,
+					missionId = 10461,
+					startValue = 1,
+					endValue = 2,
+					description = "Find the strange grave the bat was talking about. It can't be that far.",
+				},
+				[2] = {
+					name = "Through the mist",
+					storageId = Storage.Quest.U15_10.BloodyTusks.ThroughTheMist,
+					missionId = 10462,
+					startValue = 1,
+					endValue = 2,
+					description = "You were sent to investigate a looming threat of some kind of orcish vampire and his offspring. Locate the Norcferatu fortress in Vengoth and find a way to enter it.",
+				},
+				[3] = {
+					name = "The wrath of the ancestors",
+					storageId = Storage.Quest.U15_10.BloodyTusks.TheWrathOfTheAncestorst,
+					missionId = 10463,
+					startValue = 1,
+					endValue = 2,
+					description = "You first have to gain the assistance of the angered spirits of the orcish ancestors. Find the ancient burial cave and find a way to contact and appease them.",
+				},
+				[4] = {
+					name = "Dance of death",
+					storageId = Storage.Quest.U15_10.BloodyTusks.DanceOfDeath,
+					missionId = 10464,
+					startValue = 1,
+					endValue = 2,
+					description = "Apeease the Norcferatu ancestors by participating in the ancient orcish ritual dance. Dance the dance of the red full moon and gain their approval.",
+				},
+				[5] = {
+					name = "The next step",
+					storageId = Storage.Quest.U15_10.BloodyTusks.TheNextStep,
+					missionId = 10465,
+					startValue = 1,
+					endValue = 2,
+					description = "With the ancestor spirits on your side, it's time to learn hat to do next to gain entrance to Vladdrukhs underground lair. Report back to Anaztassja.",
+				},
+				[6] = {
+					name = "Bloodbath",
+					storageId = Storage.Quest.U15_10.BloodyTusks.Bloodbath,
+					missionId = 10466,
+					startValue = 1,
+					endValue = 2,
+					description = "To fool the magic wards of the fortress, you must first befoul yourself. Gain entrance to the bloodbath and let the Norcferatu's tainted blood seep into your flesh.",
+				},
+			},
+		},
+		[54] = {
+			name = "The Order of the Lion",
+			startStorageId = Storage.Quest.U12_40.TheOrderOfTheLion.Evrard,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Mission 01: Infiltrating the Camp",
+					storageId = Storage.Quest.U12_40.TheOrderOfTheLion.Evrard,
+					missionId = 10473,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "Evrard the Miller asked you to sneak into the usurper camp to the east and retrieve a ledger from the harbour warehouse and a map from somewhere in the camp. Be quiet and avoid being seen.",
+						[2] = "You have retrieved both the ledger and the map. Report back to Evrard the Miller.",
+						[3] = "Evrard rewarded you with access to an underground route into the city and a passphrase: YSELDA. Use it with the citizens of Bounac to earn their trust.",
+					},
+				},
+				[2] = {
+					name = "Gaining the Trust of Bounac Residents",
+					storageId = Storage.Quest.U12_40.TheOrderOfTheLion.BounacTrust,
+					missionId = 10474,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "You have earned the trust of 1 citizen of Bounac. Use the passphrase YSELDA with the other residents to earn their trust as well.",
+						[2] = "You have earned the trust of 2 citizens of Bounac. Use the passphrase YSELDA with the other residents to earn their trust as well.",
+						[3] = "You have earned the trust of 3 citizens of Bounac. Use the passphrase YSELDA with the other residents to earn their trust as well.",
+						[4] = "You have earned the trust of 4 citizens of Bounac. Use the passphrase YSELDA with the other residents to earn their trust as well.",
+						[5] = "You have earned the trust of all the citizens of Bounac. The Bounac Guard may now allow you to enter the Castle. Just ask him to 'pass'.",
+					},
+				},
+				[3] = {
+					name = "Mission: Tasks of Trust",
+					storageId = Storage.Quest.U12_40.TheOrderOfTheLion.WesTask,
+					missionId = 10475,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Wes the Blacksmith needs materials to forge better equipment. Bring him 20 broken longbows from fallen usurpers.",
+						[2] = "You have earned Wes the Blacksmith's trust by delivering the broken longbows.",
+					},
+				},
+				[4] = {
+					name = "Mission: The Baker's Request",
+					storageId = Storage.Quest.U12_40.TheOrderOfTheLion.JehanTask,
+					missionId = 10476,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You delivered 10 loaves of bread to Jehan the Baker and earned his trust.",
+					},
+				},
+				[5] = {
+					name = "Mission: Purify the Crypt",
+					storageId = Storage.Quest.U12_40.TheOrderOfTheLion.OnfroiKills,
+					missionId = 10477,
+					startValue = 0,
+					endValue = 20,
+					description = function(player)
+						return string.format("You already destroyed %d/20 crypt warriors.", (math.max(player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.OnfroiKills), 0)))
+					end,
+				},
+				[6] = {
+					name = "Mission: The Hunt for Dal",
+					storageId = Storage.Quest.U12_40.TheOrderOfTheLion.DalKills,
+					missionId = 10478,
+					startValue = 0,
+					endValue = 20,
+					description = function(player)
+						return string.format("You already hunted %d/20 deer.", (math.max(player:getStorageValue(Storage.Quest.U12_40.TheOrderOfTheLion.DalKills), 0)))
+					end,
+				},
+				[7] = {
+					name = "Mission: Provisions for the Butcher",
+					storageId = Storage.Quest.U12_40.TheOrderOfTheLion.FralTask,
+					missionId = 10479,
+					startValue = 1,
+					endValue = 1,
+					states = {
+						[1] = "You delivered 20 chunks of raw ham to Fral the Butcher and earned his trust.",
+					},
+				},
+				[8] = {
+					name = "Mission 02: The Siege of Bounac",
+					storageId = Storage.Quest.U12_40.TheOrderOfTheLion.KesarMission,
+					missionId = 10480,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "Kesar the Younger has asked you to wait while he attends to other matters. Return to him after some time and ask him about the siege again.",
+						[2] = "You have agreed to Kesar's plan. Wait for one Tibian day and then return to his chambers during the night. Stay alert — enemies may appear.",
+						[3] = "You have defeated Fugue. Speak with Kesar the Younger during the day. He may ask you to investigate other knightly orders before proceeding.",
+						[4] = "Join up to 4 other adventurers at the battlefield on the eastern coast of Bounac. Defeat the Usurper Commanders, then face Drume himself.",
+						[5] = "You have defeated Drume and his forces. Report back to Kesar the Younger to receive your reward.",
+					},
+				},
+			},
+		},
+		[55] = {
+			name = "Targuna",
+			startStorageId = Storage.Quest.U15_24.Targuna.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "A long lost treasure",
+					storageId = Storage.Quest.U15_24.Targuna.LongLostTreasure.Mission,
+					missionId = 11011,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "Sterling told you that his turtle Matilda can take you from Targuna to the pirate island Aragonia, whenever you're ready.\nTravel to Aragonia and take care of the pirates and save Morla in the process.",
+						[2] = function(player)
+							return ("You've arrived in Aragonia. Help Sterling and his friend Morla by saving the tortoise eggs scattered around the island and taking care of the local pirate problem.\n\nYou already killed %d/20 pirates and saved %d/10 tortoise eggs.\n\nReport back to Morla once your objective is completed. You can find her in a small cave on the south side of Aragonia."):format(
+								math.max(player:getStorageValue(Storage.Quest.U15_24.Targuna.LongLostTreasure.PirateKillCount), 0),
+								math.max(player:getStorageValue(Storage.Quest.U15_24.Targuna.LongLostTreasure.TortoiseEggCount), 0)
+							)
+						end,
+						[3] = "After talking to Morla and assuring her that she and her eggs will stay safe from now on, she handed you an old map she stole from one of the sleeping pirates.\n\nTravel back to Targuna and show Sterling the mysterious treasure map and let him decipher it.",
+						[4] = "Sterling deciphered the map and told you about the spot on Targuna.\nThe long lost treasure can be found for those who have their eyes open and their hearts pure.\nLook for a hidden place on the island where water and rocks meet.",
+						[5] = "You found the marked spot on Targuna and dug into the sand. Beneath it, a hidden entrance to a previously unknown cave was revealed.\n\nAt the end of the cave you find the long forgotten treasure chest ready to be opened.\n\nTake what is hidden inside as your reward for your hard work and service to Sterling, Morla and Targuna as a whole.",
+					},
+				},
+				[2] = {
+					name = "An Ancient Enemy",
+					storageId = Storage.Quest.U15_24.Targuna.AncientEnemy.Mission,
+					missionId = 11010,
+					startValue = 1,
+					endValue = 4,
+					states = {
+						[1] = "You heard about a growing lizard clan hidden deep inside a temple under Targuna.\nTalk to Lizzie in order to get more information on how to find these lizards and what to be careful of.\nYou can find Lizzie on the southside of Targuna.",
+						[2] = function(player)
+							return ("After talking to Lizzie you received all necessary information about the lizard group on Targuna.\nYour mission is now to eliminate the Lizard Commander and put an end to his reign.\n\nYou've eliminated %d/1 Lizard Commander.\n\nInform Lizzie after eliminating your target."):format(
+								math.max(player:getStorageValue(Storage.Quest.U15_24.Targuna.AncientEnemy.LizardCommanderKilled), 0)
+							)
+						end,
+						[3] = "You finally put an end to the reign of the Lizard Commander.\nBased on Lizzie's research, this lizard group will soon dissolve and won't be a threat again.\n\nTalk to the mayor, Camilla, about your work. You can find her in the upper levels of the depot.",
+						[4] = "You've told Camilla about the Hidden Lizard Temple under Targuna and the research Lizzie was involved in to uncover the danger hidden beneath.\n\nCamilla, Lizzie and all citizens of Targuna are grateful for your efforts, ensuring the town stays safe for years to come.",
+					},
+				},
+				[3] = {
+					name = "Burning Heat",
+					storageId = Storage.Quest.U15_24.Targuna.BurningHeart.Mission,
+					missionId = 11017,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "Emiliana asked you to help her fight the danger lingering within the portal.\nUse the teleporter in her upstairs room to travel into the Crimson Court and speak to Emiliana again to discuss your further plans.",
+						[2] = "You've reached the Crimson Court and talked to Emiliana about your next actions.\nShe tasked you to make your way deeper into the crater.\nFind out where the uprising demonic force called Herald of Fire resides and destroy his growing kingdom in order to save Targuna and its residents.",
+						[3] = "At last his kingdom comes to an end as you feel the power bursting from the remains of the Herald of Fire.\nTake what's now rightfully yours and travel back to Emiliana on Targuna to discuss further actions.",
+						[4] = "As a sign of gratitude for your service, Emiliana gifted you a bunch of turnips, hinting at the wild ram living behind the bakery on Targuna. Emiliana seems to know how much these creatures enjoy the taste of fresh roots.\n\nVisit the ram and use the given bunch of turnips to feed the hungry mammal.",
+						[5] = "You used the bunch of turnips on the ram in Targuna. It enjoyed your gift so much that it will now follow you as a partner in crime after helping Emiliana and the citizens of the island by taking care of the Herald of Fire.\n\nWhere will you and your new wandering partner head next?",
+					},
+				},
+				[4] = {
+					name = "Claim your Daily Reward",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.DailyReward,
+					missionId = 11012,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Task: Claim your Daily Reward\nYou can find the Daily Reward shrine at the depot in the center of Targuna.\nChoose your Daily Reward from the menu by clicking it.",
+						[2] = "You successfully claimed your daily reward.",
+					},
+				},
+				[5] = {
+					name = "Deposit Gold",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.DepositGold,
+					missionId = 11013,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Task: Deposit gold into your bank account\nYou can deposit gold from your backpack into your bank account by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and deposit gold by using the according icon or typing "deposit".',
+						[2] = "You successfully deposited gold into your bank account.",
+					},
+				},
+				[6] = {
+					name = "Stash an Item",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.StashItem,
+					missionId = 11014,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Task: Stash an item\nYou can find the stash inside the locker at the depot in the center of Targuna.\nInteract with the locker by clicking on a chest next to the glowing depot plates.\nMove an item from your backpack into your stash by dragging it onto the stash icon.",
+						[2] = "You successfully stashed an item.",
+					},
+				},
+				[7] = {
+					name = "Take an item from your stash",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.TakeFromStash,
+					missionId = 11015,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Task: Take an item from your stash\nYou can find the stash inside the locker at the depot in the center of Targuna.\nInteract with the locker by clicking on a chest next to the glowing depot plates.\nOpen the stash by clicking on the icon and choose your desired item. Click it to move it into your inventory.",
+						[2] = "You successfully took an item from your stash.",
+					},
+				},
+				[8] = {
+					name = "Withdraw gold from your account",
+					storageId = Storage.Quest.U15_24.Targuna.SecondaryTasks.WithdrawGold,
+					missionId = 11016,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Task: Withdraw gold from your bank account\nYou can withdraw gold from your bank account into your backpack by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and withdraw gold by using the according icon or typing "withdraw".',
+						[2] = "You successfully withdrew gold from your bank account.",
+					},
+				},
+			},
+		},
+		[56] = {
+			name = "Rottin Wood and the Married Men",
+			startStorageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Mission 1: Lucky Charms",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission01,
+					missionId = 11018,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Rottin Wood has sent you on and important mission to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
+						[2] = "You delivered the lucky charms as requested. Rottin Wood was quite pleased and offered you to continue helping him and his men.",
+					},
+				},
+				[2] = {
+					name = "Mission 2: In a State of Dispair",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission02,
+					missionId = 11019,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ("You accepted a quest to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp. So far you fixed %d of 6 broken walls."):format(math.max(count, 0))
+						end,
+						[2] = "You tried your best to fix the walls in the camp. It does not look like any of your repairs will hold forever. Rottin Wood would like you to stay around and look for any further damages another day.",
+					},
+				},
+				[3] = {
+					name = "Mission 3: Bushwhacking",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission03,
+					missionId = 11020,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-corpsecount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ('You agreed to help Rottin Wood and the Married Men to relieve several merchants of their goods. Lay out the net traps he gave you to catch 5 of them. So far you have "relieved" %d of 5 merchants.'):format(math.max(count, 0))
+						end,
+						[2] = 'You have "relieved" enough merchants to provide the very pleased Rottin Wood and his men with enough opportunities to gather valuables and supplies.',
+					},
+				},
+				[4] = {
+					name = "Daily Task: Lucky Loop",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Task01,
+					missionId = 11021,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Rottin Wood has sent you on and important task to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
+						[2] = "You delivered the lucky charms as requested. Rottin Wood seems to be satisfied with that profit for today.",
+					},
+				},
+				[5] = {
+					name = "Daily Task: Handyman",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Task02,
+					missionId = 11022,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ("You accepted a task to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp - again. So far you swong your hammer on %d of 6 broken walls."):format(math.max(count, 0))
+						end,
+						[2] = "You tried your best to fix the walls in the camp all day long. It does not look like any of your repairs will hold forever. More repairs maybe needed in the future.",
+					},
+				},
+			},
+		},
+		[57] = {
+			name = "Shadows of Yalahar Quest",
+			startStorageId = Storage.Quest.U8_5.ShadowsOfYalahar.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Mission 01: Errand boy",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission01,
+					missionId = 11023,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "You are assisting Telas in constructing a golem. Visit Boveas, Cerdras, Dreadeye, Milos and Scutty. Ask them to send their research notes to Telas.",
+						[2] = "You have contacted all the persons that Telas wanted to send him information.",
+					},
+				},
+				[2] = {
+					name = "Mission 02: A vital part",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission02,
+					missionId = 11024,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Your mission is to find a mago mechanic core for Telas. You might find one in the factory quarter. Use the cooler cannons to cool the core and then take it from the nearby core dispenser.",
+						[2] = "You have delivered the mago mechanic core to Telas.",
+					},
+				},
+				[3] = {
+					name = "Mission 03: The core problem",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission03,
+					missionId = 11025,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Gather 10 elemental crystals for Telas. You might gain them by using a pick axe on dead earth elementals (after they become movable).",
+						[2] = "You have delivered the 10 elemental crystals to Telas.",
+					},
+				},
+				[4] = {
+					name = "Mission 04: Gathering golem parts",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission04,
+					missionId = 11026,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Use your golem disassembler to retrieve golem part from recently disabled golems (after they become movable). Gather 6 golem parts for Telas.",
+						[2] = "You have delivered 6 golems parts to Telas",
+					},
+				},
+				[5] = {
+					name = "Mission 05: Charged to charge",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission05,
+					missionId = 11027,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, count = pcall(function()
+								local kv = player:kv():scoped("shadows-of-yalahar")
+								local total = 0
+								for _, letter in ipairs({ "a", "b", "c" }) do
+									local delivered = kv:get("delivered-" .. letter)
+									if delivered == true then
+										total = total + 1
+									end
+								end
+								return total
+							end)
+							count = ok and count or 0
+							return ("Find the charging machine in the alchemist quarter. Get the required charges (A, B and C) for Telas. You have delivered %d different charge%s to Telas by now."):format(count, count == 1 and "" or "s")
+						end,
+						[2] = "You have delivered all three different charges to Telas.",
+					},
+				},
+				[6] = {
+					name = "Mission 06: Out of the blue",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission06,
+					missionId = 11028,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Find golem blueprints in the factory quarter and deliver them to Telas",
+						[2] = "You have delivered the golem blueprints to Telas",
+					},
+				},
+				[7] = {
+					name = "Mission 07: Powering up",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission07,
+					missionId = 11029,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "You have to find an old power core for Telas. Your best chances to find one are probably in the former alchemist quarter.",
+						[2] = "You have found an old power core for Telas.",
+					},
+				},
+				[8] = {
+					name = "Mission 08: Getting things stable",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission08,
+					missionId = 11030,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Find a stabilizer for Telas somewhere in the sunken quarter.",
+						[2] = "You have retrieved a stabilizer for Telas.",
+					},
+				},
+				[9] = {
+					name = "Mission 09: Researching the ritual",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission09,
+					missionId = 11031,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "Find the ancient Yalahar library somewhere in Yalahar's centre. Try to use the books to recreate the ritual by using the ink-well. If you get a headache from reading, wait for it to wear off.",
+						[2] = "You have sucessfylly recreated the ritual and memorized it. Travel to Telas to share your knowledge with him.",
+						[3] = "You told Telas everything you have learned about the ancient Yalahar ritual.",
+					},
+				},
+				[10] = {
+					name = "Mission 10: The right ingredients",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission10,
+					missionId = 11032,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, count = pcall(function()
+								local kv = player:kv():scoped("shadows-of-yalahar")
+								local index = kv:get("mission10-index")
+								local state = kv:get("mission10-state")
+
+								if not index or not state then
+									return 0
+								end
+
+								if state == "done" then
+									return 3
+								end
+
+								return math.max(index - 1, 0)
+							end)
+							count = ok and count or 0
+
+							if count == 0 then
+								return "To make the ritual work, Telas needs certain ingredients. You have brought him none of the ingredients by now."
+							end
+
+							return ("To make the ritual work, Telas needs certain ingredients. You have brought him %d of the 3 ingredients by now."):format(count)
+						end,
+						[2] = "You have brought all the ingredients Telas needs.",
+					},
+				},
+				[11] = {
+					name = "Mission 11: Take a shower",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission11,
+					missionId = 11033,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "You have to disguise your aura by using a Yalahari energy shower. Telas assumes you might find one in the factory quarter.",
+						[2] = "You have taken a Yalahari energy shower - which was a shocking experience so to say - and can report back to Telas.",
+						[3] = "After taking an energy shower Telas has zapped you with some Yalahari item and claims that your aura now should be similar enough to that of a true Yalahari.",
+					},
+				},
+				[12] = {
+					name = "Mission 12: Headless",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission12,
+					missionId = 11034,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Telas hopes that your disguised aura might gain you entrance in some remote Yalahari research outpost beneath the isle of Fenrock. Gain entrance and find a golem head.",
+						[2] = "You have delivered the golem head to Telas.",
+					},
+				},
+				[13] = {
+					name = "Mission 13: Fruits of success",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission13,
+					missionId = 11035,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Telas asked you to join him in his laboratory to activate the golem. Talk to Telas afterwards.",
+						[2] = "You helped Telas create his golem.",
+					},
+				},
+			},
+		},
+		[58] = {
+			name = "The Isle Of Evil",
+			startStorageId = Storage.Quest.U8_5.TheIsleOfEvil.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Hired",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission13,
+					missionId = 11036,
+					startValue = 0,
+					endValue = 1,
+					description = "You are hired .. sort of. Speak to Rapanaio about your first mission to help him.",
+				},
+				[2] = {
+					name = "Mission 01: Just A Fishing Trip",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission01,
+					missionId = 11037,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio wants a mechanical fish. Travel to sewers of Yalahar and use your mechanical fishing rod along with some nails as bait to tactch one. Return that fish to Rapanaio for examination.You have delivered a mechanical fish to Rapanaio and are ready for your next mission.",
+						[2] = "You have delivered the mechanical fish to Rapanaio.",
+					},
+				},
+				[3] = {
+					name = "Mission 02: A Potent Fuel",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission02,
+					missionId = 11038,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio needs 10 vials filled with rum as fuel for his ominous invention.",
+						[2] = "You have delivered 10 instances of rum to Rapanaio... and pray he actually saves it as fuel.",
+					},
+				},
+				[4] = {
+					name = "Mission 03: Something Sweet",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission03,
+					missionId = 11039,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio urgently wants one vial of fruit juice. You better hurry, else his invention might be in danger.",
+						[2] = "Rapanaio got the juice he requested just in time... to quench his thirst.",
+					},
+				},
+				[5] = {
+					name = "Mission 04: The Technomancer's Machine",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission04,
+					missionId = 11040,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "Rapanaio has asked you to get him a machina from his old acquaintance Scutty of the technomancers' guild in Kazordoon.",
+						[2] = "Scutty asked you to scared away 6 carrion worms. Take caro to don't hit his ordinary worms!",
+						[3] = "You have gotten the machine from Scutty and can deliver it to Rapanaio.",
+						[4] = "You received the machine from Scutty. Go deliver it to Rapanaio.",
+						[5] = "You have delivered the machine from Scutty to Rapanaio.",
+					},
+				},
+				[6] = {
+					name = "Mission 05: The Map To Evil",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission05,
+					missionId = 11041,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "Rapanaio needs a nautical map from the Explorer Society. Ask about one at their base northeast of Carlin.",
+						[2] = "Mortimer advised you to look for the map in a cave to the east.",
+						[3] = "You have delivered the Nautical Map to Rapanaio.",
+					},
+				},
+				[7] = {
+					name = "Mission 06: The Secret",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission06,
+					missionId = 11042,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio has asked you to meet him downstairs where he will reveal his invention. Surely absolutely nothing can happen to you in some dwarf's cellar and you should be perfectly safe... probably.",
+						[2] = "You have now seen Rapanaio's invention - an underwater boat of dubious design. He has rather reluctantly transported you to the Isle of Evil. You should talk to him about the next step in his plan.",
+					},
+				},
+				[8] = {
+					name = "Mission 07: The Master Of Evil",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission07,
+					missionId = 11043,
+					startValue = 1,
+					endValue = 4,
+					states = {
+						[1] = "Now that you finally arrived on the Isle of Evil it's your duty to slay the master of this isle. Make sure to use his corpse to find prof of your accomplishment. Rapanaio will await your return.",
+						[2] = "You killed every threat on the island of evil. Talk to Rapanaio about it.",
+						[3] = "You have finally braved the perils of the Isle of Evil. Now you should follow Rapanaio's suggestion and speak to King Tibianus in Thais about that membership card.",
+						[4] = "You spoke with King Tibianus about the membership card.",
 					},
 				},
 			},

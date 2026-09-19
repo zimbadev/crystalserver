@@ -85,7 +85,7 @@ monster.loot = {
 	{ name = "vampire shield", chance = 15840 },
 	{ name = "strong health potion", chance = 18000 },
 	{ name = "platinum coin", chance = 12000, maxCount = 5 },
-	{name = "black pearl", chance = 990 },
+	{ name = "black pearl", chance = 990 },
 	{ id = 3098, chance = 10890 }, -- ring of healing
 	{ id = 3114, chance = 11880 }, -- skull
 	{ name = "spellbook of lost souls", chance = 1980 },

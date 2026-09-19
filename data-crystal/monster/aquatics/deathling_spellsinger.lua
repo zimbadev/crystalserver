@@ -86,7 +86,7 @@ monster.loot = {
 	{ name = "great health potion", chance = 9130 },
 	{ name = "deepling ridge", chance = 8840 },
 	{ name = "deepling warts", chance = 8540 },
-	{ name = "great mana potion", chance = 8200 },
+	{ id = 238, chance = 8200 }, -- great mana potion
 	{ name = "vortex bolt", chance = 6380, maxCount = 25 },
 	{ name = "eye of a deepling", chance = 4760 },
 	{ name = "heavy trident", chance = 4120 },

@@ -119,6 +119,7 @@ npcConfig.shop = {
 	{ itemName = "opal", clientId = 22194, sell = 500 },
 	{ itemName = "ornate locket", clientId = 30056, sell = 18000 },
 	{ itemName = "prismatic quartz", clientId = 24962, sell = 450 },
+	{ itemName = "rainbow quartz", clientId = 25737, sell = 500 },
 	{ itemName = "red crystal fragment", clientId = 16126, sell = 800 },
 	{ itemName = "ruby necklace", clientId = 3016, buy = 3560 },
 	{ itemName = "scarab coin", clientId = 3042, sell = 100 },
@@ -141,6 +142,7 @@ npcConfig.shop = {
 	{ itemName = "wedding ring", clientId = 3004, buy = 990 },
 	{ itemName = "white silk flower", clientId = 34008, sell = 9000 },
 	{ itemName = "white pearl", clientId = 3026, buy = 320, sell = 160 },
+	{ itemName = "bounty talisman", clientId = 51978, buy = 5000 },
 }
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)
@@ -152,5 +154,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("deposit all", "withdraw", "balance", "bye")
 
 npcType:register(npcConfig)

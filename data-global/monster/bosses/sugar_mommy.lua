@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Sugar Mommy")
 local monster = {}
 
 monster.description = "Sugar Mommy"
-monster.experience = 45000
+monster.experience = 6800
 monster.outfit = {
 	lookType = 1764,
 	lookHead = 0,
@@ -18,9 +18,9 @@ monster.bosstiary = {
 	bossRace = RARITY_BANE,
 }
 
-monster.health = 45000
-monster.maxHealth = 45000
-monster.race = "blood"
+monster.health = 6000
+monster.maxHealth = 6000
+monster.race = "candy"
 monster.corpse = 48415
 monster.speed = 150
 monster.manaCost = 0
@@ -62,46 +62,35 @@ monster.light = {
 	color = 0,
 }
 
-monster.voices = {
-	interval = 5000,
-	chance = 10,
-	{ text = "SUGAR!!!", yell = false },
-}
+monster.voices = {}
 
 monster.loot = {
-	{ name = "gold coin", chance = 100000, maxCount = 95 },
-	{ name = "platinum coin", chance = 100000, maxCount = 11 },
-	{ name = "small enchanted sapphire", chance = 8900 },
-	{ id = 3039, chance = 94465, maxCount = 1 }, -- red gem
-	{ name = "white gem", chance = 5600, maxCount = 1 },
-	{ id = 48114, chance = 1000 }, -- peppermint backpack
-	{ id = 45643, chance = 1000 }, -- biscuit barrier
-	{ id = 45644, chance = 1000 }, -- candy-coated quiver
-	{ id = 45639, chance = 1000 }, -- cocoa grimoire
-	{ id = 45640, chance = 1000 }, -- creamy grimoire
-	{ id = 45641, chance = 2300 }, -- candy necklace
-	{ id = 45642, chance = 7650 }, -- ring of temptation
-	{ id = 48254, chance = 11655, maxCount = 1 }, -- churro heart
-	{ id = 48250, chance = 46555, maxCount = 1 }, -- dark chocolate coin
-	{ id = 48252, chance = 15300, maxCount = 1 }, -- beijinho
-	{ id = 45642, chance = 14650, maxCount = 1 }, -- brigadeiro
-	{ id = 48249, chance = 54465, maxCount = 1 }, -- milk chocolate coin
-	{ id = 48256, chance = 2367, maxCount = 1 }, -- pastry dragon
+	{ id = 3035, chance = 100000, maxCount = 13 }, -- platinum coin
+	{ id = 3590, chance = 100000, maxCount = 2 }, -- cherry
+	{ id = 48249, chance = 54465, maxCount = 7 }, -- milk chocolate coin
+	{ id = 48250, chance = 46555, maxCount = 5 }, -- dark chocolate coin
+	{ id = 48273, chance = 16800, maxCount = 1 }, -- taiyaki ice cream
+	{ id = 3039, chance = 6100, maxCount = 1 }, -- red gem
+	{ id = 25737, chance = 3800, maxCount = 2 }, -- rainbow quartz
+	{ id = 3038, chance = 3500, maxCount = 1 }, -- green gem
+	{ id = 3037, chance = 3500, maxCount = 1 }, -- yellow gem
+	{ id = 25700, chance = 1700, maxCount = 1 }, -- dream blossom staff
+	{ id = 6393, chance = 3500, maxCount = 1 }, -- cream cake
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 20, minDamage = 0, maxDamage = -650 },
-	{ name = "combat", interval = 2000, chance = 50, type = COMBAT_ENERGYDAMAGE, minDamage = -470, maxDamage = -680, range = 6, shootEffect = CONST_ANI_CHERRYBOMB, target = true },
-	{ name = "combat", interval = 2000, chance = 25, type = COMBAT_ENERGYDAMAGE, minDamage = -1170, maxDamage = -1280, radius = 6, effect = CONST_ME_PURPLEENERGY, target = false },
-	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_EARTHDAMAGE, minDamage = -1050, maxDamage = -1110, radius = 12, effect = CONST_ME_HEARTS, target = false },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -200 },
+	{ name = "combat", interval = 2000, chance = 50, type = COMBAT_ENERGYDAMAGE, minDamage = -50, maxDamage = -250, range = 6, shootEffect = CONST_ANI_CHERRYBOMB, target = true },
+	{ name = "combat", interval = 2000, chance = 25, type = COMBAT_ENERGYDAMAGE, minDamage = -90, maxDamage = -180, radius = 6, effect = CONST_ME_PURPLEENERGY, target = false },
+	{ name = "combat", interval = 2000, chance = 18, type = COMBAT_EARTHDAMAGE, minDamage = -75, maxDamage = -110, radius = 12, effect = CONST_ME_HEARTS, target = false },
 	{ name = "root area", interval = 20000, chance = 100, target = false },
 }
 
 monster.defenses = {
-	defense = 65,
-	armor = 55,
+	defense = 25,
+	armor = 15,
 	--	mitigation = ???,
-	{ name = "combat", interval = 3000, chance = 25, type = COMBAT_HEALING, minDamage = 1400, maxDamage = 1600, effect = CONST_ME_MAGIC_BLUE, target = false },
+	{ name = "combat", interval = 3000, chance = 25, type = COMBAT_HEALING, minDamage = 250, maxDamage = 300, effect = CONST_ME_MAGIC_BLUE, target = false },
 }
 
 monster.elements = {

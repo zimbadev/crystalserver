@@ -85,7 +85,7 @@ monster.loot = {
 	{ name = "giant crab pincer", chance = 4420, maxCount = 2 },
 	{ name = "strong health potion", chance = 2650 },
 	{ id = 3098, chance = 880 }, -- ring of healing
-	{ name = "great mana potion", chance = 2550 },
+	{ id = 238, chance = 2550 }, -- great mana potion
 }
 
 monster.attacks = {

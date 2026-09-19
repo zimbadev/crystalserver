@@ -94,7 +94,7 @@ monster.loot = {
 	{ name = "steel boots", chance = 920 },
 	{ name = "onyx flail", chance = 920 },
 	{ name = "jade hammer", chance = 920 },
-	{ name = "great mana potion", chance = 78000, maxCount = 5 },
+	{ id = 238, chance = 78000, maxCount = 5 }, -- great mana potion
 	{ name = "great spirit potion", chance = 72000, maxCount = 5 },
 	{ name = "ultimate health potion", chance = 30000, maxCount = 5 },
 	{ name = "blue crystal shard", chance = 23000, maxCount = 3 },

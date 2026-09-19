@@ -23,8 +23,12 @@ local outfitConfig = {
 	[32631] = { female = 1271, male = 1270, addon = 2, effect = CONST_ME_BLUE_GHOST, achievement = "Mainstreet Nightmare", orangeText = "You can use the ghost claw now!" },
 
 	-- revenant
-	[34075] = { female = 1323, male = 1322, addon = 1, effect = CONST_ME_HOLYAREA, achievement = "Unleash the Beast", orangeText = "Now the beast is unleashed!" },
-	[34076] = { female = 1323, male = 1322, addon = 2, effect = CONST_ME_HOLYAREA, achievement = "Unleash the Beast", orangeText = "Wild power flows though your body!" },
+	[34075] = { female = 1323, male = 1322, addon = 2, effect = CONST_ME_HOLYAREA, achievement = "Unleash the Beast", orangeText = "Now the beast is unleashed!" },
+	[34076] = { female = 1323, male = 1322, addon = 1, effect = CONST_ME_HOLYAREA, achievement = "Unleash the Beast", orangeText = "Wild power flows though your body!" },
+
+	-- decaying defender
+	[43899] = { female = 1663, male = 1662, addon = 1, achievement = "Fully Decayed" },
+	[43900] = { female = 1663, male = 1662, addon = 2, achievement = "Fully Decayed" },
 
 	-- rascoohan
 	[35595] = { female = 1372, male = 1371, addon = 1, achievement = "Honorary Rascoohan", orangeText = "You feel a bit more raccoonish." },
@@ -33,6 +37,19 @@ local outfitConfig = {
 	-- fire-fighter
 	[39544] = { female = 1569, male = 1568, addon = 1, achievement = "Friendly Fire", orangeText = "You feel like fighting a fire!" },
 	[39545] = { female = 1569, male = 1568, addon = 2, achievement = "Friendly Fire", orangeText = "The flame engulfs you!" },
+
+	-- fiend slayer
+	[50067] = { female = 1808, male = 1809, effect = CONST_ME_BITE },
+	[50060] = { female = 1808, male = 1809, addon = 1, achievement = "Fiend Slayer", effect = CONST_ME_BITE },
+	[50061] = { female = 1808, male = 1809, addon = 2, achievement = "Fiend Slayer", effect = CONST_ME_BITE },
+
+	-- illuminator
+	[51656] = { female = 1861, male = 1860, addon = 1, achievement = "Illuminator", whiteText = "Your illuminator robes look more impressive now." },
+	[51657] = { female = 1861, male = 1860, addon = 2, achievement = "Illuminator", whiteText = "Your illuminator robes look more impressive now." },
+
+	-- Lord Retro
+	[37605] = { female = 1461, male = 1460, addon = 1, effect = CONST_ME_GREEN_HITAREA },
+	[37604] = { female = 1461, male = 1460, addon = 2, effect = CONST_ME_GREEN_HITAREA },
 }
 
 local usableOutfitItems = Action()

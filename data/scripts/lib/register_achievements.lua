@@ -561,6 +561,29 @@ ACHIEVEMENTS = {
 	[560] = { name = "Umbral Redeemer", grade = 2, points = 6, description = "You managed to create, improve and transform your katar into a master state and have proven yourself worthy in a nightmarish world." },
 	[561] = { name = "Hell Rider", grade = 1, points = 0, description = "Pray it never finds its way back to its original stable with you still riding." },
 	[562] = { name = "Alpha Rider", grade = 1, points = 0, description = "You never can tell, who's boss here." },
+	-- [563] = { name = "", grade = 1, points = 0, secret = true, description = "" },
+	[564] = { name = "The First of Many", grade = 1, points = 3, description = "The first step to greatness has been done." },
+	[565] = { name = "A Well-Honed Arsenal", grade = 2, points = 5, description = "Your expertise in weaponry reaches new heights." },
+	[566] = { name = "Arsenal of War", grade = 3, points = 7, description = "Feared by your enemies, admired by many - your reputation in weapon mastery precedes you." },
+	-- [567] = { name = "", grade = 1, points = 0, secret = true, description = "" },
+	[568] = { name = "Bat Person", grade = 1, points = 3, description = "No matter your command, this beast is all ears!" },
+	[569] = { name = "Illuminator", grade = 1, points = 3, description = "Joran and Yvette have brought the colours back to the world, and you have freed it from the monsters of this story. The world of books is now yours." },
+	[570] = { name = "Power of Words", grade = 2, points = 5, description = "The pen is mightier than the sword. In a way, yes, you have had this experience. You have seen with your own eyes what the power of words can do, the written word, to be precise." },
+
+	-- Winter Update 2025
+	[571] = { name = "ID 571", grade = 1, points = 0, secret = true, description = "???" },
+	[572] = { name = "Bastard", grade = 2, points = 5, description = "You helped uncover the truth about the lost heir of the Etzel clan. The Order of the Stag will remember your deeds." },
+	[573] = { name = "Errand Runner", grade = 1, points = 3, description = "You've proven yourself as a reliable helper, running errands and completing weekly tasks without hesitation. The task board knows your name well." },
+	[574] = { name = "Feral Trapper", grade = 2, points = 4, description = "You dedicated yourself to countless hunting tasks and earned the respect of Walter Jaeger. Your prowess as a trapper is now legendary." },
+	[575] = { name = "Pest Control", grade = 3, points = 6, description = "From clearing cellars of rats to hunting the most dangerous beasts, no creature is safe when you're on a bounty. You are the ultimate pest controller." },
+	[576] = { name = "ID 576", grade = 1, points = 0, secret = true, description = "???" },
+	[577] = { name = "Razor's Edge", grade = 2, points = 5, secret = true, description = "You completed The Gravedigger's challenge with exceptional precision, finishing with plenty of charges to spare. Living on the edge suits you well." },
+	[578] = { name = "Taskaholic", grade = 3, points = 6, description = "The bulletin board is your second home. No task is too small, no challenge too big - you live for completing tasks and have become truly addicted to them." },
+	[579] = { name = "ID 579", grade = 1, points = 0, secret = true, description = "???" },
+	[580] = { name = "ID 580", grade = 1, points = 0, secret = true, description = "???" },
+	[581] = { name = "Workhorse", grade = 2, points = 4, description = "Whether it's clearing cellars from rats or delivering quara eyes, you do the job regardless of the task type. Your dedication to work is unmatched." },
+	[582] = { name = "Castle Crasher", grade = 1, points = 1, description = "While saving turtle eggs on Aragonia you couldn't resist trampling every sandcastle in your path. The beach will never be the same." },
+	[583] = { name = "A reliable Friend", grade = 1, points = 1, description = "With a bunch of turnips you won over the lonely ram of Targuna and earned yourself a most reliable companion." },
 }
 
 --[[

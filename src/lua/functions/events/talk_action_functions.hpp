@@ -31,4 +31,5 @@ private:
 	static int luaTalkActionGetDescription(lua_State* L);
 	static int luaTalkActionSetDescription(lua_State* L);
 	static int luaTalkActionGetGroupType(lua_State* L);
+	static int luaTalkActionChannel(lua_State* L);
 };

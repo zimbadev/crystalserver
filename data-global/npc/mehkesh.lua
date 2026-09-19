@@ -67,7 +67,7 @@ npcConfig.shop = {
 	{ itemName = "empty potion flask", clientId = 284, sell = 5 },
 	{ itemName = "empty potion flask", clientId = 285, sell = 5 },
 	{ itemName = "great health potion", clientId = 239, buy = 225 },
-	{ itemName = "great mana potion", clientId = 238, buy = 158 },
+	{ itemid = 238, clientId = 238, buy = 158 },
 	{ itemName = "great spirit potion", clientId = 7642, buy = 254 },
 	{ itemName = "health potion", clientId = 266, buy = 50 },
 	{ itemName = "jug of embalming fluid", clientId = 8761, buy = 200 },
@@ -90,5 +90,8 @@ npcType.onSellItem = function(npc, player, itemId, subtype, amount, ignore, name
 end
 -- On check npc shop message (look item)
 npcType.onCheckItem = function(npc, player, clientId, subType) end
+
+-- Dialog options (interactive icons in the NPC conversation window)
+npcType:addDialogOptions("trade", "bye")
 
 npcType:register(npcConfig)
