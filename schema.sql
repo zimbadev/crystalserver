@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ('db_version', '66', 1), ('motd_hash', '', 1), ('motd_num', '0', 1), ('players_record', '0', 1);
+INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ('db_version', '67', 1), ('motd_hash', '', 1), ('motd_num', '0', 1), ('players_record', '0', 1);
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
