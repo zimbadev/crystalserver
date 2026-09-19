@@ -495,6 +495,20 @@ maxMarketOffersAtATimePerPlayer = 100
 toggleWebMarketOrders = true
 webMarketOrdersInterval = 2000
 
+-- Character Bazaar
+-- NOTE: charBazaarFee is the cost in transferable coins to create an auction
+-- NOTE: charBazaarTaxPercent is the commission percentage kept from a sale
+-- NOTE: charBazaarVaultAccount is the account an auctioned character is moved to
+-- NOTE: charBazaarMinDays / charBazaarMaxDays define the allowed auction duration range
+charBazaarEnabled = true
+charBazaarFee = 50
+charBazaarTaxPercent = 12
+charBazaarVaultAccount = 1
+charBazaarMinLevel = 8
+charBazaarShowcaseSlots = 4
+charBazaarMinDays = 1
+charBazaarMaxDays = 28
+
 -- MySQL
 -- NOTE: mysqlPoolSize 4 (default) — small to medium servers
 -- 8–16 — high-traffic servers with heavy market usage
