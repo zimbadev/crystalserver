@@ -35,6 +35,13 @@
 static constexpr int32_t MONSTER_MINSPAWN_INTERVAL = 1000; // 1 second
 static constexpr int32_t MONSTER_MAXSPAWN_INTERVAL = 86400000; // 1 day
 
+namespace {
+	// TEMP DEBUG (Mount Sternum cyclops timing) - remove after the respawn test
+	bool respawnDbgBox(const Position &pos) {
+		return pos.x >= 32500 && pos.x <= 32560 && pos.y >= 32040 && pos.y <= 32090;
+	}
+}
+
 bool SpawnsMonster::loadFromXML(const std::string &filemonstername) {
 	if (isLoaded()) {
 		return true;
@@ -180,12 +187,46 @@ bool SpawnsMonster::isInZone(const Position &centerPos, int32_t radius, const Po
 	return ((pos.getX() >= centerPos.getX() - radius) && (pos.getX() <= centerPos.getX() + radius) && (pos.getY() >= centerPos.getY() - radius) && (pos.getY() <= centerPos.getY() + radius));
 }
 
-void SpawnMonster::startSpawnMonsterCheck() {
-	if (checkSpawnMonsterEvent == 0) {
-		checkSpawnMonsterEvent = g_dispatcher().scheduleEvent(
-			getInterval(), [this] { checkSpawnMonster(); }, "SpawnMonster::checkSpawnMonster"
-		);
+uint32_t SpawnMonster::getNextCheckDelay() const {
+	// Aim the timer at the earliest pending respawn instead of a fixed cadence, so the
+	// improved-respawn (donation) halving lands exactly and is never quantized up.
+	const int64_t now = OTSYS_TIME();
+	int64_t best = interval;
+	bool any = false;
+	for (const auto &[id, sb] : spawnMonsterMap) {
+		if (spawnedMonsterMap.contains(id)) {
+			continue;
+		}
+		uint64_t effectiveInterval = sb.interval;
+		if (g_game().isImprovedRespawnPosition(sb.pos)) {
+			effectiveInterval /= 2;
+		}
+		const int64_t remaining = sb.lastSpawn + static_cast<int64_t>(effectiveInterval) - now;
+		if (!any || remaining < best) {
+			best = remaining;
+			any = true;
+		}
 	}
+	if (!any) {
+		return interval;
+	}
+
+	return static_cast<uint32_t>(std::max<int64_t>(best, 1000));
+}
+
+void SpawnMonster::startSpawnMonsterCheck() {
+	// called right when a spawned monster dies/despawns; the corpse is still inside
+	// spawnedMonsterMap at this point, so run cleanup() NOW - it stamps lastSpawn at the
+	// true death moment (not at the next timer tick) and frees the block
+	cleanup();
+	// re-aim a pending timer: another block may have scheduled a much later check
+	if (checkSpawnMonsterEvent != 0) {
+		g_dispatcher().stopEvent(checkSpawnMonsterEvent);
+		checkSpawnMonsterEvent = 0;
+	}
+	checkSpawnMonsterEvent = g_dispatcher().scheduleEvent(
+		getNextCheckDelay(), [this] { checkSpawnMonster(); }, "SpawnMonster::checkSpawnMonster"
+	);
 }
 
 SpawnMonster::~SpawnMonster() {
@@ -248,6 +289,9 @@ bool SpawnMonster::spawnMonster(uint32_t spawnMonsterId, spawnBlock_t &sb, const
 	monster->setSpawnMonster(static_self_cast<SpawnMonster>());
 	monster->setMasterPos(sb.pos);
 
+	if (respawnDbgBox(sb.pos)) {
+		g_logger().debug("[RespawnDBG] SPAWNED block {} {} at {} ({} ms after death-stamp)", spawnMonsterId, monsterType->name, sb.pos.toString(), OTSYS_TIME() - sb.lastSpawn);
+	}
 	spawnedMonsterMap[spawnMonsterId] = monster;
 	sb.lastSpawn = OTSYS_TIME();
 	monster->onSpawn(sb.pos);
@@ -320,20 +364,28 @@ void SpawnMonster::checkSpawnMonster() {
 			sb.lastSpawn = OTSYS_TIME();
 			continue;
 		}
-		if (OTSYS_TIME() < sb.lastSpawn + sb.interval) {
+		// Cyclopedia Map area donations: boosted areas respawn twice as fast
+		uint64_t effectiveInterval = sb.interval;
+		if (g_game().isImprovedRespawnPosition(sb.pos)) {
+			effectiveInterval /= 2;
+		}
+		if (OTSYS_TIME() < sb.lastSpawn + effectiveInterval) {
 			continue;
 		}
 
 		if (mType->info.isBlockable) {
 			spawnMonster(spawnMonsterId, sb, mType);
 		} else {
+			// stamp now: with the timer aimed at exact due times, re-checks land during the
+			// 4.2s staging window and would queue duplicate staged chains (effect spam)
+			sb.lastSpawn = OTSYS_TIME();
 			scheduleSpawn(spawnMonsterId, sb, mType, 3 * NONBLOCKABLE_SPAWN_MONSTER_INTERVAL);
 		}
 	}
 
 	if (spawnedMonsterMap.size() < spawnMonsterMap.size()) {
 		checkSpawnMonsterEvent = g_dispatcher().scheduleEvent(
-			getInterval(), [this] { checkSpawnMonster(); }, "SpawnMonster::checkSpawnMonster"
+			getNextCheckDelay(), [this] { checkSpawnMonster(); }, "SpawnMonster::checkSpawnMonster"
 		);
 	}
 }
@@ -359,6 +411,9 @@ void SpawnMonster::cleanup() {
 			auto spawnIt = spawnMonsterMap.find(it->first);
 			if (spawnIt != spawnMonsterMap.end()) {
 				spawnIt->second.lastSpawn = OTSYS_TIME();
+				if (respawnDbgBox(spawnIt->second.pos)) {
+					g_logger().debug("[RespawnDBG] DEAD block {} at {}", it->first, spawnIt->second.pos.toString());
+				}
 			}
 			it = spawnedMonsterMap.erase(it);
 		} else {
@@ -448,6 +503,15 @@ void SpawnMonster::removeMonster(const std::shared_ptr<Monster> &monster) {
 	if (spawnMonsterId != 0) {
 		if (monster) {
 			monster->setSpawnMonster(nullptr);
+		}
+		// stamp the respawn timer at death/removal time; without this the wait was
+		// counted from whenever cleanup() first ran, adding up to a full check tick
+		auto spawnIt = spawnMonsterMap.find(spawnMonsterId);
+		if (spawnIt != spawnMonsterMap.end()) {
+			spawnIt->second.lastSpawn = OTSYS_TIME();
+			if (respawnDbgBox(spawnIt->second.pos)) {
+				g_logger().debug("[RespawnDBG] REMOVED block {} at {}", spawnMonsterId, spawnIt->second.pos.toString());
+			}
 		}
 		spawnedMonsterMap.erase(spawnMonsterId);
 	}

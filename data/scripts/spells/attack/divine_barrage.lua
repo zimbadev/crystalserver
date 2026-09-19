@@ -34,5 +34,6 @@ spell:blockWalls(true)
 spell:needLearn(false)
 spell:cooldown(4 * 1000)
 spell:groupCooldown(2 * 1000)
+
 spell:vocation("paladin;true", "royal paladin;true")
 spell:register()

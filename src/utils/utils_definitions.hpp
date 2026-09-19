@@ -347,7 +347,24 @@ enum ShootType_t : uint8_t {
 	CONST_ANI_FROSTSTORMARROW = 67,
 	CONST_ANI_THUNDERSTORMARROW = 68,
 
-	CONST_ANI_LAST = CONST_ANI_THUNDERSTORMARROW,
+	// New 15.25 client distance effects — homing missiles (proficiency Type-32 ON_HIT_HOMING_MISSILE).
+	// ids 69 and 76 lead each block of 7; semantics unconfirmed (never fired by current data) — placeholder names.
+	CONST_ANI_HOMING_PHYSICAL = 69, // unknown/untyped homing variant — placeholder
+	CONST_ANI_HOMING_FIRE = 70,
+	CONST_ANI_HOMING_EARTH = 71,
+	CONST_ANI_HOMING_ENERGY = 72,
+	CONST_ANI_HOMING_ICE = 73,
+	CONST_ANI_HOMING_HOLY = 74,
+	CONST_ANI_HOMING_DEATH = 75,
+	CONST_ANI_HOMING_STELLAR_PHYSICAL = 76, // unknown/untyped stellar homing variant — placeholder
+	CONST_ANI_HOMING_STELLAR_FIRE = 77,
+	CONST_ANI_HOMING_STELLAR_EARTH = 78,
+	CONST_ANI_HOMING_STELLAR_ENERGY = 79,
+	CONST_ANI_HOMING_STELLAR_ICE = 80,
+	CONST_ANI_HOMING_STELLAR_HOLY = 81,
+	CONST_ANI_HOMING_STELLAR_DEATH = 82,
+
+	CONST_ANI_LAST = CONST_ANI_HOMING_STELLAR_DEATH,
 
 	// for internal use, don't send to client
 	CONST_ANI_WEAPONTYPE = 0xFE, // 254
@@ -847,9 +864,10 @@ enum ScreenshotAndBanner_t : uint8_t {
 	SCREENSHOT_AND_BANNER_TYPE_QUEST = 8,
 	SCREENSHOT_AND_BANNER_TYPE_COSMETIC = 9,
 	SCREENSHOT_AND_BANNER_TYPE_PROFICIENCY = 10,
-	SCREENSHOT_AND_BANNER_TYPE_BOUNTY_TASK = 11,
-	SCREENSHOT_AND_BANNER_TYPE_WEEKLY_TASK_SPECIFIC = 12,
-	SCREENSHOT_AND_BANNER_TYPE_SPELL = 13
+	SCREENSHOT_AND_BANNER_TYPE_BOUNTY_TASK = 11, // client GameEventTypeBountyTaskFinished (payload: uint16)
+	SCREENSHOT_AND_BANNER_TYPE_WEEKLY_TASK_SPECIFIC = 12, // client GameEventTypeWeeklyTaskSpecificCreatureFinished (payload: uint16)
+	SCREENSHOT_AND_BANNER_TYPE_SPELL = 13, // client GameEventTypeSpellUnlocked (payload: uint32 spellId) -> banner "New Spell Unlocked"
+	SCREENSHOT_AND_BANNER_TYPE_LEADER_MONSTER = 14 // client GameEventTypeLeaderMonsterKilled (payload: uint16 raceId + uint32 charmPoints) -> banner "Echo Warden Killed"
 };
 
 enum Banner_t : uint8_t {

@@ -9598,6 +9598,36 @@ void Game::playerFriendSystemAction(const std::shared_ptr<Player> &player, uint8
 	}
 }
 
+void Game::setImprovedRespawnZones(std::vector<ImprovedRespawnZone> zones) {
+	improvedRespawnZones = std::move(zones);
+	hasImprovedRespawnZones = !improvedRespawnZones.empty();
+	if (hasImprovedRespawnZones) {
+		improvedRespawnBounds = improvedRespawnZones.front();
+		for (const auto &z : improvedRespawnZones) {
+			improvedRespawnBounds.x1 = std::min(improvedRespawnBounds.x1, z.x1);
+			improvedRespawnBounds.y1 = std::min(improvedRespawnBounds.y1, z.y1);
+			improvedRespawnBounds.x2 = std::max(improvedRespawnBounds.x2, z.x2);
+			improvedRespawnBounds.y2 = std::max(improvedRespawnBounds.y2, z.y2);
+		}
+	}
+	g_logger().info("Improved Respawn {} zone rect(s) active", improvedRespawnZones.size());
+}
+
+bool Game::isImprovedRespawnPosition(const Position &pos) const {
+	if (!hasImprovedRespawnZones) {
+		return false;
+	}
+	if (pos.x < improvedRespawnBounds.x1 || pos.x > improvedRespawnBounds.x2 || pos.y < improvedRespawnBounds.y1 || pos.y > improvedRespawnBounds.y2) {
+		return false;
+	}
+	for (const auto &z : improvedRespawnZones) {
+		if (pos.x >= z.x1 && pos.x <= z.x2 && pos.y >= z.y1 && pos.y <= z.y2) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void Game::playerCyclopediaCharacterInfo(const std::shared_ptr<Player> &player, uint32_t characterID, CyclopediaCharacterInfoType_t characterInfoType, uint16_t entriesPerPage, uint16_t page) {
 	uint32_t playerID = player->getID();
 	if (playerID != characterID) {
