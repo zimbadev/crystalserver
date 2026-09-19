@@ -10970,7 +10970,7 @@ void Player::forgeResourceConversion(ForgeAction_t actionType) {
 			return;
 		}
 
-		const uint64_t upgradeCost = dustLevel > 100 ? dustLevel - 75 : 25;
+		const uint64_t upgradeCost = dustLevel > 100 ? 25 + (dustLevel - 100) / 20 : 25;
 		if (const auto dusts = getForgeDusts();
 		    upgradeCost > dusts) {
 			g_logger().error("[{}] Not enough dust", __FUNCTION__);
