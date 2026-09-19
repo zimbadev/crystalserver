@@ -30,6 +30,67 @@
 static phmap::flat_hash_map<size_t, std::shared_ptr<BasicItem>> items;
 static phmap::flat_hash_map<size_t, std::shared_ptr<BasicTile>> tiles;
 
+namespace {
+
+	// Filled by BasicItem::unserializeItemNode while the OTBM is read, drained by
+	// MapStoredAttributes::report once the load finishes. Only a handful of examples
+	// are kept: a map mid-migration can hold thousands, and a warning per occurrence
+	// buries the rest of the boot log.
+	constexpr size_t MAX_STORED_EXAMPLES = 10;
+
+	struct MapStoredExample {
+		std::string finding;
+		uint16_t itemId;
+		uint16_t x, y;
+		uint8_t z;
+	};
+
+	struct MapStoredCounters {
+		size_t actionIds { 0 };
+		size_t uniqueIds { 0 };
+		size_t filledContainers { 0 };
+		std::vector<MapStoredExample> examples;
+
+		size_t total() const {
+			return actionIds + uniqueIds + filledContainers;
+		}
+
+		void note(std::string finding, uint16_t itemId, uint16_t x, uint16_t y, uint8_t z) {
+			if (examples.size() < MAX_STORED_EXAMPLES) {
+				examples.emplace_back(std::move(finding), itemId, x, y, z);
+			}
+		}
+	};
+
+	MapStoredCounters mapStored;
+
+} // namespace
+
+void MapStoredAttributes::reset() {
+	mapStored = {};
+}
+
+void MapStoredAttributes::report(const std::filesystem::path &mapPath) {
+	if (mapStored.total() == 0) {
+		return;
+	}
+
+	const std::string mapName = mapPath.filename().string();
+
+	g_logger().warn("[{}] - the map file still stores {} action id(s), {} unique id(s) and {} filled "
+	                "container(s). Declare them in data-global/startup/tables/ and clear them in the "
+	                "map editor, otherwise nobody reading the tables can tell they exist.",
+	                mapName, mapStored.actionIds, mapStored.uniqueIds, mapStored.filledContainers);
+
+	for (const auto &example : mapStored.examples) {
+		g_logger().warn("[{}] - {} on item {} at {}, {}, {}", mapName, example.finding, example.itemId, example.x, example.y, example.z);
+	}
+
+	if (const size_t hidden = mapStored.total() - mapStored.examples.size(); hidden > 0) {
+		g_logger().warn("[{}] - and {} more not listed here.", mapName, hidden);
+	}
+}
+
 std::shared_ptr<BasicItem> static_tryGetItemFromCache(const std::shared_ptr<BasicItem> &ref) {
 	return ref ? items.try_emplace(ref->hash(), ref).first->second : nullptr;
 }
@@ -285,6 +346,16 @@ bool BasicItem::unserializeItemNode(FileStream &stream, uint16_t x, uint16_t y, 
 
 	readAttr(stream);
 
+	if (actionId > 0) {
+		++mapStored.actionIds;
+		mapStored.note(fmt::format("action id {}", actionId), id, x, y, z);
+	}
+
+	if (uniqueId > 0) {
+		++mapStored.uniqueIds;
+		mapStored.note(fmt::format("unique id {}", uniqueId), id, x, y, z);
+	}
+
 	while (stream.startNode()) {
 		if (stream.getU8() != OTBM_ITEM) {
 			throw IOMapException(fmt::format("[x:{}, y:{}, z:{}] Could not read item node.", x, y, z));
@@ -304,6 +375,13 @@ bool BasicItem::unserializeItemNode(FileStream &stream, uint16_t x, uint16_t y, 
 		if (!stream.endNode()) {
 			throw IOMapException(fmt::format("[x:{}, y:{}, z:{}] Could not end node.", x, y, z));
 		}
+	}
+
+	// A nested bag counts on its own, because it is just as much a container the map
+	// filled in as the chest holding it.
+	if (!items.empty()) {
+		++mapStored.filledContainers;
+		mapStored.note(fmt::format("{} item(s) inside", items.size()), id, x, y, z);
 	}
 
 	return true;

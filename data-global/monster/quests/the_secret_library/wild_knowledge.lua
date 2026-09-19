@@ -20,6 +20,10 @@ monster.corpse = 0
 monster.speed = 25
 monster.manaCost = 0
 
+monster.events = {
+	"mazzinorDeath",
+}
+
 monster.changeTarget = {
 	interval = 5000,
 	chance = 8,

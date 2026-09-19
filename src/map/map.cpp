@@ -51,6 +51,13 @@ void Map::loadMap(const std::string &identifier, bool mainMap /*= false*/, bool 
 	// Load the map
 	load(identifier, pos);
 
+	// Only the main map. Overlay, quest and custom maps load while the server is already
+	// running, long after the startup tables were applied, so an id stored in one of those
+	// files is the only place it could be and there is nothing to ask for.
+	if (mainMap) {
+		MapStoredAttributes::report(path);
+	}
+
 	// Only create items from lua functions if is loading main map
 	// It needs to be after the load map to ensure the map already exists before creating the items
 	if (mainMap) {

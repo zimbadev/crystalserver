@@ -98,6 +98,12 @@ maxPlayersOutsidePZPerAccount = 1
 toggleMaxConnectionsByIP = false
 maxIPConnections = 3
 
+-- Player Concurrency Lock
+-- NOTE: togglePlayerLock blocks character logins during web transactions (marketplace, admin changes, character bazaar)
+-- NOTE: playerLockTimeout defines the lock expiry in seconds to prevent deadlock if a web request fails
+togglePlayerLock = true
+playerLockTimeout = 60
+
 -- Packet Compression
 -- Minimize network bandwith and reduce ping
 -- Levels: 0 = disabled, 1 = best speed, 9 = best compression
@@ -486,6 +492,8 @@ marketRefreshPricesInterval = 30
 premiumToCreateMarketOffer = true
 checkExpiredMarketOffersEachMinutes = 60
 maxMarketOffersAtATimePerPlayer = 100
+toggleWebMarketOrders = true
+webMarketOrdersInterval = 2000
 
 -- MySQL
 -- NOTE: mysqlPoolSize 4 (default) — small to medium servers

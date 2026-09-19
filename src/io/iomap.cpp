@@ -20,6 +20,7 @@
 #include "game/movement/teleport.hpp"
 #include "game/game.hpp"
 #include "io/filestream.hpp"
+#include "map/mapcache.hpp"
 
 /*
     OTBM_ROOTV1
@@ -152,6 +153,7 @@ void IOMap::loadMap(Map* map, const Position &pos) {
 
 	// Reset before parsing so the bounds always describe this load only.
 	map->lastLoadedArea = {};
+	MapStoredAttributes::reset();
 
 	if (stream.startNode(OTBM_MAP_DATA)) {
 		parseMapDataAttributes(stream, map);
@@ -163,6 +165,9 @@ void IOMap::loadMap(Map* map, const Position &pos) {
 	parseWaypoints(stream, *map);
 
 	map->flush();
+
+	// The counters stay for Map::loadMap to report, which is where it is known whether
+	// this was the main map.
 
 	g_logger().debug("Map Loaded {} ({}x{}) in {} milliseconds", map->path.filename().string(), map->width, map->height, bm_mapLoad.duration());
 }

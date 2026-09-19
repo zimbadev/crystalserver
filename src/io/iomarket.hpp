@@ -40,6 +40,8 @@ public:
 
 	static void processExpiredOffers(const DBResult_ptr &result, bool);
 	static void checkExpiredOffers();
+	static void processWebOrders(const DBResult_ptr &result, bool);
+	static void checkWebOrders();
 
 	static uint32_t getPlayerOfferCount(uint32_t playerId);
 	static uint32_t getPlayerOfferCountPerSide(uint32_t playerId, MarketAction_t action);

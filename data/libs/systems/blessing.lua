@@ -100,7 +100,6 @@ end
 
 Blessings.DropLoot = function(player, corpse, chance, skulled)
 	local multiplier = 100
-	math.randomseed(os.time())
 	chance = chance * multiplier
 	Blessings.DebugPrint("DropLoot chance " .. chance)
 	for i = CONST_SLOT_HEAD, CONST_SLOT_AMMO do
