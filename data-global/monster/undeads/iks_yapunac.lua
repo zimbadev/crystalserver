@@ -77,13 +77,18 @@ monster.loot = {
 	{ name = "gold coin", chance = 100000, maxCount = 389 },
 	{ id = 281, chance = 7100 }, -- giant shimmering pearl (green)
 	{ name = "tiger eye", chance = 6910 },
-	{ name = "strong mana potion", chance = 6360, maxCount = 2 },
-	{ name = "small sapphire", chance = 5810, maxCount = 3 },
-	{ name = "spellbook of enlightenment", chance = 1920 },
+	{ name = "great health potion", chance = 6360, maxCount = 2 },
 	{ name = "opal", chance = 1850 },
-	{ name = "gold-brocaded cloth", chance = 1780 },
-	{ name = "gold ingot", chance = 960 },
-	{ name = "broken iks headpiece", chance = 70 },
+	{ name = "brown crystal splinter", chance = 7080 },
+	{ name = "green crystal splinter", chance = 6220 },
+	--{ name = "yapunac dagger", chance = 1380 },
+	{ name = "gearwheel chain", chance = 2900 },
+	{ name = "onyx chip", chance = 2800 },
+	{ name = "stone skin amulet", chance = 850 },
+	{ name = "ritual tooth", chance = 2700 },
+	{ name = "spiked squelcher", chance = 1700 },
+	{ name = "colourful feather", chance = 1400 },
+	{ name = "ancient iks ritual chalice", chance = 19 },
 }
 
 monster.attacks = {

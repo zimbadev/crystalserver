@@ -79,7 +79,7 @@ monster.loot = {
 	{ name = "rotten feather", chance = 45950, maxCount = 3 },
 	{ name = "great health potion", chance = 43920, maxCount = 5 },
 	{ name = "great spirit potion", chance = 26350, maxCount = 3 },
-	{ id = 238, chance = 29730, maxCount = 6 }, -- great mana potion
+	{ name = "great mana potion", chance = 29730, maxCount = 6 },
 	{ name = "ritual tooth", chance = 41890 },
 	{ name = "diamond", chance = 2700, maxCount = 8 },
 	{ name = "amber with a bug", chance = 3380 },
@@ -91,8 +91,9 @@ monster.loot = {
 	{ id = 23542, chance = 4050 }, --collar of blue plasma
 	{ id = 23543, chance = 3380 }, --collar of green plasma
 	{ name = "broken iks headpiece", chance = 1000 },
-	{ name = "broken macuahuitl", chance = 1000 },
+	{ name = "broken iks sandals", chance = 1000 },
 	{ name = "broken iks faulds", chance = 1000 },
+	{ name = "broken macuahuitl", chance = 1000 },
 	{ name = "broken iks cuirass", chance = 1000 },
 }
 

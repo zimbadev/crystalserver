@@ -84,8 +84,10 @@ monster.loot = {
 	{ name = "spellbook of enlightenment", chance = 1090 },
 	{ name = "gold ingot", chance = 730 },
 	{ name = "rotten feather", chance = 730 },
-	{ name = "broken iks faulds", chance = 360 },
 	{ name = "gold-brocaded cloth", chance = 360 },
+	{ name = "broken iks faulds", chance = 360 },
+	{ name = "broken iks headpiece", chance = 360 },
+	{ name = "broken iks sandals", chance = 360 },
 }
 
 monster.attacks = {

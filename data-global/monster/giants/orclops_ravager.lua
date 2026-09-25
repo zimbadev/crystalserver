@@ -84,7 +84,7 @@ monster.loot = {
 	{ id = 3078, chance = 50320 }, -- mysterious fetish
 	{ id = 3316, chance = 20000 }, -- orcish axe
 	{ id = 3724, chance = 50320, maxCount = 3 }, -- red mushroom
-	{ id = 23811, chance = 6000 }, -- reinvigorating seeds
+	{ id = 23811, chance = 10200 }, -- reinvigorating seeds
 	{ id = 24380, chance = 4900 }, -- bone toothpick
 	{ id = 24381, chance = 1800 }, -- beetle carapace
 	{ id = 24382, chance = 12750 }, -- bug meat

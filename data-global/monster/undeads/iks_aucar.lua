@@ -88,9 +88,12 @@ monster.loot = {
 	{ name = "war hammer", chance = 5620 },
 	{ name = "strong health potion", chance = 5180, maxCount = 2 },
 	{ name = "small ruby", chance = 4300, maxCount = 2 },
-	{ name = "rotten feather", chance = 2170 },
-	{ name = "ritual tooth", chance = 1330 },
-	{ name = "gold-brocaded cloth", chance = 890 },
+	{ name = "rotten feather", chance = 1800 },
+	{ name = "ritual tooth", chance = 1500 },
+	{ name = "gold-brocaded cloth", chance = 1000 },
+	{ name = "stone skin amulet", chance = 460 },
+	{ name = "broken iks cuirass", chance = 40 },
+	{ name = "broken iks faulds", chance = 40 },
 	{ name = "broken iks sandals", chance = 40 },
 }
 
