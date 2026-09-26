@@ -2133,9 +2133,6 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 		return RETURNVALUE_NOTPOSSIBLE;
 	}
 
-	const auto fromContainer = fromCylinder->getContainer();
-	const bool fromStoreInbox = fromContainer && fromContainer->getRootContainer() && fromContainer->getRootContainer()->isStoreInbox();
-
 	if (std::shared_ptr<Container> toCylinderContainer = toCylinder->getContainer()) {
 		auto containerID = toCylinderContainer->getID();
 		const auto rootToContainer = toCylinderContainer->getRootContainer();
@@ -2153,22 +2150,12 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 
 		if (toStoreInbox && !containerToStow) {
 			const bool isGoldPouch = item->getID() == ITEM_GOLD_POUCH;
-			const bool canMoveInStoreInbox = item->canBeMovedToStore() || isGoldPouch;
-			if (!canMoveInStoreInbox) {
-				return RETURNVALUE_NOTBOUGHTINSTORE;
-			}
-
-			// Store Inbox accepts only items already inside it (internal reordering).
-			if (!fromStoreInbox) {
+			if (!item->canBeMovedToStore() && !isGoldPouch) {
 				return RETURNVALUE_NOTBOUGHTINSTORE;
 			}
 		}
 
 		if (containerID == ITEM_GOLD_POUCH && !containerToStow) {
-			if (!fromStoreInbox) {
-				return RETURNVALUE_NOTBOUGHTINSTORE;
-			}
-
 			if (g_configManager().getBoolean(TOGGLE_GOLD_POUCH_QUICKLOOT_ONLY)) {
 				return RETURNVALUE_CONTAINERNOTENOUGHROOM;
 			}
@@ -4919,7 +4906,7 @@ std::shared_ptr<Item> Game::wrapItem(const std::shared_ptr<Item> &item, const st
 		newItem->setAttribute(ItemAttribute_t::AMOUNT, amount);
 	}
 
-	newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint16_t>(ItemAttribute_t::OWNER));
+	newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint32_t>(ItemAttribute_t::OWNER));
 	if (const int64_t storeAttribute = item->getAttribute<int64_t>(ItemAttribute_t::STORE); storeAttribute > 0) {
 		newItem->setAttribute(ItemAttribute_t::STORE, storeAttribute);
 	}
@@ -4939,7 +4926,7 @@ void Game::unwrapItem(const std::shared_ptr<Item> &item, uint16_t unWrapId, cons
 		return;
 	}
 
-	const uint16_t ownerAttr = item->getAttribute<uint16_t>(ItemAttribute_t::OWNER);
+	const uint32_t ownerAttr = item->getAttribute<uint32_t>(ItemAttribute_t::OWNER);
 	const int64_t storeAttr = item->getAttribute<int64_t>(ItemAttribute_t::STORE);
 	const uint16_t amountAttr = item->getAttribute<uint16_t>(ItemAttribute_t::AMOUNT);
 	const uint16_t amount = amountAttr ? amountAttr : 1;
