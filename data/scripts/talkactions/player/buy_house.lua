@@ -75,7 +75,7 @@ function buyHouse.onSay(player, words, param)
 		player:getPosition():sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
-	metrics.addCounter("balance_decrease", remainsPrice, {
+	metrics.addCounter("balance_decrease", price, {
 		player = player:getName(),
 		context = "house_purchase",
 	})
