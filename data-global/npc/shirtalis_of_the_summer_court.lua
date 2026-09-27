@@ -59,14 +59,14 @@ local function creatureSayCallback(npc, creature, type, message)
 	end
 
 	if MsgContains(message, "fight") then
-		if player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.DreamScar.Permission) < 1 and player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.Main.TheSummerCourt) == 1 then
+		if player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.DreamScarAccess) < 1 and player:getStorageValue(Storage.Quest.U12_00.TheDreamCourts.Main.TheSummerCourt) == 1 then
 			npcHandler:say("We allow able champions of all races to fight for our cause against the challenges of the {arena}. So are you interested? I'm not interested in fancy'wordplay, so a simple {yes} or {no} will suffice!", npc, creature)
 			npcHandler:setTopic(playerId, 2)
 		end
 	elseif MsgContains(message, "yes") then
 		if npcHandler:getTopic(playerId) == 2 then
 			npcHandler:say("You are now able to enter the teleport.", npc, creature)
-			player:setStorageValue(Storage.Quest.U12_00.TheDreamCourts.DreamScar.Permission, 1)
+			player:setStorageValue(Storage.Quest.U12_00.TheDreamCourts.DreamScarAccess, 1)
 			npcHandler:setTopic(playerId, 0)
 		end
 	elseif MsgContains(message, "no") then
