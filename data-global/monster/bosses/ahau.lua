@@ -91,8 +91,9 @@ monster.loot = {
 	{ id = 23542, chance = 4050 }, --collar of blue plasma
 	{ id = 23543, chance = 3380 }, --collar of green plasma
 	{ name = "broken iks headpiece", chance = 1000 },
-	{ name = "broken macuahuitl", chance = 1000 },
+	{ name = "broken iks sandals", chance = 1000 },
 	{ name = "broken iks faulds", chance = 1000 },
+	{ name = "broken macuahuitl", chance = 1000 },
 	{ name = "broken iks cuirass", chance = 1000 },
 }
 

@@ -98,7 +98,6 @@ monster.loot = {
 	{ id = 2966, chance = 910 }, -- war drum
 	{ id = 7439, chance = 910 }, -- berserk potion
 	{ id = 10457, chance = 910 }, -- beetle necklace
-	{ id = 23811, chance = 300 }, -- reinvigorating seeds
 }
 
 monster.attacks = {
