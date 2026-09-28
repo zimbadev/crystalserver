@@ -958,8 +958,13 @@ void Player::updateInventoryImbuement() {
 	bool isInFightMode = hasCondition(CONDITION_INFIGHT);
 	bool nonAggressiveFightOnly = g_configManager().getBoolean(TOGGLE_IMBUEMENT_NON_AGGRESSIVE_FIGHT_ONLY);
 
-	// Iterate through all items in the player's inventory
-	for (const auto &[slodNumber, item] : getAllSlotItems()) {
+	// Iterate through the equipped items, no container is built for this per-tick scan
+	for (uint8_t slotId = CONST_SLOT_FIRST; slotId <= CONST_SLOT_LAST; ++slotId) {
+		const auto &item = inventory[slotId];
+		if (!item) {
+			continue;
+		}
+
 		// Iterate through all imbuement slots on the item
 		for (uint8_t slotid = 0; slotid < item->getImbuementSlot(); slotid++) {
 			ImbuementInfo imbuementInfo;
@@ -1004,20 +1009,6 @@ void Player::updateInventoryImbuement() {
 			}
 		}
 	}
-}
-
-phmap::flat_hash_map<uint8_t, std::shared_ptr<Item>> Player::getAllSlotItems() const {
-	phmap::flat_hash_map<uint8_t, std::shared_ptr<Item>> itemMap;
-	for (uint8_t i = CONST_SLOT_FIRST; i <= CONST_SLOT_LAST; ++i) {
-		const auto &item = inventory[i];
-		if (!item) {
-			continue;
-		}
-
-		itemMap[i] = item;
-	}
-
-	return itemMap;
 }
 
 uint16_t Player::getLoyaltySkill(skills_t skill) const {
