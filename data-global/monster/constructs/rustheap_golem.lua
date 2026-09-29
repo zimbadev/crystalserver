@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Rustheap Golem")
 local monster = {}
 
 monster.description = "a rustheap golem"
-monster.experience = 2100
+monster.experience = 2350
 monster.outfit = {
 	lookType = 603,
 	lookHead = 0,
@@ -108,7 +108,7 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 45,
-	armor = 40,
+	armor = 46,
 	{ name = "speed", interval = 2000, chance = 11, speedChange = 428, effect = CONST_ME_MAGIC_BLUE, target = false, duration = 6000 },
 }
 

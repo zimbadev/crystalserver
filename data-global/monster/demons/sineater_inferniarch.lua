@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Sineater Inferniarch")
 local monster = {}
 
 monster.description = "a sineater inferniarch"
-monster.experience = 7250
+monster.experience = 6750
 monster.outfit = {
 	lookType = 1795,
 	lookHead = 0,
@@ -117,7 +117,7 @@ monster.elements = {
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
 	{ type = COMBAT_ICEDAMAGE, percent = -5 },
-	{ type = COMBAT_HOLYDAMAGE, percent = -10 },
+	{ type = COMBAT_HOLYDAMAGE, percent = -5 },
 	{ type = COMBAT_DEATHDAMAGE, percent = 10 },
 }
 

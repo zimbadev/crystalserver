@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Afflicted Strider")
 local monster = {}
 
 monster.description = "an afflicted strider"
-monster.experience = 5700
+monster.experience = 6550
 monster.outfit = {
 	lookType = 1403,
 	lookHead = 0,

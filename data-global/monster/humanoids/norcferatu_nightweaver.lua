@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Norcferatu Nightweaver")
 local monster = {}
 
 monster.description = "a norcferatu nightweaver"
-monster.experience = 4900
+monster.experience = 6370
 monster.outfit = {
 	lookType = 1851,
 	lookHead = 0,
@@ -114,7 +114,7 @@ monster.elements = {
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
 	{ type = COMBAT_ICEDAMAGE, percent = -10 },
 	{ type = COMBAT_HOLYDAMAGE, percent = 5 },
-	{ type = COMBAT_DEATHDAMAGE, percent = -25 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 25 },
 }
 
 monster.immunities = {
