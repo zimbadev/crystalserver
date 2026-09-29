@@ -126,13 +126,12 @@ bool Item::hasImbuementAttribute(const std::string &attributeSlot) const {
 }
 
 bool Item::getImbuementInfo(uint8_t slot, ImbuementInfo* imbuementInfo) const {
-	std::string attributeSlot = std::to_string(ITEM_IMBUEMENT_SLOT + slot);
-	if (!hasImbuementAttribute(attributeSlot)) {
+	const CustomAttribute* attribute = getCustomAttribute(std::to_string(ITEM_IMBUEMENT_SLOT + slot));
+	if (!attribute) {
 		return false;
 	}
 
-	const CustomAttribute* attribute = getCustomAttribute(std::to_string(ITEM_IMBUEMENT_SLOT + slot));
-	const auto info = attribute ? attribute->getAttribute<uint32_t>() : 0;
+	const auto info = attribute->getAttribute<uint32_t>();
 	imbuementInfo->imbuement = g_imbuements().getImbuement(info & 0xFF);
 	imbuementInfo->duration = info >> 8;
 	return imbuementInfo->duration && imbuementInfo->imbuement;
