@@ -101,6 +101,10 @@ struct PositionHasher {
 	}
 };
 
+struct ImprovedRespawnZone {
+	uint16_t x1, y1, x2, y2;
+};
+
 class Game {
 public:
 	Game();
@@ -711,6 +715,9 @@ public:
 		mapLuaItemsStored[position] = itemId;
 	}
 
+	void setImprovedRespawnZones(std::vector<ImprovedRespawnZone> zones);
+	bool isImprovedRespawnPosition(const Position &pos) const;
+
 	auto getFiendishMonsters() const {
 		return fiendishMonsters;
 	}
@@ -926,6 +933,10 @@ private:
 	std::vector<uint16_t> registeredMagicEffects;
 	std::vector<uint16_t> registeredDistanceEffects;
 	std::vector<uint16_t> registeredLookTypes;
+
+	std::vector<ImprovedRespawnZone> improvedRespawnZones;
+	ImprovedRespawnZone improvedRespawnBounds {}; // overall bbox for a cheap reject
+	bool hasImprovedRespawnZones = false;
 
 	size_t lastBucket = 0;
 	size_t lastImbuedBucket = 0;

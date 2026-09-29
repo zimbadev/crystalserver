@@ -152,7 +152,7 @@ void PlayerTitle::checkAndUpdateNewTitles() {
 				manage(checkTask(title.m_amount), title.m_id);
 				break;
 			case CyclopediaTitle_t::MAP:
-				// manage(checkMap(title.m_amount), title.m_id);
+				manage(checkMap(title.m_amount), title.m_id);
 				break;
 			case CyclopediaTitle_t::OTHERS:
 				manage(checkOther(title.m_maleName), title.m_id);
@@ -277,8 +277,9 @@ bool PlayerTitle::checkTask(uint32_t amount) const {
 }
 
 bool PlayerTitle::checkMap(uint32_t amount) const {
-	// todo cyclopledia
-	return false;
+	// Discovery System: overall explored-areas percent, maintained by data/scripts/discovery_system.lua
+	const auto percentKV = m_player.kv()->scoped("discovery")->get("map-percent");
+	return percentKV && percentKV.has_value() && static_cast<uint32_t>(percentKV->getNumber()) >= amount;
 }
 
 bool PlayerTitle::checkOther(const std::string &name) const {

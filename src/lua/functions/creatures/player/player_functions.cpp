@@ -486,6 +486,7 @@ void PlayerFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "Player", "sendBannerType", PlayerFunctions::luaPlayersendBannerType);
 	Lua::registerMethod(L, "Player", "sendQuestProgress", PlayerFunctions::luaPlayerSendQuestStatusUpdate);
+	Lua::registerMethod(L, "Player", "sendLeaderMonsterKilledBanner", PlayerFunctions::luaPlayerSendLeaderMonsterKilledBanner);
 
 	Lua::registerMethod(L, "Player", "sendIconBakragore", PlayerFunctions::luaPlayerSendIconBakragore);
 	Lua::registerMethod(L, "Player", "removeIconBakragore", PlayerFunctions::luaPlayerRemoveIconBakragore);
@@ -512,6 +513,14 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "applyImbuementScrollToItem", PlayerFunctions::luaPlayerApplyImbuementScrollToItem);
 	Lua::registerMethod(L, "Player", "onClearAllImbuementsOnEtcher", PlayerFunctions::luaPlayerOnClearAllImbuementsOnEtcher);
 	Lua::registerMethod(L, "Player", "sendWeaponProficiencyExperience", PlayerFunctions::luaPlayerSendWeaponProficiencyExperience);
+	Lua::registerMethod(L, "Player", "sendBossDifficultySelection", PlayerFunctions::luaPlayerSendBossDifficultySelection);
+	Lua::registerMethod(L, "Player", "sendCyclopediaDiscoveryTest", PlayerFunctions::luaPlayerSendCyclopediaDiscoveryTest);
+	Lua::registerMethod(L, "Player", "sendDiscoveryData", PlayerFunctions::luaPlayerSendDiscoveryData);
+	Lua::registerMethod(L, "Player", "sendDiscoveryCurrentArea", PlayerFunctions::luaPlayerSendDiscoveryCurrentArea);
+	Lua::registerMethod(L, "Player", "sendDiscoveryExploring", PlayerFunctions::luaPlayerSendDiscoveryExploring);
+	Lua::registerMethod(L, "Player", "sendDiscoveryDonations", PlayerFunctions::luaPlayerSendDiscoveryDonations);
+	Lua::registerMethod(L, "Player", "sendDiscoveryArea", PlayerFunctions::luaPlayerSendDiscoveryArea);
+	Lua::registerMethod(L, "Player", "checkNewTitles", PlayerFunctions::luaPlayerCheckNewTitles);
 
 	// OTCR Features
 	Lua::registerMethod(L, "Player", "getMapShader", PlayerFunctions::luaPlayerGetMapShader);
@@ -1457,6 +1466,167 @@ int PlayerFunctions::luaPlayerSetKills(lua_State* L) {
 
 	player->unjustifiedKills = std::move(newKills);
 	player->sendUnjustifiedPoints();
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendCreatureSquare(lua_State* L) {
+	// player:sendCreatureSquare(creature, markType[, weaponType = 255])
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	const auto &creature = Lua::getUserdataShared<Creature>(L, 2);
+	if (!creature) {
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	const auto markType = Lua::getNumber<uint8_t>(L, 3, 0);
+	const auto weaponType = Lua::getNumber<uint8_t>(L, 4, 255);
+	player->sendCreatureSquare(creature, static_cast<SquareColor_t>(markType), static_cast<SquareColor_t>(weaponType));
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendDiscoveryData(lua_State* L) {
+	// player:sendDiscoveryData(mainAreas, discoveredSubIds, discoverableSubIds)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> mainAreas;
+	luaL_checktype(L, 2, LUA_TTABLE);
+	lua_pushnil(L);
+	while (lua_next(L, 2) != 0) {
+		luaL_checktype(L, -1, LUA_TTABLE);
+		lua_rawgeti(L, -1, 1); // areaId
+		lua_rawgeti(L, -2, 2); // status
+		lua_rawgeti(L, -3, 3); // progress
+		mainAreas.emplace_back(static_cast<uint16_t>(luaL_checknumber(L, -3)), static_cast<uint8_t>(luaL_checknumber(L, -2)), static_cast<uint8_t>(luaL_checknumber(L, -1)));
+		lua_pop(L, 4);
+	}
+
+	const auto readIdList = [L](int idx, std::vector<uint16_t> &out) {
+		luaL_checktype(L, idx, LUA_TTABLE);
+		lua_pushnil(L);
+		while (lua_next(L, idx) != 0) {
+			out.push_back(static_cast<uint16_t>(luaL_checknumber(L, -1)));
+			lua_pop(L, 1);
+		}
+	};
+	std::vector<uint16_t> discovered;
+	std::vector<uint16_t> discoverable;
+	readIdList(3, discovered);
+	readIdList(4, discoverable);
+
+	player->sendCyclopediaMapDiscoveryData(mainAreas, discovered, discoverable);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendDiscoveryCurrentArea(lua_State* L) {
+	// player:sendDiscoveryCurrentArea(subAreaId)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	player->sendCyclopediaMapSetCurrentArea(Lua::getNumber<uint16_t>(L, 2, 0));
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendDiscoveryExploring(lua_State* L) {
+	// player:sendDiscoveryExploring(subAreaId) - 0xDD sub 11, currentExploringSubAreaID (0 = none)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	player->sendCyclopediaMapSetExploringArea(Lua::getNumber<uint16_t>(L, 2, 0));
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendDiscoveryDonations(lua_State* L) {
+	// player:sendDiscoveryDonations(goal, areas) ; areas = { {areaId, improvedRespawnActive, donated}, ... }
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	const auto goal = Lua::getNumber<uint64_t>(L, 2, 0);
+	std::vector<std::tuple<uint16_t, bool, uint64_t>> areas;
+	luaL_checktype(L, 3, LUA_TTABLE);
+	lua_pushnil(L);
+	while (lua_next(L, 3) != 0) {
+		luaL_checktype(L, -1, LUA_TTABLE);
+		lua_rawgeti(L, -1, 1); // areaId
+		lua_rawgeti(L, -2, 2); // improvedRespawnActive
+		lua_rawgeti(L, -3, 3); // donated
+		areas.emplace_back(
+			static_cast<uint16_t>(luaL_checknumber(L, -3)),
+			lua_toboolean(L, -2) != 0,
+			static_cast<uint64_t>(luaL_checknumber(L, -1))
+		);
+		lua_pop(L, 4);
+	}
+
+	player->sendCyclopediaMapDonations(goal, areas);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendDiscoveryArea(lua_State* L) {
+	// player:sendDiscoveryArea(subAreaId, active, poiTarget, points) ; points = { {x, y, z, state}, ... }
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	const auto subAreaId = Lua::getNumber<uint16_t>(L, 2, 0);
+	const bool active = lua_isboolean(L, 3) != 0 ? Lua::getBoolean(L, 3) : true;
+	const auto poiTarget = Lua::getNumber<uint8_t>(L, 4, 7);
+
+	std::vector<std::pair<Position, uint8_t>> points;
+	luaL_checktype(L, 5, LUA_TTABLE);
+	lua_pushnil(L);
+	while (lua_next(L, 5) != 0) {
+		luaL_checktype(L, -1, LUA_TTABLE);
+		lua_rawgeti(L, -1, 1); // x
+		lua_rawgeti(L, -2, 2); // y
+		lua_rawgeti(L, -3, 3); // z
+		lua_rawgeti(L, -4, 4); // state
+		points.emplace_back(
+			Position(static_cast<uint16_t>(luaL_checknumber(L, -4)), static_cast<uint16_t>(luaL_checknumber(L, -3)), static_cast<uint8_t>(luaL_checknumber(L, -2))),
+			static_cast<uint8_t>(luaL_checknumber(L, -1))
+		);
+		lua_pop(L, 5);
+	}
+
+	player->sendCyclopediaMapSetDiscoveryArea(subAreaId, active, poiTarget, points);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerCheckNewTitles(lua_State* L) {
+	// player:checkNewTitles() - re-run the cyclopedia title unlock checks (e.g. after a discovery milestone)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	player->title()->checkAndUpdateNewTitles();
 	Lua::pushBoolean(L, true);
 	return 1;
 }
@@ -3684,6 +3854,7 @@ int PlayerFunctions::luaPlayerLearnSpell(lua_State* L) {
 		const bool showBanner = Lua::getBoolean(L, 3, true);
 		const bool alreadyLearned = player->hasLearnedInstantSpell(spellName);
 		player->learnInstantSpell(spellName);
+		// Show the "New Spell Unlocked" banner only when the spell is genuinely new.
 		if (showBanner && !alreadyLearned) {
 			const auto &spell = g_spells().getInstantSpellByName(spellName);
 			if (spell && spell->getSpellId() > 0) {
@@ -5464,6 +5635,19 @@ int PlayerFunctions::luaPlayerSendQuestStatusUpdate(lua_State* L) {
 	return 0;
 }
 
+int PlayerFunctions::luaPlayerSendLeaderMonsterKilledBanner(lua_State* L) {
+	// player:sendLeaderMonsterKilledBanner(raceId, charmPoints) -> "Echo Warden Killed" banner (shows the creature)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	player->sendScreenshotAndBannerLeaderMonsterKilled(Lua::getNumber<uint16_t>(L, 2), Lua::getNumber<uint32_t>(L, 3));
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
 int PlayerFunctions::luaPlayerSendIconBakragore(lua_State* L) {
 	// player:sendIconBakragore()
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
@@ -5790,6 +5974,79 @@ int PlayerFunctions::luaPlayerSendWeaponProficiencyExperience(lua_State* L) {
 	const uint32_t addProficiencyExperience = Lua::getNumber<uint32_t>(L, 3, 0);
 
 	player->sendWeaponProficiencyExperience(itemId, addProficiencyExperience);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendBossDifficultySelection(lua_State* L) {
+	// player:sendBossDifficultySelection(selectedDifficulty, numbers{}, banners{}, redMods{}, greenMods{})
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	const uint8_t selectedDifficulty = Lua::getNumber<uint8_t>(L, 2, 0);
+
+	auto readNumbers = [L](int idx, std::vector<uint32_t> &out) {
+		if (!lua_istable(L, idx)) {
+			return;
+		}
+		for (int i = 1;; ++i) {
+			lua_rawgeti(L, idx, i);
+			if (lua_isnil(L, -1)) {
+				lua_pop(L, 1);
+				break;
+			}
+			out.push_back(Lua::getNumber<uint32_t>(L, -1, 0));
+			lua_pop(L, 1);
+		}
+	};
+	auto readStrings = [L](int idx, std::vector<std::string> &out) {
+		if (!lua_istable(L, idx)) {
+			return;
+		}
+		for (int i = 1;; ++i) {
+			lua_rawgeti(L, idx, i);
+			if (lua_isnil(L, -1)) {
+				lua_pop(L, 1);
+				break;
+			}
+			out.push_back(Lua::getString(L, -1, ""));
+			lua_pop(L, 1);
+		}
+	};
+
+	std::vector<uint32_t> numbers;
+	std::vector<std::string> banners;
+	std::vector<std::string> redMods;
+	std::vector<std::string> greenMods;
+	readNumbers(3, numbers);
+	readStrings(4, banners);
+	readStrings(5, redMods);
+	readStrings(6, greenMods);
+
+	player->sendBossDifficultySelection(selectedDifficulty, numbers, banners, redMods, greenMods);
+	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendCyclopediaDiscoveryTest(lua_State* L) {
+	// player:sendCyclopediaDiscoveryTest(mainAreaId, subAreaId, x, y, z) — Cyclopedia Map discovery test (S2C 0xDD).
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	const uint16_t mainAreaId = Lua::getNumber<uint16_t>(L, 2, 24);
+	const uint16_t subAreaId = Lua::getNumber<uint16_t>(L, 3, 28);
+	const uint16_t x = Lua::getNumber<uint16_t>(L, 4, 32369);
+	const uint16_t y = Lua::getNumber<uint16_t>(L, 5, 32214);
+	const uint8_t z = Lua::getNumber<uint8_t>(L, 6, 7);
+	player->sendCyclopediaDiscoveryTest(mainAreaId, subAreaId, Position(x, y, z));
 	Lua::pushBoolean(L, true);
 	return 1;
 }
