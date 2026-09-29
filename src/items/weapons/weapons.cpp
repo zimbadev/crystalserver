@@ -383,6 +383,11 @@ void Weapon::internalUseWeapon(const std::shared_ptr<Player> &player, const std:
 		}
 	}
 
+	// Weapon-proficiency Type-32 "Homing Missile": on-hit weapon proc. Fires once per resolved hit against a
+	// creature (auto-attack of any weapon type, including each cleaved target). Rolls the perk's Probability and
+	// on success launches an element-typed homing missile; calls combatChangeHealth directly, so no re-entrancy.
+	player->tryProcWeaponProficiencyHomingMissile(target);
+
 	onUsedWeapon(player, item, target->getTile());
 }
 

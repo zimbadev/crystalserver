@@ -78,11 +78,24 @@ void Signals::dispatchSignalHandler(int signal) {
 			g_dispatcher().addEvent(sigusr1Handler, __FUNCTION__);
 			break;
 #else
-		case SIGBREAK: // Shuts the server down
-			g_dispatcher().addEvent(sigbreakHandler, __FUNCTION__);
+		case SIGBREAK: { // Shuts the server down
+			// RACE FIX: shutting the pool down right after queueing the handler killed the
+			// dispatcher before setGameState(SHUTDOWN) ran, so kick+saveAll NEVER happened
+			// (shutdown logs had no "Saving server..."). Wait for the handler to finish
+			// (players kicked + saveAll done inside setGameState) before tearing down.
+			auto shutdownDone = std::make_shared<std::atomic_bool>(false);
+			g_dispatcher().addEvent([shutdownDone] {
+				sigbreakHandler();
+				shutdownDone->store(true);
+			},
+			                        __FUNCTION__);
+			for (int i = 0; i < 900 && !shutdownDone->load(); ++i) { // up to 90s for the save
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+			}
 			// hold the thread until other threads end
 			inject<ThreadPool>().shutdown();
 			break;
+		}
 #endif
 		default:
 			break;

@@ -57,6 +57,9 @@ public:
 	uint32_t getInterval() const {
 		return interval;
 	}
+	// delay until the earliest pending respawn is due (respects improved-respawn halving);
+	// used to schedule the check timer so boosted waits are exact, never quantized up
+	uint32_t getNextCheckDelay() const;
 	void startup(bool delayed = false);
 
 	void startSpawnMonsterCheck();
