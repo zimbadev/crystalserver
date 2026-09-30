@@ -19,6 +19,11 @@
 #include "items/containers/container.hpp"
 #include <boost/locale.hpp>
 
+static constexpr double POW10[] = {
+	1.0, 10.0, 100.0, 1000.0, 10000.0,
+	100000.0, 1000000.0, 10000000.0, 100000000.0, 1000000000.0
+};
+
 int32_t NetworkMessage::decodeHeader() {
 	// Ensure there are enough bytes to read the header (2 bytes)
 	if (!canRead(2)) {
@@ -60,9 +65,9 @@ uint8_t NetworkMessage::getByte(const std::source_location &location /*= std::so
 		return {};
 	}
 
-	// Ensure that position is within bounds before decrementing
-	if (info.position == 0) {
-		g_logger().error("[{}] Position is at the beginning of the buffer. Cannot decrement. Called line {}:{} in {}", __FUNCTION__, location.line(), location.column(), location.function_name());
+	// Ensure that position is within bounds before reading
+	if (info.position >= buffer.size()) {
+		g_logger().error("[{}] Position {} is beyond buffer size {}. Called line {}:{} in {}", __FUNCTION__, info.position, buffer.size(), location.line(), location.column(), location.function_name());
 		return {};
 	}
 
@@ -115,8 +120,22 @@ std::string NetworkMessage::getString(uint16_t stringLen /* = 0*/, const std::so
 	auto it = buffer.data() + info.position;
 	info.position += stringLen;
 
-	// Convert the string to UTF-8 using Boost.Locale
 	std::string_view latin1Str { reinterpret_cast<const char*>(it), stringLen };
+
+	// Fast path for ASCII strings (all bytes < 128) - skip Boost.Locale conversion
+	bool isAscii = true;
+	for (unsigned char c : latin1Str) {
+		if (c >= 128) {
+			isAscii = false;
+			break;
+		}
+	}
+
+	if (isAscii) {
+		return std::string(latin1Str);
+	}
+
+	// Convert the string to UTF-8 using Boost.Locale
 	return boost::locale::conv::to_utf<char>(latin1Str.data(), latin1Str.data() + latin1Str.size(), "ISO-8859-1", boost::locale::conv::skip);
 }
 
@@ -130,6 +149,14 @@ Position NetworkMessage::getPosition() {
 
 // Skips count unknown/unused bytes in an incoming message
 void NetworkMessage::skipBytes(int16_t count) {
+	if (count < 0) {
+		auto absCount = static_cast<uint16_t>(-count);
+		if (absCount > info.position) {
+			g_logger().warn("[{}] skipBytes({}) would underflow position {}, clamping to 0", __FUNCTION__, count, info.position);
+			info.position = 0;
+			return;
+		}
+	}
 	info.position += count;
 }
 
@@ -146,13 +173,27 @@ void NetworkMessage::addString(const std::string &value, const std::source_locat
 		return;
 	}
 
-	// Convert to ISO-8859-1 using Boost.Locale
-	std::string latin1Str = boost::locale::conv::from_utf<char>(
-		value.data(),
-		value.data() + value.size(),
-		"ISO-8859-1",
-		boost::locale::conv::skip
-	);
+	// Fast path for ASCII strings (all bytes < 128) - skip Boost.Locale conversion
+	bool isAscii = true;
+	for (unsigned char c : value) {
+		if (c >= 128) {
+			isAscii = false;
+			break;
+		}
+	}
+
+	std::string latin1Str;
+	if (isAscii) {
+		latin1Str = value;
+	} else {
+		// Convert to ISO-8859-1 using Boost.Locale
+		latin1Str = boost::locale::conv::from_utf<char>(
+			value.data(),
+			value.data() + value.size(),
+			"ISO-8859-1",
+			boost::locale::conv::skip
+		);
+	}
 
 	size_t stringLen = latin1Str.size();
 
@@ -192,7 +233,7 @@ void NetworkMessage::addString(const std::string &value, const std::source_locat
 
 void NetworkMessage::addDouble(double value, uint8_t precision /*= 4*/) {
 	addByte(precision);
-	add<uint32_t>((value * std::pow(static_cast<float>(SCALING_BASE), precision)) + std::numeric_limits<int32_t>::max());
+	add<uint32_t>((value * POW10[precision]) + std::numeric_limits<int32_t>::max());
 }
 
 double NetworkMessage::getDouble() {
@@ -202,8 +243,8 @@ double NetworkMessage::getDouble() {
 	auto scaledValue = get<uint32_t>();
 	// Convert the scaled value back to double using the precision factor
 	double adjustedValue = static_cast<double>(scaledValue) - static_cast<double>(std::numeric_limits<int32_t>::max());
-	// Convert back to the original double value using the precision factor
-	return adjustedValue / std::pow(static_cast<double>(SCALING_BASE), precision);
+	// Convert back to the original double value using the pre-computed power of 10
+	return adjustedValue / POW10[precision];
 }
 
 void NetworkMessage::addByte(uint8_t value, std::source_location location /*= std::source_location::current()*/) {
@@ -297,11 +338,18 @@ uint8_t* NetworkMessage::getBodyBuffer() {
 }
 
 bool NetworkMessage::canAdd(size_t size) const {
-	return (size + info.position) < MAX_BODY_LENGTH;
+	if (size > MAX_BODY_LENGTH) {
+		return false;
+	}
+	return info.position < MAX_BODY_LENGTH - size;
 }
 
 bool NetworkMessage::canRead(int32_t size) const {
-	return size <= (info.length - (info.position - INITIAL_BUFFER_POSITION));
+	if (size < 0) {
+		return false;
+	}
+	int32_t remaining = static_cast<int32_t>(info.length) - (static_cast<int32_t>(info.position) - static_cast<int32_t>(INITIAL_BUFFER_POSITION));
+	return size <= remaining;
 }
 
 void NetworkMessage::append(const NetworkMessage &other) {
