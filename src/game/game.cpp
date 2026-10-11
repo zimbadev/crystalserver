@@ -7849,8 +7849,9 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 			if (damage.critical) {
 				addMagicEffect(targetPos, CONST_ME_CRITICAL_DAMAGE, attacker);
 			}
-			if (targetPlayer) {
-				targetPlayer->updateImpactTracker(COMBAT_HEALING, realHealthChange);
+			// Impact Analyser: the healing a player does, on themselves or on others
+			if (attackerPlayer) {
+				attackerPlayer->updateImpactTracker(COMBAT_HEALING, realHealthChange);
 			}
 
 			// Party hunt analyzer
@@ -8235,23 +8236,30 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 					tmpPlayer->sendTextMessage(message);
 				}
 
+				const int32_t primaryBeforeShield = damage.primary.value;
+				const int32_t secondaryBeforeShield = damage.secondary.value;
 				damage.primary.value -= absorbedDamage;
 				if (damage.primary.value < 0) {
 					damage.secondary.value = std::max<int32_t>(0, damage.secondary.value + damage.primary.value);
 					damage.primary.value = 0;
 				}
 
-				if (attackerPlayer) {
-					attackerPlayer->updateImpactTracker(damage.primary.type, damage.primary.value);
-					if (damage.secondary.type != COMBAT_NONE) {
-						attackerPlayer->updateImpactTracker(damage.secondary.type, damage.secondary.value);
+				// Analysers: what the shield absorbed is damage the attacker dealt (Impact Analyser) and the target
+				// received (Damage Input Analyser), each element its own share; the part that still reaches health
+				// is counted in sendMessages like any other hit
+				const std::array<std::pair<CombatType_t, int32_t>, 2> absorbedByElement = { {
+					{ damage.primary.type, primaryBeforeShield - damage.primary.value },
+					{ damage.secondary.type, secondaryBeforeShield - damage.secondary.value },
+				} };
+				for (const auto &[type, absorbed] : absorbedByElement) {
+					if (type == COMBAT_NONE || absorbed <= 0) {
+						continue;
 					}
-				}
-
-				if (targetPlayer) {
-					targetPlayer->updateImpactTracker(damage.primary.type, manaDamage);
-					if (damage.secondary.type != COMBAT_NONE) {
-						targetPlayer->updateImpactTracker(damage.secondary.type, damage.secondary.value);
+					if (attackerPlayer) {
+						attackerPlayer->updateImpactTracker(type, absorbed);
+					}
+					if (targetPlayer) {
+						targetPlayer->updateInputAnalyzer(type, absorbed, attacker ? attacker->getName() : "(other)");
 					}
 				}
 			}
@@ -8385,10 +8393,8 @@ void Game::sendMessages(
 		}
 
 		targetPlayer->updateInputAnalyzer(damage.primary.type, damage.primary.value, cause);
-		if (attackerPlayer) {
-			if (damage.secondary.type != COMBAT_NONE) {
-				attackerPlayer->updateInputAnalyzer(damage.secondary.type, damage.secondary.value, cause);
-			}
+		if (damage.secondary.type != COMBAT_NONE) {
+			targetPlayer->updateInputAnalyzer(damage.secondary.type, damage.secondary.value, cause);
 		}
 	}
 	std::stringstream ss;
@@ -8890,10 +8896,8 @@ bool Game::combatChangeMana(const std::shared_ptr<Creature> &attacker, const std
 			}
 
 			targetPlayer->updateInputAnalyzer(damage.primary.type, -damage.primary.value, cause);
-			if (attackerPlayer) {
-				if (damage.secondary.type != COMBAT_NONE) {
-					attackerPlayer->updateInputAnalyzer(damage.secondary.type, -damage.secondary.value, cause);
-				}
+			if (damage.secondary.type != COMBAT_NONE) {
+				targetPlayer->updateInputAnalyzer(damage.secondary.type, -damage.secondary.value, cause);
 			}
 		}
 	}
