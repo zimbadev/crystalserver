@@ -140,6 +140,7 @@ public:
 	 */
 	void loadCustomMaps(const std::filesystem::path &customMapPath);
 	void loadMap(const std::string &path, const Position &pos = Position());
+	void clearArea(uint16_t x1, uint16_t y1, uint8_t z1, uint16_t x2, uint16_t y2, uint8_t z2);
 
 	uint64_t getLastMapLoadTime() const {
 		return lastMapLoadTime;
