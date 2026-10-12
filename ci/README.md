@@ -17,3 +17,7 @@ Local test presets run unit tests. Windows CI compiles integration tests but run
 Compiler, runner, configuration, cache and stage diagnostics are retained for 14 days. Binary artifacts are not complete server installations; runtime resources come from the repository. Cache maintenance retains two generated compiler snapshots and one complete dependency snapshot per namespace/ref. Statistics for configuration probes and source compilation are separated. Ninja task durations overlap and do not equal overall wall time.
 
 The initial profile choices come from measurements on the related standalone server. Crystalserver cold and warm builds must be measured independently before claiming the same timings or an optimal default.
+
+## Measured Linux Debug tradeoff
+
+The original PCH profile remains available as `linux-debug`. In the validated summer-update comparison its compile stage took 325 seconds cold and 229 seconds warm, while `linux-debug-cache` took 536 seconds cold and 27 seconds warm with 199/200 cacheable calls reused. CI therefore uses the cache profile for recurring builds; use the original profile when cold-build latency matters more. Both profiles passed unit and isolated database integration tests. These measurements do not guarantee identical times for every runner or source version.
