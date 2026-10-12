@@ -29,3 +29,27 @@ if (UNIX)
         target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
     endif()
 endif()
+
+# Keep production LTO while optionally avoiding repeated whole-program test links.
+if((BUILD_TESTS OR PACKAGE_TESTS) AND NOT ENABLE_TEST_LTO AND CMAKE_BUILD_TYPE MATCHES "^(Release|RelWithDebInfo|MinSizeRel)$")
+    get_target_property(test_sources ${PROJECT_NAME}_lib SOURCES)
+    add_library(crystalserver_testlib STATIC ${test_sources})
+    foreach(property IN ITEMS
+            INCLUDE_DIRECTORIES INTERFACE_INCLUDE_DIRECTORIES
+            COMPILE_DEFINITIONS INTERFACE_COMPILE_DEFINITIONS
+            COMPILE_OPTIONS INTERFACE_COMPILE_OPTIONS
+            LINK_LIBRARIES INTERFACE_LINK_LIBRARIES
+            LINK_OPTIONS INTERFACE_LINK_OPTIONS
+            CXX_STANDARD CXX_STANDARD_REQUIRED CXX_EXTENSIONS
+            UNITY_BUILD UNITY_BUILD_BATCH_SIZE
+            PRECOMPILE_HEADERS INTERFACE_PRECOMPILE_HEADERS MSVC_RUNTIME_LIBRARY)
+        get_target_property(value ${PROJECT_NAME}_lib ${property})
+        if(NOT value STREQUAL "value-NOTFOUND")
+            if(property MATCHES "^(INTERFACE_)?(COMPILE|LINK)_OPTIONS$")
+                list(FILTER value EXCLUDE REGEX "^(/GL|/LTCG(:.*)?|-flto(=.*)?)$")
+            endif()
+            set_property(TARGET crystalserver_testlib PROPERTY ${property} "${value}")
+        endif()
+    endforeach()
+    set_property(TARGET crystalserver_testlib PROPERTY INTERPROCEDURAL_OPTIMIZATION FALSE)
+endif()

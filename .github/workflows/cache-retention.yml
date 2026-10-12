@@ -1,0 +1,55 @@
+name: Cache retention
+on:
+  workflow_run:
+    workflows: [Windows build diagnostics, Linux build diagnostics]
+    types: [completed]
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: cache-retention
+  cancel-in-progress: false
+jobs:
+  prune:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+    steps:
+      # No checkout, artifact download or repository code execution with this token.
+      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const caches = [];
+            for (let page = 1; ; page++) {
+              const { data } = await github.rest.actions.getActionsCacheList({ owner, repo, per_page: 100, page });
+              caches.push(...data.actions_caches);
+              if (data.actions_caches.length < 100) break;
+            }
+            const groups = new Map();
+            for (const cache of caches) {
+              let match = cache.key.match(/^(compiler-v1-(?:Windows|Linux)-(?:windows|linux)-(?:debug|release)(?:-cache(?:-unity)?)?-[0-9.]+)-[0-9]+-[0-9]+$/);
+              let keep = 2;
+              if (!match) {
+                match = cache.key.match(/^(deps-v1-(?:Windows|Linux)-(?:windows|linux)-(?:debug|release)-[0-9.]+)-[0-9a-f]{64}$/);
+                keep = 1;
+              }
+              if (!match || !Number.isSafeInteger(cache.id) || cache.id <= 0) continue;
+              const key = `${cache.ref}:${match[1]}:${keep}`;
+              if (!groups.has(key)) groups.set(key, { keep, caches: [] });
+              groups.get(key).caches.push(cache);
+            }
+            let removed = 0, bytes = 0;
+            for (const group of groups.values()) {
+              group.caches.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+              for (const cache of group.caches.slice(group.keep)) {
+                try {
+                  await github.rest.actions.deleteActionsCacheById({ owner, repo, cache_id: cache.id });
+                  removed++;
+                  bytes += cache.size_in_bytes;
+                } catch (error) {
+                  if (error.status !== 404) throw error;
+                }
+              }
+            }
+            await core.summary.addRaw(`Removed ${removed} older generated snapshots (${bytes} bytes). Retained two compiler snapshots and one complete dependency snapshot per namespace/ref. Partial dependency caches and other cache keys were preserved.`).write();
