@@ -10,7 +10,6 @@ concurrency:
   cancel-in-progress: false
 jobs:
   prune:
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.head_repository.full_name == github.repository
     runs-on: ubuntu-24.04
     permissions:
       actions: write
@@ -40,8 +39,10 @@ jobs:
               groups.get(key).caches.push(cache);
             }
             let removed = 0, bytes = 0;
+            const candidates = [];
             for (const group of groups.values()) {
               group.caches.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+              candidates.push(...group.caches.slice(0, group.keep).filter(cache => cache.key.startsWith('compiler-v1-')));
               for (const cache of group.caches.slice(group.keep)) {
                 try {
                   await github.rest.actions.deleteActionsCacheById({ owner, repo, cache_id: cache.id });
@@ -52,4 +53,21 @@ jobs:
                 }
               }
             }
-            await core.summary.addRaw(`Removed ${removed} older generated snapshots (${bytes} bytes). Retained two compiler snapshots and one complete dependency snapshot per namespace/ref. Partial dependency caches and other cache keys were preserved.`).write();
+            // Bound storage across refs as well; newest snapshots win.
+            candidates.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+            let retainedBytes = 0;
+            const maxCompilerBytes = 4 * 1024 ** 3;
+            for (const cache of candidates) {
+              if (retainedBytes + cache.size_in_bytes <= maxCompilerBytes) {
+                retainedBytes += cache.size_in_bytes;
+                continue;
+              }
+              try {
+                await github.rest.actions.deleteActionsCacheById({ owner, repo, cache_id: cache.id });
+                removed++;
+                bytes += cache.size_in_bytes;
+              } catch (error) {
+                if (error.status !== 404) throw error;
+              }
+            }
+            await core.summary.addRaw(`Removed ${removed} older generated snapshots (${bytes} bytes). Retained at most two compiler snapshots and one complete dependency snapshot per namespace/ref, with a 4 GiB global compiler budget. Partial dependency caches and other cache keys were preserved.`).write();
