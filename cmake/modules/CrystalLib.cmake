@@ -25,8 +25,15 @@ target_sources(${PROJECT_NAME}_lib PRIVATE crystalserver.cpp)
 # Conditional Precompiled Headers
 if(USE_PRECOMPILED_HEADER)
     target_precompile_headers(${PROJECT_NAME}_lib PUBLIC pch.hpp)
-    target_compile_definitions(${PROJECT_NAME}_lib PUBLIC USE_PRECOMPILED_HEADERS)
+else()
+    # Keep the same header environment without /Yc or /Yu, allowing object caching.
+    if(MSVC)
+        target_compile_options(${PROJECT_NAME}_lib PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:/FI${CMAKE_SOURCE_DIR}/src/pch.hpp>")
+    else()
+        target_compile_options(${PROJECT_NAME}_lib PUBLIC "$<$<COMPILE_LANGUAGE:CXX>:SHELL:-include ${CMAKE_SOURCE_DIR}/src/pch.hpp>")
+    endif()
 endif()
+target_compile_definitions(${PROJECT_NAME}_lib PUBLIC USE_PRECOMPILED_HEADERS)
 
 # *****************************************************************************
 # Build flags - need to be set before the links and sources
