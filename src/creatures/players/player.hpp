@@ -1345,6 +1345,7 @@ public:
 	void setCharmPoints(uint32_t points);
 	uint32_t getMinorCharmEchoes() const;
 	void setMinorCharmEchoes(uint32_t points);
+	void sendCharmResourcesBalance() const;
 	uint32_t getMaxCharmPoints() const;
 	void setMaxCharmPoints(uint32_t points);
 	uint32_t getMaxMinorCharmEchoes() const;

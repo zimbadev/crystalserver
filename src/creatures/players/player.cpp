@@ -1801,6 +1801,12 @@ void Player::setMinorCharmEchoes(uint32_t points) {
 	minorCharmEchoes = points;
 }
 
+void Player::sendCharmResourcesBalance() const {
+	if (client) {
+		client->sendCharmResourcesBalance(getCharmPoints(), getMinorCharmEchoes(), getMaxCharmPoints(), getMaxMinorCharmEchoes());
+	}
+}
+
 uint32_t Player::getMaxCharmPoints() const {
 	return maxCharmPoints;
 }

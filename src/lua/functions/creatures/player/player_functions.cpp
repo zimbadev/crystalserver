@@ -487,6 +487,8 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "sendBannerType", PlayerFunctions::luaPlayersendBannerType);
 	Lua::registerMethod(L, "Player", "sendQuestProgress", PlayerFunctions::luaPlayerSendQuestStatusUpdate);
 	Lua::registerMethod(L, "Player", "sendLeaderMonsterKilledBanner", PlayerFunctions::luaPlayerSendLeaderMonsterKilledBanner);
+	Lua::registerMethod(L, "Player", "addLeaderMonsterKill", PlayerFunctions::luaPlayerAddLeaderMonsterKill);
+	Lua::registerMethod(L, "Player", "hasKilledLeaderMonster", PlayerFunctions::luaPlayerHasKilledLeaderMonster);
 
 	Lua::registerMethod(L, "Player", "sendIconBakragore", PlayerFunctions::luaPlayerSendIconBakragore);
 	Lua::registerMethod(L, "Player", "removeIconBakragore", PlayerFunctions::luaPlayerRemoveIconBakragore);
@@ -5645,6 +5647,38 @@ int PlayerFunctions::luaPlayerSendLeaderMonsterKilledBanner(lua_State* L) {
 
 	player->sendScreenshotAndBannerLeaderMonsterKilled(Lua::getNumber<uint16_t>(L, 2), Lua::getNumber<uint32_t>(L, 3));
 	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerAddLeaderMonsterKill(lua_State* L) {
+	// player:addLeaderMonsterKill(monsterName) -> true on the FIRST Echo Warden of this creature type
+	// Awards the retail Charm Points, fires the "Echo Warden Killed" banner, flags the cyclopedia
+	// badge and refreshes the charm balance. Returns false if this type was already credited.
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+
+	const auto &monsterType = g_monsters().getMonsterType(Lua::getString(L, 2), true);
+	if (!monsterType) {
+		Lua::pushBoolean(L, false);
+		return 1;
+	}
+
+	Lua::pushBoolean(L, g_iobestiary().addLeaderMonsterKill(player, monsterType));
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerHasKilledLeaderMonster(lua_State* L) {
+	// player:hasKilledLeaderMonster(monsterName)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		return 1;
+	}
+
+	Lua::pushBoolean(L, g_iobestiary().hasKilledLeaderMonster(player, Lua::getString(L, 2)));
 	return 1;
 }
 

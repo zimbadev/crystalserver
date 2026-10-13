@@ -2679,13 +2679,36 @@ void ProtocolGame::parseBestiarysendMonsterData(NetworkMessage &msg) {
 	newmsg.add<uint16_t>(mtype->info.bestiarySecondUnlock);
 	newmsg.add<uint16_t>(mtype->info.bestiaryToUnlock);
 
-	newmsg.addByte(mtype->info.bestiaryStars);
+	// 15.30: the Echo Warden ("leader monster") field belongs HERE -- directly after the three
+	// unlock thresholds and BEFORE the difficulty byte. That is the client's own field order on
+	// TQmlMonsterRace: ...details1Kills, details2Kills, details3Kills, isLeaderKilled,
+	// monsterDifficulty, monsterRarity...
+	//
+	// It used to be missing from this packet entirely, with a filler byte sent after the occurrence
+	// instead. The byte COUNT came out right, so loot still parsed and nothing looked broken, but
+	// all three fields in between were read one slot early:
+	//   isLeaderKilled    <- bestiaryStars       >= 1 for every creature, so the Echo Warden badge
+	//                                            drew on every entry and the tooltip's charm-point
+	//                                            count showed the star rating
+	//   monsterDifficulty <- bestiaryOccurrence  0 for common creatures -> no stars, "Harmless"
+	//   monsterRarity     <- the filler 0
+	//
+	// The value is the Charm Points this player earned from that creature's first Echo Warden (the
+	// client renders it as the count in the badge tooltip), and 0 when they have killed none --
+	// which is what hides the badge.
+	uint8_t leaderCharmPoints = 0;
+	if (g_iobestiary().hasKilledLeaderMonster(player, mtype->name)) {
+		const uint32_t earned = g_iobestiary().getLeaderMonsterCharmPoints(mtype);
+		leaderCharmPoints = static_cast<uint8_t>(earned > 0 ? earned : 1);
+	}
+	newmsg.addByte(leaderCharmPoints);
 
-	// 15.25 (sommerrelease26): in the e2a4a1 client everything past the stars byte is gated on
-	// currentLevel != 0, and the occurrence byte is now followed by an extra (unconfirmed) byte.
+	newmsg.addByte(mtype->info.bestiaryStars); // monsterDifficulty
+
+	// 15.25 (sommerrelease26): in the e2a4a1 client everything past the difficulty byte is gated on
+	// currentLevel != 0.
 	if (currentLevel != 0) {
-		newmsg.addByte(mtype->info.bestiaryOccurrence);
-		newmsg.addByte(0);
+		newmsg.addByte(mtype->info.bestiaryOccurrence); // monsterRarity
 
 		std::vector<LootBlock> lootList = mtype->info.lootItems;
 		newmsg.addByte(lootList.size());
@@ -3341,10 +3364,14 @@ void ProtocolGame::parseBestiarySendCreatures(NetworkMessage &msg) {
 		}
 
 		// 15.25 (sommerrelease26): the e2a4a1 client reads a new per-creature byte right after the
-		// race id (before progress). It appears to be a "known/unlocked" flag, so derive it from the
-		// kill progress (0 keeps the silhouette, 1 reveals the entry). The progress block also gained
-		// an extra trailing byte (sent as 0 until its meaning is confirmed).
-		newmsg.addByte(progress > 0 ? 1 : 0);
+		// race id (before progress). In 15.30 it is isLeaderKilled on the client's TQmlMonsterRace
+		// model -- "leader monster" is CipSoft's internal name for the Echo Warden -- and it draws the
+		// Echo Warden charm-reward badge on the list entry. It was previously guessed to be an
+		// "unlocked" flag and derived from kill progress, which put the badge on every entry the
+		// player had ever killed and never updated it when a warden was actually defeated. It is
+		// per-race Echo Warden state and has nothing to do with kill progress.
+		// The progress block also gained an extra trailing byte (sent as 0 until its meaning is confirmed).
+		newmsg.addByte(g_iobestiary().hasKilledLeaderMonster(player, it_.second) ? 1 : 0);
 		newmsg.addByte(progress);
 		if (progress > 0) {
 			newmsg.addByte(occurrence);

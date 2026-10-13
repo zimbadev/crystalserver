@@ -10,7 +10,7 @@
 --   Monster:setStorageValue/getStorageValue (Lua fallback in monster.lua;
 --       getStorageValue returns -1 when unset, so compare with == 1)
 --   MonsterType:BestiaryStars/raceId/name/isRewardBoss/bossRace
---   Player:addMinorCharmEchoes/sendLeaderMonsterKilledBanner/kv():scoped() (boolean round-trips)
+--   Player:addLeaderMonsterKill (C++: first-kill check + charm points + banner + badge)
 --   Game.createMonster(name,pos,extended,force,master,spawnEffect) (returns nil on fail)
 --   Game.getSpectators(pos, multifloor, onlyPlayer, minX,maxX,minY,maxY)
 --   addEvent, Tile:hasFlag/getGround, Position:sendMagicEffect
@@ -44,8 +44,11 @@ EchoWarden.STORAGE_IS_WARDEN = 54133 -- 1 = this monster is THE echo warden
 EchoWarden.STORAGE_IS_SPAWNED = 54134 -- 1 = spawned by an echo raid (never re-triggers)
 EchoWarden.KV_SCOPE = "echo_warden" -- player:kv():scoped(...) for first-kill
 
--- first-kill reward (MINOR CHARM ECHOES) by bestiary difficulty (stars). 0-star fall back to [0].
-EchoWarden.ECHOES_BY_STARS = { [0] = 1, [1] = 10, [2] = 15, [3] = 20, [4] = 25, [5] = 30 }
+-- First-kill reward is CHARM POINTS (not Minor Charm Echoes) and is now owned by C++:
+-- IOBestiary::getLeaderMonsterCharmPoints, using the retail values by bestiary difficulty --
+-- Harmless 1, Trivial 2, Easy 5, Medium 10, Hard 15, Challenging 30 (bestiaryStars 0-5).
+-- Kept only so older references to this table do not read nil.
+EchoWarden.CHARM_POINTS_BY_STARS = { [0] = 1, [1] = 2, [2] = 5, [3] = 10, [4] = 15, [5] = 30 }
 
 -- runtime map: wardenCreatureId -> baseKindName (aura loop + reward lookup)
 EchoWarden.activeWardens = EchoWarden.activeWardens or {}
@@ -238,24 +241,18 @@ function EchoWarden.runRaid(kindName, center)
 	EchoWarden.trickleSpawn(kindName, cx, cy, cz, adds, step)
 end
 
+-- First Echo Warden of a creature type: the whole payout now lives in C++
+-- (IOBestiary::addLeaderMonsterKill), because the cyclopedia badge has to read the same state.
+-- Returns false, and does nothing, if this player already killed a warden of this type.
+--
+-- It does, in one place: the first-kill check against the SAME kv scope/key this file always used
+-- ("echo_warden" / monster type name, so existing player progress is preserved), the retail CHARM
+-- POINT award (this used to grant Minor Charm Echoes instead, so charm points never moved), the
+-- "Echo Warden Killed" banner, the charm balance refresh, and a repush of the creature's
+-- cyclopedia entry so the leader-killed badge appears immediately.
 function EchoWarden.grantReward(player, baseKind)
 	if not player or not baseKind or baseKind == "" then
 		return false
 	end
-	local kv = player:kv():scoped(EchoWarden.KV_SCOPE)
-	if kv:get(baseKind) then
-		return false
-	end
-
-	local mt = MonsterType(baseKind)
-	local stars = (mt and mt:BestiaryStars()) or 0
-	local amount = EchoWarden.ECHOES_BY_STARS[stars] or EchoWarden.ECHOES_BY_STARS[0]
-	player:addMinorCharmEchoes(amount)
-	kv:set(baseKind, true)
-
-	local raceId = (mt and mt:raceId()) or 0
-	if raceId > 0 then
-		player:sendLeaderMonsterKilledBanner(raceId, amount)
-	end
-	return true
+	return player:addLeaderMonsterKill(baseKind) and true or false
 end
