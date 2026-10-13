@@ -25,19 +25,14 @@ CharBazaar = {
 -- two sides have to agree: the fee charged here is the fee the site quotes, and a
 -- character parked on the wrong account would never show up in the auction list.
 CharBazaar.Config = {
-	fee = 50, -- bazaar_create, in transferable coins
-	taxPercent = 12, -- bazaar_tax, the commission kept from a sale
-	vaultAccount = 1, -- bazaar_accountid, the account an auctioned character is moved to
-	minLevel = 8, -- CHARBAZAAR_MIN_LEVEL
-	showcaseSlots = 4, -- CHARBAZAAR_SHOWCASE_SLOTS
-	minDays = 1,
-	maxDays = 28,
-
-	-- bazaar_create_enabled. The website gates createcharacterauction.php on it and
-	-- this is the second door into the same table, so it needs the same switch:
-	-- turning creation off there and leaving it on here means the client can create
-	-- auctions the website itself would refuse.
-	enabled = true,
+	fee = configManager.getNumber(configKeys.CHARBAZAAR_FEE),
+	taxPercent = configManager.getNumber(configKeys.CHARBAZAAR_TAX_PERCENT),
+	vaultAccount = configManager.getNumber(configKeys.CHARBAZAAR_VAULT_ACCOUNT),
+	minLevel = configManager.getNumber(configKeys.CHARBAZAAR_MIN_LEVEL),
+	showcaseSlots = configManager.getNumber(configKeys.CHARBAZAAR_MAX_SHOWCASE_SLOTS),
+	minDays = configManager.getNumber(configKeys.CHARBAZAAR_MIN_DAYS),
+	maxDays = configManager.getNumber(configKeys.CHARBAZAAR_MAX_DAYS),
+	enabled = configManager.getBoolean(configKeys.CHARBAZAAR_ENABLED),
 }
 
 CharBazaar.RecvPackets = {

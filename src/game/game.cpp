@@ -2133,9 +2133,6 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 		return RETURNVALUE_NOTPOSSIBLE;
 	}
 
-	const auto fromContainer = fromCylinder->getContainer();
-	const bool fromStoreInbox = fromContainer && fromContainer->getRootContainer() && fromContainer->getRootContainer()->isStoreInbox();
-
 	if (std::shared_ptr<Container> toCylinderContainer = toCylinder->getContainer()) {
 		auto containerID = toCylinderContainer->getID();
 		const auto rootToContainer = toCylinderContainer->getRootContainer();
@@ -2153,22 +2150,12 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 
 		if (toStoreInbox && !containerToStow) {
 			const bool isGoldPouch = item->getID() == ITEM_GOLD_POUCH;
-			const bool canMoveInStoreInbox = item->canBeMovedToStore() || isGoldPouch;
-			if (!canMoveInStoreInbox) {
-				return RETURNVALUE_NOTBOUGHTINSTORE;
-			}
-
-			// Store Inbox accepts only items already inside it (internal reordering).
-			if (!fromStoreInbox) {
+			if (!item->canBeMovedToStore() && !isGoldPouch) {
 				return RETURNVALUE_NOTBOUGHTINSTORE;
 			}
 		}
 
 		if (containerID == ITEM_GOLD_POUCH && !containerToStow) {
-			if (!fromStoreInbox) {
-				return RETURNVALUE_NOTBOUGHTINSTORE;
-			}
-
 			if (g_configManager().getBoolean(TOGGLE_GOLD_POUCH_QUICKLOOT_ONLY)) {
 				return RETURNVALUE_CONTAINERNOTENOUGHROOM;
 			}
@@ -4919,7 +4906,7 @@ std::shared_ptr<Item> Game::wrapItem(const std::shared_ptr<Item> &item, const st
 		newItem->setAttribute(ItemAttribute_t::AMOUNT, amount);
 	}
 
-	newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint16_t>(ItemAttribute_t::OWNER));
+	newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint32_t>(ItemAttribute_t::OWNER));
 	if (const int64_t storeAttribute = item->getAttribute<int64_t>(ItemAttribute_t::STORE); storeAttribute > 0) {
 		newItem->setAttribute(ItemAttribute_t::STORE, storeAttribute);
 	}
@@ -4939,7 +4926,7 @@ void Game::unwrapItem(const std::shared_ptr<Item> &item, uint16_t unWrapId, cons
 		return;
 	}
 
-	const uint16_t ownerAttr = item->getAttribute<uint16_t>(ItemAttribute_t::OWNER);
+	const uint32_t ownerAttr = item->getAttribute<uint32_t>(ItemAttribute_t::OWNER);
 	const int64_t storeAttr = item->getAttribute<int64_t>(ItemAttribute_t::STORE);
 	const uint16_t amountAttr = item->getAttribute<uint16_t>(ItemAttribute_t::AMOUNT);
 	const uint16_t amount = amountAttr ? amountAttr : 1;
@@ -7862,8 +7849,9 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 			if (damage.critical) {
 				addMagicEffect(targetPos, CONST_ME_CRITICAL_DAMAGE, attacker);
 			}
-			if (targetPlayer) {
-				targetPlayer->updateImpactTracker(COMBAT_HEALING, realHealthChange);
+			// Impact Analyser: the healing a player does, on themselves or on others
+			if (attackerPlayer) {
+				attackerPlayer->updateImpactTracker(COMBAT_HEALING, realHealthChange);
 			}
 
 			// Party hunt analyzer
@@ -8248,23 +8236,30 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 					tmpPlayer->sendTextMessage(message);
 				}
 
+				const int32_t primaryBeforeShield = damage.primary.value;
+				const int32_t secondaryBeforeShield = damage.secondary.value;
 				damage.primary.value -= absorbedDamage;
 				if (damage.primary.value < 0) {
 					damage.secondary.value = std::max<int32_t>(0, damage.secondary.value + damage.primary.value);
 					damage.primary.value = 0;
 				}
 
-				if (attackerPlayer) {
-					attackerPlayer->updateImpactTracker(damage.primary.type, damage.primary.value);
-					if (damage.secondary.type != COMBAT_NONE) {
-						attackerPlayer->updateImpactTracker(damage.secondary.type, damage.secondary.value);
+				// Analysers: what the shield absorbed is damage the attacker dealt (Impact Analyser) and the target
+				// received (Damage Input Analyser), each element its own share; the part that still reaches health
+				// is counted in sendMessages like any other hit
+				const std::array<std::pair<CombatType_t, int32_t>, 2> absorbedByElement = { {
+					{ damage.primary.type, primaryBeforeShield - damage.primary.value },
+					{ damage.secondary.type, secondaryBeforeShield - damage.secondary.value },
+				} };
+				for (const auto &[type, absorbed] : absorbedByElement) {
+					if (type == COMBAT_NONE || absorbed <= 0) {
+						continue;
 					}
-				}
-
-				if (targetPlayer) {
-					targetPlayer->updateImpactTracker(damage.primary.type, manaDamage);
-					if (damage.secondary.type != COMBAT_NONE) {
-						targetPlayer->updateImpactTracker(damage.secondary.type, damage.secondary.value);
+					if (attackerPlayer) {
+						attackerPlayer->updateImpactTracker(type, absorbed);
+					}
+					if (targetPlayer) {
+						targetPlayer->updateInputAnalyzer(type, absorbed, attacker ? attacker->getName() : "(other)");
 					}
 				}
 			}
@@ -8398,10 +8393,8 @@ void Game::sendMessages(
 		}
 
 		targetPlayer->updateInputAnalyzer(damage.primary.type, damage.primary.value, cause);
-		if (attackerPlayer) {
-			if (damage.secondary.type != COMBAT_NONE) {
-				attackerPlayer->updateInputAnalyzer(damage.secondary.type, damage.secondary.value, cause);
-			}
+		if (damage.secondary.type != COMBAT_NONE) {
+			targetPlayer->updateInputAnalyzer(damage.secondary.type, damage.secondary.value, cause);
 		}
 	}
 	std::stringstream ss;
@@ -8903,10 +8896,8 @@ bool Game::combatChangeMana(const std::shared_ptr<Creature> &attacker, const std
 			}
 
 			targetPlayer->updateInputAnalyzer(damage.primary.type, -damage.primary.value, cause);
-			if (attackerPlayer) {
-				if (damage.secondary.type != COMBAT_NONE) {
-					attackerPlayer->updateInputAnalyzer(damage.secondary.type, -damage.secondary.value, cause);
-				}
+			if (damage.secondary.type != COMBAT_NONE) {
+				targetPlayer->updateInputAnalyzer(damage.secondary.type, -damage.secondary.value, cause);
 			}
 		}
 	}

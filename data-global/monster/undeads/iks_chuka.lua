@@ -87,6 +87,7 @@ monster.loot = {
 	{ name = "gold-brocaded cloth", chance = 960 },
 	{ name = "broken iks spear", chance = 110 },
 	{ name = "broken iks headpiece", chance = 50 },
+	{ name = "broken iks sandals", chance = 50 },
 }
 
 monster.attacks = {

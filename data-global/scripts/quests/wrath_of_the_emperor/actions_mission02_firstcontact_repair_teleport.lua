@@ -8,7 +8,8 @@ local waterpos = {
 }
 
 local function revertWater(position)
-	local waterTile = Tile(position):getItemById(10113)
+	local tile = Tile(position)
+	local waterTile = tile and tile:getItemById(10113)
 	if waterTile then
 		waterTile:transform(10494)
 	end
@@ -46,9 +47,13 @@ function wrathEmperorMiss2FirstContact.onUse(player, item, fromPosition, target,
 		for i = 1, 4 do
 			waterpos[i]:sendMagicEffect(CONST_ME_GREEN_RINGS)
 		end
-		for i = 1, 6 do
-			Tile(waterpos[i]):getItemById(10494):transform(10113)
-			addEvent(revertWater, 60 * 1000, waterpos[i])
+		for i = 1, #waterpos do
+			local tile = Tile(waterpos[i])
+			local water = tile and tile:getItemById(10494)
+			if water then
+				water:transform(10113)
+				addEvent(revertWater, 60 * 1000, waterpos[i])
+			end
 		end
 	end
 	return true

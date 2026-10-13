@@ -223,6 +223,14 @@ public:
 		return weaponType == WEAPON_MISSILE && weaponType != WEAPON_NONE;
 	}
 
+	void setCombatType(CombatType_t type) const {
+		combatType = type;
+	}
+
+	void setMaxHitChance(int32_t chance) const {
+		maxHitChance = chance;
+	}
+
 	Abilities &getAbilities() {
 		if (!abilities) {
 			abilities = std::make_unique<Abilities>();
@@ -290,7 +298,7 @@ public:
 	uint32_t sellPrice = 0;
 	// Signed, because some items have negative weight, but this will only be necessary for the look so everything else will be uint32_t
 	int32_t weight = 0;
-	int32_t maxHitChance = -1;
+	mutable int32_t maxHitChance = -1;
 	int32_t decayTo = -1;
 	int32_t attack = 0;
 	int32_t defense = 0;
@@ -301,7 +309,7 @@ public:
 	int32_t runeLevel = 0;
 	int32_t wrapableTo = 0;
 
-	CombatType_t combatType = COMBAT_NONE;
+	mutable CombatType_t combatType = COMBAT_NONE;
 
 	ItemAnimation_t animationType = ANIMATION_NONE;
 

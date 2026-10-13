@@ -99,6 +99,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, BOOSTED_BOSS_SLOT, "boostedBossSlot", true);
 	loadBoolConfig(L, BOUNTY_TASKS_ENABLED, "bountyTasksEnabled", true);
 	loadBoolConfig(L, CHAIN_SYSTEM_VIP_ONLY, "chainSystemVipOnly", false);
+	loadBoolConfig(L, CHARBAZAAR_ENABLED, "charBazaarEnabled", true);
 	loadBoolConfig(L, CLASSIC_ATTACK_SPEED, "classicAttackSpeed", false);
 	loadBoolConfig(L, CLEAN_PROTECTION_ZONES, "cleanProtectionZones", false);
 	loadBoolConfig(L, CONVERT_UNSAFE_SCRIPTS, "convertUnsafeScripts", true);
@@ -275,6 +276,13 @@ bool ConfigManager::load() {
 	loadIntConfig(L, BOUNTY_TASKS_REROLL_MULTIPLIER, "bountyTasksRerollMultiplier", 1);
 	loadIntConfig(L, BUY_AOL_COMMAND_FEE, "buyAolCommandFee", 0);
 	loadIntConfig(L, BUY_BLESS_COMMAND_FEE, "buyBlessCommandFee", 0);
+	loadIntConfig(L, CHARBAZAAR_FEE, "charBazaarFee", 50);
+	loadIntConfig(L, CHARBAZAAR_MAX_DAYS, "charBazaarMaxDays", 28);
+	loadIntConfig(L, CHARBAZAAR_MAX_SHOWCASE_SLOTS, "charBazaarShowcaseSlots", 4);
+	loadIntConfig(L, CHARBAZAAR_MIN_DAYS, "charBazaarMinDays", 1);
+	loadIntConfig(L, CHARBAZAAR_MIN_LEVEL, "charBazaarMinLevel", 8);
+	loadIntConfig(L, CHARBAZAAR_TAX_PERCENT, "charBazaarTaxPercent", 12);
+	loadIntConfig(L, CHARBAZAAR_VAULT_ACCOUNT, "charBazaarVaultAccount", 1);
 	loadIntConfig(L, CHECK_EXPIRED_MARKET_OFFERS_EACH_MINUTES, "checkExpiredMarketOffersEachMinutes", 60);
 	loadIntConfig(L, COMBAT_CHAIN_DELAY, "combatChainDelay", 50);
 	loadIntConfig(L, COMBAT_CHAIN_TARGETS, "combatChainTargets", 5);
