@@ -234,6 +234,9 @@
 	<npc centerx="33837" centery="32137" centerz="4" radius="1">
 		<npc name="Captain Marie-Denise Banner" x="0" y="0" z="4" spawntime="60" />
 	</npc>
+	<npc centerx="33834" centery="32352" centerz="4" radius="1">
+		<npc name="Lai" x="0" y="0" z="4" spawntime="60" />
+	</npc>
 	<npc centerx="33027" centery="32417" centerz="4" radius="1">
 		<npc name="Samir" x="0" y="0" z="4" spawntime="60" />
 	</npc>
@@ -404,6 +407,9 @@
 	</npc>
 	<npc centerx="33879" centery="32130" centerz="5" radius="1">
 		<npc name="Fitzduncan" x="0" y="0" z="5" spawntime="60" />
+	</npc>
+	<npc centerx="33030" centery="32139" centerz="5" radius="1">
+		<npc name="Ra'Clette" x="0" y="0" z="5" spawntime="60" />
 	</npc>
 	<npc centerx="32429" centery="32173" centerz="5" radius="1">
 		<npc name="Miles, The Guard" x="0" y="0" z="5" spawntime="60" />
@@ -683,6 +689,12 @@
 	</npc>
 	<npc centerx="32724" centery="31976" centerz="6" radius="1">
 		<npc name="Wyda" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="33808" centery="31982" centerz="6" radius="1">
+		<npc name="Two Lips" x="0" y="0" z="6" spawntime="60" />
+	</npc>
+	<npc centerx="33824" centery="31982" centerz="6" radius="1">
+		<npc name="Petaloid" x="1" y="0" z="6" spawntime="60" direction="2" />
 	</npc>
 	<npc centerx="32568" centery="32018" centerz="6" radius="1">
 		<npc name="Kevin" x="0" y="0" z="6" spawntime="60" />
@@ -1303,6 +1315,15 @@
 	<npc centerx="33453" centery="31330" centerz="7" radius="1">
 		<npc name="Rock Steady" x="0" y="0" z="7" spawntime="60" />
 	</npc>
+	<npc centerx="33744" centery="31332" centerz="7" radius="1">
+		<npc name="Om'Wake Naha" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="33763" centery="31337" centerz="7" radius="1">
+		<npc name="Captain Coohan" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="33743" centery="31344" centerz="7" radius="1">
+		<npc name="Tik'hi Tak'he" x="1" y="0" z="7" spawntime="60" />
+	</npc>
 	<npc centerx="32836" centery="31364" centerz="7" radius="1">
 		<npc name="Harlow" x="0" y="0" z="7" spawntime="60" />
 	</npc>
@@ -1555,6 +1576,9 @@
 	<npc centerx="32383" centery="31776" centerz="7" radius="1">
 		<npc name="Shauna" x="0" y="0" z="7" spawntime="60" />
 	</npc>
+	<npc centerx="33171" centery="31778" centerz="7" radius="1">
+		<npc name="Gunther" x="0" y="0" z="7" spawntime="60" />
+	</npc>
 	<npc centerx="33191" centery="31778" centerz="7" radius="1">
 		<npc name="Falk" x="0" y="0" z="7" spawntime="60" />
 	</npc>
@@ -1726,6 +1750,9 @@
 	<npc centerx="33356" centery="31982" centerz="7" radius="1">
 		<npc name="Hawkhurst" x="0" y="0" z="7" spawntime="60" />
 	</npc>
+	<npc centerx="32434" centery="31985" centerz="7" radius="1">
+		<npc name="Wyrdin's Apprentice" x="0" y="0" z="7" spawntime="60" />
+	</npc>
 	<npc centerx="33479" centery="31986" centerz="7" radius="1">
 		<npc name="Captain Gulliver" x="0" y="0" z="7" spawntime="60" />
 	</npc>
@@ -1756,6 +1783,9 @@
 	<npc centerx="32085" centery="32011" centerz="7" radius="1">
 		<npc name="Shanoya" x="0" y="0" z="7" spawntime="60" />
 	</npc>
+	<npc centerx="33834" centery="32011" centerz="7" radius="1">
+		<npc name="Atui" x="-1" y="0" z="7" spawntime="60" />
+	</npc>
 	<npc centerx="32067" centery="32013" centerz="7" radius="1">
 		<npc name="Ula" x="0" y="0" z="7" spawntime="60" />
 	</npc>
@@ -1775,7 +1805,7 @@
 		<npc name="Neill" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="32940" centery="32030" centerz="7" radius="1">
-		<npc name="Eustacio" x="0" y="0" z="7" spawntime="60" />
+		<npc name="Eustacio" x="-1" y="0" z="7" spawntime="60" direction="2" />
 	</npc>
 	<npc centerx="32271" centery="32052" centerz="7" radius="1">
 		<npc name="Valentina" x="0" y="0" z="7" spawntime="60" />
@@ -1797,6 +1827,9 @@
 	</npc>
 	<npc centerx="32326" centery="32093" centerz="7" radius="1">
 		<npc name="Ivalisse" x="0" y="0" z="7" spawntime="60" />
+	</npc>
+	<npc centerx="33001" centery="32096" centerz="7" radius="1">
+		<npc name="Sniff" x="0" y="0" z="7" spawntime="60" />
 	</npc>
 	<npc centerx="33024" centery="32111" centerz="7" radius="1">
 		<npc name="Bill The Worker" x="0" y="0" z="7" spawntime="60" />
@@ -2446,6 +2479,9 @@
 	<npc centerx="32308" centery="31838" centerz="8" radius="1">
 		<npc name="Dane" x="0" y="0" z="8" spawntime="60" />
 	</npc>
+	<npc centerx="33279" centery="31846" centerz="8" radius="1">
+		<npc name="Fernlor" x="0" y="0" z="8" spawntime="60" />
+	</npc>
 	<npc centerx="33267" centery="31848" centerz="8" radius="1">
 		<npc name="Puffels" x="0" y="0" z="8" spawntime="60" />
 	</npc>
@@ -2536,9 +2572,6 @@
 	<npc centerx="33277" centery="32390" centerz="8" radius="1">
 		<npc name="Mazarius" x="0" y="0" z="8" spawntime="60" />
 	</npc>
-	<npc centerx="33873" centery="32407" centerz="8" radius="1">
-		<npc name="Ortelio" x="1" y="0" z="8" spawntime="60" />
-	</npc>
 	<npc centerx="31939" centery="32502" centerz="8" radius="1">
 		<npc name="Jamesfrancis" x="0" y="0" z="8" spawntime="60" />
 	</npc>
@@ -2598,6 +2631,9 @@
 	</npc>
 	<npc centerx="33444" centery="31321" centerz="9" radius="1">
 		<npc name="Rock With A Soft Spot" x="0" y="0" z="9" spawntime="60" />
+	</npc>
+	<npc centerx="33857" centery="31334" centerz="9" radius="1">
+		<npc name="Eustacios Spy Rat" x="0" y="0" z="9" spawntime="60" />
 	</npc>
 	<npc centerx="33639" centery="31377" centerz="9" radius="1">
 		<npc name="Navigator" x="0" y="0" z="9" spawntime="60" />
@@ -2661,6 +2697,9 @@
 	</npc>
 	<npc centerx="33570" centery="31985" centerz="9" radius="1">
 		<npc name="Jacob" x="0" y="0" z="9" spawntime="60" />
+	</npc>
+	<npc centerx="33819" centery="32000" centerz="9" radius="1">
+		<npc name="Sprout Sentinel" x="0" y="0" z="9" spawntime="60" />
 	</npc>
 	<npc centerx="32567" centery="32022" centerz="9" radius="1">
 		<npc name="Dronk" x="0" y="0" z="9" spawntime="60" />
