@@ -370,6 +370,8 @@ void LuaEnums::initFactionEnums(lua_State* L) {
 	registerEnum(L, FACTION_DEATHLING);
 	registerEnum(L, FACTION_ANUMA);
 	registerEnum(L, FACTION_FAFNAR);
+	registerEnum(L, FACTION_QUARA);
+	registerEnum(L, FACTION_ROOTTHING);
 	registerEnum(L, FACTION_LAST);
 }
 
