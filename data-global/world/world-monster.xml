@@ -952,6 +952,9 @@
 	<monster centerx="32423" centery="32772" centerz="1" radius="2">
 		<monster name="Tarantula" x="0" y="-1" z="1" spawntime="90" />
 	</monster>
+	<monster centerx="32867" centery="32832" centerz="1" radius="5">
+		<monster name="Gorga" x="0" y="-1" z="1" spawntime="450" />
+	</monster>
 	<monster centerx="33089" centery="31019" centerz="2" radius="3">
 		<monster name="Lizard Legionnaire" x="2" y="0" z="2" spawntime="90" />
 		<monster name="Lizard High Guard" x="2" y="2" z="2" spawntime="90" />
