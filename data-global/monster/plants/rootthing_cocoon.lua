@@ -51,11 +51,9 @@ monster.light = {
 	color = 0,
 }
 
-monster.loot = {
-}
+monster.loot = {}
 
-monster.attacks = {
-}
+monster.attacks = {}
 
 monster.defenses = {
 	defense = 50,

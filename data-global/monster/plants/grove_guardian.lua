@@ -71,8 +71,7 @@ monster.loot = {
 	{ name = "corncob", chance = 20000 },
 }
 
-monster.attacks = {
-}
+monster.attacks = {}
 
 monster.defenses = {
 	defense = 50,
