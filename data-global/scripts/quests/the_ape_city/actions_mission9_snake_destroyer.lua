@@ -1,7 +1,7 @@
 local theApeMiss9 = Action()
 
 local GLOBAL_AMPHORAS_OPEN = 101026
-local GLOBAL_AMPHORAS_BROKEN = 101027 -- contador de amphoras rotas
+local GLOBAL_AMPHORAS_BROKEN = 101027
 local cooldownTime = 5 * 60
 
 local amphoraUids = { 40092, 40093, 40094, 40095 }
