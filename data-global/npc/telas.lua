@@ -142,11 +142,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(ShadowsOfYalahar.Mission01, 1) -- Start Mission 01
 			npcHandler:setTopic(playerId, 0)
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 1 then
-			if player:getStorageValue(ShadowsOfYalahar.ResearchBoveas) == 1
-				and player:getStorageValue(ShadowsOfYalahar.ResearchCerdras) == 1
-				and player:getStorageValue(ShadowsOfYalahar.ResearchDreadeye) == 1
-				and player:getStorageValue(ShadowsOfYalahar.ResearchMilos) == 1
-				and player:getStorageValue(ShadowsOfYalahar.ResearchScutty) == 1 then
+			if player:getStorageValue(ShadowsOfYalahar.ResearchBoveas) == 1 and player:getStorageValue(ShadowsOfYalahar.ResearchCerdras) == 1 and player:getStorageValue(ShadowsOfYalahar.ResearchDreadeye) == 1 and player:getStorageValue(ShadowsOfYalahar.ResearchMilos) == 1 and player:getStorageValue(ShadowsOfYalahar.ResearchScutty) == 1 then
 				npcHandler:say({
 					"Ah, yes. I have received all the reports I need and have already been able to glance through them. ...",
 					"It will take some time to evaluate all those different approaches to the topic. Meanwhile, we can get on with the other tasks to advance our project. ...",
@@ -268,8 +264,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			local charge = chargeIdToLetter[chargeId]
 
 			if charge == "A" or charge == "B" or charge == "C" then
-				local deliveredStorage = charge == "A" and ShadowsOfYalahar.ChargeDeliveredA
-					or (charge == "B" and ShadowsOfYalahar.ChargeDeliveredB or ShadowsOfYalahar.ChargeDeliveredC)
+				local deliveredStorage = charge == "A" and ShadowsOfYalahar.ChargeDeliveredA or (charge == "B" and ShadowsOfYalahar.ChargeDeliveredB or ShadowsOfYalahar.ChargeDeliveredC)
 				local delivered = player:getStorageValue(deliveredStorage) == 1
 
 				if delivered then
@@ -286,9 +281,7 @@ local function creatureSayCallback(npc, creature, type, message)
 						npcHandler:say("We have got a major C-charge! Excellent!", npc, creature)
 					end
 
-					local deliveredCount = (player:getStorageValue(ShadowsOfYalahar.ChargeDeliveredA) == 1 and 1 or 0)
-						+ (player:getStorageValue(ShadowsOfYalahar.ChargeDeliveredB) == 1 and 1 or 0)
-						+ (player:getStorageValue(ShadowsOfYalahar.ChargeDeliveredC) == 1 and 1 or 0)
+					local deliveredCount = (player:getStorageValue(ShadowsOfYalahar.ChargeDeliveredA) == 1 and 1 or 0) + (player:getStorageValue(ShadowsOfYalahar.ChargeDeliveredB) == 1 and 1 or 0) + (player:getStorageValue(ShadowsOfYalahar.ChargeDeliveredC) == 1 and 1 or 0)
 
 					if deliveredCount >= 3 then
 						npcHandler:say("We are finished with collecting charges! Now we can proceed and your next mission awaits you!", npc, creature)
