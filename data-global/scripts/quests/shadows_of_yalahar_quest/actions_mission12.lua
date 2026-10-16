@@ -1,58 +1,47 @@
--- Mission 12 - Golem Servant Itens Mechanic
+-- Mission 12 - Golem Servant Items Mechanic
 local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
 
-local KV_SCOPE = "shadows-of-yalahar"
-local ACTIVE_KEY = "golem-servant-active"
-local CURRENT_ITEM_KEY = "golem-servant-current-item"
-local HAS_ITEM_KEY = "golem-servant-has-item"
-
-local function createGolemContainerAction(itemKey)
+local function createGolemContainerAction(itemKey, itemIndex)
 	local containerData = GolemServantItems[itemKey]
 	local action = Action()
-
 	function action.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 		if player:getStorageValue(ShadowsOfYalahar.Mission12) ~= 1 then
 			return true
 		end
 
-		local kv = player:kv():scoped(KV_SCOPE)
-
-		local active = kv:get(ACTIVE_KEY)
-		if active ~= true then
+		if player:getStorageValue(ShadowsOfYalahar.Mission12RepairActive) ~= 1 then
 			player:sendCancelMessage("You have no use for this right now.")
 			return true
 		end
 
-		local currentItem = kv:get(CURRENT_ITEM_KEY)
-		if currentItem ~= itemKey then
+		local currentItemIndex = player:getStorageValue(ShadowsOfYalahar.Mission12RepairItem)
+		if currentItemIndex ~= itemIndex then
 			player:sendCancelMessage("You have no use for this right now.")
 			return true
 		end
 
-		local hasItem = kv:get(HAS_ITEM_KEY)
-		if hasItem == true then
+		if player:getStorageValue(ShadowsOfYalahar.Mission12RepairHasItem) == 1 then
 			player:sendCancelMessage("You already have this item.")
 			return true
 		end
 
 		player:addItem(containerData.itemId, 1)
-		kv:set(HAS_ITEM_KEY, true)
+		player:setStorageValue(ShadowsOfYalahar.Mission12RepairHasItem, 1)
 		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You take the " .. containerData.displayName .. ".")
-
 		return true
 	end
-
 	action:aid(containerData.containerActionId)
 	action:register()
-
 	return action
 end
 
-for _, itemKey in ipairs(GolemServantItemKeys) do
-	createGolemContainerAction(itemKey)
+for index, itemKey in ipairs(GolemServantItemKeys) do
+	createGolemContainerAction(itemKey, index)
 end
 
 -- Mission 12 - Elevator (Fenrock)
+local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
+
 local ELEVATOR_FLOORS = {
 	{ a = Position(32549, 31249, 9), b = Position(32549, 31249, 11) },
 }
@@ -72,7 +61,6 @@ end
 
 local function teleportPlayer(fromPosition, toPosition)
 	sendAreaEffect(fromPosition, CONST_ME_POFF)
-
 	for x = 0, AREA_SIZE - 1 do
 		for y = 0, AREA_SIZE - 1 do
 			local originalPosition = Position(fromPosition.x + x, fromPosition.y + y, fromPosition.z)
@@ -104,19 +92,21 @@ function elevatorFenrock.onUse(player, item, fromPosition, target, toPosition, i
 
 	for _, pair in ipairs(ELEVATOR_FLOORS) do
 		if isInArea(playerPosition, pair.a) then
+			if player:getStorageValue(ShadowsOfYalahar.Mission12LiftUnlocked) ~= 1 then
+				player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The lift is damaged and does not respond.")
+				return true
+			end
 			teleportPlayer(pair.a, pair.b)
 			return true
 		end
-
 		if isInArea(playerPosition, pair.b) then
 			teleportPlayer(pair.b, pair.a)
 			return true
 		end
 	end
 
-	player:sendCancelMessage("You cannot use this here.")
+	player:sendCancelMessage("Step in the elevator area.")
 	return true
 end
-
 elevatorFenrock:aid(4968)
 elevatorFenrock:register()

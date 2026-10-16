@@ -8,10 +8,7 @@ local energyPositions = {
 	Position(33268, 31789, 11),
 	Position(33269, 31789, 11),
 }
-
 local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
-local KV_SCOPE = "shadows-of-yalahar"
-local KV_KEY = "mission12-lever"
 
 local energyLever = Action()
 function energyLever.onUse(player, item, fromPosition, target, toPosition, isHotkey)
@@ -19,8 +16,7 @@ function energyLever.onUse(player, item, fromPosition, target, toPosition, isHot
 		return true
 	end
 
-	local kv = player:kv():scoped(KV_SCOPE)
-	if kv:get(KV_KEY) then
+	if player:getStorageValue(ShadowsOfYalahar.Mission12Lever) == 1 then
 		player:sendCancelMessage("You have already used this lever.")
 		return true
 	end
@@ -34,11 +30,9 @@ function energyLever.onUse(player, item, fromPosition, target, toPosition, isHot
 		position:sendMagicEffect(CONST_ME_ENERGYHIT)
 	end
 
-	kv:set(KV_KEY, true)
+	player:setStorageValue(ShadowsOfYalahar.Mission12Lever, 1)
 	item:transform(2772)
-
 	return true
 end
-
 energyLever:aid(57236)
 energyLever:register()

@@ -1,5 +1,3 @@
-local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
-
 local energyCondition = Condition(CONDITION_ENERGY)
 energyCondition:setParameter(CONDITION_PARAM_DELAYED, true)
 energyCondition:addDamage(5, 2000, -25)
@@ -55,13 +53,9 @@ end
 local golemDisassembler = Action()
 function golemDisassembler.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	-- Mission 04 Shadows of Yalahar Quest
-	if target.itemid == 8888 then
-		if player:getStorageValue(ShadowsOfYalahar.Mission04) ~= 1 then
-			return true
-		end
-
+	if target.itemid == 8888 and player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.Mission04) == 1 then
 		target:transform(8889)
-
+		toPosition:sendMagicEffect(CONST_ME_POFF)
 		local outcome = rollOutcome()
 		player:say(outcome.message, TALKTYPE_MONSTER_SAY)
 		outcome.action(player, target)

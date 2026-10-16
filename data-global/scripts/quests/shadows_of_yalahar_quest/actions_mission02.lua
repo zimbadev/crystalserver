@@ -4,8 +4,6 @@ local REWARD_KEY = "reward"
 local COOLDOWN_KEY = "telescope-cooldown"
 local TELESCOPE_COOLDOWN = 1 -- segundos
 
-local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
-
 local telescopes = {
 	{ x = 32867, y = 31257, z = 11 },
 	{ x = 32869, y = 31257, z = 11 },
@@ -60,7 +58,7 @@ end
 local yalaharTelescope = Action()
 
 function yalaharTelescope.onUse(player, item, fromPosition, target, toPosition, isHotkey)
-	local mission = player:getStorageValue(ShadowsOfYalahar.Questline)
+	local mission = player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.Questline)
 	if mission ~= 3 then
 		return true
 	end
@@ -115,7 +113,7 @@ yalaharTelescope:register()
 local yalaharCoreDispenser = Action()
 
 function yalaharCoreDispenser.onUse(player, item, fromPosition, target, toPosition, isHotkey)
-	local mission = player:getStorageValue(ShadowsOfYalahar.Questline)
+	local mission = player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.Questline)
 	if mission ~= 3 then
 		return true
 	end

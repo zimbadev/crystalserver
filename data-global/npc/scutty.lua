@@ -49,24 +49,16 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
-local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
--- The Isle of Evil Quest KVS (mission04)
-local TheIsleOfEvil = Storage.Quest.U8_5.TheIsleOfEvil
-local WORM_COUNT_KV = "mission04-wormcount"
-local MUST_PAY_KV = "mission04-mustpay"
-
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
-	local shadowsKv = player:kv():scoped("shadows-of-yalahar")
-	local isleKv = player:kv():scoped("the-isle-of-evil")
 	local playerId = player:getId()
 
 	if not npcHandler:checkInteraction(npc, creature) then
 		return false
 	end
 
-	if MsgContains(message, "research notes") and player:getStorageValue(ShadowsOfYalahar.Mission01) == 1 then
-		if shadowsKv:get("research-scutty") then
+	if MsgContains(message, "research notes") and player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.Mission01) == 1 then
+		if player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.ResearchScutty) == 1 then
 			npcHandler:say("We've already talked about this.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		else
@@ -74,19 +66,19 @@ local function creatureSayCallback(npc, creature, type, message)
 				"Ok, ok. Considering how much knowledge Telas was willing to share and keeping in mind that he promised to send me the results of his research I'll make an exception. I will send him the information he wants .. even a bit more. ...",
 				"He'd better live up to his promises, a dwarf does not forget or forgive easily.",
 			}, npc, creature)
-			shadowsKv:set("research-scutty", 1)
+			player:setStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.ResearchScutty, 1)
 			npcHandler:setTopic(playerId, 0)
 		end
 		return true
-	elseif MsgContains(message, "machine") and player:getStorageValue(TheIsleOfEvil.Mission04) == 1 then
+	elseif MsgContains(message, "machine") and player:getStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission04) == 1 then
 		npcHandler:say({
 			"So Rapanaio thinks I'd just hand out one of my greatest creations for a few coins of gold? Wrong! It works like this: you help me, then I'll help you. ...",
 			"At the moment I'm tied up with an ongoing experiment and I could do with some help in a more mundane task. Are you in?",
 		}, npc, creature)
 		npcHandler:setTopic(playerId, 1)
 		return true
-	elseif MsgContains(message, "mission") and player:getStorageValue(TheIsleOfEvil.Mission04) == 2 then
-		if isleKv:get(MUST_PAY_KV) then
+	elseif MsgContains(message, "mission") and player:getStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission04) == 2 then
+		if player:getStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission04MustPay) == 1 then
 			npcHandler:say("You let one of my precious drilling worms get hurt! I'll need 500 gold to cover the damages before you can go back out there. Will you pay?", npc, creature)
 			npcHandler:setTopic(playerId, 3)
 		else
@@ -94,9 +86,9 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:setTopic(playerId, 0)
 		end
 		return true
-	elseif MsgContains(message, "mission") and player:getStorageValue(TheIsleOfEvil.Mission04) == 3 then
+	elseif MsgContains(message, "mission") and player:getStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission04) == 3 then
 		npcHandler:say("Finally! I could have shaved off and grown a new beard in the time it has taken you to complate that task. However, here is your machine. Now leave me alone, I have experiments to carry out.", npc, creature)
-		player:setStorageValue(TheIsleOfEvil.Mission04, 4)
+		player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission04, 4)
 		player:addItem(9390, 1) -- machine crate
 		return true
 	elseif MsgContains(message, "yes") then
@@ -115,14 +107,14 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:setTopic(playerId, 2)
 		elseif npcHandler:getTopic(playerId) == 2 then
 			npcHandler:say("Good. Here is the 'Worm punisher'. Remember DO NOT hurt the drilling worms! If you do it will cost you 500 gold!", npc, creature)
-			player:setStorageValue(TheIsleOfEvil.Mission04, 2)
-			player:setStorageValue(TheIsleOfEvil.Door_04, 1)
+			player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission04, 2)
+			player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Door_04, 1)
 			player:addItem(9234, 1) -- worm punisher
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 3 then
 			if player:removeMoney(500) then
-				isleKv:set(MUST_PAY_KV, false)
-				isleKv:set(WORM_COUNT_KV, 0)
+				player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission04MustPay, 0)
+				player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission04WormCount, 0)
 				npcHandler:say("There we go. Now get back out there and be more careful with my drilling worms this time!", npc, creature)
 			else
 				npcHandler:say("You don't even have 500 gold on you...", npc, creature)
