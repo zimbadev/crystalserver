@@ -1,44 +1,42 @@
 local theApeMiss9 = Action()
 
-local amphoraStorages = {
-	[40092] = Storage.Quest.U7_6.TheApeCity.TheLargeAmphoras1,
-	[40093] = Storage.Quest.U7_6.TheApeCity.TheLargeAmphoras2,
-	[40094] = Storage.Quest.U7_6.TheApeCity.TheLargeAmphoras3,
-	[40095] = Storage.Quest.U7_6.TheApeCity.TheLargeAmphoras4,
-}
-
-local cooldownStorage = Storage.Quest.U7_6.TheApeCity.TheLargeAmphorasCooldown
+local GLOBAL_AMPHORAS_OPEN = 101026
+local GLOBAL_AMPHORAS_BROKEN = 101027
 local cooldownTime = 5 * 60
+
+local amphoraUids = { 40092, 40093, 40094, 40095 }
+local amphoraSet = {}
+for _, uid in ipairs(amphoraUids) do
+	amphoraSet[uid] = true
+end
+
+local brokenAmphoras = {}
+
+local function countBroken()
+	local n = 0
+	for _ in pairs(brokenAmphoras) do
+		n = n + 1
+	end
+	return n
+end
 
 function theApeMiss9.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	local uid = target:getUniqueId()
 	local itemId = target.itemid
 
-	if amphoraStorages[uid] and itemId == 4995 then
-		local storage = amphoraStorages[uid]
-
-		local storageValue = player:getStorageValue(storage)
-		if storageValue > 0 then
+	if amphoraSet[uid] and itemId == 4995 then
+		if player:getStorageValue(Storage.Quest.U7_6.TheApeCity.Questline) < 17 then
 			return false
 		end
 
-		player:setStorageValue(storage, 1)
-
 		target:transform(4996)
-
-		local allUsed = true
-		for _, s in pairs(amphoraStorages) do
-			if player:getStorageValue(s) < 1 then
-				allUsed = false
-				break
-			end
-		end
-
-		if allUsed then
-			player:setStorageValue(cooldownStorage, os.time())
-		end
-
 		toPosition:sendMagicEffect(CONST_ME_POFF)
+
+		brokenAmphoras[uid] = true
+		if countBroken() >= #amphoraUids then
+			Game.setStorageValue(GLOBAL_AMPHORAS_OPEN, os.time() + cooldownTime)
+			brokenAmphoras = {}
+		end
 		return true
 	end
 
