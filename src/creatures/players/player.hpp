@@ -1546,9 +1546,6 @@ public:
 	// This get all player inventory items
 	std::vector<std::shared_ptr<Item>> getAllInventoryItems(bool ignoreEquiped = false, bool ignoreItemWithTier = false) const;
 
-	// This get all players slot items
-	phmap::flat_hash_map<uint8_t, std::shared_ptr<Item>> getAllSlotItems() const;
-
 	// Gets the equipped items with augment by type
 	std::vector<std::shared_ptr<Item>> getEquippedAugmentItemsByType(Augment_t augmentType) const;
 
