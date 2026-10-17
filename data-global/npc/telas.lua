@@ -49,138 +49,74 @@ end
 npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
-local SOY_KV_SCOPE = "shadows-of-yalahar"
-local MISSION10_ORDER_KEY = "mission10-order"
-local MISSION10_INDEX_KEY = "mission10-index"
-local MISSION10_STATE_KEY = "mission10-state"
-local mission10Items = {
-	deepcrystal = {
-		itemId = 9240,
-		assign = "According to dwarven miners you might find the deep crystal somewhere in the depths under Ab'Dendriel. I have no idea where though, or even how to get there.",
-		deliver = "I truly hope this is a deep crystal. I have to admit, all those crystals look the same to me.",
-	},
-	darkessence = {
-		itemId = 9238,
-		assign = "One of the more unpleasant components that I need is some dark essence. Some of my colleagues believe that it sometimes condenses in the depths beneath the cursed town of Drefia in the desert of the Daramian continent.",
-		deliver = "By the Gods! Handle that dark essence with care! Didn't I mention it might explode? Ooops, I probably forgot to tell you! Well, whatever, I'll put it in a safe place for now. Thank you for your efforts my friend.",
-	},
-	shadoworb = {
-		itemId = 9237,
-		assign = "One of the components is a shadow orb. So far, I have had no luck acquiring one. I even tried one of my more dubious contacts but he refused, saying that he would only mess with the guys in the dark cathedral if he had a death wish'. I think if you find this dark cathedral you might find a shadow orb.",
-		deliver = "Ah, a perfect shadow orb! This is exactly what we need.",
-	},
-	bloodkiss = {
-		itemId = 9241,
-		assign = "Some of the elves of Shadowthorn cultivate a plant known as bloodkiss. I need one sample for the ritual.",
-		deliver = "What a beautiful flower. A shame that we have to destroy it in the ritual.",
-	},
-	wormqueentooth = {
-		itemId = 9239,
-		assign = "I am convinced that the tooth from a long dead rotworm queen will make an apt replacement for one of the more exotic ingredients in the Yalahari ritual. The books in the Edron academy suggest that the most likely place to find one might be deeper Fibula.",
-		deliver = "My, this rotworm tooth looks old. But the older the better. It will certainly be sufficient for our ritual.",
-	},
-	animalfetish = {
-		itemId = 9236,
-		assign = "One of the components could easily be substituted by an animal fetish. I have heard that the orcs in the Orcland use them to tame their war wolves. That's where you should start looking.",
-		deliver = "Phew. That fetish stinks. I'd better put it into some sort of container.",
-	},
-}
-local mission10ItemKeys = { "wormqueentooth", "shadoworb", "bloodkiss", "animalfetish", "darkessence", "deepcrystal" }
-local function mission10RandomItem()
-	local pool = {}
-	for i, key in ipairs(mission10ItemKeys) do
-		pool[i] = key
-	end
-
-	for i = #pool, 2, -1 do
-		local j = math.random(i)
-		pool[i], pool[j] = pool[j], pool[i]
-	end
-
-	return { pool[1], pool[2], pool[3] }
-end
-
-local function mission10GetOrder(kv)
-	local orderValue = kv:get(MISSION10_ORDER_KEY)
-	if not orderValue then
-		return nil
-	end
-
-	local order = {}
-	for itemKey in orderValue:gmatch("[^,]+") do
-		order[#order + 1] = itemKey
-	end
-	return order
-end
-
--- Shadows of Yalahar
-local SOY_KV_SCOPE = "shadows-of-yalahar"
-local MISSION10_ORDER_KEY = "mission10-order"
-local MISSION10_INDEX_KEY = "mission10-index"
-local MISSION10_STATE_KEY = "mission10-state"
-
-local mission10Items = {
-	deepcrystal = {
-		itemId = 9240,
-		assign = "According to dwarven miners you might find the deep crystal somewhere in the depths under Ab'Dendriel. I have no idea where though, or even how to get there.",
-		deliver = "I truly hope this is a deep crystal. I have to admit, all those crystals look the same to me.",
-	},
-	darkessence = {
-		itemId = 9238,
-		assign = "One of the more unpleasant components that I need is some dark essence. Some of my colleagues believe that it sometimes condenses in the depths beneath the cursed town of Drefia in the desert of the Daramian continent.",
-		deliver = "By the Gods! Handle that dark essence with care! Didn't I mention it might explode? Ooops, I probably forgot to tell you! Well, whatever, I'll put it in a safe place for now. Thank you for your efforts my friend.",
-	},
-	shadoworb = {
-		itemId = 9237,
-		assign = "One of the components is a shadow orb. So far, I have had no luck acquiring one. I even tried one of my more dubious contacts but he refused, saying that he would only mess with the guys in the dark cathedral if he had a death wish'. I think if you find this dark cathedral you might find a shadow orb.",
-		deliver = "Ah, a perfect shadow orb! This is exactly what we need.",
-	},
-	bloodkiss = {
-		itemId = 9241,
-		assign = "Some of the elves of Shadowthorn cultivate a plant known as bloodkiss. I need one sample for the ritual.",
-		deliver = "What a beautiful flower. A shame that we have to destroy it in the ritual.",
-	},
-	wormqueentooth = {
-		itemId = 9239,
-		assign = "I am convinced that the tooth from a long dead rotworm queen will make an apt replacement for one of the more exotic ingredients in the Yalahari ritual. The books in the Edron academy suggest that the most likely place to find one might be deeper Fibula.",
-		deliver = "My, this rotworm tooth looks old. But the older the better. It will certainly be sufficient for our ritual.",
-	},
-	animalfetish = {
-		itemId = 9236,
-		assign = "One of the components could easily be substituted by an animal fetish. I have heard that the orcs in the Orcland use them to tame their war wolves. That's where you should start looking.",
-		deliver = "Phew. That fetish stinks. I'd better put it into some sort of container.",
-	},
-}
-local mission10ItemKeys = { "wormqueentooth", "shadoworb", "bloodkiss", "animalfetish", "darkessence", "deepcrystal" }
-
-local function mission10RandomItem()
-	local pool = {}
-	for i, key in ipairs(mission10ItemKeys) do
-		pool[i] = key
-	end
-
-	for i = #pool, 2, -1 do
-		local j = math.random(i)
-		pool[i], pool[j] = pool[j], pool[i]
-	end
-
-	return { pool[1], pool[2], pool[3] }
-end
-
-local function mission10GetOrder(kv)
-	local orderValue = kv:get(MISSION10_ORDER_KEY)
-	if not orderValue then
-		return nil
-	end
-
-	local order = {}
-	for itemKey in orderValue:gmatch("[^,]+") do
-		order[#order + 1] = itemKey
-	end
-	return order
-end
 
 local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
+
+-- Mapeo de letra de carga <-> id numerico de storage (Mission05)
+local chargeLetterToId = { A = 1, B = 2, C = 3, X = 4, Y = 5, Z = 6 }
+local chargeIdToLetter = { [1] = "A", [2] = "B", [3] = "C", [4] = "X", [5] = "Y", [6] = "Z" }
+
+local mission10Items = {
+	deepcrystal = {
+		itemId = 9240,
+		assign = "According to dwarven miners you might find the deep crystal somewhere in the depths under Ab'Dendriel. I have no idea where though, or even how to get there.",
+		deliver = "I truly hope this is a deep crystal. I have to admit, all those crystals look the same to me.",
+	},
+	darkessence = {
+		itemId = 9238,
+		assign = "One of the more unpleasant components that I need is some dark essence. Some of my colleagues believe that it sometimes condenses in the depths beneath the cursed town of Drefia in the desert of the Daramian continent.",
+		deliver = "By the Gods! Handle that dark essence with care! Didn't I mention it might explode? Ooops, I probably forgot to tell you! Well, whatever, I'll put it in a safe place for now. Thank you for your efforts my friend.",
+	},
+	shadoworb = {
+		itemId = 9237,
+		assign = "One of the components is a shadow orb. So far, I have had no luck acquiring one. I even tried one of my more dubious contacts but he refused, saying that he would only mess with the guys in the dark cathedral if he had a death wish'. I think if you find this dark cathedral you might find a shadow orb.",
+		deliver = "Ah, a perfect shadow orb! This is exactly what we need.",
+	},
+	bloodkiss = {
+		itemId = 9241,
+		assign = "Some of the elves of Shadowthorn cultivate a plant known as bloodkiss. I need one sample for the ritual.",
+		deliver = "What a beautiful flower. A shame that we have to destroy it in the ritual.",
+	},
+	wormqueentooth = {
+		itemId = 9239,
+		assign = "I am convinced that the tooth from a long dead rotworm queen will make an apt replacement for one of the more exotic ingredients in the Yalahari ritual. The books in the Edron academy suggest that the most likely place to find one might be deeper Fibula.",
+		deliver = "My, this rotworm tooth looks old. But the older the better. It will certainly be sufficient for our ritual.",
+	},
+	animalfetish = {
+		itemId = 9236,
+		assign = "One of the components could easily be substituted by an animal fetish. I have heard that the orcs in the Orcland use them to tame their war wolves. That's where you should start looking.",
+		deliver = "Phew. That fetish stinks. I'd better put it into some sort of container.",
+	},
+}
+local mission10ItemKeys = { "wormqueentooth", "shadoworb", "bloodkiss", "animalfetish", "darkessence", "deepcrystal" }
+
+-- Devuelve una tabla con 3 INDICES (1-6) que referencian mission10ItemKeys
+local function mission10RandomItem()
+	local pool = {}
+	for i = 1, #mission10ItemKeys do
+		pool[i] = i
+	end
+
+	for i = #pool, 2, -1 do
+		local j = math.random(i)
+		pool[i], pool[j] = pool[j], pool[i]
+	end
+
+	return { pool[1], pool[2], pool[3] }
+end
+
+-- Lee el orden guardado en storage y devuelve las claves de item, o nil si no hay orden guardado
+local function mission10GetOrder(player)
+	local i1 = player:getStorageValue(ShadowsOfYalahar.Mission10Order1)
+	local i2 = player:getStorageValue(ShadowsOfYalahar.Mission10Order2)
+	local i3 = player:getStorageValue(ShadowsOfYalahar.Mission10Order3)
+
+	if i1 <= 0 or i2 <= 0 or i3 <= 0 then
+		return nil
+	end
+
+	return { mission10ItemKeys[i1], mission10ItemKeys[i2], mission10ItemKeys[i3] }
+end
 
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
@@ -206,9 +142,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(ShadowsOfYalahar.Mission01, 1) -- Start Mission 01
 			npcHandler:setTopic(playerId, 0)
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 1 then
-			local kv = player:kv():scoped(SOY_KV_SCOPE)
-
-			if kv:get("research-boveas") and kv:get("research-cerdras") and kv:get("research-dreadeye") and kv:get("research-milos") and kv:get("research-scutty") then
+			if player:getStorageValue(ShadowsOfYalahar.ResearchBoveas) == 1 and player:getStorageValue(ShadowsOfYalahar.ResearchCerdras) == 1 and player:getStorageValue(ShadowsOfYalahar.ResearchDreadeye) == 1 and player:getStorageValue(ShadowsOfYalahar.ResearchMilos) == 1 and player:getStorageValue(ShadowsOfYalahar.ResearchScutty) == 1 then
 				npcHandler:say({
 					"Ah, yes. I have received all the reports I need and have already been able to glance through them. ...",
 					"It will take some time to evaluate all those different approaches to the topic. Meanwhile, we can get on with the other tasks to advance our project. ...",
@@ -305,10 +239,8 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 8 then
-			local kv = player:kv():scoped(SOY_KV_SCOPE)
-			local started = kv:get("mission05-started")
-
-			if started ~= true then
+			-- Mission 05 (sub-storages: 1 = 0/3, 2 = 1/3, 3 = 2/3, 4 = 3/3 finished)
+			if player:getStorageValue(ShadowsOfYalahar.Mission05) < 1 then
 				npcHandler:say({
 					"Well, this one is somewhat hard to explain. The power core of the golem needs some specific charges to make it work. The good news is that I have discovered the perfect carrier for the charge. ...",
 					"The bad news is, it's you! Well, let me elaborate: I need three different charges. ...",
@@ -317,64 +249,60 @@ local function creatureSayCallback(npc, creature, type, message)
 					"Unfortunately, the machine may charge you in two further ways to the three charges we actually need. The other two charges are of no use to our project. ...",
 					"But, on the positive side, each charge that we don't need can be sold to other scientists and I am willing to share some gold with you for your efforts.",
 				}, npc, creature)
-				kv:set("mission05-started", true)
-				player:setStorageValue(ShadowsOfYalahar.Mission05, 1) -- Start Mission 05
+				player:setStorageValue(ShadowsOfYalahar.Mission05, 1) -- Start Mission 05 (0/3 delivered)
 				player:setStorageValue(ShadowsOfYalahar.Door_05, 1)
 				npcHandler:setTopic(playerId, 0)
 				return true
 			end
 
-			local charge = kv:get("charge")
-			if not charge then
+			local chargeId = player:getStorageValue(ShadowsOfYalahar.ChargeCurrent)
+			if chargeId <= 0 then
 				npcHandler:say("You are not charged yet. Go find the charge generator in the alchemists' quarter and come back to me.", npc, creature)
 				return true
 			end
 
-			local chargeValue = charge
+			local charge = chargeIdToLetter[chargeId]
 
-			if chargeValue == "A" or chargeValue == "B" or chargeValue == "C" then
-				local deliveredKey = "delivered-" .. chargeValue:lower()
-				local delivered = kv:get(deliveredKey)
+			if charge == "A" or charge == "B" or charge == "C" then
+				local deliveredStorage = charge == "A" and ShadowsOfYalahar.ChargeDeliveredA or (charge == "B" and ShadowsOfYalahar.ChargeDeliveredB or ShadowsOfYalahar.ChargeDeliveredC)
+				local delivered = player:getStorageValue(deliveredStorage) == 1
 
-				if delivered == true then
-					npcHandler:say("Hm, that is another " .. chargeValue .. "-charge. Though it won't advance our project it will bring us a good price from other researchers. I will give you 900 gold for that charge.", npc, creature)
+				if delivered then
+					npcHandler:say("Hm, that is another " .. charge .. "-charge. Though it won't advance our project it will bring us a good price from other researchers. I will give you 900 gold for that charge.", npc, creature)
 					player:addMoney(900)
 				else
-					kv:set(deliveredKey, true)
+					player:setStorageValue(deliveredStorage, 1)
 
-					local mission05Value = player:getStorageValue(ShadowsOfYalahar.Mission05)
-					player:updateStorage(ShadowsOfYalahar.Mission05, mission05Value, mission05Value, os.time())
-
-					if chargeValue == "A" then
+					if charge == "A" then
 						npcHandler:say("Excellent. You brought an A-charge. Just what we needed.", npc, creature)
-					elseif chargeValue == "B" then
+					elseif charge == "B" then
 						npcHandler:say("Exemplary! A B-charge! Incredible!", npc, creature)
-					elseif chargeValue == "C" then
+					elseif charge == "C" then
 						npcHandler:say("We have got a major C-charge! Excellent!", npc, creature)
 					end
 
-					local deliveredA = kv:get("delivered-a")
-					local deliveredB = kv:get("delivered-b")
-					local deliveredC = kv:get("delivered-c")
+					local deliveredCount = (player:getStorageValue(ShadowsOfYalahar.ChargeDeliveredA) == 1 and 1 or 0) + (player:getStorageValue(ShadowsOfYalahar.ChargeDeliveredB) == 1 and 1 or 0) + (player:getStorageValue(ShadowsOfYalahar.ChargeDeliveredC) == 1 and 1 or 0)
 
-					if deliveredA == true and deliveredB == true and deliveredC == true then
+					if deliveredCount >= 3 then
 						npcHandler:say("We are finished with collecting charges! Now we can proceed and your next mission awaits you!", npc, creature)
 						player:setStorageValue(ShadowsOfYalahar.Questline, 9)
-						player:setStorageValue(ShadowsOfYalahar.Mission05, 2) -- Finish Mission 05
+						player:setStorageValue(ShadowsOfYalahar.Mission05, 4) -- Finish Mission 05 (3/3 delivered)
+					else
+						player:setStorageValue(ShadowsOfYalahar.Mission05, deliveredCount + 1) -- 2 = 1/3, 3 = 2/3
 					end
 				end
-			elseif chargeValue == "X" then
+			elseif charge == "X" then
 				npcHandler:say("Oh, that's an X-charge. Nevermind. Although we don't need it, the academy might use it for their lightning research. Here is your share of the money I'll get from reselling it. That makes 1500 gold.", npc, creature)
 				player:addMoney(1500)
-			elseif chargeValue == "Y" then
+			elseif charge == "Y" then
 				npcHandler:say("Though this Y-charge is quite rare we don't need it for our research. However, some independent researchers will be willing to part with a fair amount of coin for it. I'll advance you 1200 gold. I'm sure I'll get that much back from my colleague.", npc, creature)
 				player:addMoney(1200)
-			elseif chargeValue == "Z" then
+			elseif charge == "Z" then
 				npcHandler:say("Ah, a Z-charge. Not what we need, but I'm sure I can sell it. Here's your share: 900 gold.", npc, creature)
 				player:addMoney(900)
 			end
 
-			kv:remove("charge")
+			player:setStorageValue(ShadowsOfYalahar.ChargeCurrent, -1)
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 9 then
 			npcHandler:say("I need a blueprint of a golem to compare with my own plans. I need to figure out where problems might arise. Please search the factory quarter for some blueprints that I can use.", npc, creature)
 			player:setStorageValue(ShadowsOfYalahar.Questline, 10)
@@ -455,56 +383,56 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 17 then
-			-- Mission 10
-			local kv = player:kv():scoped(SOY_KV_SCOPE)
-			local order = mission10GetOrder(kv)
+			-- Mission 10 (sub-storages: 1 = 0/3, 2 = 1/3, 3 = 2/3, 4 = 3/3 finished)
+			local order = mission10GetOrder(player)
 
 			if not order then
 				npcHandler:say({
 					"Yalahari rituals are quite complicated and need certain reagents that are not readily available nowadays. I think I can come up with some substitutes for most of them though. ...",
 					"Specifically, three items need to be replaced. Are you ready for your first mission?",
 				}, npc, creature)
-				order = mission10RandomItem()
-				kv:set(MISSION10_ORDER_KEY, table.concat(order, ","))
-				kv:set(MISSION10_INDEX_KEY, 1)
-				kv:set(MISSION10_STATE_KEY, "ready")
-				player:setStorageValue(ShadowsOfYalahar.Mission10, 1) -- Start Mission
+				local pool = mission10RandomItem()
+				player:setStorageValue(ShadowsOfYalahar.Mission10Order1, pool[1])
+				player:setStorageValue(ShadowsOfYalahar.Mission10Order2, pool[2])
+				player:setStorageValue(ShadowsOfYalahar.Mission10Order3, pool[3])
+				player:setStorageValue(ShadowsOfYalahar.Mission10State, 0) -- 0 = ready
+				player:setStorageValue(ShadowsOfYalahar.Mission10, 1) -- Start Mission (0/3 delivered)
 				player:setStorageValue(ShadowsOfYalahar.Door_10, 1)
 				return true
 			end
 
-			local index = kv:get(MISSION10_INDEX_KEY)
-			local state = kv:get(MISSION10_STATE_KEY)
+			local mission10Value = player:getStorageValue(ShadowsOfYalahar.Mission10)
+			local state = player:getStorageValue(ShadowsOfYalahar.Mission10State)
 
-			if state == "ready" then
+			if mission10Value == 4 then
+				npcHandler:say("Finally! You have brought all the ingredients we need! We can talk about your next mission whenever you like.", npc, creature)
+				player:setStorageValue(ShadowsOfYalahar.Questline, 18)
+				player:setStorageValue(ShadowsOfYalahar.Mission10Order1, -1)
+				player:setStorageValue(ShadowsOfYalahar.Mission10Order2, -1)
+				player:setStorageValue(ShadowsOfYalahar.Mission10Order3, -1)
+				player:setStorageValue(ShadowsOfYalahar.Mission10State, -1)
+			elseif state == 0 then -- ready
+				local index = mission10Value
 				local ordinal = index == 1 and "first" or (index == 2 and "second" or "third")
 				npcHandler:say("Are you up to your " .. ordinal .. " assignment?", npc, creature)
-			elseif state == "collecting" then
+			elseif state == 1 then -- collecting
+				local index = mission10Value
 				local currentItem = mission10Items[order[index]]
 
 				if player:getItemCount(currentItem.itemId) > 0 then
 					player:removeItem(currentItem.itemId, 1)
 					npcHandler:say(currentItem.deliver, npc, creature)
 
-					local mission10Value = player:getStorageValue(ShadowsOfYalahar.Mission10)
-					player:updateStorage(ShadowsOfYalahar.Mission10, mission10Value, mission10Value, os.time())
-
 					if index >= 3 then
-						kv:set(MISSION10_STATE_KEY, "done")
+						player:setStorageValue(ShadowsOfYalahar.Mission10State, 0)
+						player:setStorageValue(ShadowsOfYalahar.Mission10, 4) -- 3/3 delivered
 					else
-						kv:set(MISSION10_INDEX_KEY, index + 1)
-						kv:set(MISSION10_STATE_KEY, "ready")
+						player:setStorageValue(ShadowsOfYalahar.Mission10State, 0)
+						player:setStorageValue(ShadowsOfYalahar.Mission10, index + 1) -- 2 = 1/3, 3 = 2/3
 					end
 				else
 					npcHandler:say("You still have to bring me the item for this assignment.", npc, creature)
 				end
-			elseif state == "done" then
-				npcHandler:say("Finally! You have brought all the ingredients we need! We can talk about your next mission whenever you like.", npc, creature)
-				player:setStorageValue(ShadowsOfYalahar.Questline, 18)
-				player:setStorageValue(ShadowsOfYalahar.Mission10, 2) -- Finish Mission 10
-				kv:remove(MISSION10_ORDER_KEY)
-				kv:remove(MISSION10_INDEX_KEY)
-				kv:remove(MISSION10_STATE_KEY)
 			end
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 18 then
 			-- Mission 11
@@ -523,6 +451,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			player:setStorageValue(ShadowsOfYalahar.Questline, 19)
 			player:setStorageValue(ShadowsOfYalahar.Mission11, 1) -- Start Mission 11
 			player:setStorageValue(ShadowsOfYalahar.Door_11, 1)
+			npcHandler:setTopic(playerId, 0)
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 19 then
 			npcHandler:say("Ah, yes. My instruments tell me you have taken the shower! Are you ready to receive the amplifying charge?", npc, creature)
 			npcHandler:setTopic(playerId, 4)
@@ -533,19 +462,16 @@ local function creatureSayCallback(npc, creature, type, message)
 				player:setStorageValue(ShadowsOfYalahar.Questline, 21)
 				player:setStorageValue(ShadowsOfYalahar.Mission12, 2) -- Compete Mission 12
 				player:addMoney(500)
-				player:kv():scoped(SOY_KV_SCOPE):set("mission12-timer", os.time() + 2 * 60) -- 1 * 60 * 60
+				player:setStorageValue(ShadowsOfYalahar.Mission12Timer, os.time() + 2 * 60) -- 1 * 60 * 60
 				npcHandler:setTopic(playerId, 0)
 			else
 				npcHandler:say("Come back after finish your task.", npc, creature)
 				npcHandler:setTopic(playerId, 0)
 			end
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 21 then
-			local kv = player:kv():scoped(SOY_KV_SCOPE)
-			local timerValue = kv:get("mission12-timer")
+			local timer = player:getStorageValue(ShadowsOfYalahar.Mission12Timer)
 
-			if timerValue then
-				local timer = timerValue
-
+			if timer > 0 then
 				if timer > os.time() then
 					local remaining = timer - os.time()
 
@@ -576,13 +502,12 @@ local function creatureSayCallback(npc, creature, type, message)
 				player:setStorageValue(ShadowsOfYalahar.Questline, 22)
 				player:setStorageValue(ShadowsOfYalahar.Mission13, 1) -- Start Mission 13
 				player:setStorageValue(ShadowsOfYalahar.DoorLab, 1)
-				kv:remove("mission12-timer")
+				player:setStorageValue(ShadowsOfYalahar.Mission12Timer, -1)
 			end
 		elseif player:getStorageValue(ShadowsOfYalahar.Questline) == 22 then
-			local kv = player:kv():scoped(SOY_KV_SCOPE)
-			local leverPulled = kv:get("mission12-lever")
+			local leverPulled = player:getStorageValue(ShadowsOfYalahar.Mission12Lever) == 1
 
-			if leverPulled == true then
+			if leverPulled then
 				npcHandler:say({
 					"It's alive! Well, not strictly alive, of course, but moving and talking! Hmm, it seems to be behaving strangely, but perhaps it just needs some training or something like that! ...",
 					"I am so grateful to you! I grant you the privilege of being allowed to enter my laboratory. My latest experiments involve creatures from the far north. ...",
@@ -591,7 +516,6 @@ local function creatureSayCallback(npc, creature, type, message)
 				}, npc, creature)
 				player:setStorageValue(ShadowsOfYalahar.Questline, 23) -- Finish Quest
 				player:setStorageValue(ShadowsOfYalahar.Mission13, 2) -- Finish Mission 13
-				kv:set("telas-trade", true) -- Ability to negotiate with Telas
 				player:setStorageValue(ShadowsOfYalahar.DoorFinal, 1)
 				player:addAchievement("Golem in the Gears")
 				player:addExperience(25000, true)
@@ -609,16 +533,15 @@ local function creatureSayCallback(npc, creature, type, message)
 		end
 	elseif MsgContains(message, "yes") and (player:getStorageValue(ShadowsOfYalahar.Questline) == 17 or npcHandler:getTopic(playerId) == 4) then
 		if player:getStorageValue(ShadowsOfYalahar.Questline) == 17 then
-			local kv = player:kv():scoped(SOY_KV_SCOPE)
-			local state = kv:get(MISSION10_STATE_KEY)
+			local state = player:getStorageValue(ShadowsOfYalahar.Mission10State)
 
-			if state == "ready" then
-				local order = mission10GetOrder(kv)
-				local index = kv:get(MISSION10_INDEX_KEY)
+			if state == 0 then
+				local order = mission10GetOrder(player)
+				local index = player:getStorageValue(ShadowsOfYalahar.Mission10)
 				local currentItem = mission10Items[order[index]]
 
 				npcHandler:say(currentItem.assign, npc, creature)
-				kv:set(MISSION10_STATE_KEY, "collecting")
+				player:setStorageValue(ShadowsOfYalahar.Mission10State, 1) -- 1 = collecting
 			end
 		elseif npcHandler:getTopic(playerId) == 4 then
 			if player:getStorageValue(ShadowsOfYalahar.Mission11) == 2 then
@@ -709,9 +632,8 @@ end
 
 local function onTradeRequest(npc, creature)
 	local player = Player(creature)
-	local kv = player:kv():scoped(SOY_KV_SCOPE)
 
-	if not kv:get("telas-trade", true) then
+	if player:getStorageValue(ShadowsOfYalahar.DoorFinal) ~= 1 then
 		npcHandler:say("I have nothing to trade with you.", npc, creature)
 		return false
 	end
@@ -751,6 +673,10 @@ npcConfig.shop = {
 	{ itemName = "vein of ore", clientId = 16135, sell = 330 },
 	{ itemName = "war crystal", clientId = 9654, sell = 460 },
 }
+
+local function shadowsOfYalaharCompleted(player)
+	return player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.DoorFinal) == 1
+end
 
 -- On buy npc shop message
 npcType.onBuyItem = function(npc, player, itemId, subType, amount, ignore, inBackpacks, totalCost)

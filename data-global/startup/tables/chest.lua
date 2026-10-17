@@ -3112,6 +3112,15 @@ ChestUnique = {
 		questName = "dark-essence",
 	},
 	-- Shadows of Yalahar Quest Mision 10
+	[6335] = {
+		useKV = true,
+		itemId = 2469,
+		itemPos = { x = 32629, y = 32446, z = 10 },
+		reward = { { 9237, 1 } }, -- shadow orb
+		weight = 4.00,
+		questName = "shadow-orb",
+	},
+	-- Shadows of Yalahar Quest Mision 10
 	[6336] = {
 		useKV = true,
 		itemId = 3634,
@@ -3146,7 +3155,14 @@ ChestUnique = {
 		weight = 2.00,
 		questName = "golem-wrench",
 	},
-
+	[6340] = {
+		useKV = true,
+		itemId = 2473,
+		itemPos = { x = 32576, y = 31572, z = 110 },
+		reward = { { 9308, 1 } }, -- Nautical Map
+		weight = 8.19,
+		questName = "nautical-map",
+	},
 	-- The Inquisition Quest
 	[6500] = {
 		itemId = 2472,

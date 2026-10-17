@@ -7362,7 +7362,7 @@ if not Quests then
 			},
 		},
 		[57] = {
-			name = "Shadows of Yalahar Quest",
+			name = "Shadows of Yalahar",
 			startStorageId = Storage.Quest.U8_5.ShadowsOfYalahar.Questline,
 			startStorageValue = 1,
 			missions = {
@@ -7415,24 +7415,12 @@ if not Quests then
 					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission05,
 					missionId = 11027,
 					startValue = 1,
-					endValue = 2,
+					endValue = 4,
 					states = {
-						[1] = function(player)
-							local ok, count = pcall(function()
-								local kv = player:kv():scoped("shadows-of-yalahar")
-								local total = 0
-								for _, letter in ipairs({ "a", "b", "c" }) do
-									local delivered = kv:get("delivered-" .. letter)
-									if delivered == true then
-										total = total + 1
-									end
-								end
-								return total
-							end)
-							count = ok and count or 0
-							return ("Find the charging machine in the alchemist quarter. Get the required charges (A, B and C) for Telas. You have delivered %d different charge%s to Telas by now."):format(count, count == 1 and "" or "s")
-						end,
-						[2] = "You have delivered all three different charges to Telas.",
+						[1] = "Find the charging machine in the alchemist quarter. Get the required charges (A, B and C) for Telas. You have delivered 0 different charges to Telas by now.",
+						[2] = "Find the charging machine in the alchemist quarter. Get the required charges (A, B and C) for Telas. You have delivered 1 different charge to Telas by now.",
+						[3] = "Find the charging machine in the alchemist quarter. Get the required charges (A, B and C) for Telas. You have delivered 2 different charges to Telas by now.",
+						[4] = "You have delivered all three different charges to Telas.",
 					},
 				},
 				[6] = {
@@ -7485,33 +7473,12 @@ if not Quests then
 					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission10,
 					missionId = 11032,
 					startValue = 1,
-					endValue = 2,
+					endValue = 4,
 					states = {
-						[1] = function(player)
-							local ok, count = pcall(function()
-								local kv = player:kv():scoped("shadows-of-yalahar")
-								local index = kv:get("mission10-index")
-								local state = kv:get("mission10-state")
-
-								if not index or not state then
-									return 0
-								end
-
-								if state == "done" then
-									return 3
-								end
-
-								return math.max(index - 1, 0)
-							end)
-							count = ok and count or 0
-
-							if count == 0 then
-								return "To make the ritual work, Telas needs certain ingredients. You have brought him none of the ingredients by now."
-							end
-
-							return ("To make the ritual work, Telas needs certain ingredients. You have brought him %d of the 3 ingredients by now."):format(count)
-						end,
-						[2] = "You have brought all the ingredients Telas needs.",
+						[1] = "To make the ritual work, Telas needs certain ingredients. You have brought him none of the ingredients by now.",
+						[2] = "To make the ritual work, Telas needs certain ingredients. You have brought him 1 of the 3 ingredients by now.",
+						[3] = "To make the ritual work, Telas needs certain ingredients. You have brought him 2 of the 3 ingredients by now.",
+						[4] = "You have brought all the ingredients Telas needs.",
 					},
 				},
 				[11] = {

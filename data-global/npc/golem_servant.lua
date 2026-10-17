@@ -44,9 +44,6 @@ npcType.onMove = function(npc, creature, fromPosition, toPosition)
 end
 
 npcType.onSay = function(npc, creature, type, message)
-	if not (MsgContains(message, "hi") or MsgContains(message, "hello")) then
-		npcHandler:say("Where .. am I??", npc, creature)
-	end
 	npcHandler:onSay(npc, creature, type, message)
 end
 
@@ -56,17 +53,13 @@ end
 
 local ShadowsOfYalahar = Storage.Quest.U8_5.ShadowsOfYalahar
 
-local SOY_KV_SCOPE = "shadows-of-yalahar"
-local ACTIVE_KEY = "golem-servant-active"
-local PROGRESS_KEY = "golem-servant-progress"
-local CURRENT_ITEM_KEY = "golem-servant-current-item"
-local HAS_ITEM_KEY = "golem-servant-has-item"
-local DEADLINE_KEY = "golem-servant-deadline"
-local STATE_KEY = "golem-servant-state"
-local LIFT_UNLOCKED_KEY = "golem-servant-lift-unlocked"
-
 local REQUIRED_REPAIRS = 8
-local REPAIR_TIME_LIMIT = 10 * 60 -- 10 min
+local REPAIR_TIME_LIMIT = 10 * 60
+
+local STATE_NONE = 0
+local STATE_START = 1
+local STATE_HASITEM = 2
+local STATE_CONTINUE = 3
 
 local progressMessages = {
 	"Task fulfilled!",
@@ -79,36 +72,36 @@ local progressMessages = {
 	"Flesh unit is functioning in acceptable parameters!",
 }
 
-local function golemServantResetRepair(kv)
-	kv:remove(ACTIVE_KEY)
-	kv:remove(PROGRESS_KEY)
-	kv:remove(CURRENT_ITEM_KEY)
-	kv:remove(HAS_ITEM_KEY)
-	kv:remove(DEADLINE_KEY)
-	kv:remove(STATE_KEY)
+local function golemServantResetRepair(player)
+	player:setStorageValue(ShadowsOfYalahar.Mission12RepairActive, 0)
+	player:setStorageValue(ShadowsOfYalahar.Mission12RepairProgress, 0)
+	player:setStorageValue(ShadowsOfYalahar.Mission12RepairItem, -1)
+	player:setStorageValue(ShadowsOfYalahar.Mission12RepairHasItem, 0)
+	player:setStorageValue(ShadowsOfYalahar.Mission12RepairDeadline, -1)
+	player:setStorageValue(ShadowsOfYalahar.Mission12RepairState, STATE_NONE)
 end
 
-local function golemServantRequestNextItem(npc, creature, kv)
-	local itemKey = GolemServantItemKeys[math.random(1, #GolemServantItemKeys)]
+local function golemServantRequestNextItem(npc, creature, player)
+	local itemIndex = math.random(1, #GolemServantItemKeys)
+	local itemKey = GolemServantItemKeys[itemIndex]
 	local itemData = GolemServantItems[itemKey]
 
-	kv:set(CURRENT_ITEM_KEY, itemKey)
-	kv:set(HAS_ITEM_KEY, false)
-	kv:set(STATE_KEY, "hasitem")
+	player:setStorageValue(ShadowsOfYalahar.Mission12RepairItem, itemIndex)
+	player:setStorageValue(ShadowsOfYalahar.Mission12RepairHasItem, 0)
+	player:setStorageValue(ShadowsOfYalahar.Mission12RepairState, STATE_HASITEM)
 
 	npcHandler:say(itemData.requestMessage, npc, creature)
 end
 
-local function golemServantCheckDeadline(npc, creature, kv)
-	local active = kv:get(ACTIVE_KEY)
-	if active ~= true then
+local function golemServantCheckDeadline(npc, creature, player)
+	if player:getStorageValue(ShadowsOfYalahar.Mission12RepairActive) ~= 1 then
 		return false
 	end
 
-	local deadlineValue = kv:get(DEADLINE_KEY)
-	if deadlineValue < os.time() then
+	local deadline = player:getStorageValue(ShadowsOfYalahar.Mission12RepairDeadline)
+	if deadline > 0 and deadline < os.time() then
 		npcHandler:say("Time limit exceeded! Repair procedure aborted. You must start over, flesh unit.", npc, creature)
-		golemServantResetRepair(kv)
+		golemServantResetRepair(player)
 		return true
 	end
 
@@ -117,36 +110,44 @@ end
 
 local function greetCallback(npc, creature)
 	local player = Player(creature)
-	local playerId = player:getId()
 
-	if player:getStorageValue(ShadowsOfYalahar.Mission12) == 1 then
-		local kv = player:kv():scoped(SOY_KV_SCOPE)
-
-		if golemServantCheckDeadline(npc, creature, kv) then
-			return false
-		end
-
-		local liftUnlocked = kv:get(LIFT_UNLOCKED_KEY)
-		if liftUnlocked == true then
-			npcHandler:say("Hello there!", npc, creature)
-			return false
-		end
-
-		local active = kv:get(ACTIVE_KEY)
-		local state = kv:get(STATE_KEY)
-
-		if active == true and state == "hasitem" then
-			npcHandler:say("Do you have the required item, flesh unit?", npc, creature)
-			return false
-		end
-
-		npcHandler:say("Greetings! What brings you {here}?", npc, creature)
-		return false
-	else
+	if player:getStorageValue(ShadowsOfYalahar.Mission12) ~= 1 then
 		npcHandler:say("Greetings!", npc, creature)
 		return false
 	end
+
+	if golemServantCheckDeadline(npc, creature, player) then
+		return false
+	end
+
+	if player:getStorageValue(ShadowsOfYalahar.Mission12LiftUnlocked) == 1 then
+		npcHandler:say("Hello there!", npc, creature)
+		return false
+	end
+
+	if player:getStorageValue(ShadowsOfYalahar.Mission12RepairActive) == 1 and player:getStorageValue(ShadowsOfYalahar.Mission12RepairState) == STATE_HASITEM then
+		npcHandler:say("Do you have the required item, flesh unit?", npc, creature)
+		return false
+	end
+
+	npcHandler:say("Greetings! What brings you {here}?", npc, creature)
+	return false
 end
+
+keywordHandler:addKeyword({ "here" }, StdModule.say, {
+	npcHandler = npcHandler,
+	text = "I am a servant and maintenance golem. I also operate the {lift}.",
+})
+
+keywordHandler:addKeyword({ "name" }, StdModule.say, {
+	npcHandler = npcHandler,
+	text = "I require no name.",
+})
+
+keywordHandler:addKeyword({ "job" }, StdModule.say, {
+	npcHandler = npcHandler,
+	text = "I am a servant and maintenance golem. I also operate the lift.",
+})
 
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
@@ -159,96 +160,102 @@ local function creatureSayCallback(npc, creature, type, message)
 		return true
 	end
 
-	local kv = player:kv():scoped(SOY_KV_SCOPE)
-
-	if golemServantCheckDeadline(npc, creature, kv) then
+	if golemServantCheckDeadline(npc, creature, player) then
 		return true
 	end
 
-	if MsgContains(message, "here") then
-		npcHandler:say("I am a servant and maintenance golem. I also operate the {lift}.", npc, creature)
-	elseif MsgContains(message, "lift") then
-		local liftUnlocked = kv:get(LIFT_UNLOCKED_KEY)
-		if liftUnlocked == true then
+	if MsgContains(message, "lift") then
+		if player:getStorageValue(ShadowsOfYalahar.Mission12LiftUnlocked) == 1 then
 			npcHandler:say("The lift is fully operational, flesh unit.", npc, creature)
 		else
 			npcHandler:say("The lift is damaged, sir or madame flesh unit! I could initiate the repair process but I need the correct tools and parts for the repairs. If you wish to initiate the repair process ask me for {repairs}, male or female unit.", npc, creature)
 		end
-	elseif MsgContains(message, "name") then
-		npcHandler:say("I require no name.", npc, creature)
-	elseif MsgContains(message, "job") then
-		npcHandler:say("I am a servant and maintenance golem. I also operate the lift.", npc, creature)
-	elseif MsgContains(message, "repairs") then
-		local liftUnlocked = kv:get(LIFT_UNLOCKED_KEY)
-		if liftUnlocked == true then
+		return true
+	end
+
+	if MsgContains(message, "repairs") then
+		if player:getStorageValue(ShadowsOfYalahar.Mission12LiftUnlocked) == 1 then
 			npcHandler:say("The lift is already fully operational, flesh unit.", npc, creature)
 			return true
 		end
 
-		local active = kv:get(ACTIVE_KEY)
-		if active == true then
-			local state = kv:get(STATE_KEY)
+		if player:getStorageValue(ShadowsOfYalahar.Mission12RepairActive) == 1 then
+			local state = player:getStorageValue(ShadowsOfYalahar.Mission12RepairState)
 
-			if state == "hasitem" then
+			if state == STATE_HASITEM then
 				npcHandler:say("Do you have the required item, flesh unit?", npc, creature)
-			elseif state == "continue" then
+			elseif state == STATE_CONTINUE then
 				npcHandler:say("Can we continue?", npc, creature)
-			elseif state == "start" then
+			elseif state == STATE_START then
 				npcHandler:say("Are you ready, flesh unit?", npc, creature)
 			end
 			return true
 		end
 
 		npcHandler:say("You must bring me the correct components or tools. The items deteriorate when they leave their conservation fields so you must be quick. Are you ready, flesh unit?", npc, creature)
-		kv:set(STATE_KEY, "start")
-	elseif MsgContains(message, "yes") then
-		local state = kv:get(STATE_KEY)
-		local stateValue = state or nil
+		player:setStorageValue(ShadowsOfYalahar.Mission12RepairState, STATE_START)
+		return true
+	end
 
-		if stateValue == "start" then
-			kv:set(ACTIVE_KEY, true)
-			kv:set(PROGRESS_KEY, 0)
-			kv:set(DEADLINE_KEY, os.time() + REPAIR_TIME_LIMIT)
-			golemServantRequestNextItem(npc, creature, kv)
-		elseif stateValue == "hasitem" then
-			local currentItemKey = kv:get(CURRENT_ITEM_KEY)
-			local hasItem = kv:get(HAS_ITEM_KEY)
+	if MsgContains(message, "yes") then
+		local state = player:getStorageValue(ShadowsOfYalahar.Mission12RepairState)
 
-			if hasItem ~= true then
+		if state == STATE_START then
+			player:setStorageValue(ShadowsOfYalahar.Mission12RepairActive, 1)
+			player:setStorageValue(ShadowsOfYalahar.Mission12RepairProgress, 0)
+			player:setStorageValue(ShadowsOfYalahar.Mission12RepairDeadline, os.time() + REPAIR_TIME_LIMIT)
+			golemServantRequestNextItem(npc, creature, player)
+			return true
+		end
+
+		if state == STATE_HASITEM then
+			local hasItem = player:getStorageValue(ShadowsOfYalahar.Mission12RepairHasItem)
+
+			if hasItem ~= 1 then
 				npcHandler:say("Negative! You do not have the correct item yet, flesh unit!", npc, creature)
 				return true
 			end
 
-			local itemData = GolemServantItems[currentItemKey]
+			local itemIndex = player:getStorageValue(ShadowsOfYalahar.Mission12RepairItem)
+			local itemKey = GolemServantItemKeys[itemIndex]
+			local itemData = GolemServantItems[itemKey]
 			player:removeItem(itemData.itemId, 1)
 
-			local progress = kv:get(PROGRESS_KEY) + 1
-			kv:set(PROGRESS_KEY, progress)
+			local progress = player:getStorageValue(ShadowsOfYalahar.Mission12RepairProgress) + 1
+			player:setStorageValue(ShadowsOfYalahar.Mission12RepairProgress, progress)
 
 			if progress >= REQUIRED_REPAIRS then
 				npcHandler:say("Repair procedure complete! Elevator fully operational. Ending communication. Have a nice day. Good bye.", npc, creature)
-				kv:set(LIFT_UNLOCKED_KEY, true)
-				golemServantResetRepair(kv)
+				player:setStorageValue(ShadowsOfYalahar.Mission12LiftUnlocked, 1)
+				golemServantResetRepair(player)
 			else
 				npcHandler:say(progressMessages[progress] .. " Repair progress " .. progress .. " / " .. REQUIRED_REPAIRS .. " ! Can we continue?", npc, creature)
-				kv:set(STATE_KEY, "continue")
+				player:setStorageValue(ShadowsOfYalahar.Mission12RepairState, STATE_CONTINUE)
 			end
-		elseif stateValue == "continue" then
-			golemServantRequestNextItem(npc, creature, kv)
+			return true
 		end
-	elseif MsgContains(message, "no") then
-		local state = kv:get(STATE_KEY)
-		local stateValue = state or nil
 
-		if stateValue == "start" then
-			npcHandler:say("Understood! No repair procedure initiated.", npc, creature)
-			kv:remove(STATE_KEY)
-		elseif stateValue == "hasitem" then
-			npcHandler:say("Then hurry up and bring it, flesh unit!", npc, creature)
-		elseif stateValue == "continue" then
-			npcHandler:say("Understood! Repair procedure aborted. You must start over, flesh unit.", npc, creature)
-			golemServantResetRepair(kv)
+		if state == STATE_CONTINUE then
+			golemServantRequestNextItem(npc, creature, player)
+			return true
 		end
+
+		return true
+	end
+
+	if MsgContains(message, "no") then
+		local state = player:getStorageValue(ShadowsOfYalahar.Mission12RepairState)
+
+		if state == STATE_START then
+			npcHandler:say("Understood! No repair procedure initiated.", npc, creature)
+			player:setStorageValue(ShadowsOfYalahar.Mission12RepairState, STATE_NONE)
+		elseif state == STATE_HASITEM then
+			npcHandler:say("Then hurry up and bring it, flesh unit!", npc, creature)
+		elseif state == STATE_CONTINUE then
+			npcHandler:say("Understood! Repair procedure aborted. You must start over, flesh unit.", npc, creature)
+			golemServantResetRepair(player)
+		end
+		return true
 	end
 
 	return true
@@ -262,5 +269,4 @@ npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 
--- npcType registering the npcConfig table
 npcType:register(npcConfig)

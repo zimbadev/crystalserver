@@ -539,6 +539,17 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 		end
 	end
 
+	-- Mission 03 Shadows of Yalahar Quest
+	if target and target:isItem() and target:getId() == 8106 and player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.Mission03) == 1 then
+		target:transform(8107)
+		toPosition:sendMagicEffect(CONST_ME_POFF)
+		if math.random(1, 10) == 1 then
+			player:addItem(9251, 1)
+			toPosition:sendMagicEffect(CONST_ME_MAGIC_GREEN)
+		end
+		return true
+	end
+
 	-- The Secret Library Quest
 	local tPos = toPosition
 
@@ -840,16 +851,6 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 		target:decay()
 	else
 		return false
-	end
-	-- Mission 03 Shadows of Yalahar Quest
-	if target and target:isItem() and target:getId() == 8106 then
-		if player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.Mission03) ~= 1 then
-			return true
-		end
-
-		target:transform(8107)
-		player:addItem(9251, 1)
-		return true
 	end
 
 	return true
