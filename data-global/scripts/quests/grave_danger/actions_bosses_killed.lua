@@ -17,14 +17,10 @@ function bossesGraveDanger.onDeath(creature)
 		if bossConfig.storage then
 			player:setStorageValue(bossConfig.storage, 1)
 		end
-		local bossesKilled = 0
-		for value in pairs(bosses) do
-			if player:getStorageValue(bosses[value].storage) > 0 then
-				bossesKilled = bossesKilled + 1
-			end
-		end
-		if bossesKilled >= 5 then -- number of mini bosses
-			player:setStorageValue(Storage.Quest.U12_20.GraveDanger.Bosses.KingZelosDoor, 1)
+		-- each boss marks its grave in the quest log; with all 5 the mission goes to 2 and Jack Springer
+		-- opens King Zelos' door (grave_danger_access.lua). The door is no longer given here.
+		if GraveDangerGraves then
+			GraveDangerGraves.refresh(player)
 		end
 	end)
 	return true

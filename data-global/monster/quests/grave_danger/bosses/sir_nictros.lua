@@ -13,8 +13,8 @@ monster.outfit = {
 	lookMount = 0,
 }
 
-monster.health = 75000
-monster.maxHealth = 75000
+monster.health = 150000 -- NOT CONFIRMED (W only lists Baeloc: 150,000)
+monster.maxHealth = 150000 -- NOT CONFIRMED (W only lists Baeloc: 150,000)
 monster.race = "venom"
 monster.corpse = 31599
 monster.speed = 125
@@ -80,20 +80,8 @@ monster.voices = {
 	chance = 10,
 }
 
+-- Only Sir Baeloc has loot (reward chest); Sir Nictros drops nothing
 monster.loot = {}
-
--- melee: 852, 505
---death ring: 510,464, 487, 632, 210
---physical beam: 370, 2233?, 2199?, 900
---death strike: 230, 212, 231
---weapon throw: 361, 625
-
-monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -900, effect = CONST_ME_DRAWBLOOD },
-	{ name = "combat", interval = 3100, chance = 37, type = COMBAT_PHYSICALDAMAGE, minDamage = -400, maxDamage = -1000, length = 7, spread = 0, effect = CONST_ME_DRAWBLOOD, target = false },
-	{ name = "combat", interval = 2500, chance = 35, type = COMBAT_PHYSICALDAMAGE, minDamage = -350, maxDamage = -625, range = 5, shootEffect = CONST_ANI_WHIRLWINDAXE, effect = CONST_ME_DRAWBLOOD, target = true },
-	{ name = "combat", interval = 2700, chance = 30, type = COMBAT_DEATHDAMAGE, minDamage = -180, maxDamage = -250, range = 1, shootEffect = CONST_ANI_SUDDENDEATH, effect = CONST_ME_MORTAREA, target = true },
-}
 
 monster.defenses = {
 	defense = 25,

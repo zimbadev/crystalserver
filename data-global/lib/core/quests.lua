@@ -6496,7 +6496,7 @@ if not Quests then
 					storageId = Storage.Quest.U12_20.GraveDanger.QuestLine,
 					missionId = 10437,
 					startValue = 1,
-					endValue = 2,
+					endValue = 5,
 					states = {
 						[1] = function(player)
 							return string.format(
@@ -6516,6 +6516,11 @@ if not Quests then
 									- 12
 							)
 						end,
+						-- NOT CONFIRMED: texts written for this server (the global quest log text is not published), so no step shows "nil"
+						[2] = "All twelve graves have been secured. Report back to Jack Springer.",
+						[3] = "Jack Springer sent you to the Isle of the Kings. The cultists are trying to raise King Zelos in his hidden grave beneath the isle. Defeat him before the ritual is completed - the longer it takes, the stronger he becomes.",
+						[4] = "You defeated King Zelos and stopped the ritual of the Shiron'Fal. Report back to Jack Springer.",
+						[5] = "You averted the crisis and became one of the hands of the Inquisition.",
 					},
 				},
 				[2] = {
