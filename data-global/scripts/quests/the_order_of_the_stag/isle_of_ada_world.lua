@@ -23,10 +23,21 @@ local HARPY_NAME = "Night Harpy"
 
 -- top-left corner of open-sky 8x8 blocks (taken from the official map)
 local RAID_SPOTS = {
-	Position(33896, 32120, 4), Position(33888, 32144, 4), Position(33904, 32120, 4), Position(33880, 32104, 4), -- castle yard
-	Position(33880, 32160, 5), Position(33872, 32176, 5), Position(33888, 32184, 5), -- surroundings
-	Position(33840, 32176, 6), Position(33816, 32184, 6), Position(33856, 32192, 6), Position(33896, 32200, 6), Position(33848, 32208, 6), -- valley
-	Position(33824, 32216, 6), Position(33808, 32224, 6), Position(33888, 32224, 6), -- southern mountains (nest)
+	Position(33896, 32120, 4),
+	Position(33888, 32144, 4),
+	Position(33904, 32120, 4),
+	Position(33880, 32104, 4), -- castle yard
+	Position(33880, 32160, 5),
+	Position(33872, 32176, 5),
+	Position(33888, 32184, 5), -- surroundings
+	Position(33840, 32176, 6),
+	Position(33816, 32184, 6),
+	Position(33856, 32192, 6),
+	Position(33896, 32200, 6),
+	Position(33848, 32208, 6), -- valley
+	Position(33824, 32216, 6),
+	Position(33808, 32224, 6),
+	Position(33888, 32224, 6), -- southern mountains (nest)
 }
 
 local OSVERGER_NAME = "Overseer Osverger"
