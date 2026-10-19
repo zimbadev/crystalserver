@@ -455,7 +455,9 @@ timeBetweenActions = 200
 timeBetweenExActions = 1000
 timeBetweenNecklace = 500
 timeBetweenRing = 500
-timeAfterParalyze = 500
+-- NOTE: timeAfterParalyze: after each step while paralyzed, spells, potions and runes are blocked if ms are set here.
+-- 0 = no block, as on the global server.
+timeAfterParalyze = 0
 
 -- Push
 -- NOTE: pushDelay: interval for every push

@@ -26,7 +26,7 @@ function talkaction.onSay(player, words, param)
 		return true
 	end
 
-	if isPlayerGhost(target) and getPlayerGhostAccess(target) > getPlayerGhostAccess(player) then
+	if isPlayerGhost(target) and target:getGroup():getId() > player:getGroup():getId() then
 		player:sendCancelMessage("Player " .. targetName .. " not found.")
 		return true
 	end
