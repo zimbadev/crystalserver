@@ -21,7 +21,7 @@ combatEnergy:setArea(createCombatArea(AREA))
 
 local combatEarth = Combat()
 combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
-combatEarth:setParameter(COMBAT_PARAM_EFFECT, 326))
+combatEarth:setParameter(COMBAT_PARAM_EFFECT, 326)
 combatEarth:setArea(createCombatArea(AREA))
 
 function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
