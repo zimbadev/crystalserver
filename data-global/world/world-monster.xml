@@ -3981,7 +3981,7 @@
 	</monster>
 	<monster centerx="33869" centery="32171" centerz="3" radius="5">
 		<monster name="Deer" x="-1" y="0" z="3" spawntime="60" />
-		<monster name="Deer" x="1" y="1" z="3" spawntime="60" />
+		<monster name="Stag" x="1" y="1" z="3" spawntime="60" />
 	</monster>
 	<monster centerx="33078" centery="32175" centerz="3" radius="3">
 		<monster name="Firestarter" x="-3" y="-1" z="3" spawntime="60" />
@@ -6694,7 +6694,7 @@
 	</monster>
 	<monster centerx="33902" centery="32118" centerz="4" radius="5">
 		<monster name="Deer" x="0" y="-1" z="4" spawntime="60" />
-		<monster name="Deer" x="1" y="2" z="4" spawntime="60" />
+		<monster name="Stag" x="1" y="2" z="4" spawntime="60" />
 	</monster>
 	<monster centerx="32562" centery="32119" centerz="4" radius="3">
 		<monster name="Stalker" x="1" y="-1" z="4" spawntime="90" />
@@ -6722,13 +6722,13 @@
 	</monster>
 	<monster centerx="33890" centery="32142" centerz="4" radius="5">
 		<monster name="Deer" x="3" y="-3" z="4" spawntime="60" />
-		<monster name="Deer" x="2" y="-2" z="4" spawntime="60" />
+		<monster name="Stag" x="2" y="-2" z="4" spawntime="60" />
 		<monster name="Deer" x="2" y="-1" z="4" spawntime="60" />
-		<monster name="Deer" x="-3" y="0" z="4" spawntime="60" />
+		<monster name="Stag" x="-3" y="0" z="4" spawntime="60" />
 		<monster name="Deer" x="2" y="1" z="4" spawntime="60" />
-		<monster name="Deer" x="-3" y="2" z="4" spawntime="60" />
+		<monster name="Stag" x="-3" y="2" z="4" spawntime="60" />
 		<monster name="Deer" x="-3" y="3" z="4" spawntime="60" />
-		<monster name="Deer" x="3" y="4" z="4" spawntime="60" />
+		<monster name="Stag" x="3" y="4" z="4" spawntime="60" />
 		<monster name="Deer" x="4" y="4" z="4" spawntime="60" />
 	</monster>
 	<monster centerx="32824" centery="32145" centerz="4" radius="4">
@@ -11243,7 +11243,7 @@
 		<monster name="Troll" x="2" y="5" z="5" spawntime="90" />
 	</monster>
 	<monster centerx="33894" centery="32107" centerz="5" radius="5">
-		<monster name="Deer" x="0" y="0" z="5" spawntime="60" />
+		<monster name="Stag" x="0" y="0" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="33712" centery="32108" centerz="5" radius="1">
 		<monster name="Arachnophobica" x="0" y="0" z="5" spawntime="60" />
@@ -11458,7 +11458,7 @@
 	<monster centerx="33855" centery="32179" centerz="5" radius="5">
 		<monster name="Raubritter Skirmisher" x="3" y="-3" z="5" spawntime="60" />
 		<monster name="Deer" x="-1" y="-1" z="5" spawntime="60" />
-		<monster name="Deer" x="-3" y="0" z="5" spawntime="60" />
+		<monster name="Stag" x="-3" y="0" z="5" spawntime="60" />
 		<monster name="Raubritter Skirmisher" x="1" y="2" z="5" spawntime="60" />
 		<monster name="Raubritter Skirmisher" x="3" y="2" z="5" spawntime="60" />
 	</monster>
@@ -11474,15 +11474,15 @@
 	</monster>
 	<monster centerx="33895" centery="32188" centerz="5" radius="17">
 		<monster name="Deer" x="5" y="-10" z="5" spawntime="60" />
-		<monster name="Deer" x="8" y="-9" z="5" spawntime="60" />
+		<monster name="Stag" x="8" y="-9" z="5" spawntime="60" />
 		<monster name="Deer" x="9" y="5" z="5" spawntime="60" />
-		<monster name="Deer" x="10" y="5" z="5" spawntime="60" />
+		<monster name="Stag" x="10" y="5" z="5" spawntime="60" />
 		<monster name="Deer" x="12" y="6" z="5" spawntime="60" />
 		<monster name="Raubritter Skirmisher" x="-9" y="8" z="5" spawntime="60" />
-		<monster name="Deer" x="-17" y="9" z="5" spawntime="60" />
+		<monster name="Stag" x="-17" y="9" z="5" spawntime="60" />
 		<monster name="Raubritter Skirmisher" x="-10" y="9" z="5" spawntime="60" />
 		<monster name="Deer" x="15" y="10" z="5" spawntime="60" />
-		<monster name="Deer" x="14" y="11" z="5" spawntime="60" />
+		<monster name="Stag" x="14" y="11" z="5" spawntime="60" />
 		<monster name="Deer" x="13" y="14" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="33687" centery="32189" centerz="5" radius="3">
@@ -11510,9 +11510,9 @@
 		<monster name="Arachnophobica" x="-3" y="3" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="33876" centery="32196" centerz="5" radius="5">
-		<monster name="Deer" x="0" y="-1" z="5" spawntime="60" />
+		<monster name="Stag" x="0" y="-1" z="5" spawntime="60" />
 		<monster name="Deer" x="1" y="0" z="5" spawntime="60" />
-		<monster name="Deer" x="1" y="1" z="5" spawntime="60" />
+		<monster name="Stag" x="1" y="1" z="5" spawntime="60" />
 	</monster>
 	<monster centerx="33673" centery="32203" centerz="5" radius="3">
 		<monster name="Crazed Summer Rearguard" x="0" y="-1" z="5" spawntime="60" />
@@ -11545,8 +11545,14 @@
 		<monster name="Swamp Troll" x="3" y="-2" z="5" spawntime="90" />
 		<monster name="Swamp Troll" x="1" y="3" z="5" spawntime="90" />
 	</monster>
-	<monster centerx="33827" centery="32243" centerz="5" radius="5">
-		<monster name="Night Harpy" x="0" y="0" z="5" spawntime="60" />
+	<monster centerx="33862" centery="32106" centerz="4" radius="1">
+		<monster name="Clavius" x="0" y="0" z="4" spawntime="3600" />
+	</monster>
+	<monster centerx="33857" centery="32167" centerz="2" radius="1">
+		<monster name="Adlerauge" x="0" y="0" z="2" spawntime="3600" />
+	</monster>
+	<monster centerx="33863" centery="32115" centerz="0" radius="1">
+		<monster name="Michael the Stalwart" x="0" y="0" z="0" spawntime="3600" />
 	</monster>
 	<monster centerx="33244" centery="32266" centerz="5" radius="1">
 		<monster name="Wyrm" x="0" y="1" z="5" spawntime="90" />
@@ -18326,7 +18332,7 @@
 		<monster name="Raubritter Skirmisher" x="6" y="4" z="6" spawntime="60" />
 		<monster name="Raubritter Skirmisher" x="7" y="4" z="6" spawntime="60" />
 		<monster name="Raubritter Marksman" x="-4" y="5" z="6" spawntime="60" />
-		<monster name="Deer" x="8" y="5" z="6" spawntime="60" />
+		<monster name="Stag" x="8" y="5" z="6" spawntime="60" />
 		<monster name="Raubritter Marksman" x="-6" y="7" z="6" spawntime="60" />
 		<monster name="Raubritter Marksman" x="-3" y="10" z="6" spawntime="60" />
 	</monster>
