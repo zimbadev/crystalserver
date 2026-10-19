@@ -9,6 +9,7 @@ local rewards = {
 	[57244] = 49530,
 	[57245] = 49528,
 	[57246] = 49529,
+	[57247] = 50250,
 }
 
 local theForgeRewards = Action()
