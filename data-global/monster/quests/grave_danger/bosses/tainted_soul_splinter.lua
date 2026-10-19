@@ -78,8 +78,6 @@ monster.immunities = {
 	{ type = "bleed", condition = false },
 }
 
-monster.events = {
-
-}
+monster.events = {}
 
 mType:register(monster)
