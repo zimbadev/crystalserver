@@ -16,12 +16,12 @@ combatPhysical:setArea(createCombatArea(AREA))
 
 local combatEnergy = Combat()
 combatEnergy:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
-combatEnergy:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_PINK_FLURRYOFBLOWS)
+combatEnergy:setParameter(COMBAT_PARAM_EFFECT, 326)
 combatEnergy:setArea(createCombatArea(AREA))
 
 local combatEarth = Combat()
 combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
-combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_FLURRYOFBLOWS)
+combatEarth:setParameter(COMBAT_PARAM_EFFECT, 326))
 combatEarth:setArea(createCombatArea(AREA))
 
 function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
@@ -82,6 +82,5 @@ spell:needWeapon(false)
 spell:needLearn(false)
 spell:cooldown(12 * 1000)
 spell:groupCooldown(2 * 1000)
-
 spell:vocation("monk;true", "exalted monk;true")
 spell:register()

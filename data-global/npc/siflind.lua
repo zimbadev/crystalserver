@@ -254,7 +254,7 @@ npcConfig.shop = {
 	{ itemName = "poison field rune", clientId = 3172, buy = 21 },
 	{ itemName = "poison wall rune", clientId = 3176, buy = 52 },
 	{ itemName = "snakebite rod", clientId = 3066, buy = 500 },
-	{ itemName = "spellbook", clientId = 6120, buy = 150 },
+	{ itemName = "spellbook", clientId = 3059, buy = 150 },
 	{ itemName = "springsprout rod", clientId = 8084, buy = 18000 },
 	{ itemName = "stalagmite rune", clientId = 3179, buy = 12 },
 	{ itemName = "strong health potion", clientId = 236, buy = 115 },
