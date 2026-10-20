@@ -332,26 +332,6 @@ TeleportAction = {
 }
 
 TeleportUnique = {
-	-- magic forcefield
-	[1062] = {
-		itemId = 1949,
-		itemPos = { x = 33262, y = 31835, z = 10 },
-	},
-	-- magic forcefield
-	[1063] = {
-		itemId = 1949,
-		itemPos = { x = 33274, y = 31835, z = 10 },
-	},
-	-- magic forcefield
-	[1064] = {
-		itemId = 1949,
-		itemPos = { x = 33268, y = 31841, z = 10 },
-	},
-	-- magic forcefield
-	[1065] = {
-		itemId = 1949,
-		itemPos = { x = 33265, y = 31830, z = 10 },
-	},
 	-- Forgotten Knowledge Quest
 	[1067] = {
 		itemId = 1949,
