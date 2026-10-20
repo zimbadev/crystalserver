@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("True Feverbloom Asura")
 local monster = {}
 
 monster.description = "a true feverbloom asura"
-monster.experience = 7850
+monster.experience = 8600
 monster.outfit = {
 	lookType = 1068,
 	lookHead = 62,
