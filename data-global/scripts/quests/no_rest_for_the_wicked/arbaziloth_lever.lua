@@ -4,6 +4,10 @@ local config = {
 		position = Position(34034, 32330, 14),
 	},
 	timeToFightAgain = 60 * 60 * 20,
+	-- resets the fight state (scripts/quests/no_rest_for_the_wicked/arbaziloth_fight.lua)
+	onUseExtra = function(player, infoPositions)
+		return ArbazilothFight.onLever()
+	end,
 	playerPositions = {
 		{ pos = Position(34058, 32395, 14), teleport = Position(34034, 32340, 14) },
 		{ pos = Position(34058, 32396, 14), teleport = Position(34034, 32340, 14) },
@@ -20,8 +24,6 @@ local config = {
 		{ name = "The Forgemaster", pos = Position(34033, 32330, 14) },
 	},
 }
-
-Game.setStorageValue("globalArbazilothHeal", 0)
 
 local leverArbaziloth = BossLever(config)
 leverArbaziloth:position(Position(34058, 32394, 14))
