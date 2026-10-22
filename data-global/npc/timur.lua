@@ -84,7 +84,7 @@ npcConfig.shop = {
 	{ itemName = "net", clientId = 31489, buy = 50 },
 	{ itemName = "parchment", clientId = 2817, buy = 8 },
 	{ itemName = "pick", clientId = 3456, buy = 50, sell = 15 },
-	{ itemName = "present", clientId = 3218, buy = 10 },
+	{ itemName = "present", clientId = 2856, buy = 10 },
 	{ itemName = "rope", clientId = 3003, buy = 50, sell = 15 },
 	{ itemName = "scroll", clientId = 2815, buy = 10 },
 	{ itemName = "scythe", clientId = 3453, buy = 50, sell = 10 },

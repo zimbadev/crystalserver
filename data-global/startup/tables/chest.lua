@@ -1179,7 +1179,7 @@ ChestUnique = {
 	[6078] = {
 		itemId = 2472,
 		itemPos = { x = 32776, y = 32253, z = 8 },
-		reward = { { 12510, 1 } },
+		reward = { { 3208, 1 } },
 		storage = Storage.Quest.U7_6.ExplorerSociety.GiantSmithHammer.Hammer,
 	},
 	-- 100 gold coin
