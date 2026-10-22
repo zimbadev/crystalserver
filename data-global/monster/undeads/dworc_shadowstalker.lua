@@ -3,7 +3,7 @@ local mType = Game.createMonsterType("Dworc Shadowstalker")
 local monster = {}
 
 monster.description = "a dworc shadowstalker"
-monster.experience = 7150
+monster.experience = 7680
 monster.outfit = {
 	lookType = 1853,
 	lookHead = 0,

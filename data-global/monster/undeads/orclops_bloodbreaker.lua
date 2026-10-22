@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Orclops Bloodbreaker")
 local monster = {}
 
 monster.description = "an orclops bloodbreaker"
-monster.experience = 7800
+monster.experience = 8820
 monster.outfit = {
 	lookType = 1854,
 	lookHead = 0,
