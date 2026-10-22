@@ -1,0 +1,227 @@
+name: Linux build diagnostics
+'on':
+  push:
+    branches:
+    - main
+    - summer-update
+    - ci/**
+  pull_request: null
+  workflow_dispatch:
+    inputs:
+      preset:
+        description: Build both configurations, or select one for a focused validation
+        type: choice
+        required: true
+        default: both
+        options:
+        - both
+        - linux-release
+        - linux-debug
+        - linux-debug-cache
+        - linux-release-cache
+      parallel:
+        description: Parallel compile/link jobs for measured comparison
+        type: choice
+        required: true
+        default: '4'
+        options:
+        - '2'
+        - '4'
+permissions:
+  contents: read
+concurrency:
+  group: linux-${{ github.ref }}-${{ github.event_name == 'workflow_dispatch' && inputs.preset || 'both' }}-${{ github.event_name == 'workflow_dispatch'
+    && inputs.parallel || '4' }}
+  cancel-in-progress: true
+env:
+  CMAKE_BUILD_PARALLEL_LEVEL: ${{ github.event_name == 'workflow_dispatch' && inputs.parallel || '4' }}
+  CC: gcc-14
+  CXX: g++-14
+  VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}/.cache/vcpkg,readwrite
+  VCPKG_DOWNLOADS: ${{ github.workspace }}/.cache/downloads
+  CCACHE_DIR: ${{ github.workspace }}/.cache/ccache
+  CCACHE_MAXSIZE: 2G
+  CCACHE_BASEDIR: ${{ github.workspace }}
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    services:
+      database:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_ROOT_HOST: '%'
+          MARIADB_DATABASE: crystalserver
+        ports:
+        - 3306:3306
+        options: --health-cmd="healthcheck.sh --connect --innodb_initialized" --health-interval=10s --health-timeout=5s --health-retries=12
+    strategy:
+      fail-fast: false
+      matrix:
+        preset: ${{ github.event_name == 'workflow_dispatch' && inputs.preset != 'both' && fromJSON(format('["{0}"]', inputs.preset)) || fromJSON('["linux-release-cache",
+          "linux-debug-cache"]') }}
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+    - name: Install compiler and system build tools
+      shell: bash
+      run: "sudo apt-get update\nsudo apt-get install -y gcc-14 g++-14 build-essential ninja-build pkg-config autoconf automake libtool ccache default-mysql-client\
+        \ \n"
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - uses: lukka/get-cmake@v3.31.6
+    - name: Environment and dependency identity
+      id: identity
+      run: |
+        New-Item -ItemType Directory -Force build/diagnostics,.cache/vcpkg,.cache/downloads | Out-Null
+        $baseline=(Get-Content vcpkg.json -Raw | ConvertFrom-Json).'builtin-baseline'
+        if ($baseline -notmatch '^[0-9a-f]{40}$') { throw "Invalid vcpkg baseline" }
+        $compiler=(g++-14 -dumpfullversion).Trim()
+        "baseline=$baseline" >> $env:GITHUB_OUTPUT
+        $dependencyPreset="${{ matrix.preset }}" -replace "-cache$",""
+        "dependency-preset=$dependencyPreset" >> $env:GITHUB_OUTPUT
+        "compiler=$compiler" >> $env:GITHUB_OUTPUT
+        @("commit=$env:GITHUB_SHA","runner=$env:ImageOS/$env:ImageVersion","compiler=$compiler","preset=${{ matrix.preset }}") | Set-Content build/diagnostics/environment.txt
+        cmake --version >> build/diagnostics/environment.txt
+        ninja --version >> build/diagnostics/environment.txt
+        ccache --version >> build/diagnostics/environment.txt
+        "CMAKE_C_COMPILER_LAUNCHER=ccache" >> $env:GITHUB_ENV
+        "CMAKE_CXX_COMPILER_LAUNCHER=ccache" >> $env:GITHUB_ENV
+        "parallel=$env:CMAKE_BUILD_PARALLEL_LEVEL" >> build/diagnostics/environment.txt
+        "processors=$([Environment]::ProcessorCount)" >> build/diagnostics/environment.txt
+        exit 0
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - uses: actions/cache/restore@v4
+      id: dependencies
+      with:
+        path: .cache/vcpkg
+        key: deps-v1-${{ runner.os }}-${{ steps.identity.outputs.dependency-preset }}-${{ steps.identity.outputs.compiler }}-${{ hashFiles('vcpkg.json',
+          'CMakePresets.json', 'cmake/vcpkg-ports/**') }}
+        restore-keys: |
+          deps-v1-${{ runner.os }}-${{ steps.identity.outputs.dependency-preset }}-${{ steps.identity.outputs.compiler }}-
+          deps-partial-v1-${{ runner.os }}-${{ steps.identity.outputs.dependency-preset }}-${{ steps.identity.outputs.compiler }}-
+    - uses: actions/cache/restore@v4
+      with:
+        path: .cache/downloads
+        key: downloads-v1-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+        restore-keys: downloads-v1-${{ runner.os }}-
+      id: downloads
+    - uses: actions/cache/restore@v4
+      id: compiler
+      with:
+        path: .cache/ccache
+        key: compiler-v1-${{ runner.os }}-${{ matrix.preset }}-${{ steps.identity.outputs.compiler }}-${{ github.run_id }}-${{ github.run_attempt }}
+        restore-keys: compiler-v1-${{ runner.os }}-${{ matrix.preset }}-${{ steps.identity.outputs.compiler }}-
+    - name: Reset compiler cache counters
+      run: ccache --zero-stats
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - uses: actions/checkout@v4
+      with:
+        repository: microsoft/vcpkg
+        ref: ${{ steps.identity.outputs.baseline }}
+        path: .tools/vcpkg
+        persist-credentials: false
+        fetch-depth: 0
+    - name: Bootstrap vcpkg
+      run: |
+        & bash .tools/vcpkg/bootstrap-vcpkg.sh -disableMetrics
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        "VCPKG_ROOT=$env:GITHUB_WORKSPACE/.tools/vcpkg" >> $env:GITHUB_ENV
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - name: Configure
+      id: configure
+      run: |
+        ./ci/RunBuildStage.ps1 -Name configure -FilePath cmake -CommandArguments @("--preset","${{ matrix.preset }}","-DBUILD_TESTS=ON","-DTOGGLE_BIN_FOLDER=ON","-DOPTIONS_ENABLE_SCCACHE=OFF","-DOPTIONS_ENABLE_CCACHE=OFF")
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - name: Separate configure probes from compilation cache counters
+      run: |
+        ccache --show-stats | Tee-Object build/diagnostics/configure-cache.txt
+        ccache --zero-stats
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - uses: actions/cache/save@v4
+      if: ${{ !cancelled() && steps.configure.outcome == 'success' && steps.dependencies.outputs.cache-hit != 'true' }}
+      with:
+        path: .cache/vcpkg
+        key: ${{ steps.dependencies.outputs.cache-primary-key }}
+    - name: Compile
+      run: |
+        ./ci/RunBuildStage.ps1 -Name compile -FilePath cmake -CommandArguments @("--build","build/${{ matrix.preset }}","--parallel","$env:CMAKE_BUILD_PARALLEL_LEVEL")
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - name: Initialize isolated test database
+      shell: bash
+      env:
+        MYSQL_PWD: root
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+      run: |
+        set -euo pipefail
+        mysql --protocol=TCP --host=127.0.0.1 --port=3306 --user=root crystalserver < schema.sql > build/diagnostics/database-schema.log 2>&1
+    - name: Unit tests
+      run: |
+        ./ci/RunBuildStage.ps1 -Name tests -FilePath ctest -CommandArguments @("--test-dir","build/${{ matrix.preset }}/tests","--output-on-failure","--no-tests=error","--timeout","120","--output-junit","$env:GITHUB_WORKSPACE/build/diagnostics/tests.xml")
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - name: Preserve completed dependency packages after a configuration failure
+      if: ${{ !cancelled() && steps.configure.outcome == 'failure' && steps.dependencies.outputs.cache-hit != 'true' }}
+      uses: actions/cache/save@v4
+      with:
+        path: .cache/vcpkg
+        key: deps-partial-v1-${{ runner.os }}-${{ steps.identity.outputs.dependency-preset }}-${{ steps.identity.outputs.compiler }}-${{ github.run_id }}-${{
+          github.run_attempt }}
+    - name: Preserve verified source downloads
+      if: ${{ !cancelled() && steps.identity.outcome == 'success' && steps.downloads.outputs.cache-hit != 'true' }}
+      uses: actions/cache/save@v4
+      with:
+        path: .cache/downloads
+        key: ${{ steps.downloads.outputs.cache-primary-key }}
+    - name: Capture compiler statistics and configuration
+      if: always()
+      run: |
+        ccache --show-stats | Tee-Object build/diagnostics/compiler-cache.txt
+        $folder="build/${{ matrix.preset }}"
+        foreach ($name in @("CMakeCache.txt","vcpkg-manifest-install.log","CMakeFiles/CMakeConfigureLog.yaml","build.ninja","compile_commands.json")) {
+          $file=Join-Path $folder $name
+          if (Test-Path $file) { Copy-Item $file build/diagnostics/ }
+        }
+        python ./ci/SummarizeBuild.py $folder build/diagnostics/build-metrics.json
+        if (Test-Path "$folder/.ninja_log") { Copy-Item "$folder/.ninja_log" build/diagnostics/ninja.log }
+        exit 0
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - uses: actions/cache/save@v4
+      if: ${{ !cancelled() && steps.configure.outcome == 'success' }}
+      with:
+        path: .cache/ccache
+        key: ${{ steps.compiler.outputs.cache-primary-key }}
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: diagnostics-${{ matrix.preset }}-${{ github.run_attempt }}
+        path: build/diagnostics
+        retention-days: 14
+    - uses: actions/upload-artifact@v4
+      with:
+        name: binaries-${{ matrix.preset }}
+        path: |
+          build/${{ matrix.preset }}/bin/
+        if-no-files-found: error
+        retention-days: 14
