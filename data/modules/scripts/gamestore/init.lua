@@ -1614,7 +1614,6 @@ function GameStore.processItemPurchase(player, offerId, offerCount, movable, set
 	if not canReceive then
 		return error({ code = 0, message = errorMsg })
 	end
-
 	local iType = ItemType(offerId)
 	if iType and iType:isStackable() then
 		local stackSize = iType:getStackSize()
