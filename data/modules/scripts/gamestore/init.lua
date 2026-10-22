@@ -1614,9 +1614,19 @@ function GameStore.processItemPurchase(player, offerId, offerCount, movable, set
 	if not canReceive then
 		return error({ code = 0, message = errorMsg })
 	end
-
-	for t = 1, offerCount do
-		player:addItemStoreInbox(offerId, offerCount or 1, movable, setOwner)
+	local iType = ItemType(offerId)
+	if iType and iType:isStackable() then
+		local stackSize = iType:getStackSize()
+		local remaining = offerCount
+		while remaining > 0 do
+			local toAdd = math.min(remaining, stackSize)
+			player:addItemStoreInbox(offerId, toAdd, movable, setOwner)
+			remaining = remaining - toAdd
+		end
+	else
+		for t = 1, offerCount do
+			player:addItemStoreInbox(offerId, 1, movable, setOwner)
+		end
 	end
 end
 
