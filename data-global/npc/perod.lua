@@ -150,7 +150,7 @@ npcConfig.shop = {
 	{ itemName = "throwing star", clientId = 3287, buy = 42 },
 	{ itemName = "torch", clientId = 2920, buy = 2 },
 	{ itemName = "vortex bolt", clientId = 14252, buy = 6 },
-	{ itemName = "watch", clientId = 6092, buy = 20 },
+	{ itemName = "watch", clientId = 2906, buy = 20 },
 	{ itemName = "wooden hammer", clientId = 3459, sell = 15 },
 	{ itemName = "worm", clientId = 3492, buy = 1 },
 }
