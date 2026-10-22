@@ -15,10 +15,11 @@ monster.outfit = {
 
 monster.events = {
 	"GraveDangerBossDeath",
+	"GraveDangerOsam",
 }
 
-monster.health = 75000
-monster.maxHealth = 75000
+monster.health = 300000 -- TibiaWiki BR (the EN page has no value)
+monster.maxHealth = 300000 -- TibiaWiki BR (the EN page has no value)
 monster.race = "venom"
 monster.corpse = 31599
 monster.speed = 125

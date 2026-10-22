@@ -18,8 +18,8 @@ monster.events = {
 	"DukeKruleTransform",
 }
 
-monster.health = 75000
-monster.maxHealth = 75000
+monster.health = 290000 -- W
+monster.maxHealth = 290000 -- W
 monster.race = "venom"
 monster.corpse = 31599
 monster.speed = 125
