@@ -11,17 +11,17 @@ local AREA = AREA_CIRCLE3X3
 
 local combatPhysical = Combat()
 combatPhysical:setParameter(COMBAT_PARAM_TYPE, COMBAT_PHYSICALDAMAGE)
-combatPhysical:setParameter(COMBAT_PARAM_EFFECT, 326)
+combatPhysical:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_FLURRYOFBLOWS)
 combatPhysical:setArea(createCombatArea(AREA))
 
 local combatEnergy = Combat()
 combatEnergy:setParameter(COMBAT_PARAM_TYPE, COMBAT_ENERGYDAMAGE)
-combatEnergy:setParameter(COMBAT_PARAM_EFFECT, 326)
+combatEnergy:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_FLURRYOFBLOWS)
 combatEnergy:setArea(createCombatArea(AREA))
 
 local combatEarth = Combat()
 combatEarth:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
-combatEarth:setParameter(COMBAT_PARAM_EFFECT, 326)
+combatEarth:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_GREEN_FLURRYOFBLOWS)
 combatEarth:setArea(createCombatArea(AREA))
 
 function onGetFormulaValues(player, skill, weaponDamage, attackFactor, basePower)
