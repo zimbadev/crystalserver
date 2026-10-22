@@ -103,7 +103,7 @@ monster.loot = {
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -94 },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -75 },
 	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_PHYSICALDAMAGE, minDamage = 0, maxDamage = -120, range = 7, shootEffect = CONST_ANI_ARROW, target = false },
 	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_ENERGYDAMAGE, minDamage = -80, maxDamage = -100, range = 7, shootEffect = CONST_ANI_ENERGY, effect = CONST_ME_ENERGYHIT, target = false },
 	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_DEATHDAMAGE, minDamage = -120, maxDamage = -135, range = 7, shootEffect = CONST_ANI_SUDDENDEATH, effect = CONST_ME_MORTAREA, target = false },
@@ -124,9 +124,9 @@ monster.elements = {
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 0 },
-	{ type = COMBAT_HOLYDAMAGE, percent = -10 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 20 },
+	{ type = COMBAT_ICEDAMAGE, percent = 10 },
+	{ type = COMBAT_HOLYDAMAGE, percent = -5 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 10 },
 }
 
 monster.immunities = {
