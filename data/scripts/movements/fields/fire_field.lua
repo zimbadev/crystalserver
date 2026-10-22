@@ -21,7 +21,7 @@ function fireField.onStepIn(creature, item, position, fromPosition)
 		return true
 	end
 
-	if creature:isPlayer() or (creature:isMonster() and creature:getMaster() and creature:getMaster():isPlayer()) then
+	if creature:isMonster() and creature:getMaster() and creature:getMaster():isPlayer() then
 		position:sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
@@ -38,5 +38,5 @@ function fireField.onStepIn(creature, item, position, fromPosition)
 end
 
 fireField:type("stepin")
-fireField:id(2131, 2132)
+fireField:id(2118, 2119, 2131, 2132)
 fireField:register()
