@@ -7623,5 +7623,58 @@ if not Quests then
 				},
 			},
 		},
+		[59] = {
+			name = "The Order of the Stag",
+			startStorageId = Storage.Quest.U15_20.TheOrderOfTheStag.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "The Order of the Stag",
+					storageId = Storage.Quest.U15_20.TheOrderOfTheStag.Questline,
+					missionId = 11023,
+					startValue = 1,
+					endValue = 13,
+					states = {
+						[1] = "Kesar the Younger asked you to retrieve a family writ from a sealed room below the cathedral of Bounac.",
+						[2] = "You found an ice-covered certificate of ancestry in the frozen chest. Bring it to Kesar the Younger.",
+						[3] = "Kesar sent you to the Isle of Ada. Find a small fishing boat south of the castle of Bounac and look for the expedition.",
+						[4] = "Second in Command Demeron believes you. Fight your way through the mines and further into the isle.",
+						[5] = "You made it through the mines. Find the Stags in their castle.",
+						[6] = function(player)
+							return string.format("Guard Captain Hartford needs proof of slain night harpies. You have pulled %d of 20 beaks yourself.", math.min(OrderOfTheStag.getCount(player, "Beaks"), 20))
+						end,
+						[7] = "Guard Captain Hartford granted you access to the upper hall. Find Eldoran the Ambitious.",
+						[8] = "Eldoran the Ambitious asked you to set fire to three corpses in the lower dungeons of the castle.",
+						[9] = "You burned the corpses. Ask Eldoran the Ambitious for another mission.",
+						[10] = "Eldoran the Ambitious wants you to take care of the Court Warlock. Find Captain Banner in the west tower.",
+						[11] = "Captain Marie-Denise Banner showed you the way through the wall. Defeat the Court Warlock.",
+						[12] = "You defeated the Court Warlock. Report to Eldoran the Ambitious.",
+						[13] = "You helped uncover the truth about the lost heir of the Etzel clan. The Order of the Stag will remember your deeds.",
+					},
+				},
+				[2] = {
+					name = "Supplies for the Steadfast",
+					storageId = Storage.Quest.U15_20.TheOrderOfTheStag.Harlan,
+					missionId = 11024,
+					startValue = 2,
+					endValue = 3,
+					states = {
+						[2] = "Lieutenant Harlan needs 20 tender venisons for his camp.",
+						[3] = "You brought Lieutenant Harlan enough tender venison to feed his men for a while.",
+					},
+				},
+				[3] = {
+					name = "Emmanuelle's Boat Repair",
+					storageId = Storage.Quest.U15_20.TheOrderOfTheStag.Demeron,
+					missionId = 11025,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Second in Command Demeron needs 30 salvaged iron parts, 20 salvaged bronze parts and 10 salvaged silver parts to repair the Emmanuelle.",
+						[2] = "You brought Demeron the salvaged parts and received the mariner's compass from the Antoinette.",
+					},
+				},
+			},
+		},
 	}
 end

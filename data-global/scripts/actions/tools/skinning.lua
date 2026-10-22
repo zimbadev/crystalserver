@@ -17,6 +17,13 @@ local RABBIT_KNIFE_IDS = { [5908] = true }
 
 local config = {
 	[5908] = {
+		-- The Order of the Stag: night harpy -> night harpy beak (W). Chance NOT CONFIRMED: the Wiki only
+		-- says it is rare ("will take a few night cycles", Gudii's video); we use 10%.
+		-- Also on the decay stages (52679 and 52678). Skinning takes any stage straight to the last one
+		-- (52677), which cannot be skinned: 1 attempt per corpse, within the first 15 min.
+		[52680] = { value = 10000, newItem = 52632, after = 52677 },
+		[52679] = { value = 10000, newItem = 52632, after = 52677 },
+		[52678] = { value = 10000, newItem = 52632, after = 52677 },
 		-- minotaurs
 		[4011] = { value = CREATURE_SKINNING_CHANCE, newItem = 5878, after = 4012 }, -- minotaur
 		[5969] = { value = CREATURE_SKINNING_CHANCE, newItem = 5878, after = 4012 }, -- minotaur, after being killed

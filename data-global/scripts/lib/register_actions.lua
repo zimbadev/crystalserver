@@ -525,6 +525,11 @@ function onUseShovel(player, item, fromPosition, target, toPosition, isHotkey)
 end
 
 function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
+	-- The Order of the Stag: Bounac cathedral floor (scripts/quests/the_order_of_the_stag/bounac_cathedral.lua)
+	if OrderOfTheStag and OrderOfTheStag.onPick and OrderOfTheStag.onPick(player, target, toPosition) then
+		return true
+	end
+
 	local stonePos = Position(32648, 32134, 10)
 	if toPosition == stonePos then
 		local tile = Tile(stonePos)
