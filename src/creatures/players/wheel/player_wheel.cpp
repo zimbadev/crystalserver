@@ -1290,7 +1290,8 @@ void PlayerWheel::sendSpellDataModifications() const {
 		entries.emplace_back(
 			spell->getSpellId(),
 			static_cast<uint8_t>(SpellDataModificationMod_t::WHEEL_GRADE),
-			static_cast<uint8_t>(grade));
+			static_cast<uint8_t>(grade)
+		);
 	}
 	if (!entries.empty()) {
 		m_player.client->sendSpellDataModification(entries);
