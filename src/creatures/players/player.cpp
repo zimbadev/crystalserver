@@ -2262,6 +2262,27 @@ void Player::sendHirelingNameChange(uint32_t creatureId, uint32_t objectId) cons
 	}
 }
 
+void Player::sendPartyLeft() const {
+	if (client) {
+		client->sendPartyLeft();
+	}
+}
+
+bool Player::turnTowardsRefusedStep(Direction dir, ReturnValue result) {
+	if (!turnTowardsMoveDirection || (result != RETURNVALUE_NOTPOSSIBLE && result != RETURNVALUE_NOTENOUGHROOM)) {
+		return false;
+	}
+	if (dir == DIRECTION_NORTHEAST || dir == DIRECTION_SOUTHEAST) {
+		dir = DIRECTION_EAST;
+	} else if (dir == DIRECTION_SOUTHWEST || dir == DIRECTION_NORTHWEST) {
+		dir = DIRECTION_WEST;
+	}
+	if (getDirection() == dir) {
+		return false;
+	}
+	return g_game().internalCreatureTurn(getPlayer(), dir);
+}
+
 void Player::sendGameNews() const {
 	if (client) {
 		client->sendGameNews();
