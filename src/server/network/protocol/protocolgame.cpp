@@ -1249,6 +1249,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 		case 0x2D:
 			parseMemberFinderWindow(msg);
 			break;
+		case 0x2E:
+			parseSetClientOptions(msg);
+			break;
 		case 0x32:
 			parseExtendedOpcode(msg);
 			break; // otclient extended opcode
@@ -1424,6 +1427,15 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			break;
 		case 0x9A:
 			parseOpenPrivateChannel(msg);
+			break;
+		case 0x9B:
+			parseGetGuildMessage();
+			break;
+		case 0x9C:
+			parseEditGuildMessage(msg);
+			break;
+		case 0x9D:
+			parseGetTextForReport(msg);
 			break;
 		case 0x9E:
 			g_game().playerCloseNpcChannel(player->getID());
@@ -3762,6 +3774,77 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
 	}
 
 	sendResourceBalance(resourceType, value);
+}
+
+void ProtocolGame::parseSetClientOptions(NetworkMessage &msg) {
+	// CIP SetClientOptions (C 0x2E): u8 option, u8 enabled. Option 1 =
+	// turnTowardsMoveDirection (session; CIP does not persist across relog).
+	const uint8_t option = msg.getByte();
+	const bool enabled = msg.getByte() != 0;
+	if (oldProtocol || option != 1) {
+		return;
+	}
+	g_dispatcher().addEvent([self = getThis(), playerID = player->getID(), enabled] {
+		if (const auto &target = g_game().getPlayerByID(playerID)) {
+			target->setTurnTowardsMoveDirection(enabled);
+		}
+	}, __FUNCTION__);
+}
+
+void ProtocolGame::parseGetGuildMessage() {
+	// CIP GetGuildMessage (C 0x9B): leader-only; opens MOTD editor (S 0xAE)
+	// even when the current MOTD is empty.
+	if (oldProtocol) {
+		return;
+	}
+	const auto &guild = player->getGuild();
+	const auto &rank = player->getGuildRank();
+	if (!guild || !rank || rank->level != GUILDLEVEL_LEADER) {
+		return;
+	}
+
+	sendEditGuildMessage(IOGuild::getMotd(guild->getId()));
+}
+
+void ProtocolGame::parseEditGuildMessage(NetworkMessage &msg) {
+	// CIP EditGuildMessage (C 0x9C): leader-only; empty string clears MOTD.
+	const std::string message = msg.getString();
+	if (oldProtocol) {
+		return;
+	}
+	const auto &guild = player->getGuild();
+	const auto &rank = player->getGuildRank();
+	if (!guild || !rank || rank->level != GUILDLEVEL_LEADER || message.size() > 255) {
+		return;
+	}
+
+	g_game().setGuildMotd(guild->getId(), message);
+	for (const auto &member : guild->getMembersOnline()) {
+		g_game().sendGuildMotd(member->getID(), guild->getId());
+	}
+}
+
+void ProtocolGame::parseGetTextForReport(NetworkMessage &msg) {
+	const Position pos = msg.getPosition();
+	const auto itemId = msg.get<uint16_t>();
+	const uint8_t stackpos = msg.getByte();
+	if (oldProtocol) {
+		return;
+	}
+
+	const auto &thing = g_game().internalGetThing(player, pos, stackpos, itemId, STACKPOS_LOOK);
+	const auto &item = thing ? thing->getItem() : nullptr;
+	if (!item || !player->canSee(item->getPosition())) {
+		return;
+	}
+	const ItemType &it = Item::items[item->getID()];
+	if (!it.canReadText && !it.canWriteText) {
+		return;
+	}
+
+	// CIP TextForReport (S 0x81): fill report UI including empty text.
+	const std::string text = item->getAttribute<std::string>(ItemAttribute_t::TEXT);
+	sendTextForReport(0, text, item->getAttribute<std::string>(ItemAttribute_t::WRITER));
 }
 
 void ProtocolGame::parseInviteToParty(NetworkMessage &msg) {
@@ -6120,6 +6203,42 @@ void ProtocolGame::sendHirelingNameChange(uint32_t creatureId, uint32_t objectId
 	out.add<uint32_t>(creatureId);
 	out.add<uint32_t>(objectId);
 	writeToOutputBuffer(out);
+}
+
+void ProtocolGame::sendPartyLeft() {
+	if (!player || oldProtocol) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x06);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendEditGuildMessage(const std::string &message) {
+	if (!player || oldProtocol) {
+		return;
+	}
+
+	// CIP EditGuildMessage (S 0xAE) — MOTD editor body (not C 0xAE Bosstiary).
+	NetworkMessage msg;
+	msg.addByte(0xAE);
+	msg.addString(message);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendTextForReport(uint32_t textId, const std::string &text, const std::string &author) {
+	if (!player || oldProtocol) {
+		return;
+	}
+
+	// CIP TextForReport (S 0x81) — not C 0x81 FriendSystemAction.
+	NetworkMessage msg;
+	msg.addByte(0x81);
+	msg.add<uint32_t>(textId);
+	msg.addString(text);
+	msg.addString(author);
+	writeToOutputBuffer(msg);
 }
 
 void ProtocolGame::sendGameNews() {
