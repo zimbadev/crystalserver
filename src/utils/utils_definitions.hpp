@@ -738,6 +738,9 @@ enum ItemID_t : uint16_t {
 	ITEM_LESSER_FRAGMENT = 46625,
 	ITEM_GREATER_FRAGMENT = 46626,
 
+	// CIP lunar ascension orb — weapon proficiency Maximise (resource balance 0x49).
+	ITEM_LUNAR_ASCENSION_ORB = 53695,
+
 	ITEM_WATERBALL_SPLASH = 619,
 	ITEM_WATERBALL = 893,
 
