@@ -1096,6 +1096,8 @@ public:
 	void removeBakragoreIcon(const IconBakragore icon);
 	void sendClientCheck() const;
 	void sendGameNews() const;
+	/// CIP HirelingNameChange (S 0xDB); see ProtocolGame::sendHirelingNameChange.
+	void sendHirelingNameChange(uint32_t creatureId = 0, uint32_t objectId = 0) const;
 	void sendMagicEffect(const Position &pos, uint16_t type, SourceEffect_t source = SourceEffect_t::GLOBAL) const;
 	void removeMagicEffect(const Position &pos, uint16_t type) const;
 	void sendPing();

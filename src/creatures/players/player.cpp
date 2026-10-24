@@ -2232,6 +2232,12 @@ void Player::sendClientCheck() const {
 	}
 }
 
+void Player::sendHirelingNameChange(uint32_t creatureId, uint32_t objectId) const {
+	if (client) {
+		client->sendHirelingNameChange(creatureId, objectId);
+	}
+}
+
 void Player::sendGameNews() const {
 	if (client) {
 		client->sendGameNews();

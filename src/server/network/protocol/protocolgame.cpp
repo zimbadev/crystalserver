@@ -6045,6 +6045,20 @@ void ProtocolGame::sendClientCheck() {
 	writeToOutputBuffer(msg);
 }
 
+void ProtocolGame::sendHirelingNameChange(uint32_t creatureId, uint32_t objectId) {
+	if (!player || oldProtocol) {
+		return;
+	}
+
+	// CIP HirelingNameChange (S 0xDB): creature + appearance instance ids for the
+	// configuration dialog; zeros open a store-style name prompt only.
+	NetworkMessage out;
+	out.addByte(0xDB);
+	out.add<uint32_t>(creatureId);
+	out.add<uint32_t>(objectId);
+	writeToOutputBuffer(out);
+}
+
 void ProtocolGame::sendGameNews() {
 	if (!player || oldProtocol) {
 		return;
