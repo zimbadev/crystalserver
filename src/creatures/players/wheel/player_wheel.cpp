@@ -1260,7 +1260,41 @@ void PlayerWheel::revealGem(WheelGemQuality_t quality) {
 		}
 	});
 
+	// CIP GemAtelierGemRevealed (S 0xC5): GemId = revealed-gem inventory index
+	// (TGemAtelierPageController selectGem / GEM_ATELIER_SELECT_GEM), not item type id.
+	if (m_player.client && !m_player.client->oldProtocol) {
+		const uint16_t revealedIndex = getGemIndex(gem.uuid);
+		if (revealedIndex != 0xFF) {
+			m_player.client->sendGemAtelierGemRevealed(revealedIndex);
+		}
+	}
+
 	sendOpenWheelWindow(m_player.getID());
+}
+
+void PlayerWheel::sendSpellDataModifications() const {
+	if (!m_player.client || m_player.client->oldProtocol || m_spellsSelected.empty()) {
+		return;
+	}
+
+	std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> entries;
+	entries.reserve(m_spellsSelected.size());
+	for (const auto &[spellName, grade] : m_spellsSelected) {
+		if (grade == WheelSpellGrade_t::NONE) {
+			continue;
+		}
+		const auto &spell = g_spells().getInstantSpellByName(spellName);
+		if (!spell) {
+			continue;
+		}
+		entries.emplace_back(
+			spell->getSpellId(),
+			static_cast<uint8_t>(SpellDataModificationMod_t::WHEEL_GRADE),
+			static_cast<uint8_t>(grade));
+	}
+	if (!entries.empty()) {
+		m_player.client->sendSpellDataModification(entries);
+	}
 }
 
 PlayerWheelGem &PlayerWheel::getGem(uint16_t index) {
@@ -2528,6 +2562,10 @@ void PlayerWheel::loadPlayerBonusData() {
 	registerPlayerBonusData();
 
 	printPlayerWheelMethodsBonusData(m_playerBonusData);
+
+	// After wheel bonus reload, refresh CIP spell UI for grades that alter
+	// area / targets / duration (S 0x60 SpellDataModification).
+	sendSpellDataModifications();
 }
 
 void PlayerWheel::printPlayerWheelMethodsBonusData(const PlayerWheelMethodsBonusData &bonusData) const {

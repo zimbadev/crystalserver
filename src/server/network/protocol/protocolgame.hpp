@@ -405,6 +405,10 @@ private:
 	void sendNpcDialogOptions(const NpcDialogOptions &dialogOptions);
 	void sendClientCheck();
 	void sendGameNews();
+	/// CIP SpellDataModification (S 0x60): u16 count + count×(u16 spellId, u8 mod, u8 value).
+	void sendSpellDataModification(const std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> &entries);
+	/// CIP GemAtelierGemRevealed (S 0xC5): u32 gem id (atelier inventory index).
+	void sendGemAtelierGemRevealed(uint32_t gemId);
 	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t soulsealsPoints = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);
 	void sendResourceBalance(Resource_t resourceType);
 	void sendResourceBalance(Resource_t resourceType, uint64_t value);
