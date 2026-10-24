@@ -3788,7 +3788,8 @@ void ProtocolGame::parseSetClientOptions(NetworkMessage &msg) {
 		if (const auto &target = g_game().getPlayerByID(playerID)) {
 			target->setTurnTowardsMoveDirection(enabled);
 		}
-	}, __FUNCTION__);
+	},
+	                        __FUNCTION__);
 }
 
 void ProtocolGame::parseGetGuildMessage() {
