@@ -6122,6 +6122,33 @@ void ProtocolGame::sendHirelingNameChange(uint32_t creatureId, uint32_t objectId
 	writeToOutputBuffer(out);
 }
 
+void ProtocolGame::sendSpellDataModification(const std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> &entries) {
+	if (!player || oldProtocol) {
+		return;
+	}
+
+	NetworkMessage out;
+	out.addByte(0x60);
+	out.add<uint16_t>(static_cast<uint16_t>(entries.size()));
+	for (const auto &[spellId, mod, value] : entries) {
+		out.add<uint16_t>(spellId);
+		out.addByte(mod);
+		out.addByte(value);
+	}
+	writeToOutputBuffer(out);
+}
+
+void ProtocolGame::sendGemAtelierGemRevealed(uint32_t gemId) {
+	if (!player || oldProtocol) {
+		return;
+	}
+
+	NetworkMessage out;
+	out.addByte(0xC5);
+	out.add<uint32_t>(gemId);
+	writeToOutputBuffer(out);
+}
+
 void ProtocolGame::sendGameNews() {
 	if (!player || oldProtocol) {
 		return;
