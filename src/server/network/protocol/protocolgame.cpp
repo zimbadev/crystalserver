@@ -3648,6 +3648,12 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
 		case RESOURCE_INVENTORY_MONEY:
 			value = player->getMoney();
 			break;
+		case RESOURCE_GUILD_BANK: {
+			if (const auto &guild = player->getGuild()) {
+				value = guild->getBankBalance();
+			}
+			break;
+		}
 		case RESOURCE_PREY_CARDS:
 			value = player->getPreyCards();
 			break;
@@ -3667,11 +3673,10 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
 			value = coreCount;
 			break;
 		}
-		case RESOURCE_FORGE_DUST_LIMIT:
-			// 15.25 (sommerrelease26): the client polls 0x49 for the forge dust cap (shown as the
-			// "/limit" next to current dust, and used by the Increase Dust Limit preview). The 0xEE
-			// parser reads this in the default branch as u64, which is what sendResourceBalance emits.
-			value = player->getForgeDustLevel();
+		case RESOURCE_LUNAR_ASCENSION_ORBS:
+			// CIP 15.30+: 0x49 is lunar orb balance (Maximise). Forge dust cap
+			// remains in sendForgingData — do not emit it as resource 0x49.
+			value = player->getItemTypeCount(ITEM_LUNAR_ASCENSION_ORB);
 			break;
 		case RESOURCE_LESSER_GEMS:
 			value = player->getItemTypeCount(player->getVocation()->getWheelGemId(WheelGemQuality_t::Lesser));
@@ -6060,12 +6065,21 @@ void ProtocolGame::sendGameNews() {
 void ProtocolGame::sendResourcesBalance(uint64_t money /*= 0*/, uint64_t bank /*= 0*/, uint64_t preyCards /*= 0*/, uint64_t taskHunting /*= 0*/, uint64_t soulsealsPoints /*= 0*/, uint64_t forgeDust /*= 0*/, uint64_t forgeSliver /*= 0*/, uint64_t forgeCores /*= 0*/) {
 	sendResourceBalance(RESOURCE_BANK, bank);
 	sendResourceBalance(RESOURCE_INVENTORY_MONEY, money);
+	// CIP only enables guild-bank UI when type 0x02 is received — omit when not in a guild.
+	if (player) {
+		if (const auto &guild = player->getGuild()) {
+			sendResourceBalance(RESOURCE_GUILD_BANK, guild->getBankBalance());
+		}
+	}
 	sendResourceBalance(RESOURCE_PREY_CARDS, preyCards);
 	sendResourceBalance(RESOURCE_TASK_HUNTING, taskHunting);
 	sendResourceBalance(RESOURCE_SOULSEALS_POINTS, soulsealsPoints);
 	sendResourceBalance(RESOURCE_FORGE_DUST, forgeDust);
 	sendResourceBalance(RESOURCE_FORGE_SLIVER, forgeSliver);
 	sendResourceBalance(RESOURCE_FORGE_CORES, forgeCores);
+	if (player && !oldProtocol) {
+		sendResourceBalance(RESOURCE_LUNAR_ASCENSION_ORBS);
+	}
 }
 
 void ProtocolGame::sendResourceBalance(Resource_t resourceType, uint64_t value) {
@@ -6342,7 +6356,8 @@ void ProtocolGame::sendSaleItemList(const std::vector<ShopBlock> &shopVector, co
 		if (search != inventoryMap.end()) {
 			customCurrencyValue += static_cast<uint64_t>(search->second);
 		}
-		sendResourceBalance(oldProtocol ? RESOURCE_INVENTORY_MONEY : RESOURCE_INVENTORY_CURRENCY_CUSTOM, customCurrencyValue);
+		// CIP: non-gold NPC currency is 0x3C (0x02 is guild bank gold).
+		sendResourceBalance(oldProtocol ? RESOURCE_INVENTORY_MONEY : RESOURCE_NPC_TRADE_QUEST_FLAG_CURRENCY, customCurrencyValue);
 	}
 
 	NetworkMessage msg;
