@@ -138,6 +138,60 @@
         "DEBUG_LOG": "ON",
         "SPEED_UP_BUILD_UNITY": "OFF"
       }
+    },
+    {
+      "name": "windows-debug-cache",
+      "inherits": "windows-debug",
+      "displayName": "Windows Debug - compiler cache",
+      "description": "Disable PCH so compiler objects can be cached; preserve production optimization and runtime settings",
+      "cacheVariables": {
+        "USE_PRECOMPILED_HEADER": "OFF",
+        "ENABLE_TEST_LTO": "OFF"
+      }
+    },
+    {
+      "name": "windows-release-cache",
+      "inherits": "windows-release",
+      "displayName": "Windows Release - compiler cache",
+      "description": "Disable PCH so compiler objects can be cached; preserve production optimization and runtime settings",
+      "cacheVariables": {
+        "USE_PRECOMPILED_HEADER": "OFF",
+        "ENABLE_TEST_LTO": "OFF"
+      }
+    },
+    {
+      "name": "linux-debug-cache",
+      "inherits": "linux-debug",
+      "displayName": "Linux Debug - compiler cache",
+      "description": "Disable PCH so compiler objects can be cached; preserve production optimization and runtime settings",
+      "cacheVariables": {
+        "USE_PRECOMPILED_HEADER": "OFF",
+        "OPTIONS_ENABLE_CCACHE": "ON",
+        "OPTIONS_ENABLE_SCCACHE": "OFF",
+        "ENABLE_TEST_LTO": "OFF"
+      }
+    },
+    {
+      "name": "linux-release-cache",
+      "inherits": "linux-release",
+      "displayName": "Linux Release - compiler cache",
+      "description": "Disable PCH so compiler objects can be cached; preserve production optimization and runtime settings",
+      "cacheVariables": {
+        "USE_PRECOMPILED_HEADER": "OFF",
+        "OPTIONS_ENABLE_CCACHE": "ON",
+        "OPTIONS_ENABLE_SCCACHE": "OFF",
+        "ENABLE_TEST_LTO": "OFF"
+      }
+    },
+    {
+      "name": "windows-debug-cache-unity",
+      "inherits": "windows-debug-cache",
+      "displayName": "Windows Debug - cache and unity candidate",
+      "description": "Measured optional candidate; original Debug preset remains unchanged",
+      "cacheVariables": {
+        "SPEED_UP_BUILD_UNITY": "ON",
+        "ENABLE_TEST_LTO": "OFF"
+      }
     }
   ],
   "buildPresets": [
@@ -172,6 +226,107 @@
     {
       "name": "macos-debug",
       "configurePreset": "macos-debug"
+    },
+    {
+      "name": "windows-debug-cache",
+      "configurePreset": "windows-debug-cache"
+    },
+    {
+      "name": "windows-release-cache",
+      "configurePreset": "windows-release-cache"
+    },
+    {
+      "name": "linux-debug-cache",
+      "configurePreset": "linux-debug-cache"
+    },
+    {
+      "name": "linux-release-cache",
+      "configurePreset": "linux-release-cache"
+    },
+    {
+      "name": "windows-debug",
+      "configurePreset": "windows-debug"
+    },
+    {
+      "name": "windows-debug-cache-unity",
+      "configurePreset": "windows-debug-cache-unity"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "windows-debug-cache",
+      "configurePreset": "windows-debug-cache",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "filter": {
+        "include": {
+          "name": "^unit$"
+        }
+      }
+    },
+    {
+      "name": "windows-release-cache",
+      "configurePreset": "windows-release-cache",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "filter": {
+        "include": {
+          "name": "^unit$"
+        }
+      }
+    },
+    {
+      "name": "linux-debug-cache",
+      "configurePreset": "linux-debug-cache",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "filter": {
+        "include": {
+          "name": "^unit$"
+        }
+      }
+    },
+    {
+      "name": "linux-release-cache",
+      "configurePreset": "linux-release-cache",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "filter": {
+        "include": {
+          "name": "^unit$"
+        }
+      }
+    },
+    {
+      "name": "windows-debug-cache-unity",
+      "configurePreset": "windows-debug-cache-unity",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error"
+      },
+      "filter": {
+        "include": {
+          "name": "^unit$"
+        }
+      }
     }
   ]
 }
