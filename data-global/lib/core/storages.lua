@@ -3132,6 +3132,23 @@ Storage = {
 			newhavenViolaBookQuestDone = 48038,
 			newhavenStarterItems = 48039,
 		},
+		U15_20 = { -- update 15.20 - Reserved Storages 48041 - 48048
+			TheOrderOfTheStag = {
+				Questline = 48041,
+				HarpyBeaks = 48042,
+				PutridPile = 48043,
+				PoisonousPile = 48044,
+				VilePile = 48045,
+				CourtWarlockKilled = 48046,
+				Reward = 48047,
+				Certificate = 48048,
+				-- next free numbers after the U15_24 range (48049 - 48090)
+				Corpses = 48091,
+				Harlan = 48092,
+				Demeron = 48093,
+				KingsCouncil = 48094,
+			},
+		},
 		U15_24 = { -- update 15.24 - Reserved Storages 48049 - 48090 (Targuna Quest)
 			Targuna = {
 				Questline = 48049,
