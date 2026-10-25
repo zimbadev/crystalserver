@@ -64,6 +64,29 @@ suite<"networkmessage"> networkMessageTest = [] {
 		expect(abs(retrievedValue - testValue) < 1e-6) << "Expected: " << testValue << ", Got: " << retrievedValue;
 	};
 
+	test("NetworkMessage::addDouble supports every precision byte") = [&]() {
+		for (uint16_t precision = 0; precision <= std::numeric_limits<uint8_t>::max(); ++precision) {
+			NetworkMessage msg;
+			const double value = 1024.0 / std::pow(10.0, precision);
+			msg.addDouble(value, static_cast<uint8_t>(precision));
+			msg.setBufferPosition(NetworkMessage::INITIAL_BUFFER_POSITION);
+			expect(eq(msg.getByte(), static_cast<uint8_t>(precision))) << "Precision: " << precision;
+			expect(eq(msg.get<uint32_t>(), static_cast<uint32_t>(std::numeric_limits<int32_t>::max()) + 1024U)) << "Precision: " << precision;
+		}
+	};
+
+	test("NetworkMessage::getDouble supports every precision byte") = [&]() {
+		for (uint16_t precision = 0; precision <= std::numeric_limits<uint8_t>::max(); ++precision) {
+			NetworkMessage msg;
+			msg.addByte(static_cast<uint8_t>(precision));
+			msg.add<uint32_t>(static_cast<uint32_t>(std::numeric_limits<int32_t>::max()) + 1024U);
+			msg.setBufferPosition(NetworkMessage::INITIAL_BUFFER_POSITION);
+			const double expected = 1024.0 / std::pow(10.0, precision);
+			const double actual = msg.getDouble();
+			expect(std::isfinite(actual) && std::abs((actual - expected) / expected) < 1e-12) << "Precision: " << precision;
+		}
+	};
+
 	test("NetworkMessage::addPosition and getPosition") = [&]() {
 		NetworkMessage msg;
 		Position pos { 100, 200, 7 };

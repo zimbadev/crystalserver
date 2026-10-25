@@ -233,7 +233,8 @@ void NetworkMessage::addString(const std::string &value, const std::source_locat
 
 void NetworkMessage::addDouble(double value, uint8_t precision /*= 4*/) {
 	addByte(precision);
-	add<uint32_t>((value * POW10[precision]) + std::numeric_limits<int32_t>::max());
+	const double scale = precision < std::size(POW10) ? POW10[precision] : std::pow(10.0, precision);
+	add<uint32_t>((value * scale) + std::numeric_limits<int32_t>::max());
 }
 
 double NetworkMessage::getDouble() {
@@ -243,8 +244,9 @@ double NetworkMessage::getDouble() {
 	auto scaledValue = get<uint32_t>();
 	// Convert the scaled value back to double using the precision factor
 	double adjustedValue = static_cast<double>(scaledValue) - static_cast<double>(std::numeric_limits<int32_t>::max());
-	// Convert back to the original double value using the pre-computed power of 10
-	return adjustedValue / POW10[precision];
+	// Use the table for common precisions and preserve support for the full uint8_t range.
+	const double scale = precision < std::size(POW10) ? POW10[precision] : std::pow(10.0, precision);
+	return adjustedValue / scale;
 }
 
 void NetworkMessage::addByte(uint8_t value, std::source_location location /*= std::source_location::current()*/) {
