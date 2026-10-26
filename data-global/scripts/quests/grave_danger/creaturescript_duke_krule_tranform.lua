@@ -1,129 +1,132 @@
-local dukeKruleTransformEvent = CreatureEvent("DukeKruleTransform")
-local transformationCooldown = 11
-local lastTransformationTime = 0
-local damageAmount = 4000
-local damageCooldown = 4
-local lastDamageTime = {}
-local fromPosition = Position(33447, 31464, 13)
-local toPosition = Position(33464, 31481, 13)
-local transformationDuration = 10000
+-- Grave Danger: Duke Krule (TibiaWiki = W)
+--   W BR: turns the players into Fire or Water Elementals; each player automatically casts
+--      a Great Fireball (Fire) or an Avalanche (Water). These attacks deal high, steady damage to the players of the
+--      OTHER element inside the blast; players of the same element are not hurt.
+--   W EN: "they'll take around 2000 damage".
+--   NOT CONFIRMED (server choice): the transformation lasts 6 s, then 10 s of cooldown (everyone normal), and repeats.
+--   Area = the rune area (Great Fireball / Avalanche: 7x7 circle without the corners). 1,100-2,000 damage per cast (server
+--   choice), of its element (fire/ice). NOT CONFIRMED: one cast per player every 2 s during the 6 s.
+local FROM, TO = Position(33447, 31464, 13), Position(33464, 31481, 13)
+local CENTER, RANGE_X, RANGE_Y = Position(33456, 31473, 13), 9, 9
+local ACTIVE_S = 6
+local COOLDOWN_S = 10
+local PULSE_MS = 2000
+local RADIUS = 3
+local DAMAGE_MIN, DAMAGE_MAX = 1100, 2000 -- NOT CONFIRMED (W EN: "around 2000")
+local FORMS = {
+	fire = { look = 49, effect = CONST_ME_FIREAREA, combat = COMBAT_FIREDAMAGE, text = "You have been transformed into a Fire Elemental!" },
+	water = { look = 286, effect = CONST_ME_ICEAREA, combat = COMBAT_ICEDAMAGE, text = "You have been transformed into a Water Elemental!" },
+}
 
-local function isInArea(position, fromPos, toPos)
-	return position.x >= fromPos.x and position.x <= toPos.x and position.y >= fromPos.y and position.y <= toPos.y and position.z == fromPos.z
+local fight = { bossId = 0, forms = {}, outfits = {}, token = 0 }
+
+local function inRoom(position)
+	return position.z == FROM.z and position.x >= FROM.x and position.x <= TO.x and position.y >= FROM.y and position.y <= TO.y
 end
 
-local function applyAreaEffect(player, transformationType)
-	if not player or not player:isPlayer() then
+local function roomPlayers()
+	local list = {}
+	for _, player in ipairs(Game.getSpectators(CENTER, false, true, RANGE_X, RANGE_X, RANGE_Y, RANGE_Y)) do
+		if inRoom(player:getPosition()) then
+			list[#list + 1] = player
+		end
+	end
+	return list
+end
+
+-- rune circle (radius 3 = rows 3-5-7-7-7-5-3)
+local function inBlast(center, position)
+	local dx, dy = position.x - center.x, position.y - center.y
+	return position.z == center.z and dx * dx + dy * dy <= RADIUS * RADIUS + 1
+end
+
+local function restoreAll()
+	for playerId, outfit in pairs(fight.outfits) do
+		local player = Player(playerId)
+		if player then
+			player:setOutfit(outfit)
+			player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+		end
+	end
+	fight.forms, fight.outfits = {}, {}
+end
+
+local function transformAll()
+	for _, player in ipairs(roomPlayers()) do
+		local id = player:getId()
+		fight.outfits[id] = player:getOutfit()
+		local form = math.random(2) == 1 and "fire" or "water"
+		fight.forms[id] = form
+		local outfit = player:getOutfit()
+		outfit.lookType = FORMS[form].look
+		player:setOutfit(outfit)
+		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, FORMS[form].text)
+	end
+end
+
+-- each transformed player casts its spell; it only hurts players of the OTHER element inside the blast
+local function pulse()
+	local players = {}
+	for _, player in ipairs(roomPlayers()) do
+		local form = fight.forms[player:getId()]
+		if form then
+			players[#players + 1] = { p = player, form = form, pos = player:getPosition() }
+		end
+	end
+	for _, caster in ipairs(players) do
+		local data = FORMS[caster.form]
+		for dx = -RADIUS, RADIUS do
+			for dy = -RADIUS, RADIUS do
+				local pos = Position(caster.pos.x + dx, caster.pos.y + dy, caster.pos.z)
+				if inBlast(caster.pos, pos) then
+					pos:sendMagicEffect(data.effect)
+				end
+			end
+		end
+		for _, target in ipairs(players) do
+			if target.form ~= caster.form and inBlast(caster.pos, target.pos) then
+				doTargetCombatHealth(0, target.p, data.combat, -DAMAGE_MIN, -DAMAGE_MAX, CONST_ME_NONE)
+			end
+		end
+	end
+end
+
+local function cycle(bossId, token)
+	if fight.token ~= token or not Monster(bossId) then
+		if fight.token == token then
+			restoreAll()
+			fight.bossId = 0
+		end
 		return
 	end
-
-	local playerPos = player:getPosition()
-	if transformationType == "fire" then
-		for x = -2, 2 do
-			for y = -2, 2 do
-				local pos = Position(playerPos.x + x, playerPos.y + y, playerPos.z)
-				pos:sendMagicEffect(CONST_ME_HITBYFIRE)
+	-- active phase: transform, cast every 2 s, and after 6 s everyone goes back to normal
+	transformAll()
+	local pulses = math.floor(ACTIVE_S * 1000 / PULSE_MS)
+	for i = 0, pulses - 1 do
+		addEvent(function()
+			if fight.token == token and Monster(bossId) then
+				pulse()
 			end
-		end
-	elseif transformationType == "water" then
-		for x = -2, 2 do
-			for y = -2, 2 do
-				local pos = Position(playerPos.x + x, playerPos.y + y, playerPos.z)
-				pos:sendMagicEffect(CONST_ME_ICETORNADO)
-			end
-		end
+		end, i * PULSE_MS)
 	end
+	addEvent(function()
+		if fight.token == token then
+			restoreAll()
+		end
+	end, ACTIVE_S * 1000)
+	-- 10 s cooldown, then repeat
+	addEvent(cycle, (ACTIVE_S + COOLDOWN_S) * 1000, bossId, token)
 end
 
-function transformPlayers(position)
-	local players = Game.getSpectators(position, false, false, 30, 30, 30, 30)
-	local transformedPlayers = {}
-	for _, player in ipairs(players) do
-		if player:isPlayer() and isInArea(player:getPosition(), fromPosition, toPosition) then
-			local originalOutfit = player:getOutfit()
-			local randomTransformation = math.random(2)
-			if randomTransformation == 1 then
-				player:setOutfit({ lookType = 49 })
-				player:sendCancelMessage("You have been transformed into a Fire Elemental!")
-				transformedPlayers[player:getId()] = { type = "fire", originalOutfit = originalOutfit }
-			else
-				player:setOutfit({ lookType = 286 })
-				player:sendCancelMessage("You have been transformed into a Water Elemental!")
-				transformedPlayers[player:getId()] = { type = "water", originalOutfit = originalOutfit }
-			end
-
-			local function periodicEffect(playerId, transformationType)
-				local player = Player(playerId)
-				if player and player:getOutfit().lookType == (transformationType == "fire" and 49 or 286) then
-					applyAreaEffect(player, transformationType)
-					addEvent(periodicEffect, 2000, playerId, transformationType)
-				end
-			end
-			addEvent(periodicEffect, 2000, player:getId(), transformedPlayers[player:getId()].type)
-
-			addEvent(function()
-				for _, p in ipairs(players) do
-					if p:isPlayer() and transformedPlayers[p:getId()] then
-						p:setOutfit(transformedPlayers[p:getId()].originalOutfit)
-						p:sendCancelMessage("You have returned to your normal form.")
-						p:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
-						transformedPlayers[p:getId()] = nil
-					end
-				end
-			end, transformationDuration)
-
-			addEvent(checkProximityAndApplyDamage, 1000, transformedPlayers)
-		end
-	end
-end
-
-function checkProximityAndApplyDamage(transformedPlayers)
-	local currentTime = os.time()
-	local playerIds = {}
-	for playerId, _ in pairs(transformedPlayers) do
-		table.insert(playerIds, playerId)
-	end
-	for i = 1, #playerIds - 1 do
-		local player1 = Player(playerIds[i])
-		if player1 then
-			local outfit1 = transformedPlayers[player1:getId()].type
-			for j = i + 1, #playerIds do
-				local player2 = Player(playerIds[j])
-				if player2 and player1:getPosition():getDistance(player2:getPosition()) <= 3 then
-					local outfit2 = transformedPlayers[player2:getId()].type
-					if outfit1 ~= outfit2 then
-						local lastDamage1 = lastDamageTime[player1:getId()] or 0
-						local lastDamage2 = lastDamageTime[player2:getId()] or 0
-						if currentTime - lastDamage1 >= damageCooldown or currentTime - lastDamage2 >= damageCooldown then
-							if currentTime - lastDamage1 >= damageCooldown then
-								player1:addHealth(-damageAmount)
-								player1:sendCancelMessage("You took damage for being too close to an opposite elemental!")
-								player1:getPosition():sendMagicEffect(CONST_ME_BIGCLOUDS)
-								lastDamageTime[player1:getId()] = currentTime
-							end
-							if currentTime - lastDamage2 >= damageCooldown then
-								player2:addHealth(-damageAmount)
-								player2:sendCancelMessage("You took damage for being too close to an opposite elemental!")
-								player2:getPosition():sendMagicEffect(CONST_ME_BIGCLOUDS)
-								lastDamageTime[player2:getId()] = currentTime
-							end
-						end
-					end
-				end
-			end
-		end
-	end
-
-	addEvent(checkProximityAndApplyDamage, 1000, transformedPlayers)
-end
+local dukeKruleTransformEvent = CreatureEvent("DukeKruleTransform")
 
 function dukeKruleTransformEvent.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
-	if creature and creature:isMonster() and creature:getName():lower() == "duke krule" then
-		local currentTime = os.time()
-		if currentTime - lastTransformationTime >= transformationCooldown then
-			transformPlayers(creature:getPosition())
-			lastTransformationTime = currentTime
-		end
+	-- the cycle starts a few seconds after the first damage on the boss
+	if fight.bossId ~= creature:getId() then
+		restoreAll()
+		fight.bossId = creature:getId()
+		fight.token = fight.token + 1
+		addEvent(cycle, 3000, creature:getId(), fight.token)
 	end
 	return primaryDamage, primaryType, secondaryDamage, secondaryType
 end

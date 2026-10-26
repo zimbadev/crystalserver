@@ -177,6 +177,14 @@ end
 local fishing = Action()
 
 function fishing.onUse(player, item, fromPosition, target, toPosition, isHotkey)
+	if target and target.isCreature and target:isCreature() and ArbazilothFight and ArbazilothFight.onRod(player, item, target) then
+		return true
+	end
+
+	if not target then
+		return false
+	end
+
 	if not table.contains(waterIds, target.itemid) then
 		return false
 	end

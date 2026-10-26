@@ -129,9 +129,15 @@ std::shared_ptr<Container> Container::getTopParentContainer() {
 		return prevThing->getContainer();
 	}
 
+	size_t depth = 0;
+	const size_t maxDepth = static_cast<size_t>(g_configManager().getNumber(MAX_CONTAINER_DEPTH));
 	while (thing->getParent() != nullptr && thing->getParent()->getContainer()) {
 		prevThing = thing;
 		thing = thing->getParent();
+		if (++depth >= maxDepth) {
+			g_logger().error("Container::getTopParentContainer: max container depth reached, possible cycle");
+			break;
+		}
 	}
 
 	if (prevThing) {
@@ -233,8 +239,14 @@ bool Container::countsToLootAnalyzerBalance() const {
 void Container::updateItemWeight(int32_t diff) {
 	totalWeight += diff;
 	std::shared_ptr<Container> parentContainer = getContainer();
+	size_t depth = 0;
+	const size_t maxDepth = static_cast<size_t>(g_configManager().getNumber(MAX_CONTAINER_DEPTH));
 	while ((parentContainer = parentContainer->getParentContainer()) != nullptr) {
 		parentContainer->totalWeight += diff;
+		if (++depth >= maxDepth) {
+			g_logger().error("Container::updateItemWeight: max container depth reached, possible cycle");
+			break;
+		}
 	}
 }
 
@@ -804,7 +816,7 @@ void Container::removeThing(const std::shared_ptr<Thing> &thing, uint32_t count)
 		return /*RETURNVALUE_NOTPOSSIBLE*/;
 	}
 
-	if (item->isStackable() && count != item->getItemCount()) {
+	if (item->isStackable() && count < item->getItemCount()) {
 		const auto newCount = static_cast<uint8_t>(std::max<int32_t>(0, item->getItemCount() - count));
 		const int32_t oldWeight = item->getWeight();
 		item->setItemCount(newCount);

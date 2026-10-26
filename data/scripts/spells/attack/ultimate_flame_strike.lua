@@ -1,31 +1,18 @@
--- Vocation Adjustment: a Master Sorcerer's elemental stance reshapes Ultimate Flame Strike (element +
--- impact effect + missile):
---   Master of Thunder -> energy, effects 331+333, missile 5
---   Master of Decay   -> death,  effects 332+336, missile 11
---   Master of Flames / no stance -> base fire (CONST_ME_FIREATTACK, CONST_ANI_FIRE)
-
--- Phase III LIVE rebalance: base 150 -> 210.
-local DAMAGE_SCALE = 210 / 150
-
-local function strikeFormula(level, maglevel)
-	local min = (calculateBaseDamageHealing(level)) + (maglevel * 4.5) + 35
-	local max = (calculateBaseDamageHealing(level)) + (maglevel * 7.3) + 55
-	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
+local function strikeFormula(level, maglevel, basePower)
+	local min, max = calculateMagicSpellDamage(level, maglevel, basePower)
+	return -min, -max
 end
 
--- Each combat needs its OWN callback name (Canary won't let two combats share a callback name); all
--- three delegate to the same formula.
 function onGetFormulaValues(player, level, maglevel, basePower)
-	return strikeFormula(level, maglevel)
+	return strikeFormula(level, maglevel, basePower)
 end
-function onGetFormulaValuesThunder(player, level, maglevel)
-	return strikeFormula(level, maglevel)
+function onGetFormulaValuesThunder(player, level, maglevel, basePower)
+	return strikeFormula(level, maglevel, basePower)
 end
-function onGetFormulaValuesDecay(player, level, maglevel)
-	return strikeFormula(level, maglevel)
+function onGetFormulaValuesDecay(player, level, maglevel, basePower)
+	return strikeFormula(level, maglevel, basePower)
 end
 
--- Second-effect target callbacks (variants list two impact effects each).
 function onTargetSecondEffectThunder(creature, target)
 	target:getPosition():sendMagicEffect(333)
 	return true

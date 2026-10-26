@@ -20,6 +20,7 @@
 #include "game/movement/teleport.hpp"
 #include "game/game.hpp"
 #include "io/filestream.hpp"
+#include "map/mapcache.hpp"
 
 /*
     OTBM_ROOTV1
@@ -150,6 +151,10 @@ void IOMap::loadMap(Map* map, const Position &pos) {
 		throw IOMapException("This map need to be upgraded by using the latest map editor version to be able to load correctly.");
 	}
 
+	// Reset before parsing so the bounds always describe this load only.
+	map->lastLoadedArea = {};
+	MapStoredAttributes::reset();
+
 	if (stream.startNode(OTBM_MAP_DATA)) {
 		parseMapDataAttributes(stream, map);
 		parseTileArea(stream, *map, pos);
@@ -160,6 +165,9 @@ void IOMap::loadMap(Map* map, const Position &pos) {
 	parseWaypoints(stream, *map);
 
 	map->flush();
+
+	// The counters stay for Map::loadMap to report, which is where it is known whether
+	// this was the main map.
 
 	g_logger().debug("Map Loaded {} ({}x{}) in {} milliseconds", map->path.filename().string(), map->width, map->height, bm_mapLoad.duration());
 }
@@ -220,6 +228,23 @@ void IOMap::parseTileArea(FileStream &stream, Map &map, const Position &pos) {
 			const uint16_t x = base_x + tileCoordsX + pos.x;
 			const uint16_t y = base_y + tileCoordsY + pos.y;
 			const auto z = static_cast<uint8_t>(base_z + pos.z);
+
+			// Bounds are kept in int32_t so callers can pad them by the client
+			// viewport without wrapping around near the map edges.
+			auto &area = map.lastLoadedArea;
+			if (!area.valid) {
+				area.valid = true;
+				area.minX = area.maxX = x;
+				area.minY = area.maxY = y;
+				area.minZ = area.maxZ = z;
+			} else {
+				area.minX = std::min<int32_t>(area.minX, x);
+				area.maxX = std::max<int32_t>(area.maxX, x);
+				area.minY = std::min<int32_t>(area.minY, y);
+				area.maxY = std::max<int32_t>(area.maxY, y);
+				area.minZ = std::min<int32_t>(area.minZ, z);
+				area.maxZ = std::max<int32_t>(area.maxZ, z);
+			}
 
 			if (tileType == OTBM_HOUSETILE) {
 				tile->houseId = stream.getU32();

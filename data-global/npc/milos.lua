@@ -56,6 +56,30 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
+local function creatureSayCallback(npc, creature, type, message)
+	local player = Player(creature)
+	local playerId = player:getId()
+
+	if not npcHandler:checkInteraction(npc, creature) then
+		return false
+	end
+
+	if MsgContains(message, "research notes") and player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.Mission01) == 1 then
+		if player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.ResearchMilos) == 1 then
+			npcHandler:say("We've already talked about this.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+		else
+			npcHandler:say("Oh, of course I'll send him my notes immediately. Perhaps he'll come back and visit us here sometime. Do pass on my regards to him, won't you?", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.ResearchMilos, 1)
+			npcHandler:setTopic(playerId, 0)
+		end
+		return true
+	end
+
+	return false
+end
+
+npcHandler:setCallback(CALLBACK_MESSAGE_DEFAULT, creatureSayCallback)
 npcHandler:setMessage(MESSAGE_GREET, "Oh hello. I hardly noticed you. I'm afraid I am a bit distracted at the moment.")
 npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 

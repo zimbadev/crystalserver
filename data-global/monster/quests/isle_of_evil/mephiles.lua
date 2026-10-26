@@ -21,7 +21,7 @@ monster.bosstiary = {
 monster.health = 415
 monster.maxHealth = 415
 monster.race = "blood"
-monster.corpse = 6363
+monster.corpse = 9406
 monster.speed = 150
 monster.manaCost = 0
 
@@ -72,14 +72,7 @@ monster.voices = {
 	{ text = "Come on. being a bit evil won't hurt you.", yell = false },
 }
 
-monster.loot = {
-	{ id = 3031, chance = 2000, maxCount = 95 }, -- gold coin
-	{ id = 3035, chance = 30000, maxCount = 9 }, -- platinum coin
-	{ id = 9376, chance = 1000 }, -- stale bread of ancientness
-	{ id = 9387, chance = 1000 }, -- poet's fencing quill
-	{ id = 9400, chance = 1000 }, -- rain coat
-	{ id = 3537, chance = 1000 }, -- white knight
-}
+monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 1200, chance = 100, minDamage = 0, maxDamage = -35 },

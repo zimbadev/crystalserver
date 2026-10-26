@@ -332,7 +332,7 @@ ConditionType_t Combat::DamageToConditionType(CombatType_t type) {
 		case COMBAT_EARTHDAMAGE:
 			return CONDITION_POISON;
 
-		case CONDITION_AGONY:
+		case COMBAT_AGONYDAMAGE:
 			return CONDITION_AGONY;
 
 		case COMBAT_ICEDAMAGE:
@@ -679,7 +679,7 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 			return RETURNVALUE_YOUMAYNOTATTACKTHISCREATURE;
 		}
 
-		if (g_game().getWorldType() == WORLDTYPE_OPTIONAL) {
+		if (g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL) {
 			if (attackerPlayer || masterAttackerPlayer) {
 				if (targetPlayer) {
 					if (!isInPvpZone(attacker, target)) {
@@ -933,11 +933,11 @@ void Combat::CombatHealthFunc(const std::shared_ptr<Creature> &caster, const std
 
 					g_logger().debug("[{}] skillPercentageAsExtraDamageForAutoAttack before {} / {} bonus {} skill id {}", __FUNCTION__, damage.primary.value, damage.secondary.value, bonus, static_cast<uint8_t>(skillType));
 
-					if (damage.primary.value > 0) {
+					if (damage.primary.value < 0) {
 						damage.primary.value -= bonus;
 					}
 
-					if (damage.secondary.value > 0) {
+					if (damage.secondary.value < 0) {
 						damage.secondary.value -= bonus;
 					}
 
@@ -1248,7 +1248,7 @@ void Combat::CombatDispelFunc(const std::shared_ptr<Creature> &, const std::shar
 	if (params.dispelType == CONDITION_INVISIBLE) {
 		if (const auto &player = target->getPlayer()) {
 			const auto &item = player->getEquippedItem(CONST_SLOT_RING);
-			if (item && item->getID() == ITEM_STEALTH_RING_ACTIVATED && (g_game().getWorldType() == WORLDTYPE_HARDCORE || player->getTile()->hasFlag(TILESTATE_PVPZONE)) && normal_random(1, 100) <= 10) {
+			if (item && item->getID() == ITEM_STEALTH_RING_ACTIVATED && (g_game().worlds().getCurrentWorld()->type == WORLDTYPE_HARDCORE || player->getTile()->hasFlag(TILESTATE_PVPZONE)) && normal_random(1, 100) <= 10) {
 				g_game().internalRemoveItem(item);
 			}
 		}
@@ -1309,7 +1309,7 @@ void Combat::combatTileEffects(const CreatureVector &spectators, const std::shar
 			}
 
 			if (casterPlayer) {
-				if (g_game().getWorldType() == WORLDTYPE_OPTIONAL || tile->hasFlag(TILESTATE_NOPVPZONE)) {
+				if (g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL || tile->hasFlag(TILESTATE_NOPVPZONE)) {
 					if (itemId == ITEM_FIREFIELD_PVP_FULL) {
 						itemId = ITEM_FIREFIELD_NOPVP;
 					} else if (itemId == ITEM_POISONFIELD_PVP) {
@@ -1581,9 +1581,14 @@ bool Combat::doCombatChain(const std::shared_ptr<Creature> &caster, const std::s
 			if (!nextTarget) {
 				continue;
 			}
+
 			g_dispatcher().scheduleEvent(
-				delay, [combat, caster, nextTarget, affected]() {
+				delay, [combat, caster, origin = from, nextTarget, affected]() {
 					if (combat && caster && nextTarget) {
+						if (combat->params.chainEffect != CONST_ME_NONE) {
+							Combat::doChainEffect(origin, nextTarget->getPosition(), combat->params.chainEffect);
+						}
+
 						CombatDamage damage = combat->getCombatDamage(caster, nextTarget);
 						damage.affected = affected;
 						Combat::CombatHealthFunc(caster, nextTarget, combat->params, &damage);
@@ -1664,7 +1669,7 @@ void Combat::CombatFunc(const std::shared_ptr<Creature> &caster, const Position 
 	// Calculate the max viewable range and affected creatures
 	for (const auto &tile : tileList) {
 		// If the caster is a player and the world is no pvp, we need to check if there are more than one player in the tile and skip the combat
-		if (casterPlayer && g_game().getWorldType() == WORLDTYPE_OPTIONAL && tile->getPosition() == origin) {
+		if (casterPlayer && g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL && tile->getPosition() == origin) {
 			if (!casterPlayer->isFirstOnStack()) {
 				casterPlayer->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
 				casterPlayer->sendMagicEffect(origin, CONST_ME_POFF);
@@ -2745,7 +2750,7 @@ void AreaCombat::setupExtArea(const std::list<uint32_t> &list, uint32_t rows) {
 
 void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 	// remove magic walls/wild growth
-	if ((!isBlocking() && g_game().getWorldType() == WORLDTYPE_OPTIONAL && id == ITEM_MAGICWALL_SAFE) || id == ITEM_WILDGROWTH_SAFE) {
+	if ((!isBlocking() && g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL && id == ITEM_MAGICWALL_SAFE) || id == ITEM_WILDGROWTH_SAFE) {
 		if (!creature->isInGhostMode()) {
 			g_game().internalRemoveItem(static_self_cast<Item>(), 1);
 		}
@@ -2768,7 +2773,7 @@ void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 
 			bool harmfulField = true;
 			const auto &itemTile = getTile();
-			if (g_game().getWorldType() == WORLDTYPE_OPTIONAL || (itemTile && itemTile->hasFlag(TILESTATE_NOPVPZONE))) {
+			if (g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL || (itemTile && itemTile->hasFlag(TILESTATE_NOPVPZONE))) {
 				const auto &ownerPlayer = g_game().getPlayerByGUID(ownerId);
 				if (ownerPlayer) {
 					harmfulField = false;
@@ -2802,7 +2807,7 @@ void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 	}
 }
 
-void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std::vector<std::shared_ptr<Creature>> targets, CombatDamage &damage, const CombatParams &params) {
+void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std::vector<std::shared_ptr<Creature>> &targets, CombatDamage &damage, const CombatParams &params) {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	if (damage.extension || !caster || damage.primary.type == COMBAT_HEALING) {
 		return;
@@ -2863,7 +2868,7 @@ void Combat::applyExtensions(const std::shared_ptr<Creature> &caster, const std:
 
 			const auto &targetMonster = targetCreature->getMonster();
 			if (targetMonster) {
-				const auto &mType = g_monsters().getMonsterType(targetMonster->getName());
+				const auto &mType = targetMonster->getMonsterType();
 				if (!mType) {
 					continue;
 				}
@@ -3009,50 +3014,24 @@ int32_t MagicField::getDamage() const {
 }
 
 MatrixArea::MatrixArea(uint32_t initRows, uint32_t initCols) :
-	centerX(0), centerY(0), rows(initRows), cols(initCols) {
-	data_ = new bool*[rows];
-
-	for (uint32_t row = 0; row < rows; ++row) {
-		data_[row] = new bool[cols];
-
-		for (uint32_t col = 0; col < cols; ++col) {
-			data_[row][col] = false;
-		}
-	}
+	centerX(0), centerY(0), rows(initRows), cols(initCols),
+	data_(initRows, std::vector<char>(initCols, 0)) {
 }
 
-MatrixArea::MatrixArea(const MatrixArea &rhs) {
-	centerX = rhs.centerX;
-	centerY = rhs.centerY;
-	rows = rhs.rows;
-	cols = rhs.cols;
-
-	data_ = new bool*[rows];
-
-	for (uint32_t row = 0; row < rows; ++row) {
-		data_[row] = new bool[cols];
-
-		for (uint32_t col = 0; col < cols; ++col) {
-			data_[row][col] = rhs.data_[row][col];
-		}
-	}
+MatrixArea::MatrixArea(const MatrixArea &rhs) :
+	centerX(rhs.centerX), centerY(rhs.centerY), rows(rhs.rows), cols(rhs.cols),
+	data_(rhs.data_) {
 }
 
-MatrixArea::~MatrixArea() {
-	for (uint32_t row = 0; row < rows; ++row) {
-		delete[] data_[row];
-	}
-
-	delete[] data_;
-}
+MatrixArea::~MatrixArea() = default;
 
 std::unique_ptr<MatrixArea> MatrixArea::clone() const {
 	return std::make_unique<MatrixArea>(*this);
 }
 
-void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) const {
+void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) {
 	if (row < rows && col < cols) {
-		data_[row][col] = value;
+		data_[row][col] = value ? 1 : 0;
 	} else {
 		g_logger().error("[{}] Access exceeds the upper limit of memory block");
 		throw std::out_of_range("Access exceeds the upper limit of memory block");
@@ -3060,7 +3039,7 @@ void MatrixArea::setValue(uint32_t row, uint32_t col, bool value) const {
 }
 
 bool MatrixArea::getValue(uint32_t row, uint32_t col) const {
-	return data_[row][col];
+	return data_[row][col] != 0;
 }
 
 void MatrixArea::setCenter(uint32_t y, uint32_t x) {
@@ -3081,11 +3060,11 @@ uint32_t MatrixArea::getCols() const {
 	return cols;
 }
 const bool* MatrixArea::operator[](uint32_t i) const {
-	return data_[i];
+	return reinterpret_cast<const bool*>(data_[i].data());
 }
 
 bool* MatrixArea::operator[](uint32_t i) {
-	return data_[i];
+	return reinterpret_cast<bool*>(data_[i].data());
 }
 
 CombatDamage Combat::applyWeaponProficiencyDamage(const std::shared_ptr<Player> &attackerPlayer, std::shared_ptr<Item> item, std::shared_ptr<Monster> &targetMonster, CombatDamage damage) {

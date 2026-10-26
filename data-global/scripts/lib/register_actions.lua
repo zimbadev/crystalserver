@@ -525,6 +525,11 @@ function onUseShovel(player, item, fromPosition, target, toPosition, isHotkey)
 end
 
 function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
+	-- The Order of the Stag: Bounac cathedral floor (scripts/quests/the_order_of_the_stag/bounac_cathedral.lua)
+	if OrderOfTheStag and OrderOfTheStag.onPick and OrderOfTheStag.onPick(player, target, toPosition) then
+		return true
+	end
+
 	local stonePos = Position(32648, 32134, 10)
 	if toPosition == stonePos then
 		local tile = Tile(stonePos)
@@ -537,6 +542,17 @@ function onUsePick(player, item, fromPosition, target, toPosition, isHotkey)
 			end, 20000)
 			return true
 		end
+	end
+
+	-- Mission 03 Shadows of Yalahar Quest
+	if target and target:isItem() and target:getId() == 8106 and player:getStorageValue(Storage.Quest.U8_5.ShadowsOfYalahar.Mission03) == 1 then
+		target:transform(8107)
+		toPosition:sendMagicEffect(CONST_ME_POFF)
+		if math.random(1, 10) == 1 then
+			player:addItem(9251, 1)
+			toPosition:sendMagicEffect(CONST_ME_MAGIC_GREEN)
+		end
+		return true
 	end
 
 	-- The Secret Library Quest
@@ -1059,6 +1075,11 @@ end
 function onUseKitchenKnife(player, item, fromPosition, target, toPosition, isHotkey)
 	if not table.contains({ 3469, 9594, 9598 }, item.itemid) then
 		return false
+	end
+
+	-- Rottin Wood and the Married Men Quest: Kitchen Knife
+	if target and target:isItem() and rottinWoodSkinRabbit(player, target) then
+		return true
 	end
 
 	-- The Secret Library Quest

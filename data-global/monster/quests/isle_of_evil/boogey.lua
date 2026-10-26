@@ -21,7 +21,7 @@ monster.bosstiary = {
 monster.health = 930
 monster.maxHealth = 930
 monster.race = "undead"
-monster.corpse = 8127
+monster.corpse = 9407
 monster.speed = 200
 monster.manaCost = 0
 
@@ -79,12 +79,7 @@ monster.voices = {
 	{ text = "I'll take you into the darkness ... forever!", yell = false },
 }
 
-monster.loot = {
-	{ id = 9379, chance = 1000 }, -- heavy metal t-shirt
-	{ id = 9385, chance = 1000 }, -- club of the fury
-	{ id = 9384, chance = 1000 }, -- scythe of the reaper
-	{ id = 9378, chance = 1000 }, -- musician's bow
-}
+monster.loot = {}
 
 monster.attacks = {
 	{ name = "melee", interval = 1200, chance = 100, minDamage = 0, maxDamage = -120 },

@@ -344,6 +344,7 @@ void Npc::onThink(uint32_t interval) {
 
 	if (!npcType->canSpawn(position)) {
 		g_game().removeCreature(static_self_cast<Npc>());
+		return;
 	}
 
 	if (!isInSpawnRange(position)) {
@@ -382,7 +383,8 @@ void Npc::onPlayerBuyItem(const std::shared_ptr<Player> &player, uint16_t itemId
 			slotsNedeed = inBackpacks ? std::ceil(static_cast<double>(amount) / shoppingBagSlots) : static_cast<double>(amount);
 		}
 
-		if ((static_cast<double>(tile->getItemList()->size()) + (slotsNedeed - player->getFreeBackpackSlots())) > 30) {
+		const TileItemVector* itemList = tile->getItemList();
+		if ((static_cast<double>(itemList ? itemList->size() : 0) + (slotsNedeed - player->getFreeBackpackSlots())) > 30) {
 			player->sendCancelMessage(RETURNVALUE_NOTENOUGHROOM);
 			return;
 		}
@@ -983,16 +985,20 @@ void Npc::removeShopPlayer(uint32_t playerGUID) {
 }
 
 void Npc::closeAllShopWindows() {
-	for (auto it = shopPlayers.begin(); it != shopPlayers.end();) {
-		const auto &player = g_game().getPlayerByGUID(it->first);
+	std::vector<uint32_t> guids;
+	guids.reserve(shopPlayers.size());
+	for (const auto &it : shopPlayers) {
+		guids.push_back(it.first);
+	}
+
+	for (const auto &guid : guids) {
+		const auto &player = g_game().getPlayerByGUID(guid);
 		if (player) {
 			player->closeShopWindow();
 		}
 	}
 
-	if (!shopPlayers.empty()) {
-		shopPlayers.clear();
-	}
+	shopPlayers.clear();
 }
 
 void Npc::sendDialogOptions(const std::shared_ptr<Player> &player, uint8_t conversationId) const {

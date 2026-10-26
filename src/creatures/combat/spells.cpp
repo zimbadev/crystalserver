@@ -764,7 +764,7 @@ int32_t Spell::calculateAugmentSpellCooldownReduction(const std::shared_ptr<Play
 	for (const auto &playerProficiencyAugment : player->getEquippedWeaponProficiency().spellAugments) {
 		if (playerProficiencyAugment.spellId == getSpellId()) {
 			if (playerProficiencyAugment.augmentType == PROFICIENCY_AUGMENTTYPE_COOLDOWN) {
-				const int32_t augmentValue = playerProficiencyAugment.value * 1;
+				const int32_t augmentValue = static_cast<int32_t>(playerProficiencyAugment.value * -1000.0f);
 				spellCooldown += augmentValue;
 			}
 		}
@@ -781,13 +781,12 @@ void Spell::applyCooldownConditions(const std::shared_ptr<Player> &player) const
 	if (std::abs(rateCooldown) < std::numeric_limits<float>::epsilon()) {
 		rateCooldown = 0.1; // Safe minimum value
 	}
-
+	int32_t augmentCooldownReduction = calculateAugmentSpellCooldownReduction(player);
 	if (cooldown > 0) {
 		int32_t spellCooldown = cooldown;
 		if (isUpgraded) {
 			spellCooldown -= getWheelOfDestinyBoost(WheelSpellBoost_t::COOLDOWN, spellGrade);
 		}
-		int32_t augmentCooldownReduction = calculateAugmentSpellCooldownReduction(player);
 		g_logger().debug("[{}] spell name: {}, spellCooldown: {}, bonus: {}, augment {}", __FUNCTION__, name, spellCooldown, player->wheel()->getSpellBonus(name, WheelSpellBoost_t::COOLDOWN), augmentCooldownReduction);
 		spellCooldown -= player->wheel()->getSpellBonus(name, WheelSpellBoost_t::COOLDOWN);
 		spellCooldown -= augmentCooldownReduction;
@@ -817,6 +816,7 @@ void Spell::applyCooldownConditions(const std::shared_ptr<Player> &player) const
 			spellSecondaryGroupCooldown -= getWheelOfDestinyBoost(WheelSpellBoost_t::SECONDARY_GROUP_COOLDOWN, spellGrade);
 		}
 		spellSecondaryGroupCooldown -= player->wheel()->getSpellBonus(name, WheelSpellBoost_t::SECONDARY_GROUP_COOLDOWN);
+		spellSecondaryGroupCooldown -= augmentCooldownReduction;
 		// Vocation Adjustment: Focus Mastery additionally reduces the focus-spell group cooldown by 2s.
 		if (secondaryGroup == SPELLGROUP_FOCUS && player->wheel()->getInstant("Focus Mastery")) {
 			spellSecondaryGroupCooldown -= 2000;
@@ -1275,7 +1275,7 @@ bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std:
 		return false;
 	}
 
-	auto worldType = g_game().getWorldType();
+	auto worldType = g_game().worlds().getCurrentWorld()->type;
 	if (pzLocked && (worldType == WORLDTYPE_OPEN || worldType == WORLDTYPE_HARDCORE)) {
 		player->addInFightTicks(true);
 		player->updateLastAggressiveAction();
@@ -1544,7 +1544,7 @@ bool RuneSpell::executeUse(const std::shared_ptr<Player> &player, const std::sha
 		}
 	}
 
-	auto worldType = g_game().getWorldType();
+	auto worldType = g_game().worlds().getCurrentWorld()->type;
 	if (pzLocked && (worldType == WORLDTYPE_OPEN || worldType == WORLDTYPE_HARDCORE)) {
 		player->addInFightTicks(true);
 		player->updateLastAggressiveAction();

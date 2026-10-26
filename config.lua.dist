@@ -24,10 +24,15 @@ toggleMaintainMode = false
 -- @field [parent=#global] #string maintainModeMessage an empty string by default, set a custom message if needed.
 maintainModeMessage = ""
 
+-- World settings (This information will be loaded from the 'worlds' database table as well)
+-- NOTE: World id is 1 as default, new worlds must have different ids always greater than 1
+-- NOTE: valid values for worldType are: "pvp", "no-pvp", "pvp-enforced", "retro-pvp" and "retro-hardcore"
+-- NOTE: valid values for worldLocation are: "Europe", "North America", "South America" and "Oceania"
+worldId = 1
+worldType = "pvp"
+worldLocation = "South America"
+
 -- Combat settings
--- NOTE: valid values for worldType are: "expert-pvp", "retro-pvp", "no-pvp" and "pvp-enforced"
--- NOTE: "expert-pvp" = full 2014 Open PvP (pass-through, situation boxes, dove/white/yellow/red hand modes, first-in-stack)
--- NOTE: "retro-pvp" (aliases "pvp"/"open") = plain Open PvP without the 2014 Expert extras
 -- NOTE: removeBeginningWeaponAmmunition: spears, arrows, bolt have endless ammo (allows training for paladins)
 -- NOTE: refundManaOnBeginningWeapons: wand of vortex and snakebite refund mana used (allows training for mages)
 worldType = "expert-pvp"
@@ -82,7 +87,7 @@ allowOldProtocol = false
 bindOnlyGlobalAddress = false
 loginProtocolPort = 7171
 gameProtocolPort = 7172
-statusProtocolPort = 7171
+statusProtocolPort = 97172
 maxPlayers = 0
 serverName = "Crystal"
 serverMotd = "Welcome to the Crystal Server!"
@@ -93,6 +98,12 @@ maxPlayersOnlinePerAccount = 1
 maxPlayersOutsidePZPerAccount = 1
 toggleMaxConnectionsByIP = false
 maxIPConnections = 3
+
+-- Player Concurrency Lock
+-- NOTE: togglePlayerLock blocks character logins during web transactions (marketplace, admin changes, character bazaar)
+-- NOTE: playerLockTimeout defines the lock expiry in seconds to prevent deadlock if a web request fails
+togglePlayerLock = true
+playerLockTimeout = 60
 
 -- Packet Compression
 -- Minimize network bandwith and reduce ping
@@ -308,7 +319,6 @@ onlyPremiumAccount = false
 -- NOTE: autoBank = true, the dropped coins from monsters will be automatically deposited to your bank account.
 -- NOTE: toggleGoldPouchAllowAnything will allow players to move items or gold to gold pouch
 -- NOTE: toggleGoldPouchQuickLootOnly will ONLY allow quickloot to move items to gold pouch
--- NOTE: toggleServerIsRetroPVP will make this server as retro, setting PARTY_PROTECTION and ADVANCED_SECURE_MODE to 0
 -- NOTE: toggleTravelsFree will make all travels from boat free
 -- NOTE: buyAolCommandFee will add fee when player buy aol by command (!aol), active changing value more than 0 (fee value. ex: 1 = 1gp  aol will be 50001)
 -- NOTE: teleportPlayerToVocationRoom will enable oressa to teleport player to his/her room vocation
@@ -325,7 +335,6 @@ autoLoot = false
 autoBank = false
 toggleGoldPouchAllowAnything = false
 toggleGoldPouchQuickLootOnly = false
-toggleServerIsRetroPVP = false
 toggleTravelsFree = false
 buyAolCommandFee = 0
 teleportPlayerToVocationRoom = true
@@ -484,8 +493,27 @@ marketRefreshPricesInterval = 30
 premiumToCreateMarketOffer = true
 checkExpiredMarketOffersEachMinutes = 60
 maxMarketOffersAtATimePerPlayer = 100
+toggleWebMarketOrders = true
+webMarketOrdersInterval = 2000
+
+-- Character Bazaar
+-- NOTE: charBazaarFee is the cost in transferable coins to create an auction
+-- NOTE: charBazaarTaxPercent is the commission percentage kept from a sale
+-- NOTE: charBazaarVaultAccount is the account an auctioned character is moved to
+-- NOTE: charBazaarMinDays / charBazaarMaxDays define the allowed auction duration range
+charBazaarEnabled = true
+charBazaarFee = 50
+charBazaarTaxPercent = 12
+charBazaarVaultAccount = 1
+charBazaarMinLevel = 8
+charBazaarShowcaseSlots = 4
+charBazaarMinDays = 1
+charBazaarMaxDays = 28
 
 -- MySQL
+-- NOTE: mysqlPoolSize 4 (default) — small to medium servers
+-- 8–16 — high-traffic servers with heavy market usage
+-- 1 — equivalent to the old single-connection behavior
 mysqlHost = "127.0.0.1"
 mysqlUser = "root"
 mysqlPass = "root"
@@ -494,6 +522,7 @@ mysqlPort = 3306
 mysqlSock = ""
 passwordType = "sha1"
 mysqlDatabaseBackup = false
+mysqlPoolSize = 4
 
 -- NOTE: memoryConst: This is the memory cost for the Argon2 hash algorithm. It specifies the amount of memory that the algorithm will use when calculating a hash.
 --The memory cost is measured in units of KiB (1024 bytes). A higher memory cost makes the algorithm more resistant to brute-force and hash-table attacks, but also consumes more memory.
@@ -665,6 +694,7 @@ mountSounds = false
 -- Scripts
 warnUnsafeScripts = true
 convertUnsafeScripts = true
+luaDebugHook = false
 
 -- Startup
 -- NOTE: defaultPriority only works on Windows and sets process
@@ -676,7 +706,6 @@ startupDatabaseOptimization = true
 ownerName = "Tryller"
 ownerEmail = "@gmail.com"
 url = "https://github.com/zimbadev/crystalserver"
-location = "South America"
 
 -- Sends Discord webhook notifications on startup, raids and shutdown.
 -- The URL layout is https://discord.com/api/webhooks/:id/:token

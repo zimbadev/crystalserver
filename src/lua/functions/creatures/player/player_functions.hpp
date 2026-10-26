@@ -124,6 +124,12 @@ class PlayerFunctions {
 	static int luaPlayerSetKills(lua_State* L);
 	static int luaPlayerSendCreatureSquare(lua_State* L);
 	static int luaPlayerHasActivePvpSituation(lua_State* L);
+	static int luaPlayerSendDiscoveryData(lua_State* L);
+	static int luaPlayerSendDiscoveryCurrentArea(lua_State* L);
+	static int luaPlayerSendDiscoveryExploring(lua_State* L);
+	static int luaPlayerSendDiscoveryDonations(lua_State* L);
+	static int luaPlayerSendDiscoveryArea(lua_State* L);
+	static int luaPlayerCheckNewTitles(lua_State* L);
 
 	static int luaPlayerGetFreeCapacity(lua_State* L);
 
@@ -322,6 +328,7 @@ class PlayerFunctions {
 	static int luaPlayerPopupFYI(lua_State* L);
 
 	static int luaPlayerIsPzLocked(lua_State* L);
+	static int luaPlayerAddInFightTicks(lua_State* L);
 	static int luaPlayerIsOffline(lua_State* L);
 
 	static int luaPlayerGetClient(lua_State* L);
@@ -461,6 +468,9 @@ class PlayerFunctions {
 
 	static int luaPlayersendBannerType(lua_State* L);
 	static int luaPlayerSendQuestStatusUpdate(lua_State* L);
+	static int luaPlayerSendLeaderMonsterKilledBanner(lua_State* L);
+	static int luaPlayerAddLeaderMonsterKill(lua_State* L);
+	static int luaPlayerHasKilledLeaderMonster(lua_State* L);
 
 	static int luaPlayerSendIconBakragore(lua_State* L);
 	static int luaPlayerRemoveIconBakragore(lua_State* L);
@@ -487,6 +497,8 @@ class PlayerFunctions {
 	static int luaPlayerApplyImbuementScrollToItem(lua_State* L);
 	static int luaPlayerOnClearAllImbuementsOnEtcher(lua_State* L);
 	static int luaPlayerSendWeaponProficiencyExperience(lua_State* L);
+	static int luaPlayerSendBossDifficultySelection(lua_State* L);
+	static int luaPlayerSendCyclopediaDiscoveryTest(lua_State* L);
 
 	static int luaPlayerGetMapShader(lua_State* L);
 	static int luaPlayerSetMapShader(lua_State* L);

@@ -30,7 +30,6 @@ private:
 	static int luaConditionGetType(lua_State* L);
 	static int luaConditionGetIcons(lua_State* L);
 	static int luaConditionGetEndTime(lua_State* L);
-	static int luaConditionGetFoodTicks(lua_State* L);
 
 	static int luaConditionClone(lua_State* L);
 

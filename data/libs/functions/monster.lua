@@ -205,7 +205,7 @@ do
 	end
 
 	function MonsterType.getBossReward(self, lootFactor, topScore, equipmentOnly, lootTable, player)
-		if configManager.getNumber(configKeys.RATE_LOOT) <= 0 then
+		if configManager.getFloat(configKeys.RATE_LOOT) <= 0 then
 			return lootTable or {}
 		end
 

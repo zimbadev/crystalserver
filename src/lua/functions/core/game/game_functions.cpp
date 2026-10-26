@@ -18,6 +18,7 @@
 #include "lua/functions/core/game/game_functions.hpp"
 
 #include "core.hpp"
+#include "lua/creature/actions.hpp"
 #include "creatures/monsters/monster.hpp"
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/npcs/npc.hpp"
@@ -67,7 +68,6 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "setGameState", GameFunctions::luaGameSetGameState);
 
 	Lua::registerMethod(L, "Game", "getWorldType", GameFunctions::luaGameGetWorldType);
-	Lua::registerMethod(L, "Game", "setWorldType", GameFunctions::luaGameSetWorldType);
 
 	Lua::registerMethod(L, "Game", "getReturnMessage", GameFunctions::luaGameGetReturnMessage);
 
@@ -87,6 +87,7 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "startRaid", GameFunctions::luaGameStartRaid);
 
 	Lua::registerMethod(L, "Game", "getClientVersion", GameFunctions::luaGameGetClientVersion);
+	Lua::registerMethod(L, "Game", "setImprovedRespawnZones", GameFunctions::luaGameSetImprovedRespawnZones);
 
 	Lua::registerMethod(L, "Game", "reload", GameFunctions::luaGameReload);
 
@@ -137,6 +138,7 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "setRankName", GameFunctions::luaGameSetRankName);
 	Lua::registerMethod(L, "Game", "createGuild", GameFunctions::luaGameCreateGuild);
 	Lua::registerMethod(L, "Game", "joinGuild", GameFunctions::luaGameJoinGuild);
+	Lua::registerMethod(L, "Game", "reportShadowedScripts", GameFunctions::luaGameReportShadowedScripts);
 }
 
 // Game
@@ -403,6 +405,14 @@ int GameFunctions::luaGameGetExperienceForLevel(lua_State* L) {
 	return 1;
 }
 
+int GameFunctions::luaGameReportShadowedScripts(lua_State* L) {
+	// Game.reportShadowedScripts()
+	// Reports scripts registered by position that can never run, because an id on the
+	// same tile is checked first. Call it after the startup tables stamped the map.
+	g_actions().reportShadowedPositionScripts();
+	return 0;
+}
+
 int GameFunctions::luaGameGetMonsterCount(lua_State* L) {
 	// Game.getMonsterCount()
 	lua_pushnumber(L, g_game().getMonstersOnline());
@@ -478,20 +488,7 @@ int GameFunctions::luaGameSetGameState(lua_State* L) {
 
 int GameFunctions::luaGameGetWorldType(lua_State* L) {
 	// Game.getWorldType()
-	lua_pushnumber(L, g_game().getWorldType());
-	return 1;
-}
-
-int GameFunctions::luaGameSetWorldType(lua_State* L) {
-	// Game.setWorldType(type)
-	const WorldType_t type = Lua::getNumber<WorldType_t>(L, 1);
-	if (type >= WORLDTYPE_FIRST && type <= WORLDTYPE_LAST) {
-		g_game().setWorldType(type);
-		Lua::pushBoolean(L, true);
-	} else {
-		Lua::pushBoolean(L, false);
-	}
-
+	lua_pushnumber(L, g_game().worlds().getCurrentWorld()->type);
 	return 1;
 }
 
@@ -792,6 +789,30 @@ int GameFunctions::luaGameGetClientVersion(lua_State* L) {
 	Lua::setField(L, "max", CLIENT_VERSION);
 	const std::string version = fmt::format("{}.{}", CLIENT_VERSION_UPPER, CLIENT_VERSION_LOWER);
 	Lua::setField(L, "string", version);
+	return 1;
+}
+
+int GameFunctions::luaGameSetImprovedRespawnZones(lua_State* L) {
+	// Game.setImprovedRespawnZones(rects) ; rects = { {x1, y1, x2, y2}, ... } (whole replace)
+	std::vector<ImprovedRespawnZone> zones;
+	luaL_checktype(L, 1, LUA_TTABLE);
+	lua_pushnil(L);
+	while (lua_next(L, 1) != 0) {
+		luaL_checktype(L, -1, LUA_TTABLE);
+		lua_rawgeti(L, -1, 1);
+		lua_rawgeti(L, -2, 2);
+		lua_rawgeti(L, -3, 3);
+		lua_rawgeti(L, -4, 4);
+		zones.push_back(ImprovedRespawnZone {
+			static_cast<uint16_t>(luaL_checknumber(L, -4)),
+			static_cast<uint16_t>(luaL_checknumber(L, -3)),
+			static_cast<uint16_t>(luaL_checknumber(L, -2)),
+			static_cast<uint16_t>(luaL_checknumber(L, -1)),
+		});
+		lua_pop(L, 5);
+	}
+	g_game().setImprovedRespawnZones(std::move(zones));
+	Lua::pushBoolean(L, true);
 	return 1;
 }
 

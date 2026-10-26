@@ -25,6 +25,8 @@
 #include "items/item.hpp"
 #include "utils/tools.hpp"
 #include "lua/functions/lua_functions_loader.hpp"
+#include "lua/creature/actions.hpp"
+#include "lua/creature/movement.hpp"
 
 void ItemFunctions::init(lua_State* L) {
 	Lua::registerSharedClass(L, "Item", "", ItemFunctions::luaItemCreate);
@@ -45,6 +47,7 @@ void ItemFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Item", "getUniqueId", ItemFunctions::luaItemGetUniqueId);
 	Lua::registerMethod(L, "Item", "getActionId", ItemFunctions::luaItemGetActionId);
 	Lua::registerMethod(L, "Item", "setActionId", ItemFunctions::luaItemSetActionId);
+	Lua::registerMethod(L, "Item", "getScriptBindings", ItemFunctions::luaItemGetScriptBindings);
 	Lua::registerMethod(L, "Item", "setLoadedFromMap", ItemFunctions::luaItemSetLoadedFromMap);
 
 	Lua::registerMethod(L, "Item", "getCount", ItemFunctions::luaItemGetCount);
@@ -317,6 +320,35 @@ int ItemFunctions::luaItemSetActionId(lua_State* L) {
 	} else {
 		lua_pushnil(L);
 	}
+	return 1;
+}
+
+int ItemFunctions::luaItemGetScriptBindings(lua_State* L) {
+	// item:getScriptBindings()
+	const auto &item = Lua::getUserdataShared<Item>(L, 1);
+	if (!item) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	auto bindings = g_actions().getScriptBindings(item);
+	const auto moveBindings = g_moveEvents().getScriptBindings(item);
+	bindings.insert(bindings.end(), moveBindings.begin(), moveBindings.end());
+
+	lua_createtable(L, static_cast<int>(bindings.size()), 0);
+
+	int index = 0;
+	for (const auto &binding : bindings) {
+		lua_createtable(L, 0, 5);
+		Lua::setField(L, "kind", binding.kind);
+		Lua::setField(L, "source", binding.source);
+		Lua::setField(L, "script", binding.script);
+		Lua::setField(L, "event", binding.event);
+		Lua::pushBoolean(L, binding.shadowed);
+		lua_setfield(L, -2, "shadowed");
+		lua_rawseti(L, -2, ++index);
+	}
+
 	return 1;
 }
 

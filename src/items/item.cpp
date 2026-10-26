@@ -126,13 +126,12 @@ bool Item::hasImbuementAttribute(const std::string &attributeSlot) const {
 }
 
 bool Item::getImbuementInfo(uint8_t slot, ImbuementInfo* imbuementInfo) const {
-	std::string attributeSlot = std::to_string(ITEM_IMBUEMENT_SLOT + slot);
-	if (!hasImbuementAttribute(attributeSlot)) {
+	const CustomAttribute* attribute = getCustomAttribute(std::to_string(ITEM_IMBUEMENT_SLOT + slot));
+	if (!attribute) {
 		return false;
 	}
 
-	const CustomAttribute* attribute = getCustomAttribute(std::to_string(ITEM_IMBUEMENT_SLOT + slot));
-	const auto info = attribute ? attribute->getAttribute<uint32_t>() : 0;
+	const auto info = attribute->getAttribute<uint32_t>();
 	imbuementInfo->imbuement = g_imbuements().getImbuement(info & 0xFF);
 	imbuementInfo->duration = info >> 8;
 	return imbuementInfo->duration && imbuementInfo->imbuement;
@@ -3458,6 +3457,11 @@ std::shared_ptr<Item> Item::transform(uint16_t itemId, uint16_t itemCount /*= -1
 		newItem = Item::CreateItem(itemId, 1);
 	} else {
 		newItem = Item::CreateItem(itemId, itemCount);
+	}
+
+	if (!newItem) {
+		g_logger().error("[{}] failed to transform item {} to {}, CreateItem returned nullptr", __FUNCTION__, getID(), itemId);
+		return nullptr;
 	}
 
 	const int32_t itemIndex = cylinder->getThingIndex(static_self_cast<Item>());

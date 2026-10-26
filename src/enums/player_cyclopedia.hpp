@@ -67,6 +67,7 @@ enum class CyclopediaMapData_t : uint8_t {
 	MonsterBestiary = 8,
 	Donations = 9,
 	SetCurrentArea = 10,
+	SetExploringArea = 11,
 };
 
 enum class CyclopediaHouseState : uint8_t {

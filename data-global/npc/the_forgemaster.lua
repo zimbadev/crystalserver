@@ -89,6 +89,8 @@ local forgeItem = {
 	["critical_wand"] = { requiredID = 49528, forgedID = 49882 },
 	["critical_rod"] = { requiredID = 49529, forgedID = 49885 },
 	["critical_fist"] = { requiredID = 50250, forgedID = 50251 },
+	["life_fist"] = { requiredID = 50250, forgedID = 50252 }, -- draining inferniarch claws (was missing)
+	["mana_fist"] = { requiredID = 50250, forgedID = 50253 }, -- siphoning inferniarch claws (was missing)
 	-- Heal steal
 	["life_bow"] = { requiredID = 49520, forgedID = 49859 },
 	["life_crossbow"] = { requiredID = 49522, forgedID = 49862 },
@@ -115,13 +117,13 @@ local forgeItem = {
 
 local requiredItems = {
 	["critical"] = {
-		{ id = 49892, count = 1 }, -- demon finger
-		{ id = 12541, count = 1 }, -- skin of Gravalon
+		{ id = 49892, count = 1 }, -- skin of Gralvalon
+		{ id = 12541, count = 1 }, -- demonic finger
 		{ id = 22728, count = 100 }, -- vexclaw talons
 		{ id = 49894, count = 500 }, -- demonic matter
 		{ id = 5954, count = 50 }, -- demon horn
 		{ id = 6499, count = 350 }, -- demonic essence
-		{ id = 6558, count = 750 }, -- demonic blood
+		{ id = 6558, count = 350 }, -- demonic blood (W: 350; was 750)
 	},
 	["mana"] = {
 		{ id = 49891, count = 1 }, -- skin of Twisterror
@@ -138,6 +140,26 @@ local requiredItems = {
 		{ id = 5906, count = 50 }, -- demon dust
 	},
 }
+
+-- only an UNTIERED base weapon (W: "tiered base weapons can not be used in the Doomforge").
+local function findUntieredWeapon(player, itemId)
+	for slot = CONST_SLOT_FIRST, CONST_SLOT_LAST do
+		local slotItem = player:getSlotItem(slot)
+		if slotItem then
+			if slotItem:getId() == itemId and slotItem:getTier() == 0 then
+				return slotItem
+			end
+			if slotItem:isContainer() then
+				for _, inner in ipairs(Container(slotItem:getUniqueId()):getItems(true)) do
+					if inner:getId() == itemId and inner:getTier() == 0 then
+						return inner
+					end
+				end
+			end
+		end
+	end
+	return nil
+end
 
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
@@ -181,7 +203,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		npcHandler:setTopic(playerId, 2)
 	elseif table.contains({ "fist" }, message:lower()) and npcHandler:getTopic(playerId) == 1 then
 		weapon[playerId] = message:lower()
-		npcHandler:say("Do you want to craft an inferniarch fist weapon that is destined to deal {critical} hits?", npc, creature)
+		npcHandler:say("Do you want to craft an inferniarch fist weapon that is destined to deal {critical} hits, steal the {life} force of your enemies or absorb the {mana} of your foes?", npc, creature)
 		npcHandler:setTopic(playerId, 3)
 	elseif table.contains({ "bow", "crossbow", "wand", "rod" }, message:lower()) and npcHandler:getTopic(playerId) == 1 then
 		weapon[playerId] = message:lower()
@@ -194,7 +216,7 @@ local function creatureSayCallback(npc, creature, type, message)
 	elseif table.contains({ "critical", "life", "mana" }, message:lower()) and npcHandler:getTopic(playerId) == 3 then
 		selectedType[playerId] = message:lower()
 		if message:lower() == "critical" then
-			npcHandler:say("In this case, you will need to spend the base version of your weapon, 100 vexclaw talons, 500 samples of demonic matter, 50 demon horns, 750 flask of demonic blood, 350 demonic essences, 1 demon finger and 1 skin of Gravalon. Do you want to proceed, {yes}?", npc, creature)
+			npcHandler:say("In this case, you will need to spend the base version of your weapon, 100 vexclaw talons, 500 samples of demonic matter, 50 demon horns, 350 flasks of demonic blood, 350 demonic essences, 1 demon finger and 1 skin of Gravalon. Do you want to proceed, {yes}?", npc, creature)
 		elseif message:lower() == "life" then
 			npcHandler:say("In this case, you will need to spend the base version of your weapon, 100 pieces of dead brain, 500 samples of demonic matter, 750 flask of demonic blood, 50 demon dust and 1 skin of Malvaroth. Do you want to proceed, {yes}?", npc, creature)
 		elseif message:lower() == "mana" then
@@ -217,9 +239,20 @@ local function creatureSayCallback(npc, creature, type, message)
 				end
 			end
 
-			if player:getItemCount(forgeItem[selectedType[playerId] .. "_" .. weapon[playerId]].requiredID) < 1 then
-				local itemName = ItemType(forgeItem[selectedType[playerId] .. "_" .. weapon[playerId]].requiredID):getName()
-				npcHandler:say("You don't have an " .. itemName .. ".", npc, creature)
+			local recipe = forgeItem[selectedType[playerId] .. "_" .. weapon[playerId]]
+			if not recipe then
+				npcHandler:say("I can't forge that kind of weapon.", npc, creature)
+				npcHandler:setTopic(playerId, 0)
+				return false
+			end
+			local baseWeapon = findUntieredWeapon(player, recipe.requiredID)
+			if not baseWeapon then
+				local itemName = ItemType(recipe.requiredID):getName()
+				if player:getItemCount(recipe.requiredID) > 0 then
+					npcHandler:say("Your " .. itemName .. " has been treated at the Exaltation Forge. I can only work with unfused equipment.", npc, creature)
+				else
+					npcHandler:say("You don't have an " .. itemName .. ".", npc, creature)
+				end
 				return false
 			end
 
@@ -227,8 +260,8 @@ local function creatureSayCallback(npc, creature, type, message)
 				player:removeItem(item.id, item.count)
 			end
 
-			player:removeItem(forgeItem[selectedType[playerId] .. "_" .. weapon[playerId]].requiredID, 1)
-			player:addItem(forgeItem[selectedType[playerId] .. "_" .. weapon[playerId]].forgedID, 1)
+			baseWeapon:remove(1)
+			player:addItem(recipe.forgedID, 1)
 			npcHandler:say("Here you go.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		elseif MsgContains(message, "no") then

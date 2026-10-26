@@ -1,28 +1,16 @@
--- Vocation Adjustment: a Master Sorcerer's elemental stance reshapes Strong Energy Strike (element +
--- impact EFFECT id + MISSILE):
---   Master of Flames -> fire,  effect 329, missile 4
---   Master of Decay  -> death, effect 330, missile 11
---   Master of Thunder / no stance -> base energy (CONST_ME_ENERGYAREA / CONST_ANI_ENERGY)
-
--- Phase III LIVE rebalance: base 90 -> 125.
-local DAMAGE_SCALE = 125 / 90
-
-local function strikeFormula(level, maglevel)
-	local min = (calculateBaseDamageHealing(level)) + (maglevel * 2.8) + 16
-	local max = (calculateBaseDamageHealing(level)) + (maglevel * 4.4) + 28
-	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
+local function strikeFormula(level, maglevel, basePower)
+	local min, max = calculateMagicSpellDamage(level, maglevel, basePower)
+	return -min, -max
 end
 
--- Each combat needs its OWN callback name (Canary won't let two combats share a callback name); all
--- three delegate to the same formula.
 function onGetFormulaValues(player, level, maglevel, basePower)
-	return strikeFormula(level, maglevel)
+	return strikeFormula(level, maglevel, basePower)
 end
-function onGetFormulaValuesFlames(player, level, maglevel)
-	return strikeFormula(level, maglevel)
+function onGetFormulaValuesFlames(player, level, maglevel, basePower)
+	return strikeFormula(level, maglevel, basePower)
 end
-function onGetFormulaValuesDecay(player, level, maglevel)
-	return strikeFormula(level, maglevel)
+function onGetFormulaValuesDecay(player, level, maglevel, basePower)
+	return strikeFormula(level, maglevel, basePower)
 end
 
 local function createStrikeCombat(combatType, effect, missile, callbackName)

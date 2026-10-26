@@ -84,6 +84,7 @@ monster.loot = {
 	{ id = 3052, chance = 300 }, -- life ring
 	{ id = 3114, chance = 3000 }, -- skull
 	{ name = "knife", chance = 1067 },
+	{ id = 50150, chance = 1400 }, -- ring of orange plasma
 	{ name = "brass helmet", chance = 2200 },
 	{ name = "viking helmet", chance = 860 },
 	{ name = "scale armor", chance = 440 },

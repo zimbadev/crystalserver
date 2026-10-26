@@ -190,7 +190,7 @@ private:
 	void parseHighscores(NetworkMessage &msg);
 	void parseSoulSeals(NetworkMessage &msg);
 	void sendHighscoresNoData();
-	void sendHighscores(const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationBaseId, uint16_t page, uint16_t pages, uint32_t updateTimer);
+	void sendHighscores(const std::string &selectedWorld, const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationBaseId, uint16_t page, uint16_t pages, uint32_t updateTimer);
 
 	void parseGreet(NetworkMessage &msg);
 	void parseBugReport(NetworkMessage &msg);
@@ -298,7 +298,6 @@ private:
 	void sendToChannel(const std::shared_ptr<Creature> &creature, SpeakClasses type, const std::string &text, uint16_t channelId);
 	void sendPrivateMessage(const std::shared_ptr<Player> &speaker, SpeakClasses type, const std::string &text);
 	void sendIcons(const std::unordered_set<PlayerIcon> &iconSet, const IconBakragore iconBakragore);
-	void sendIconBakragore(const IconBakragore icon);
 	void sendFYIBox(const std::string &message);
 
 	void openImbuementWindow(const Imbuement_Window_t type, const std::shared_ptr<Item> &item = nullptr);
@@ -364,6 +363,15 @@ private:
 
 	void sendTutorial(uint8_t tutorialId);
 	void sendAddMarker(const Position &pos, uint8_t markType, const std::string &desc);
+
+	// Cyclopedia Map "Measuring Tibia" discovery — S2C 0xDD sub-types (RE'd from summer client).
+	void sendCyclopediaMapSetCurrentArea(uint16_t areaId);
+	void sendCyclopediaMapSetExploringArea(uint16_t subAreaId);
+	void sendCyclopediaMapDonations(uint64_t donationGoal, const std::vector<std::tuple<uint16_t, bool, uint64_t>> &areas);
+	void sendCyclopediaMapDiscoveryData(const std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> &mainAreas, const std::vector<uint16_t> &discoveredSubAreas, const std::vector<uint16_t> &discoverableSubAreas);
+	void sendCyclopediaMapSetDiscoveryArea(uint16_t areaId, bool active, uint8_t poiTarget, const std::vector<std::pair<Position, uint8_t>> &points);
+	void parseCyclopediaMapAction(NetworkMessage &msg, uint8_t recvbyte); // C2S 0x92 + 0xDB (Map tab: requests / donations)
+	void handleDiscoveryDonation(uint16_t areaId, uint64_t amount);
 
 	void sendCyclopediaCharacterNoData(CyclopediaCharacterInfoType_t characterInfoType, uint8_t errorCode);
 	void sendCyclopediaCharacterBaseInformation();
@@ -570,6 +578,9 @@ private:
 	void parseWeaponProficiency(NetworkMessage &msg);
 	void sendWeaponProficiencyExperience(const uint16_t itemId, const uint32_t experience);
 	void sendWeaponProficiencyInfo(const uint16_t itemId);
+	void sendWeaponProficiencyReshapeOffers(const uint16_t itemId);
+	void sendBossDifficultySelection(uint8_t selectedDifficulty, const std::vector<uint32_t> &numbers, const std::vector<std::string> &banners, const std::vector<std::string> &redMods, const std::vector<std::string> &greenMods);
+	void parseBossDifficultySelection(NetworkMessage &msg);
 
 	friend class Player;
 	friend class PlayerWheel;
@@ -624,6 +635,7 @@ private:
 	void sendScreenshotAndBannerUnlockedSpell(uint16_t spellId);
 	void sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId);
 	void sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId);
+	void sendScreenshotAndBannerLeaderMonsterKilled(uint16_t raceId, uint32_t charmPoints);
 
 	void sendDisableLoginMusic();
 

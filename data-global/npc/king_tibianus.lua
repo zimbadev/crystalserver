@@ -45,7 +45,6 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
-local TheNewFrontier = Storage.Quest.U8_54.TheNewFrontier
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
 	local playerId = player:getId()
@@ -54,35 +53,81 @@ local function creatureSayCallback(npc, creature, type, message)
 		return false
 	end
 
-	if MsgContains(message, "farmine") and player:getStorageValue(TheNewFrontier.Questline) == 14 then
-		if player:getStorageValue(TheNewFrontier.Mission05.KingTibianus) == 1 then
+	-- The New Frontier
+	local persuasionReplies = {
+		flatter = "Indeed, indeed. Without the help of Thais, our allies stand no chance! Well, I'll send some money to support their cause.",
+		threaten = "You dare raise your voice to a king?! ...Still, I suppose a show of resolve is not without merit. Very well, our allies shall have their support.",
+		bluff = "Ha! Bold tales indeed, adventurer. Preposterous as they sound, my kingdom cannot afford to be left behind if there is even a grain of truth to them. I'll send support.",
+		impress = "A new frontier, you say? Tibia's glory has always grown through bold expansion. Very well, I am impressed enough to lend our allies my support.",
+		reason = "A sound argument, and a king who ignores reason is no king at all. I shall see to it that our allies receive support.",
+		plea = "Your plea moves me, adventurer. A king must also show mercy and generosity. Our allies shall have their support.",
+	}
+	local persuasionKeywords = { "flatter", "threaten", "bluff", "impress", "reason", "plea" }
+
+	if MsgContains(message, "farmine") and player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus) < 3 then
+		if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 then
+			if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus) == 1 then
+				npcHandler:say("Ah, I vaguely remember that our little allies were eager to build some base. So speak up, what do you want?", npc, creature)
+				npcHandler:setTopic(playerId, 6)
+			else
+				npcHandler:say("Do you have anything that might change my mind?", npc, creature)
+				npcHandler:setTopic(playerId, 8)
+			end
+		end
+	elseif MsgContains(message, "yes") and npcHandler:getTopic(playerId) == 8 then
+		if player:getStorageValue(Storage.Quest.U8_54.TheNewFrontier.Questline) == 14 and player:removeItem(10009, 1) then
 			npcHandler:say("Ah, I vaguely remember that our little allies were eager to build some base. So speak up, what do you want?", npc, creature)
-			npcHandler:setTopic(playerId, 10)
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 1)
+			npcHandler:setTopic(playerId, 7)
 		else
-			npcHandler:say("Do you have anything that might change my mind?", npc, creature)
-			npcHandler:setTopic(playerId, 6)
+			npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 2)
+			npcHandler:setTopic(playerId, 0)
 		end
-	elseif MsgContains(message, "flatter") and player:getStorageValue(TheNewFrontier.Mission05.KingTibianus) == 1 then
-		if npcHandler:getTopic(playerId) == 10 then
-			npcHandler:say("Indeed, indeed. Without the help of Thais, our allies stand no chance! Well, I'll send some money to support their cause.", npc, creature)
-			player:setStorageValue(TheNewFrontier.Mission05.KingTibianus, 3)
+	elseif MsgContains(message, "flatter") or MsgContains(message, "threaten") or MsgContains(message, "bluff") or MsgContains(message, "impress") or MsgContains(message, "reason") or MsgContains(message, "plea") then
+		if npcHandler:getTopic(playerId) == 6 then
+			if player:removeItem(10009, 1) then
+				for _, keyword in ipairs(persuasionKeywords) do
+					if MsgContains(message, keyword) then
+						npcHandler:say(persuasionReplies[keyword], npc, creature)
+						break
+					end
+				end
+				player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 3)
+			else
+				npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
+				player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 2)
+			end
+			npcHandler:setTopic(playerId, 0)
+		elseif npcHandler:getTopic(playerId) == 7 then
+			for _, keyword in ipairs(persuasionKeywords) do
+				if MsgContains(message, keyword) then
+					npcHandler:say(persuasionReplies[keyword], npc, creature)
+					break
+				end
+			end
+			player:setStorageValue(Storage.Quest.U8_54.TheNewFrontier.Mission05.KingTibianus, 3)
+			npcHandler:setTopic(playerId, 0)
 		end
-	elseif (MsgContains(message, "outfit")) or (MsgContains(message, "addon")) then
+	elseif MsgContains(message, "no") and (npcHandler:getTopic(playerId) == 6 or npcHandler:getTopic(playerId) == 8) then
+		npcHandler:say("Come back when you find any information.", npc, creature)
+		npcHandler:setTopic(playerId, 0)
+	end
+
+	local outfitHandled = false
+	if (MsgContains(message, "outfit")) or (MsgContains(message, "addon")) then
+		outfitHandled = true
 		npcHandler:say("In exchange for a truly generous donation, I will offer a special outfit. Do you want to make a donation?", npc, creature)
 		npcHandler:setTopic(playerId, 1)
 	elseif MsgContains(message, "yes") then
-		-- Vamos tratar todas condições para YES aqui
+		outfitHandled = true
 		if npcHandler:getTopic(playerId) == 1 then
-			-- Para o primeiro Yes, o npc deve explicar como obter o outfit
 			npcHandler:say({ "Excellent! Now, let me explain. If you donate 1.000.000.000 gold pieces, you will be entitled to wear a unique outfit. ...", "You will be entitled to wear the {armor} for 500.000.000 gold pieces, {helmet} for an additional 250.000.000 and the {boots} for another 250.000.000 gold pieces. ...", "What will it be?" }, npc, creature)
 			npcHandler:setTopic(playerId, 2)
-			-- O NPC só vai oferecer os addons se o player já tiver escolhido.
 		elseif npcHandler:getTopic(playerId) == 2 then
-			-- caso o player repita o yes, resetamos o tópico para começar de novo?
 			npcHandler:say("In that case, return to me once you made up your mind.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
-			-- Inicio do outfit
-		elseif npcHandler:getTopic(playerId) == 3 then -- ARMOR/OUTFIT
+		elseif npcHandler:getTopic(playerId) == 3 then
 			if player:getStorageValue(Storage.OutfitQuest.GoldenOutfit) < 1 then
 				if player:getMoney() + player:getBankBalance() >= 500000000 then
 					local inbox = player:getStoreInbox()
@@ -108,8 +153,6 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:say("You alread have that addon.", npc, creature)
 			end
 			npcHandler:setTopic(playerId, 2)
-			-- Fim do outfit
-			-- Inicio do helmet
 		elseif npcHandler:getTopic(playerId) == 4 then
 			if player:getStorageValue(Storage.OutfitQuest.GoldenOutfit) == 1 then
 				if player:getStorageValue(Storage.OutfitQuest.GoldenOutfit) < 2 then
@@ -134,8 +177,6 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:setTopic(playerId, 2)
 			end
 			npcHandler:setTopic(playerId, 2)
-			-- Fim do helmet
-			-- Inicio da boots
 		elseif npcHandler:getTopic(playerId) == 5 then
 			if player:getStorageValue(Storage.OutfitQuest.GoldenOutfit) == 2 then
 				if player:getStorageValue(Storage.OutfitQuest.GoldenOutfit) < 3 then
@@ -159,36 +200,38 @@ local function creatureSayCallback(npc, creature, type, message)
 				npcHandler:say("You need to donate {helmet} addon first.", npc, creature)
 				npcHandler:setTopic(playerId, 2)
 			end
-			-- Fim da boots
 			npcHandler:setTopic(playerId, 2)
-			-- Reseting word The New Frontier: Mission 5
-		elseif npcHandler:getTopic(playerId) == 6 then
-			if player:getStorageValue(TheNewFrontier.Questline) == 14 and player:getStorageValue(TheNewFrontier.Mission05.KingTibianus) == 2 and player:removeItem(10009, 1) then
-				npcHandler:say("Ah, I vaguely remember that our little allies were eager to build some base. So speak up, what do you want?", npc, creature)
-				player:setStorageValue(TheNewFrontier.Mission05.KingTibianus, 1)
-				npcHandler:setTopic(playerId, 10)
-			end
 		end
-		-- inicio das opções armor/helmet/boots
-		-- caso o player não diga YES, dirá alguma das seguintes palavras:
 	elseif (MsgContains(message, "armor")) and npcHandler:getTopic(playerId) == 2 then
+		outfitHandled = true
 		npcHandler:say("So you wold like to donate 500.000.000 gold pieces which in return will entitle you to wear a unique armor?", npc, creature)
-		npcHandler:setTopic(playerId, 3) -- alterando o tópico para que no próximo YES ele faça o outfit
+		npcHandler:setTopic(playerId, 3)
 	elseif (MsgContains(message, "helmet")) and npcHandler:getTopic(playerId) == 2 then
+		outfitHandled = true
 		npcHandler:say("So you would like to donate 250.000.000 gold pieces which in return will entitle you to wear unique helmet?", npc, creature)
-		npcHandler:setTopic(playerId, 4) -- alterando o tópico para que no próximo YES ele faça o helmet
+		npcHandler:setTopic(playerId, 4)
 	elseif (MsgContains(message, "boots")) and npcHandler:getTopic(playerId) == 2 then
+		outfitHandled = true
 		npcHandler:say("So you would like to donate 250.000.000 gold pieces which in return will entitle you to wear a unique boots?", npc, creature)
-		npcHandler:setTopic(playerId, 5) -- alterando o tópico para que no próximo YES ele faça a boots
-	else
-		if player:getStorageValue(TheNewFrontier.Questline) == 14 and player:getStorageValue(TheNewFrontier.Mission05.KingTibianus) == 1 then
-			npcHandler:say("I don't think that's a very convincing argument. I have nothing more to say about {farmine}.", npc, creature)
-			player:setStorageValue(TheNewFrontier.Mission05.KingTibianus, 2)
-		end
+		npcHandler:setTopic(playerId, 5)
 	end
-	-- fim das opções armor/helmet/boots
+
+	-- The Isle of Evil
+	if MsgContains(message, "fan club membership card") and player:getStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Questline) == 15 then
+		npcHandler:say({
+			"Ah, A fan club premium membership card! You must be that intelligent fellow who wrote me all those flattering letters! Nice to finally meet my greatest admirer in person. Here, take this little token of appreciation. ...",
+			"And now if you will excuse me, I have to attend urgent matters of state.",
+		}, npc, creature)
+		player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Mission07, 4) -- Finish The Isle of Evil Quest
+		player:setStorageValue(Storage.Quest.U8_5.TheIsleOfEvil.Questline, 16)
+		player:addItem(9389, 1) -- fan doll of King Tibianus
+		if not player:hasAchievement("King Tibianus Fan") then
+			player:addAchievement("King Tibianus Fan")
+		end
+		npcHandler:setTopic(playerId, 0)
+	end
 end
--- Promotion
+
 local node1 = keywordHandler:addKeyword({ "promot" }, StdModule.say, {
 	npcHandler = npcHandler,
 	onlyFocus = true,
@@ -206,7 +249,7 @@ node1:addChildKeyword({ "no" }, StdModule.say, {
 	text = "Alright then, come back when you are ready.",
 	reset = true,
 })
--- Basic
+
 keywordHandler:addKeyword({ "eremo" }, StdModule.say, {
 	npcHandler = npcHandler,
 	text = "It is said that he lives on a small island near Edron. Maybe the people there know more about him.",
@@ -436,7 +479,6 @@ keywordHandler:addKeyword({ "druid" }, StdModule.say, {
 })
 keywordHandler:addAliasKeyword({ "marvik" })
 
--- Greeting message
 keywordHandler:addGreetKeyword({ "hail king" }, {
 	npcHandler = npcHandler,
 	text = "I greet thee, my loyal subject |PLAYERNAME|.",

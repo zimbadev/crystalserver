@@ -16,6 +16,7 @@ monster.outfit = {
 monster.events = {
 	"GraveDangerBossDeath",
 	"zelosDeath",
+	"GraveDangerZelos",
 }
 
 monster.health = 480000
@@ -84,6 +85,7 @@ monster.loot = {
 }
 
 monster.attacks = {
+	{ name = "king zelos hex beam", interval = 2000, chance = 15 }, -- W: Greater Hex beam (interval/chance NOT CONFIRMED)
 	{ name = "melee", type = COMBAT_PHYSICALDAMAGE, interval = 2000, minDamage = -900, maxDamage = -2700 },
 	{ name = "combat", type = COMBAT_FIREDAMAGE, interval = 2000, chance = 15, length = 8, spread = 0, minDamage = -1200, maxDamage = -3200, effect = CONST_ME_HITBYFIRE },
 	{ name = "combat", type = COMBAT_LIFEDRAIN, interval = 2000, chance = 10, length = 8, spread = 0, minDamage = -600, maxDamage = -1600, effect = CONST_ME_SMALLCLOUDS },

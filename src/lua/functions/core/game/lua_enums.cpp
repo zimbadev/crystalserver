@@ -263,9 +263,12 @@ void LuaEnums::initOthersEnums(lua_State* L) {
 }
 
 void LuaEnums::initWorldTypeEnums(lua_State* L) {
-	registerEnum(L, WORLDTYPE_OPTIONAL);
+	registerEnum(L, WORLDTYPE_NONE);
 	registerEnum(L, WORLDTYPE_OPEN);
+	registerEnum(L, WORLDTYPE_OPTIONAL);
 	registerEnum(L, WORLDTYPE_HARDCORE);
+	registerEnum(L, WORLDTYPE_RETRO_PVP);
+	registerEnum(L, WORLDTYPE_RETRO_HARDCORE);
 	registerEnum(L, WORLDTYPE_FIRST);
 	registerEnum(L, WORLDTYPE_LAST);
 }
@@ -367,6 +370,8 @@ void LuaEnums::initFactionEnums(lua_State* L) {
 	registerEnum(L, FACTION_DEATHLING);
 	registerEnum(L, FACTION_ANUMA);
 	registerEnum(L, FACTION_FAFNAR);
+	registerEnum(L, FACTION_QUARA);
+	registerEnum(L, FACTION_ROOTTHING);
 	registerEnum(L, FACTION_LAST);
 }
 
@@ -469,7 +474,6 @@ void LuaEnums::initConditionParamEnums(lua_State* L) {
 	registerEnum(L, CONDITION_PARAM_INCREASE_MANADRAINPERCENT);
 	registerEnum(L, CONDITION_PARAM_INCREASE_DROWNPERCENT);
 	registerEnum(L, CONDITION_PARAM_CHARM_CHANCE_MODIFIER);
-	registerEnum(L, CONDITION_PARAM_FOODTICKS);
 }
 
 void LuaEnums::initAttributeConditionSubIdEnums(lua_State* L) {
@@ -772,6 +776,20 @@ void LuaEnums::initConstAniEnums(lua_State* L) {
 	registerEnum(L, CONST_ANI_TERRASTORMARROW);
 	registerEnum(L, CONST_ANI_FROSTSTORMARROW);
 	registerEnum(L, CONST_ANI_THUNDERSTORMARROW);
+	registerEnum(L, CONST_ANI_HOMING_PHYSICAL);
+	registerEnum(L, CONST_ANI_HOMING_FIRE);
+	registerEnum(L, CONST_ANI_HOMING_EARTH);
+	registerEnum(L, CONST_ANI_HOMING_ENERGY);
+	registerEnum(L, CONST_ANI_HOMING_ICE);
+	registerEnum(L, CONST_ANI_HOMING_HOLY);
+	registerEnum(L, CONST_ANI_HOMING_DEATH);
+	registerEnum(L, CONST_ANI_HOMING_STELLAR_PHYSICAL);
+	registerEnum(L, CONST_ANI_HOMING_STELLAR_FIRE);
+	registerEnum(L, CONST_ANI_HOMING_STELLAR_EARTH);
+	registerEnum(L, CONST_ANI_HOMING_STELLAR_ENERGY);
+	registerEnum(L, CONST_ANI_HOMING_STELLAR_ICE);
+	registerEnum(L, CONST_ANI_HOMING_STELLAR_HOLY);
+	registerEnum(L, CONST_ANI_HOMING_STELLAR_DEATH);
 	registerEnum(L, CONST_ANI_WEAPONTYPE);
 }
 

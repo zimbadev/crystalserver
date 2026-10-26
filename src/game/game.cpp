@@ -42,6 +42,7 @@
 #include "game/scheduling/dispatcher.hpp"
 #include "game/scheduling/events_scheduler.hpp"
 #include "game/scheduling/save_manager.hpp"
+#include "game/worlds/gameworlds.hpp"
 #include "game/zones/zone.hpp"
 #include "io/io_bosstiary.hpp"
 #include "io/io_wheel.hpp"
@@ -88,6 +89,7 @@
 #include <appearances.pb.h>
 
 std::vector<std::weak_ptr<Creature>> checkCreatureLists[EVENT_CREATURECOUNT];
+size_t checkCreatureSizes[EVENT_CREATURECOUNT] = {}; // Track sizes for reserve
 
 namespace {
 	bool isBountyHighscoreCategory(const std::string &categoryName) {
@@ -267,6 +269,14 @@ Game::Game() {
 	offlineTrainingWindow.defaultEscapeButton = 1;
 	offlineTrainingWindow.defaultEnterButton = 0;
 	offlineTrainingWindow.priority = true;
+
+	m_worldTypesNames = {
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_OPEN), "Open PvP" },
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_OPTIONAL), "Optional PvP" },
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_HARDCORE), "Hardcore PvP" },
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_RETRO_PVP), "Retro Open PvP" },
+		{ static_cast<uint8_t>(WorldType_t::WORLDTYPE_RETRO_HARDCORE), "Retro Hardcore PvP" },
+	};
 
 	// Create instance of IOWheel to Game class
 	m_IOWheel = std::make_unique<IOWheel>();
@@ -488,6 +498,19 @@ Game &Game::getInstance() {
 	return inject<Game>();
 }
 
+// Worlds interface
+Worlds &Game::worlds() {
+	return m_worlds;
+}
+
+const Worlds &Game::worlds() const {
+	return m_worlds;
+}
+
+const std::unordered_map<uint8_t, std::string> &Game::getWorldTypeNames() const {
+	return m_worldTypesNames;
+}
+
 void Game::resetMonsters() const {
 	for (const auto &[monsterId, monster] : getMonsters()) {
 		monster->clearTargetList();
@@ -505,11 +528,16 @@ void Game::resetNpcs() const {
 
 void Game::loadBoostedCreature() {
 	auto &db = Database::getInstance();
-	const auto result = db.storeQuery("SELECT * FROM `boosted_creature`");
+	const std::string &selectQuery = "SELECT `date`, `boostname`, `raceid`, `looktype`, `lookfeet`, `looklegs`, `lookhead`, `lookbody`, `lookaddons`, `lookmount` FROM `boosted_creature`";
+	auto result = db.storeQuery(selectQuery);
 	if (!result) {
-		g_logger().warn("[Game::loadBoostedCreature] - "
-		                "Failed to detect boosted creature database. (CODE 01)");
-		return;
+		db.storeQuery("INSERT INTO `boosted_creature` (`boostname`, `date`, `raceid`) VALUES ('default', 0, 0)");
+
+		result = db.storeQuery(selectQuery);
+		if (!result) {
+			g_logger().warn("{} - Failed to detect boosted creature database. (CODE 01)", __FUNCTION__);
+			return;
+		}
 	}
 
 	const auto date = result->getNumber<uint16_t>("date");
@@ -544,45 +572,40 @@ void Game::loadBoostedCreature() {
 	}
 
 	if (selectedMonster.raceId == 0) {
-		g_logger().warn("[Game::loadBoostedCreature] - "
-		                "It was not possible to generate a new boosted creature->");
+		g_logger().warn("{} - It was not possible to generate a new boosted creature->", __FUNCTION__);
 		return;
 	}
 
 	const auto monsterType = g_monsters().getMonsterType(selectedMonster.name);
 	if (!monsterType) {
-		g_logger().warn("[Game::loadBoostedCreature] - "
-		                "It was not possible to generate a new boosted creature-> Monster '{}' not found.",
-		                selectedMonster.name);
+		g_logger().warn("{} - It was not possible to generate a new boosted creature-> Monster '{}' not found.", __FUNCTION__, selectedMonster.name);
 		return;
 	}
 
 	setBoostedName(selectedMonster.name);
 
-	auto query = std::string("UPDATE `boosted_creature` SET ")
-		+ "`date` = '" + std::to_string(ltm->tm_mday) + "',"
-		+ "`boostname` = " + db.escapeString(selectedMonster.name) + ","
-		+ "`looktype` = " + std::to_string(monsterType->info.outfit.lookType) + ","
-		+ "`lookfeet` = " + std::to_string(monsterType->info.outfit.lookFeet) + ","
-		+ "`looklegs` = " + std::to_string(monsterType->info.outfit.lookLegs) + ","
-		+ "`lookhead` = " + std::to_string(monsterType->info.outfit.lookHead) + ","
-		+ "`lookbody` = " + std::to_string(monsterType->info.outfit.lookBody) + ","
-		+ "`lookaddons` = " + std::to_string(monsterType->info.outfit.lookAddons) + ","
-		+ "`lookmount` = " + std::to_string(monsterType->info.outfit.lookMount) + ","
-		+ "`raceid` = '" + std::to_string(selectedMonster.raceId) + "'";
+	auto query = fmt::format(
+		"UPDATE `boosted_creature` SET `date` = '{}', `boostname` = {}, `looktype` = {}, `lookfeet` = {}, `looklegs` = {}, `lookhead` = {}, `lookbody` = {}, `lookaddons` = {}, `lookmount` = {}, `raceid` = {}",
+		std::to_string(ltm->tm_mday), db.escapeString(selectedMonster.name), std::to_string(monsterType->info.outfit.lookType), std::to_string(monsterType->info.outfit.lookFeet),
+		std::to_string(monsterType->info.outfit.lookLegs), std::to_string(monsterType->info.outfit.lookHead), std::to_string(monsterType->info.outfit.lookBody),
+		std::to_string(monsterType->info.outfit.lookAddons), std::to_string(monsterType->info.outfit.lookMount), std::to_string(selectedMonster.raceId)
+	);
 
 	if (!db.executeQuery(query)) {
-		g_logger().warn("[Game::loadBoostedCreature] - "
-		                "Failed to detect boosted creature database. (CODE 02)");
+		g_logger().warn("{} - Failed to detect boosted creature database. (CODE 02)", __FUNCTION__);
 	}
 }
 
 void Game::start(ServiceManager* manager) {
+	const std::shared_ptr<World> &currentWorld = worlds().getCurrentWorld();
+	if (!currentWorld) {
+		throw std::runtime_error("No world found to start the game server.");
+	}
 	// Game client protocols
-	manager->add<ProtocolGame>(static_cast<uint16_t>(g_configManager().getNumber(GAME_PORT)));
+	manager->add<ProtocolGame>(currentWorld->port);
 	manager->add<ProtocolLogin>(static_cast<uint16_t>(g_configManager().getNumber(LOGIN_PORT)));
 	// OT protocols
-	manager->add<ProtocolStatus>(static_cast<uint16_t>(g_configManager().getNumber(STATUS_PORT)));
+	manager->add<ProtocolStatus>(currentWorld->portStatus);
 
 	serviceManager = manager;
 
@@ -626,10 +649,6 @@ void Game::start(ServiceManager* manager) {
 
 GameState_t Game::getGameState() const {
 	return gameState;
-}
-
-void Game::setWorldType(WorldType_t type) {
-	worldType = type;
 }
 
 const std::unique_ptr<TeamFinder> &Game::getTeamFinder(const std::shared_ptr<Player> &player) const {
@@ -824,6 +843,51 @@ void Game::loadCustomMaps(const std::filesystem::path &customMapPath) {
 void Game::loadMap(const std::string &path, const Position &pos) {
 	lastMapLoadTime = OTSYS_TIME();
 	map.loadMap(path, false, false, false, false, false, pos);
+
+	const auto &area = map.getLastLoadedArea();
+	if (!area.valid) {
+		return;
+	}
+
+	// The client draws neighbouring floors shifted on x/y, so pad the box by
+	// the viewport plus the maximum floor shift.
+	constexpr int32_t paddingX = MAP_MAX_CLIENT_VIEW_PORT_X + 1 + MAP_MAX_LAYERS;
+	constexpr int32_t paddingY = MAP_MAX_CLIENT_VIEW_PORT_Y + 1 + MAP_MAX_LAYERS;
+
+	for (const auto &[playerId, player] : players) {
+		if (!player) {
+			continue;
+		}
+
+		const Position &playerPos = player->getPosition();
+		const auto posX = static_cast<int32_t>(playerPos.x);
+		const auto posY = static_cast<int32_t>(playerPos.y);
+		const auto posZ = static_cast<int32_t>(playerPos.z);
+
+		if (posX < area.minX - paddingX || posX > area.maxX + paddingX) {
+			continue;
+		}
+
+		if (posY < area.minY - paddingY || posY > area.maxY + paddingY) {
+			continue;
+		}
+
+		// Same floor range ProtocolGame::GetMapDescription walks through.
+		int32_t visibleMinZ, visibleMaxZ;
+		if (posZ > MAP_INIT_SURFACE_LAYER) {
+			visibleMinZ = posZ - MAP_LAYER_VIEW_LIMIT;
+			visibleMaxZ = std::min<int32_t>(MAP_MAX_LAYERS - 1, posZ + MAP_LAYER_VIEW_LIMIT);
+		} else {
+			visibleMinZ = 0;
+			visibleMaxZ = MAP_INIT_SURFACE_LAYER;
+		}
+
+		if (area.maxZ < visibleMinZ || area.minZ > visibleMaxZ) {
+			continue;
+		}
+
+		player->sendMapDescription(playerPos);
+	}
 }
 
 std::shared_ptr<Cylinder> Game::internalGetCylinder(const std::shared_ptr<Player> &player, const Position &pos) {
@@ -1015,7 +1079,7 @@ std::shared_ptr<Creature> Game::getCreatureByID(uint32_t id) {
 	} else if (id <= Npc::npcAutoID) {
 		return getNpcByID(id);
 	} else {
-		g_logger().warn("Creature with id {} not exists");
+		g_logger().warn("Creature with id {} does not exist", id);
 	}
 	return nullptr;
 }
@@ -1152,11 +1216,12 @@ std::shared_ptr<Player> Game::getPlayerByGUID(const uint32_t &guid, bool allowOf
 	if (guid == 0) {
 		return nullptr;
 	}
-	for (const auto &it : players) {
-		if (guid == it.second->getGUID()) {
-			return it.second;
-		}
+
+	auto it = playersByGUID.find(guid);
+	if (it != playersByGUID.end()) {
+		return it->second;
 	}
+
 	if (!allowOffline) {
 		return nullptr;
 	}
@@ -2068,9 +2133,6 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 		return RETURNVALUE_NOTPOSSIBLE;
 	}
 
-	const auto fromContainer = fromCylinder->getContainer();
-	const bool fromStoreInbox = fromContainer && fromContainer->getRootContainer() && fromContainer->getRootContainer()->isStoreInbox();
-
 	if (std::shared_ptr<Container> toCylinderContainer = toCylinder->getContainer()) {
 		auto containerID = toCylinderContainer->getID();
 		const auto rootToContainer = toCylinderContainer->getRootContainer();
@@ -2088,22 +2150,12 @@ ReturnValue Game::checkMoveItemToCylinder(const std::shared_ptr<Player> &player,
 
 		if (toStoreInbox && !containerToStow) {
 			const bool isGoldPouch = item->getID() == ITEM_GOLD_POUCH;
-			const bool canMoveInStoreInbox = item->canBeMovedToStore() || isGoldPouch;
-			if (!canMoveInStoreInbox) {
-				return RETURNVALUE_NOTBOUGHTINSTORE;
-			}
-
-			// Store Inbox accepts only items already inside it (internal reordering).
-			if (!fromStoreInbox) {
+			if (!item->canBeMovedToStore() && !isGoldPouch) {
 				return RETURNVALUE_NOTBOUGHTINSTORE;
 			}
 		}
 
 		if (containerID == ITEM_GOLD_POUCH && !containerToStow) {
-			if (!fromStoreInbox) {
-				return RETURNVALUE_NOTBOUGHTINSTORE;
-			}
-
 			if (g_configManager().getBoolean(TOGGLE_GOLD_POUCH_QUICKLOOT_ONLY)) {
 				return RETURNVALUE_CONTAINERNOTENOUGHROOM;
 			}
@@ -2245,6 +2297,9 @@ ReturnValue Game::internalMoveItem(std::shared_ptr<Cylinder> fromCylinder, std::
 	// check if we can add this item
 	ret = toCylinder->queryAdd(index, item, count, flags, actor);
 	if (ret == RETURNVALUE_NEEDEXCHANGE) {
+		if (!toItem) {
+			return RETURNVALUE_NOTPOSSIBLE;
+		}
 		// check if we can add it to source cylinder
 		ret = fromCylinder->queryAdd(fromCylinder->getThingIndex(item), toItem, toItem->getItemCount(), 0);
 		if (ret == RETURNVALUE_NOERROR) {
@@ -3458,7 +3513,7 @@ ReturnValue Game::collectRewardChestItems(const std::shared_ptr<Player> &player,
 	std::string lootedItemsMessage;
 	for (const auto &item : rewardItemsVector) {
 		// Stop if player not have free capacity
-		if (item && player->getCapacity() < item->getWeight()) {
+		if (item && player->getFreeCapacity() < item->getWeight()) {
 			player->sendCancelMessage(RETURNVALUE_NOTENOUGHCAPACITY);
 			break;
 		}
@@ -4851,7 +4906,7 @@ std::shared_ptr<Item> Game::wrapItem(const std::shared_ptr<Item> &item, const st
 		newItem->setAttribute(ItemAttribute_t::AMOUNT, amount);
 	}
 
-	newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint16_t>(ItemAttribute_t::OWNER));
+	newItem->setAttribute(ItemAttribute_t::OWNER, item->getAttribute<uint32_t>(ItemAttribute_t::OWNER));
 	if (const int64_t storeAttribute = item->getAttribute<int64_t>(ItemAttribute_t::STORE); storeAttribute > 0) {
 		newItem->setAttribute(ItemAttribute_t::STORE, storeAttribute);
 	}
@@ -4871,7 +4926,7 @@ void Game::unwrapItem(const std::shared_ptr<Item> &item, uint16_t unWrapId, cons
 		return;
 	}
 
-	const uint16_t ownerAttr = item->getAttribute<uint16_t>(ItemAttribute_t::OWNER);
+	const uint32_t ownerAttr = item->getAttribute<uint32_t>(ItemAttribute_t::OWNER);
 	const int64_t storeAttr = item->getAttribute<int64_t>(ItemAttribute_t::STORE);
 	const uint16_t amountAttr = item->getAttribute<uint16_t>(ItemAttribute_t::AMOUNT);
 	const uint16_t amount = amountAttr ? amountAttr : 1;
@@ -6959,7 +7014,12 @@ void Game::addCreatureCheck(const std::shared_ptr<Creature> &creature) {
 	}
 
 	g_dispatcher().addEvent([this, index = uniform_random(0, EVENT_CREATURECOUNT - 1), creature] {
+		// Reserve capacity to avoid frequent reallocations
+		if (checkCreatureLists[index].capacity() <= checkCreatureLists[index].size()) {
+			checkCreatureLists[index].reserve(checkCreatureLists[index].size() + 32);
+		}
 		checkCreatureLists[index].emplace_back(creature);
+		checkCreatureSizes[index]++;
 	},
 	                        "Game::addCreatureCheck");
 }
@@ -6975,13 +7035,23 @@ void Game::checkCreatures() {
 	metrics::method_latency measure(__METRICS_METHOD_NAME__);
 	static size_t index = 0;
 
-	std::erase_if(checkCreatureLists[index], [this](const std::weak_ptr<Creature> &weak) {
+	auto &bucket = checkCreatureLists[index];
+
+	// Skip empty buckets early
+	if (bucket.empty()) {
+		index = (index + 1) % EVENT_CREATURECOUNT;
+		return;
+	}
+
+	// Manual loop for better control and tracking
+	size_t writeIndex = 0;
+	for (size_t i = 0; i < bucket.size(); ++i) {
+		const auto &weak = bucket[i];
 		if (const auto creature = weak.lock()) {
 			if (creature->creatureCheck && creature->isAlive()) {
 				creature->onThink(EVENT_CREATURE_THINK_INTERVAL);
 				if (creature->getMonster()) {
-					// The monster's onThink function runs asynchronously,
-					// meaning the target gets updated at a later time; therefore, we must delay the actions outlined below.
+					// Monster's onThink runs asynchronously, so delay attacking/conditions
 					g_dispatcher().addEvent([creature] {
 						if (creature->isAlive()) {
 							creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
@@ -6991,15 +7061,25 @@ void Game::checkCreatures() {
 					creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
 					creature->executeConditions(EVENT_CREATURE_THINK_INTERVAL);
 				}
-				return false;
+				// Keep entry (alive and active)
+				if (writeIndex != i) {
+					bucket[writeIndex] = std::move(bucket[i]);
+				}
+				writeIndex++;
+			} else {
+				creature->inCheckCreaturesVector = false;
 			}
-
-			creature->inCheckCreaturesVector = false;
 		}
+		// Dead/expired: don't increment writeIndex (remove entry)
+	}
 
-		return true;
-	});
+	// Shrink if too many empty slots
+	bucket.resize(writeIndex);
+	if (bucket.capacity() > 64 && bucket.size() < bucket.capacity() / 4) {
+		bucket.shrink_to_fit();
+	}
 
+	checkCreatureSizes[index] = writeIndex;
 	index = (index + 1) % EVENT_CREATURECOUNT;
 }
 
@@ -7594,6 +7674,11 @@ void Game::applyWheelOfDestinyEffectsToDamage(CombatDamage &damage, const std::s
 		damage.secondary.value += (damage.secondary.value * (damage.damageMultiplier)) / 100.;
 	}
 
+	if (damage.damageReductionMultiplier > 0) {
+		damage.primary.value -= (damage.primary.value * damage.damageReductionMultiplier) / 100;
+		damage.secondary.value -= (damage.secondary.value * damage.damageReductionMultiplier) / 100;
+	}
+
 	if (attackerPlayer) {
 		damage.primary.value -= attackerPlayer->wheel()->getStat(WheelStat_t::DAMAGE);
 		if (damage.secondary.value != 0) {
@@ -7765,8 +7850,9 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 			if (damage.critical) {
 				addMagicEffect(targetPos, CONST_ME_CRITICAL_DAMAGE, attacker);
 			}
-			if (targetPlayer) {
-				targetPlayer->updateImpactTracker(COMBAT_HEALING, realHealthChange);
+			// Impact Analyser: the healing a player does, on themselves or on others
+			if (attackerPlayer) {
+				attackerPlayer->updateImpactTracker(COMBAT_HEALING, realHealthChange);
 			}
 
 			// Party hunt analyzer
@@ -8151,23 +8237,30 @@ bool Game::combatChangeHealth(const std::shared_ptr<Creature> &attacker, const s
 					tmpPlayer->sendTextMessage(message);
 				}
 
+				const int32_t primaryBeforeShield = damage.primary.value;
+				const int32_t secondaryBeforeShield = damage.secondary.value;
 				damage.primary.value -= absorbedDamage;
 				if (damage.primary.value < 0) {
 					damage.secondary.value = std::max<int32_t>(0, damage.secondary.value + damage.primary.value);
 					damage.primary.value = 0;
 				}
 
-				if (attackerPlayer) {
-					attackerPlayer->updateImpactTracker(damage.primary.type, damage.primary.value);
-					if (damage.secondary.type != COMBAT_NONE) {
-						attackerPlayer->updateImpactTracker(damage.secondary.type, damage.secondary.value);
+				// Analysers: what the shield absorbed is damage the attacker dealt (Impact Analyser) and the target
+				// received (Damage Input Analyser), each element its own share; the part that still reaches health
+				// is counted in sendMessages like any other hit
+				const std::array<std::pair<CombatType_t, int32_t>, 2> absorbedByElement = { {
+					{ damage.primary.type, primaryBeforeShield - damage.primary.value },
+					{ damage.secondary.type, secondaryBeforeShield - damage.secondary.value },
+				} };
+				for (const auto &[type, absorbed] : absorbedByElement) {
+					if (type == COMBAT_NONE || absorbed <= 0) {
+						continue;
 					}
-				}
-
-				if (targetPlayer) {
-					targetPlayer->updateImpactTracker(damage.primary.type, manaDamage);
-					if (damage.secondary.type != COMBAT_NONE) {
-						targetPlayer->updateImpactTracker(damage.secondary.type, damage.secondary.value);
+					if (attackerPlayer) {
+						attackerPlayer->updateImpactTracker(type, absorbed);
+					}
+					if (targetPlayer) {
+						targetPlayer->updateInputAnalyzer(type, absorbed, attacker ? attacker->getName() : "(other)");
 					}
 				}
 			}
@@ -8301,10 +8394,8 @@ void Game::sendMessages(
 		}
 
 		targetPlayer->updateInputAnalyzer(damage.primary.type, damage.primary.value, cause);
-		if (attackerPlayer) {
-			if (damage.secondary.type != COMBAT_NONE) {
-				attackerPlayer->updateInputAnalyzer(damage.secondary.type, damage.secondary.value, cause);
-			}
+		if (damage.secondary.type != COMBAT_NONE) {
+			targetPlayer->updateInputAnalyzer(damage.secondary.type, damage.secondary.value, cause);
 		}
 	}
 	std::stringstream ss;
@@ -8806,10 +8897,8 @@ bool Game::combatChangeMana(const std::shared_ptr<Creature> &attacker, const std
 			}
 
 			targetPlayer->updateInputAnalyzer(damage.primary.type, -damage.primary.value, cause);
-			if (attackerPlayer) {
-				if (damage.secondary.type != COMBAT_NONE) {
-					attackerPlayer->updateInputAnalyzer(damage.secondary.type, -damage.secondary.value, cause);
-				}
+			if (damage.secondary.type != COMBAT_NONE) {
+				targetPlayer->updateInputAnalyzer(damage.secondary.type, -damage.secondary.value, cause);
 			}
 		}
 	}
@@ -9033,16 +9122,17 @@ void Game::checkLight() {
 }
 
 ItemClassification* Game::getItemsClassification(uint8_t id, bool create) {
-	auto it = std::ranges::find_if(itemsClassifications, [id](ItemClassification* classification) {
+	auto it = std::ranges::find_if(itemsClassifications, [id](const std::unique_ptr<ItemClassification> &classification) {
 		return classification->id == id;
 	});
 
 	if (it != itemsClassifications.end()) {
-		return *it;
+		return it->get();
 	} else if (create) {
-		auto itemClassification = new ItemClassification(id);
-		addItemsClassification(itemClassification);
-		return itemClassification;
+		auto itemClassification = std::make_unique<ItemClassification>(id);
+		auto* raw = itemClassification.get();
+		addItemsClassification(std::move(itemClassification));
+		return raw;
 	}
 
 	return nullptr;
@@ -9060,6 +9150,14 @@ bool Game::gameIsDay() {
 	}
 
 	return isDay;
+}
+
+bool Game::isRetroPVP() const {
+	if (const auto &currentWorld = worlds().getCurrentWorld()) {
+		const auto worldType = currentWorld->type;
+		return worldType == WORLDTYPE_RETRO_PVP || worldType == WORLDTYPE_RETRO_HARDCORE;
+	}
+	return false;
 }
 
 void Game::dieSafely(const std::string &errorMsg /* = "" */) {
@@ -9113,7 +9211,7 @@ void Game::updateCreatureWalkthrough(const std::shared_ptr<Creature> &creature) 
 }
 
 void Game::updateCreatureSkull(const std::shared_ptr<Creature> &creature) const {
-	if (getWorldType() != WORLDTYPE_OPEN) {
+	if (worlds().getCurrentWorld()->type != WORLDTYPE_OPEN) {
 		return;
 	}
 
@@ -9163,35 +9261,35 @@ void Game::updateCreatureType(const std::shared_ptr<Creature> &creature) {
 
 void Game::loadMotdNum() {
 	Database &db = Database::getInstance();
+	const auto worldId = worlds().getCurrentWorld()->id;
 
-	DBResult_ptr result = db.storeQuery("SELECT `value` FROM `server_config` WHERE `config` = 'motd_num'");
+	auto result = db.storeQuery(fmt::format("SELECT `value` FROM `server_config` WHERE `config` = 'motd_num' AND `world_id` = {}", worldId));
 	if (result) {
 		motdNum = result->getNumber<uint32_t>("value");
 	} else {
-		db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('motd_num', '0')");
+		db.executeQuery(fmt::format("INSERT INTO `server_config` (`world_id`, `config`, `value`) VALUES ({}, 'motd_num', '0')", worldId));
 	}
 
-	result = db.storeQuery("SELECT `value` FROM `server_config` WHERE `config` = 'motd_hash'");
+	result = db.storeQuery(fmt::format("SELECT `value` FROM `server_config` WHERE `config` = 'motd_hash' AND `world_id` = {}", worldId));
 	if (result) {
 		motdHash = result->getString("value");
 		if (motdHash != transformToSHA1(g_configManager().getString(SERVER_MOTD))) {
 			++motdNum;
 		}
 	} else {
-		db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('motd_hash', '')");
+		db.executeQuery(fmt::format("INSERT INTO `server_config` (`world_id`, `config`, `value`) VALUES ({}, 'motd_hash', '')", worldId));
 	}
 }
 
 void Game::saveMotdNum() const {
 	Database &db = Database::getInstance();
+	const auto worldId = worlds().getCurrentWorld()->id;
 
-	std::ostringstream query;
-	query << "UPDATE `server_config` SET `value` = '" << motdNum << "' WHERE `config` = 'motd_num'";
-	db.executeQuery(query.str());
+	std::string query = fmt::format("UPDATE `server_config` SET `value` = {} WHERE `config` = 'motd_num' AND `world_id` = {}", motdNum, worldId);
+	db.executeQuery(query);
 
-	query.str(std::string());
-	query << "UPDATE `server_config` SET `value` = '" << transformToSHA1(g_configManager().getString(SERVER_MOTD)) << "' WHERE `config` = 'motd_hash'";
-	db.executeQuery(query.str());
+	query = fmt::format("UPDATE `server_config` SET `value` = '{}' WHERE `config` = 'motd_hash' AND `world_id` = {}", transformToSHA1(g_configManager().getString(SERVER_MOTD)), worldId);
+	db.executeQuery(query);
 }
 
 void Game::checkPlayersRecord() {
@@ -9210,19 +9308,19 @@ void Game::checkPlayersRecord() {
 void Game::updatePlayersRecord() const {
 	Database &db = Database::getInstance();
 
-	std::ostringstream query;
-	query << "UPDATE `server_config` SET `value` = '" << playersRecord << "' WHERE `config` = 'players_record'";
-	db.executeQuery(query.str());
+	std::string query = fmt::format("UPDATE `server_config` SET `value` = {} WHERE `config` = 'players_record' AND `world_id` = {}", playersRecord, worlds().getCurrentWorld()->id);
+	db.executeQuery(query);
 }
 
 void Game::loadPlayersRecord() {
 	Database &db = Database::getInstance();
+	const auto worldId = worlds().getCurrentWorld()->id;
 
-	DBResult_ptr result = db.storeQuery("SELECT `value` FROM `server_config` WHERE `config` = 'players_record'");
+	const auto result = db.storeQuery(fmt::format("SELECT `value` FROM `server_config` WHERE `config` = 'players_record' AND `world_id` = {}", worldId));
 	if (result) {
 		playersRecord = result->getNumber<uint32_t>("value");
 	} else {
-		db.executeQuery("INSERT INTO `server_config` (`config`, `value`) VALUES ('players_record', '0')");
+		db.executeQuery(fmt::format("INSERT INTO `server_config` (`world_id`, `config`, `value`) VALUES ({}, 'players_record', '0')", worldId));
 	}
 }
 
@@ -9339,7 +9437,7 @@ void Game::playerLeaveParty(uint32_t playerId) {
 	}
 
 	std::shared_ptr<Party> party = player->getParty();
-	if (!party || (player->hasCondition(CONDITION_INFIGHT) && !player->getZoneType() == ZONE_PROTECTION)) {
+	if (!party || (player->hasCondition(CONDITION_INFIGHT) && player->getZoneType() != ZONE_PROTECTION)) {
 		player->sendTextMessage(TextMessage(MESSAGE_FAILURE, "You cannot leave party, contact the administrator."));
 		return;
 	}
@@ -9492,6 +9590,36 @@ void Game::playerFriendSystemAction(const std::shared_ptr<Player> &player, uint8
 	}
 }
 
+void Game::setImprovedRespawnZones(std::vector<ImprovedRespawnZone> zones) {
+	improvedRespawnZones = std::move(zones);
+	hasImprovedRespawnZones = !improvedRespawnZones.empty();
+	if (hasImprovedRespawnZones) {
+		improvedRespawnBounds = improvedRespawnZones.front();
+		for (const auto &z : improvedRespawnZones) {
+			improvedRespawnBounds.x1 = std::min(improvedRespawnBounds.x1, z.x1);
+			improvedRespawnBounds.y1 = std::min(improvedRespawnBounds.y1, z.y1);
+			improvedRespawnBounds.x2 = std::max(improvedRespawnBounds.x2, z.x2);
+			improvedRespawnBounds.y2 = std::max(improvedRespawnBounds.y2, z.y2);
+		}
+	}
+	g_logger().info("Improved Respawn {} zone rect(s) active", improvedRespawnZones.size());
+}
+
+bool Game::isImprovedRespawnPosition(const Position &pos) const {
+	if (!hasImprovedRespawnZones) {
+		return false;
+	}
+	if (pos.x < improvedRespawnBounds.x1 || pos.x > improvedRespawnBounds.x2 || pos.y < improvedRespawnBounds.y1 || pos.y > improvedRespawnBounds.y2) {
+		return false;
+	}
+	for (const auto &z : improvedRespawnZones) {
+		if (pos.x >= z.x1 && pos.x <= z.x2 && pos.y >= z.y1 && pos.y <= z.y2) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void Game::playerCyclopediaCharacterInfo(const std::shared_ptr<Player> &player, uint32_t characterID, CyclopediaCharacterInfoType_t characterInfoType, uint16_t entriesPerPage, uint16_t page) {
 	uint32_t playerID = player->getID();
 	if (playerID != characterID) {
@@ -9559,63 +9687,89 @@ void Game::playerCyclopediaCharacterInfo(const std::shared_ptr<Player> &player, 
 	}
 }
 
-std::string Game::generateHighscoreQueryForEntries(const std::string &categoryName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation) {
-	std::ostringstream query;
-	uint32_t startPage = (static_cast<uint32_t>(page - 1) * static_cast<uint32_t>(entriesPerPage));
+std::string Game::generateHighscoreQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation) {
+	uint32_t startPage = (page - 1) * static_cast<uint32_t>(entriesPerPage);
 	uint32_t endPage = startPage + static_cast<uint32_t>(entriesPerPage);
-	const std::string pointsExpression = getHighscorePointsExpression(categoryName);
-	const std::string fromClause = getHighscoreFromClause(categoryName);
+	std::string vocationCondition = (vocation != 0xFFFFFFFF) ? generateVocationConditionHighscore(vocation) : "";
 
-	query << "SELECT *, @row AS `entries`, " << page << " AS `page` FROM (SELECT *, (@row := @row + 1) AS `rn` FROM (SELECT `id`, `name`, `level`, `vocation`, "
-		  << pointsExpression << " AS `points`, @curRank := IF(@prevRank = " << pointsExpression << ", @curRank, IF(@prevRank := " << pointsExpression
-		  << ", @curRank + 1, @curRank + 1)) AS `rank` " << fromClause << ", (SELECT @curRank := 0, @prevRank := NULL, @row := 0) `r` WHERE `group_id` < "
-		  << static_cast<int>(GROUP_TYPE_GAMEMASTER) << " ORDER BY " << pointsExpression << " DESC) `t`";
+	std::string worldCondition = !worldName.empty() ? fmt::format(" AND `w`.`name` = {}", Database::getInstance().escapeString(worldName)) : "";
 
-	if (vocation != 0xFFFFFFFF) {
-		query << generateVocationConditionHighscore(vocation);
-	}
-	query << ") `T` WHERE `rn` > " << startPage << " AND `rn` <= " << endPage;
+	std::string query = fmt::format(
+		"SELECT *, @row AS `entries`, {0} AS `page` FROM ("
+		"SELECT *, (@row := @row + 1) AS `rn` FROM ("
+		"SELECT `p`.`id`, `p`.`name`, `p`.`level`, `p`.`vocation`, `w`.`name` AS `worldName`, `p`.`{1}` AS `points`, "
+		"@curRank := IF(@prevRank = `{1}`, @curRank, IF(@prevRank := `{1}`, @curRank + 1, @curRank + 1)) AS `rank` "
+		"FROM `players` `p` INNER JOIN `worlds` `w` ON `p`.`world_id` = `w`.`id`, "
+		"(SELECT @curRank := 0, @prevRank := NULL, @row := 0) `r` "
+		"WHERE `group_id` < {2}{3}{4} "
+		"ORDER BY `{1}` DESC) `t`"
+		") `T` WHERE `rn` > {5} AND `rn` <= {6}",
+		page, // {0}
+		categoryName, // {1}
+		static_cast<int>(GROUP_TYPE_GAMEMASTER), // {2}
+		vocationCondition, // {3}
+		worldCondition, // {4}
+		startPage, // {5}
+		endPage // {6}
+	);
 
-	return query.str();
+	return query;
 }
 
-std::string Game::generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation) {
-	std::ostringstream query;
+std::string Game::generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation, const std::string &selectedWorld) {
 	std::string entriesStr = std::to_string(entriesPerPage);
-	const std::string pointsExpression = getHighscorePointsExpression(categoryName);
-	const std::string fromClause = getHighscoreFromClause(categoryName);
 
-	query << "SELECT *, @row AS `entries`, (@ourRow DIV " << entriesStr << ") + 1 AS `page` FROM (SELECT *, (@row := @row + 1) AS `rn`, @ourRow := IF(`id` = "
-		  << playerGUID << ", @row - 1, @ourRow) AS `rw` FROM (SELECT `id`, `name`, `level`, `vocation`, " << pointsExpression << " AS `points`, @curRank := IF(@prevRank = "
-		  << pointsExpression << ", @curRank, IF(@prevRank := " << pointsExpression << ", @curRank + 1, @curRank + 1)) AS `rank` " << fromClause << ", (SELECT @curRank := 0, @prevRank := NULL, @row := 0, @ourRow := 0) `r` WHERE `group_id` < "
-		  << static_cast<int>(GROUP_TYPE_GAMEMASTER) << " ORDER BY " << pointsExpression << " DESC) `t`";
+	std::string vocationCondition = (vocation != 0xFFFFFFFF) ? generateVocationConditionHighscore(vocation) : "";
+	std::string worldCondition = !selectedWorld.empty() ? fmt::format(" AND `w`.`name` = {}", Database::getInstance().escapeString(selectedWorld)) : "";
 
-	if (vocation != 0xFFFFFFFF) {
-		query << generateVocationConditionHighscore(vocation);
-	}
-	query << ") `T` WHERE `rn` > ((@ourRow DIV " << entriesStr << ") * " << entriesStr << ") AND `rn` <= (((@ourRow DIV " << entriesStr << ") * " << entriesStr << ") + " << entriesStr << ")";
+	std::string query = fmt::format(
+		"SELECT *, @row AS `entries`, (@ourRow DIV {0}) + 1 AS `page` FROM ("
+		"SELECT *, (@row := @row + 1) AS `rn`, @ourRow := IF(`id` = {1}, @row - 1, @ourRow) AS `rw` FROM ("
+		"SELECT `p`.`id`, `p`.`name`, `p`.`level`, `p`.`vocation`, `w`.`name` AS `worldName`, `p`.`{2}` AS `points`, "
+		"@curRank := IF(@prevRank = `{2}`, @curRank, IF(@prevRank := `{2}`, @curRank + 1, @curRank + 1)) AS `rank` "
+		"FROM `players` `p` INNER JOIN `worlds` `w` ON `p`.`world_id` = `w`.`id`, "
+		"(SELECT @curRank := 0, @prevRank := NULL, @row := 0, @ourRow := 0) `r` "
+		"WHERE `group_id` < {3}{4}{5} "
+		"ORDER BY `{2}` DESC) `t`) `T` WHERE `rn` > ((@ourRow DIV {0}) * {0}) AND `rn` <= (((@ourRow DIV {0}) * {0}) + {0})",
+		entriesStr, // {0}
+		playerGUID, // {1}
+		categoryName, // {2}
+		static_cast<int>(GROUP_TYPE_GAMEMASTER), // {3}
+		vocationCondition, // {4}
+		worldCondition // {5}
+	);
 
-	return query.str();
+	return query;
 }
 
 std::string Game::generateVocationConditionHighscore(uint32_t searchVocationBaseId) {
-	std::ostringstream queryPart;
-
+	// Build a safe AND(...) clause containing all matching vocation ids.
+	std::vector<uint32_t> ids;
 	const auto vocationsMap = g_vocations().getVocations();
 	for (const auto &[currentVocationId, vocationPtr] : vocationsMap) {
 		if (vocationPtr->getBaseId() == searchVocationBaseId) {
-			if (vocationPtr->getFromVocation() == static_cast<uint32_t>(currentVocationId)) {
-				queryPart << " WHERE `vocation` = " << currentVocationId;
-			} else {
-				queryPart << " OR `vocation` = " << currentVocationId;
-			}
+			ids.push_back(currentVocationId);
 		}
 	}
 
-	return queryPart.str();
+	if (ids.empty()) {
+		return std::string();
+	}
+
+	std::ostringstream ss;
+	ss << " AND (";
+	for (size_t i = 0; i < ids.size(); ++i) {
+		if (i) {
+			ss << " OR ";
+		}
+		ss << "`vocation` = " << ids[i];
+	}
+	ss << ")";
+
+	return ss.str();
 }
 
-void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage) {
+void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage, const std::string &selectedWorld) {
 	const auto &player = g_game().getPlayerByID(playerID);
 	if (!player) {
 		return;
@@ -9633,9 +9787,7 @@ void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID
 	pages += entriesPerPage - 1;
 	pages /= entriesPerPage;
 
-	std::ostringstream cacheKeyStream;
-	cacheKeyStream << "Highscore_" << static_cast<int>(category) << "_" << static_cast<int>(vocation) << "_" << static_cast<int>(entriesPerPage) << "_" << page;
-	std::string cacheKey = cacheKeyStream.str();
+	std::string cacheKey = fmt::format("Highscore_{}_{}_{}_{}_{}", selectedWorld.empty() ? "All" : selectedWorld, static_cast<int>(category), static_cast<int>(vocation), static_cast<int>(entriesPerPage), page);
 
 	auto it = highscoreCache.find(cacheKey);
 	auto now = std::chrono::system_clock::now();
@@ -9645,7 +9797,7 @@ void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID
 		auto durationSinceEpoch = cachedTime.time_since_epoch();
 		auto secondsSinceEpoch = std::chrono::duration_cast<std::chrono::seconds>(durationSinceEpoch).count();
 		auto updateTimer = static_cast<uint32_t>(secondsSinceEpoch);
-		player->sendHighscores(cacheEntry.characters, category, vocation, cacheEntry.page, static_cast<uint16_t>(cacheEntry.entriesPerPage), updateTimer);
+		player->sendHighscores(selectedWorld, cacheEntry.characters, category, vocation, cacheEntry.page, static_cast<uint16_t>(cacheEntry.entriesPerPage), updateTimer);
 	} else {
 		std::vector<HighscoreCharacter> characters;
 		characters.reserve(result->countResults());
@@ -9654,11 +9806,11 @@ void Game::processHighscoreResults(const DBResult_ptr &result, uint32_t playerID
 				const auto &voc = g_vocations().getVocation(result->getNumber<uint16_t>("vocation"));
 				uint8_t characterVocation = voc ? voc->getClientId() : 0;
 				std::string loyaltyTitle; // todo get loyalty title from player
-				characters.emplace_back(std::move(result->getString("name")), result->getNumber<uint64_t>("points"), result->getNumber<uint32_t>("id"), result->getNumber<uint32_t>("rank"), result->getNumber<uint16_t>("level"), characterVocation, loyaltyTitle);
+				characters.emplace_back(std::move(result->getString("name")), result->getNumber<uint64_t>("points"), result->getNumber<uint32_t>("id"), result->getNumber<uint32_t>("rank"), result->getNumber<uint16_t>("level"), characterVocation, result->getString("worldName"), loyaltyTitle);
 			} while (result->next());
 		}
 
-		player->sendHighscores(characters, category, vocation, page, static_cast<uint16_t>(pages), getTimeNow());
+		player->sendHighscores(selectedWorld, characters, category, vocation, page, static_cast<uint16_t>(pages), getTimeNow());
 		highscoreCache[cacheKey] = { characters, page, pages, now };
 	}
 }
@@ -9668,10 +9820,8 @@ void Game::cacheQueryHighscore(const std::string &key, const std::string &query,
 	queryCache[key] = queryEntry;
 }
 
-std::string Game::generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation) {
-	std::ostringstream cacheKeyStream;
-	cacheKeyStream << "Entries_" << categoryName << "_" << page << "_" << static_cast<int>(entriesPerPage) << "_" << vocation;
-	std::string cacheKey = cacheKeyStream.str();
+std::string Game::generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation) {
+	std::string cacheKey = fmt::format("Entries_{}_{}_{}_{}_{}", worldName.empty() ? "All" : worldName, categoryName, page, static_cast<int>(entriesPerPage), vocation);
 
 	if (queryCache.find(cacheKey) != queryCache.end()) {
 		const QueryHighscoreCacheEntry &cachedEntry = queryCache[cacheKey];
@@ -9680,7 +9830,7 @@ std::string Game::generateHighscoreOrGetCachedQueryForEntries(const std::string 
 		}
 	}
 
-	std::string newQuery = generateHighscoreQueryForEntries(categoryName, page, entriesPerPage, vocation);
+	std::string newQuery = generateHighscoreQueryForEntries(categoryName, worldName, page, entriesPerPage, vocation);
 	cacheQueryHighscore(cacheKey, newQuery, page, entriesPerPage);
 
 	return newQuery;
@@ -9698,13 +9848,13 @@ std::string Game::generateHighscoreOrGetCachedQueryForOurRank(const std::string 
 		}
 	}
 
-	std::string newQuery = generateHighscoreQueryForOurRank(categoryName, entriesPerPage, playerGUID, vocation);
+	std::string newQuery = generateHighscoreQueryForOurRank(categoryName, entriesPerPage, playerGUID, vocation, worlds().getCurrentWorld()->name);
 	cacheQueryHighscore(cacheKey, newQuery, entriesPerPage, entriesPerPage);
 
 	return newQuery;
 }
 
-void Game::playerHighscores(const std::shared_ptr<Player> &player, HighscoreType_t type, uint8_t category, uint32_t vocation, const std::string &, uint16_t page, uint8_t entriesPerPage) {
+void Game::playerHighscores(const std::shared_ptr<Player> &player, HighscoreType_t type, uint8_t category, uint32_t vocation, const std::string &worldName, uint16_t page, uint8_t entriesPerPage) {
 	if (player->hasAsyncOngoingTask(PlayerAsyncTask_Highscore)) {
 		return;
 	}
@@ -9713,14 +9863,14 @@ void Game::playerHighscores(const std::shared_ptr<Player> &player, HighscoreType
 
 	std::string query;
 	if (type == HIGHSCORE_GETENTRIES) {
-		query = generateHighscoreOrGetCachedQueryForEntries(categoryName, page, entriesPerPage, vocation);
+		query = generateHighscoreOrGetCachedQueryForEntries(categoryName, worldName, page, entriesPerPage, vocation);
 	} else if (type == HIGHSCORE_OURRANK) {
 		query = generateHighscoreOrGetCachedQueryForOurRank(categoryName, entriesPerPage, player->getGUID(), vocation);
 	}
 
 	uint32_t playerID = player->getID();
-	std::function<void(DBResult_ptr, bool)> callback = [this, playerID, category, vocation, entriesPerPage](const DBResult_ptr &result, bool) {
-		processHighscoreResults(result, playerID, category, vocation, entriesPerPage);
+	std::function<void(DBResult_ptr, bool)> callback = [this, playerID, category, vocation, entriesPerPage, worldName](const DBResult_ptr &result, bool) {
+		processHighscoreResults(result, playerID, category, vocation, entriesPerPage, worldName);
 	};
 
 	g_databaseTasks().store(query, callback);
@@ -11283,6 +11433,7 @@ void Game::addPlayer(const std::shared_ptr<Player> &player) {
 	mappedPlayerNames[lowercase_name] = player;
 	wildcardTree->insert(lowercase_name);
 	players[player->getID()] = player;
+	playersByGUID[player->getGUID()] = player;
 }
 
 void Game::removePlayer(const std::shared_ptr<Player> &player) {
@@ -11290,6 +11441,7 @@ void Game::removePlayer(const std::shared_ptr<Player> &player) {
 	mappedPlayerNames.erase(lowercase_name);
 	wildcardTree->remove(lowercase_name);
 	players.erase(player->getID());
+	playersByGUID.erase(player->getGUID());
 }
 
 void Game::addNpc(const std::shared_ptr<Npc> &npc) {

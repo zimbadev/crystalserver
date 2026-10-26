@@ -88,7 +88,8 @@ int CrystalServer::run() {
 				rsa.start();
 				initializeDatabase();
 				loadModules();
-				setWorldType();
+				g_game().worlds().load();
+				loadThisWorld();
 				loadMaps();
 
 				logger.info("Initializing gamestate...");
@@ -98,6 +99,7 @@ int CrystalServer::run() {
 				g_game().transferHouseItemsToDepot();
 
 				IOMarket::checkExpiredOffers();
+				IOMarket::checkWebOrders();
 				IOMarket::getInstance().updateStatistics();
 
 				g_ioweeklytasks().initializeShopOffers(); // Winter Update 2025 - Task Board Shop (after mounts/outfits are loaded)
@@ -149,7 +151,8 @@ int CrystalServer::run() {
 		return EXIT_FAILURE;
 	}
 
-	logger.info("{} {}", g_configManager().getString(SERVER_NAME), "server online!");
+	const auto &curWorld = g_game().worlds().getCurrentWorld();
+	logger.info("World [{} - {} - {}] on port [{}] is online!", curWorld->id, curWorld->name, g_game().getWorldTypeNames().at(curWorld->type), curWorld->port);
 	g_logger().setLevel(g_configManager().getString(LOGLEVEL));
 
 	serviceManager.run();
@@ -158,31 +161,29 @@ int CrystalServer::run() {
 	return EXIT_SUCCESS;
 }
 
-void CrystalServer::setWorldType() {
-	const std::string worldType = asLowerCaseString(g_configManager().getString(WORLD_TYPE));
-	bool expertPvp = false;
-	// "expert-pvp" (and legacy open aliases) -> full 2014 Expert Open PvP; "retro-pvp" -> plain Open PvP.
-	if (worldType == "expert-pvp" || worldType == "expertpvp" || worldType == "expert"
-	    || worldType == "open" || worldType == "2" || worldType == "openpvp" || worldType == "pvp" || worldType == "normal") {
-		g_game().setWorldType(WORLDTYPE_OPEN);
-		expertPvp = true;
-	} else if (worldType == "retro-pvp" || worldType == "retropvp" || worldType == "retro") {
-		g_game().setWorldType(WORLDTYPE_OPEN);
-	} else if (worldType == "optional" || worldType == "1" || worldType == "optionalpvp" || worldType == "safe" || worldType == "nopvp" || worldType == "no-pvp" || worldType == "secure") {
-		g_game().setWorldType(WORLDTYPE_OPTIONAL);
-	} else if (worldType == "hardcore" || worldType == "3" || worldType == "hardcorepvp" || worldType == "war" || worldType == "pvp-enforced" || worldType == "enforced") {
-		g_game().setWorldType(WORLDTYPE_HARDCORE);
-	} else {
+void CrystalServer::loadThisWorld() {
+	auto worldId = g_configManager().getNumber(WORLD_ID);
+	auto world = g_game().worlds().getWorldConfigsById(worldId);
+	if (!world) {
+		throw FailedToInitializeCrystalServer(fmt::format("Unknown world with ID {}", worldId));
+	}
+
+	if (world->type == WORLDTYPE_NONE) {
 		throw FailedToInitializeCrystalServer(
-			fmt::format(
-				"Unknown world type: {}, valid world types are: expert-pvp, retro-pvp, optional (no-pvp) and hardcore (pvp-enforced)",
-				g_configManager().getString(WORLD_TYPE)
-			)
+			fmt::format("Unknown world type for world ID {}", world->id)
 		);
 	}
-	g_game().setExpertPvp(expertPvp);
+	const auto configuredType = asLowerCaseString(g_configManager().getString(WORLD_TYPE));
+	g_game().setExpertPvp(configuredType == "expert-pvp" || configuredType == "expertpvp" || configuredType == "expert");
+	const auto location = Worlds::getWorldLocationByKey(world->locationName);
+	if (location == Location_t::None) {
+		throw FailedToInitializeCrystalServer(
+			fmt::format("Unknown world location: {}, valid world locations are: Europe, North America, South America and Oceania", world->locationName)
+		);
+	}
 
-	logger.info("World type set as {}{}", asUpperCaseString(worldType), expertPvp ? " (Expert PvP)" : "");
+	g_game().worlds().setCurrentWorld(world);
+	logger.info("World ID: {}, Name: {}, Type: {}, Location: {}, Port {}{}", world->id, world->name, g_game().getWorldTypeNames().at(world->type), world->locationName, world->port, g_game().isExpertPvp() ? " (Expert PvP)" : "");
 }
 
 void CrystalServer::loadMaps() const {

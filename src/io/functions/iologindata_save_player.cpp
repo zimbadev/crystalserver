@@ -38,7 +38,7 @@ bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const Ite
 		return false;
 	}
 
-	const Database &db = Database::getInstance();
+	Database &db = Database::getInstance();
 	std::ostringstream ss;
 
 	// Initialize variables
@@ -282,7 +282,7 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 	const char* animusMastery = propAnimusMasteryStream.getStream(animusMasterySize);
 	query << "`animus_mastery` = " << db.escapeBlob(animusMastery, static_cast<uint32_t>(animusMasterySize)) << ",";
 
-	if (g_game().getWorldType() != WORLDTYPE_HARDCORE) {
+	if (g_game().worlds().getCurrentWorld()->type != WORLDTYPE_HARDCORE) {
 		int64_t skullTime = 0;
 
 		if (player->skullTicks > 0) {
@@ -352,6 +352,29 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 		for (const auto &perk : proficiency.activePerks) {
 			propWeaponProficiency.write<uint8_t>(perk.proficiencyLevel);
 			propWeaponProficiency.write<uint8_t>(perk.perkPosition);
+		}
+	}
+
+	// 15.25 (sommerrelease26) SHAPE: trailing modified-slots section. Appended AFTER the main loop so old blobs
+	// (which lack it) still load — the loader treats a missing section as "no modified slots". See PORT.md §7.5.
+	uint16_t modifiedWeaponCount = 0;
+	for (const auto &entry : player->weaponProficiencies) {
+		if (!entry.second.modifiedSlots.empty()) {
+			++modifiedWeaponCount;
+		}
+	}
+	propWeaponProficiency.write<uint16_t>(modifiedWeaponCount);
+	for (const auto &[itemId, proficiency] : player->weaponProficiencies) {
+		if (proficiency.modifiedSlots.empty()) {
+			continue;
+		}
+		propWeaponProficiency.write<uint16_t>(itemId);
+		propWeaponProficiency.write<uint8_t>(static_cast<uint8_t>(proficiency.modifiedSlots.size()));
+		for (const auto &slot : proficiency.modifiedSlots) {
+			propWeaponProficiency.write<uint8_t>(slot.proficiencyLevel);
+			propWeaponProficiency.write<uint8_t>(slot.perkPosition);
+			propWeaponProficiency.write<uint16_t>(static_cast<uint16_t>(slot.perkType));
+			propWeaponProficiency.write<uint8_t>(slot.value);
 		}
 	}
 
@@ -1062,12 +1085,10 @@ bool IOLoginDataSave::savePlayerStatement(const std::shared_ptr<Player> &player,
 		  << player->getGUID() << ", " << db.escapeString(receiver) << ", " << channelId << ", "
 		  << db.escapeString(utf8Text) << ", " << time(nullptr) << ")";
 
-	if (!db.executeQuery(query.str())) {
-		return false;
-	}
-
-	statementId = db.getLastInsertId();
-	return true;
+	// Pool-safe: pin the connection for INSERT + LAST_INSERT_ID so a concurrent INSERT
+	// on another connection in the pool can't return a foreign id here.
+	statementId = db.insertAndGetId(query.str());
+	return statementId != 0;
 }
 
 bool IOLoginDataSave::savePlayerNamesAndChangeName(const std::shared_ptr<Player> &player, const std::string &newName, const std::string &oldName) {

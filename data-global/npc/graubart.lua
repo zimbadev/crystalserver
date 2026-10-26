@@ -60,6 +60,9 @@ keywordHandler:addKeyword({ "races" }, StdModule.say, { npcHandler = npcHandler,
 keywordHandler:addKeyword({ "water" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, sold out." })
 keywordHandler:addKeyword({ "marlene" }, StdModule.say, { npcHandler = npcHandler, text = "Pssst. Marlene is not near right now...? You know... she is a lovely woman, but she talks too much! So I always try to keep distance from her because she can't stop talking." })
 keywordHandler:addKeyword({ "bruno" }, StdModule.say, { npcHandler = npcHandler, text = "Bruno is one of the best sailors I know. He is nearly as good as me. *laughs loudly*" })
+keywordHandler:addKeyword({ "work" }, StdModule.say, { npcHandler = npcHandler, text = "I'm sorry, but it is too dangerous nowadays. Too many storms out there. Too dangerous for the ship. Come back in some months and we will see." })
+keywordHandler:addKeyword({ "aneus" }, StdModule.say, { npcHandler = npcHandler, text = "Hmm, I don't know him very well. But he has a very nice story to tell." })
+keywordHandler:addKeyword({ "food" }, StdModule.say, { npcHandler = npcHandler, text = "Sorry, sold out. Ask Bruno." })
 
 npcHandler:setMessage(MESSAGE_FAREWELL, "Good bye and don't forget me!")
 npcHandler:setMessage(MESSAGE_GREET, "Ahoi, young man |PLAYERNAME|. Looking for work on my ship?")

@@ -51,6 +51,31 @@ local function handleCreatureDescription(inspectedThing, lookDistance)
 	return "You see " .. descriptionText
 end
 
+-- Names the Lua file that answers for an item, and how it was hooked: through the
+-- item's unique id, its action id, its item id, or the position it sits on. Only
+-- the first hook of a kind ever runs, so a losing one is marked as shadowed.
+local function appendScriptBindings(descriptionText, inspectedThing)
+	local scriptBindings = inspectedThing:getScriptBindings()
+	if not scriptBindings then
+		return descriptionText
+	end
+
+	for _, binding in ipairs(scriptBindings) do
+		local bindingLabel = binding.kind
+		if binding.event ~= "" then
+			bindingLabel = string.format("%s %s", bindingLabel, binding.event)
+		end
+
+		if binding.shadowed then
+			bindingLabel = bindingLabel .. " (shadowed)"
+		end
+
+		descriptionText = string.format("%s\n%s: %s (%s)", descriptionText, bindingLabel, binding.script, binding.source)
+	end
+
+	return descriptionText
+end
+
 local function appendAdminDetails(descriptionText, inspectedThing, inspectedPosition)
 	if inspectedThing:isItem() then
 		descriptionText = string.format("%s\nClient ID: %d", descriptionText, inspectedThing:getId())
@@ -99,6 +124,10 @@ local function appendAdminDetails(descriptionText, inspectedThing, inspectedPosi
 	end
 
 	descriptionText = string.format("%s\n%s", descriptionText, getPositionDescription(inspectedPosition))
+
+	if inspectedThing:isItem() then
+		descriptionText = appendScriptBindings(descriptionText, inspectedThing)
+	end
 
 	if inspectedThing:isCreature() then
 		local creatureBaseSpeed = inspectedThing:getBaseSpeed()

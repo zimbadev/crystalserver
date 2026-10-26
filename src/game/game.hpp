@@ -26,7 +26,9 @@
 #include "map/map.hpp"
 #include "modal_window/modal_window.hpp"
 #include "movement/position.hpp"
+#include "game/worlds/gameworlds.hpp"
 #include "creatures/creatures_definitions.hpp"
+#include "items/items_classification.hpp"
 
 // Forward declaration for protobuf class
 namespace Crystal {
@@ -44,7 +46,6 @@ class Npc;
 class Charm;
 class IOPrey;
 class IOWheel;
-class ItemClassification;
 class Guild;
 class Mounts;
 class AttachedEffects;
@@ -100,6 +101,10 @@ struct PositionHasher {
 	}
 };
 
+struct ImprovedRespawnZone {
+	uint16_t x1, y1, x2, y2;
+};
+
 class Game {
 public:
 	Game();
@@ -110,6 +115,11 @@ public:
 	Game &operator=(const Game &) = delete;
 
 	static Game &getInstance();
+
+	// Game worlds interface
+	Worlds &worlds();
+	[[nodiscard]] const Worlds &worlds() const;
+	[[nodiscard]] const std::unordered_map<uint8_t, std::string> &getWorldTypeNames() const;
 
 	void resetMonsters() const;
 	void resetNpcs() const;
@@ -144,16 +154,11 @@ public:
 		height = map.height;
 	}
 
-	void setWorldType(WorldType_t type);
-	WorldType_t getWorldType() const {
-		return worldType;
-	}
-
 	// Open PvP (2014 rules): the full "Expert PvP" ruleset (character pass-through, situation boxes,
 	// first-in-stack initiate rule, expert client controls, field ownership) is gated on this.
 	// Selected via config worldType: "expert-pvp" enables it, "retro-pvp" keeps plain Open PvP.
 	bool isExpertPvp() const {
-		return worldType == WORLDTYPE_OPEN && expertPvp;
+		return worlds().getCurrentWorld() && worlds().getCurrentWorld()->type == WORLDTYPE_OPEN && expertPvp;
 	}
 	void setExpertPvp(bool enabled) {
 		expertPvp = enabled;
@@ -230,14 +235,15 @@ public:
 	bool isSwimmingPool(const std::shared_ptr<Item> &item, const std::shared_ptr<Tile> &tile, bool checkProtection) const;
 	void createIllusion(const std::shared_ptr<Player> &player, const Outfit_t &outfit, int32_t time);
 
-	void addItemsClassification(ItemClassification* itemsClassification) {
-		itemsClassifications.push_back(itemsClassification);
+	void addItemsClassification(std::unique_ptr<ItemClassification> itemsClassification) {
+		itemsClassifications.push_back(std::move(itemsClassification));
 	}
 	ItemClassification* getItemsClassification(uint8_t id, bool create);
 
 	LightInfo getWorldLightInfo() const;
 
 	bool gameIsDay();
+	bool isRetroPVP() const;
 
 	ReturnValue internalMoveCreature(const std::shared_ptr<Creature> &creature, Direction direction, uint32_t flags = 0);
 	ReturnValue internalMoveCreature(const std::shared_ptr<Creature> &creature, const std::shared_ptr<Tile> &toTile, uint32_t flags = 0);
@@ -504,8 +510,8 @@ public:
 	}
 
 	void setBoostedName(std::string name) {
-		boostedCreature = name;
 		g_logger().info("Boosted creature: {}", name);
+		boostedCreature = std::move(name);
 	}
 
 	std::string getBoostedMonsterName() const {
@@ -631,8 +637,13 @@ public:
 	void removeDeadPlayer(const std::string &playerName);
 	std::shared_ptr<Player> getDeadPlayer(const std::string &playerName);
 
-	const std::vector<ItemClassification*> &getItemsClassifications() const {
-		return itemsClassifications;
+	std::vector<ItemClassification*> getItemsClassifications() const {
+		std::vector<ItemClassification*> result;
+		result.reserve(itemsClassifications.size());
+		for (const auto &ptr : itemsClassifications) {
+			result.push_back(ptr.get());
+		}
+		return result;
 	}
 
 	void addPlayer(const std::shared_ptr<Player> &player);
@@ -713,6 +724,9 @@ public:
 	void setCreateLuaItems(Position position, uint16_t itemId) {
 		mapLuaItemsStored[position] = itemId;
 	}
+
+	void setImprovedRespawnZones(std::vector<ImprovedRespawnZone> zones);
+	bool isImprovedRespawnPosition(const Position &pos) const;
 
 	auto getFiendishMonsters() const {
 		return fiendishMonsters;
@@ -817,6 +831,8 @@ public:
 	void refreshItem(const std::shared_ptr<Item> &item);
 
 private:
+	std::unordered_map<uint8_t, std::string> m_worldTypesNames;
+
 	std::map<uint16_t, Achievement> m_achievements;
 	std::map<std::string, uint16_t> m_achievementsNameToId;
 
@@ -910,6 +926,7 @@ private:
 
 	std::unordered_map<std::string, std::weak_ptr<Player>> m_deadPlayers;
 	phmap::parallel_flat_hash_map<uint32_t, std::shared_ptr<Player>> players;
+	phmap::parallel_flat_hash_map<uint32_t, std::shared_ptr<Player>> playersByGUID;
 	phmap::flat_hash_map<std::string, std::weak_ptr<Player>> mappedPlayerNames;
 	phmap::parallel_flat_hash_map<uint32_t, std::shared_ptr<Guild>> guilds;
 	phmap::flat_hash_map<uint16_t, std::shared_ptr<Item>> uniqueItems;
@@ -929,6 +946,10 @@ private:
 	std::vector<uint16_t> registeredMagicEffects;
 	std::vector<uint16_t> registeredDistanceEffects;
 	std::vector<uint16_t> registeredLookTypes;
+
+	std::vector<ImprovedRespawnZone> improvedRespawnZones;
+	ImprovedRespawnZone improvedRespawnBounds {}; // overall bbox for a cheap reject
+	bool hasImprovedRespawnZones = false;
 
 	size_t lastBucket = 0;
 	size_t lastImbuedBucket = 0;
@@ -963,7 +984,6 @@ private:
 	bool browseField = false;
 
 	GameState_t gameState = GAME_STATE_NORMAL;
-	WorldType_t worldType = WORLDTYPE_OPEN;
 	bool expertPvp = false; // Open PvP (2014 rules): true only for config worldType "expert-pvp"
 
 	LightState_t lightState = LIGHT_STATE_DAY;
@@ -985,7 +1005,7 @@ private:
 
 	std::map<uint16_t, std::map<uint8_t, uint64_t>> itemsPriceMap;
 
-	std::vector<ItemClassification*> itemsClassifications;
+	std::vector<std::unique_ptr<ItemClassification>> itemsClassifications;
 
 	bool isTryingToStow(const Position &toPos, const std::shared_ptr<Cylinder> &toCylinder) const;
 
@@ -1031,16 +1051,17 @@ private:
 
 	// Variable members (m_)
 	std::unique_ptr<IOWheel> m_IOWheel;
+	Worlds m_worlds = {};
 
 	std::unique_ptr<AttachedEffects> m_attachedEffects;
 
 	void cacheQueryHighscore(const std::string &key, const std::string &query, uint32_t page, uint8_t entriesPerPage);
-	void processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage);
+	void processHighscoreResults(const DBResult_ptr &result, uint32_t playerID, uint8_t category, uint32_t vocation, uint8_t entriesPerPage, const std::string &selectedWorld);
 
 	std::string generateVocationConditionHighscore(uint32_t searchVocationBaseId);
-	std::string generateHighscoreQueryForEntries(const std::string &categoryName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
-	std::string generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation);
-	std::string generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
+	std::string generateHighscoreQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
+	std::string generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation, const std::string &selectedWorld);
+	std::string generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
 	std::string generateHighscoreOrGetCachedQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation);
 
 	bool hasPartyMembersNearby(const std::shared_ptr<Player> &player);

@@ -18,6 +18,7 @@
 #pragma once
 
 #include "declarations.hpp"
+#include "lua/scripts/script_binding.hpp"
 
 class Action;
 class LuaScriptInterface;
@@ -169,6 +170,26 @@ public:
 	bool registerLuaActionEvent(const std::shared_ptr<Action> &action);
 	bool registerLuaPositionEvent(const std::shared_ptr<Action> &action);
 	bool registerLuaEvent(const std::shared_ptr<Action> &action);
+
+	/**
+	 * @brief Reports scripts registered by position that can never run.
+	 *
+	 * getAction() looks up unique id, then action id, then item id, and only then
+	 * the position. So a script registered for a position is dead whenever an item
+	 * on that tile carries an id another script also registered. Call it after the
+	 * startup tables have stamped the map, through Game.reportShadowedScripts().
+	 */
+	void reportShadowedPositionScripts();
+
+	/**
+	 * @brief Every action script hooked to an item, and how each one got hooked.
+	 *
+	 * Walks the same order getAction() does, so the first entry is the script that
+	 * actually answers; anything after it is flagged as shadowed. Exposed to Lua
+	 * through Item:getScriptBindings() so a look can name the file.
+	 */
+	[[nodiscard]] std::vector<ScriptBinding> getScriptBindings(const std::shared_ptr<Item> &item) const;
+
 	// Clear maps for reloading
 	void clear();
 

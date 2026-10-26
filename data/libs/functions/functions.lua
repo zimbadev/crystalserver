@@ -66,23 +66,25 @@ function getTitle(uid)
 end
 
 function getLootRandom(modifier)
-	local multi = (configManager.getNumber(configKeys.RATE_LOOT) * SCHEDULE_LOOT_RATE) * (modifier or 1)
+	local multi = (configManager.getFloat(configKeys.RATE_LOOT) * SCHEDULE_LOOT_RATE) * (modifier or 1)
 	return math.random(0, MAX_LOOTCHANCE) * 100 / math.max(1, multi)
 end
 
-local start = os.time()
-local linecount = 0
-debug.sethook(function(event, line)
-	linecount = linecount + 1
-	if systemTime() - start >= 1 then
-		if linecount >= 30000 then
-			logger.warn("[debug.sethook] - Possible infinite loop in file [{}] near line [{}]", debug.getinfo(2).source, line)
-			debug.sethook()
+if configManager.getBoolean(configKeys.LUA_DEBUG_HOOK) then
+	local start = os.time()
+	local linecount = 0
+	debug.sethook(function(event, line)
+		linecount = linecount + 1
+		if systemTime() - start >= 1 then
+			if linecount >= 30000 then
+				logger.warn("[debug.sethook] - Possible infinite loop in file [{}] near line [{}]", debug.getinfo(2).source, line)
+				debug.sethook()
+			end
+			linecount = 0
+			start = os.time()
 		end
-		linecount = 0
-		start = os.time()
-	end
-end, "l")
+	end, "l")
+end
 
 -- Global functions
 function getJackLastMissionState(player)
@@ -90,7 +92,7 @@ function getJackLastMissionState(player)
 		return true
 	end
 
-	if player:getStorageValue(Storage.TibiaTales.JackFutureQuest.LastMissionState) == 1 then
+	if player:getStorageValue(Storage.Quest.U8_7.JackFutureQuest.LastMissionState) == 1 then
 		return "You told Jack the truth about his personality. You also explained that you and Spectulus \z
 		made a mistake by assuming him as the real Jack."
 	else
@@ -280,7 +282,8 @@ function clearForgotten(fromPosition, toPosition, exitPosition, storage)
 end
 
 function isValidMoney(money)
-	return isNumber(money) and money > 0 and money < 4294967296
+	-- 2^53: max integer LuaJIT doubles represent exactly (bank balance is uint64_t in C++)
+	return isNumber(money) and money > 0 and money < 9007199254740992
 end
 
 function iterateArea(func, from, to)

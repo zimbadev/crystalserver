@@ -93,13 +93,15 @@ void ProtocolStatus::sendStatusString() {
 	pugi::xml_node tsqp = doc.append_child("tsqp");
 	tsqp.append_attribute("version") = "1.0";
 
+	const auto &currentWorld = g_game().worlds().getCurrentWorld();
 	pugi::xml_node serverinfo = tsqp.append_child("serverinfo");
 	const uint64_t uptime = (OTSYS_TIME() - ProtocolStatus::start) / 1000;
 	serverinfo.append_attribute("uptime") = std::to_string(uptime).c_str();
-	serverinfo.append_attribute("ip") = g_configManager().getString(IP).c_str();
-	serverinfo.append_attribute("servername") = g_configManager().getString(ConfigKey_t::SERVER_NAME).c_str();
+	serverinfo.append_attribute("ip") = currentWorld->ip.c_str();
+	serverinfo.append_attribute("servername") = currentWorld->name.c_str();
+
 	serverinfo.append_attribute("port") = std::to_string(g_configManager().getNumber(LOGIN_PORT)).c_str();
-	serverinfo.append_attribute("location") = g_configManager().getString(LOCATION).c_str();
+	serverinfo.append_attribute("location") = currentWorld->locationName.c_str();
 	serverinfo.append_attribute("url") = g_configManager().getString(URL).c_str();
 	serverinfo.append_attribute("server") = SOFTWARE_NAME;
 	serverinfo.append_attribute("version") = SOFTWARE_VERSION;
@@ -142,7 +144,9 @@ void ProtocolStatus::sendStatusString() {
 	pugi::xml_node rates = tsqp.append_child("rates");
 	rates.append_attribute("experience") = std::to_string(g_configManager().getNumber(RATE_EXPERIENCE)).c_str();
 	rates.append_attribute("skill") = std::to_string(g_configManager().getNumber(RATE_SKILL)).c_str();
-	rates.append_attribute("loot") = std::to_string(g_configManager().getNumber(RATE_LOOT)).c_str();
+	// RATE_LOOT is stored as a float; getNumber() would hit the wrong type branch,
+	// return 0 and make the status protocol announce loot="0" while looting worked.
+	rates.append_attribute("loot") = fmt::format("{:g}", g_configManager().getFloat(RATE_LOOT)).c_str();
 	rates.append_attribute("magic") = std::to_string(g_configManager().getNumber(RATE_MAGIC)).c_str();
 	rates.append_attribute("spawn") = std::to_string(g_configManager().getNumber(RATE_SPAWN)).c_str();
 
@@ -170,10 +174,11 @@ void ProtocolStatus::sendStatusString() {
 void ProtocolStatus::sendInfo(uint16_t requestedInfo, const std::string &characterName) const {
 	const auto output = OutputMessagePool::getOutputMessage();
 
+	const auto &currentWorld = g_game().worlds().getCurrentWorld();
 	if (requestedInfo & REQUEST_BASIC_SERVER_INFO) {
 		output->addByte(0x10);
-		output->addString(g_configManager().getString(ConfigKey_t::SERVER_NAME));
-		output->addString(g_configManager().getString(IP));
+		output->addString(currentWorld->name);
+		output->addString(currentWorld->ip);
 		output->addString(std::to_string(g_configManager().getNumber(LOGIN_PORT)));
 	}
 
@@ -185,8 +190,8 @@ void ProtocolStatus::sendInfo(uint16_t requestedInfo, const std::string &charact
 
 	if (requestedInfo & REQUEST_MISC_SERVER_INFO) {
 		output->addByte(0x12);
-		output->addString(g_configManager().getString(SERVER_MOTD));
-		output->addString(g_configManager().getString(LOCATION));
+		output->addString(currentWorld->motd);
+		output->addString(currentWorld->locationName);
 		output->addString(g_configManager().getString(URL));
 		output->add<uint64_t>((OTSYS_TIME() - ProtocolStatus::start) / 1000);
 	}

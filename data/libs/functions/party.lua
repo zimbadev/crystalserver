@@ -131,7 +131,7 @@ function Participants(player, requireSharedExperience)
 	if not party then
 		return { player }
 	end
-	if requiredSharedExperience and not party:isSharedExperienceActive() then
+	if requireSharedExperience and not party:isSharedExperienceActive() then
 		return { player }
 	end
 	local members = party:getMembers()

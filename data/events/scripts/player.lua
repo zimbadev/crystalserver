@@ -50,7 +50,6 @@ local pushDelay = {}
 
 local function antiPush(player, item, count, fromPosition, toPosition, fromCylinder, toCylinder)
 	if not player then
-		player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
 		return false
 	end
 
@@ -218,8 +217,7 @@ function Player:onLookInBattleList(creature, distance)
 	local description = "You see " .. creature:getDescription(distance)
 	if creature:isMonster() then
 		local master = creature:getMaster()
-		local summons = { "sorcerer familiar", "knight familiar", "druid familiar", "paladin familiar", "monk familiar" }
-		if master and table.contains(summons, creature:getName():lower()) then
+		if master and table.contains(FAMILIARSNAME, creature:getName():lower()) then
 			local familiarSummonTime = master:kv():get("familiar-summon-time") or 0
 			description = description .. " (Master: " .. master:getName() .. "). \z
 				It will disappear in " .. Game.getTimeInWords(familiarSummonTime - os.time())

@@ -65,18 +65,15 @@ local function creatureSayCallback(npc, creature, type, message)
 		npcHandler:setTopic(playerId, 1)
 	elseif message == "yes" and npcHandler:getTopic(playerId) == 1 then
 		if player:getStorageValue(30020) == 1 then
-			if player:removeMoney(1000000) then
+			local inbox = player:getStoreInbox()
+			if not inbox or #inbox:getItems() >= inbox:getMaxCapacity() then
+				npcHandler:say("Please make sure you have free slots in your store inbox.", npc, creature)
+			elseif player:removeMoney(1000000) then
 				npcHandler:say("Ah, I see you killed a lot of dangerous creatures. Here's your podium of vigour!", npc, creature)
-				local inbox = player:getStoreInbox()
-				local inboxItems = inbox:getItems()
-				if inbox and #inboxItems < inbox:getMaxCapacity() then
-					local decoKit = inbox:addItem(ITEM_DECORATION_KIT, 1)
-					if decoKit then
-						decoKit:setAttribute(ITEM_ATTRIBUTE_DESCRIPTION, "Unwrap it in your own house to create a <" .. ItemType(38707):getName() .. ">.")
-						decoKit:setCustomAttribute("unWrapId", 38707)
-					end
-				else
-					npcHandler:say("Please make sure you have free slots in your store inbox.", npc, creature)
+				local decoKit = inbox:addItem(ITEM_DECORATION_KIT, 1)
+				if decoKit then
+					decoKit:setAttribute(ITEM_ATTRIBUTE_DESCRIPTION, "Unwrap it in your own house to create a <" .. ItemType(38707):getName() .. ">.")
+					decoKit:setCustomAttribute("unWrapId", 38707)
 				end
 			else
 				npcHandler:say("You don'\t have enough money.", npc, creature)
@@ -85,7 +82,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:say("You have not aquired enough knowledge in hunting big scary creatures.", npc, creature)
 		end
 		npcHandler:setTopic(playerId, 0)
-	elseif message == "no" and npcHandler:getTopic(playerId == 1) then
+	elseif message == "no" and npcHandler:getTopic(playerId) == 1 then
 		npcHandler:say("Blessings on your hunts!", npc, creature)
 		npcHandler:setTopic(playerId, 0)
 	end

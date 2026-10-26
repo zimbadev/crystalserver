@@ -29,10 +29,11 @@ public:
 
 	uint64_t getId() {
 		if (id == 0) {
-			if (++LAST_EVENT_ID == 0) {
-				LAST_EVENT_ID = 1;
+			uint64_t newId = LAST_EVENT_ID.fetch_add(1, std::memory_order_relaxed) + 1;
+			if (newId == 0) {
+				newId = LAST_EVENT_ID.fetch_add(1, std::memory_order_relaxed) + 1;
 			}
-			id = LAST_EVENT_ID;
+			id = newId;
 		}
 		return id;
 	}

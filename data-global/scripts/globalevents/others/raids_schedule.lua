@@ -24,6 +24,7 @@ local raidSchedule = {
 }
 
 local spawnRaidsEvent = GlobalEvent("SpawnRaidsEvent")
+local executedRaids = {}
 
 function spawnRaidsEvent.onThink(interval, lastExecution, thinkInterval)
 	local currentDayOfWeek, currentDate = os.date("%A"), getRealDate()
@@ -40,9 +41,12 @@ function spawnRaidsEvent.onThink(interval, lastExecution, thinkInterval)
 	if #raidsToSpawn > 0 then
 		for i = 1, #raidsToSpawn do
 			local currentRaidSchedule = raidsToSpawn[i][getRealTime()]
-			if currentRaidSchedule and not currentRaidSchedule.alreadyExecuted then
-				Game.startRaid(currentRaidSchedule.raidName)
-				currentRaidSchedule.alreadyExecuted = true
+			if currentRaidSchedule then
+				local raidKey = currentDate .. "|" .. getRealTime() .. "|" .. currentRaidSchedule.raidName
+				if not executedRaids[raidKey] then
+					Game.startRaid(currentRaidSchedule.raidName)
+					executedRaids[raidKey] = true
+				end
 			end
 		end
 	end

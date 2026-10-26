@@ -74,6 +74,15 @@ local function creatureSayCallback(npc, creature, type, message)
 
 	if MsgContains(message, "barkless") and player:getStorageValue(Storage.Quest.U11_40.CultsOfTibia.Barkless.Mission) == 1 then
 		npcHandler:say({ "You are now one of us. Learn to endure this world's suffering in every facet and take delight in the soothing eternity that waits for the {purest} of us on the other side." }, npc, creature)
+		if player:getStorageValue(Storage.Quest.U11_40.CultsOfTibia.Barkless.Mission) < 1 then
+			player:setStorageValue(Storage.Quest.U11_40.CultsOfTibia.Barkless.Mission, 1)
+		end
+		if player:getStorageValue(Storage.Quest.U11_40.CultsOfTibia.Barkless.TrialAccessDoor) < 1 then
+			player:setStorageValue(Storage.Quest.U11_40.CultsOfTibia.Barkless.TrialAccessDoor, 1)
+		end
+		if player:getStorageValue(Storage.Quest.U11_40.CultsOfTibia.Questline) < 1 then
+			player:setStorageValue(Storage.Quest.U11_40.CultsOfTibia.Questline, 1)
+		end
 		npcHandler:setTopic(playerId, 1)
 	elseif MsgContains(message, "purest") and npcHandler:getTopic(playerId) == 1 then
 		npcHandler:say({ "Purification is but one of the difficult steps on your way to the other side. The {trial} of tar, sulphur and ice." }, npc, creature)

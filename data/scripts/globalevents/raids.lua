@@ -1,8 +1,8 @@
-local serverSaveTime = GetNextOccurrence(configManager.getString(configKeys.GLOBAL_SERVER_SAVE_TIME))
-local stopExecutionAt = serverSaveTime - ParseDuration("1h") / ParseDuration("1s") -- stop rolling raids 1 hour before server save
 local raidCheck = GlobalEvent("raids.check.onThink")
 
 function raidCheck.onThink(interval, lastExecution)
+	local serverSaveTime = GetNextOccurrence(configManager.getString(configKeys.GLOBAL_SERVER_SAVE_TIME))
+	local stopExecutionAt = serverSaveTime - ParseDuration("1h") / ParseDuration("1s")
 	if os.time() > stopExecutionAt then
 		return true
 	end

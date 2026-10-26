@@ -964,6 +964,7 @@ int MonsterTypeFunctions::luaMonsterTypeConditionImmunities(lua_State* L) {
 		                "Unknown immunity name: {} for monster: {}",
 		                immunity, monsterType->name);
 		lua_pushnil(L);
+		return 1;
 	}
 
 	monsterType->info.m_conditionImmunities[static_cast<size_t>(conditionType)] = true;

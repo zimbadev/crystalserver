@@ -15,10 +15,11 @@ monster.outfit = {
 
 monster.events = {
 	"GraveDangerBossDeath",
+	"GraveDangerVlarkorth",
 }
 
-monster.health = 75000
-monster.maxHealth = 75000
+monster.health = 280000 -- NOT CONFIRMED: server choice (W: 300,000)
+monster.maxHealth = 280000 -- NOT CONFIRMED: server choice (W: 300,000)
 monster.race = "venom"
 monster.corpse = 31599
 monster.speed = 125
@@ -108,11 +109,12 @@ monster.loot = {
 	{ name = "final judgement", chance = 400 },
 }
 
+-- Attacks from TibiaWiki BR: physical melee 0-1400, Fire Beam 330-1400,
+-- Life Drain Wave 480-1200. Interval/chance and beam/wave size NOT CONFIRMED.
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -800, effect = CONST_ME_DRAWBLOOD },
-	{ name = "combat", interval = 2300, chance = 20, type = COMBAT_LIFEDRAIN, minDamage = -250, maxDamage = -350, range = 1, effect = CONST_ME_MAGIC_RED, target = true },
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_MANADRAIN, minDamage = -1, maxDamage = -250, length = 7, spread = 0, effect = CONST_ME_SMALLCLOUDS, target = false },
-	{ name = "combat", interval = 2500, chance = 20, type = COMBAT_FIREDAMAGE, minDamage = -500, maxDamage = -1500, length = 7, spread = 0, effect = CONST_ME_HITBYFIRE, target = false },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -1400, effect = CONST_ME_DRAWBLOOD },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_FIREDAMAGE, minDamage = -330, maxDamage = -1400, length = 7, spread = 0, effect = CONST_ME_HITBYFIRE, target = false },
+	{ name = "combat", interval = 2500, chance = 20, type = COMBAT_LIFEDRAIN, minDamage = -480, maxDamage = -1200, length = 5, spread = 3, effect = CONST_ME_MAGIC_RED, target = false },
 }
 
 monster.defenses = {

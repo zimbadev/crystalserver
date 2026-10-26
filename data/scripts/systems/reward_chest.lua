@@ -64,7 +64,7 @@ function bossDeath.onDeath(creature, corpse, killer, mostDamageKiller, lastHitUn
 
 		local expectedScore = 1 / participants
 
-		for _, con in ipairs(scores) do
+		for index, con in ipairs(scores) do
 			-- Ignoring stamina for now because I heard you get receive rewards even when it's depleted
 			if con.score ~= 0 then
 				local reward, stamina, player
@@ -103,7 +103,7 @@ function bossDeath.onDeath(creature, corpse, killer, mostDamageKiller, lastHitUn
 				end
 
 				local playerLoot = creature:generateGemAtelierLoot()
-				playerLoot = monsterType:getBossReward(lootFactor, _ == 1, false, playerLoot, player)
+				playerLoot = monsterType:getBossReward(lootFactor, index == 1, false, playerLoot, player)
 				for _ = 2, rolls do
 					playerLoot = monsterType:getBossReward(lootFactor, false, true, playerLoot, player)
 				end

@@ -1,32 +1,18 @@
--- Vocation Adjustment: a Master Sorcerer's elemental stance reshapes Strong Flame Strike
--- (element + impact effect + missile):
---   Master of Thunder -> energy, effects [331, 333], missile 5
---   Master of Decay   -> death,  effects [332, 336], missile 11
---   Master of Flames / no stance -> base fire (CONST_ME_FIREATTACK, CONST_ANI_FIRE)
-
--- Phase III LIVE rebalance: base 90 -> 125.
-local DAMAGE_SCALE = 125 / 90
-
--- Shared formula; each combat needs its OWN callback name (Canary won't let two combats share a
--- callback name), so the variants delegate to this.
-local function strikeFormula(level, maglevel)
-	local min = (calculateBaseDamageHealing(level)) + (maglevel * 2.8) + 16
-	local max = (calculateBaseDamageHealing(level)) + (maglevel * 4.4) + 28
-	return -math.floor(min * DAMAGE_SCALE), -math.floor(max * DAMAGE_SCALE)
+local function strikeFormula(level, maglevel, basePower)
+	local min, max = calculateMagicSpellDamage(level, maglevel, basePower)
+	return -min, -max
 end
 
 function onGetFormulaValues(player, level, maglevel, basePower)
-	return strikeFormula(level, maglevel)
+	return strikeFormula(level, maglevel, basePower)
 end
-function onGetFormulaValuesThunder(player, level, maglevel)
-	return strikeFormula(level, maglevel)
+function onGetFormulaValuesThunder(player, level, maglevel, basePower)
+	return strikeFormula(level, maglevel, basePower)
 end
-function onGetFormulaValuesDecay(player, level, maglevel)
-	return strikeFormula(level, maglevel)
+function onGetFormulaValuesDecay(player, level, maglevel, basePower)
+	return strikeFormula(level, maglevel, basePower)
 end
 
--- Second impact effect (the first is set via COMBAT_PARAM_EFFECT) is delivered through a uniquely
--- named target callback per variant.
 function onTargetSecondEffectThunder(creature, target)
 	target:getPosition():sendMagicEffect(333)
 	return true
@@ -36,7 +22,6 @@ function onTargetSecondEffectDecay(creature, target)
 	return true
 end
 
--- Base combat (unchanged element/effect/missile).
 local combat = Combat()
 combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_FIREDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_FIREATTACK)
