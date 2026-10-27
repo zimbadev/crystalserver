@@ -1021,6 +1021,14 @@ phmap::flat_hash_map<uint8_t, std::shared_ptr<Item>> Player::getAllSlotItems() c
 }
 
 uint16_t Player::getLoyaltySkill(skills_t skill) const {
+	if (skill == SKILL_MAGLEVEL) {
+		const auto loyaltyMagicLevel = getLoyaltyMagicLevel();
+		return loyaltyMagicLevel > 65535 ? 65535 : static_cast<uint16_t>(loyaltyMagicLevel);
+	}
+	if (skill < SKILL_FIRST || skill > SKILL_LAST) {
+		return 0;
+	}
+
 	uint16_t level = getBaseSkill(skill);
 	absl::uint128 currReqTries = vocation->getReqSkillTries(skill, level);
 	absl::uint128 nextReqTries = vocation->getReqSkillTries(skill, level + 1);
@@ -1048,10 +1056,25 @@ uint16_t Player::getLoyaltySkill(skills_t skill) const {
 }
 
 uint16_t Player::getBaseSkill(uint8_t skill) const {
+	if (skill == SKILL_MAGLEVEL) {
+		const auto baseMagicLevel = getBaseMagicLevel();
+		return baseMagicLevel > 65535 ? 65535 : static_cast<uint16_t>(baseMagicLevel);
+	}
+	if (skill > SKILL_LAST) {
+		return 0;
+	}
+
 	return skills[skill].level;
 }
 
 double_t Player::getSkillPercent(skills_t skill) const {
+	if (skill == SKILL_MAGLEVEL) {
+		return getMagicLevelPercent();
+	}
+	if (skill < SKILL_FIRST || skill > SKILL_LAST) {
+		return 0;
+	}
+
 	return skills[skill].percent;
 }
 
@@ -7414,6 +7437,17 @@ int32_t Player::getSkill(skills_t skilltype, SkillsId_t skillinfo) const {
 }
 
 uint16_t Player::getSkillLevel(skills_t skill) const {
+	// Magic level is stored separately from the skills array. SKILL_MAGLEVEL is
+	// intentionally greater than SKILL_LAST, so indexing skills/varSkills with it
+	// reads unrelated Player memory and can produce enormous proficiency damage.
+	if (skill == SKILL_MAGLEVEL) {
+		const auto magicLevel = getMagicLevel();
+		return magicLevel > 65535 ? 65535 : static_cast<uint16_t>(magicLevel);
+	}
+	if (skill < SKILL_FIRST || skill > SKILL_LAST) {
+		return 0;
+	}
+
 	auto skillLevel = getLoyaltySkill(skill);
 	skillLevel = std::max<int32_t>(0, skillLevel + varSkills[skill]);
 
