@@ -1685,11 +1685,11 @@ SpellGroup_t stringToSpellGroup(const std::string &value) {
 	if (tmpStr == "ultimatestrikes" || tmpStr == "8") {
 		return SPELLGROUP_ULTIMATESTRIKES;
 	}
-	if (tmpStr == "burstsofnature" || tmpStr == "9") {
-		return SPELLGROUP_BURSTS_OF_NATURE;
-	}
-	if (tmpStr == "greatbeams" || tmpStr == "10") {
+	if (tmpStr == "greatbeams" || tmpStr == "9") {
 		return SPELLGROUP_GREAT_BEAMS;
+	}
+	if (tmpStr == "burstsofnature" || tmpStr == "10") {
+		return SPELLGROUP_BURSTS_OF_NATURE;
 	}
 	if (tmpStr == "stance" || tmpStr == "11") {
 		return SPELLGROUP_STANCE;

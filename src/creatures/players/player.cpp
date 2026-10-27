@@ -13255,8 +13255,8 @@ void Player::refineWeaponProficiencySlot(const uint16_t itemId, const uint8_t pr
 }
 
 void Player::maximiseWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
-	// TODO(15.25): official client charges 1 special tradeable item; not in data yet, so just set to max.
 	static constexpr uint8_t MAX_RANK = 10;
+	static constexpr uint32_t MAXIMISE_ORB_COST = 1;
 	auto it = weaponProficiencies.find(itemId);
 	if (it == weaponProficiencies.end()) {
 		sendTextMessage(MESSAGE_FAILURE, "You have no proficiency progress on this weapon.");
@@ -13285,9 +13285,14 @@ void Player::maximiseWeaponProficiencySlot(const uint16_t itemId, const uint8_t 
 		sendTextMessage(MESSAGE_FAILURE, "This perk is already at its maximum rank.");
 		return;
 	}
+	if (!removeItemCountById(ITEM_LUNAR_ASCENSION_ORB, MAXIMISE_ORB_COST, false)) {
+		sendTextMessage(MESSAGE_FAILURE, "You need a lunar ascension orb to maximise this perk.");
+		return;
+	}
 	slot->value = MAX_RANK;
 	applyEquippedWeaponProficiency(itemId);
 	sendWeaponProficiencyInfo(itemId);
+	sendResourceBalance(RESOURCE_LUNAR_ASCENSION_ORBS, getItemTypeCount(ITEM_LUNAR_ASCENSION_ORB));
 }
 
 void Player::clearWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
