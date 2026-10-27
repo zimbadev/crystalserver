@@ -576,14 +576,6 @@ ChestUnique = {
 		questName = "minohell3",
 	},
 	-- Shadows of Yalahar Quest Mision 10
-	[5027] = {
-		useKV = true,
-		itemId = 2469,
-		itemPos = { x = 32629, y = 32446, z = 10 },
-		reward = { { 9237, 1 } }, -- shadow orb
-		weight = 4.00,
-		questName = "shadow-orb",
-	},
 	-- To add a reward inside a bag, you need to add the variable "container = bagId" before "reward"
 	-- Just duplicate the table and configure correctly, the scripts already register the entire table automatically
 	-- Path: data\scripts\actions\system\quest_reward_common.lua
@@ -3112,15 +3104,6 @@ ChestUnique = {
 		questName = "dark-essence",
 	},
 	-- Shadows of Yalahar Quest Mision 10
-	[6335] = {
-		useKV = true,
-		itemId = 2469,
-		itemPos = { x = 32629, y = 32446, z = 10 },
-		reward = { { 9237, 1 } }, -- shadow orb
-		weight = 4.00,
-		questName = "shadow-orb",
-	},
-	-- Shadows of Yalahar Quest Mision 10
 	[6336] = {
 		useKV = true,
 		itemId = 3634,
@@ -3154,6 +3137,14 @@ ChestUnique = {
 		reward = { { 16251, 1 } }, -- Golem Wrench
 		weight = 2.00,
 		questName = "golem-wrench",
+	},
+	[6341] = {
+		useKV = true,
+		itemId = 2469,
+		itemPos = { x = 32629, y = 32446, z = 10 },
+		reward = { { 9237, 1 } }, -- shadow orb
+		weight = 4.00,
+		questName = "shadow-orb",
 	},
 	[6340] = {
 		useKV = true,
