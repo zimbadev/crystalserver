@@ -75,7 +75,7 @@ end
 local HIRELING_RENAME_PRICE = 250
 local HIRELING_SEXCHANGE_PRICE = 120
 
-local function chargeHirelingService(player, price, description)
+local function chargeHirelingService(player, price, description, successMessage)
 	local tibia = player:getTibiaCoins() or 0
 	local transferable = player:getTransferableCoins() or 0
 	if tibia + transferable < price then
@@ -103,6 +103,10 @@ local function chargeHirelingService(player, price, description)
 		GameStore.insertHistory(accountId, GameStore.HistoryTypes.HISTORY_TYPE_NONE, description, -fromTransferable, GameStore.CoinType.Transferable)
 	end
 	sendUpdatedStoreBalances(player:getId())
+
+	if successMessage then
+		addPlayerEvent(sendStorePurchaseSuccessful, 550, player:getId(), successMessage)
+	end
 	return true
 end
 
@@ -2475,7 +2479,7 @@ function createHirelingType(HirelingName)
 				end
 
 				local oldName = hireling:getName()
-				if not chargeHirelingService(player, HIRELING_RENAME_PRICE, "Hireling Name Change (" .. oldName .. " to " .. newName .. ")") then
+				if not chargeHirelingService(player, HIRELING_RENAME_PRICE, "Hireling Name Change (" .. oldName .. " to " .. newName .. ")", "You have renamed your hireling to " .. newName .. " successfully") then
 					npcHandler:say(string.format("Sorry, you need %d Tibia Coins to rename me.", HIRELING_RENAME_PRICE), npc, creature)
 					return true
 				end
@@ -2519,7 +2523,7 @@ function createHirelingType(HirelingName)
 			if MsgContains(message, "yes") then
 				npcHandler:setTopic(playerId, TOPIC.SERVICES)
 
-				if not chargeHirelingService(player, HIRELING_SEXCHANGE_PRICE, "Hireling Sex Change (" .. hireling:getName() .. ")") then
+				if not chargeHirelingService(player, HIRELING_SEXCHANGE_PRICE, "Hireling Sex Change (" .. hireling:getName() .. ")", "You have changed your hireling's gender successfully") then
 					npcHandler:say(string.format("Sorry, you need %d Tibia Coins to change my gender.", HIRELING_SEXCHANGE_PRICE), npc, creature)
 					return true
 				end
