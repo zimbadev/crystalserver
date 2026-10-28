@@ -584,6 +584,16 @@ private:
 	void sendBossDifficultySelection(uint8_t selectedDifficulty, const std::vector<uint32_t> &numbers, const std::vector<std::string> &banners, const std::vector<std::string> &redMods, const std::vector<std::string> &greenMods);
 	void parseBossDifficultySelection(NetworkMessage &msg);
 
+	void parseOpenDailyReward(NetworkMessage &msg);
+	void parseOpenDailyRewardHistory(NetworkMessage &msg);
+	void parseSelectDailyReward(NetworkMessage &msg);
+
+	void sendDailyRewardBasic();
+	void sendOpenRewardWall(uint8_t shrine, uint8_t dayStreak, uint16_t jokerTokens, uint16_t streakLevel, uint32_t nextRewardTime, bool rewardTaken, bool testMode);
+	void sendDailyRewardCollectionState(uint8_t state);
+	void sendDailyRewardHistory(uint32_t playerGuid);
+	void sendDailyRewardCollectionResource(uint8_t resourceType, uint64_t value);
+
 	friend class Player;
 	friend class PlayerWheel;
 	friend class PlayerVIP;

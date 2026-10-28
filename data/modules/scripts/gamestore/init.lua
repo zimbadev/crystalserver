@@ -2002,12 +2002,7 @@ local function HandleHirelingNameChange(playerId, offer, newHirelingName)
 		end
 		logger.debug("{} has been renamed to {}", oldName, hireling.name)
 		sendUpdatedStoreBalances(playerIdInFunction)
-		addPlayerEvent(
-			sendStorePurchaseSuccessful,
-			200,
-			playerIdInFunction,
-			string.format("You have purchased %s for %d coins.", data.offer.name, data.offer.price)
-		)
+		addPlayerEvent(sendStorePurchaseSuccessful, 200, playerIdInFunction, string.format("You have purchased %s for %d coins.", data.offer.name, data.offer.price))
 	end
 
 	local eligibleHirelings = player:getHirelingsInLamp()
