@@ -825,6 +825,9 @@ function Player.canBuyOffer(self, offer)
 			if self:getHirelingsCount() <= 0 then
 				disabled = 1
 				disabledReason = "You need to have a hireling."
+			elseif #self:getHirelingsInLamp() == 0 then
+				disabled = 1
+				disabledReason = "Your hireling must be inside his/her lamp."
 			end
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_HIRELING_SEXCHANGE then
 			if self:getHirelingsCount() <= 0 then
@@ -1965,7 +1968,7 @@ local function HandleHirelingNameChange(playerId, offer, newHirelingName)
 		end
 
 		if not hireling then
-			return playerInFunction:showInfoModal("Error", "Your must select a hireling.")
+			return playerInFunction:showInfoModal("Error", "You must select a hireling.")
 		end
 
 		if hireling.active > 0 then
@@ -1973,10 +1976,14 @@ local function HandleHirelingNameChange(playerId, offer, newHirelingName)
 		end
 
 		local oldName = hireling.name
-		hireling.name = data.newHirelingName
-
-		if not playerInFunction:makeCoinTransaction(data.offer, oldName .. " to " .. hireling.name) then
+		if not playerInFunction:makeCoinTransaction(data.offer, oldName .. " to " .. data.newHirelingName) then
 			return playerInFunction:showInfoModal("Error", "Transaction error")
+		end
+
+		hireling.name = data.newHirelingName
+		if not hireling:save() then
+			hireling.name = oldName
+			return playerInFunction:showInfoModal("Error", "There was an error saving your hireling name.")
 		end
 
 		local lamp = playerInFunction:findHirelingLamp(hireling:getId())
@@ -1985,12 +1992,28 @@ local function HandleHirelingNameChange(playerId, offer, newHirelingName)
 		end
 		logger.debug("{} has been renamed to {}", oldName, hireling.name)
 		sendUpdatedStoreBalances(playerIdInFunction)
+		addPlayerEvent(
+			sendStorePurchaseSuccessful,
+			200,
+			playerIdInFunction,
+			string.format("You have purchased %s for %d coins.", data.offer.name, data.offer.price)
+		)
 	end
 
-	player:sendHirelingSelectionModal("Choose a Hireling", "Select a hireling below", functionCallback, { offer = offer, newHirelingName = newHirelingName })
+	local eligibleHirelings = player:getHirelingsInLamp()
+	if #eligibleHirelings == 0 then
+		return player:showInfoModal("Error", "Your hireling must be inside his/her lamp.")
+	end
+	player:sendHirelingSelectionModal("Choose a Hireling", "Select a hireling below", functionCallback, { offer = offer, newHirelingName = newHirelingName }, eligibleHirelings)
 end
 
 function GameStore.processHirelingChangeNamePurchase(player, offer, productType, newHirelingName)
+	-- Recheck on purchase and name submission, even if the store offer was enabled earlier.
+	if #player:getHirelingsInLamp() == 0 then
+		GameStore.pendingHirelingNameOffers[player:getId()] = nil
+		return queueSendStoreAlertToUser("Your hireling must be inside his/her lamp.", 250, player:getId(), GameStore.StoreErrors.STORE_ERROR_INFORMATION)
+	end
+
 	if player:getClient().version < 1200 then
 		return error({
 			code = 1,
@@ -2008,8 +2031,10 @@ function GameStore.processHirelingChangeNamePurchase(player, offer, productType,
 			return string.upper(a) .. b
 		end)
 
-		local message = "Close the store window to select which hireling should be renamed to " .. newHirelingName
 		local playerId = player:getId()
+		-- The client keeps the purchase dialog open until it receives this packet.
+		-- The actual charge and rename still happen only after the hireling is selected.
+		local message = "Close the store window to select which hireling should be renamed to " .. newHirelingName
 		addPlayerEvent(sendStorePurchaseSuccessful, 200, playerId, message)
 		addPlayerEvent(HandleHirelingNameChange, 550, playerId, offer, newHirelingName)
 	else
