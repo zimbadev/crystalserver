@@ -294,6 +294,7 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "removeOutfitAddon", PlayerFunctions::luaPlayerRemoveOutfitAddon);
 	Lua::registerMethod(L, "Player", "hasOutfit", PlayerFunctions::luaPlayerHasOutfit);
 	Lua::registerMethod(L, "Player", "sendOutfitWindow", PlayerFunctions::luaPlayerSendOutfitWindow);
+	Lua::registerMethod(L, "Player", "sendHirelingNameChange", PlayerFunctions::luaPlayerSendHirelingNameChange);
 
 	Lua::registerMethod(L, "Player", "addMount", PlayerFunctions::luaPlayerAddMount);
 	Lua::registerMethod(L, "Player", "removeMount", PlayerFunctions::luaPlayerRemoveMount);
@@ -3351,6 +3352,21 @@ int PlayerFunctions::luaPlayerHasOutfit(lua_State* L) {
 	} else {
 		lua_pushnil(L);
 	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSendHirelingNameChange(lua_State* L) {
+	// player:sendHirelingNameChange([creatureId[, objectId]])
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	const auto creatureId = Lua::getNumber<uint32_t>(L, 2, 0);
+	const auto objectId = Lua::getNumber<uint32_t>(L, 3, 0);
+	player->sendHirelingNameChange(creatureId, objectId);
+	Lua::pushBoolean(L, true);
 	return 1;
 }
 
