@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ('db_version', '67', 1), ('motd_hash', '', 1), ('motd_num', '0', 1), ('players_record', '0', 1);
+INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ('db_version', '68', 1), ('motd_hash', '', 1), ('motd_num', '0', 1), ('players_record', '0', 1);
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -761,6 +761,7 @@ CREATE TABLE IF NOT EXISTS `player_kills` (
     `time` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
     `target` int(11) NOT NULL,
     `unavenged` tinyint(1) NOT NULL DEFAULT '0',
+    `weight` smallint(5) UNSIGNED NOT NULL DEFAULT '100',
     CONSTRAINT `player_kills_players_fk`
         FOREIGN KEY (`player_id`) REFERENCES `players` (`id`)
         ON DELETE CASCADE

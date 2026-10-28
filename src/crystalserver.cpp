@@ -170,10 +170,11 @@ void CrystalServer::loadThisWorld() {
 
 	if (world->type == WORLDTYPE_NONE) {
 		throw FailedToInitializeCrystalServer(
-			fmt::format("Unknown world type: {}, valid world types are: no-pvp, pvp, retro-pvp, pvp-enforced and retro-hardcore", world->type)
+			fmt::format("Unknown world type for world ID {}", world->id)
 		);
 	}
-
+	const auto configuredType = asLowerCaseString(g_configManager().getString(WORLD_TYPE));
+	g_game().setExpertPvp(configuredType == "expert-pvp" || configuredType == "expertpvp" || configuredType == "expert");
 	const auto location = Worlds::getWorldLocationByKey(world->locationName);
 	if (location == Location_t::None) {
 		throw FailedToInitializeCrystalServer(
@@ -182,7 +183,7 @@ void CrystalServer::loadThisWorld() {
 	}
 
 	g_game().worlds().setCurrentWorld(world);
-	logger.info("World ID: {}, Name: {}, Type: {}, Location: {}, Port {}", world->id, world->name, g_game().getWorldTypeNames().at(world->type), world->locationName, world->port);
+	logger.info("World ID: {}, Name: {}, Type: {}, Location: {}, Port {}{}", world->id, world->name, g_game().getWorldTypeNames().at(world->type), world->locationName, world->port, g_game().isExpertPvp() ? " (Expert PvP)" : "");
 }
 
 void CrystalServer::loadMaps() const {

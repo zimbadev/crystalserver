@@ -149,6 +149,8 @@ void PlayerFunctions::init(lua_State* L) {
 
 	Lua::registerMethod(L, "Player", "getKills", PlayerFunctions::luaPlayerGetKills);
 	Lua::registerMethod(L, "Player", "setKills", PlayerFunctions::luaPlayerSetKills);
+	Lua::registerMethod(L, "Player", "sendCreatureSquare", PlayerFunctions::luaPlayerSendCreatureSquare);
+	Lua::registerMethod(L, "Player", "hasActivePvpSituation", PlayerFunctions::luaPlayerHasActivePvpSituation);
 
 	Lua::registerMethod(L, "Player", "getReward", PlayerFunctions::luaPlayerGetReward);
 	Lua::registerMethod(L, "Player", "removeReward", PlayerFunctions::luaPlayerRemoveReward);
@@ -1432,13 +1434,15 @@ int PlayerFunctions::luaPlayerGetKills(lua_State* L) {
 	lua_createtable(L, player->unjustifiedKills.size(), 0);
 	int idx = 0;
 	for (const auto &kill : player->unjustifiedKills) {
-		lua_createtable(L, 3, 0);
+		lua_createtable(L, 4, 0);
 		lua_pushnumber(L, kill.target);
 		lua_rawseti(L, -2, 1);
 		lua_pushnumber(L, kill.time);
 		lua_rawseti(L, -2, 2);
 		Lua::pushBoolean(L, kill.unavenged);
 		lua_rawseti(L, -2, 3);
+		lua_pushnumber(L, kill.weight);
+		lua_rawseti(L, -2, 4);
 		lua_rawseti(L, -2, ++idx);
 	}
 
@@ -1463,8 +1467,10 @@ int PlayerFunctions::luaPlayerSetKills(lua_State* L) {
 		lua_rawgeti(L, -1, 1); // push target
 		lua_rawgeti(L, -2, 2); // push time
 		lua_rawgeti(L, -3, 3); // push unavenged
-		newKills.emplace_back(luaL_checknumber(L, -3), luaL_checknumber(L, -2), Lua::getBoolean(L, -1));
-		lua_pop(L, 4);
+		lua_rawgeti(L, -4, 4); // push weight (optional, defaults to a full frag)
+		const double weight = lua_isnumber(L, -1) != 0 ? lua_tonumber(L, -1) : 1.0;
+		newKills.emplace_back(luaL_checknumber(L, -4), luaL_checknumber(L, -3), Lua::getBoolean(L, -2), weight);
+		lua_pop(L, 5);
 	}
 
 	player->unjustifiedKills = std::move(newKills);
@@ -1491,6 +1497,18 @@ int PlayerFunctions::luaPlayerSendCreatureSquare(lua_State* L) {
 	const auto weaponType = Lua::getNumber<uint8_t>(L, 4, 255);
 	player->sendCreatureSquare(creature, static_cast<SquareColor_t>(markType), static_cast<SquareColor_t>(weaponType));
 	Lua::pushBoolean(L, true);
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerHasActivePvpSituation(lua_State* L) {
+	// player:hasActivePvpSituation() — Open PvP: any non-expired PvP situation with another player
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	Lua::pushBoolean(L, player->hasActivePvpSituation());
 	return 1;
 }
 
