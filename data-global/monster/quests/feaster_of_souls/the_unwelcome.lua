@@ -17,6 +17,12 @@ monster.events = {
 	"FeasterOfSoulsBossDeath",
 }
 
+monster.raceId = 1868
+monster.bosstiary = {
+	bossRaceId = 1868,
+	bossRace = RARITY_ARCHFOE,
+}
+
 monster.health = 300000
 monster.maxHealth = 300000
 monster.race = "undead"

@@ -23,6 +23,8 @@
 #include "creatures/monsters/monsters.hpp"
 #include "creatures/players/player.hpp"
 #include "game/game.hpp"
+#include "kv/kv.hpp"
+#include "kv/kv_definitions.hpp"
 #include "lib/metrics/metrics.hpp"
 
 SoftSingleton IOBestiary::instanceTracker("IOBestiary");
@@ -369,6 +371,9 @@ void IOBestiary::addCharmPoints(const std::shared_ptr<Player> &player, uint32_t 
 		player->setMaxCharmPoints(maxCharmPoints + amount);
 	}
 	player->setCharmPoints(myCharms);
+	// Retail refreshes the charm balance immediately; without this the client keeps showing the old
+	// figure until the cyclopedia is reopened.
+	player->sendCharmResourcesBalance();
 }
 
 void IOBestiary::addMinorCharmEchoes(const std::shared_ptr<Player> &player, uint32_t amount, bool negative /*= false*/) {
@@ -385,6 +390,92 @@ void IOBestiary::addMinorCharmEchoes(const std::shared_ptr<Player> &player, uint
 		player->setMaxMinorCharmEchoes(maxCharmPoints + amount);
 	}
 	player->setMinorCharmEchoes(myCharms);
+	player->sendCharmResourcesBalance();
+}
+
+/*
+ * Echo Raids (client 15.30) -- "leader monster" is CipSoft's internal name for the Echo Warden.
+ *
+ * State lives in the player's own KV scope "echo_warden", keyed by the monster TYPE name, which is
+ * the same scope and key data-global/lib/core/echo_warden.lua already wrote, so existing player
+ * progress carries over untouched. The cyclopedia badge and the Charm Point award now both read
+ * this one source of truth instead of being derived from unrelated kill progress.
+ */
+namespace {
+	constexpr auto ECHO_WARDEN_KV_SCOPE = "echo_warden";
+}
+
+bool IOBestiary::hasKilledLeaderMonster(const std::shared_ptr<Player> &player, const std::string &monsterName) const {
+	if (!player || monsterName.empty()) {
+		return false;
+	}
+
+	const auto &scope = player->kv()->scoped(ECHO_WARDEN_KV_SCOPE);
+	if (!scope) {
+		return false;
+	}
+
+	const auto value = scope->get(monsterName);
+	return value && value->get<BooleanType>();
+}
+
+uint32_t IOBestiary::getLeaderMonsterCharmPoints(const std::shared_ptr<MonsterType> &mtype) const {
+	if (!mtype) {
+		return 0;
+	}
+
+	// Retail Charm Point reward for a first Echo Warden kill, by bestiary difficulty
+	// (bestiaryStars 0-5 == Harmless, Trivial, Easy, Medium, Hard, Challenging).
+	switch (mtype->info.bestiaryStars) {
+		case 0:
+			return 1; // Harmless
+		case 1:
+			return 2; // Trivial
+		case 2:
+			return 5; // Easy
+		case 3:
+			return 10; // Medium
+		case 4:
+			return 15; // Hard
+		case 5:
+			return 30; // Challenging
+		default:
+			g_logger().warn("[{}] Monster {} has an invalid bestiaryStars value: {}.", __FUNCTION__, mtype->name, mtype->info.bestiaryStars);
+			return 0;
+	}
+}
+
+bool IOBestiary::addLeaderMonsterKill(const std::shared_ptr<Player> &player, const std::shared_ptr<MonsterType> &mtype) {
+	if (!player || !mtype) {
+		return false;
+	}
+
+	const auto &monsterName = mtype->name;
+	if (monsterName.empty() || hasKilledLeaderMonster(player, monsterName)) {
+		return false; // only the FIRST warden of a creature type pays out
+	}
+
+	const auto &scope = player->kv()->scoped(ECHO_WARDEN_KV_SCOPE);
+	if (!scope) {
+		return false;
+	}
+	scope->set(monsterName, true);
+
+	const uint32_t charmPoints = getLeaderMonsterCharmPoints(mtype);
+	if (charmPoints > 0) {
+		// Charm POINTS, not Minor Charm Echoes -- the client banner and its string
+		// ("You received %1 Charm Point ... for the first time") both read charm points.
+		addCharmPoints(player, charmPoints);
+	}
+
+	const uint16_t raceId = mtype->info.raceid;
+	if (raceId != 0) {
+		player->sendScreenshotAndBannerLeaderMonsterKilled(raceId, charmPoints);
+		// Repush this creature's cyclopedia entry so the leader-killed badge appears at once.
+		player->sendBestiaryEntryChanged(raceId);
+	}
+
+	return true;
 }
 
 void IOBestiary::addBestiaryKill(const std::shared_ptr<Player> &player, const std::shared_ptr<MonsterType> &mtype, uint32_t amount /*= 1*/) {

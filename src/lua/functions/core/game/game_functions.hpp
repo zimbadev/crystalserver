@@ -36,6 +36,8 @@ private:
 
 	static int luaGameGetExperienceForLevel(lua_State* L);
 	static int luaGameGetMonsterCount(lua_State* L);
+
+	static int luaGameReportShadowedScripts(lua_State* L);
 	static int luaGameGetPlayerCount(lua_State* L);
 	static int luaGameGetNpcCount(lua_State* L);
 	static int luaGameGetMonsterTypes(lua_State* L);
@@ -47,7 +49,6 @@ private:
 	static int luaGameSetGameState(lua_State* L);
 
 	static int luaGameGetWorldType(lua_State* L);
-	static int luaGameSetWorldType(lua_State* L);
 
 	static int luaGameGetReturnMessage(lua_State* L);
 
@@ -67,6 +68,7 @@ private:
 	static int luaGameStartRaid(lua_State* L);
 
 	static int luaGameGetClientVersion(lua_State* L);
+	static int luaGameSetImprovedRespawnZones(lua_State* L);
 
 	static int luaGameReload(lua_State* L);
 

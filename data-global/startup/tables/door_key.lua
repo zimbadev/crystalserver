@@ -7,38 +7,59 @@ Look README.md for look the reserved action of the keys
 KeyDoorAction = {
 	-- Door of the key 4182 (draconia quest)
 	[Storage.Quest.Key.ID3001] = {
-		itemId = false,
-		itemPos = { { x = 32814, y = 31597, z = 7 } },
+		{
+			itemId = false,
+			itemPos = { { x = 32814, y = 31597, z = 7 } },
+		},
+		{ itemId = 2969, itemPos = { { x = 32794, y = 31572, z = 7 } } }, -- silver key
 	},
 	-- Door of the key 4183 (draconia quest)
 	[Storage.Quest.Key.ID3002] = {
-		itemId = false,
-		itemPos = { { x = 32796, y = 31597, z = 7 } },
+		{
+			itemId = false,
+			itemPos = { { x = 32796, y = 31597, z = 7 } },
+		},
+		{ itemId = 2969, itemPos = { { x = 32802, y = 31576, z = 7 } } }, -- silver key
 	},
 	-- Door of the key 4184 (draconia quest)
 	[Storage.Quest.Key.ID3003] = {
-		itemId = false,
-		itemPos = { { x = 32811, y = 31597, z = 7 } },
+		{
+			itemId = false,
+			itemPos = { { x = 32811, y = 31597, z = 7 } },
+		},
+		{ itemId = 2969, itemPos = { { x = 32790, y = 31593, z = 7 } } }, -- silver key
 	},
 	-- Door of the key 4185 (draconia quest)
 	[Storage.Quest.Key.ID3004] = {
-		itemId = false,
-		itemPos = { { x = 32809, y = 31593, z = 6 } },
+		{
+			itemId = false,
+			itemPos = { { x = 32809, y = 31593, z = 6 } },
+		},
+		{ itemId = 2969, itemPos = { { x = 32807, y = 31576, z = 6 } } }, -- silver key
 	},
 	-- Door of the key 4186 (draconia quest)
 	[Storage.Quest.Key.ID3005] = {
-		itemId = false,
-		itemPos = { { x = 32794, y = 31582, z = 6 } },
+		{
+			itemId = false,
+			itemPos = { { x = 32794, y = 31582, z = 6 } },
+		},
+		{ itemId = 2969, itemPos = { { x = 32792, y = 31590, z = 6 } } }, -- silver key
 	},
 	-- Door of the key 4187 (draconia quest)
 	[Storage.Quest.Key.ID3006] = {
-		itemId = false,
-		itemPos = { { x = 32814, y = 31595, z = 6 } },
+		{
+			itemId = false,
+			itemPos = { { x = 32814, y = 31595, z = 6 } },
+		},
+		{ itemId = 2969, itemPos = { { x = 32801, y = 31579, z = 6 } } }, -- silver key
 	},
 	-- Door of the key 4188 (draconia quest)
 	[Storage.Quest.Key.ID3007] = {
-		itemId = false,
-		itemPos = { { x = 32797, y = 31592, z = 4 } },
+		{
+			itemId = false,
+			itemPos = { { x = 32797, y = 31592, z = 4 } },
+		},
+		{ itemId = 2969, itemPos = { { x = 32813, y = 31576, z = 5 } } }, -- silver key
 	},
 	-- Door of the key 4189 (draconia quest)
 	[Storage.Quest.Key.ID3008] = {
@@ -197,5 +218,34 @@ KeyDoorAction = {
 	[Storage.Quest.Key.ID3304] = {
 		itemId = false,
 		itemPos = { { x = 32620, y = 32199, z = 10 } },
+	},
+
+	-- ---------------------------------------------------------
+	-- Declared here since the world.otbm stopped storing ids
+	-- ---------------------------------------------------------
+	-- closed door
+	[3033] = {
+		itemId = 6194,
+		itemPos = {
+			{ x = 32655, y = 31655, z = 9 },
+			{ x = 32658, y = 31645, z = 9 },
+		},
+	},
+	-- closed door
+	[4602] = {
+		itemId = 5106,
+		itemPos = {
+			{ x = 32118, y = 32059, z = 12 },
+		},
+	},
+	-- closed door
+	[26001] = {
+		itemId = 6251,
+		itemPos = {
+			{ x = 33908, y = 31107, z = 9 },
+			{ x = 33934, y = 31097, z = 9 },
+			{ x = 33936, y = 31055, z = 9 },
+			{ x = 33943, y = 31063, z = 9 },
+		},
 	},
 }

@@ -42,7 +42,7 @@ void DatabaseTasks::store(const std::string &query, const std::function<void(DBR
 	threadPool.detach_task([this, query, callback]() {
 		DBResult_ptr result = db.storeQuery(query);
 		if (callback != nullptr) {
-			g_dispatcher().addEvent([callback, result]() { callback(result, true); }, __FUNCTION__);
+			g_dispatcher().addEvent([callback, result]() { callback(result, result != nullptr); }, __FUNCTION__);
 		}
 	});
 }

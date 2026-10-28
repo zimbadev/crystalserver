@@ -95,6 +95,8 @@ int Webhook::sendRequest(const char* url, const char* payload, std::string* resp
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, reinterpret_cast<void*>(response_body));
 	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 	curl_easy_setopt(curl, CURLOPT_USERAGENT, "crystalserver (https://github.com/zimbadev/crystalserver)");
+	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 30L);
+	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 10L);
 
 	const CURLcode res = curl_easy_perform(curl);
 
@@ -151,12 +153,14 @@ std::string Webhook::getPayload(const std::string &title, const std::string &mes
 }
 
 void Webhook::sendWebhook() {
-	std::scoped_lock lock { taskLock };
-	if (webhooks.empty()) {
-		return;
+	std::shared_ptr<WebhookTask> task;
+	{
+		std::scoped_lock lock { taskLock };
+		if (webhooks.empty()) {
+			return;
+		}
+		task = webhooks.front();
 	}
-
-	const auto &task = webhooks.front();
 
 	std::string response_body;
 	auto response_code = sendRequest(task->url.c_str(), task->payload.c_str(), &response_body);
@@ -185,5 +189,6 @@ void Webhook::sendWebhook() {
 	g_logger().debug("Webhook successfully sent to {}", task->url);
 
 	// Removes the object after processing everything, avoiding memory usage after freeing
+	std::scoped_lock lock { taskLock };
 	webhooks.pop_front();
 }

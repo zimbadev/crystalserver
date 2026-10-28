@@ -463,7 +463,8 @@ function GetHirelingOutfitNameById(id)
 end
 
 function HirelingsInit()
-	local rows = db.storeQuery("SELECT * FROM `player_hirelings`")
+	local query = string.format("SELECT `ph`.* FROM `player_hirelings` AS `ph` INNER JOIN `players` as `p` ON `p`.`id` = `ph`.`player_id` WHERE `p`.`world_id` = %d", configManager.getNumber(configKeys.WORLD_ID))
+	local rows = db.storeQuery(query)
 	if rows then
 		local player_id, hireling
 		repeat
@@ -672,10 +673,20 @@ function Player:findHirelingLamp(hirelingId)
 	return nil
 end
 
-function Player:sendHirelingSelectionModal(title, message, callback, data)
+function Player:getHirelingsInLamp()
+	local hirelings = {}
+	for _, hireling in ipairs(self:getHirelings()) do
+		if hireling.active == 0 then
+			table.insert(hirelings, hireling)
+		end
+	end
+	return hirelings
+end
+
+function Player:sendHirelingSelectionModal(title, message, callback, data, eligibleHirelings)
 	-- callback(playerId, data, hireling)
 	-- get all hireling list
-	local hirelings = self:getHirelings()
+	local hirelings = eligibleHirelings or self:getHirelings()
 	local modal = ModalWindow({
 		title = title,
 		message = message,
@@ -683,13 +694,12 @@ function Player:sendHirelingSelectionModal(title, message, callback, data)
 	local hireling
 	for i = 1, #hirelings do
 		hireling = hirelings[i]
-		local choice = modal:addChoice(string.format("#%d - %s", i, hireling:getName()))
-		choice.hireling = hireling
+		modal:addChoice(string.format("#%d - %s", i, hireling:getName()))
 	end
 
 	local playerId = self:getId()
-	local internalConfirm = function(button, choice)
-		local hrlng = choice and choice.hireling or nil
+	local internalConfirm = function(player, button, choice)
+		local hrlng = choice and hirelings[choice.id] or nil
 		callback(playerId, data, hrlng)
 	end
 

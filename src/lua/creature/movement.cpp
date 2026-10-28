@@ -260,6 +260,83 @@ std::shared_ptr<MoveEvent> MoveEvents::getEvent(const std::shared_ptr<Item> &ite
 	return nullptr;
 }
 
+std::vector<ScriptBinding> MoveEvents::getScriptBindings(const std::shared_ptr<Item> &item) const {
+	std::vector<ScriptBinding> bindings;
+	if (!item) {
+		return bindings;
+	}
+
+	static constexpr std::pair<MoveEvent_t, std::string_view> eventNames[] = {
+		{ MOVE_EVENT_STEP_IN, "onStepIn" },
+		{ MOVE_EVENT_STEP_OUT, "onStepOut" },
+		{ MOVE_EVENT_EQUIP, "onEquip" },
+		{ MOVE_EVENT_DEEQUIP, "onDeEquip" },
+		{ MOVE_EVENT_ADD_ITEM, "onAddItem" },
+		{ MOVE_EVENT_REMOVE_ITEM, "onRemoveItem" },
+		{ MOVE_EVENT_ADD_ITEM_ITEMTILE, "onAddItem (item tile)" },
+		{ MOVE_EVENT_REMOVE_ITEM_ITEMTILE, "onRemoveItem (item tile)" },
+	};
+
+	const auto add = [&bindings](std::string_view source, std::string_view event, const std::list<std::shared_ptr<MoveEvent>> &moveEventList) {
+		if (moveEventList.empty()) {
+			return;
+		}
+
+		auto file = ScriptBindings::fileOf(moveEventList.front());
+		if (file.empty()) {
+			return;
+		}
+
+		ScriptBinding binding;
+		binding.kind = "MoveEvent";
+		binding.source = source;
+		binding.script = std::move(file);
+		binding.event = event;
+		bindings.emplace_back(std::move(binding));
+	};
+
+	// An item can carry one move event per moment, so each event type is resolved
+	// on its own. Inside a single type getEvent() takes the first registration it
+	// finds, which is why only the leftover ones are flagged as shadowed.
+	for (const auto &[eventType, eventName] : eventNames) {
+		const auto answered = bindings.size();
+
+		if (item->hasAttribute(ItemAttribute_t::UNIQUEID)) {
+			if (const auto it = uniqueIdMap.find(item->getAttribute<uint16_t>(ItemAttribute_t::UNIQUEID));
+			    it != uniqueIdMap.end()) {
+				add("unique id", eventName, it->second.moveEvent[eventType]);
+			}
+		}
+
+		if (item->hasAttribute(ItemAttribute_t::ACTIONID)) {
+			if (const auto it = actionIdMap.find(item->getAttribute<uint16_t>(ItemAttribute_t::ACTIONID));
+			    it != actionIdMap.end()) {
+				add("action id", eventName, it->second.moveEvent[eventType]);
+			}
+		}
+
+		if (const auto it = itemIdMap.find(item->getID());
+		    it != itemIdMap.end()) {
+			add("item id", eventName, it->second.moveEvent[eventType]);
+		}
+
+		if (const auto it = positionsMap.find(item->getPosition());
+		    it != positionsMap.end()) {
+			// As with actions, a position only claims what lies on the map.
+			const auto &holdingPlayer = item->getHoldingPlayer();
+			if (item->getTile() && (!holdingPlayer || item->getTopParent() != holdingPlayer)) {
+				add("position", eventName, it->second.moveEvent[eventType]);
+			}
+		}
+
+		for (auto i = answered + 1; i < bindings.size(); ++i) {
+			bindings[i].shadowed = true;
+		}
+	}
+
+	return bindings;
+}
+
 bool MoveEvents::registerEvent(const std::shared_ptr<MoveEvent> &moveEvent, const Position &position, std::map<Position, MoveEventList> &moveListMap) const {
 	const auto it = moveListMap.find(position);
 	if (it == moveListMap.end()) {

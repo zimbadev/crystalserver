@@ -118,11 +118,6 @@ local function updateEventRates()
 		SCHEDULE_INFLUENCED_RATE = influencedRate
 	end
 
-	local spawnRate = EventsScheduler.getSpawnMonsterSchedule()
-	if spawnRate ~= 100 then
-		SCHEDULE_SPAWN_RATE = spawnRate
-	end
-
 	local rates = {
 		{ name = "Exp", value = expRate },
 		{ name = "Loot", value = lootRate },
@@ -166,6 +161,15 @@ local function resetAccountSessions()
 	end
 end
 
+-- Function to report NPC shop prices that let a player buy an item and sell it back at a profit
+local function checkNpcShopPrices()
+	for clientId, entry in pairs(NpcPriceChecker or {}) do
+		if entry.buy and entry.sell and entry.sell > entry.buy then
+			logger.warn("The item {} ({}) can be bought from {} for {} gold and sold to {} for {} gold, letting players profit {} gold per trade.", entry.itemName or "unknown", clientId, entry.buyNpc, entry.buy, entry.sellNpc, entry.sell, entry.sell - entry.buy)
+		end
+	end
+end
+
 local serverInitialization = GlobalEvent("Server Initialization")
 
 function serverInitialization.onStartup()
@@ -176,6 +180,7 @@ function serverInitialization.onStartup()
 	moveExpiredBansToHistory()
 	storeTownsInDatabase()
 	checkAndLogDuplicateValues({ "Global", "GlobalStorage", "Storage" })
+	checkNpcShopPrices()
 	updateEventRates()
 	HirelingsInit()
 	resetAccountSessions()

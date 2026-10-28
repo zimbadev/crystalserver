@@ -4,9 +4,7 @@ local foodCondition = Condition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
 function Player.feed(self, food)
 	local condition = self:getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT)
 	if condition then
-		local newTicks = math.min(condition:getTicks() + (food * 1000), 1200000)
-		condition:setTicks(newTicks)
-		condition:setParameter(CONDITION_PARAM_FOODTICKS, newTicks)
+		condition:setTicks(condition:getTicks() + (food * 1000))
 	else
 		local vocation = self:getVocation()
 		if not vocation then
@@ -14,7 +12,6 @@ function Player.feed(self, food)
 		end
 
 		foodCondition:setTicks(food * 1000)
-		foodCondition:setParameter(CONDITION_PARAM_FOODTICKS, food * 1000)
 		foodCondition:setParameter(CONDITION_PARAM_HEALTHGAIN, vocation:getHealthGainAmount())
 		foodCondition:setParameter(CONDITION_PARAM_HEALTHTICKS, vocation:getHealthGainTicks())
 		foodCondition:setParameter(CONDITION_PARAM_MANAGAIN, vocation:getManaGainAmount())
@@ -168,14 +165,14 @@ function Player.addFamePoint(self)
 end
 
 function Player.getFamePoints(self)
-	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Constants.Spike_Fame_Points)
+	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Spike_Fame_Points)
 	return math.max(0, points)
 end
 
 function Player.removeFamePoints(self, amount)
-	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Constants.Spike_Fame_Points)
+	local points = self:getStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Spike_Fame_Points)
 	local current = math.max(0, points)
-	self:setStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Constants.Spike_Fame_Points, current - amount)
+	self:setStorageValue(Storage.Quest.U10_20.SpikeTaskQuest.Spike_Fame_Points, current - amount)
 end
 
 function Player.depositMoney(self, amount)

@@ -1068,7 +1068,7 @@ void Tile::addThing(int32_t, const std::shared_ptr<Thing> &thing) {
 			} else {
 				const ItemType &oldType = Item::items[ground->getID()];
 
-				const auto &oldGround = ground;
+				const auto oldGround = ground;
 				ground->resetParent();
 				ground = item;
 				resetTileFlags(oldGround);
@@ -1683,6 +1683,8 @@ void Tile::internalAddThing(uint32_t, const std::shared_ptr<Thing> &thing) {
 			if (ground == nullptr) {
 				ground = item;
 				setTileFlags(item);
+			} else {
+				thing->setParent(std::weak_ptr<Cylinder>());
 			}
 			return;
 		}

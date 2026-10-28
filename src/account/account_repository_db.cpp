@@ -25,6 +25,8 @@
 #include "enums/account_coins.hpp"
 #include "enums/account_errors.hpp"
 #include "account/account_info.hpp"
+#include "game/game.hpp"
+#include "game/worlds/gameworlds.hpp"
 
 AccountRepositoryDB::AccountRepositoryDB() :
 	coinTypeToColumn({ { enumToValue(CoinType::Normal), "coins" }, { enumToValue(CoinType::Tournament), "tournament_coins" }, { enumToValue(CoinType::Transferable), "coins_transferable" } }) { }
@@ -258,7 +260,7 @@ bool AccountRepositoryDB::registerCoinsTransaction(
 
 bool AccountRepositoryDB::loadAccountPlayers(AccountInfo &acc) {
 	auto result = g_database().storeQuery(
-		fmt::format("SELECT `name`, `deletion` FROM `players` WHERE `account_id` = {} ORDER BY `name` ASC", acc.id)
+		fmt::format("SELECT `name`, `deletion`, `world_id` FROM `players` WHERE `account_id` = {} AND `world_id` = {} ORDER BY `name` ASC", acc.id, g_game().worlds().getCurrentWorld()->id)
 	);
 
 	if (!result) {
@@ -267,11 +269,13 @@ bool AccountRepositoryDB::loadAccountPlayers(AccountInfo &acc) {
 	}
 
 	do {
-		if (result->getNumber<uint64_t>("deletion") != 0) {
+		const auto deletion = result->getNumber<uint64_t>("deletion");
+		if (deletion != 0) {
 			continue;
 		}
 
-		acc.players.try_emplace({ result->getString("name"), result->getNumber<uint64_t>("deletion") });
+		Character character = { deletion, static_cast<uint8_t>(result->getNumber<uint16_t>("world_id")) };
+		acc.players.try_emplace(result->getString("name"), character);
 	} while (result->next());
 
 	return true;

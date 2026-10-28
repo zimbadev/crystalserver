@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
+# Keep MSVC debug information cacheable without losing the linked PDB.
+if(POLICY CMP0141)
+    cmake_policy(SET CMP0141 NEW)
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
+endif()
+
 # VCPKG
 # cmake -DCMAKE_TOOLCHAIN_FILE=/opt/workspace/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 # Needed libs are in file vcpkg.json
@@ -33,7 +39,7 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
 # Configure build options for compatibility with commodity CPUs
-if(NOT MSVC)
+if(NOT MSVC AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64|i[3-6]86)$")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=x86-64 -mtune=generic -mno-avx -mno-sse4")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64 -mtune=generic -mno-avx -mno-sse4")
 endif()
@@ -85,6 +91,7 @@ if(OPTIONS_ENABLE_SCCACHE)
     endif()
 endif()
 
+option(ENABLE_TEST_LTO "Link tests against the production LTO library" ON)
 option(BUILD_TESTS "Build tests" OFF) # By default, tests will not be built
 option(RUN_TESTS_AFTER_BUILD "Run tests when building" OFF) # By default, tests will only run if requested
 

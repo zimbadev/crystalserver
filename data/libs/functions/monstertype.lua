@@ -2,7 +2,7 @@
 ---@param config { factor: number, gut: boolean, filter?: fun(itemType: ItemType, unique: boolean): boolean }
 ---@return LootItems
 function MonsterType:generateLootRoll(config, resultTable, player)
-	if configManager.getNumber(configKeys.RATE_LOOT) <= 0 then
+	if configManager.getFloat(configKeys.RATE_LOOT) <= 0 then
 		return resultTable or {}
 	end
 

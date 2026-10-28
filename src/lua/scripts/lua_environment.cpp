@@ -35,9 +35,6 @@ LuaEnvironment::LuaEnvironment() :
 	LuaScriptInterface("Main Interface") { }
 
 LuaEnvironment::~LuaEnvironment() {
-	if (!testInterface) {
-	}
-
 	LuaEnvironment::shuttingDown = true;
 	closeState();
 }
@@ -96,10 +93,10 @@ bool LuaEnvironment::closeState() {
 
 LuaScriptInterface* LuaEnvironment::getTestInterface() {
 	if (!testInterface) {
-		testInterface = new LuaScriptInterface("Test Interface");
+		testInterface = std::make_unique<LuaScriptInterface>("Test Interface");
 		testInterface->initState();
 	}
-	return testInterface;
+	return testInterface.get();
 }
 
 const std::unique_ptr<AreaCombat> &LuaEnvironment::getAreaObject(uint32_t id) const {

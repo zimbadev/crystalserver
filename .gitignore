@@ -396,3 +396,10 @@ database_backup
 # CLION
 cmake-build-*
 /data/logs
+
+# macOS
+.DS_Store
+
+# Generated CI caches and pinned dependency checkout
+/.cache/
+/.tools/

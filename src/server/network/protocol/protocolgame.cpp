@@ -47,6 +47,7 @@
 #include "creatures/players/wheel/player_wheel.hpp"
 #include "enums/player_icons.hpp"
 #include "game/game.hpp"
+#include "kv/kv.hpp"
 #include "game/modal_window/modal_window.hpp"
 #include "game/scheduling/dispatcher.hpp"
 #include "game/scheduling/save_manager.hpp"
@@ -1398,7 +1399,7 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			parseQuickLootBlackWhitelist(msg);
 			break;
 		case 0x92:
-			parseOpenDepotSearch();
+			parseCyclopediaMapAction(msg, recvbyte);
 			break;
 		case 0x93:
 			parseCloseDepotSearch();
@@ -1487,6 +1488,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 		case 0xB3:
 			parseWeaponProficiency(msg);
 			break;
+		case 0xC2:
+			parseBossDifficultySelection(msg);
+			break;
 		case 0xBA:
 			parseSoulSeals(msg);
 			break;
@@ -1525,6 +1529,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			if (outfitModule) {
 				outfitModule->executeOnRecvbyte(player, msg);
 			}
+			if (!player) {
+				break;
+			}
 			if (msg.getBufferPosition() == startBufferPosition) {
 				g_game().playerRequestOutfit(player->getID());
 			}
@@ -1535,6 +1542,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			const auto &outfitModule = g_modules().getEventByRecvbyte(0xD3, false);
 			if (outfitModule) {
 				outfitModule->executeOnRecvbyte(player, msg);
+			}
+			if (!player) {
+				break;
 			}
 			if (msg.getBufferPosition() == startBufferPosition) {
 				parseSetOutfit(msg);
@@ -1561,6 +1571,9 @@ void ProtocolGame::parsePacketFromDispatcher(NetworkMessage &msg, uint8_t recvby
 			break;
 		case 0xDA:
 			parseSelectDailyReward(msg);
+			break;
+		case 0xDB:
+			parseCyclopediaMapAction(msg, recvbyte);
 			break;
 		case 0xDC:
 			parseAddVip(msg);
@@ -1675,7 +1688,9 @@ void ProtocolGame::GetTileDescription(const std::shared_ptr<Tile> &tile, Network
 
 	int32_t count;
 	std::shared_ptr<Item> ground = tile->getGround();
-	if (ground) {
+	// 15.25+ clients reject a zero client-id appearance on a map tile ("field has more than
+	// one zero id appearance"); skip any tile thing whose ItemType resolves to id 0.
+	if (ground && Item::items[ground->getID()].id != 0) {
 		AddItem(msg, ground);
 		count = 1;
 	} else {
@@ -1685,6 +1700,9 @@ void ProtocolGame::GetTileDescription(const std::shared_ptr<Tile> &tile, Network
 	const TileItemVector* items = tile->getItemList();
 	if (items) {
 		for (auto it = items->getBeginTopItem(), end = items->getEndTopItem(); it != end; ++it) {
+			if (Item::items[(*it)->getID()].id == 0) {
+				continue; // skip zero client-id appearance (15.25+ map parser rejects it)
+			}
 			AddItem(msg, *it);
 
 			count++;
@@ -1729,6 +1747,9 @@ void ProtocolGame::GetTileDescription(const std::shared_ptr<Tile> &tile, Network
 
 	if (items) {
 		for (auto it = items->getBeginDownItem(), end = items->getEndDownItem(); it != end; ++it) {
+			if (Item::items[(*it)->getID()].id == 0) {
+				continue; // skip zero client-id appearance (15.25+ map parser rejects it)
+			}
 			AddItem(msg, *it);
 
 			if (++count == 10) {
@@ -2487,14 +2508,14 @@ void ProtocolGame::parseHighscores(NetworkMessage &msg) {
 	uint8_t category = msg.getByte();
 	auto vocation = msg.get<uint32_t>();
 	uint16_t page = 1;
-	const std::string worldName = msg.getString();
+	auto worldName = msg.getString();
 	msg.getByte(); // Game World Category
 	msg.getByte(); // BattlEye World Type
 	if (type == HIGHSCORE_GETENTRIES) {
 		page = std::max<uint16_t>(1, msg.get<uint16_t>());
 	}
 	uint8_t entriesPerPage = std::min<uint8_t>(30, std::max<uint8_t>(5, msg.getByte()));
-	g_game().playerHighscores(player, type, category, vocation, worldName, page, entriesPerPage);
+	g_game().playerHighscores(player, type, category, vocation, worldName == "OWN" || type == HIGHSCORE_OURRANK ? g_game().worlds().getCurrentWorld()->name : worldName, page, entriesPerPage);
 }
 
 void ProtocolGame::parseSoulSeals(NetworkMessage &msg) {
@@ -2517,7 +2538,7 @@ void ProtocolGame::sendHighscoresNoData() {
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::sendHighscores(const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationBaseId, uint16_t page, uint16_t pages, uint32_t updateTimer) {
+void ProtocolGame::sendHighscores(const std::string &selectedWorld, const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationBaseId, uint16_t page, uint16_t pages, uint32_t updateTimer) {
 	if (oldProtocol) {
 		return;
 	}
@@ -2526,10 +2547,14 @@ void ProtocolGame::sendHighscores(const std::vector<HighscoreCharacter> &charact
 	msg.addByte(0xB1);
 	msg.addByte(0x00); // All data available
 
-	msg.addByte(1); // Worlds
+	const auto &worlds = g_game().worlds().getWorlds();
+	msg.addByte(worlds.size()); // Worlds
 	auto serverName = g_configManager().getString(SERVER_NAME);
-	msg.addString(serverName); // First World
-	msg.addString(serverName); // Selected World
+	for (const auto &world : worlds) {
+		msg.addString(world->name); // Worlds
+	}
+
+	msg.addString(selectedWorld); // Selected World
 
 	msg.addByte(0); // Game World Category: 0xFF(-1) - Selected World
 	msg.addByte(0); // BattlEye World Type
@@ -2574,12 +2599,12 @@ void ProtocolGame::sendHighscores(const std::vector<HighscoreCharacter> &charact
 	msg.add<uint16_t>(pages); // Pages
 
 	msg.addByte(characters.size()); // Character Count
-	for (const HighscoreCharacter &character : characters) {
+	for (const auto &character : characters) {
 		msg.add<uint32_t>(character.rank); // Rank
 		msg.addString(character.name); // Character Name
 		msg.addString(character.loyaltyTitle); // Character Loyalty Title
 		msg.addByte(character.vocation); // Vocation Id
-		msg.addString(serverName); // World
+		msg.addString(character.worldName); // World
 		msg.add<uint16_t>(character.level); // Level
 		msg.addByte((player->getGUID() == character.id)); // Player Indicator Boolean
 		msg.add<uint64_t>(character.points); // Points
@@ -2712,73 +2737,102 @@ void ProtocolGame::parseBestiarysendMonsterData(NetworkMessage &msg) {
 	newmsg.add<uint16_t>(mtype->info.bestiarySecondUnlock);
 	newmsg.add<uint16_t>(mtype->info.bestiaryToUnlock);
 
-	newmsg.addByte(mtype->info.bestiaryStars);
-	newmsg.addByte(mtype->info.bestiaryOccurrence);
+	// 15.30: the Echo Warden ("leader monster") field belongs HERE -- directly after the three
+	// unlock thresholds and BEFORE the difficulty byte. That is the client's own field order on
+	// TQmlMonsterRace: ...details1Kills, details2Kills, details3Kills, isLeaderKilled,
+	// monsterDifficulty, monsterRarity...
+	//
+	// It used to be missing from this packet entirely, with a filler byte sent after the occurrence
+	// instead. The byte COUNT came out right, so loot still parsed and nothing looked broken, but
+	// all three fields in between were read one slot early:
+	//   isLeaderKilled    <- bestiaryStars       >= 1 for every creature, so the Echo Warden badge
+	//                                            drew on every entry and the tooltip's charm-point
+	//                                            count showed the star rating
+	//   monsterDifficulty <- bestiaryOccurrence  0 for common creatures -> no stars, "Harmless"
+	//   monsterRarity     <- the filler 0
+	//
+	// The value is the Charm Points this player earned from that creature's first Echo Warden (the
+	// client renders it as the count in the badge tooltip), and 0 when they have killed none --
+	// which is what hides the badge.
+	uint8_t leaderCharmPoints = 0;
+	if (g_iobestiary().hasKilledLeaderMonster(player, mtype->name)) {
+		const uint32_t earned = g_iobestiary().getLeaderMonsterCharmPoints(mtype);
+		leaderCharmPoints = static_cast<uint8_t>(earned > 0 ? earned : 1);
+	}
+	newmsg.addByte(leaderCharmPoints);
 
-	std::vector<LootBlock> lootList = mtype->info.lootItems;
-	newmsg.addByte(lootList.size());
-	for (const LootBlock &loot : lootList) {
-		int8_t difficult = g_iobestiary().calculateDifficult(loot.chance);
-		bool shouldAddItem = false;
+	newmsg.addByte(mtype->info.bestiaryStars); // monsterDifficulty
 
-		switch (currentLevel) {
-			case 1:
-				shouldAddItem = false;
-				break;
-			case 2:
-				if (difficult < 2) {
+	// 15.25 (sommerrelease26): in the e2a4a1 client everything past the difficulty byte is gated on
+	// currentLevel != 0.
+	if (currentLevel != 0) {
+		newmsg.addByte(mtype->info.bestiaryOccurrence); // monsterRarity
+
+		std::vector<LootBlock> lootList = mtype->info.lootItems;
+		newmsg.addByte(lootList.size());
+		for (const LootBlock &loot : lootList) {
+			int8_t difficult = g_iobestiary().calculateDifficult(loot.chance);
+			bool shouldAddItem = false;
+
+			switch (currentLevel) {
+				case 1:
+					shouldAddItem = false;
+					break;
+				case 2:
+					if (difficult < 2) {
+						shouldAddItem = true;
+					}
+					break;
+				case 3:
+					if (difficult < 3) {
+						shouldAddItem = true;
+					}
+					break;
+				case 4:
 					shouldAddItem = true;
-				}
-				break;
-			case 3:
-				if (difficult < 3) {
-					shouldAddItem = true;
-				}
-				break;
-			case 4:
-				shouldAddItem = true;
-				break;
+					break;
+			}
+
+			newmsg.add<uint16_t>(g_configManager().getBoolean(SHOW_LOOTS_IN_BESTIARY) || shouldAddItem == true ? loot.id : 0);
+			newmsg.addByte(difficult);
+			newmsg.addByte(0); // 1 if special event - 0 if regular loot (?)
+			if (g_configManager().getBoolean(SHOW_LOOTS_IN_BESTIARY) || shouldAddItem == true) {
+				newmsg.addString(loot.name);
+				newmsg.addByte(loot.countmax > 0 ? 0x1 : 0x0);
+			}
 		}
 
-		newmsg.add<uint16_t>(g_configManager().getBoolean(SHOW_LOOTS_IN_BESTIARY) || shouldAddItem == true ? loot.id : 0);
-		newmsg.addByte(difficult);
-		newmsg.addByte(0); // 1 if special event - 0 if regular loot (?)
-		if (g_configManager().getBoolean(SHOW_LOOTS_IN_BESTIARY) || shouldAddItem == true) {
-			newmsg.addString(loot.name);
-			newmsg.addByte(loot.countmax > 0 ? 0x1 : 0x0);
-		}
-	}
+		if (currentLevel > 1) {
+			newmsg.add<uint16_t>(mtype->info.bestiaryCharmsPoints);
+			int8_t attackmode = 0;
+			if (!mtype->info.isHostile) {
+				attackmode = 2;
+			} else if (mtype->info.targetDistance) {
+				attackmode = 1;
+			}
 
-	if (currentLevel > 1) {
-		newmsg.add<uint16_t>(mtype->info.bestiaryCharmsPoints);
-		int8_t attackmode = 0;
-		if (!mtype->info.isHostile) {
-			attackmode = 2;
-		} else if (mtype->info.targetDistance) {
-			attackmode = 1;
-		}
-
-		newmsg.addByte(attackmode);
-		newmsg.addByte(0x02);
-		newmsg.add<uint32_t>(mtype->info.healthMax);
-		newmsg.add<uint32_t>(mtype->info.experience);
-		newmsg.add<uint16_t>(mtype->getBaseSpeed());
-		newmsg.add<uint16_t>(mtype->info.armor);
-		newmsg.addDouble(mtype->info.mitigation);
-	}
-
-	if (currentLevel > 2) {
-		std::map<uint8_t, int16_t> elements = g_iobestiary().getMonsterElements(mtype);
-
-		newmsg.addByte(elements.size());
-		for (auto &element : elements) {
-			newmsg.addByte(element.first);
-			newmsg.add<uint16_t>(element.second);
+			newmsg.addByte(attackmode);
+			newmsg.addByte(0x02);
+			newmsg.add<uint32_t>(mtype->info.healthMax);
+			newmsg.add<uint32_t>(mtype->info.experience);
+			newmsg.add<uint16_t>(mtype->getBaseSpeed());
+			newmsg.add<uint16_t>(mtype->info.armor);
+			newmsg.addDouble(mtype->info.mitigation);
 		}
 
-		newmsg.add<uint16_t>(1);
-		newmsg.addString(mtype->info.bestiaryLocations);
-	}
+		if (currentLevel > 2) {
+			std::map<uint8_t, int16_t> elements = g_iobestiary().getMonsterElements(mtype);
+
+			newmsg.addByte(elements.size());
+			for (auto &element : elements) {
+				newmsg.addByte(element.first);
+				newmsg.add<uint16_t>(element.second);
+			}
+
+			newmsg.add<uint16_t>(1);
+			newmsg.addString(mtype->info.bestiaryLocations);
+		}
+	} // end 15.25 (sommerrelease26) currentLevel != 0 gate
 
 	writeToOutputBuffer(newmsg);
 }
@@ -3367,10 +3421,18 @@ void ProtocolGame::parseBestiarySendCreatures(NetworkMessage &msg) {
 			}
 		}
 
+		// 15.25 (sommerrelease26): the e2a4a1 client reads a new per-creature byte right after the
+		// race id (before progress). In 15.30 it is isLeaderKilled on the client's TQmlMonsterRace
+		// model -- "leader monster" is CipSoft's internal name for the Echo Warden -- and it draws the
+		// Echo Warden charm-reward badge on the list entry. It was previously guessed to be an
+		// "unlocked" flag and derived from kill progress, which put the badge on every entry the
+		// player had ever killed and never updated it when a warden was actually defeated. It is
+		// per-race Echo Warden state and has nothing to do with kill progress.
+		// The progress block also gained an extra trailing byte (sent as 0 until its meaning is confirmed).
+		newmsg.addByte(g_iobestiary().hasKilledLeaderMonster(player, it_.second) ? 1 : 0);
+		newmsg.addByte(progress);
 		if (progress > 0) {
-			newmsg.addByte(progress);
 			newmsg.addByte(occurrence);
-		} else {
 			newmsg.addByte(0);
 		}
 
@@ -3613,30 +3675,22 @@ void ProtocolGame::parseSendResourceBalance() {
 
 void ProtocolGame::parseSendResourceBalance(NetworkMessage &msg) {
 	// Portable forge open (client UI): empty 0xED requests the forge item list (0x87).
+	// Do NOT prime m_lastForgeOpenTime here: leaving it stale makes the follow-up
+	// forge-resource request trigger a full re-open (sendOpenForge), which is what
+	// arms the window buttons. This mirrors the working path (use-item / /openforge).
 	if (!msg.canRead(1)) {
-		m_lastForgeOpenTime = OTSYS_TIME();
+		// Empty 0xED (portable-forge button): open the exaltation forge.
 		sendOpenForge();
 		return;
 	}
 
 	const auto resourceType = static_cast<Resource_t>(msg.getByte());
-	switch (resourceType) {
-		case RESOURCE_FORGE_DUST:
-		case RESOURCE_FORGE_SLIVER:
-		case RESOURCE_FORGE_CORES: {
-			const uint32_t now = OTSYS_TIME();
-			if (now - m_lastForgeOpenTime > 1000) {
-				m_lastForgeOpenTime = now;
-				sendOpenForge();
-			} else {
-				sendResourceBalance(resourceType);
-			}
-			break;
-		}
-		default:
-			sendResourceBalance(resourceType);
-			break;
-	}
+	// 15.25 (sommerrelease26): answer with the requested resource balance only. The Weapon
+	// Proficiency "Modify" panel polls the forge dust via 0xED (with a resource byte); the old
+	// portable-forge re-open hack popped the exaltation forge and never delivered the dust to
+	// the proficiency panel ("Not enough dust available"). Sending the balance fixes both the
+	// stray forge window and the missing dust.
+	sendResourceBalance(resourceType);
 }
 
 void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
@@ -3652,6 +3706,12 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
 		case RESOURCE_INVENTORY_MONEY:
 			value = player->getMoney();
 			break;
+		case RESOURCE_GUILD_BANK: {
+			if (const auto &guild = player->getGuild()) {
+				value = guild->getBankBalance();
+			}
+			break;
+		}
 		case RESOURCE_PREY_CARDS:
 			value = player->getPreyCards();
 			break;
@@ -3671,6 +3731,11 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
 			value = coreCount;
 			break;
 		}
+		case RESOURCE_LUNAR_ASCENSION_ORBS:
+			// CIP 15.30+: 0x49 is lunar orb balance (Maximise). Forge dust cap
+			// remains in sendForgingData — do not emit it as resource 0x49.
+			value = player->getItemTypeCount(ITEM_LUNAR_ASCENSION_ORB);
+			break;
 		case RESOURCE_LESSER_GEMS:
 			value = player->getItemTypeCount(player->getVocation()->getWheelGemId(WheelGemQuality_t::Lesser));
 			break;
@@ -3917,6 +3982,7 @@ void ProtocolGame::addCreatureIcon(NetworkMessage &msg, const std::shared_ptr<Cr
 		msg.addByte(icon.serialize());
 		msg.addByte(static_cast<uint8_t>(icon.category));
 		msg.add<uint16_t>(icon.count);
+		msg.addByte(0); // 15.25 (sommerrelease26): new trailing per-icon byte
 	}
 }
 
@@ -3999,7 +4065,7 @@ void ProtocolGame::sendCreatureEmblem(const std::shared_ptr<Creature> &creature)
 }
 
 void ProtocolGame::sendCreatureSkull(const std::shared_ptr<Creature> &creature) {
-	if (g_game().getWorldType() != WORLDTYPE_OPEN) {
+	if (g_game().worlds().getCurrentWorld()->type != WORLDTYPE_OPEN) {
 		return;
 	}
 
@@ -4076,6 +4142,265 @@ void ProtocolGame::sendAddMarker(const Position &pos, uint8_t markType, const st
 	writeToOutputBuffer(msg);
 }
 
+void ProtocolGame::sendCyclopediaMapSetCurrentArea(uint16_t areaId) {
+	if (!player || oldProtocol) {
+		return;
+	}
+	NetworkMessage msg;
+	msg.addByte(0xDD);
+	msg.addByte(enumToValue(CyclopediaMapData_t::SetCurrentArea));
+	msg.add<uint16_t>(areaId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendCyclopediaMapDiscoveryData(const std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> &mainAreas, const std::vector<uint16_t> &discoveredSubAreas, const std::vector<uint16_t> &discoverableSubAreas) {
+	if (!player || oldProtocol) {
+		return;
+	}
+	// sub 1: u16 nMain {u16 areaId, u8 status(0-3), u8 progress(0-100,0xFF=undiscoverable)}; u16 nDiscovered {u16}; u16 nDiscoverable {u16}.
+	NetworkMessage msg;
+	msg.addByte(0xDD);
+	msg.addByte(enumToValue(CyclopediaMapData_t::DiscoveryData));
+	msg.add<uint16_t>(static_cast<uint16_t>(mainAreas.size()));
+	for (const auto &[areaId, status, progress] : mainAreas) {
+		msg.add<uint16_t>(areaId);
+		msg.addByte(status);
+		msg.addByte(progress);
+	}
+	msg.add<uint16_t>(static_cast<uint16_t>(discoveredSubAreas.size()));
+	for (const auto subAreaId : discoveredSubAreas) {
+		msg.add<uint16_t>(subAreaId);
+	}
+	msg.add<uint16_t>(static_cast<uint16_t>(discoverableSubAreas.size()));
+	for (const auto subAreaId : discoverableSubAreas) {
+		msg.add<uint16_t>(subAreaId);
+	}
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendCyclopediaMapSetExploringArea(uint16_t subAreaId) {
+	if (!player || oldProtocol) {
+		return;
+	}
+	// sub 11: u16 subarea id -> currentExploringSubAreaID (0 = none)
+	NetworkMessage msg;
+	msg.addByte(0xDD);
+	msg.addByte(enumToValue(CyclopediaMapData_t::SetExploringArea));
+	msg.add<uint16_t>(subAreaId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendCyclopediaMapDonations(uint64_t donationGoal, const std::vector<std::tuple<uint16_t, bool, uint64_t>> &areas) {
+	if (!player || oldProtocol) {
+		return;
+	}
+	// sub 9: u64 goal; u8 count; {u16 areaId, bool improvedRespawnActive, u64 donatedAmount}xN
+	NetworkMessage msg;
+	msg.addByte(0xDD);
+	msg.addByte(enumToValue(CyclopediaMapData_t::Donations));
+	msg.add<uint64_t>(donationGoal);
+	msg.addByte(static_cast<uint8_t>(areas.size()));
+	for (const auto &[areaId, improvedRespawn, donated] : areas) {
+		msg.add<uint16_t>(areaId);
+		msg.addByte(improvedRespawn ? 0x01 : 0x00);
+		msg.add<uint64_t>(donated);
+	}
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendCyclopediaMapSetDiscoveryArea(uint16_t areaId, bool active, uint8_t poiTarget, const std::vector<std::pair<Position, uint8_t>> &points) {
+	if (!player || oldProtocol) {
+		return;
+	}
+	// sub 5 ("Start Discovering" response): u16 areaId; bool active (reader+0x88!); u8 poiTarget(=7); u8 poiCount; {position(5B), u8 state}xN.
+	NetworkMessage msg;
+	msg.addByte(0xDD);
+	msg.addByte(enumToValue(CyclopediaMapData_t::SetDiscoveryArea));
+	msg.add<uint16_t>(areaId);
+	msg.addByte(active ? 0x01 : 0x00);
+	msg.addByte(poiTarget);
+	msg.addByte(static_cast<uint8_t>(points.size()));
+	for (const auto &[pos, state] : points) {
+		msg.addPosition(pos);
+		msg.addByte(state);
+	}
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::parseCyclopediaMapAction(NetworkMessage &msg, uint8_t recvbyte) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	if (recvbyte == 0xDB) {
+		const uint8_t mapAction = msg.canRead(1) ? msg.getByte() : 0xFF;
+		if (mapAction == 1 && msg.canRead(6)) {
+			// confirmed wire: u16 areaId, u32 amount, u8 trailing (ignored)
+			const uint16_t areaId = msg.get<uint16_t>();
+			const uint32_t amount = msg.get<uint32_t>();
+			g_logger().debug("[CyclopediaMapAction] 0xDB donate: areaId {} amount {}", areaId, amount);
+			if (areaId > 0 && areaId < 1000 && amount > 0) {
+				handleDiscoveryDonation(areaId, amount);
+			}
+		} else if (mapAction != 2) {
+			std::string hex;
+			while (msg.canRead(1)) {
+				hex += fmt::format("{:02x} ", msg.getByte());
+			}
+			g_logger().debug("[CyclopediaMapAction] 0xDB unknown action {}: [{}]", mapAction, hex);
+		}
+		// intentionally never replied to
+		return;
+	}
+
+	std::vector<uint8_t> body;
+	body.reserve(msg.getLength());
+	while (msg.canRead(1)) {
+		body.push_back(msg.getByte());
+	}
+	size_t p = 0;
+	auto readVarint = [&](uint64_t &value) -> bool {
+		value = 0;
+		int shift = 0;
+		while (p < body.size()) {
+			const uint8_t b = body[p++];
+			value |= static_cast<uint64_t>(b & 0x7F) << shift;
+			if (!(b & 0x80)) {
+				return true;
+			}
+			shift += 7;
+		}
+		return false;
+	};
+
+	std::map<uint32_t, uint64_t> top;
+	std::map<uint32_t, std::map<uint32_t, uint64_t>> nested;
+	std::string dump;
+	while (p < body.size()) {
+		uint64_t tag;
+		if (!readVarint(tag)) {
+			break;
+		}
+		const auto fn = static_cast<uint32_t>(tag >> 3);
+		const auto wt = static_cast<uint32_t>(tag & 7);
+		if (wt == 0) {
+			uint64_t v;
+			if (!readVarint(v)) {
+				break;
+			}
+			top[fn] = v;
+			dump += fmt::format("f{}={} ", fn, v);
+		} else if (wt == 2) {
+			uint64_t ln;
+			if (!readVarint(ln)) {
+				break;
+			}
+			const size_t end = std::min(body.size(), p + static_cast<size_t>(ln));
+			while (p < end) {
+				uint64_t tag2;
+				if (!readVarint(tag2)) {
+					break;
+				}
+				if ((tag2 & 7) != 0) {
+					break;
+				}
+				uint64_t v2;
+				if (!readVarint(v2)) {
+					break;
+				}
+				nested[fn][static_cast<uint32_t>(tag2 >> 3)] = v2;
+				dump += fmt::format("f{}.{}={} ", fn, tag2 >> 3, v2);
+			}
+			p = end;
+		} else {
+			break;
+		}
+	}
+	g_logger().debug("[CyclopediaMapAction] C2S 0x92: {}", dump.empty() ? "(empty)" : dump);
+
+	// legacy 0x92 donation encodings (top f5+f6 / {f1, f2} submessage)
+	uint64_t donArea = 0;
+	uint64_t donAmount = 0;
+	if (top.contains(5) && top.contains(6)) {
+		donArea = top[5];
+		donAmount = top[6];
+	} else {
+		for (const auto &[fn, inner] : nested) {
+			if (inner.contains(1) && inner.contains(2)) {
+				donArea = inner.at(1);
+				donAmount = inner.at(2);
+				break;
+			}
+		}
+	}
+	if (donArea > 0 && donArea < 1000 && donAmount > 0) {
+		handleDiscoveryDonation(static_cast<uint16_t>(donArea), donAmount);
+		return;
+	}
+
+	player->resendCyclopediaMapDiscoveryData();
+}
+
+void ProtocolGame::handleDiscoveryDonation(uint16_t areaId, uint64_t amount) {
+	static constexpr uint64_t MAX_SINGLE_DONATION = 1000000000000ULL;
+	if (!player || amount == 0 || amount > MAX_SINGLE_DONATION) {
+		return;
+	}
+	const auto store = g_kv().scoped("discovery-donations");
+	const auto goalVal = store->get("goal");
+	const auto goal = goalVal ? static_cast<uint64_t>(goalVal->getNumber()) : 10000000ULL;
+
+	if (!g_game().removeMoney(player, amount, 0, true)) {
+		player->sendTextMessage(MESSAGE_EVENT_ADVANCE, "You do not have that much money (including your bank balance).");
+		return;
+	}
+	// refresh the gold shown in the map UI right away (it reads the resource balance)
+	sendResourcesBalance(player->getMoney(), player->getBankBalance(), player->getPreyCards(), player->getTaskHuntingPoints(), player->getSoulsealsPoints());
+
+	const auto poolKey = fmt::format("area-{}", areaId);
+	const auto poolVal = store->get(poolKey);
+	const uint64_t oldPool = poolVal ? static_cast<uint64_t>(poolVal->getNumber()) : 0;
+	const uint64_t newPool = oldPool + amount;
+	store->set(poolKey, ValueWrapper(static_cast<double>(newPool)));
+	g_logger().debug("[Discovery] {} donated {} gold to area {} (pool {}/{})", player->getName(), amount, areaId, newPool, goal);
+
+	// rebuild sub 9 entries from every known pool/boost key and push to everyone online
+	const auto now = static_cast<uint64_t>(time(nullptr));
+	std::map<uint16_t, std::tuple<uint16_t, bool, uint64_t>> entryMap;
+	for (const auto &fullKey : store->keys()) {
+		const auto pos = fullKey.rfind("area-");
+		if (pos == std::string::npos) {
+			continue;
+		}
+		const int id = std::atoi(fullKey.c_str() + pos + 5);
+		if (id <= 0 || id >= 1000 || entryMap.contains(static_cast<uint16_t>(id))) {
+			continue;
+		}
+		const auto donatedVal = store->get(fmt::format("area-{}", id));
+		const auto untilVal = store->get(fmt::format("boost-until-{}", id));
+		const uint64_t donated = donatedVal ? static_cast<uint64_t>(donatedVal->getNumber()) : 0;
+		const bool active = untilVal && static_cast<uint64_t>(untilVal->getNumber()) > now;
+		entryMap.emplace(static_cast<uint16_t>(id), std::make_tuple(static_cast<uint16_t>(id), active, donated));
+	}
+	std::vector<std::tuple<uint16_t, bool, uint64_t>> entries;
+	entries.reserve(entryMap.size());
+	for (const auto &[id, entry] : entryMap) {
+		entries.push_back(entry);
+	}
+
+	const bool crossed = oldPool < goal && newPool >= goal;
+	for (const auto &[pid, onlinePlayer] : g_game().getPlayers()) {
+		if (!onlinePlayer) {
+			continue;
+		}
+		onlinePlayer->sendCyclopediaMapDonations(goal, entries);
+		if (crossed) {
+			onlinePlayer->sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("Donations for the area reached their goal - improved respawn rate will activate at the next server save and last one day!"));
+		}
+	}
+	player->sendTextMessage(MESSAGE_EVENT_ADVANCE, fmt::format("You donated {} gold (area pool: {}/{}).", amount, newPool, goal));
+}
+
 void ProtocolGame::sendCyclopediaCharacterNoData(CyclopediaCharacterInfoType_t characterInfoType, uint8_t errorCode) {
 	if (!player || oldProtocol) {
 		return;
@@ -4143,8 +4468,7 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 	}
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
-	const auto &conditionRegen = std::dynamic_pointer_cast<ConditionRegeneration>(condition);
-	msg.add<uint16_t>(conditionRegen ? conditionRegen->getFoodTicks() / 1000 : 0x00);
+	msg.add<uint16_t>(condition ? condition->getTicks() / 1000 : 0x00);
 	msg.add<uint16_t>(player->getOfflineTrainingTime() / 60 / 1000);
 	msg.add<uint16_t>(player->getSpeed());
 	msg.add<uint16_t>(player->getBaseSpeed());
@@ -5155,7 +5479,7 @@ void ProtocolGame::sendBlessingWindow() {
 	NetworkMessage msg;
 	msg.addByte(0x9B);
 
-	bool isRetro = g_configManager().getBoolean(TOGGLE_SERVER_IS_RETRO);
+	bool isRetro = g_game().isRetroPVP();
 
 	msg.addByte(isRetro ? 0x07 : 0x08);
 	for (auto blessing : magic_enum::enum_values<Blessings>()) {
@@ -5784,6 +6108,20 @@ void ProtocolGame::sendClientCheck() {
 	writeToOutputBuffer(msg);
 }
 
+void ProtocolGame::sendHirelingNameChange(uint32_t creatureId, uint32_t objectId) {
+	if (!player || oldProtocol) {
+		return;
+	}
+
+	// CIP HirelingNameChange (S 0xDB): creature + appearance instance ids for the
+	// configuration dialog; zeros open a store-style name prompt only.
+	NetworkMessage out;
+	out.addByte(0xDB);
+	out.add<uint32_t>(creatureId);
+	out.add<uint32_t>(objectId);
+	writeToOutputBuffer(out);
+}
+
 void ProtocolGame::sendGameNews() {
 	if (!player || oldProtocol) {
 		return;
@@ -5799,12 +6137,21 @@ void ProtocolGame::sendGameNews() {
 void ProtocolGame::sendResourcesBalance(uint64_t money /*= 0*/, uint64_t bank /*= 0*/, uint64_t preyCards /*= 0*/, uint64_t taskHunting /*= 0*/, uint64_t soulsealsPoints /*= 0*/, uint64_t forgeDust /*= 0*/, uint64_t forgeSliver /*= 0*/, uint64_t forgeCores /*= 0*/) {
 	sendResourceBalance(RESOURCE_BANK, bank);
 	sendResourceBalance(RESOURCE_INVENTORY_MONEY, money);
+	// CIP only enables guild-bank UI when type 0x02 is received — omit when not in a guild.
+	if (player) {
+		if (const auto &guild = player->getGuild()) {
+			sendResourceBalance(RESOURCE_GUILD_BANK, guild->getBankBalance());
+		}
+	}
 	sendResourceBalance(RESOURCE_PREY_CARDS, preyCards);
 	sendResourceBalance(RESOURCE_TASK_HUNTING, taskHunting);
 	sendResourceBalance(RESOURCE_SOULSEALS_POINTS, soulsealsPoints);
 	sendResourceBalance(RESOURCE_FORGE_DUST, forgeDust);
 	sendResourceBalance(RESOURCE_FORGE_SLIVER, forgeSliver);
 	sendResourceBalance(RESOURCE_FORGE_CORES, forgeCores);
+	if (player && !oldProtocol) {
+		sendResourceBalance(RESOURCE_LUNAR_ASCENSION_ORBS);
+	}
 }
 
 void ProtocolGame::sendResourceBalance(Resource_t resourceType, uint64_t value) {
@@ -6081,7 +6428,8 @@ void ProtocolGame::sendSaleItemList(const std::vector<ShopBlock> &shopVector, co
 		if (search != inventoryMap.end()) {
 			customCurrencyValue += static_cast<uint64_t>(search->second);
 		}
-		sendResourceBalance(oldProtocol ? RESOURCE_INVENTORY_MONEY : RESOURCE_INVENTORY_CURRENCY_CUSTOM, customCurrencyValue);
+		// CIP: non-gold NPC currency is 0x3C (0x02 is guild bank gold).
+		sendResourceBalance(oldProtocol ? RESOURCE_INVENTORY_MONEY : RESOURCE_NPC_TRADE_QUEST_FLAG_CURRENCY, customCurrencyValue);
 	}
 
 	NetworkMessage msg;
@@ -6194,6 +6542,11 @@ void ProtocolGame::sendCoinBalance() {
 	}
 
 	writeToOutputBuffer(msg);
+
+	if (!oldProtocol) {
+		sendResourceBalance(RESOURCE_COIN_NORMAL, player->coinBalance);
+		sendResourceBalance(RESOURCE_COIN_TRANSFERRABLE, player->coinTransferableBalance);
+	}
 }
 
 void ProtocolGame::updateCoinBalance() {
@@ -6495,32 +6848,8 @@ void ProtocolGame::sendForgingData() {
 		msg.add<uint64_t>(price);
 	}
 
-	// (conversion) (left column top) Cost to make 1 bottom item - 20
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_COST_ONE_SLIVER)));
-	// (conversion) (left column bottom) How many items to make - 3
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_SLIVER_AMOUNT)));
-	// (conversion) (middle column top) Cost to make 1 - 50
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_CORE_COST)));
-	// (conversion) (right column top) Current stored dust limit minus this number = cost to increase stored dust limit - 75
-	msg.addByte(75);
-	// (conversion) (right column bottom) Starting stored dust limit
-	msg.add<uint16_t>(player->getForgeDustLevel());
-	// (conversion) (right column bottom) Max stored dust limit - 325
-	msg.add<uint16_t>(g_configManager().getNumber(FORGE_MAX_DUST));
-	// (normal fusion) dust cost - 100
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_FUSION_DUST_COST)));
-	// (convergence fusion) dust cost - 130
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_CONVERGENCE_FUSION_DUST_COST)));
-	// (normal transfer) dust cost - 100
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_TRANSFER_DUST_COST)));
-	// (convergence transfer) dust cost - 160
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_CONVERGENCE_TRANSFER_DUST_COST)));
-	// (fusion) Base success rate - 50
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_BASE_SUCCESS_RATE)));
-	// (fusion) Bonus success rate - 15
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_BONUS_SUCCESS_RATE)));
-	// (fusion) Tier loss chance after reduction - 50
-	msg.addByte(static_cast<uint8_t>(g_configManager().getNumber(FORGE_TIER_LOSS_REDUCTION)));
+	const auto dustLevelByte = static_cast<uint8_t>(std::min<uint64_t>(player->getForgeDustLevel() > 100 ? (player->getForgeDustLevel() - 100) / 20 : 0, 225));
+	msg.addByte(dustLevelByte);
 
 	// Update player resources
 	parseSendResourceBalance();
@@ -6760,7 +7089,7 @@ void ProtocolGame::sendOpenForge() {
 	msg.addByte(convergenceTransferCount);
 	msg.setBufferPosition(dustLevelPosition);
 
-	msg.add<uint16_t>(player->getForgeDustLevel()); // Player dust limit
+	msg.addByte(static_cast<uint8_t>(std::min<uint64_t>(player->getForgeDustLevel() > 100 ? (player->getForgeDustLevel() - 100) / 20 : 0, 225))); // Player dust limit
 	writeToOutputBuffer(msg);
 	// Update forging informations
 	sendForgingData();
@@ -7491,6 +7820,7 @@ void ProtocolGame::sendCancelTarget() {
 	NetworkMessage msg;
 	msg.addByte(0xA3);
 	msg.add<uint32_t>(0x00);
+	msg.add<uint32_t>(0x00); // 15.25 (sommerrelease26): client reads a 2nd u32 here now
 	writeToOutputBuffer(msg);
 }
 
@@ -7686,7 +8016,7 @@ void ProtocolGame::sendPartyCreatureShield(const std::shared_ptr<Creature> &targ
 }
 
 void ProtocolGame::sendPartyCreatureSkull(const std::shared_ptr<Creature> &target) {
-	if (g_game().getWorldType() != WORLDTYPE_OPEN) {
+	if (g_game().worlds().getCurrentWorld()->type != WORLDTYPE_OPEN) {
 		return;
 	}
 
@@ -7810,6 +8140,12 @@ void ProtocolGame::sendAddTileItem(const Position &pos, uint32_t stackpos, const
 		return;
 	}
 
+	// Don't send a zero client-id appearance on a tile — the 15.25+ client rejects it
+	// ("field has more than one zero id appearance"); it can't render anyway.
+	if (!item || Item::items[item->getID()].id == 0) {
+		return;
+	}
+
 	NetworkMessage msg;
 	msg.addByte(0x6A);
 	msg.addPosition(pos);
@@ -7820,6 +8156,11 @@ void ProtocolGame::sendAddTileItem(const Position &pos, uint32_t stackpos, const
 
 void ProtocolGame::sendUpdateTileItem(const Position &pos, uint32_t stackpos, const std::shared_ptr<Item> &item) {
 	if (!canSee(pos)) {
+		return;
+	}
+
+	// Don't send a zero client-id appearance on a tile — the 15.25+ client rejects it.
+	if (!item || Item::items[item->getID()].id == 0) {
 		return;
 	}
 
@@ -7976,7 +8317,7 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 	msg.add<uint16_t>(static_cast<uint16_t>(g_configManager().getNumber(STORE_COIN_PACKET)));
 
 	if (!oldProtocol) {
-		const bool exivaEnabled = g_game().getWorldType() == WORLDTYPE_OPTIONAL || !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS);
+		const bool exivaEnabled = g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL || !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS);
 		msg.addByte(exivaEnabled ? 0x01 : 0x00); // exiva button enabled
 		if (exivaEnabled) {
 			sendExivaRestrictions(true);
@@ -8991,6 +9332,9 @@ void ProtocolGame::AddCreature(NetworkMessage &msg, const std::shared_ptr<Creatu
 	msg.add<uint16_t>(creature->getStepSpeed());
 
 	addCreatureIcon(msg, creature);
+	// 15.25 (sommerrelease26): the second creature-icon list (count2) is inline here in
+	// AddCreature only — sendCreatureIcon (0x8B) sends each list as its own typed message.
+	msg.addByte(0);
 
 	msg.addByte(player->getSkullClient(creature));
 	msg.addByte(player->getPartyShield(otherPlayer));
@@ -9107,8 +9451,7 @@ void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
 	msg.add<uint16_t>(player->getBaseSpeed());
 
 	std::shared_ptr<Condition> condition = player->getCondition(CONDITION_REGENERATION, CONDITIONID_DEFAULT);
-	const auto &conditionRegen = std::dynamic_pointer_cast<ConditionRegeneration>(condition);
-	msg.add<uint16_t>(conditionRegen ? conditionRegen->getFoodTicks() / 1000 : 0x00);
+	msg.add<uint16_t>(condition ? condition->getTicks() / 1000 : 0x00);
 
 	msg.add<uint16_t>(player->getOfflineTrainingTime() / 60 / 1000);
 
@@ -11030,6 +11373,8 @@ void ProtocolGame::sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) {
 		return;
 	}
 
+	// Client GameEventTypeSpellUnlocked: the spell id is sent as a uint32 and the
+	// client resolves it to the spell name, showing the "New Spell Unlocked" banner.
 	NetworkMessage msg;
 	msg.addByte(0x75);
 	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_SPELL);
@@ -11062,6 +11407,22 @@ void ProtocolGame::sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t ra
 	msg.addByte(0x75);
 	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_WEEKLY_TASK_SPECIFIC);
 	msg.add<uint16_t>(raceId);
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendScreenshotAndBannerLeaderMonsterKilled(uint16_t raceId, uint32_t charmPoints) {
+	if (oldProtocol) {
+		return;
+	}
+
+	// Client GameEventTypeLeaderMonsterKilled (banner subtype 0x0e): creature race id (uint16) + charm
+	// points (uint32). The client resolves the race id to the creature and renders the
+	// "Echo Warden Killed / You have received N Charm Points" banner with the creature shown.
+	NetworkMessage msg;
+	msg.addByte(0x75);
+	msg.addByte(SCREENSHOT_AND_BANNER_TYPE_LEADER_MONSTER);
+	msg.add<uint16_t>(raceId);
+	msg.add<uint32_t>(charmPoints);
 	writeToOutputBuffer(msg);
 }
 
@@ -11420,6 +11781,12 @@ void ProtocolGame::sendSereneProtocol(const bool isSerene) {
 }
 
 void ProtocolGame::sendStanceProtocol(const std::vector<uint16_t> &spellIds) {
+	// 0xC1 sub-channel 0x02 = active-stance highlight list. The 15.25 client reads a u8 count
+	// then that many little-endian u16 spell ids and WHOLE-REPLACES its active-spell set, framing
+	// every action-bar slot whose spell id is in the set. So we must send the COMPLETE set of
+	// currently-active stances every time — e.g. a sorcerer with an elemental stance AND a
+	// crippling stance sends both ids (count 2) so BOTH slots get framed. An empty list (count 0)
+	// clears all frames; never send id 0 (id 0 matches every empty slot -> frames them all).
 	NetworkMessage msg;
 	msg.addByte(0xC1);
 	msg.addByte(0x02);
@@ -11491,10 +11858,12 @@ void ProtocolGame::parseWeaponProficiency(NetworkMessage &msg) {
 
 	if (type == WEAPON_PROFICIENCY_ITEM_INFO) {
 		const uint16_t itemId = msg.get<uint16_t>();
+		player->sanitizeWeaponProficiencyShapes(itemId);
 		player->sendWeaponProficiencyInfo(itemId);
 
 	} else if (type == WEAPON_PROFICIENCY_LIST_INFO) {
 		for (const auto &[itemId, _] : player->weaponProficiencies) {
+			player->sanitizeWeaponProficiencyShapes(itemId);
 			player->sendWeaponProficiencyInfo(itemId);
 		}
 
@@ -11517,6 +11886,64 @@ void ProtocolGame::parseWeaponProficiency(NetworkMessage &msg) {
 		}
 
 		player->applyEquippedWeaponProficiency(itemId);
+
+	} else if (type == WEAPON_PROFICIENCY_MODIFY_SLOT) {
+		const uint16_t itemId = msg.get<uint16_t>();
+		const uint8_t proficiencyLevel = msg.getByte();
+		const uint8_t perkPosition = msg.getByte();
+		while (msg.canRead(1)) { // trailing flag byte (observed 0x49) — purpose unknown; drain it.
+			msg.getByte();
+		}
+		player->modifyWeaponProficiencySlot(itemId, proficiencyLevel, perkPosition);
+
+	} else if (type == WEAPON_PROFICIENCY_REFINE_SLOT) {
+		const uint16_t itemId = msg.get<uint16_t>();
+		const uint8_t proficiencyLevel = msg.getByte();
+		const uint8_t perkPosition = msg.getByte();
+		while (msg.canRead(1)) { // trailing flag byte (observed 0xCF) — drain it.
+			msg.getByte();
+		}
+		player->refineWeaponProficiencySlot(itemId, proficiencyLevel, perkPosition);
+
+	} else if (type == WEAPON_PROFICIENCY_MAXIMISE_SLOT) {
+		const uint16_t itemId = msg.get<uint16_t>();
+		const uint8_t proficiencyLevel = msg.getByte();
+		const uint8_t perkPosition = msg.getByte();
+		while (msg.canRead(1)) { // trailing flag byte (observed 0x90) — drain it.
+			msg.getByte();
+		}
+		player->maximiseWeaponProficiencySlot(itemId, proficiencyLevel, perkPosition);
+
+	} else if (type == WEAPON_PROFICIENCY_RESHAPE_SLOT) {
+		const uint16_t itemId = msg.get<uint16_t>();
+		const uint8_t proficiencyLevel = msg.getByte();
+		const uint8_t perkPosition = msg.getByte();
+		while (msg.canRead(1)) { // trailing flag byte (observed 0x46 / 0x60) — drain it.
+			msg.getByte();
+		}
+		player->reshapeWeaponProficiencySlot(itemId, proficiencyLevel, perkPosition);
+
+	} else if (type == WEAPON_PROFICIENCY_PICK_OFFER) {
+		// Payload CONFIRMED live (D8 0C 00 00 00 00): itemId(u16) + slot level + slot pos + chosen offer index + flag.
+		const uint16_t itemId = msg.canRead(2) ? msg.get<uint16_t>() : 0;
+		const uint8_t proficiencyLevel = msg.canRead(1) ? msg.getByte() : 0; // echoed slot (unused)
+		const uint8_t perkPosition = msg.canRead(1) ? msg.getByte() : 0;
+		const uint8_t offerIndex = msg.canRead(1) ? msg.getByte() : 0;
+		(void)proficiencyLevel;
+		(void)perkPosition;
+		while (msg.canRead(1)) {
+			msg.getByte();
+		}
+		player->pickReshapeWeaponProficiencyOffer(itemId, offerIndex);
+
+	} else if (type == WEAPON_PROFICIENCY_CLEAR_SLOT) {
+		const uint16_t itemId = msg.get<uint16_t>();
+		const uint8_t proficiencyLevel = msg.getByte();
+		const uint8_t perkPosition = msg.getByte();
+		while (msg.canRead(1)) { // trailing flag byte (observed 0xF2) — drain it.
+			msg.getByte();
+		}
+		player->clearWeaponProficiencySlot(itemId, proficiencyLevel, perkPosition);
 	}
 }
 
@@ -11551,12 +11978,131 @@ void ProtocolGame::sendWeaponProficiencyInfo(const uint16_t itemId) {
 			msg.addByte(perk.proficiencyLevel - 1);
 			msg.addByte(perk.perkPosition - 1);
 		}
+		// 15.25 (sommerrelease26) SHAPE: a SECOND list right after the active perks carries the modified slots:
+		// [level(0-based), position(0-based), perkType:u16 (client catalogue index), value]. The client renders
+		// the rolled perk from the catalogue index. See PORT.md §7.4.
+		msg.addByte(static_cast<uint8_t>(proficiency.modifiedSlots.size()));
+		for (const auto &slot : proficiency.modifiedSlots) {
+			msg.addByte(slot.proficiencyLevel - 1);
+			msg.addByte(slot.perkPosition - 1);
+			msg.add<uint16_t>(static_cast<uint16_t>(slot.perkType));
+			msg.addByte(slot.value);
+		}
 		writeToOutputBuffer(msg);
 	}
 }
 
+void ProtocolGame::sendWeaponProficiencyReshapeOffers(const uint16_t itemId) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	auto it = player->weaponProficiencies.find(itemId);
+	if (it == player->weaponProficiencies.end()) {
+		return;
+	}
+	const auto &offers = it->second.pendingReshapeOffers;
+
+	// 15.25 (sommerrelease26): Reshape offers = opcode 0xBB (Ghidra-confirmed FUN_140601bf0). NOT 0xC7 (that is
+	// CyclopediaCurrentHouseData). Wire: u16 itemId · byte curLevel · byte curPos · byte count · count×{u16 perkType, byte value}.
+	// Each offer uses the same perkType+rank encoding as a 0xC4 modified slot (no name string). See PORT.md §7.4.
+	// Offers are shown at the rank the slot already has (rank 0 = base magnitude); Reshape keeps the refinement.
+	uint8_t rank = 0;
+	for (const auto &slot : it->second.modifiedSlots) {
+		if (slot.proficiencyLevel == it->second.pendingReshapeLevel && slot.perkPosition == it->second.pendingReshapePosition) {
+			rank = slot.value;
+			break;
+		}
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0xBB);
+	msg.add<uint16_t>(itemId);
+	msg.addByte(it->second.pendingReshapeLevel - 1); // current slot (0-based on the wire, like active perks)
+	msg.addByte(it->second.pendingReshapePosition - 1);
+	msg.addByte(static_cast<uint8_t>(offers.size()));
+	for (const auto perkType : offers) {
+		msg.add<uint16_t>(static_cast<uint16_t>(perkType));
+		msg.addByte(rank);
+	}
+
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::sendBossDifficultySelection(uint8_t selectedDifficulty, const std::vector<uint32_t> &numbers, const std::vector<std::string> &banners, const std::vector<std::string> &redMods, const std::vector<std::string> &greenMods) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	NetworkMessage msg;
+	msg.addByte(0x2F);
+	msg.addByte(selectedDifficulty);
+
+	msg.add<uint32_t>(numbers.size() > 0 ? numbers[0] : 0); // f1
+	msg.addByte(numbers.size() > 1 ? static_cast<uint8_t>(numbers[1]) : 0); // f2 (u8)
+	msg.add<uint16_t>(numbers.size() > 2 ? static_cast<uint16_t>(numbers[2]) : 0); // f3 = raceId
+	msg.add<uint16_t>(numbers.size() > 3 ? static_cast<uint16_t>(numbers[3]) : 0); // f4
+	msg.add<uint16_t>(numbers.size() > 4 ? static_cast<uint16_t>(numbers[4]) : 0); // f5 = Highest in Group
+	msg.add<uint16_t>(numbers.size() > 5 ? static_cast<uint16_t>(numbers[5]) : 0); // f6 = Personal Highest
+	msg.add<uint32_t>(numbers.size() > 6 ? numbers[6] : 0); // f7 = Bad Luck % (value/1000)
+
+	for (size_t i = 0; i < 5; ++i) {
+		msg.addString(i < banners.size() ? banners[i] : std::string());
+	}
+
+	msg.add<uint16_t>(0); // Update.f1
+	msg.addByte(static_cast<uint8_t>(redMods.size()));
+	for (const auto &s : redMods) {
+		msg.addString(s);
+	}
+	msg.addByte(static_cast<uint8_t>(greenMods.size()));
+	for (const auto &s : greenMods) {
+		msg.addString(s);
+	}
+
+	g_logger().info("[BossDiffSel] 0x2F sel={} raceId(f3)={} banners={}", selectedDifficulty, numbers.size() > 2 ? numbers[2] : 0, banners.size());
+	writeToOutputBuffer(msg);
+}
+
+void ProtocolGame::parseBossDifficultySelection(NetworkMessage &msg) {
+	if (oldProtocol || !player) {
+		return;
+	}
+
+	const uint32_t selectionContext = msg.canRead(4) ? msg.get<uint32_t>() : 0; // always 1 so far
+	(void)selectionContext;
+	const uint8_t action = msg.canRead(1) ? msg.getByte() : 0xFF;
+	uint16_t difficulty = 0;
+	if ((action == 0x00 || action == 0x02) && msg.canRead(2)) {
+		difficulty = msg.get<uint16_t>();
+	}
+	while (msg.canRead(1)) { // drain trailing byte(s)
+		msg.getByte();
+	}
+
+	if (action == 0x02) {
+		// spinner preview — the window stays open, nothing to do server-side (selection is client-side)
+		g_logger().info("[BossDiffSel] select difficulty={}", difficulty);
+		return;
+	}
+	if (action == 0x00) {
+		// Start Fight — difficulty range is 0..25. Clamp/validate, then fire the callback.
+		if (difficulty > 25) {
+			difficulty = 25;
+		}
+		g_logger().info("[BossDiffSel] START FIGHT difficulty={} (0..25)", difficulty);
+	} else {
+		g_logger().info("[BossDiffSel] cancel/other action={}", action);
+	}
+	// Start (after handling) or Cancel -> close the dialog
+	NetworkMessage out;
+	out.addByte(0x2F);
+	out.addByte(0x01); // discriminator 1 = CLOSE
+	writeToOutputBuffer(out);
+}
+
 void ProtocolGame::parseExivaRestrictions(NetworkMessage &msg) {
-	if (!player || (g_game().getWorldType() == WORLDTYPE_OPTIONAL && !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS))) {
+	if (!player || (g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL && !g_configManager().getBoolean(EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS))) {
 		return;
 	}
 

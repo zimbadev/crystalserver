@@ -157,7 +157,7 @@ if Modules == nil then
 			error("StdModule.bless called without any npcHandler instance.")
 		end
 
-		if not npcHandler:checkInteraction(npc, player) or Game.getWorldType() == WORLD_TYPE_PVP_ENFORCED then
+		if not npcHandler:checkInteraction(npc, player) or Game.getWorldType() == WORLDTYPE_HARDCORE then
 			return false
 		end
 
@@ -586,7 +586,9 @@ if Modules == nil then
 		local destination = Position(parameters.destination)
 
 		if player:isPremium() or not parameters.premium then
-			if player:removeMoneyBank(cost) then
+			if player:isPzLocked(player) then
+				module.npcHandler:say("Get out of there with this blood.", npc, player)
+			elseif player:removeMoneyBank(cost) then
 				local position = player:getPosition()
 				player:teleportTo(destination)
 

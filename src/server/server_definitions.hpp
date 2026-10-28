@@ -66,19 +66,29 @@ enum SessionEndInformations : uint8_t {
 enum Resource_t : uint8_t {
 	RESOURCE_BANK = 0x00,
 	RESOURCE_INVENTORY_MONEY = 0x01,
-	RESOURCE_INVENTORY_CURRENCY_CUSTOM = 0x02,
+	// CIP GameserverMessageResourceBalance type 0x02 = guild bank gold.
+	// Previously misnamed INVENTORY_CURRENCY_CUSTOM; NPC non-gold currency is 0x3C.
+	RESOURCE_GUILD_BANK = 0x02,
+	RESOURCE_INVENTORY_CURRENCY_CUSTOM = RESOURCE_GUILD_BANK, // deprecated alias
 	RESOURCE_PREY_CARDS = 0x0A,
 	RESOURCE_TASK_HUNTING = 0x32,
+	// CIP NPC shop quest/flag currency (non-gold). Do not reuse 0x02.
+	RESOURCE_NPC_TRADE_QUEST_FLAG_CURRENCY = 0x3C,
 	RESOURCE_FORGE_DUST = 0x46,
 	RESOURCE_FORGE_SLIVER = 0x47,
 	RESOURCE_FORGE_CORES = 0x48,
+	// CIP 15.30+: lunar ascension orbs (weapon proficiency "Maximise").
+	// Forge dust *cap* is carried in sendForgingData, not as resource 0x49.
+	RESOURCE_LUNAR_ASCENSION_ORBS = 0x49,
 	RESOURCE_LESSER_GEMS = 0x51,
 	RESOURCE_REGULAR_GEMS = 0x52,
 	RESOURCE_GREATER_GEMS = 0x53,
 	RESOURCE_LESSER_FRAGMENT = 0x54,
 	RESOURCE_GREATER_FRAGMENT = 0x55,
 	RESOURCE_BOUNTY_POINTS = 0x56,
-	RESOURCE_SOULSEALS_POINTS = 0x57
+	RESOURCE_SOULSEALS_POINTS = 0x57,
+	RESOURCE_COIN_NORMAL = 0x5A,
+	RESOURCE_COIN_TRANSFERRABLE = 0x5B
 };
 
 enum CharmResource_t : uint8_t {
@@ -135,13 +145,14 @@ enum Stash_Actions_t : uint8_t {
 };
 
 struct HighscoreCharacter {
-	HighscoreCharacter(std::string name, uint64_t points, uint32_t id, uint32_t rank, uint16_t level, uint8_t vocation, std::string loyaltyTitle) :
+	HighscoreCharacter(std::string name, uint64_t points, uint32_t id, uint32_t rank, uint16_t level, uint8_t vocation, std::string worldName, std::string loyaltyTitle) :
 		name(std::move(name)),
 		points(points),
 		id(id),
 		rank(rank),
 		level(level),
 		vocation(vocation),
+		worldName(std::move(worldName)),
 		loyaltyTitle(std::move(loyaltyTitle)) { }
 
 	std::string name;
@@ -150,6 +161,7 @@ struct HighscoreCharacter {
 	uint32_t rank;
 	uint16_t level;
 	uint8_t vocation;
+	std::string worldName;
 	std::string loyaltyTitle;
 };
 
@@ -163,5 +175,11 @@ enum WeaponProficiency_t : uint8_t {
 	WEAPON_PROFICIENCY_ITEM_INFO = 0,
 	WEAPON_PROFICIENCY_LIST_INFO = 1,
 	WEAPON_PROFICIENCY_RESET_PERKS = 2,
-	WEAPON_PROFICIENCY_APPLY_PERKS = 3
+	WEAPON_PROFICIENCY_APPLY_PERKS = 3,
+	WEAPON_PROFICIENCY_MODIFY_SLOT = 4, // 15.25 sommerrelease26: dust-roll a custom effect onto a perk slot
+	WEAPON_PROFICIENCY_REFINE_SLOT = 5, // 15.25: raise a modified slot's rank by one (Refine button)
+	WEAPON_PROFICIENCY_MAXIMISE_SLOT = 6, // 15.25: push a modified slot to max rank (Maximise button)
+	WEAPON_PROFICIENCY_RESHAPE_SLOT = 7, // 15.25: re-roll — server offers 3 perks to pick from (Reshape)
+	WEAPON_PROFICIENCY_PICK_OFFER = 8, // 15.25: pick one of the reshape offers (replace the slot's perk)
+	WEAPON_PROFICIENCY_CLEAR_SLOT = 9 // 15.25: free — remove the modification, restore the tree perk (Clear)
 };

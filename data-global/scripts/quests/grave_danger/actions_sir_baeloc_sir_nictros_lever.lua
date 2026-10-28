@@ -10,6 +10,9 @@ local config = {
 				return false
 			end
 			nictros:registerEvent("SirNictrosThink")
+			-- Only Sir Baeloc gives loot. setDropLoot(false) blocks ANY item in Sir Nictros' corpse
+			-- (including the gem atelier/soul core/boosted extras that every boss gets).
+			nictros:setDropLoot(false)
 
 			local baeloc = Game.createMonster("Sir Baeloc", baelocPosition, true, true)
 			if not baeloc then
@@ -32,7 +35,6 @@ local config = {
 						baeloc:say("Oh, man! You always get the fun!")
 						if nictros then
 							nictros:teleportTo(Position(33426, 31437, 13))
-							nictros:setMoveLocked(false)
 						end
 					end
 				end, 12 * 1000)

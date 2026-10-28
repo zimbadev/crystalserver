@@ -90,6 +90,14 @@ public:
 	bool parseCharmCombat(const std::shared_ptr<Charm> &charm, const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &target, int32_t realDamage = 0, bool checkArmor = false);
 	void addCharmPoints(const std::shared_ptr<Player> &player, uint32_t amount, bool negative = false);
 	void addMinorCharmEchoes(const std::shared_ptr<Player> &player, uint32_t amount, bool negative = false);
+
+	// Echo Raids (15.30): CipSoft calls the Echo Warden a "leader monster". The first Echo Warden a
+	// player defeats of a given creature type awards Charm Points, and that creature's cyclopedia
+	// entry then shows the leader-killed badge (isLeaderKilled on the client's TQmlMonsterRace model,
+	// carried by the per-creature byte in 0xD6 and the pre-difficulty byte in 0xD7).
+	bool hasKilledLeaderMonster(const std::shared_ptr<Player> &player, const std::string &monsterName) const;
+	bool addLeaderMonsterKill(const std::shared_ptr<Player> &player, const std::shared_ptr<MonsterType> &mtype);
+	uint32_t getLeaderMonsterCharmPoints(const std::shared_ptr<MonsterType> &mtype) const;
 	void sendBuyCharmRune(const std::shared_ptr<Player> &player, uint8_t action, charmRune_t charmId, uint16_t raceId);
 	void setCharmRuneCreature(const std::shared_ptr<Player> &player, const std::shared_ptr<Charm> &charm, uint16_t raceid) const;
 	void resetCharmRuneCreature(const std::shared_ptr<Player> &player, const std::shared_ptr<Charm> &charm) const;

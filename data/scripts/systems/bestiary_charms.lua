@@ -323,6 +323,12 @@ for charmId, charmsTable in ipairs(charms) do
 		charmConfig.points = charmsTable.points
 	end
 
-	-- Create charm and egister charmConfig table
+	-- Create charm and register charmConfig table
+	if not charm then
+		logger.warning("[bestiary_charms] Charm ID {} not supported by C++, skipping", charmId - 1)
+		goto continue
+	end
 	charm:register(charmConfig)
+
+	::continue::
 end

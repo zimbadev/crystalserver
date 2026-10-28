@@ -28,7 +28,7 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 	end
 
 	local byPlayerMostDamage = 0
-	local mostDamageKillerName
+	local mostDamageName
 	if mostDamageKiller ~= nil then
 		if mostDamageKiller:isPlayer() then
 			byPlayerMostDamage = 1
@@ -44,14 +44,14 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 		mostDamageName = "field item"
 	end
 
-	player:sendBannerType(byPlayer and BANNER_TYPE_DEATHPVP or BANNER_TYPE_DEATHPVE)
+	player:sendBannerType(byPlayer == 1 and BANNER_TYPE_DEATHPVP or BANNER_TYPE_DEATHPVE)
 
 	if mostDamageKiller and mostDamageKiller:isPlayer() then
 		mostDamageKiller:sendBannerType(BANNER_TYPE_PLAYERKILL)
 	end
 
 	local playerGuid = player:getGuid()
-	db.query(
+	db.asyncQuery(
 		"INSERT INTO `player_deaths` (`player_id`, `time`, `level`, `killed_by`, `is_player`, `mostdamage_by`, `mostdamage_is_player`, `unjustified`, `mostdamage_unjustified`) VALUES ("
 			.. playerGuid
 			.. ", "
@@ -72,7 +72,6 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 			.. (mostDamageUnjustified and 1 or 0)
 			.. ")"
 	)
-	local resultId = db.storeQuery("SELECT `player_id` FROM `player_deaths` WHERE `player_id` = " .. playerGuid)
 	Webhook.sendMessage(":skull_crossbones: " .. player:getMarkdownLink() .. " has died. Killed at level _" .. player:getLevel() .. "_ by **" .. killerName .. "**.", announcementChannels["player-kills"])
 
 	local function removeAllPlayerIcons(player)
@@ -120,19 +119,9 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 	end
 	removeAllPlayerIcons(player)
 
-	local deathRecords = 0
-	local tmpResultId = resultId
-	while tmpResultId ~= false do
-		tmpResultId = Result.next(resultId)
-		deathRecords = deathRecords + 1
-	end
-
-	if resultId ~= false then
-		Result.free(resultId)
-	end
-
 	if byPlayer == 1 then
 		killer:sendBannerType(BANNER_TYPE_PLAYERKILL)
+		local resultId = false
 		local toggleGuildWars = configManager.getBoolean(configKeys.TOGGLE_GUILD_WARS)
 		if toggleGuildWars then
 			local targetGuild = player:getGuild()
@@ -178,7 +167,7 @@ function playerDeath.onDeath(player, corpse, killer, mostDamageKiller, unjustifi
 							end
 
 							if guild1_kills >= frags_limit or guild2_kills >= frags_limit then
-								db.query("UPDATE `guild_wars` SET `status` = 4, `ended` = " .. os.time() .. " WHERE `status` = 1 AND `id` = " .. warId)
+								db.asyncQuery("UPDATE `guild_wars` SET `status` = 4, `ended` = " .. os.time() .. " WHERE `status` = 1 AND `id` = " .. warId)
 								Game.broadcastMessage(string.format("%s has just won the war against %s with a score of %d:%d (frags limit: %d).", killerGuild:getName(), targetGuild:getName(), guild1_kills, guild2_kills, frags_limit))
 							end
 						end

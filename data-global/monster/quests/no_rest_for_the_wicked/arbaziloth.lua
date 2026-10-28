@@ -1,3 +1,5 @@
+-- No Rest for the Wicked: Arbaziloth (the whole fight). Loot = EASY mode (W: inferniarch weapons + Demon Claws).
+-- When The Forgemaster is spared he becomes Enraged Arbaziloth (hard loot): see arbaziloth_fight.lua.
 local mType = Game.createMonsterType("Arbaziloth")
 local monster = {}
 
@@ -126,13 +128,18 @@ monster.loot = {
 	{ id = 30059, chance = 10000, maxCount = 1 }, -- giant ruby
 	{ id = 3364, chance = 10000, maxCount = 1 }, -- golden legs
 	{ id = 3366, chance = 10000, maxCount = 1 }, -- magic plate armor
-	{ id = 50061, chance = 700, maxCount = 1 }, -- demon skull
-	{ id = 50064, chance = 700, maxCount = 1 }, -- demon in a green box
-	{ id = 49531, chance = 400, maxCount = 1 }, -- maliceforged helmet
-	{ id = 49532, chance = 400, maxCount = 1 }, -- hellstalker visor
-	{ id = 49533, chance = 400, maxCount = 1 }, -- dreadfire headpiece
-	{ id = 49534, chance = 400, maxCount = 1 }, -- demonfang mask
-	{ id = 50189, chance = 800, maxCount = 1 }, -- demon mengu
+	{ id = 50060, chance = 700, maxCount = 1 }, -- demon claws
+	{ id = 49522, chance = 400, maxCount = 1 }, -- inferniarch arbalest
+	{ id = 49523, chance = 400, maxCount = 1 }, -- inferniarch battleaxe
+	{ id = 49520, chance = 400, maxCount = 1 }, -- inferniarch bow
+	{ id = 49524, chance = 400, maxCount = 1 }, -- inferniarch greataxe
+	{ id = 49525, chance = 400, maxCount = 1 }, -- inferniarch flail
+	{ id = 49526, chance = 400, maxCount = 1 }, -- inferniarch warhammer
+	{ id = 49528, chance = 400, maxCount = 1 }, -- inferniarch wand
+	{ id = 49529, chance = 400, maxCount = 1 }, -- inferniarch rod
+	{ id = 49530, chance = 400, maxCount = 1 }, -- inferniarch slayer
+	{ id = 49527, chance = 400, maxCount = 1 }, -- inferniarch blade (W; was missing)
+	{ id = 50250, chance = 400, maxCount = 1 }, -- inferniarch claws (W; was missing)
 }
 
 monster.attacks = {
@@ -185,169 +192,11 @@ mType.onMove = function(monster, creature, fromPosition, toPosition) end
 
 mType.onSay = function(monster, creature, type, message) end
 
-mType:register(monster)
-
-local aditionalMonsters = {
-	{ name = "Overcharged Demon", pos = Position(34029, 32328, 14) },
-	{ name = "Overcharged Demon", pos = Position(34037, 32328, 14) },
-}
-
-local areaTopLeft = Position(34026, 32325, 14)
-local areaBottomRight = Position(34042, 32340, 14)
-
-local effectInterval = 2000
-local effectDuration = 5000
-
-local forgemasterAreaTopLeft = Position(34026, 32325, 14)
-local forgemasterAreaBottomRight = Position(34042, 32340, 14)
-
-local function countMonstersInArea(fromPos, toPos, monsterName)
-	for x = fromPos.x, toPos.x do
-		for y = fromPos.y, toPos.y do
-			local tile = Tile(Position(x, y, fromPos.z))
-			if tile then
-				local creatures = tile:getCreatures()
-				for _, creature in ipairs(creatures) do
-					if creature:isMonster() and creature:getName():lower() == monsterName:lower() then
-						return true
-					end
-				end
-			end
-		end
-	end
-	return false
-end
-
-local function healMaster(monster)
-	if not monster or not monster:isMonster() then
-		return
-	end
-
-	local healCount = Game.getStorageValue("globalArbazilothHeal") or 0
-	if healCount >= 1 then
-		return
-	end
-	monster:addHealth(monster:getMaxHealth() - monster:getHealth())
-	monster:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
-	Game.setStorageValue("globalArbazilothHeal", healCount + 1)
-end
-
-local function replaceMaster(monster)
-	if monster and monster:isMonster() then
-		local pos = monster:getPosition()
-		monster:remove()
-		Game.createMonster("Weakened Arbaziloth", pos)
-	end
-end
-
-local function countDemonsInArea(fromPos, toPos)
-	local count = 0
-	for x = fromPos.x, toPos.x do
-		for y = fromPos.y, toPos.y do
-			local tile = Tile(Position(x, y, fromPos.z))
-			if tile then
-				local creatures = tile:getCreatures()
-				for _, creature in ipairs(creatures) do
-					if creature:isMonster() and creature:getName():lower() == "overcharged demon" then
-						count = count + 1
-						if count >= 2 then
-							return count
-						end
-					end
-				end
-			end
-		end
-	end
-	return count
-end
-
-local function showEffectsAndSummon(monster)
-	local times = 0
-
-	local function effectLoop()
-		if times < (effectDuration / effectInterval) then
-			for _, monsterData in ipairs(aditionalMonsters) do
-				if countDemonsInArea(areaTopLeft, areaBottomRight) < 2 then
-					monsterData.pos:sendMagicEffect(CONST_ME_TELEPORT)
-				end
-			end
-			times = times + 1
-			addEvent(effectLoop, effectInterval)
-		else
-			local currentCount = countDemonsInArea(areaTopLeft, areaBottomRight)
-			if currentCount < 2 then
-				local demonsToSummon = 2 - currentCount
-				for i = 1, demonsToSummon do
-					local monsterData = aditionalMonsters[i]
-					if monsterData then
-						Game.createMonster(monsterData.name, monsterData.pos)
-					end
-				end
-			end
-		end
-	end
-
-	effectLoop()
-end
-
-local fireSpawnTopLeft = Position(34027, 32328, 14)
-local fireSpawnBottomRight = Position(34029, 32336, 14)
-
-local function getRandomPosition(fromPos, toPos)
-	local x = math.random(fromPos.x, toPos.x)
-	local y = math.random(fromPos.y, toPos.y)
-	local z = fromPos.z
-	return Position(x, y, z)
-end
-
-local function createItemInRandomPosition(itemId, fromPos, toPos)
-	local maxAttempts = 10
-	for _ = 1, maxAttempts do
-		local pos = getRandomPosition(fromPos, toPos)
-		local tile = Tile(pos)
-		if tile and not tile:getItemById(itemId) then
-			if Game.getStorageValue("globalArbazilothFire") >= 1 then
-			else
-				Game.createItem(itemId, 1, pos)
-			end
-			return true
-		end
-	end
-	return false
-end
-
 mType.onThink = function(monster, interval)
-	if countDemonsInArea(areaTopLeft, areaBottomRight) < 2 then
-		showEffectsAndSummon(monster)
-	end
-	if Game.getStorageValue("globalArbazilothHeal") < 1 then
-		if monster:getHealth() > 295000 and monster:getHealth() < 300000 then
-			monster:registerEvent("ArbazilothImmunity")
-			createItemInRandomPosition(49362, fireSpawnTopLeft, fireSpawnBottomRight)
-			Game.setStorageValue("globalArbazilothFire", 1)
-		elseif monster:getHealth() > 220000 and monster:getHealth() < 225000 then
-			monster:registerEvent("ArbazilothImmunity")
-			monster:setOutfit({ lookType = 1800 })
-			createItemInRandomPosition(49362, fireSpawnTopLeft, fireSpawnBottomRight)
-			Game.setStorageValue("globalArbazilothFire", 1)
-		elseif monster:getHealth() > 145000 and monster:getHealth() < 150000 then
-			monster:registerEvent("ArbazilothImmunity")
-			monster:setOutfit({ lookType = 1801 })
-			createItemInRandomPosition(49362, fireSpawnTopLeft, fireSpawnBottomRight)
-			Game.setStorageValue("globalArbazilothFire", 1)
-		elseif monster:getHealth() > 70000 and monster:getHealth() < 75000 then
-			monster:registerEvent("ArbazilothImmunity")
-			monster:setOutfit({ lookType = 1802 })
-			createItemInRandomPosition(49362, fireSpawnTopLeft, fireSpawnBottomRight)
-			Game.setStorageValue("globalArbazilothFire", 1)
-		end
-	else
-	end
-	if countMonstersInArea(forgemasterAreaTopLeft, forgemasterAreaBottomRight, "The Forgemaster") then
-		if monster:getHealth() < 5000 then
-			healMaster(monster)
-			replaceMaster(monster)
-		end
+	-- Overcharged Demons respawn (scripts/quests/no_rest_for_the_wicked/arbaziloth_fight.lua)
+	if ArbazilothFight then
+		ArbazilothFight.onThink(monster)
 	end
 end
+
 mType:register(monster)

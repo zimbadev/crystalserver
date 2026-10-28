@@ -713,7 +713,7 @@ if not Quests then
 					storageId = Storage.Quest.U8_5.HotCuisineQuest.QuestLog,
 					missionId = 1070,
 					startValue = 1,
-					endValue = 16,
+					endValue = 17,
 					states = {
 						[1] = "You've become the apprentice of Maltre Jean Pierre. \z
 							The first dish he will teach you to prepare is Rotworm Stew. Bring him the ingredients he told you.",
@@ -745,7 +745,9 @@ if not Quests then
 							prepare is Demonic Candy Balls. Bring him the ingredients he told you.",
 						[15] = "You have completed the thirteenth dish, the fourteenth dish he will teach you to \z
 							prepare is Sweet Mangonaise Elixir. Bring him the ingredients he told you.",
-						[16] = "You have completed all the dishes. You are now able to make all the dishes in any order you want.",
+						[16] = "You have completed the fourteenth dish, the fifteenth dish he will teach you to \z
+							prepare is Zaoan Sauce. Bring him the ingredients he told you.",
+						[17] = "You have completed all the dishes. You are now able to make all the dishes in any order you want.",
 					},
 				},
 			},
@@ -6494,7 +6496,7 @@ if not Quests then
 					storageId = Storage.Quest.U12_20.GraveDanger.QuestLine,
 					missionId = 10437,
 					startValue = 1,
-					endValue = 2,
+					endValue = 5,
 					states = {
 						[1] = function(player)
 							return string.format(
@@ -6514,6 +6516,11 @@ if not Quests then
 									- 12
 							)
 						end,
+						-- NOT CONFIRMED: texts written for this server (the global quest log text is not published), so no step shows "nil"
+						[2] = "All twelve graves have been secured. Report back to Jack Springer.",
+						[3] = "Jack Springer sent you to the Isle of the Kings. The cultists are trying to raise King Zelos in his hidden grave beneath the isle. Defeat him before the ritual is completed - the longer it takes, the stronger he becomes.",
+						[4] = "You defeated King Zelos and stopped the ritual of the Shiron'Fal. Report back to Jack Springer.",
+						[5] = "You averted the crisis and became one of the hands of the Inquisition.",
 					},
 				},
 				[2] = {
@@ -6867,7 +6874,10 @@ if not Quests then
 					startValue = 1,
 					endValue = 3,
 					states = {
-						[1] = "Defeat the Arbaziloth 10 times to access The Doomforge reward room.",
+						[1] = function(player)
+							local kills = NoRestForTheWicked and NoRestForTheWicked.getHardKills(player) or 0
+							return string.format("Defeat Arbaziloth in his full power, sparing The Forgemaster, 10 times to access the Doomforge reward room. (%d/10)", math.min(kills, 10))
+						end,
 						[2] = "Speak with The Forgemaster and ask about the 'key'.",
 						[3] = "You have defeated Arbaziloth 10 times and got your reward at The Doomforge.",
 					},
@@ -7275,6 +7285,393 @@ if not Quests then
 					states = {
 						[1] = 'Task: Withdraw gold from your bank account\nYou can withdraw gold from your bank account into your backpack by speaking to a banker.\nAdrian is the responsible banker on Targuna. He can be found in the southern part of the island.\nClick on Adrian to talk to him and withdraw gold by using the according icon or typing "withdraw".',
 						[2] = "You successfully withdrew gold from your bank account.",
+					},
+				},
+			},
+		},
+		[56] = {
+			name = "Rottin Wood and the Married Men",
+			startStorageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Mission 1: Lucky Charms",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission01,
+					missionId = 11018,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Rottin Wood has sent you on and important mission to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
+						[2] = "You delivered the lucky charms as requested. Rottin Wood was quite pleased and offered you to continue helping him and his men.",
+					},
+				},
+				[2] = {
+					name = "Mission 2: In a State of Dispair",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission02,
+					missionId = 11019,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ("You accepted a quest to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp. So far you fixed %d of 6 broken walls."):format(math.max(count, 0))
+						end,
+						[2] = "You tried your best to fix the walls in the camp. It does not look like any of your repairs will hold forever. Rottin Wood would like you to stay around and look for any further damages another day.",
+					},
+				},
+				[3] = {
+					name = "Mission 3: Bushwhacking",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Mission03,
+					missionId = 11020,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-corpsecount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ('You agreed to help Rottin Wood and the Married Men to relieve several merchants of their goods. Lay out the net traps he gave you to catch 5 of them. So far you have "relieved" %d of 5 merchants.'):format(math.max(count, 0))
+						end,
+						[2] = 'You have "relieved" enough merchants to provide the very pleased Rottin Wood and his men with enough opportunities to gather valuables and supplies.',
+					},
+				},
+				[4] = {
+					name = "Daily Task: Lucky Loop",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Task01,
+					missionId = 11021,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = 'Rottin Wood has sent you on and important task to gather rabbit feet for him and his men. Without the money earned from selling these "lucky charms" they would surely starve during the next winter.',
+						[2] = "You delivered the lucky charms as requested. Rottin Wood seems to be satisfied with that profit for today.",
+					},
+				},
+				[5] = {
+					name = "Daily Task: Handyman",
+					storageId = Storage.Quest.U8_7.RottinWoodAndTheMarriedMen.Task02,
+					missionId = 11022,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = function(player)
+							local ok, value = pcall(function()
+								return player:kv():get("rottinwood-wallcount")
+							end)
+							local count = ok and (tonumber(value) or 0) or 0
+							return ("You accepted a task to help Rottin Wood and the Married Men fix the sorry state of the structures in the camp - again. So far you swong your hammer on %d of 6 broken walls."):format(math.max(count, 0))
+						end,
+						[2] = "You tried your best to fix the walls in the camp all day long. It does not look like any of your repairs will hold forever. More repairs maybe needed in the future.",
+					},
+				},
+			},
+		},
+		[57] = {
+			name = "Shadows of Yalahar",
+			startStorageId = Storage.Quest.U8_5.ShadowsOfYalahar.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Mission 01: Errand boy",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission01,
+					missionId = 11023,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "You are assisting Telas in constructing a golem. Visit Boveas, Cerdras, Dreadeye, Milos and Scutty. Ask them to send their research notes to Telas.",
+						[2] = "You have contacted all the persons that Telas wanted to send him information.",
+					},
+				},
+				[2] = {
+					name = "Mission 02: A vital part",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission02,
+					missionId = 11024,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Your mission is to find a mago mechanic core for Telas. You might find one in the factory quarter. Use the cooler cannons to cool the core and then take it from the nearby core dispenser.",
+						[2] = "You have delivered the mago mechanic core to Telas.",
+					},
+				},
+				[3] = {
+					name = "Mission 03: The core problem",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission03,
+					missionId = 11025,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Gather 10 elemental crystals for Telas. You might gain them by using a pick axe on dead earth elementals (after they become movable).",
+						[2] = "You have delivered the 10 elemental crystals to Telas.",
+					},
+				},
+				[4] = {
+					name = "Mission 04: Gathering golem parts",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission04,
+					missionId = 11026,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Use your golem disassembler to retrieve golem part from recently disabled golems (after they become movable). Gather 6 golem parts for Telas.",
+						[2] = "You have delivered 6 golems parts to Telas",
+					},
+				},
+				[5] = {
+					name = "Mission 05: Charged to charge",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission05,
+					missionId = 11027,
+					startValue = 1,
+					endValue = 4,
+					states = {
+						[1] = "Find the charging machine in the alchemist quarter. Get the required charges (A, B and C) for Telas. You have delivered 0 different charges to Telas by now.",
+						[2] = "Find the charging machine in the alchemist quarter. Get the required charges (A, B and C) for Telas. You have delivered 1 different charge to Telas by now.",
+						[3] = "Find the charging machine in the alchemist quarter. Get the required charges (A, B and C) for Telas. You have delivered 2 different charges to Telas by now.",
+						[4] = "You have delivered all three different charges to Telas.",
+					},
+				},
+				[6] = {
+					name = "Mission 06: Out of the blue",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission06,
+					missionId = 11028,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Find golem blueprints in the factory quarter and deliver them to Telas",
+						[2] = "You have delivered the golem blueprints to Telas",
+					},
+				},
+				[7] = {
+					name = "Mission 07: Powering up",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission07,
+					missionId = 11029,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "You have to find an old power core for Telas. Your best chances to find one are probably in the former alchemist quarter.",
+						[2] = "You have found an old power core for Telas.",
+					},
+				},
+				[8] = {
+					name = "Mission 08: Getting things stable",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission08,
+					missionId = 11030,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Find a stabilizer for Telas somewhere in the sunken quarter.",
+						[2] = "You have retrieved a stabilizer for Telas.",
+					},
+				},
+				[9] = {
+					name = "Mission 09: Researching the ritual",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission09,
+					missionId = 11031,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "Find the ancient Yalahar library somewhere in Yalahar's centre. Try to use the books to recreate the ritual by using the ink-well. If you get a headache from reading, wait for it to wear off.",
+						[2] = "You have sucessfylly recreated the ritual and memorized it. Travel to Telas to share your knowledge with him.",
+						[3] = "You told Telas everything you have learned about the ancient Yalahar ritual.",
+					},
+				},
+				[10] = {
+					name = "Mission 10: The right ingredients",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission10,
+					missionId = 11032,
+					startValue = 1,
+					endValue = 4,
+					states = {
+						[1] = "To make the ritual work, Telas needs certain ingredients. You have brought him none of the ingredients by now.",
+						[2] = "To make the ritual work, Telas needs certain ingredients. You have brought him 1 of the 3 ingredients by now.",
+						[3] = "To make the ritual work, Telas needs certain ingredients. You have brought him 2 of the 3 ingredients by now.",
+						[4] = "You have brought all the ingredients Telas needs.",
+					},
+				},
+				[11] = {
+					name = "Mission 11: Take a shower",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission11,
+					missionId = 11033,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "You have to disguise your aura by using a Yalahari energy shower. Telas assumes you might find one in the factory quarter.",
+						[2] = "You have taken a Yalahari energy shower - which was a shocking experience so to say - and can report back to Telas.",
+						[3] = "After taking an energy shower Telas has zapped you with some Yalahari item and claims that your aura now should be similar enough to that of a true Yalahari.",
+					},
+				},
+				[12] = {
+					name = "Mission 12: Headless",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission12,
+					missionId = 11034,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Telas hopes that your disguised aura might gain you entrance in some remote Yalahari research outpost beneath the isle of Fenrock. Gain entrance and find a golem head.",
+						[2] = "You have delivered the golem head to Telas.",
+					},
+				},
+				[13] = {
+					name = "Mission 13: Fruits of success",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission13,
+					missionId = 11035,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Telas asked you to join him in his laboratory to activate the golem. Talk to Telas afterwards.",
+						[2] = "You helped Telas create his golem.",
+					},
+				},
+			},
+		},
+		[58] = {
+			name = "The Isle Of Evil",
+			startStorageId = Storage.Quest.U8_5.TheIsleOfEvil.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "Hired",
+					storageId = Storage.Quest.U8_5.ShadowsOfYalahar.Mission13,
+					missionId = 11036,
+					startValue = 0,
+					endValue = 1,
+					description = "You are hired .. sort of. Speak to Rapanaio about your first mission to help him.",
+				},
+				[2] = {
+					name = "Mission 01: Just A Fishing Trip",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission01,
+					missionId = 11037,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio wants a mechanical fish. Travel to sewers of Yalahar and use your mechanical fishing rod along with some nails as bait to tactch one. Return that fish to Rapanaio for examination.You have delivered a mechanical fish to Rapanaio and are ready for your next mission.",
+						[2] = "You have delivered the mechanical fish to Rapanaio.",
+					},
+				},
+				[3] = {
+					name = "Mission 02: A Potent Fuel",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission02,
+					missionId = 11038,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio needs 10 vials filled with rum as fuel for his ominous invention.",
+						[2] = "You have delivered 10 instances of rum to Rapanaio... and pray he actually saves it as fuel.",
+					},
+				},
+				[4] = {
+					name = "Mission 03: Something Sweet",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission03,
+					missionId = 11039,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio urgently wants one vial of fruit juice. You better hurry, else his invention might be in danger.",
+						[2] = "Rapanaio got the juice he requested just in time... to quench his thirst.",
+					},
+				},
+				[5] = {
+					name = "Mission 04: The Technomancer's Machine",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission04,
+					missionId = 11040,
+					startValue = 1,
+					endValue = 5,
+					states = {
+						[1] = "Rapanaio has asked you to get him a machina from his old acquaintance Scutty of the technomancers' guild in Kazordoon.",
+						[2] = "Scutty asked you to scared away 6 carrion worms. Take caro to don't hit his ordinary worms!",
+						[3] = "You have gotten the machine from Scutty and can deliver it to Rapanaio.",
+						[4] = "You received the machine from Scutty. Go deliver it to Rapanaio.",
+						[5] = "You have delivered the machine from Scutty to Rapanaio.",
+					},
+				},
+				[6] = {
+					name = "Mission 05: The Map To Evil",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission05,
+					missionId = 11041,
+					startValue = 1,
+					endValue = 3,
+					states = {
+						[1] = "Rapanaio needs a nautical map from the Explorer Society. Ask about one at their base northeast of Carlin.",
+						[2] = "Mortimer advised you to look for the map in a cave to the east.",
+						[3] = "You have delivered the Nautical Map to Rapanaio.",
+					},
+				},
+				[7] = {
+					name = "Mission 06: The Secret",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission06,
+					missionId = 11042,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Rapanaio has asked you to meet him downstairs where he will reveal his invention. Surely absolutely nothing can happen to you in some dwarf's cellar and you should be perfectly safe... probably.",
+						[2] = "You have now seen Rapanaio's invention - an underwater boat of dubious design. He has rather reluctantly transported you to the Isle of Evil. You should talk to him about the next step in his plan.",
+					},
+				},
+				[8] = {
+					name = "Mission 07: The Master Of Evil",
+					storageId = Storage.Quest.U8_5.TheIsleOfEvil.Mission07,
+					missionId = 11043,
+					startValue = 1,
+					endValue = 4,
+					states = {
+						[1] = "Now that you finally arrived on the Isle of Evil it's your duty to slay the master of this isle. Make sure to use his corpse to find prof of your accomplishment. Rapanaio will await your return.",
+						[2] = "You killed every threat on the island of evil. Talk to Rapanaio about it.",
+						[3] = "You have finally braved the perils of the Isle of Evil. Now you should follow Rapanaio's suggestion and speak to King Tibianus in Thais about that membership card.",
+						[4] = "You spoke with King Tibianus about the membership card.",
+					},
+				},
+			},
+		},
+		[59] = {
+			name = "The Order of the Stag",
+			startStorageId = Storage.Quest.U15_20.TheOrderOfTheStag.Questline,
+			startStorageValue = 1,
+			missions = {
+				[1] = {
+					name = "The Order of the Stag",
+					storageId = Storage.Quest.U15_20.TheOrderOfTheStag.Questline,
+					missionId = 11023,
+					startValue = 1,
+					endValue = 13,
+					states = {
+						[1] = "Kesar the Younger asked you to retrieve a family writ from a sealed room below the cathedral of Bounac.",
+						[2] = "You found an ice-covered certificate of ancestry in the frozen chest. Bring it to Kesar the Younger.",
+						[3] = "Kesar sent you to the Isle of Ada. Find a small fishing boat south of the castle of Bounac and look for the expedition.",
+						[4] = "Second in Command Demeron believes you. Fight your way through the mines and further into the isle.",
+						[5] = "You made it through the mines. Find the Stags in their castle.",
+						[6] = function(player)
+							return string.format("Guard Captain Hartford needs proof of slain night harpies. You have pulled %d of 20 beaks yourself.", math.min(OrderOfTheStag.getCount(player, "Beaks"), 20))
+						end,
+						[7] = "Guard Captain Hartford granted you access to the upper hall. Find Eldoran the Ambitious.",
+						[8] = "Eldoran the Ambitious asked you to set fire to three corpses in the lower dungeons of the castle.",
+						[9] = "You burned the corpses. Ask Eldoran the Ambitious for another mission.",
+						[10] = "Eldoran the Ambitious wants you to take care of the Court Warlock. Find Captain Banner in the west tower.",
+						[11] = "Captain Marie-Denise Banner showed you the way through the wall. Defeat the Court Warlock.",
+						[12] = "You defeated the Court Warlock. Report to Eldoran the Ambitious.",
+						[13] = "You helped uncover the truth about the lost heir of the Etzel clan. The Order of the Stag will remember your deeds.",
+					},
+				},
+				[2] = {
+					name = "Supplies for the Steadfast",
+					storageId = Storage.Quest.U15_20.TheOrderOfTheStag.Harlan,
+					missionId = 11024,
+					startValue = 2,
+					endValue = 3,
+					states = {
+						[2] = "Lieutenant Harlan needs 20 tender venisons for his camp.",
+						[3] = "You brought Lieutenant Harlan enough tender venison to feed his men for a while.",
+					},
+				},
+				[3] = {
+					name = "Emmanuelle's Boat Repair",
+					storageId = Storage.Quest.U15_20.TheOrderOfTheStag.Demeron,
+					missionId = 11025,
+					startValue = 1,
+					endValue = 2,
+					states = {
+						[1] = "Second in Command Demeron needs 30 salvaged iron parts, 20 salvaged bronze parts and 10 salvaged silver parts to repair the Emmanuelle.",
+						[2] = "You brought Demeron the salvaged parts and received the mariner's compass from the Antoinette.",
 					},
 				},
 			},

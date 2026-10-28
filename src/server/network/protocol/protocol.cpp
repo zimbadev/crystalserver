@@ -54,8 +54,16 @@ void Protocol::onSendMessage(const OutputMessage_ptr &msg) {
 
 bool Protocol::sendRecvMessageCallback(NetworkMessage &msg) {
 	if (encryptionEnabled && !XTEA_decrypt(msg)) {
-		g_logger().error("[Protocol::onRecvMessage] - XTEA_decrypt Failed");
-		return false;
+		if (const auto &connection = getConnection()) {
+			g_logger().error(
+				"[Protocol::onRecvMessage] - XTEA_decrypt Failed, IP: {}",
+				convertIPToString(connection->getIP())
+			);
+			connection->close(FORCE_CLOSE);
+		} else {
+			g_logger().error("[Protocol::onRecvMessage] - XTEA_decrypt Failed");
+		}
+		return true;
 	}
 
 	g_dispatcher().addEvent(

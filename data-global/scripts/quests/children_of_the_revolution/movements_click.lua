@@ -19,12 +19,17 @@ local config = {
 		{ monster = "eternal guardian", size = 20 },
 		{ monster = "lizard chosen", size = 20 },
 	},
+
+	waveInterval = 30,
+	duration = 10 * 60,
 }
+
+local currentRun = 0
 
 function doClearMissionArea()
 	Game.setStorageValue(Storage.Quest.U8_54.ChildrenOfTheRevolution.Mission05, -1)
 
-	local spectators, spectator = Game.getSpectators(config.areaCenter, false, true, 26, 26, 20, 20)
+	local spectators, spectator = Game.getSpectators(config.areaCenter, false, false, 26, 26, 20, 20)
 	for i = 1, #spectators do
 		spectator = spectators[i]
 		if spectator:isPlayer() then
@@ -47,13 +52,23 @@ local function removeStairs()
 	end
 end
 
-local function summonWave(i)
-	local wave = config.waves[i]
-	if wave then
-		for i = 1, wave.size do
-			local summonPosition = Position(math.random(config.summonArea.from.x, config.summonArea.to.x), math.random(config.summonArea.from.y, config.summonArea.to.y), 7)
-			Game.createMonster(wave.monster, summonPosition)
+local function summonWave(waveIndex, run)
+	if run ~= currentRun then
+		return
+	end
+
+	local wave = config.waves[waveIndex]
+	if not wave then
+		return
+	end
+
+	local spawned, attempts = 0, 0
+	while spawned < wave.size and attempts < wave.size * 10 do
+		attempts = attempts + 1
+		local summonPosition = Position(math.random(config.summonArea.from.x, config.summonArea.to.x), math.random(config.summonArea.from.y, config.summonArea.to.y), 7)
+		if Game.createMonster(wave.monster, summonPosition) then
 			summonPosition:sendMagicEffect(CONST_ME_TELEPORT)
+			spawned = spawned + 1
 		end
 	end
 end
@@ -94,11 +109,20 @@ function click.onStepIn(creature, item, position, fromPosition)
 	end
 	Game.setStorageValue(Storage.Quest.U8_54.ChildrenOfTheRevolution.Mission05, 1)
 
-	for wave = 1, #config.waves do
-		addEvent(summonWave, wave * 30 * 1000, wave)
+	currentRun = currentRun + 1
+	local run = currentRun
+
+	for n = 1, (config.duration / config.waveInterval) - 1 do
+		local waveIndex = ((n - 1) % #config.waves) + 1
+		addEvent(summonWave, n * config.waveInterval * 1000, waveIndex, run)
 	end
+
 	addEvent(removeStairs, 30 * 1000)
-	addEvent(doClearMissionArea, 5 * 30 * 1000)
+	addEvent(function()
+		if run == currentRun then
+			doClearMissionArea()
+		end
+	end, config.duration * 1000)
 	return true
 end
 

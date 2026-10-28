@@ -148,9 +148,24 @@ struct WeaponProficiencyPerk {
 	uint8_t perkPosition = 0;
 };
 
+// 15.25 (sommerrelease26) SHAPE: a perk slot can be "modified" with dust to roll a custom effect that
+// overrides the slot's tree perk. One entry per modified slot, keyed by (level, position). perkType is a
+// CLIENT CATALOGUE INDEX (1-323), value is the rank 0-10.
+struct WeaponProficiencyModifiedSlot {
+	uint8_t proficiencyLevel = 0;
+	uint8_t perkPosition = 0;
+	WeaponProficiencyPerkType_t perkType = PROFICIENCY_PERK_ATTACK_DAMAGE;
+	uint8_t value = 0;
+};
+
 struct WeaponProficiencyData {
 	uint32_t experience = 0;
 	std::vector<WeaponProficiencyPerk> activePerks;
+	std::vector<WeaponProficiencyModifiedSlot> modifiedSlots;
+	// 15.25 (sommerrelease26): transient Reshape state (offer -> pick). Not persisted.
+	uint8_t pendingReshapeLevel = 0;
+	uint8_t pendingReshapePosition = 0;
+	std::vector<WeaponProficiencyPerkType_t> pendingReshapeOffers;
 };
 
 struct WeaponProficiencyAugment {
@@ -297,6 +312,10 @@ public:
 	}
 	bool isOnline() const override {
 		return online;
+	}
+
+	uint8_t getWorldId() {
+		return worldId;
 	}
 
 	static uint32_t getFirstID();
@@ -1084,6 +1103,8 @@ public:
 	void removeBakragoreIcon(const IconBakragore icon);
 	void sendClientCheck() const;
 	void sendGameNews() const;
+	/// CIP HirelingNameChange (S 0xDB); see ProtocolGame::sendHirelingNameChange.
+	void sendHirelingNameChange(uint32_t creatureId = 0, uint32_t objectId = 0) const;
 	void sendMagicEffect(const Position &pos, uint16_t type, SourceEffect_t source = SourceEffect_t::GLOBAL) const;
 	void removeMagicEffect(const Position &pos, uint16_t type) const;
 	void sendPing();
@@ -1138,11 +1159,35 @@ public:
 
 	// Weapon Proficiency
 	EquippedWeaponProficiencyBonuses &getEquippedWeaponProficiency();
+
+	// Weapon-proficiency Type-32 "Homing Missile": on a weapon hit, rolls each active Type-32 perk's probability
+	// and on success fires an element-typed homing missile at the target.
+	void tryProcWeaponProficiencyHomingMissile(const std::shared_ptr<Creature> &target);
 	void sendWeaponProficiencyInfo(const uint16_t itemId) const;
+	void sendBossDifficultySelection(uint8_t selectedDifficulty, const std::vector<uint32_t> &numbers, const std::vector<std::string> &banners, const std::vector<std::string> &redMods, const std::vector<std::string> &greenMods) const;
+	// Discovery System (Cyclopedia Map).
+	void sendCyclopediaDiscoveryTest(uint16_t mainAreaId, uint16_t subAreaId, const Position &base);
+	void sendCyclopediaMapDiscoveryData(const std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> &mainAreas, const std::vector<uint16_t> &discoveredSubAreas, const std::vector<uint16_t> &discoverableSubAreas);
+	void resendCyclopediaMapDiscoveryData() const;
+	void sendCyclopediaMapSetCurrentArea(uint16_t subAreaId) const;
+	void sendCyclopediaMapSetExploringArea(uint16_t subAreaId) const;
+	void sendCyclopediaMapDonations(uint64_t donationGoal, const std::vector<std::tuple<uint16_t, bool, uint64_t>> &areas) const;
+	void sendCyclopediaMapSetDiscoveryArea(uint16_t subAreaId, bool active, uint8_t poiTarget, const std::vector<std::pair<Position, uint8_t>> &points) const;
 	void resetAllWeaponProficiencyPerks(const uint16_t itemId);
 	void applyEquippedWeaponProficiency(const uint16_t itemId);
 	void removeEquippedWeaponProficiency(const uint16_t itemId);
 	void sendWeaponProficiencyExperience(const uint16_t itemId, const uint32_t addProficiencyExperience);
+	// 15.25 (sommerrelease26) SHAPE handlers + helpers (see CLIENT_15.25_e2a4a1_PORT.md §7.5 / §8).
+	uint8_t getWeaponProficiencyVocationRegion() const;
+	std::vector<WeaponProficiencyPerkType_t> rollWeaponProficiencyPerks(const size_t count, const std::vector<WeaponProficiencyPerkType_t> &exclude = {}) const;
+	void sanitizeWeaponProficiencyShapes(const uint16_t itemId);
+	void modifyWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition);
+	void refineWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition);
+	void maximiseWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition);
+	void clearWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition);
+	void reshapeWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition);
+	void pickReshapeWeaponProficiencyOffer(const uint16_t itemId, const uint8_t offerIndex);
+	void sendWeaponProficiencyReshapeOffers(const uint16_t itemId) const;
 
 	std::unordered_map<uint16_t, WeaponProficiencyData> weaponProficiencies;
 
@@ -1171,11 +1216,12 @@ public:
 	void sendCyclopediaCharacterDefenceStats() const;
 	void sendCyclopediaCharacterMiscStats() const;
 	void sendHighscoresNoData() const;
-	void sendHighscores(const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationId, uint16_t page, uint16_t pages, uint32_t updateTimer) const;
+	void sendHighscores(const std::string &selectedWorld, const std::vector<HighscoreCharacter> &characters, uint8_t categoryId, uint32_t vocationId, uint16_t page, uint16_t pages, uint32_t updateTimer) const;
 	void addAsyncOngoingTask(uint64_t flags);
 	bool hasAsyncOngoingTask(uint64_t flags) const;
 	void resetAsyncOngoingTask(uint64_t flags);
 	void sendEnterWorld() const;
+	void sendMapDescription(const Position &pos) const;
 	void sendFightModes() const;
 	void sendNetworkMessage(NetworkMessage &message) const;
 
@@ -1193,10 +1239,12 @@ public:
 	void sendScreenshotAndBannerProgressQuest(const std::string &questName, bool isCompleted) const;
 	void sendScreenshotAndBannerProficiencyProgress(uint16_t itemId, const std::string &message) const;
 	void sendScreenshotAndBannerUnlockedSpell(uint16_t spellId) const;
-
+	// Shows the "New Spell Unlocked" banner for vocation spells that auto-unlock
+	// when the player crosses their required level / magic level on advance.
 	void checkSpellUnlocksOnAdvance(uint32_t oldLevel, uint32_t newLevel, uint32_t oldMagLevel, uint32_t newMagLevel) const;
 	void sendScreenshotAndBannerBountyTaskFinished(uint16_t raceId) const;
 	void sendScreenshotAndBannerWeeklyTaskSpecificFinished(uint16_t raceId) const;
+	void sendScreenshotAndBannerLeaderMonsterKilled(uint16_t raceId, uint32_t charmPoints) const;
 
 	void onThink(uint32_t interval) override;
 
@@ -1306,6 +1354,7 @@ public:
 	void setCharmPoints(uint32_t points);
 	uint32_t getMinorCharmEchoes() const;
 	void setMinorCharmEchoes(uint32_t points);
+	void sendCharmResourcesBalance() const;
 	uint32_t getMaxCharmPoints() const;
 	void setMaxCharmPoints(uint32_t points);
 	uint32_t getMaxMinorCharmEchoes() const;
@@ -1553,9 +1602,6 @@ public:
 	// This get all player inventory items
 	std::vector<std::shared_ptr<Item>> getAllInventoryItems(bool ignoreEquiped = false, bool ignoreItemWithTier = false) const;
 
-	// This get all players slot items
-	phmap::flat_hash_map<uint8_t, std::shared_ptr<Item>> getAllSlotItems() const;
-
 	// Gets the equipped items with augment by type
 	std::vector<std::shared_ptr<Item>> getEquippedAugmentItemsByType(Augment_t augmentType) const;
 
@@ -1775,6 +1821,11 @@ private:
 
 	phmap::flat_hash_set<uint32_t> attackedSet {};
 
+	// Discovery System: last DiscoveryData pushed by the Lua logic (answer for C2S 0x92 requests)
+	std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> discoveryMains;
+	std::vector<uint16_t> discoveryDiscovered;
+	std::vector<uint16_t> discoveryDiscoverable;
+
 	std::map<uint8_t, OpenContainer> openContainers;
 	std::map<uint32_t, std::shared_ptr<DepotLocker>> depotLockerMap;
 	std::map<uint32_t, std::shared_ptr<DepotChest>> depotChests;
@@ -1919,6 +1970,7 @@ private:
 	uint32_t coinBalance = 0;
 	uint32_t coinTransferableBalance = 0;
 	uint16_t xpBoostTime = 0;
+	uint8_t worldId = 1;
 
 	bool randomMount = false;
 

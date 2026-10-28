@@ -95,7 +95,7 @@ npcConfig.shop = {
 	{ itemName = "blue quiver", clientId = 35848, buy = 400 },
 	{ itemName = "bolt", clientId = 3446, buy = 4 },
 	{ itemName = "bottle", clientId = 2875, buy = 3 },
-	{ itemName = "bow", clientId = 3350, buy = 400, sell = 400 },
+	{ itemName = "bow", clientId = 3350, buy = 400, sell = 100 },
 	{ itemName = "brown book", clientId = 2837, buy = 15 },
 	{ itemName = "bucket", clientId = 2873, buy = 4 },
 	{ itemName = "camouflage backpack", clientId = 2872, buy = 20 },
@@ -150,7 +150,7 @@ npcConfig.shop = {
 	{ itemName = "throwing star", clientId = 3287, buy = 42 },
 	{ itemName = "torch", clientId = 2920, buy = 2 },
 	{ itemName = "vortex bolt", clientId = 14252, buy = 6 },
-	{ itemName = "watch", clientId = 6092, buy = 20 },
+	{ itemName = "watch", clientId = 2906, buy = 20 },
 	{ itemName = "wooden hammer", clientId = 3459, sell = 15 },
 	{ itemName = "worm", clientId = 3492, buy = 1 },
 }
