@@ -9,5 +9,5 @@ function offlineTrainingBook.onUse(player, item, fromPosition, target, toPositio
 	return true
 end
 
-offlineTrainingBook:id(11441)
+offlineTrainingBook:id(11440, 11441, 11442)
 offlineTrainingBook:register()
