@@ -422,7 +422,7 @@ local config = {
 			[3] = "Excellent. As a true fool you have of course no clue what these ingredients are good for, but I will enlighten you. Just ask about your next mission and I'll tell you everything you need to know.",
 		},
 		yes = true,
-		removeItem = { itemId = 9149 },
+		removeItem = { itemId = 126 },
 		updateStorages = {
 			{ key = Storage.Quest.U8_1.WhatAFoolishQuest.Mission9, value = 3 },
 			{ key = Storage.Quest.U8_1.WhatAFoolishQuest.Questline, value = 28 },
