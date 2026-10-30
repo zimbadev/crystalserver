@@ -721,20 +721,20 @@ void DailyRewards::playerSelectReward(const std::shared_ptr<Player> &player, Net
 						}
 						inboxItem->setAttribute(ItemAttribute_t::STORE, static_cast<int64_t>(std::time(nullptr)));
 						inboxItem->setAttribute(ItemAttribute_t::CHARGES, dailyTable.itemCharges);
-						inbox->addItem(inboxItem);
+						inbox->addItemBack(inboxItem);
 					}
 				} else {
 					const auto &inboxItem = Item::CreateItem(selected.itemId, selected.count);
 					if (inboxItem) {
 						inboxItem->setAttribute(ItemAttribute_t::STORE, static_cast<int64_t>(std::time(nullptr)));
-						inbox->addItem(inboxItem);
+						inbox->addItemBack(inboxItem);
 					}
 				}
 			} else if (itemType.stackable) {
 				const auto &inboxItem = Item::CreateItem(selected.itemId, selected.count);
 				if (inboxItem) {
 					inboxItem->setAttribute(ItemAttribute_t::STORE, static_cast<int64_t>(std::time(nullptr)));
-					inbox->addItem(inboxItem);
+					inbox->addItemBack(inboxItem);
 				}
 			} else {
 				for (uint8_t itemIndex = 0; itemIndex < selected.count; ++itemIndex) {
@@ -743,7 +743,7 @@ void DailyRewards::playerSelectReward(const std::shared_ptr<Player> &player, Net
 						continue;
 					}
 					inboxItem->setAttribute(ItemAttribute_t::STORE, static_cast<int64_t>(std::time(nullptr)));
-					inbox->addItem(inboxItem);
+					inbox->addItemBack(inboxItem);
 				}
 			}
 
