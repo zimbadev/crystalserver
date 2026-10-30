@@ -94,7 +94,7 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:setTopic(playerId, 1)
 		end
 	elseif MsgContains(message, "2000 steel shields") then
-		if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Questline) ~= 29 or player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract) >= 1 then
+		if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Questline) ~= 29 or player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract) >= 3 then
 			npcHandler:say("My offers are weapons, armors, helmets, legs, and shields. If you'd like to see my offers, ask me for a {trade}.", npc, creature)
 			return true
 		end
@@ -102,9 +102,12 @@ local function creatureSayCallback(npc, creature, type, message)
 		npcHandler:say("What? You want to buy 2000 steel shields??", npc, creature)
 		npcHandler:setTopic(playerId, 2)
 	elseif MsgContains(message, "contract") then
-		if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract) == 1 then
+		local contractStorage = player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract)
+		if contractStorage == 2 then
 			npcHandler:say("Have you signed the contract?", npc, creature)
 			npcHandler:setTopic(playerId, 4)
+		elseif contractStorage == 1 then
+			npcHandler:say("Sign it first, then talk to me about it again.", npc, creature)
 		end
 	elseif MsgContains(message, "yes") then
 		if npcHandler:getTopic(playerId) == 1 then
@@ -134,7 +137,7 @@ local function creatureSayCallback(npc, creature, type, message)
 				return true
 			end
 
-			player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract, 2)
+			player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract, 3)
 			npcHandler:say("Excellent! I will start working right away! Now that I am going to be rich, I will take the opportunity to tell some people what I REALLY think about them!", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		end

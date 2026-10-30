@@ -422,7 +422,7 @@ local config = {
 			[3] = "Excellent. As a true fool you have of course no clue what these ingredients are good for, but I will enlighten you. Just ask about your next mission and I'll tell you everything you need to know.",
 		},
 		yes = true,
-		removeItem = { itemId = 9149 },
+		removeItem = { itemId = 126 },
 		updateStorages = {
 			{ key = Storage.Quest.U8_1.WhatAFoolishQuest.Mission9, value = 3 },
 			{ key = Storage.Quest.U8_1.WhatAFoolishQuest.Questline, value = 28 },
@@ -451,6 +451,7 @@ local config = {
 		},
 		yes = true,
 		checkStorage = Storage.Quest.U8_1.WhatAFoolishQuest.Contract,
+		checkStorageValue = 3,
 		updateStorages = {
 			{ key = Storage.Quest.U8_1.WhatAFoolishQuest.Mission9, value = 5 },
 			{ key = Storage.Quest.U8_1.WhatAFoolishQuest.Questline, value = 30 },
@@ -688,7 +689,7 @@ local function creatureSayCallback(npc, creature, type, message)
 		elseif npcHandler:getTopic(playerId) == 3 then
 			local targetValue = value[playerId]
 			if targetValue.checkStorage then
-				if player:getStorageValue(targetValue.checkStorage) ~= 1 then
+				if player:getStorageValue(targetValue.checkStorage) ~= (targetValue.checkStorageValue or 1) then
 					npcHandler:say(targetValue.text[2], npc, creature)
 					npcHandler:setTopic(playerId, 0)
 					return true
@@ -867,6 +868,14 @@ keywordHandler:addKeyword({ "excalibug" }, StdModule.say, { npcHandler = npcHand
 keywordHandler:addKeyword({ "wall", "carving" }, StdModule.say, { npcHandler = npcHandler, text = "Oh, I saw some demon carvings in the dungeons as I hid there after a little joke on old Stutch." })
 keywordHandler:addKeyword({ "demon", "carving" }, StdModule.say, { npcHandler = npcHandler, text = "Yes, they showed demons, seven actually, dancing around a sword! In something like a flaming pit." })
 keywordHandler:addKeyword({ "flaming", "pit" }, StdModule.say, { npcHandler = npcHandler, text = "Ah, don't ask me! Usually mages and mystics know more about such stuff." })
+keywordHandler:addKeyword({ "demoncarving" }, StdModule.say, { npcHandler = npcHandler, text = "Yes, they showed demons, seven actually, dancing around a sword! In something like a flaming pit." })
+keywordHandler:addKeyword({ "necromancer" }, StdModule.say, { npcHandler = npcHandler, text = "Don't feed the necromancers." })
+keywordHandler:addKeyword({ "wallcarving" }, StdModule.say, { npcHandler = npcHandler, text = "Oh, I saw some demon carvings in the dungeons as I hid there after a little joke on old Stutch." })
+keywordHandler:addKeyword({ "eclesius" }, StdModule.say, { npcHandler = npcHandler, text = "Mwehehehe I like that guys humour. Although his gags and puns are most likely not intended. I wonder how he's doing, haven't seen him for a while." })
+keywordHandler:addKeyword({ "ghost" }, StdModule.say, { npcHandler = npcHandler, text = "Why do ghosts flee if wounded? ... They are so spineless!" })
+keywordHandler:addKeyword({ "lynda" }, StdModule.say, { npcHandler = npcHandler, text = "Most men in town are mad about her but she is some kind of an iron maiden, you know?" })
+keywordHandler:addKeyword({ "fool" }, StdModule.say, { npcHandler = npcHandler, text = "Wow, your stupidity would be pride and joy for every fool. You've already applied as a member. Let's rather talk about your current mission." })
+keywordHandler:addKeyword({ "time" }, StdModule.say, { npcHandler = npcHandler, text = "Since you met me it is happy hour for you." })
 
 local jobKeyword = keywordHandler:addKeyword({ "job" }, StdModule.say, { npcHandler = npcHandler, text = "I'm the royal jes ... uhm ... the royal tax-collector! Do you want to pay your taxes?" })
 jobKeyword:addChildKeyword({ "yes" }, StdModule.say, { npcHandler = npcHandler, text = "Come back, when you have enough money.", reset = true }, function(player)
