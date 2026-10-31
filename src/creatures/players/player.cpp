@@ -2911,6 +2911,17 @@ void Player::onChangeZone(ZoneType_t zone) {
 			g_game().internalCreatureChangeOutfit(getPlayer(), defaultOutfit);
 			wasMounted = true;
 		}
+		if (!isPzLocked()) {
+			removeCondition(CONDITION_INFIGHT);
+		}
+		removeCondition(CONDITION_POISON);
+		removeCondition(CONDITION_FIRE);
+		removeCondition(CONDITION_ENERGY);
+		removeCondition(CONDITION_FREEZING);
+		removeCondition(CONDITION_DAZZLED);
+		removeCondition(CONDITION_CURSED);
+		removeCondition(CONDITION_BLEEDING);
+		removeCondition(CONDITION_DROWN);
 	} else {
 		int32_t ticks = g_configManager().getNumber(STAIRHOP_DELAY);
 		if (ticks > 0) {
