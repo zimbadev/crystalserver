@@ -193,7 +193,10 @@ void Creature::onCreatureWalk() {
 				ReturnValue ret = g_game().internalMoveCreature(static_self_cast<Creature>(), dir, flags);
 				if (ret != RETURNVALUE_NOERROR) {
 					if (std::shared_ptr<Player> player = getPlayer()) {
-						player->sendCancelMessage(ret);
+						// CIP SetClientOptions option 1: turn toward refused step instead of only cancelling.
+						if (!player->turnTowardsRefusedStep(dir, ret)) {
+							player->sendCancelMessage(ret);
+						}
 						player->sendCancelWalk();
 					}
 
