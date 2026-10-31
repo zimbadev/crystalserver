@@ -213,6 +213,10 @@ private:
 	void parsePartyAnalyzerAction(NetworkMessage &msg) const;
 	void parseLeaderFinderWindow(NetworkMessage &msg);
 	void parseMemberFinderWindow(NetworkMessage &msg);
+	void parseSetClientOptions(NetworkMessage &msg);
+	void parseGetGuildMessage();
+	void parseEditGuildMessage(NetworkMessage &msg);
+	void parseGetTextForReport(NetworkMessage &msg);
 	void parseSendBuyCharmRune(NetworkMessage &msg);
 	void parseBestiarysendMonsterData(NetworkMessage &msg);
 	void parseCyclopediaMonsterTracker(NetworkMessage &msg);
@@ -407,6 +411,9 @@ private:
 	void sendGameNews();
 	/// CIP HirelingNameChange (S 0xDB). Zeros open a store-style name prompt.
 	void sendHirelingNameChange(uint32_t creatureId = 0, uint32_t objectId = 0);
+	void sendPartyLeft();
+	void sendEditGuildMessage(const std::string &message);
+	void sendTextForReport(uint32_t textId, const std::string &text, const std::string &author);
 	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t soulsealsPoints = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);
 	void sendResourceBalance(Resource_t resourceType);
 	void sendResourceBalance(Resource_t resourceType, uint64_t value);
