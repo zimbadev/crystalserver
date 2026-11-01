@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Gorger Inferniarch")
 local monster = {}
 
 monster.description = "a gorger inferniarch"
-monster.experience = 7680
+monster.experience = 7180
 monster.outfit = {
 	lookType = 1797,
 	lookHead = 0,
@@ -111,7 +111,7 @@ monster.defenses = {
 
 monster.elements = {
 	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = -10 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = -5 },
 	{ type = COMBAT_EARTHDAMAGE, percent = 0 },
 	{ type = COMBAT_FIREDAMAGE, percent = 20 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
