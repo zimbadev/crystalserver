@@ -989,6 +989,16 @@ function onUseSpoon(player, item, fromPosition, target, toPosition, isHotkey)
 		return false
 	end
 
+	-- What a Foolish Quest - Mission 8 (sulphur)
+	if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Questline) == 21 then
+		if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur) < 1 then
+			player:addItem(124, 1) -- Easily inflammable sulphur
+			player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur, 1)
+			toPosition:sendMagicEffect(CONST_ME_YELLOW_RINGS)
+			return true
+		end
+	end
+
 	-- The Ice Islands Quest - Cure the Dogs
 	if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.Questline) >= 21 then
 		if player:getStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava) < 1 then
@@ -996,18 +1006,8 @@ function onUseSpoon(player, item, fromPosition, target, toPosition, isHotkey)
 			player:setStorageValue(Storage.Quest.U8_0.TheIceIslands.SulphurLava, 1)
 			toPosition:sendMagicEffect(CONST_ME_MAGIC_RED)
 			player:say("You retrieve a fine sulphur from a lava hole.", TALKTYPE_MONSTER_SAY)
+			return true
 		end
-		return true
-	end
-
-	-- What a Foolish Quest - Mission 8 (sulphur)
-	if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Questline) == 21 then
-		if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur) < 1 then
-			player:addItem(124, 1) -- Easily inflammable sulphur
-			player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.InflammableSulphur, 1)
-			toPosition:sendMagicEffect(CONST_ME_YELLOW_RINGS)
-		end
-		return true
 	end
 
 	return false
