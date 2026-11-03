@@ -427,6 +427,8 @@ public:
 	PlayerWheelGem &getGem(const std::string &uuid);
 	uint16_t getGemIndex(const std::string &uuid) const;
 	void revealGem(WheelGemQuality_t quality);
+	/// Emit CIP SpellDataModification (S 0x60) for current wheel spell grades.
+	void sendSpellDataModifications() const;
 	void destroyGem(uint16_t index);
 	void switchGemDomain(uint16_t index);
 	void toggleGemLock(uint16_t index);

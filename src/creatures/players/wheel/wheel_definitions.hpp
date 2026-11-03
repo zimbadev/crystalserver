@@ -183,6 +183,14 @@ enum class WheelSpellGrade_t : uint8_t {
 	MAX = 3 // This one is used only on LUA
 };
 
+/// CIP SpellDataModification (S 0x60) entry `mod` field.
+/// Classic wire is (u16 spellId, u8 mod, u8 value). CIP UI refreshes the spell
+/// list on any non-empty packet (`TSpellListDataModel::onSpellDataModificationsApplied`);
+/// Crystal emits wheel grades as mod=WHEEL_GRADE with value=WheelSpellGrade_t.
+enum class SpellDataModificationMod_t : uint8_t {
+	WHEEL_GRADE = 0,
+};
+
 enum class WheelSpellBoost_t : uint8_t {
 	MANA = 0,
 	COOLDOWN = 1,
