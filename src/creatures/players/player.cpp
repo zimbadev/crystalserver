@@ -2262,12 +2262,6 @@ void Player::sendHirelingNameChange(uint32_t creatureId, uint32_t objectId) cons
 	}
 }
 
-void Player::sendPartyLeft() const {
-	if (client) {
-		client->sendPartyLeft();
-	}
-}
-
 bool Player::turnTowardsRefusedStep(Direction dir, ReturnValue result) {
 	if (!turnTowardsMoveDirection || (result != RETURNVALUE_NOTPOSSIBLE && result != RETURNVALUE_NOTENOUGHROOM)) {
 		return false;

@@ -415,7 +415,6 @@ private:
 	void sendSpellDataModification(const std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> &entries);
 	/// CIP GemAtelierGemRevealed (S 0xC5): u32 gem id (atelier inventory index).
 	void sendGemAtelierGemRevealed(uint32_t gemId);
-	void sendPartyLeft();
 	void sendEditGuildMessage(const std::string &message);
 	void sendTextForReport(uint32_t textId, const std::string &text, const std::string &author);
 	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t soulsealsPoints = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);

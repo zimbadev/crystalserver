@@ -3777,11 +3777,11 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
 }
 
 void ProtocolGame::parseSetClientOptions(NetworkMessage &msg) {
-	// CIP SetClientOptions (C 0x2E): u8 option, u8 enabled. Option 1 =
-	// turnTowardsMoveDirection (session; CIP does not persist across relog).
+	// CIP SetClientOptions (C 0x2E): u8 option, u8 enabled.
+	// The 15.30 classic writer uses option 0 for ClientOptionSetMovement.
 	const uint8_t option = msg.getByte();
 	const bool enabled = msg.getByte() != 0;
-	if (oldProtocol || option != 1) {
+	if (oldProtocol || option != 0) {
 		return;
 	}
 	g_dispatcher().addEvent([self = getThis(), playerID = player->getID(), enabled] {
@@ -6231,16 +6231,6 @@ void ProtocolGame::sendGemAtelierGemRevealed(uint32_t gemId) {
 	out.addByte(0xC5);
 	out.add<uint32_t>(gemId);
 	writeToOutputBuffer(out);
-}
-
-void ProtocolGame::sendPartyLeft() {
-	if (!player || oldProtocol) {
-		return;
-	}
-
-	NetworkMessage msg;
-	msg.addByte(0x06);
-	writeToOutputBuffer(msg);
 }
 
 void ProtocolGame::sendEditGuildMessage(const std::string &message) {

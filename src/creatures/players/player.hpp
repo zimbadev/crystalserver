@@ -1102,7 +1102,6 @@ public:
 	void removeBakragoreIcons();
 	void removeBakragoreIcon(const IconBakragore icon);
 	void sendClientCheck() const;
-	void sendPartyLeft() const;
 	void sendGameNews() const;
 	/// CIP HirelingNameChange (S 0xDB); see ProtocolGame::sendHirelingNameChange.
 	void sendHirelingNameChange(uint32_t creatureId = 0, uint32_t objectId = 0) const;
