@@ -6122,7 +6122,7 @@ void ProtocolGame::sendHirelingNameChange(uint32_t creatureId, uint32_t objectId
 	writeToOutputBuffer(out);
 }
 
-void ProtocolGame::sendSpellDataModification(const std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> &entries) {
+void ProtocolGame::sendSpellDataModification(const std::vector<std::tuple<uint16_t, uint8_t, uint32_t>> &entries) {
 	if (!player || oldProtocol) {
 		return;
 	}
@@ -6133,7 +6133,7 @@ void ProtocolGame::sendSpellDataModification(const std::vector<std::tuple<uint16
 	for (const auto &[spellId, mod, value] : entries) {
 		out.add<uint16_t>(spellId);
 		out.addByte(mod);
-		out.addByte(value);
+		out.add<uint32_t>(value);
 	}
 	writeToOutputBuffer(out);
 }
