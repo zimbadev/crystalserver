@@ -1,6 +1,7 @@
 setup_test(crystalserver_ut unit)
 
 add_subdirectory(account)
+add_subdirectory(creatures)
 add_subdirectory(items)
 add_subdirectory(kv)
 add_subdirectory(lib)

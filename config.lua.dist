@@ -35,6 +35,7 @@ worldLocation = "South America"
 -- Combat settings
 -- NOTE: removeBeginningWeaponAmmunition: spears, arrows, bolt have endless ammo (allows training for paladins)
 -- NOTE: refundManaOnBeginningWeapons: wand of vortex and snakebite refund mana used (allows training for mages)
+worldType = "expert-pvp"
 hotkeyAimbotEnabled = true
 protectionLevel = 7
 pzLocked = 60 * 1000
