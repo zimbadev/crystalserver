@@ -1277,7 +1277,7 @@ void PlayerWheel::sendSpellDataModifications() const {
 		return;
 	}
 
-	std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> entries;
+	std::vector<std::tuple<uint16_t, uint8_t, uint32_t>> entries;
 	entries.reserve(m_spellsSelected.size());
 	for (const auto &[spellName, grade] : m_spellsSelected) {
 		if (grade == WheelSpellGrade_t::NONE) {
@@ -1290,7 +1290,7 @@ void PlayerWheel::sendSpellDataModifications() const {
 		entries.emplace_back(
 			spell->getSpellId(),
 			static_cast<uint8_t>(SpellDataModificationMod_t::WHEEL_GRADE),
-			static_cast<uint8_t>(grade)
+			static_cast<uint32_t>(grade)
 		);
 	}
 	if (!entries.empty()) {
