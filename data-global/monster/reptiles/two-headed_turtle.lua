@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Two-Headed Turtle")
 local monster = {}
 
 monster.description = "a two-headed turtle"
-monster.experience = 2930
+monster.experience = 3310
 monster.outfit = {
 	lookType = 1535,
 }
@@ -92,7 +92,7 @@ monster.attacks = {
 	{ name = "melee", interval = 2000, chance = 100, minDamage = -100, maxDamage = -300 },
 	{ name = "combat", interval = 2500, chance = 35, type = COMBAT_ENERGYDAMAGE, minDamage = -100, maxDamage = -300, radius = 4, target = false, effect = CONST_ME_ENERGYHIT },
 	{ name = "combat", interval = 2000, chance = 35, type = COMBAT_LIFEDRAIN, minDamage = -100, maxDamage = -300, radius = 3, target = true, effect = CONST_ME_GHOSTLY_BITE },
-	{ name = "combat", interval = 3000, chance = 45, type = COMBAT_PHYSICALDAMAGE, minDamage = -100, maxDamage = -300, range = 1, radius = 1, target = true, effect = CONST_ME_EXPLOSIONAREA },
+	{ name = "combat", interval = 3000, chance = 45, type = COMBAT_PHYSICALDAMAGE, minDamage = -231, maxDamage = -328, range = 1, radius = 1, target = true, effect = CONST_ME_EXPLOSIONAREA },
 }
 
 monster.defenses = {
