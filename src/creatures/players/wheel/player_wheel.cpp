@@ -34,6 +34,8 @@
 #include "server/network/protocol/protocolgame.hpp"
 #include "utils/tools.hpp"
 
+#include <cmath>
+
 static PlayerWheelGem emptyGem = {};
 
 const std::array<int32_t, COMBAT_COUNT> m_resistance = { 0 };
@@ -300,11 +302,13 @@ namespace {
 			auto size = std::ssize(spellTable.grade);
 			g_logger().debug("spell area stage {}, grade {}", stage, size);
 			if (spellTable.name == spellName && stage < static_cast<uint8_t>(size)) {
-				const auto &spellData = spellTable.grade[stage];
-				if (spellData.increase.area) {
-					g_logger().debug("[{}] spell with name {}, and stage {} has increase area", __FUNCTION__, spellName, stage);
+				// Area bonuses accumulate: higher stages keep the area from lower stages.
+				for (uint8_t grade = 1; grade <= stage; ++grade) {
+					if (spellTable.grade[grade].increase.area) {
+						g_logger().debug("[{}] spell with name {}, and stage {} has increase area", __FUNCTION__, spellName, stage);
 
-					return true;
+						return true;
+					}
 				}
 			}
 		}
@@ -1446,7 +1450,7 @@ void PlayerWheel::addSpellBonus(const std::string &spellName, const WheelSpells:
 		m_spellsBonuses[spellName].decrease.manaCost += bonus.decrease.manaCost;
 		m_spellsBonuses[spellName].decrease.secondaryGroupCooldown += bonus.decrease.secondaryGroupCooldown;
 		m_spellsBonuses[spellName].increase.aditionalTarget += bonus.increase.aditionalTarget;
-		m_spellsBonuses[spellName].increase.area = bonus.increase.area;
+		m_spellsBonuses[spellName].increase.area = m_spellsBonuses[spellName].increase.area || bonus.increase.area;
 		m_spellsBonuses[spellName].increase.criticalChance += bonus.increase.criticalChance;
 		m_spellsBonuses[spellName].increase.criticalDamage += bonus.increase.criticalDamage;
 		m_spellsBonuses[spellName].increase.damage += bonus.increase.damage;
@@ -1475,15 +1479,15 @@ int32_t PlayerWheel::getSpellBonus(const std::string &spellName, WheelSpellBoost
 		case SECONDARY_GROUP_COOLDOWN:
 			return decrease.secondaryGroupCooldown;
 		case CRITICAL_CHANCE:
-			return increase.criticalChance;
+			return static_cast<int32_t>(std::lround(increase.criticalChance));
 		case CRITICAL_DAMAGE:
-			return increase.criticalDamage;
+			return static_cast<int32_t>(std::lround(increase.criticalDamage));
 		case DAMAGE:
-			return increase.damage;
+			return static_cast<int32_t>(std::lround(increase.damage));
 		case DAMAGE_REDUCTION:
 			return increase.damageReduction;
 		case HEAL:
-			return increase.heal;
+			return static_cast<int32_t>(std::lround(increase.heal));
 		case LIFE_LEECH:
 			return leech.life;
 		case MANA_LEECH:
