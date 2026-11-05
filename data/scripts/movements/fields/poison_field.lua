@@ -10,25 +10,25 @@ poisonCondition:addDamage(10, 1000, -2)
 poisonCondition:addDamage(19, 1000, -1)
 
 function poisonField.onStepIn(creature, item, position, fromPosition)
-    if not creature:isCreature() then
-        return true
-    end
+	if not creature:isCreature() then
+		return true
+	end
 
-    if creature:isPlayer() and creature:getGroup():getId() >= 2 then
-        return true
-    end
+	if creature:isPlayer() and creature:getGroup():getId() >= 2 then
+		return true
+	end
 
-    if item:getId() == 2134 then
-        if not creature:isMonster() or creature:getMaster() then
-            position:sendMagicEffect(CONST_ME_POFF)
-            return true
-        end
-    end
+	if item:getId() == 2134 then
+		if not creature:isMonster() or creature:getMaster() then
+			position:sendMagicEffect(CONST_ME_POFF)
+			return true
+		end
+	end
 
-    doTargetCombatHealth(0, creature, COMBAT_EARTHDAMAGE, -10, -10, CONST_ME_POISON)
-    creature:addCondition(poisonCondition)
+	doTargetCombatHealth(0, creature, COMBAT_EARTHDAMAGE, -10, -10, CONST_ME_POISON)
+	creature:addCondition(poisonCondition)
 
-    return true
+	return true
 end
 
 poisonField:type("stepin")

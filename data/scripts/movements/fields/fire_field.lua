@@ -13,30 +13,30 @@ fireCondition10:setParameter(CONDITION_PARAM_TICKS, 7000)
 fireCondition10:setParameter(CONDITION_PARAM_PERIODICDAMAGE, -10)
 
 function fireField.onStepIn(creature, item, position, fromPosition)
-    if not creature:isCreature() then
-        return true
-    end
+	if not creature:isCreature() then
+		return true
+	end
 
-    if creature:isPlayer() and creature:getGroup():getId() >= 2 then
-        return true
-    end
+	if creature:isPlayer() and creature:getGroup():getId() >= 2 then
+		return true
+	end
 
-    if item:getId() == 2131 or item:getId() == 2132 then
-        if not creature:isMonster() or creature:getMaster() then
-            position:sendMagicEffect(CONST_ME_POFF)
-            return true
-        end
-    end
+	if item:getId() == 2131 or item:getId() == 2132 then
+		if not creature:isMonster() or creature:getMaster() then
+			position:sendMagicEffect(CONST_ME_POFF)
+			return true
+		end
+	end
 
-    if item:getId() == 2132 then
-        doTargetCombatHealth(0, creature, COMBAT_FIREDAMAGE, -10, -10, CONST_ME_HITBYFIRE)
-        creature:addCondition(fireCondition10)
-    else
-        doTargetCombatHealth(0, creature, COMBAT_FIREDAMAGE, -20, -20, CONST_ME_HITBYFIRE)
-        creature:addCondition(fireCondition20)
-    end
+	if item:getId() == 2132 then
+		doTargetCombatHealth(0, creature, COMBAT_FIREDAMAGE, -10, -10, CONST_ME_HITBYFIRE)
+		creature:addCondition(fireCondition10)
+	else
+		doTargetCombatHealth(0, creature, COMBAT_FIREDAMAGE, -20, -20, CONST_ME_HITBYFIRE)
+		creature:addCondition(fireCondition20)
+	end
 
-    return true
+	return true
 end
 
 fireField:type("stepin")
