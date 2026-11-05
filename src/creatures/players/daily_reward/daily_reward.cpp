@@ -680,11 +680,19 @@ void DailyRewards::playerSelectReward(const std::shared_ptr<Player> &player, Net
 		for (uint8_t i = 0; i < columnsPicked; ++i) {
 			const uint16_t itemId = msg.get<uint16_t>();
 			const uint8_t count = msg.getByte();
+			if (count == 0) {
+				continue;
+			}
 			orderedCounter += count;
 			if (std::ranges::find(possibleItems, itemId) != possibleItems.end()) {
 				selectedItems.push_back({ itemId, count });
 				totalCounter += count;
 			}
+		}
+
+		if (selectedItems.empty() || totalCounter == 0) {
+			player->sendMessageDialog("You must select at least one item.");
+			return;
 		}
 
 		if (totalCounter > rewardCount) {
