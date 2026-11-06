@@ -21,12 +21,14 @@ function fireField.onStepIn(creature, item, position, fromPosition)
 		return true
 	end
 
-	if creature:isPlayer() or (creature:isMonster() and creature:getMaster() and creature:getMaster():isPlayer()) then
-		position:sendMagicEffect(CONST_ME_POFF)
-		return true
+	if item:getId() == 2131 or item:getId() == 2132 then
+		if not creature:isMonster() or creature:getMaster() then
+			position:sendMagicEffect(CONST_ME_POFF)
+			return true
+		end
 	end
 
-	if item:getId() == 2132 then
+	if item:getId() == 2132 or item:getId() == 2124 or item:getId() == 2119 then
 		doTargetCombatHealth(0, creature, COMBAT_FIREDAMAGE, -10, -10, CONST_ME_HITBYFIRE)
 		creature:addCondition(fireCondition10)
 	else
@@ -38,5 +40,5 @@ function fireField.onStepIn(creature, item, position, fromPosition)
 end
 
 fireField:type("stepin")
-fireField:id(2131, 2132)
+fireField:id(2118, 2119, 2123, 2124, 2131, 2132)
 fireField:register()
