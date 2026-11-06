@@ -294,13 +294,13 @@ struct SlotInfo {
 namespace WheelSpells {
 	struct Increase {
 		bool area = false;
-		int damage = 0;
-		int heal = 0;
+		float damage = 0;
+		float heal = 0;
 		int aditionalTarget = 0;
 		int damageReduction = 0;
 		int duration = 0;
-		int criticalDamage = 0;
-		int criticalChance = 0;
+		float criticalDamage = 0;
+		float criticalChance = 0;
 	};
 
 	struct Decrease {
