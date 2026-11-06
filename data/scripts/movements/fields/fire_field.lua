@@ -28,7 +28,7 @@ function fireField.onStepIn(creature, item, position, fromPosition)
 		end
 	end
 
-	if item:getId() == 2132 then
+	if item:getId() == 2132 or item:getId() == 2124 or item:getId() == 2119 then
 		doTargetCombatHealth(0, creature, COMBAT_FIREDAMAGE, -10, -10, CONST_ME_HITBYFIRE)
 		creature:addCondition(fireCondition10)
 	else
