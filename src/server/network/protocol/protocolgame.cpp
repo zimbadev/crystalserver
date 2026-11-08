@@ -6138,7 +6138,7 @@ void ProtocolGame::sendSpellDataModification(const std::vector<std::tuple<uint16
 	writeToOutputBuffer(out);
 }
 
-void ProtocolGame::sendGemAtelierGemRevealed(uint32_t gemId) {
+void ProtocolGame::sendGemAtelierGemRevealed(uint16_t gemId) {
 	if (!player || oldProtocol) {
 		return;
 	}
