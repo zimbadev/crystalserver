@@ -2472,11 +2472,54 @@ void ProtocolGame::sendItemInspection(uint16_t itemId, uint8_t itemCount, const 
 }
 
 void ProtocolGame::parseFriendSystemAction(NetworkMessage &msg) {
-	uint8_t state = msg.getByte();
-	if (state == 0x0E) {
-		uint8_t titleId = msg.getByte();
-		g_game().playerFriendSystemAction(player, state, titleId);
+	if (oldProtocol) {
+		return;
 	}
+
+	const uint8_t action = msg.getByte();
+	switch (action) {
+		case 0x0C: // Request the account badge catalog.
+			sendSocialBadges();
+			break;
+		case 0x0D: { // Change badge visibility.
+			const auto badgeId = msg.get<uint32_t>();
+			const uint8_t visible = msg.getByte();
+			if (!msg.isOverrun() && visible <= 1) {
+				player->badge()->setVisible(badgeId, visible != 0);
+				sendSocialBadges();
+			}
+			break;
+		}
+		case 0x0E: {
+			const uint8_t titleId = msg.getByte();
+			if (!msg.isOverrun()) {
+				g_game().playerFriendSystemAction(player, action, titleId);
+			}
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+void ProtocolGame::sendSocialBadges() {
+	// Tibia 15.30 FriendSystemData (0x74), badge catalog (0x06).
+	const auto badges = g_game().getBadges();
+	const auto &playerBadge = player->badge();
+
+	NetworkMessage msg;
+	msg.addByte(0x74);
+	msg.addByte(0x06);
+	msg.addByte(static_cast<uint8_t>(badges.size()));
+	for (const auto &badge : badges) {
+		const bool unlocked = playerBadge->hasBadge(badge.m_id);
+		msg.add<uint32_t>(badge.m_id);
+		msg.addString(badge.m_name);
+		msg.addString(badge.getDescription());
+		msg.addByte(unlocked);
+		msg.addByte(unlocked && playerBadge->isVisible(badge.m_id));
+	}
+	writeToOutputBuffer(msg);
 }
 
 void ProtocolGame::parseCyclopediaCharacterInfo(NetworkMessage &msg) {
