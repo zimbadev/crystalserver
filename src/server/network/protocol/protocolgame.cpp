@@ -5549,12 +5549,14 @@ void ProtocolGame::sendBlessStatus() {
 
 	// Ignore Twist of Fate (Id 1)
 	uint8_t blessCount = 0;
+	uint16_t blessingsMask = 0;
 	for (auto bless : magic_enum::enum_values<Blessings>()) {
-		if (bless == Blessings::TwistOfFate) {
-			continue;
-		}
-		if (player->hasBlessing(enumToValue(bless))) {
-			blessCount++;
+		auto val = enumToValue(bless);
+		if (player->hasBlessing(val)) {
+			blessingsMask |= (1 << val);
+			if (bless != Blessings::TwistOfFate) {
+				blessCount++;
+			}
 		}
 	}
 
@@ -5565,7 +5567,7 @@ void ProtocolGame::sendBlessStatus() {
 		msg.add<uint16_t>(blessCount >= 5 ? 0x01 : 0x00);
 	} else {
 		bool glow = player->getVocationId() > VOCATION_NONE && ((g_configManager().getBoolean(INVENTORY_GLOW) && blessCount >= 5) || player->getLevel() < g_configManager().getNumber(ADVENTURERSBLESSING_LEVEL));
-		msg.add<uint16_t>(glow ? 1 : 0); // Show up the glowing effect in items if you have all blesses or adventurer's blessing
+		msg.add<uint16_t>(blessingsMask > 0 ? blessingsMask : (glow ? 1 : 0)); // Bitwise blessings mask or glow flag
 		msg.addByte((blessCount >= 7) ? 3 : ((blessCount >= 5) ? 2 : 1)); // 1 = Disabled | 2 = normal | 3 = green
 	}
 
