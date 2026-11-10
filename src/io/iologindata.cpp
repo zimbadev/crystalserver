@@ -233,12 +233,16 @@ bool IOLoginData::savePlayerGuard(const std::shared_ptr<Player> &player) {
 		throw DatabaseException("[IOLoginDataSave::savePlayerFirst] - Failed to save player stash: " + player->getName());
 	}
 
-	if (!IOLoginDataSave::savePlayerSpells(player)) {
-		throw DatabaseException("[IOLoginDataSave::savePlayerSpells] - Failed to save player spells: " + player->getName());
+	if (player->isOffline() || player->isSpellsModified()) {
+		if (!IOLoginDataSave::savePlayerSpells(player)) {
+			throw DatabaseException("[IOLoginDataSave::savePlayerSpells] - Failed to save player spells: " + player->getName());
+		}
 	}
 
-	if (!IOLoginDataSave::savePlayerKills(player)) {
-		throw DatabaseException("IOLoginDataSave::savePlayerKills] - Failed to save player kills: " + player->getName());
+	if (player->isOffline() || player->isKillsModified()) {
+		if (!IOLoginDataSave::savePlayerKills(player)) {
+			throw DatabaseException("IOLoginDataSave::savePlayerKills] - Failed to save player kills: " + player->getName());
+		}
 	}
 
 	if (!IOLoginDataSave::savePlayerBestiarySystem(player)) {
@@ -295,8 +299,10 @@ bool IOLoginData::savePlayerGuard(const std::shared_ptr<Player> &player) {
 	player->wheel()->saveKVScrolls();
 	player->wheel()->saveKVHuntingTaskShopExtraPoints();
 
-	if (!IOLoginDataSave::savePlayerStorage(player)) {
-		throw DatabaseException("[IOLoginDataSave::savePlayerStorage] - Failed to save player storage: " + player->getName());
+	if (player->isOffline() || player->isStorageModified()) {
+		if (!IOLoginDataSave::savePlayerStorage(player)) {
+			throw DatabaseException("[IOLoginDataSave::savePlayerStorage] - Failed to save player storage: " + player->getName());
+		}
 	}
 
 	if (player->isOutfitsModified()) {
