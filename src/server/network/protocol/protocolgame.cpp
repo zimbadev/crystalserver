@@ -2471,14 +2471,6 @@ void ProtocolGame::sendItemInspection(uint16_t itemId, uint8_t itemCount, const 
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::parseFriendSystemAction(NetworkMessage &msg) {
-	uint8_t state = msg.getByte();
-	if (state == 0x0E) {
-		uint8_t titleId = msg.getByte();
-		g_game().playerFriendSystemAction(player, state, titleId);
-	}
-}
-
 void ProtocolGame::parseCyclopediaCharacterInfo(NetworkMessage &msg) {
 	if (oldProtocol) {
 		return;
@@ -2495,6 +2487,13 @@ void ProtocolGame::parseCyclopediaCharacterInfo(NetworkMessage &msg) {
 	}
 	if (characterID == 0) {
 		characterID = player->getID();
+	}
+	if (msg.isOverrun()) {
+		return;
+	}
+	if (characterInfoType == CYCLOPEDIA_CHARACTERINFO_INSPECTION && characterID != player->getID()) {
+		inspectSocialCharacter(characterID);
+		return;
 	}
 	g_game().playerCyclopediaCharacterInfo(player, characterID, characterInfoType, entriesPerPage, page);
 }
@@ -4878,10 +4877,13 @@ void ProtocolGame::sendCyclopediaCharacterStoreSummary() {
 	writeToOutputBuffer(msg);
 }
 
-void ProtocolGame::sendCyclopediaCharacterInspection() {
+void ProtocolGame::sendCyclopediaCharacterInspection(const std::shared_ptr<Player> &target) {
 	if (!player || oldProtocol) {
 		return;
 	}
+
+	const auto &subject = target ? target : player;
+	const bool ownCharacter = subject == player;
 
 	NetworkMessage msg;
 	msg.addByte(0xDA);
@@ -4891,7 +4893,7 @@ void ProtocolGame::sendCyclopediaCharacterInspection() {
 	auto startInventory = msg.getBufferPosition();
 	msg.skipBytes(1);
 	for (std::underlying_type<Slots_t>::type slot = CONST_SLOT_FIRST; slot <= CONST_SLOT_LAST; slot++) {
-		std::shared_ptr<Item> inventoryItem = player->getInventoryItem(static_cast<Slots_t>(slot));
+		std::shared_ptr<Item> inventoryItem = subject->getInventoryItem(static_cast<Slots_t>(slot));
 		if (inventoryItem) {
 			++inventoryItems;
 
@@ -4925,8 +4927,8 @@ void ProtocolGame::sendCyclopediaCharacterInspection() {
 			}
 		}
 	}
-	msg.addString(player->getName());
-	AddOutfit(msg, player->getDefaultOutfit(), false);
+	msg.addString(subject->getName());
+	AddOutfit(msg, subject->getDefaultOutfit(), false);
 
 	// Player overall summary
 	uint8_t playerDescriptionSize = 0;
@@ -4934,31 +4936,31 @@ void ProtocolGame::sendCyclopediaCharacterInspection() {
 	msg.skipBytes(1);
 
 	// Player title
-	if (player->title()->getCurrentTitle() != 0) {
+	if (subject->title()->getCurrentTitle() != 0) {
 		playerDescriptionSize++;
 		msg.addString("Character Title");
-		msg.addString(player->title()->getCurrentTitleName());
+		msg.addString(subject->title()->getCurrentTitleName());
 	}
 
 	// Level description
 	playerDescriptionSize++;
 	msg.addString("Level");
-	msg.addString(std::to_string(player->getLevel()));
+	msg.addString(std::to_string(subject->getLevel()));
 
 	// Vocation description
 	playerDescriptionSize++;
 	msg.addString("Vocation");
-	msg.addString(player->getVocation()->getVocName());
+	msg.addString(subject->getVocation()->getVocName());
 
 	// Loyalty title
-	if (!player->getLoyaltyTitle().empty()) {
+	if (ownCharacter && !subject->getLoyaltyTitle().empty()) {
 		playerDescriptionSize++;
 		msg.addString("Loyalty Title");
-		msg.addString(player->getLoyaltyTitle());
+		msg.addString(subject->getLoyaltyTitle());
 	}
 
 	// Marriage description
-	if (const auto spouseId = player->getMarriageSpouse(); spouseId > 0) {
+	if (const auto spouseId = subject->getMarriageSpouse(); ownCharacter && spouseId > 0) {
 		if (const auto &spouse = g_game().getPlayerByID(spouseId, true); spouse) {
 			playerDescriptionSize++;
 			msg.addString("Married to");
@@ -4967,8 +4969,8 @@ void ProtocolGame::sendCyclopediaCharacterInspection() {
 	}
 
 	// Prey description
-	for (uint8_t slotId = PreySlot_First; slotId <= PreySlot_Last; slotId++) {
-		if (const auto &slot = player->getPreySlotById(static_cast<PreySlot_t>(slotId));
+	for (uint8_t slotId = PreySlot_First; ownCharacter && slotId <= PreySlot_Last; slotId++) {
+		if (const auto &slot = subject->getPreySlotById(static_cast<PreySlot_t>(slotId));
 		    slot && slot->isOccupied()) {
 			playerDescriptionSize++;
 			std::string activePrey = fmt::format("Active Prey {}", slotId + 1);
@@ -5001,7 +5003,7 @@ void ProtocolGame::sendCyclopediaCharacterInspection() {
 	// Outfit description
 	playerDescriptionSize++;
 	msg.addString("Outfit");
-	if (const auto outfit = Outfits::getInstance().getOutfitByLookType(player, player->getDefaultOutfit().lookType)) {
+	if (const auto outfit = Outfits::getInstance().getOutfitByLookType(subject, subject->getDefaultOutfit().lookType)) {
 		msg.addString(outfit->name);
 	} else {
 		msg.addString("unknown");

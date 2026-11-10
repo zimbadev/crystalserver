@@ -184,6 +184,10 @@ private:
 	void parseInspectionObject(NetworkMessage &msg);
 
 	void parseFriendSystemAction(NetworkMessage &msg);
+	void sendSocialList(uint8_t type);
+	void sendSocialSettings();
+	void sendSocialProfile(uint32_t account, const std::string &name);
+	void inspectSocialCharacter(uint32_t characterId);
 
 	void parseCyclopediaCharacterInfo(NetworkMessage &msg);
 
@@ -382,7 +386,7 @@ private:
 	void sendCyclopediaCharacterItemSummary(const ItemsTierCountList &inventoryItems, const ItemsTierCountList &storeInboxItems, const StashItemList &stashItems, const ItemsTierCountList &depotBoxItems, const ItemsTierCountList &inboxItems);
 	void sendCyclopediaCharacterOutfitsMounts();
 	void sendCyclopediaCharacterStoreSummary();
-	void sendCyclopediaCharacterInspection();
+	void sendCyclopediaCharacterInspection(const std::shared_ptr<Player> &target = nullptr);
 	void sendCyclopediaCharacterBadges();
 	void sendCyclopediaCharacterTitles();
 	void sendCyclopediaCharacterOffenceStats();
