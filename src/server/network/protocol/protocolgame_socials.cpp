@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////
 
-
 #include "server/network/protocol/protocolgame.hpp"
 
 #include "creatures/players/cyclopedia/player_title.hpp"
@@ -36,12 +35,32 @@ namespace {
 	constexpr uint8_t MaxProfileCharacters = 32;
 
 	enum class SocialAction : uint8_t {
-		List = 0, Invitations, Blacklist, Invite, Accept, Decline, Cancel, Block,
-		Unblock, Profile, SetGroup, Search, SetTitle = 14, Settings, SetSettings,
+		List = 0,
+		Invitations,
+		Blacklist,
+		Invite,
+		Accept,
+		Decline,
+		Cancel,
+		Block,
+		Unblock,
+		Profile,
+		SetGroup,
+		Search,
+		SetTitle = 14,
+		Settings,
+		SetSettings,
 	};
 
 	enum class SocialData : uint8_t {
-		Error, NewInvitation, List, Invitations, Blacklist, Profile, NewFriend = 7, Settings,
+		Error,
+		NewInvitation,
+		List,
+		Invitations,
+		Blacklist,
+		Profile,
+		NewFriend = 7,
+		Settings,
 	};
 
 	struct SocialSettings {
@@ -217,7 +236,8 @@ namespace {
 		const auto row = g_database().storeQuery(fmt::format(
 			"SELECT COUNT(*) AS total FROM account_socials "
 			"WHERE (low_account = {} AND (inviter <> 0 OR low_group <> 0 OR low_blocked = 1)) "
-			"OR (high_account = {} AND (inviter <> 0 OR high_group <> 0 OR high_blocked = 1))", account, account
+			"OR (high_account = {} AND (inviter <> 0 OR high_group <> 0 OR high_blocked = 1))",
+			account, account
 		));
 		return row && row->getNumber<uint32_t>("total") < MaxSocialEntries;
 	}
@@ -356,10 +376,14 @@ void ProtocolGame::sendSocialList(uint8_t type) {
 	std::erase_if(entries, [data, account](const SocialEntry &entry) {
 		const auto &relation = entry.relation;
 		switch (data) {
-			case SocialData::List: return !relation.friends();
-			case SocialData::Invitations: return relation.inviter == 0;
-			case SocialData::Blacklist: return !relation.isBlocked(account);
-			default: return true;
+			case SocialData::List:
+				return !relation.friends();
+			case SocialData::Invitations:
+				return relation.inviter == 0;
+			case SocialData::Blacklist:
+				return !relation.isBlocked(account);
+			default:
+				return true;
 		}
 	});
 
