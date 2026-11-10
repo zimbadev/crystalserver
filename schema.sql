@@ -54,6 +54,14 @@ CREATE TABLE IF NOT EXISTS `accounts` (
 -- Table structure `account_socials`
 CREATE TABLE IF NOT EXISTS `account_socials` (
     `low_account` int(11) UNSIGNED NOT NULL,
+    `high_account` int(11) UNSIGNED NOT NULL,
+    `inviter` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `inviter_character` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `invite_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `low_block_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `high_block_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `low_group` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+    `high_group` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
     `low_blocked` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
     `high_blocked` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
     PRIMARY KEY (`low_account`, `high_account`),
