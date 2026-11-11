@@ -187,6 +187,21 @@ private:
 	bool hasExtArea = false;
 };
 
+// Open PvP expert modes: the pure allow/deny decision extracted from Combat::checkExpertPvpMode so it
+// can be unit-tested in isolation. Inputs are pre-gathered facts about the attacker/target pair; the
+// function reads no globals and has no side effects.
+struct PvpFacts {
+	bool targetAttackedMe = false; // the target has attacked us (self-defense)
+	bool inSituation = false; // we are already in a mutual PvP situation with the target
+	bool targetSkulled = false; // the target carries a skull visible to us (yellow-hand fair game)
+	bool attackedAllyOfMe = false; // the target has attacked one of our party/guild members
+	bool partner = false; // the target is in our party
+	bool guildMate = false; // the target is in our guild
+};
+
+// Returns true if `mode` permits attacking a target described by `facts`. Pure decision matrix.
+bool pvpModeAllows(PvpMode_t mode, const PvpFacts &facts);
+
 class Combat {
 public:
 	Combat() = default;
@@ -213,6 +228,15 @@ public:
 
 	static bool isInPvpZone(const std::shared_ptr<Creature> &attacker, const std::shared_ptr<Creature> &target);
 	static bool isProtected(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target);
+	// Open PvP expert modes (dove / white hand / yellow hand / red fist): who may attack whom.
+	static ReturnValue checkExpertPvpMode(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target);
+	static bool isOwnedFieldBystander(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &field);
+	// Open PvP (2014 rules): resolve a field's ownerId (a player GUID) to the owning player, falling
+	// back to a live summon's master. Single source of truth for field-owner lookup.
+	static std::shared_ptr<Player> resolveFieldOwnerPlayer(uint32_t ownerId);
+	// Open PvP (2014 rules): wall cast OUTSIDE a PvP situation = PvE wall — blocks only monsters,
+	// every player (including the caster) walks through it. Flagged at cast time by the rune script.
+	static bool isPveWall(const std::shared_ptr<Item> &item);
 	static bool isPlayerCombat(const std::shared_ptr<Creature> &target);
 	static CombatType_t ConditionToDamageType(ConditionType_t type);
 	static ConditionType_t DamageToConditionType(CombatType_t type);

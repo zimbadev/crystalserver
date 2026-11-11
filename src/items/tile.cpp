@@ -772,10 +772,21 @@ ReturnValue Tile::queryAdd(int32_t, const std::shared_ptr<Thing> &thing, uint32_
 				if (creature && creature->getPlayer()) {
 					if (const auto fieldList = getItemList()) {
 						for (const auto &findfield : *fieldList) {
-							if (findfield && (findfield->getID() == ITEM_WILDGROWTH_SAFE || findfield->getID() == ITEM_MAGICWALL_SAFE)) {
+							if (!findfield) {
+								continue;
+							}
+
+							if (findfield->getID() == ITEM_WILDGROWTH_SAFE || findfield->getID() == ITEM_MAGICWALL_SAFE) {
 								if (!creature->isInGhostMode()) {
 									g_game().internalRemoveItem(findfield, 1);
 								}
+								return RETURNVALUE_NOERROR;
+							}
+
+							// Open PvP (2014 rules): a magic wall / wild growth blocks only its owner and
+							// players in a PvP situation with him — everyone else walks through while the
+							// wall stays up for those it does block.
+							if ((findfield->getID() == ITEM_MAGICWALL || findfield->getID() == ITEM_WILDGROWTH) && (Combat::isPveWall(findfield) || Combat::isOwnedFieldBystander(creature->getPlayer(), findfield))) {
 								return RETURNVALUE_NOERROR;
 							}
 						}

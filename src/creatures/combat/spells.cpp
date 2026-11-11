@@ -430,6 +430,14 @@ bool Spell::playerSpellCheck(const std::shared_ptr<Player> &player) const {
 		return false;
 	}
 
+	// Open PvP (2014 rules): a player hidden under another player in the tile stack
+	// cannot use aggressive area spells/runes — only the top ("first in stack") player can.
+	if (aggressive && range < 1 && g_game().isExpertPvp() && !player->isFirstInStack()) {
+		player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
+		g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
+		return false;
+	}
+
 	if (aggressive && player->hasCondition(CONDITION_PACIFIED)) {
 		player->sendCancelMessage(RETURNVALUE_YOUAREEXHAUSTED);
 		g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
