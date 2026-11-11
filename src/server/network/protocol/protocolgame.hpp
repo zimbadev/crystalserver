@@ -184,6 +184,7 @@ private:
 	void parseInspectionObject(NetworkMessage &msg);
 
 	void parseFriendSystemAction(NetworkMessage &msg);
+	void sendSocialBadges();
 
 	void parseCyclopediaCharacterInfo(NetworkMessage &msg);
 
