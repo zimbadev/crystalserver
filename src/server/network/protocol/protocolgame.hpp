@@ -188,6 +188,7 @@ private:
 	void sendSocialSettings();
 	void sendSocialProfile(uint32_t account, const std::string &name);
 	void inspectSocialCharacter(uint32_t characterId);
+	void sendSocialBadges();
 
 	void parseCyclopediaCharacterInfo(NetworkMessage &msg);
 
@@ -414,7 +415,7 @@ private:
 	/// CIP SpellDataModification (S 0x60): u16 count + count×(u16 spellId, u8 mod, u32 value).
 	void sendSpellDataModification(const std::vector<std::tuple<uint16_t, uint8_t, uint32_t>> &entries);
 	/// CIP GemAtelierGemRevealed (S 0xC5): u32 gem id (atelier inventory index).
-	void sendGemAtelierGemRevealed(uint32_t gemId);
+	void sendGemAtelierGemRevealed(uint16_t gemIndex);
 	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t soulsealsPoints = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);
 	void sendResourceBalance(Resource_t resourceType);
 	void sendResourceBalance(Resource_t resourceType, uint64_t value);

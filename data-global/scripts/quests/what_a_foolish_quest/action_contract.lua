@@ -4,12 +4,13 @@ function whatFoolishContract.onUse(player, item, fromPosition, target, toPositio
 		return false
 	end
 
-	if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract) < 1 then
+	if player:getStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract) ~= 1 then
 		return false
 	end
 
 	player:say("You sign the contract", TALKTYPE_MONSTER_SAY)
 	player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+	player:setStorageValue(Storage.Quest.U8_1.WhatAFoolishQuest.Contract, 2)
 	item:remove()
 	target:transform(128)
 	return true

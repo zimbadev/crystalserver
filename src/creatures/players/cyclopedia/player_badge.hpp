@@ -29,6 +29,8 @@ struct Badge {
 	std::string m_name {};
 	uint16_t m_amount = 0;
 
+	[[nodiscard]] std::string getDescription() const;
+
 	Badge() = default;
 
 	Badge(uint8_t id, CyclopediaBadge_t type, std::string name, uint16_t amount) :
@@ -51,21 +53,25 @@ public:
 	explicit PlayerBadge(Player &player);
 
 	[[nodiscard]] bool hasBadge(uint8_t id) const;
+	[[nodiscard]] bool isVisible(uint8_t id) const;
+	void setVisible(uint32_t id, bool visible) const;
 	bool add(uint8_t id, uint32_t timestamp = 0);
 	void checkAndUpdateNewBadges();
 	void loadUnlockedBadges();
 	const std::shared_ptr<KV> &getUnlockedKV();
 
 	// Badge Calculate Functions
-	bool accountAge(uint8_t amount) const;
-	bool loyalty(uint8_t amount) const;
+	bool accountAge(uint16_t amount) const;
+	bool loyalty(uint16_t amount) const;
 	std::vector<std::shared_ptr<Player>> getPlayersInfoByAccount(const std::shared_ptr<Account> &acc) const;
-	bool accountAllLevel(uint8_t amount) const;
-	bool accountAllVocations(uint8_t amount) const;
+	bool accountAllLevel(uint16_t amount) const;
+	bool accountAllVocations(uint16_t amount) const;
 	[[nodiscard]] bool tournamentParticipation(uint8_t skill) const;
 	[[nodiscard]] bool tournamentPoints(uint8_t race) const;
 
 private:
+	std::shared_ptr<KV> getVisibilityKV() const;
+
 	// {badge ID, time when it was unlocked}
 	std::shared_ptr<KV> m_badgeUnlockedKV;
 	std::vector<std::pair<Badge, uint32_t>> m_badgesUnlocked;

@@ -2471,6 +2471,57 @@ void ProtocolGame::sendItemInspection(uint16_t itemId, uint8_t itemCount, const 
 	writeToOutputBuffer(msg);
 }
 
+void ProtocolGame::parseFriendSystemAction(NetworkMessage &msg) {
+	if (oldProtocol) {
+		return;
+	}
+
+	const uint8_t action = msg.getByte();
+	switch (action) {
+		case 0x0C: // Request the account badge catalog.
+			sendSocialBadges();
+			break;
+		case 0x0D: { // Change badge visibility.
+			const auto badgeId = msg.get<uint32_t>();
+			const uint8_t visible = msg.getByte();
+			if (!msg.isOverrun() && visible <= 1) {
+				player->badge()->setVisible(badgeId, visible != 0);
+				sendSocialBadges();
+			}
+			break;
+		}
+		case 0x0E: {
+			const uint8_t titleId = msg.getByte();
+			if (!msg.isOverrun()) {
+				g_game().playerFriendSystemAction(player, action, titleId);
+			}
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+void ProtocolGame::sendSocialBadges() {
+	// Tibia 15.30 FriendSystemData (0x74), badge catalog (0x06).
+	const auto badges = g_game().getBadges();
+	const auto &playerBadge = player->badge();
+
+	NetworkMessage msg;
+	msg.addByte(0x74);
+	msg.addByte(0x06);
+	msg.addByte(static_cast<uint8_t>(badges.size()));
+	for (const auto &badge : badges) {
+		const bool unlocked = playerBadge->hasBadge(badge.m_id);
+		msg.add<uint32_t>(badge.m_id);
+		msg.addString(badge.m_name);
+		msg.addString(badge.getDescription());
+		msg.addByte(unlocked);
+		msg.addByte(unlocked && playerBadge->isVisible(badge.m_id));
+	}
+	writeToOutputBuffer(msg);
+}
+
 void ProtocolGame::parseCyclopediaCharacterInfo(NetworkMessage &msg) {
 	if (oldProtocol) {
 		return;
@@ -5551,12 +5602,14 @@ void ProtocolGame::sendBlessStatus() {
 
 	// Ignore Twist of Fate (Id 1)
 	uint8_t blessCount = 0;
+	uint16_t blessingsMask = 0;
 	for (auto bless : magic_enum::enum_values<Blessings>()) {
-		if (bless == Blessings::TwistOfFate) {
-			continue;
-		}
-		if (player->hasBlessing(enumToValue(bless))) {
-			blessCount++;
+		auto val = enumToValue(bless);
+		if (player->hasBlessing(val)) {
+			blessingsMask |= (1 << val);
+			if (bless != Blessings::TwistOfFate) {
+				blessCount++;
+			}
 		}
 	}
 
@@ -5567,7 +5620,7 @@ void ProtocolGame::sendBlessStatus() {
 		msg.add<uint16_t>(blessCount >= 5 ? 0x01 : 0x00);
 	} else {
 		bool glow = player->getVocationId() > VOCATION_NONE && ((g_configManager().getBoolean(INVENTORY_GLOW) && blessCount >= 5) || player->getLevel() < g_configManager().getNumber(ADVENTURERSBLESSING_LEVEL));
-		msg.add<uint16_t>(glow ? 1 : 0); // Show up the glowing effect in items if you have all blesses or adventurer's blessing
+		msg.add<uint16_t>(blessingsMask > 0 ? blessingsMask : (glow ? 1 : 0)); // Bitwise blessings mask or glow flag
 		msg.addByte((blessCount >= 7) ? 3 : ((blessCount >= 5) ? 2 : 1)); // 1 = Disabled | 2 = normal | 3 = green
 	}
 
@@ -6140,14 +6193,14 @@ void ProtocolGame::sendSpellDataModification(const std::vector<std::tuple<uint16
 	writeToOutputBuffer(out);
 }
 
-void ProtocolGame::sendGemAtelierGemRevealed(uint32_t gemId) {
+void ProtocolGame::sendGemAtelierGemRevealed(uint16_t gemIndex) {
 	if (!player || oldProtocol) {
 		return;
 	}
 
 	NetworkMessage out;
 	out.addByte(0xC5);
-	out.add<uint32_t>(gemId);
+	out.add<uint32_t>(gemIndex);
 	writeToOutputBuffer(out);
 }
 
