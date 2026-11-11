@@ -529,12 +529,47 @@ void ProtocolGame::inspectSocialCharacter(uint32_t characterId) {
 	sendCyclopediaCharacterInspection(target);
 }
 
+void ProtocolGame::sendSocialBadges() {
+	// Tibia 15.30 FriendSystemData (0x74), badge catalog (0x06).
+	const auto badges = g_game().getBadges();
+	const auto &playerBadge = player->badge();
+
+	NetworkMessage msg;
+	msg.addByte(0x74);
+	msg.addByte(0x06);
+	msg.addByte(static_cast<uint8_t>(badges.size()));
+	for (const auto &badge : badges) {
+		const bool unlocked = playerBadge->hasBadge(badge.m_id);
+		msg.add<uint32_t>(badge.m_id);
+		msg.addString(badge.m_name);
+		msg.addString(badge.getDescription());
+		msg.addByte(unlocked);
+		msg.addByte(unlocked && playerBadge->isVisible(badge.m_id));
+	}
+	writeToOutputBuffer(msg);
+}
+
 void ProtocolGame::parseFriendSystemAction(NetworkMessage &msg) {
 	if (oldProtocol) {
 		return;
 	}
 
-	const auto action = static_cast<SocialAction>(msg.getByte());
+	const auto rawAction = msg.getByte();
+	if (rawAction == 0x0C) {
+		sendSocialBadges();
+		return;
+	}
+	if (rawAction == 0x0D) {
+		const auto badgeId = msg.get<uint32_t>();
+		const auto visible = msg.getByte();
+		if (!msg.isOverrun() && visible <= 1) {
+			player->badge()->setVisible(badgeId, visible != 0);
+			sendSocialBadges();
+		}
+		return;
+	}
+
+	const auto action = static_cast<SocialAction>(rawAction);
 	if (msg.isOverrun()) {
 		return;
 	}
