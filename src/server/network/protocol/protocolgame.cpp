@@ -11987,7 +11987,7 @@ void ProtocolGame::sendWeaponProficiencyExperience(const uint16_t itemId, const 
 	msg.addByte(0x5C);
 	msg.add<uint16_t>(itemId);
 	msg.add<uint32_t>(experience);
-	msg.addByte(0x01);
+	msg.addByte(0x00);
 
 	writeToOutputBuffer(msg);
 }
