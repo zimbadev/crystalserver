@@ -106,16 +106,16 @@ namespace InternalPlayerWheel {
 			// Increase data
 			const auto increaseData = spellData.increase;
 			if (increaseData.damage > 0) {
-				spell->setWheelOfDestinyBoost(WheelSpellBoost_t::DAMAGE, gradeType, increaseData.damage);
+				spell->setWheelOfDestinyBoost(WheelSpellBoost_t::DAMAGE, gradeType, static_cast<int32_t>(std::lround(increaseData.damage)));
 			}
 			if (increaseData.heal > 0) {
-				spell->setWheelOfDestinyBoost(WheelSpellBoost_t::HEAL, gradeType, increaseData.heal);
+				spell->setWheelOfDestinyBoost(WheelSpellBoost_t::HEAL, gradeType, static_cast<int32_t>(std::lround(increaseData.heal)));
 			}
 			if (increaseData.criticalDamage > 0) {
-				spell->setWheelOfDestinyBoost(WheelSpellBoost_t::CRITICAL_DAMAGE, gradeType, increaseData.criticalDamage);
+				spell->setWheelOfDestinyBoost(WheelSpellBoost_t::CRITICAL_DAMAGE, gradeType, static_cast<int32_t>(std::lround(increaseData.criticalDamage)));
 			}
 			if (increaseData.criticalChance > 0) {
-				spell->setWheelOfDestinyBoost(WheelSpellBoost_t::CRITICAL_CHANCE, gradeType, increaseData.criticalChance);
+				spell->setWheelOfDestinyBoost(WheelSpellBoost_t::CRITICAL_CHANCE, gradeType, static_cast<int32_t>(std::lround(increaseData.criticalChance)));
 			}
 
 			// Decrease data
@@ -284,7 +284,7 @@ void IOWheel::initializeDruidSpells() {
 	m_wheelBonusData.spells.druid[2].grade[2].increase.aditionalTarget = 1; // II +1 target (forked_*.lua reads getWheelSpellAdditionalTarget)
 
 	m_wheelBonusData.spells.druid[3].name = "Terra Wave";
-	m_wheelBonusData.spells.druid[3].grade[1].increase.damage = static_cast<int>(std::round(6.5));
+	m_wheelBonusData.spells.druid[3].grade[1].increase.damage = 6.5;
 	m_wheelBonusData.spells.druid[3].grade[2].leech.life = 10; // Vocation Adjustment: II 10% life leech (was 5%)
 
 	m_wheelBonusData.spells.druid[4].name = "Heal Friend";
@@ -299,7 +299,7 @@ void IOWheel::initializeKnightSpells() {
 
 	m_wheelBonusData.spells.knight[1].name = "Groundshaker";
 	m_wheelBonusData.spells.knight[1].grade[1].decrease.cooldown = 2; // Vocation Adjustment: swapped I<->II
-	m_wheelBonusData.spells.knight[1].grade[2].increase.damage = static_cast<int>(std::round(12.5));
+	m_wheelBonusData.spells.knight[1].grade[2].increase.damage = 12.5;
 
 	m_wheelBonusData.spells.knight[2].name = "Shield Slam"; // Vocation Adjustment: replaces Chivalrous Challenge
 	m_wheelBonusData.spells.knight[2].grade[1].leech.life = 15; // I +15% life leech
@@ -334,7 +334,7 @@ void IOWheel::initializePaladinSpells() {
 
 	m_wheelBonusData.spells.paladin[4].name = "Divine Caldera";
 	m_wheelBonusData.spells.paladin[4].grade[1].decrease.manaCost = 20;
-	m_wheelBonusData.spells.paladin[4].grade[2].increase.damage = static_cast<int>(std::round(8.5));
+	m_wheelBonusData.spells.paladin[4].grade[2].increase.damage = 8.5;
 }
 
 void IOWheel::initializeSorcererSpells() {
