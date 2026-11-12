@@ -24,8 +24,6 @@ jobs:
           MYSQL_DATABASE: crystalserver
           MYSQL_USER: crystalserver
           MYSQL_PASSWORD: crystalserver
-        ports:
-          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       fail-fast: false
@@ -33,11 +31,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
-      - name: 📌 MySQL Start & init & show db
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -e 'CREATE DATABASE crystalserver;' -uroot -proot
-          mysql -e "SHOW DATABASES" -uroot -proot
       - name: Import Crystal Server Schema
+        env:
+          MYSQL_CONTAINER: ${{ job.services.mysql.id }}
         run: |
-          mysql -uroot -proot crystalserver < schema.sql
+          docker exec -i "$MYSQL_CONTAINER" mysql -uroot -proot crystalserver < schema.sql

@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ('db_version', '67', 1), ('motd_hash', '', 1), ('motd_num', '0', 1), ('players_record', '0', 1);
+INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ('db_version', '68', 1), ('motd_hash', '', 1), ('motd_num', '0', 1), ('players_record', '0', 1);
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -50,6 +50,25 @@ CREATE TABLE IF NOT EXISTS `accounts` (
     INDEX `accounts_email` (`email`),
     INDEX `accounts_password` (`password`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Table structure `account_socials`
+CREATE TABLE IF NOT EXISTS `account_socials` (
+    `low_account` int(11) UNSIGNED NOT NULL,
+    `high_account` int(11) UNSIGNED NOT NULL,
+    `inviter` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `inviter_character` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `invite_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `low_block_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `high_block_date` int(11) UNSIGNED NOT NULL DEFAULT 0,
+    `low_group` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+    `high_group` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+    `low_blocked` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+    `high_blocked` tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY (`low_account`, `high_account`),
+    KEY `account_socials_high` (`high_account`),
+    FOREIGN KEY (`low_account`) REFERENCES `accounts` (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`high_account`) REFERENCES `accounts` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Table structure `coins_transactions`
 CREATE TABLE IF NOT EXISTS `coins_transactions` (

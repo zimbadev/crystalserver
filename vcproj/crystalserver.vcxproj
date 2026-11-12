@@ -420,6 +420,7 @@
     <ClCompile Include="..\src\server\network\message\outputmessage.cpp" />
     <ClCompile Include="..\src\server\network\protocol\protocol.cpp" />
     <ClCompile Include="..\src\server\network\protocol\protocolgame.cpp" />
+    <ClCompile Include="..\src\server\network\protocol\protocolgame_socials.cpp" />
     <ClCompile Include="..\src\server\network\protocol\protocollogin.cpp" />
     <ClCompile Include="..\src\server\network\protocol\protocolstatus.cpp" />
     <ClCompile Include="..\src\server\network\webhook\webhook.cpp" />
