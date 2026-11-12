@@ -13,9 +13,11 @@ function energyField.onStepIn(creature, item, position, fromPosition)
 		return true
 	end
 
-	if creature:isPlayer() or (creature:isMonster() and creature:getMaster() and creature:getMaster():isPlayer()) then
-		position:sendMagicEffect(CONST_ME_POFF)
-		return true
+	if item:getId() == 2135 then
+		if not creature:isMonster() or creature:getMaster() then
+			position:sendMagicEffect(CONST_ME_POFF)
+			return true
+		end
 	end
 
 	doTargetCombatHealth(0, creature, COMBAT_ENERGYDAMAGE, -30, -30, CONST_ME_ENERGYHIT)
@@ -25,5 +27,5 @@ function energyField.onStepIn(creature, item, position, fromPosition)
 end
 
 energyField:type("stepin")
-energyField:id(2135)
+energyField:id(2122, 2126, 2135)
 energyField:register()
