@@ -94,6 +94,11 @@ const std::set<std::string> deniedNames = {
 };
 
 bool Bank::transferTo(const std::shared_ptr<Bank> &destination, uint64_t amount) {
+	if (amount == 0) {
+		g_logger().warn("Bank::transferTo: zero amount transfer denied");
+		return false;
+	}
+
 	if (!destination) {
 		g_logger().error("Bank::transferTo: destination is nullptr");
 		return false;
