@@ -3103,8 +3103,13 @@ void ProtocolGame::parsePartyAnalyzerAction(NetworkMessage &msg) const {
 	} else if (action == PARTYANALYZERACTION_PRICETYPE) {
 		party->switchAnalyzerPriceType();
 	} else if (action == PARTYANALYZERACTION_PRICEVALUE) {
-		auto size = msg.get<uint16_t>();
-		for (uint16_t i = 1; i <= size; i++) {
+		const auto size = msg.get<uint16_t>();
+		// each entry is u16 itemId + u64 price; reject counts the payload cannot hold
+		static constexpr int32_t entrySize = sizeof(uint16_t) + sizeof(uint64_t);
+		if (!msg.canRead(static_cast<int32_t>(size) * entrySize)) {
+			return;
+		}
+		for (uint16_t i = 0; i < size; ++i) {
 			auto itemId = msg.get<uint16_t>();
 			auto price = msg.get<uint64_t>();
 			player->setItemCustomPrice(itemId, price);
@@ -4258,16 +4263,21 @@ void ProtocolGame::parseCyclopediaMapAction(NetworkMessage &msg, uint8_t recvbyt
 		body.push_back(msg.getByte());
 	}
 	size_t p = 0;
-	auto readVarint = [&](uint64_t &value) -> bool {
+	// reads one varint without going past `limit` (the end of the body or of the current field)
+	auto readVarint = [&](uint64_t &value, size_t limit) -> bool {
 		value = 0;
 		int shift = 0;
-		while (p < body.size()) {
+		while (p < limit) {
 			const uint8_t b = body[p++];
 			value |= static_cast<uint64_t>(b & 0x7F) << shift;
 			if (!(b & 0x80)) {
 				return true;
 			}
 			shift += 7;
+			// a uint64 varint has at most 10 bytes; a longer one would shift past 63 bits
+			if (shift >= 64) {
+				return false;
+			}
 		}
 		return false;
 	};
@@ -4277,34 +4287,38 @@ void ProtocolGame::parseCyclopediaMapAction(NetworkMessage &msg, uint8_t recvbyt
 	std::string dump;
 	while (p < body.size()) {
 		uint64_t tag;
-		if (!readVarint(tag)) {
+		if (!readVarint(tag, body.size())) {
 			break;
 		}
 		const auto fn = static_cast<uint32_t>(tag >> 3);
 		const auto wt = static_cast<uint32_t>(tag & 7);
 		if (wt == 0) {
 			uint64_t v;
-			if (!readVarint(v)) {
+			if (!readVarint(v, body.size())) {
 				break;
 			}
 			top[fn] = v;
 			dump += fmt::format("f{}={} ", fn, v);
 		} else if (wt == 2) {
 			uint64_t ln;
-			if (!readVarint(ln)) {
+			if (!readVarint(ln, body.size())) {
 				break;
 			}
-			const size_t end = std::min(body.size(), p + static_cast<size_t>(ln));
+			// compare against the remaining bytes before adding, so p + ln cannot wrap and move p backwards
+			if (ln > body.size() - p) {
+				break;
+			}
+			const size_t end = p + static_cast<size_t>(ln);
 			while (p < end) {
 				uint64_t tag2;
-				if (!readVarint(tag2)) {
+				if (!readVarint(tag2, end)) {
 					break;
 				}
 				if ((tag2 & 7) != 0) {
 					break;
 				}
 				uint64_t v2;
-				if (!readVarint(v2)) {
+				if (!readVarint(v2, end)) {
 					break;
 				}
 				nested[fn][static_cast<uint32_t>(tag2 >> 3)] = v2;
