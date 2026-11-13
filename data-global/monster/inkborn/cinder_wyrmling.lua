@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Cinder Wyrmling")
 local monster = {}
 
 monster.description = "a cinder wyrmling"
-monster.experience = 1950
+monster.experience = 2350
 monster.outfit = {
 	lookType = 1850,
 	lookHead = 77,
@@ -55,7 +55,7 @@ monster.loot = {
 
 monster.attacks = {
 	-- Fire: Strike (100-200)
-	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_FIREDAMAGE, minDamage = -100, maxDamage = -200, range = 7, shootEffect = CONST_ANI_FIRE, effect = CONST_ME_FIREAREA, target = true },
+	{ name = "combat", interval = 2000, chance = 20, type = COMBAT_FIREDAMAGE, minDamage = -260, maxDamage = -290, range = 7, shootEffect = CONST_ANI_FIRE, effect = CONST_ME_FIREAREA, target = true },
 	-- Fire: Wave (200-300)
 	{ name = "combat", interval = 2000, chance = 15, type = COMBAT_FIREDAMAGE, minDamage = -200, maxDamage = -300, radius = 4, effect = CONST_ME_FIREAREA, target = false },
 }
@@ -67,15 +67,15 @@ monster.defenses = {
 }
 
 monster.elements = {
-	{ type = COMBAT_PHYSICALDAMAGE, percent = -5 },
+	{ type = COMBAT_PHYSICALDAMAGE, percent = 5 },
 	{ type = COMBAT_ENERGYDAMAGE, percent = 0 },
-	{ type = COMBAT_EARTHDAMAGE, percent = 5 },
-	{ type = COMBAT_FIREDAMAGE, percent = -20 },
+	{ type = COMBAT_EARTHDAMAGE, percent = -5 },
+	{ type = COMBAT_FIREDAMAGE, percent = 20 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 10 },
-	{ type = COMBAT_HOLYDAMAGE, percent = -5 },
+	{ type = COMBAT_ICEDAMAGE, percent = -10 },
+	{ type = COMBAT_HOLYDAMAGE, percent = 5 },
 	{ type = COMBAT_DEATHDAMAGE, percent = 0 },
 }
 

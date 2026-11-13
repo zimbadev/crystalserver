@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Bulltaur Alchemist")
 local monster = {}
 
 monster.description = "a bulltaur alchemist"
-monster.experience = 4350
+monster.experience = 4500
 monster.outfit = {
 	lookType = 1718,
 	lookHead = 0,
@@ -104,7 +104,7 @@ monster.attacks = {
 
 monster.defenses = {
 	defense = 30,
-	armor = 78,
+	armor = 67,
 	mitigation = 1.22,
 }
 
