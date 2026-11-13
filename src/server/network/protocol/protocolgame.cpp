@@ -3103,8 +3103,13 @@ void ProtocolGame::parsePartyAnalyzerAction(NetworkMessage &msg) const {
 	} else if (action == PARTYANALYZERACTION_PRICETYPE) {
 		party->switchAnalyzerPriceType();
 	} else if (action == PARTYANALYZERACTION_PRICEVALUE) {
-		auto size = msg.get<uint16_t>();
-		for (uint16_t i = 1; i <= size; i++) {
+		const auto size = msg.get<uint16_t>();
+		// each entry is u16 itemId + u64 price; reject counts the payload cannot hold
+		static constexpr int32_t entrySize = sizeof(uint16_t) + sizeof(uint64_t);
+		if (!msg.canRead(static_cast<int32_t>(size) * entrySize)) {
+			return;
+		}
+		for (uint16_t i = 0; i < size; ++i) {
 			auto itemId = msg.get<uint16_t>();
 			auto price = msg.get<uint64_t>();
 			player->setItemCustomPrice(itemId, price);
@@ -4268,6 +4273,10 @@ void ProtocolGame::parseCyclopediaMapAction(NetworkMessage &msg, uint8_t recvbyt
 				return true;
 			}
 			shift += 7;
+			// a uint64 varint has at most 10 bytes; a longer one would shift past 63 bits
+			if (shift >= 64) {
+				return false;
+			}
 		}
 		return false;
 	};
@@ -4294,7 +4303,11 @@ void ProtocolGame::parseCyclopediaMapAction(NetworkMessage &msg, uint8_t recvbyt
 			if (!readVarint(ln)) {
 				break;
 			}
-			const size_t end = std::min(body.size(), p + static_cast<size_t>(ln));
+			// compare against the remaining bytes before adding, so p + ln cannot wrap and move p backwards
+			if (ln > body.size() - p) {
+				break;
+			}
+			const size_t end = p + static_cast<size_t>(ln);
 			while (p < end) {
 				uint64_t tag2;
 				if (!readVarint(tag2)) {
