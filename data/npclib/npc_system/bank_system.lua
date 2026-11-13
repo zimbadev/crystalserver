@@ -226,7 +226,7 @@ function Npc:parseBank(message, npc, creature, npcHandler)
 	elseif MsgContains(message, "transfer") then
 		count[playerId] = getMoneyCount(message)
 		transfer[playerId] = string.match(message, "[^transfer %d+ to ].+")
-		if string.match(message, "%d+") then
+		if string.match(message, "%d+") and isValidMoney(count[playerId]) then
 			if player:getBankBalance() < count[playerId] then
 				npcHandler:say("There is not enough gold on your account.", npc, creature)
 				npcHandler:setTopic(playerId, 0)
@@ -273,6 +273,11 @@ function Npc:parseBank(message, npc, creature, npcHandler)
 		npcHandler:setTopic(playerId, 11)
 	elseif npcHandler:getTopic(playerId) == 11 then
 		count[playerId] = getMoneyCount(message)
+		if not isValidMoney(count[playerId]) then
+			npcHandler:say("Please tell me a valid amount of gold to transfer.", npc, creature)
+			npcHandler:setTopic(playerId, 0)
+			return true
+		end
 		if not Bank.hasBalance(player, count[playerId]) then
 			npcHandler:say("There is not enough gold on your account.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
@@ -452,7 +457,7 @@ function Npc:parseGuildBank(message, npc, creature, playerId, npcHandler)
 			npcHandler:setTopic(playerId, 0)
 			return false
 		end
-		if string.match(message, "%d+") then
+		if string.match(message, "%d+") and isValidMoney(count[playerId]) then
 			count[playerId] = getMoneyCount(message)
 			if not Bank.hasBalance(player, count[playerId]) then
 				npcHandler:say("You do not have enough gold.", npc, creature)
@@ -527,7 +532,7 @@ function Npc:parseGuildBank(message, npc, creature, playerId, npcHandler)
 			return false
 		end
 
-		if string.match(message, "%d+") then
+		if string.match(message, "%d+") and isValidMoney(count[playerId]) then
 			count[playerId] = getMoneyCount(message)
 			if isValidMoney(count[playerId]) then
 				npcHandler:say("Are you sure you wish to withdraw %d gold from your guild account?", npc, creature)
@@ -601,7 +606,7 @@ function Npc:parseGuildBank(message, npc, creature, playerId, npcHandler)
 			return false
 		end
 
-		if string.match(message, "%d+") then
+		if string.match(message, "%d+") and isValidMoney(count[playerId]) then
 			count[playerId] = getMoneyCount(message)
 			if isValidMoney(count[playerId]) then
 				transfer[playerId] = string.match(message, "to%s*(.+)$")
