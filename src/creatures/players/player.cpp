@@ -1351,6 +1351,7 @@ void Player::addStorageValue(const uint32_t key, const int32_t value, const bool
 	if (value != -1) {
 		int32_t oldValue = getStorageValue(key);
 		storageMap[key] = value;
+		setStorageModified(true);
 
 		if (!isLogin) {
 			auto currentFrameTime = g_dispatcher().getDispatcherCycle();
@@ -1358,8 +1359,34 @@ void Player::addStorageValue(const uint32_t key, const int32_t value, const bool
 			g_callbacks().executeCallback(EventCallback_t::playerOnStorageUpdate, &EventCallback::playerOnStorageUpdate, getPlayer(), key, value, oldValue, currentFrameTime);
 		}
 	} else {
-		storageMap.erase(key);
+		if (storageMap.erase(key) > 0) {
+			setStorageModified(true);
+		}
 	}
+}
+
+void Player::setStorageModified(bool modified) {
+	storageModified = modified;
+}
+
+void Player::setSpellsModified(bool modified) {
+	spellsModified = modified;
+}
+
+void Player::setKillsModified(bool modified) {
+	killsModified = modified;
+}
+
+bool Player::isStorageModified() const {
+	return storageModified;
+}
+
+bool Player::isSpellsModified() const {
+	return spellsModified;
+}
+
+bool Player::isKillsModified() const {
+	return killsModified;
 }
 
 int32_t Player::getStorageValue(const uint32_t key) const {
@@ -3160,11 +3187,14 @@ void Player::setEditHouse(const std::shared_ptr<House> &house, uint32_t listId) 
 void Player::learnInstantSpell(const std::string &spellName) {
 	if (!hasLearnedInstantSpell(spellName)) {
 		learnedInstantSpellList.emplace(asLowerCaseString(spellName));
+		setSpellsModified(true);
 	}
 }
 
 void Player::forgetInstantSpell(const std::string &spellName) {
-	learnedInstantSpellList.erase(asLowerCaseString(spellName));
+	if (learnedInstantSpellList.erase(asLowerCaseString(spellName)) > 0) {
+		setSpellsModified(true);
+	}
 }
 
 bool Player::hasLearnedInstantSpell(const std::string &spellName) const {
@@ -7217,6 +7247,7 @@ void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked) {
 	sendTextMessage(MESSAGE_EVENT_ADVANCE, "Warning! The murder of " + attacked->getName() + " was not justified.");
 
 	unjustifiedKills.emplace_back(attacked->getGUID(), time(nullptr), true);
+	setKillsModified(true);
 
 	uint8_t dayKills = 0;
 	uint8_t weekKills = 0;

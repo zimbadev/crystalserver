@@ -441,6 +441,7 @@ void IOLoginDataLoad::loadPlayerKills(const std::shared_ptr<Player> &player, DBR
 			}
 		} while (result->next());
 	}
+	player->setKillsModified(false);
 }
 
 void IOLoginDataLoad::loadPlayerGuild(const std::shared_ptr<Player> &player, DBResult_ptr result) {
@@ -578,6 +579,7 @@ void IOLoginDataLoad::loadPlayerInstantSpellList(const std::shared_ptr<Player> &
 			player->learnedInstantSpellList.emplace(result->getString("name"));
 		} while (result->next());
 	}
+	player->setSpellsModified(false);
 }
 
 void IOLoginDataLoad::loadPlayerInventoryItems(const std::shared_ptr<Player> &player, DBResult_ptr result) {
@@ -787,6 +789,7 @@ void IOLoginDataLoad::loadPlayerStorageMap(const std::shared_ptr<Player> &player
 			player->addStorageValue(result->getNumber<uint32_t>("key"), result->getNumber<int32_t>("value"), true);
 		} while (result->next());
 	}
+	player->setStorageModified(false);
 }
 
 void IOLoginDataLoad::loadPlayerVip(const std::shared_ptr<Player> &player, DBResult_ptr result) {

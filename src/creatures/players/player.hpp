@@ -358,6 +358,12 @@ public:
 	void setMountsModified(bool modified);
 	bool isOutfitsModified() const;
 	bool isMountsModified() const;
+	void setStorageModified(bool modified);
+	void setSpellsModified(bool modified);
+	void setKillsModified(bool modified);
+	bool isStorageModified() const;
+	bool isSpellsModified() const;
+	bool isKillsModified() const;
 
 	uint16_t getDodgeChance() const;
 
@@ -1856,6 +1862,9 @@ private:
 	std::vector<std::shared_ptr<Party>> invitePartyList;
 	std::vector<uint32_t> modalWindows;
 	std::unordered_set<std::string> learnedInstantSpellList;
+	bool storageModified = true;
+	bool spellsModified = true;
+	bool killsModified = true;
 
 	// TODO: This variable is only temporarily used when logging in, get rid of it somehow.
 	std::vector<std::shared_ptr<Condition>> storedConditionList;
