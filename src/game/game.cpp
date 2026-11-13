@@ -9099,15 +9099,11 @@ void Game::checkLight() {
 
 	LightInfo lightInfo = getWorldLightInfo();
 
-	if (lightChange) {
-		for ([[maybe_unused]] const auto &[mapPlayerId, mapPlayer] : getPlayers()) {
+	for ([[maybe_unused]] const auto &[mapPlayerId, mapPlayer] : getPlayers()) {
+		if (lightChange) {
 			mapPlayer->sendWorldLight(lightInfo);
-			mapPlayer->sendTibiaTime(lightHour);
 		}
-	} else {
-		for ([[maybe_unused]] const auto &[mapPlayerId, mapPlayer] : getPlayers()) {
-			mapPlayer->sendTibiaTime(lightHour);
-		}
+		mapPlayer->sendTibiaTime(lightHour);
 	}
 	if (currentLightState != lightState) {
 		currentLightState = lightState;
