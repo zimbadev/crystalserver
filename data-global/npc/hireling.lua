@@ -1,3 +1,115 @@
+local HIRELING_BLOCKED_SUBSTRINGS = {
+	"ass",
+	"asshole",
+	"fag",
+	"fuck",
+	"idiot",
+	"lunatic",
+	"shit",
+	"stupid",
+	"tyrant", -- keep adding keywords you want to block in hireling names
+}
+
+local HIRELING_BLOCKED_WORDS = {
+	"account",
+	"admin",
+	"cancel",
+	"cm",
+	"crystal",
+	"gamemaster",
+	"gm",
+	"god",
+	"owner",
+	"paco",
+	"server",
+	"staff",
+	"tibia",
+	"tryller",
+	"tutor",
+	"yes", -- add here concepts you want to block in hireling names
+}
+
+local function isHirelingNameAllowed(name)
+	local lowered = name:lower()
+
+	for word in lowered:gmatch("%a+") do
+		for _, blocked in ipairs(HIRELING_BLOCKED_WORDS) do
+			if word == blocked then
+				return false, "That name is not allowed."
+			end
+		end
+	end
+
+	local compact = lowered:gsub("%s+", ""):gsub("(%a)%1+", "%1")
+	for _, blocked in ipairs(HIRELING_BLOCKED_SUBSTRINGS) do
+		if compact:find(blocked, 1, true) then
+			return false, "That name is not allowed."
+		end
+	end
+	return true
+end
+
+local function hirelingNameExists(name)
+	local resultId = db.storeQuery("SELECT 1 FROM `player_hirelings` WHERE LOWER(`name`) = " .. db.escapeString(name:lower()) .. " LIMIT 1")
+	if resultId then
+		Result.free(resultId)
+		return true
+	end
+	return false
+end
+
+local function npcNameExists(name)
+	return Npc(name) ~= nil
+end
+
+local function characterNameExists(name)
+	local resultId = db.storeQuery("SELECT 1 FROM `players` WHERE LOWER(`name`) = " .. db.escapeString(name:lower()) .. " LIMIT 1")
+	if resultId then
+		Result.free(resultId)
+		return true
+	end
+	return false
+end
+
+-- Hireling rename / sex change services (paid with Tibia Coins: non-transferable first, then transferable)
+local HIRELING_RENAME_PRICE = 250
+local HIRELING_SEXCHANGE_PRICE = 120
+
+local function chargeHirelingService(player, price, description, successMessage)
+	local tibia = player:getTibiaCoins() or 0
+	local transferable = player:getTransferableCoins() or 0
+	if tibia + transferable < price then
+		return false
+	end
+
+	local fromTibia = math.min(tibia, price)
+	local fromTransferable = price - fromTibia
+
+	if fromTibia > 0 and not player:removeCoinsBalance(fromTibia) then
+		return false
+	end
+	if fromTransferable > 0 and not player:removeTransferableCoinsBalance(fromTransferable) then
+		if fromTibia > 0 then
+			player:addCoinsBalance(fromTibia, true) -- refund
+		end
+		return false
+	end
+
+	local accountId = player:getAccountId()
+	if fromTibia > 0 then
+		GameStore.insertHistory(accountId, GameStore.HistoryTypes.HISTORY_TYPE_NONE, description, -fromTibia, GameStore.CoinType.Coin)
+	end
+	if fromTransferable > 0 then
+		GameStore.insertHistory(accountId, GameStore.HistoryTypes.HISTORY_TYPE_NONE, description, -fromTransferable, GameStore.CoinType.Transferable)
+	end
+	sendUpdatedStoreBalances(player:getId())
+
+	if successMessage then
+		addPlayerEvent(sendStorePurchaseSuccessful, 550, player:getId(), successMessage)
+	end
+	return true
+end
+
 function createHirelingType(HirelingName)
 	local npcType = Game.createNpcType(HirelingName)
 
@@ -2048,6 +2160,7 @@ function createHirelingType(HirelingName)
 	local hireling = nil
 	local count = {} -- for banking
 	local transfer = {} -- for banking
+	local hcPending = {} -- for rename
 
 	npcType.onAppear = function(npc, creature)
 		npcHandler:onAppear(npc, creature)
@@ -2065,6 +2178,7 @@ function createHirelingType(HirelingName)
 
 	npcType.onDisappear = function(npc, creature)
 		enableBankSystem[creature:getId()] = nil
+		hcPending[creature:getId()] = nil
 		npcHandler:onDisappear(npc, creature)
 	end
 
@@ -2074,6 +2188,7 @@ function createHirelingType(HirelingName)
 
 	npcType.onCloseChannel = function(npc, creature)
 		enableBankSystem[creature:getId()] = nil
+		hcPending[creature:getId()] = nil
 		npcHandler:onCloseChannel(npc, creature)
 	end
 
@@ -2091,6 +2206,9 @@ function createHirelingType(HirelingName)
 		IMBUEMENT_START = 2000,
 		IMBUEMENT_BUY = 2001,
 		IMBUEMENT_END = 2002,
+		RENAME_NAME = 1500,
+		RENAME_CONFIRM = 1501,
+		SEX_CONFIRM = 1502,
 	}
 
 	local TOPIC_FOOD = {
@@ -2143,7 +2261,7 @@ function createHirelingType(HirelingName)
 		local player = Player(creature)
 
 		if player:getGuid() == hireling:getOwnerId() then
-			str = str .. " If you want, I can go back to my {lamp} or maybe change my {outfit}."
+			str = str .. " If you want, I can go back to my {lamp} or maybe change my {outfit}. You can also {rename} me or change my {gender}."
 		end
 		return str
 	end
@@ -2289,6 +2407,157 @@ function createHirelingType(HirelingName)
 	end
 	-- ======================[[ END IMBUEMENT FUNCTIONS ]] ======================== --
 
+	-- ===================[[ RENAME / CHANGE SEX SERVICES ]] =================== --
+	local function handleHirelingChanges(npc, creature, message)
+		local player = Player(creature)
+		local playerId = player:getId()
+		local topic = npcHandler:getTopic(playerId)
+
+		if player:getGuid() ~= hireling:getOwnerId() then
+			return false
+		end
+
+		if topic ~= TOPIC.BANK and MsgContains(message, "rename") then
+			hcPending[playerId] = nil
+			npcHandler:setTopic(playerId, TOPIC.RENAME_NAME)
+			npcHandler:say(string.format("Do you want to rename me? It costs %d Tibia Coins. Please, tell me my new name or {cancel} the operation.", HIRELING_RENAME_PRICE), npc, creature)
+			return true
+		end
+
+		if topic == TOPIC.RENAME_NAME then
+			local lowered = message:lower()
+			if lowered == "cancel" or lowered == "no" then
+				npcHandler:setTopic(playerId, TOPIC.SERVICES)
+				npcHandler:say("Alright then, I will keep my name.", npc, creature)
+				return true
+			end
+
+			local check = GameStore.canUseHirelingName(message)
+			if not check.ability then
+				npcHandler:say(check.reason .. " Please choose another name or {cancel} the operation.", npc, creature)
+				return true
+			end
+
+			local allowed, reason = isHirelingNameAllowed(message)
+			if not allowed then
+				npcHandler:say(reason .. " Please choose another name or {cancel} the operation.", npc, creature)
+				return true
+			end
+
+			if hirelingNameExists(message) then
+				npcHandler:say("Another hireling already has that name. Please choose another name or {cancel} the operation.", npc, creature)
+				return true
+			end
+
+			if npcNameExists(message) then
+				npcHandler:say("An NPC already uses that name. Please choose another name or {cancel} the operation.", npc, creature)
+				return true
+			end
+
+			if characterNameExists(message) then
+				npcHandler:say("A character already uses that name. Please choose another name or {cancel} the operation.", npc, creature)
+				return true
+			end
+
+			local newName = (lowered:gsub("(%l)(%w*)", function(a, b)
+				return string.upper(a) .. b
+			end))
+
+			hcPending[playerId] = newName
+			npcHandler:setTopic(playerId, TOPIC.RENAME_CONFIRM)
+			npcHandler:say(string.format("Do you want to rename me to %s for %d Tibia Coins?", newName, HIRELING_RENAME_PRICE), npc, creature)
+			return true
+		end
+
+		if topic == TOPIC.RENAME_CONFIRM then
+			if MsgContains(message, "yes") then
+				local newName = hcPending[playerId]
+				hcPending[playerId] = nil
+				npcHandler:setTopic(playerId, TOPIC.SERVICES)
+				if not newName then
+					return true
+				end
+
+				local oldName = hireling:getName()
+				if not chargeHirelingService(player, HIRELING_RENAME_PRICE, "Hireling Name Change (" .. oldName .. " to " .. newName .. ")", "You have renamed your hireling to " .. newName .. " successfully") then
+					npcHandler:say(string.format("Sorry, you need %d Tibia Coins to rename me.", HIRELING_RENAME_PRICE), npc, creature)
+					return true
+				end
+
+				hireling.name = newName
+				if type(hireling.save) == "function" then
+					hireling:save()
+				end
+
+				npcHandler:say(string.format("Splendid, from now on I am %s! I must go back to my lamp for the change to take effect, you can call me again anytime.", newName), npc, creature)
+
+				local hirelingId = hireling:getId()
+				hireling:returnToLamp(player:getGuid())
+				addEvent(function()
+					local p = Player(playerId)
+					if not p then
+						return
+					end
+					local lamp = p:findHirelingLamp(hirelingId)
+					if lamp then
+						lamp:setAttribute(ITEM_ATTRIBUTE_DESCRIPTION, "This mysterious lamp summons your very own personal hireling.\nThis item cannot be traded.\nThis magic lamp is the home of " .. newName .. ".")
+					end
+				end, 500)
+			elseif MsgContains(message, "no") then
+				hcPending[playerId] = nil
+				npcHandler:setTopic(playerId, TOPIC.SERVICES)
+				npcHandler:say("Alright then, I will keep my current name. I like it anyway!", npc, creature)
+			else
+				npcHandler:say("Please, use the keywords {yes} or {no} to continue.", npc, creature)
+			end
+			return true
+		end
+
+		if topic ~= TOPIC.BANK and (MsgContains(message, "gender") or MsgContains(message, "change sex")) then
+			npcHandler:setTopic(playerId, TOPIC.SEX_CONFIRM)
+			npcHandler:say(string.format("Would you like to change my gender? It costs %d Tibia Coins.", HIRELING_SEXCHANGE_PRICE), npc, creature)
+			return true
+		end
+
+		if topic == TOPIC.SEX_CONFIRM then
+			if MsgContains(message, "yes") then
+				npcHandler:setTopic(playerId, TOPIC.SERVICES)
+
+				if not chargeHirelingService(player, HIRELING_SEXCHANGE_PRICE, "Hireling Sex Change (" .. hireling:getName() .. ")", "You have changed your hireling's gender successfully") then
+					npcHandler:say(string.format("Sorry, you need %d Tibia Coins to change my gender.", HIRELING_SEXCHANGE_PRICE), npc, creature)
+					return true
+				end
+
+				local changeTo, lookType
+				if hireling.sex == HIRELING_SEX.FEMALE then
+					changeTo = HIRELING_SEX.MALE
+					lookType = HIRELING_OUTFIT_DEFAULT.male
+				else
+					changeTo = HIRELING_SEX.FEMALE
+					lookType = HIRELING_OUTFIT_DEFAULT.female
+				end
+
+				hireling.sex = changeTo
+				hireling.looktype = lookType
+				if type(hireling.save) == "function" then
+					hireling:save()
+				end
+
+				npcHandler:say("Done! I must go back to my lamp for the change to take effect, you can call me again anytime.", npc, creature)
+				hireling:returnToLamp(player:getGuid())
+			elseif MsgContains(message, "no") then
+				npcHandler:setTopic(playerId, TOPIC.SERVICES)
+				npcHandler:say("Alright then, I will stay as I am.", npc, creature)
+			else
+				npcHandler:say("Please, use the keywords {yes} or {no} to continue.", npc, creature)
+			end
+			return true
+		end
+
+		return false
+	end
+	-- =================[[ END RENAME / CHANGE SEX SERVICES ]] ================= --
+
 	local function creatureSayCallback(npc, creature, type, message)
 		local player = Player(creature)
 		local playerId = player:getId()
@@ -2301,6 +2570,9 @@ function createHirelingType(HirelingName)
 			return false
 		end
 
+		if handleHirelingChanges(npc, creature, message) then
+			return true
+		end
 		-- imbuement packages
 		local imbuementPackages =
 			"These are the available imbuement packages, Skill increase: {bash}, {blockade}, {chop}, {epiphany}, {precision}, {slash}. Additional attributes: {featherweight}, {strike}, {swiftness}, {vampirism}, {vibrancy}, {void}. Elemental damage: {electrify}, {frost}, {reap}, {scorch}, {venom}. Elemental protection: {cloud fabric}, {demon presence}, {dragon hide}, {lich shroud}, {quara scale}, {snake skin}."
