@@ -1414,22 +1414,19 @@ bool Player::canWalkthrough(const std::shared_ptr<Creature> &creature) {
 
 	if (player) {
 		const auto &playerTile = player->getTile();
+		// Open PvP (2014 rules): characters never block each other, so pass through freely, without
+		// the PZ/level restrictions or the double-step confirmation. canWalkthroughEx tells the client the same.
+		if (g_game().isExpertPvp()) {
+			const auto &expertTileGround = playerTile ? playerTile->getGround() : nullptr;
+			return expertTileGround && expertTileGround->hasWalkStack();
+		}
+
 		if (!playerTile || (!playerTile->hasFlag(TILESTATE_NOPVPZONE) && !playerTile->hasFlag(TILESTATE_PROTECTIONZONE) && player->getLevel() > static_cast<uint32_t>(g_configManager().getNumber(PROTECTION_LEVEL)) && g_game().worlds().getCurrentWorld()->type != WORLDTYPE_OPTIONAL)) {
 			return false;
 		}
 
 		const auto &playerTileGround = playerTile->getGround();
 		if (!playerTileGround || !playerTileGround->hasWalkStack()) {
-			return false;
-		}
-
-		// Open PvP (2014 rules): characters never block each other — pass through freely,
-		// without the PZ/level restrictions or the double-step confirmation.
-		if (g_game().isExpertPvp()) {
-			return true;
-		}
-
-		if (!playerTile->hasFlag(TILESTATE_NOPVPZONE) && !playerTile->hasFlag(TILESTATE_PROTECTIONZONE) && player->getLevel() > static_cast<uint32_t>(g_configManager().getNumber(PROTECTION_LEVEL)) && g_game().worlds().getCurrentWorld()->type != WORLDTYPE_OPTIONAL) {
 			return false;
 		}
 
@@ -1472,10 +1469,10 @@ bool Player::canWalkthroughEx(const std::shared_ptr<Creature> &creature) const {
 	const auto &npc = creature->getNpc();
 	if (player) {
 		const auto &playerTile = player->getTile();
-		// Open PvP (2014 rules): characters never block each other.
+		// Open PvP (2014 rules): characters never block each other (same answer as canWalkthrough and Tile::queryAdd).
 		if (g_game().isExpertPvp()) {
 			const auto &playerTileGround = playerTile ? playerTile->getGround() : nullptr;
-			return playerTileGround && playerTileGround->hasWalkStack();
+			return g_configManager().getBoolean(WALK_THROUGH_PLAYERS) && playerTileGround && playerTileGround->hasWalkStack();
 		}
 		return playerTile && (playerTile->hasFlag(TILESTATE_NOPVPZONE) || playerTile->hasFlag(TILESTATE_PROTECTIONZONE) || player->getLevel() <= static_cast<uint32_t>(g_configManager().getNumber(PROTECTION_LEVEL)) || g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL);
 	} else if (npc) {
