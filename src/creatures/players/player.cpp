@@ -7291,12 +7291,16 @@ void Player::updatePvpSituationMarks() {
 	}
 
 	// refresh our creature block for all viewers whenever the set of active pairs changes
-	// (fight starts, a new adversary joins, situations expire) — each viewer recomputes its color
+	// (fight starts, a new adversary joins, situations expire), each viewer recomputes its color.
+	// Expired situations are dropped here.
 	size_t activePairs = 0;
 	const int64_t now = OTSYS_TIME();
-	for (const auto &[guid, expiry] : pvpSituations) {
-		if (expiry > now) {
+	for (auto it = pvpSituations.begin(); it != pvpSituations.end();) {
+		if (it->second > now) {
 			++activePairs;
+			++it;
+		} else {
+			pvpSituations.erase(it++);
 		}
 	}
 
