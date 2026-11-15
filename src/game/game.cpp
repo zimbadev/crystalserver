@@ -7039,43 +7039,43 @@ void Game::checkCreatures() {
 		return;
 	}
 
-	// Manual loop for better control and tracking
-	size_t writeIndex = 0;
-	for (size_t i = 0; i < bucket.size(); ++i) {
-		const auto &weak = bucket[i];
-		if (const auto creature = weak.lock()) {
-			if (creature->creatureCheck && creature->isAlive()) {
-				creature->onThink(EVENT_CREATURE_THINK_INTERVAL);
-				if (creature->getMonster()) {
-					// Monster's onThink runs asynchronously, so delay attacking/conditions
-					g_dispatcher().addEvent([creature] {
-						if (creature->isAlive()) {
-							creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
-							creature->executeConditions(EVENT_CREATURE_THINK_INTERVAL);
-						} }, __FUNCTION__);
-				} else {
+	// Move the bucket out first: onThink may call addCreatureCheck, which must not
+	// emplace into the vector while we iterate/compact it.
+	std::vector<std::weak_ptr<Creature>> creatures = std::move(bucket);
+	bucket.clear();
+
+	for (const auto &weak : creatures) {
+		const auto creature = weak.lock();
+		if (!creature) {
+			continue;
+		}
+
+		if (!creature->creatureCheck || !creature->isAlive()) {
+			creature->inCheckCreaturesVector = false;
+			continue;
+		}
+
+		creature->onThink(EVENT_CREATURE_THINK_INTERVAL);
+		if (creature->getMonster()) {
+			// Monster's onThink runs asynchronously, so delay attacking/conditions
+			g_dispatcher().addEvent([creature] {
+				if (creature->isAlive()) {
 					creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
 					creature->executeConditions(EVENT_CREATURE_THINK_INTERVAL);
-				}
-				// Keep entry (alive and active)
-				if (writeIndex != i) {
-					bucket[writeIndex] = std::move(bucket[i]);
-				}
-				writeIndex++;
-			} else {
-				creature->inCheckCreaturesVector = false;
-			}
+				} }, __FUNCTION__);
+		} else {
+			creature->onAttacking(EVENT_CREATURE_THINK_INTERVAL);
+			creature->executeConditions(EVENT_CREATURE_THINK_INTERVAL);
 		}
-		// Dead/expired: don't increment writeIndex (remove entry)
+
+		bucket.emplace_back(creature);
 	}
 
-	// Shrink if too many empty slots
-	bucket.resize(writeIndex);
 	if (bucket.capacity() > 64 && bucket.size() < bucket.capacity() / 4) {
 		bucket.shrink_to_fit();
 	}
 
-	checkCreatureSizes[index] = writeIndex;
+	checkCreatureSizes[index] = bucket.size();
 	index = (index + 1) % EVENT_CREATURECOUNT;
 }
 
