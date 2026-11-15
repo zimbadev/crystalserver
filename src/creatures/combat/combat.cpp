@@ -507,7 +507,7 @@ ReturnValue Combat::checkExpertPvpMode(const std::shared_ptr<Player> &attacker, 
 		return RETURNVALUE_NOERROR;
 	}
 
-	const PvpMode_t mode = attacker->getPvpMode();
+	const PvpMode_t mode = attacker->getEffectivePvpMode();
 
 	// gather the decision facts from the live players, then defer to the pure decision matrix. All of
 	// these accessors are side-effect-free reads, so evaluating them eagerly does not change behavior.

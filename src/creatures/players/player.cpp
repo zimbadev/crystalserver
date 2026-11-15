@@ -906,9 +906,21 @@ bool Player::hasSecureMode() const {
 	return secureMode;
 }
 
+PvpMode_t Player::getEffectivePvpMode() const {
+	if (g_game().isExpertPvp() && g_game().worlds().getCurrentWorld()->type == WORLDTYPE_HARDCORE) {
+		return PVP_MODE_RED_FIST;
+	}
+	return pvpMode;
+}
+
 PvpMode_t Player::getAllowedPvpMode(PvpMode_t requested) const {
 	if (!g_game().isExpertPvp()) {
 		return requested;
+	}
+
+	// hardcore PvP: always red fist
+	if (g_game().worlds().getCurrentWorld()->type == WORLDTYPE_HARDCORE) {
+		return PVP_MODE_RED_FIST;
 	}
 
 	// a black skull cannot select red fist: keep the previous mode, or dove
@@ -6433,7 +6445,7 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 		}
 
 		const bool expertPvp = g_game().isExpertPvp();
-		const PvpMode_t expertMode = expertPvp ? getPvpMode() : PVP_MODE_DOVE;
+		const PvpMode_t expertMode = expertPvp ? getEffectivePvpMode() : PVP_MODE_DOVE;
 		const bool allyDefence = expertPvp && (expertMode == PVP_MODE_WHITE_HAND || expertMode == PVP_MODE_YELLOW_HAND)
 			&& !targetPlayer->hasAttacked(static_self_cast<Player>()) && targetPlayer->hasAttackedAllyOf(static_self_cast<Player>());
 		if (allyDefence) {

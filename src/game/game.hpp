@@ -156,10 +156,14 @@ public:
 
 	// Open PvP (2014 rules): the full "Expert PvP" ruleset (character pass-through, situation boxes,
 	// first-in-stack initiate rule, expert client controls, field ownership) is gated on this.
-	// Enabled by the config option expertPvp and only on open PvP ("pvp") worlds, every other world type and
-	// expertPvp = false keep the classic rules.
+	// Enabled by the config option expertPvp and only on open PvP ("pvp") and hardcore PvP ("pvp-enforced") worlds,
+	// every other world type and expertPvp = false keep the classic rules.
 	bool isExpertPvp() const {
-		return worlds().getCurrentWorld() && worlds().getCurrentWorld()->type == WORLDTYPE_OPEN && expertPvp;
+		if (!expertPvp || !worlds().getCurrentWorld()) {
+			return false;
+		}
+		const auto type = worlds().getCurrentWorld()->type;
+		return type == WORLDTYPE_OPEN || type == WORLDTYPE_HARDCORE;
 	}
 	void setExpertPvp(bool enabled) {
 		expertPvp = enabled;
