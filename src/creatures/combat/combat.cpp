@@ -420,7 +420,7 @@ ReturnValue Combat::canTargetCreature(const std::shared_ptr<Player> &player, con
 }
 
 ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Tile> &tile, bool aggressive) {
-	if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
+	if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE) && !isOccupiedOwnedWallTile(tile)) {
 		return RETURNVALUE_CANNOTTHROW;
 	}
 	if (aggressive && tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
@@ -580,6 +580,31 @@ bool Combat::isWalkableWallFor(const std::shared_ptr<Player> &player, const std:
 	return isPveWall(wall) || isOwnedFieldBystander(player, wall);
 }
 
+bool Combat::isOccupiedOwnedWallTile(const std::shared_ptr<Tile> &tile) {
+	if (!tile || !g_game().isExpertPvp() || !tile->getTopCreature()) {
+		return false;
+	}
+
+	const auto &ground = tile->getGround();
+	if (ground && Item::items[ground->getID()].blockProjectile) {
+		return false;
+	}
+
+	bool ownedWall = false;
+	if (const TileItemVector* items = tile->getItemList()) {
+		for (const auto &item : *items) {
+			if (!item || !Item::items[item->getID()].blockProjectile) {
+				continue;
+			}
+			if ((item->getID() != ITEM_MAGICWALL && item->getID() != ITEM_WILDGROWTH) || item->getOwnerId() == 0) {
+				return false;
+			}
+			ownedWall = true;
+		}
+	}
+	return ownedWall;
+}
+
 ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const std::shared_ptr<Creature> &target, bool aggressive) {
 	if (!aggressive) {
 		return RETURNVALUE_NOERROR;
@@ -588,7 +613,7 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 	const auto &targetPlayer = target ? target->getPlayer() : nullptr;
 	if (target) {
 		const std::shared_ptr<Tile> &tile = target->getTile();
-		if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
+		if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE) && !isOccupiedOwnedWallTile(tile)) {
 			return RETURNVALUE_NOTENOUGHROOM;
 		}
 		if (targetPlayer && tile->hasFlag(TILESTATE_PROTECTIONZONE)) {

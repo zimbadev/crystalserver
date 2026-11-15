@@ -243,6 +243,10 @@ public:
 	// Open PvP (2014 rules): may this player walk through this magic wall / wild growth? Never through
 	// his own; through a PvE wall or the wall of a player he is not in a PvP situation with.
 	static bool isWalkableWallFor(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &wall);
+	// Open PvP (2014 rules): a creature stands on the tile and every projectile blocker there is a
+	// player's magic wall / wild growth (players may stand on the walls of others). Such a tile does
+	// not shield the creature from attacks. False without expert PvP.
+	static bool isOccupiedOwnedWallTile(const std::shared_ptr<Tile> &tile);
 	static bool isPlayerCombat(const std::shared_ptr<Creature> &target);
 	static CombatType_t ConditionToDamageType(ConditionType_t type);
 	static ConditionType_t DamageToConditionType(CombatType_t type);
