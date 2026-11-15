@@ -829,6 +829,9 @@ public:
 	PvpMode_t getPvpMode() const {
 		return pvpMode;
 	}
+	// Open PvP: the mode the server accepts for a requested one. A black skull cannot select red fist,
+	// it keeps the previous mode (or dove). Returns the request unchanged without expert PvP.
+	PvpMode_t getAllowedPvpMode(PvpMode_t requested) const;
 
 	Faction_t getFaction() const override;
 

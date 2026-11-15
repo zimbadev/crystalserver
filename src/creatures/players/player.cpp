@@ -906,6 +906,18 @@ bool Player::hasSecureMode() const {
 	return secureMode;
 }
 
+PvpMode_t Player::getAllowedPvpMode(PvpMode_t requested) const {
+	if (!g_game().isExpertPvp()) {
+		return requested;
+	}
+
+	// a black skull cannot select red fist: keep the previous mode, or dove
+	if (requested == PVP_MODE_RED_FIST && getSkull() == SKULL_BLACK) {
+		return pvpMode != PVP_MODE_RED_FIST ? pvpMode : PVP_MODE_DOVE;
+	}
+	return requested;
+}
+
 void Player::setParty(std::shared_ptr<Party> newParty) {
 	m_party = std::move(newParty);
 	// Open PvP (2014 rules): party membership affects the situation-box colors this player sees.
@@ -7494,6 +7506,8 @@ void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked, double 
 			setSkull(SKULL_BLACK);
 			// start black skull time
 			skullTicks = static_cast<int64_t>(g_configManager().getNumber(BLACK_SKULL_DURATION)) * 24 * 60 * 60;
+			// Open PvP: a black skull cannot stay in red fist
+			pvpMode = getAllowedPvpMode(pvpMode);
 		} else if (dayKills >= g_configManager().getNumber(DAY_KILLS_TO_RED) || weekKills >= g_configManager().getNumber(WEEK_KILLS_TO_RED) || monthKills >= g_configManager().getNumber(MONTH_KILLS_TO_RED)) {
 			setSkull(SKULL_RED);
 			// reset red skull time

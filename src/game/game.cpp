@@ -6328,7 +6328,8 @@ void Game::playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool ch
 	player->setFightMode(fightMode);
 	player->setChaseMode(chaseMode);
 	player->setSecureMode(secureMode);
-	player->setPvpMode(pvpMode);
+	// Open PvP: a black skull cannot select red fist
+	player->setPvpMode(player->getAllowedPvpMode(pvpMode));
 }
 
 void Game::playerRequestAddVip(uint32_t playerId, const std::string &name) {
