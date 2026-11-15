@@ -930,6 +930,14 @@ public:
 	void onAttackedCreatureDrainHealth(const std::shared_ptr<Creature> &target, int32_t points) override;
 	void onTargetCreatureGainHealth(const std::shared_ptr<Creature> &target, int32_t points) override;
 	bool onKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit) override;
+	// Expert PvP: frag for one participant of the victim's last fight (see getExpertPvpKillParticipants).
+	bool onExpertPvpKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit, double weight);
+	// Expert PvP: every online player who attacked us within the PZ lock time.
+	std::vector<std::shared_ptr<Player>> getExpertPvpKillParticipants() const;
+	// Expert PvP: frag share of each participant (full up to 5, then 5 divided by the count).
+	static double getExpertPvpFragWeight(size_t participants);
+	void noteExpertPvpAggressor(const std::shared_ptr<Player> &aggressor);
+	void clearExpertPvpAggressors();
 	bool onKilledMonster(const std::shared_ptr<Monster> &target) override;
 	void onGainExperience(uint64_t gainExp, const std::shared_ptr<Creature> &target) override;
 	void onGainSharedExperience(uint64_t gainExp, const std::shared_ptr<Creature> &target);
@@ -969,7 +977,7 @@ public:
 	void refreshPvpItemsInView();
 	// Open PvP: true when no other player is stacked on top of us on our tile.
 	bool isFirstInStack() const;
-	void addUnjustifiedDead(const std::shared_ptr<Player> &attacked);
+	void addUnjustifiedDead(const std::shared_ptr<Player> &attacked, double weight = 1.0);
 	void sendCreatureEmblem(const std::shared_ptr<Creature> &creature) const;
 	void sendCreatureSkull(const std::shared_ptr<Creature> &creature) const;
 	void checkSkullTicks(int64_t ticks);
@@ -1834,6 +1842,9 @@ private:
 	// Open PvP: pairwise "PvP situation" state (guid -> expiry, OTSYS_TIME ms). Mutual aggression
 	// puts both players in a situation; fields/magic walls/boxes key off it. Runtime-only.
 	phmap::flat_hash_map<uint32_t, int64_t> pvpSituations {};
+	// Expert PvP: aggressor GUID -> time of the last aggressive act against us (frag participants)
+	phmap::flat_hash_map<uint32_t, int64_t> pvpAggressors {};
+	bool onKilledPlayerFrag(const std::shared_ptr<Player> &target, bool lastHit, bool expertParticipant, double weight);
 	size_t pvpActivePairs = 0; // last broadcast count of active situations (box refresh detection)
 
 	// Discovery System: last DiscoveryData pushed by the Lua logic (answer for C2S 0x92 requests)

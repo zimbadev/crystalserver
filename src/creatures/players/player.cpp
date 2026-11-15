@@ -6412,6 +6412,7 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 		// players (drives field damage, magic wall blocking and the PvP situation boxes).
 		if (!Combat::isInPvpZone(static_self_cast<Player>(), targetPlayer)) {
 			addPvpSituationWith(targetPlayer);
+			targetPlayer->noteExpertPvpAggressor(static_self_cast<Player>());
 		}
 
 		if (!pzLocked && g_game().worlds().getCurrentWorld()->type == WORLDTYPE_HARDCORE) {
@@ -6530,12 +6531,21 @@ void Player::onTargetCreatureGainHealth(const std::shared_ptr<Creature> &target,
 }
 
 bool Player::onKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit) {
+	return onKilledPlayerFrag(target, lastHit, false, 1.0);
+}
+
+bool Player::onExpertPvpKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit, double weight) {
+	return onKilledPlayerFrag(target, lastHit, true, weight);
+}
+
+bool Player::onKilledPlayerFrag(const std::shared_ptr<Player> &target, bool lastHit, bool expertParticipant, double weight) {
 	bool unjustified = false;
 	if (target->getZoneType() == ZONE_PVP) {
 		target->setDropLoot(false);
 		target->setSkillLoss(false);
 	} else if (!hasFlag(PlayerFlags_t::NotGainInFight) && !isPartner(target)) {
-		if (!Combat::isInPvpZone(getPlayer(), target) && hasAttacked(target) && !target->hasAttacked(getPlayer()) && !isGuildMate(target) && target != getPlayer()) {
+		// Expert PvP: a participant of the victim's last fight counts even after his attack mark expired
+		if (!Combat::isInPvpZone(getPlayer(), target) && (hasAttacked(target) || expertParticipant) && !target->hasAttacked(getPlayer()) && !isGuildMate(target) && target != getPlayer()) {
 			if (target->hasKilled(getPlayer())) {
 				for (auto &kill : target->unjustifiedKills) {
 					if (kill.target == getGUID() && kill.unavenged) {
@@ -6546,7 +6556,7 @@ bool Player::onKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit)
 				}
 			} else if (target->getSkull() == SKULL_NONE && !isInWar(target)) {
 				unjustified = true;
-				addUnjustifiedDead(target);
+				addUnjustifiedDead(target, weight);
 			}
 
 			if (lastHit && hasCondition(CONDITION_INFIGHT)) {
@@ -7362,6 +7372,74 @@ void Player::refreshPvpItemsInView() {
 	}
 }
 
+std::vector<std::shared_ptr<Player>> Player::getExpertPvpKillParticipants() const {
+	std::vector<std::shared_ptr<Player>> participants;
+	if (!g_game().isExpertPvp()) {
+		return participants;
+	}
+
+	const int64_t timeNow = OTSYS_TIME();
+	const auto window = static_cast<int64_t>(g_configManager().getNumber(PZ_LOCKED));
+	const auto addParticipant = [&](const std::shared_ptr<Player> &participant) {
+		if (participant && participant.get() != this && std::ranges::find(participants, participant) == participants.end()) {
+			participants.emplace_back(participant);
+		}
+	};
+
+	// any aggressive act against us (damage, mana drain, paralyse, targeting) recorded in onAttackedCreature
+	for (const auto &[guid, lastAggression] : pvpAggressors) {
+		if (timeNow - lastAggression <= window) {
+			addParticipant(g_game().getPlayerByGUID(guid));
+		}
+	}
+
+	// damage, also from summons, which the master's onAttackedCreature does not see
+	for (const auto &[attackerId, damageInfo] : damageMap) {
+		const auto &[total, ticks] = damageInfo;
+		if (total == 0 || ticks == 0 || timeNow - ticks > window) {
+			continue;
+		}
+		const auto &attackerCreature = g_game().getCreatureByID(attackerId);
+		if (!attackerCreature) {
+			continue;
+		}
+		const auto &master = attackerCreature->getMaster() ? attackerCreature->getMaster() : attackerCreature;
+		addParticipant(master->getPlayer());
+	}
+	return participants;
+}
+
+double Player::getExpertPvpFragWeight(size_t participants) {
+	// "unfair fight": with 5 or fewer participants everyone gets the full frag, with more each one
+	// gets 5 divided by the number of participants.
+	constexpr size_t fullShare = 5;
+	if (participants <= fullShare) {
+		return 1.0;
+	}
+	return static_cast<double>(fullShare) / static_cast<double>(participants);
+}
+
+void Player::noteExpertPvpAggressor(const std::shared_ptr<Player> &aggressor) {
+	if (!g_game().isExpertPvp() || !aggressor || aggressor.get() == this) {
+		return;
+	}
+
+	const int64_t timeNow = OTSYS_TIME();
+	const auto window = static_cast<int64_t>(g_configManager().getNumber(PZ_LOCKED));
+	for (auto it = pvpAggressors.begin(); it != pvpAggressors.end();) {
+		if (timeNow - it->second > window) {
+			pvpAggressors.erase(it++);
+		} else {
+			++it;
+		}
+	}
+	pvpAggressors[aggressor->getGUID()] = timeNow;
+}
+
+void Player::clearExpertPvpAggressors() {
+	pvpAggressors.clear();
+}
+
 bool Player::isFirstInStack() const {
 	const auto &tile = getTile();
 	if (!tile) {
@@ -7379,42 +7457,16 @@ bool Player::isFirstInStack() const {
 	return true;
 }
 
-void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked) {
+void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked, double weight) {
 	if (hasFlag(PlayerFlags_t::NotGainInFight) || hasFlag(PlayerFlags_t::NotGainUnjustified) || attacked == getPlayer() || g_game().worlds().getCurrentWorld()->type == WORLDTYPE_HARDCORE) {
 		return;
 	}
 
 	sendTextMessage(MESSAGE_EVENT_ADVANCE, "Warning! The murder of " + attacked->getName() + " was not justified.");
 
-	// Open PvP (2014 rules) "unfair fight": with 5 or fewer player participants everyone gets the
-	// full frag; with 6+ each participant only receives a share of it.
-	double killWeight = 1.0;
+	// Expert PvP: the frag share comes from Creature::onDeath (getExpertPvpFragWeight); classic worlds pass 1.0.
 	const bool expertPvp = g_game().isExpertPvp();
-	if (expertPvp) {
-		const int64_t timeNow = OTSYS_TIME();
-		const auto inFightTicks = static_cast<uint64_t>(g_configManager().getNumber(PZ_LOCKED));
-		phmap::flat_hash_set<uint32_t> participants;
-		for (const auto &[attackerId, damageInfo] : attacked->damageMap) {
-			const auto &[total, ticks] = damageInfo;
-			if (total == 0 || static_cast<uint64_t>(timeNow - ticks) > inFightTicks) {
-				continue;
-			}
-			const auto &attackerCreature = g_game().getCreatureByID(attackerId);
-			if (!attackerCreature) {
-				continue;
-			}
-			const auto &master = attackerCreature->getMaster() ? attackerCreature->getMaster() : attackerCreature;
-			if (const auto &participant = master->getPlayer()) {
-				if (participant != attacked) {
-					participants.insert(participant->getGUID());
-				}
-			}
-		}
-		if (participants.size() > 5) {
-			killWeight = 5.0 / static_cast<double>(participants.size());
-		}
-	}
-
+	const double killWeight = expertPvp ? std::clamp(weight, 0.0, 1.0) : 1.0;
 	unjustifiedKills.emplace_back(attacked->getGUID(), time(nullptr), true, killWeight);
 
 	double dayKills = 0;
