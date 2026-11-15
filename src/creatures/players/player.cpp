@@ -9383,14 +9383,13 @@ void Player::setGuild(const std::shared_ptr<Guild> &newGuild) {
 	guildRank = nullptr;
 
 	if (newGuild) {
-		const auto &rank = newGuild->getRankByLevel(1);
-		if (!rank) {
-			return;
+		// without a level 1 rank the player stays without a guild, but the refresh below still runs for the
+		// guild he may have just left
+		if (const auto &rank = newGuild->getRankByLevel(1)) {
+			guild = newGuild;
+			guildRank = rank;
+			newGuild->addMember(static_self_cast<Player>());
 		}
-
-		guild = newGuild;
-		guildRank = rank;
-		newGuild->addMember(static_self_cast<Player>());
 	}
 
 	// Open PvP (2014 rules): guild membership affects the situation-box colors this player sees.
