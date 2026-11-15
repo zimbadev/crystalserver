@@ -8058,7 +8058,8 @@ void Player::sendUnjustifiedPoints() const {
 			}
 		}
 
-		const bool isRed = getSkull() == SKULL_RED;
+		// with a red or black skull the bars count towards the black skull thresholds
+		const bool isRed = getSkull() == SKULL_RED || getSkull() == SKULL_BLACK;
 
 		auto dayMax = ((isRed ? 2 : 1) * g_configManager().getNumber(DAY_KILLS_TO_RED));
 		auto weekMax = ((isRed ? 2 : 1) * g_configManager().getNumber(WEEK_KILLS_TO_RED));
@@ -8068,8 +8069,10 @@ void Player::sendUnjustifiedPoints() const {
 		const uint8_t weekProgress = std::min(std::round(weekKills / weekMax * 100), 100.0);
 		const uint8_t monthProgress = std::min(std::round(monthKills / monthMax * 100), 100.0);
 		uint8_t skullDuration = 0;
-		if (skullTicks != 0) {
-			skullDuration = std::floor<uint8_t>(skullTicks / (24 * 60 * 60 * 1000));
+		if (skullTicks > 0) {
+			// skullTicks is in seconds; the client shows the days left, a started day counts as a day
+			constexpr int64_t secondsPerDay = 24 * 60 * 60;
+			skullDuration = static_cast<uint8_t>(std::min<int64_t>((skullTicks + secondsPerDay - 1) / secondsPerDay, std::numeric_limits<uint8_t>::max()));
 		}
 		client->sendUnjustifiedPoints(dayProgress, std::max(dayMax - dayKills, 0.0), weekProgress, std::max(weekMax - weekKills, 0.0), monthProgress, std::max(monthMax - monthKills, 0.0), skullDuration);
 	}
