@@ -18,6 +18,11 @@ local config = {
 	timeToKill = 20,
 }
 
+-- The lever is a fixed item of the map, so it is registered by position: no action id of
+-- the map or of the startup tables ever carried 59601, which left this handler dead.
+local LEVER_ID = 31366
+local LEVER_POSITION = Position(32456, 32508, 6)
+
 local currentEvent = nil
 
 local function clearRoomDrume(centerPosition, rangeX, rangeY)
@@ -36,6 +41,10 @@ end
 
 local drumeAction = Action()
 function drumeAction.onUse(player, item, fromPosition, target, toPosition, isHotkey)
+	if item:getId() ~= LEVER_ID then
+		return false
+	end
+
 	if player:getPosition() ~= config.firstPlayerPosition then
 		return false
 	end
@@ -127,5 +136,5 @@ function drumeAction.onUse(player, item, fromPosition, target, toPosition, isHot
 	return true
 end
 
-drumeAction:aid(59601)
+drumeAction:position(LEVER_POSITION)
 drumeAction:register()
