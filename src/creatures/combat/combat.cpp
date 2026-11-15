@@ -490,8 +490,8 @@ bool pvpModeAllows(PvpMode_t mode, const PvpFacts &facts) {
 		return true;
 	}
 
-	// yellow hand: skulled players are fair game
-	if (mode == PVP_MODE_YELLOW_HAND && facts.targetSkulled) {
+	// yellow hand: skulled players are fair game, except our own party and guild members
+	if (mode == PVP_MODE_YELLOW_HAND && facts.targetSkulled && !facts.partner && !facts.guildMate) {
 		return true;
 	}
 
@@ -514,7 +514,9 @@ ReturnValue Combat::checkExpertPvpMode(const std::shared_ptr<Player> &attacker, 
 	PvpFacts facts;
 	facts.targetAttackedMe = target->hasAttacked(attacker);
 	facts.inSituation = attacker->isInPvpSituationWith(target);
-	facts.targetSkulled = attacker->getSkullClient(target) != SKULL_NONE;
+	// the green skull only marks a party member, it is not a skull that makes the target fair game
+	const Skulls_t targetSkull = attacker->getSkullClient(target);
+	facts.targetSkulled = targetSkull != SKULL_NONE && targetSkull != SKULL_GREEN;
 	facts.attackedAllyOfMe = target->hasAttackedAllyOf(attacker);
 	facts.partner = attacker->isPartner(target);
 	facts.guildMate = attacker->isGuildMate(target);
