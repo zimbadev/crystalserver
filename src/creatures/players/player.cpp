@@ -6422,11 +6422,12 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 			sendIcons();
 		}
 
-		if (getSkull() == SKULL_NONE && (getSkullClient(targetPlayer) == SKULL_YELLOW || targetPlayer->getSkull() != SKULL_NONE)) {
-			// Open PvP: retaliating against our aggressor or attacking an already SKULLED player is
-			// justified — no white skull for us, but the attacked player sees us with a yellow skull
+		const bool expertPvp = g_game().isExpertPvp();
+		if (getSkull() == SKULL_NONE && (getSkullClient(targetPlayer) == SKULL_YELLOW || (expertPvp && targetPlayer->getSkull() != SKULL_NONE))) {
+			// Expert PvP: retaliating against our aggressor or attacking an already SKULLED player is
+			// justified, no white skull for us, but the attacked player sees us with a yellow skull
 			// ("obtained when attacking skulled players; visible only to the attacked player").
-			if (targetPlayer->getSkull() != SKULL_NONE && !pzLocked) {
+			if (expertPvp && targetPlayer->getSkull() != SKULL_NONE && !pzLocked) {
 				pzLocked = true;
 				sendIcons();
 			}
@@ -7124,9 +7125,11 @@ Skulls_t Player::getSkullClient(const std::shared_ptr<Creature> &creature) {
 
 	const auto &player = creature->getPlayer();
 	if (player) {
-		// Open PvP: an unjustified killer is marked ORANGE to his victim ("visible only between
-		// involved parties") — it overrides the killer's own white skull, but not red/black.
-		if (player.get() != this && player->getSkull() <= SKULL_WHITE && player->hasKilled(getPlayer())) {
+		// Expert PvP: an unjustified killer is marked ORANGE to his victim ("visible only between
+		// involved parties"), it overrides the killer's own white skull, but not red/black.
+		// Classic rules: only a killer without a skull is shown orange.
+		const auto maxOrangeSkull = g_game().isExpertPvp() ? SKULL_WHITE : SKULL_NONE;
+		if (player.get() != this && player->getSkull() <= maxOrangeSkull && player->hasKilled(getPlayer())) {
 			return SKULL_ORANGE;
 		}
 
@@ -7202,7 +7205,7 @@ void Player::clearAttacked() {
 }
 
 void Player::addPvpSituationWith(const std::shared_ptr<Player> &other) {
-	if (!other || other.get() == this || hasFlag(PlayerFlags_t::NotGainInFight) || other->hasFlag(PlayerFlags_t::NotGainInFight)) {
+	if (!g_game().isExpertPvp() || !other || other.get() == this || hasFlag(PlayerFlags_t::NotGainInFight) || other->hasFlag(PlayerFlags_t::NotGainInFight)) {
 		return;
 	}
 
@@ -7316,7 +7319,8 @@ void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked) {
 	// Open PvP (2014 rules) "unfair fight": with 5 or fewer player participants everyone gets the
 	// full frag; with 6+ each participant only receives a share of it.
 	double killWeight = 1.0;
-	{
+	const bool expertPvp = g_game().isExpertPvp();
+	if (expertPvp) {
 		const int64_t timeNow = OTSYS_TIME();
 		const auto inFightTicks = static_cast<uint64_t>(g_configManager().getNumber(PZ_LOCKED));
 		phmap::flat_hash_set<uint32_t> participants;
@@ -7347,16 +7351,19 @@ void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked) {
 	double weekKills = 0;
 	double monthKills = 0;
 
+	// Classic rules: every frag counts as a full frag and the day window is 4 hours.
+	const auto dayWindow = expertPvp ? 24 * 60 * 60 : 4 * 60 * 60;
 	for (const auto &kill : unjustifiedKills) {
 		const auto diff = time(nullptr) - kill.time;
-		if (diff <= 24 * 60 * 60) {
-			dayKills += kill.weight;
+		const double weight = expertPvp ? kill.weight : 1.0;
+		if (diff <= dayWindow) {
+			dayKills += weight;
 		}
 		if (diff <= 7 * 24 * 60 * 60) {
-			weekKills += kill.weight;
+			weekKills += weight;
 		}
 		if (diff <= 30 * 24 * 60 * 60) {
-			monthKills += kill.weight;
+			monthKills += weight;
 		}
 	}
 
@@ -8022,16 +8029,18 @@ void Player::sendUnjustifiedPoints() const {
 		double weekKills = 0;
 		double monthKills = 0;
 
+		const bool expertPvp = g_game().isExpertPvp();
 		for (const auto &kill : unjustifiedKills) {
 			const auto diff = time(nullptr) - kill.time;
+			const double weight = expertPvp ? kill.weight : 1.0;
 			if (diff <= 24 * 60 * 60) {
-				dayKills += kill.weight;
+				dayKills += weight;
 			}
 			if (diff <= 7 * 24 * 60 * 60) {
-				weekKills += kill.weight;
+				weekKills += weight;
 			}
 			if (diff <= 30 * 24 * 60 * 60) {
-				monthKills += kill.weight;
+				monthKills += weight;
 			}
 		}
 

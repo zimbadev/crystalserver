@@ -68,6 +68,7 @@ void GameFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Game", "setGameState", GameFunctions::luaGameSetGameState);
 
 	Lua::registerMethod(L, "Game", "getWorldType", GameFunctions::luaGameGetWorldType);
+	Lua::registerMethod(L, "Game", "isExpertPvp", GameFunctions::luaGameIsExpertPvp);
 
 	Lua::registerMethod(L, "Game", "getReturnMessage", GameFunctions::luaGameGetReturnMessage);
 
@@ -489,6 +490,12 @@ int GameFunctions::luaGameSetGameState(lua_State* L) {
 int GameFunctions::luaGameGetWorldType(lua_State* L) {
 	// Game.getWorldType()
 	lua_pushnumber(L, g_game().worlds().getCurrentWorld()->type);
+	return 1;
+}
+
+int GameFunctions::luaGameIsExpertPvp(lua_State* L) {
+	// Game.isExpertPvp()
+	Lua::pushBoolean(L, g_game().isExpertPvp());
 	return 1;
 }
 

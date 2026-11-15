@@ -554,7 +554,7 @@ bool Combat::isOwnedFieldBystander(const std::shared_ptr<Player> &player, const 
 }
 
 bool Combat::isPveWall(const std::shared_ptr<Item> &item) {
-	return item && item->getCustomAttribute("pveWall") != nullptr;
+	return item && g_game().isExpertPvp() && item->getCustomAttribute("pveWall") != nullptr;
 }
 
 ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const std::shared_ptr<Creature> &target, bool aggressive) {
