@@ -405,7 +405,8 @@ ReturnValue Combat::canTargetCreature(const std::shared_ptr<Player> &player, con
 		}
 
 		if (g_game().isExpertPvp()) {
-			// Open PvP: the expert PvP mode governs who may be targeted (supersedes secure mode)
+			// Open PvP: the expert PvP mode alone decides who may be targeted, secure mode does not
+			// (data/events/scripts/creature.lua skips its secure mode check too)
 			const ReturnValue modeRet = checkExpertPvpMode(player, target->getPlayer());
 			if (modeRet != RETURNVALUE_NOERROR) {
 				return modeRet;
@@ -519,6 +520,13 @@ ReturnValue Combat::checkExpertPvpMode(const std::shared_ptr<Player> &attacker, 
 	facts.guildMate = attacker->isGuildMate(target);
 
 	return pvpModeAllows(mode, facts) ? RETURNVALUE_NOERROR : RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
+}
+
+bool Combat::mayHitPlayerInArea(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target) {
+	if (!g_game().isExpertPvp()) {
+		return !attacker->hasSecureMode();
+	}
+	return checkExpertPvpMode(attacker, target) == RETURNVALUE_NOERROR;
 }
 
 std::shared_ptr<Player> Combat::resolveFieldOwnerPlayer(uint32_t ownerId) {
@@ -2022,7 +2030,14 @@ std::vector<std::pair<Position, std::vector<uint32_t>>> Combat::pickChainTargets
 			const auto &spectatorSummon = spectator->isSummon();
 
 			if (casterPlayer) {
-				if (casterPlayer->hasSecureMode()) {
+				if (g_game().isExpertPvp()) {
+					const auto &spectatorMaster = spectatorSummon && spectator->getMaster() ? spectator->getMaster()->getPlayer() : nullptr;
+					const auto &bouncePlayer = spectatorPlayer ? spectatorPlayer : spectatorMaster;
+					if (bouncePlayer && bouncePlayer != casterPlayer && !mayHitPlayerInArea(casterPlayer, bouncePlayer)) {
+						visited.insert(spectator->getID());
+						continue;
+					}
+				} else if (casterPlayer->hasSecureMode()) {
 					if (spectatorPlayer) {
 						visited.insert(spectator->getID());
 						continue;

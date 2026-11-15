@@ -69,7 +69,8 @@ function Creature:onTargetCombat(target)
 			end
 		end
 
-		if self:isPlayer() and target:isPlayer() then
+		-- Expert PvP: the PvP mode decides in Combat::checkExpertPvpMode, secure mode does not block here
+		if self:isPlayer() and target:isPlayer() and not Game.isExpertPvp() then
 			if self:hasSecureMode() then
 				return RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER
 			end

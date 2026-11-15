@@ -624,7 +624,18 @@ bool Spell::playerRuneSpellCheck(const std::shared_ptr<Player> &player, const Po
 		return false;
 	}
 
-	if (aggressive && needTarget && topVisibleCreature && player->hasSecureMode()) {
+	if (aggressive && needTarget && topVisibleCreature && g_game().isExpertPvp()) {
+		// Expert PvP: an aimed rune follows the same PvP mode rule as a direct attack, secure mode or not
+		const auto &targetPlayer = topVisibleCreature->getPlayer();
+		if (targetPlayer && targetPlayer != player) {
+			const ReturnValue modeRet = Combat::checkExpertPvpMode(player, targetPlayer);
+			if (modeRet != RETURNVALUE_NOERROR) {
+				player->sendCancelMessage(modeRet);
+				g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
+				return false;
+			}
+		}
+	} else if (aggressive && needTarget && topVisibleCreature && player->hasSecureMode()) {
 		const auto &targetPlayer = topVisibleCreature->getPlayer();
 		if (targetPlayer && targetPlayer != player && player->getSkullClient(targetPlayer) == SKULL_NONE && !Combat::isInPvpZone(player, targetPlayer)) {
 			player->sendCancelMessage(RETURNVALUE_TURNSECUREMODETOATTACKUNMARKEDPLAYERS);
