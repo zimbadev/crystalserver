@@ -31,6 +31,7 @@
 #include "io/iobountytasks.hpp"
 #include "io/ioweeklytasks.hpp"
 #include "kv/kv.hpp"
+#include "utils/tools.hpp"
 
 bool IOLoginDataSave::saveItems(const std::shared_ptr<Player> &player, const ItemBlockList &itemList, DBInsert &query_insert, PropWriteStream &propWriteStream) {
 	if (!player) {
@@ -448,8 +449,13 @@ bool IOLoginDataSave::savePlayerSpells(const std::shared_ptr<Player> &player) {
 	query.str("");
 
 	DBInsert spellsQuery("INSERT INTO `player_spells` (`player_id`, `name` ) VALUES ");
+	std::unordered_set<std::string> uniqueSpells;
 	for (const std::string &spellName : player->learnedInstantSpellList) {
-		query << player->getGUID() << ',' << db.escapeString(spellName);
+		const std::string lowerName = asLowerCaseString(spellName);
+		if (!uniqueSpells.insert(lowerName).second) {
+			continue;
+		}
+		query << player->getGUID() << ',' << db.escapeString(lowerName);
 		if (!spellsQuery.addRow(query)) {
 			return false;
 		}
