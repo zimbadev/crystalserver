@@ -156,7 +156,8 @@ public:
 
 	// Open PvP (2014 rules): the full "Expert PvP" ruleset (character pass-through, situation boxes,
 	// first-in-stack initiate rule, expert client controls, field ownership) is gated on this.
-	// Selected via config worldType: "expert-pvp" enables it, "retro-pvp" keeps plain Open PvP.
+	// Enabled by the config option expertPvp and only on open PvP ("pvp") worlds, every other world type and
+	// expertPvp = false keep the classic rules.
 	bool isExpertPvp() const {
 		return worlds().getCurrentWorld() && worlds().getCurrentWorld()->type == WORLDTYPE_OPEN && expertPvp;
 	}
@@ -984,7 +985,7 @@ private:
 	bool browseField = false;
 
 	GameState_t gameState = GAME_STATE_NORMAL;
-	bool expertPvp = false; // Open PvP (2014 rules): true only for config worldType "expert-pvp"
+	bool expertPvp = false; // config expertPvp, see isExpertPvp()
 
 	LightState_t lightState = LIGHT_STATE_DAY;
 	LightState_t currentLightState = lightState;

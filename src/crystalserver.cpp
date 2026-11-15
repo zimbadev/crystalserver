@@ -170,11 +170,12 @@ void CrystalServer::loadThisWorld() {
 
 	if (world->type == WORLDTYPE_NONE) {
 		throw FailedToInitializeCrystalServer(
-			fmt::format("Unknown world type for world ID {}", world->id)
+			fmt::format("Unknown world type: {}, valid world types are: no-pvp, pvp, retro-pvp, pvp-enforced and retro-hardcore", world->type)
 		);
 	}
-	const auto configuredType = asLowerCaseString(g_configManager().getString(WORLD_TYPE));
-	g_game().setExpertPvp(configuredType == "expert-pvp" || configuredType == "expertpvp" || configuredType == "expert");
+
+	// Expert PvP is a config option on top of the world type, isExpertPvp() limits it to the world types it applies to
+	g_game().setExpertPvp(g_configManager().getBoolean(EXPERT_PVP));
 	const auto location = Worlds::getWorldLocationByKey(world->locationName);
 	if (location == Location_t::None) {
 		throw FailedToInitializeCrystalServer(
