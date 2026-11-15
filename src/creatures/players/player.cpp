@@ -6420,7 +6420,22 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 		}
 
 		const bool expertPvp = g_game().isExpertPvp();
-		if (getSkull() == SKULL_NONE && (getSkullClient(targetPlayer) == SKULL_YELLOW || (expertPvp && targetPlayer->getSkull() != SKULL_NONE))) {
+		const PvpMode_t expertMode = expertPvp ? getPvpMode() : PVP_MODE_DOVE;
+		const bool allyDefence = expertPvp && (expertMode == PVP_MODE_WHITE_HAND || expertMode == PVP_MODE_YELLOW_HAND)
+			&& !targetPlayer->hasAttacked(static_self_cast<Player>()) && targetPlayer->hasAttackedAllyOf(static_self_cast<Player>());
+		if (allyDefence) {
+			// Expert PvP: entering the orange situation to defend a party or guild member is justified. No
+			// white skull, and with White Hand no PZ lock either (Yellow Hand always PZ locks); the aggressor
+			// sees us with a yellow skull.
+			if (expertMode == PVP_MODE_YELLOW_HAND && !pzLocked) {
+				pzLocked = true;
+				sendIcons();
+			}
+			addAttacked(targetPlayer);
+			if (getSkull() == SKULL_NONE) {
+				targetPlayer->sendCreatureSkull(static_self_cast<Player>());
+			}
+		} else if (getSkull() == SKULL_NONE && (getSkullClient(targetPlayer) == SKULL_YELLOW || (expertPvp && targetPlayer->getSkull() != SKULL_NONE))) {
 			// Expert PvP: retaliating against our aggressor or attacking an already SKULLED player is
 			// justified, no white skull for us, but the attacked player sees us with a yellow skull
 			// ("obtained when attacking skulled players; visible only to the attacked player").
@@ -7180,9 +7195,11 @@ bool Player::hasAttackedAllyOf(const std::shared_ptr<Player> &defender) const {
 		return false;
 	}
 
+	// an ally who attacked us first does not count: we only defended ourselves against him
+	const auto &self = std::const_pointer_cast<Player>(static_self_cast<Player>());
 	for (const auto attackedGuid : attackedSet) {
 		const auto &victim = g_game().getPlayerByGUID(attackedGuid);
-		if (victim && (defender->isPartner(victim) || defender->isGuildMate(victim))) {
+		if (victim && (defender->isPartner(victim) || defender->isGuildMate(victim)) && !victim->hasAttacked(self)) {
 			return true;
 		}
 	}
