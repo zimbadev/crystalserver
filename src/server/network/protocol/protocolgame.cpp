@@ -491,8 +491,10 @@ void ProtocolGame::AddItem(NetworkMessage &msg, const std::shared_ptr<Item> &ite
 			case ITEM_FIREFIELD_PVP_SMALL:
 			case ITEM_POISONFIELD_PVP:
 			case ITEM_ENERGYFIELD_PVP: {
-				// PvE walls (cast outside a PvP situation) look walkable to everyone, caster included
-				if (!Combat::isPveWall(item) && !Combat::isOwnedFieldBystander(player, item)) {
+				// walls look walkable to whoever may walk through them (never the caster); fields look
+				// harmless to bystanders
+				const bool isWall = wireId == ITEM_MAGICWALL || wireId == ITEM_WILDGROWTH;
+				if (isWall ? !Combat::isWalkableWallFor(player, item) : !Combat::isOwnedFieldBystander(player, item)) {
 					break;
 				}
 				if (wireId == ITEM_MAGICWALL) {

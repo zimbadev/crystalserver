@@ -786,7 +786,7 @@ ReturnValue Tile::queryAdd(int32_t, const std::shared_ptr<Thing> &thing, uint32_
 							// Open PvP (2014 rules): a magic wall / wild growth blocks only its owner and
 							// players in a PvP situation with him — everyone else walks through while the
 							// wall stays up for those it does block.
-							if ((findfield->getID() == ITEM_MAGICWALL || findfield->getID() == ITEM_WILDGROWTH) && (Combat::isPveWall(findfield) || Combat::isOwnedFieldBystander(creature->getPlayer(), findfield))) {
+							if (Combat::isWalkableWallFor(creature->getPlayer(), findfield)) {
 								return RETURNVALUE_NOERROR;
 							}
 						}

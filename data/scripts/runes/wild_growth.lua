@@ -23,8 +23,8 @@ function onCreateWildGrowth(creature, position)
 			-- Normalize summon casts to the master so the owner is always a stable player GUID.
 			local fieldOwner = creature:getMaster() or creature
 			item:setOwner(fieldOwner)
-			-- Cast outside a PvP situation -> PvE growth: blocks only monsters, every player
-			-- (including the caster) walks through it
+			-- Cast outside a PvP situation -> PvE growth: blocks monsters and the caster, every other
+			-- player walks through it
 			if fieldOwner:isPlayer() and not fieldOwner:hasActivePvpSituation() then
 				item:setCustomAttribute("pveWall", true)
 			end

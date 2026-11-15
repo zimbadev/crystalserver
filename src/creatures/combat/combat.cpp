@@ -567,6 +567,19 @@ bool Combat::isPveWall(const std::shared_ptr<Item> &item) {
 	return item && g_game().isExpertPvp() && item->getCustomAttribute("pveWall") != nullptr;
 }
 
+bool Combat::isWalkableWallFor(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &wall) {
+	if (!player || !wall || (wall->getID() != ITEM_MAGICWALL && wall->getID() != ITEM_WILDGROWTH)) {
+		return false;
+	}
+
+	// the caster never walks through his own wall
+	const auto ownerId = wall->getOwnerId();
+	if (ownerId != 0 && ownerId == player->getGUID()) {
+		return false;
+	}
+	return isPveWall(wall) || isOwnedFieldBystander(player, wall);
+}
+
 ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const std::shared_ptr<Creature> &target, bool aggressive) {
 	if (!aggressive) {
 		return RETURNVALUE_NOERROR;

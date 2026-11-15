@@ -237,9 +237,12 @@ public:
 	// Open PvP (2014 rules): resolve a field's ownerId (a player GUID) to the owning player, falling
 	// back to a live summon's master. Single source of truth for field-owner lookup.
 	static std::shared_ptr<Player> resolveFieldOwnerPlayer(uint32_t ownerId);
-	// Open PvP (2014 rules): wall cast OUTSIDE a PvP situation = PvE wall — blocks only monsters,
-	// every player (including the caster) walks through it. Flagged at cast time by the rune script.
+	// Open PvP (2014 rules): wall cast OUTSIDE a PvP situation = PvE wall, it blocks monsters and its
+	// caster, every other player walks through it. Flagged at cast time by the rune script.
 	static bool isPveWall(const std::shared_ptr<Item> &item);
+	// Open PvP (2014 rules): may this player walk through this magic wall / wild growth? Never through
+	// his own; through a PvE wall or the wall of a player he is not in a PvP situation with.
+	static bool isWalkableWallFor(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &wall);
 	static bool isPlayerCombat(const std::shared_ptr<Creature> &target);
 	static CombatType_t ConditionToDamageType(ConditionType_t type);
 	static ConditionType_t DamageToConditionType(CombatType_t type);
