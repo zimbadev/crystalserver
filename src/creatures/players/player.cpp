@@ -7307,6 +7307,58 @@ void Player::updatePvpSituationMarks() {
 	if (activePairs != pvpActivePairs) {
 		pvpActivePairs = activePairs;
 		g_game().sendUpdateCreature(static_self_cast<Player>());
+		// fields and walls of the players we fight now affect us (or no longer do)
+		refreshPvpItemsInView();
+	}
+}
+
+void Player::refreshPvpItemsInView() {
+	if (!client || !g_game().isExpertPvp()) {
+		return;
+	}
+
+	const Position &center = getPosition();
+	int32_t minZ = 0;
+	int32_t maxZ = MAP_INIT_SURFACE_LAYER;
+	if (center.z > MAP_INIT_SURFACE_LAYER) {
+		minZ = std::max<int32_t>(center.z - MAP_LAYER_VIEW_LIMIT, 0);
+		maxZ = std::min<int32_t>(center.z + MAP_LAYER_VIEW_LIMIT, MAP_MAX_LAYERS - 1);
+	}
+
+	for (int32_t z = minZ; z <= maxZ; ++z) {
+		const int32_t offsetZ = center.z - z;
+		for (int32_t x = center.x - MAP_MAX_CLIENT_VIEW_PORT_X - 1 + offsetZ; x <= center.x + MAP_MAX_CLIENT_VIEW_PORT_X + 2 + offsetZ; ++x) {
+			for (int32_t y = center.y - MAP_MAX_CLIENT_VIEW_PORT_Y - 1 + offsetZ; y <= center.y + MAP_MAX_CLIENT_VIEW_PORT_Y + 2 + offsetZ; ++y) {
+				if (x < 0 || y < 0 || x > std::numeric_limits<uint16_t>::max() || y > std::numeric_limits<uint16_t>::max()) {
+					continue;
+				}
+				const Position pos(static_cast<uint16_t>(x), static_cast<uint16_t>(y), static_cast<uint8_t>(z));
+				const auto &tile = g_game().map.getTile(pos);
+				const TileItemVector* items = tile ? tile->getItemList() : nullptr;
+				if (!items) {
+					continue;
+				}
+				for (const auto &item : *items) {
+					// only the player-made walls and fields that ProtocolGame::AddItem shows per viewer
+					if (!item || item->getOwnerId() == 0) {
+						continue;
+					}
+					switch (item->getID()) {
+						case ITEM_MAGICWALL:
+						case ITEM_WILDGROWTH:
+						case ITEM_FIREFIELD_PVP_FULL:
+						case ITEM_FIREFIELD_PVP_MEDIUM:
+						case ITEM_FIREFIELD_PVP_SMALL:
+						case ITEM_POISONFIELD_PVP:
+						case ITEM_ENERGYFIELD_PVP:
+							sendUpdateTileItem(tile, pos, item);
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
 	}
 }
 

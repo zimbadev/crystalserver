@@ -964,6 +964,9 @@ public:
 	PvPBox_t getPvpSituationMarkFor(const std::shared_ptr<Player> &viewer) const;
 	// 1 Hz: re-send our creature block to viewers whenever the set of active situations changes.
 	void updatePvpSituationMarks();
+	// Open PvP: re-send to this player's client every player-made field and wall in view, so the
+	// per-viewer item id (ProtocolGame::AddItem) follows a change of whom they affect.
+	void refreshPvpItemsInView();
 	// Open PvP: true when no other player is stacked on top of us on our tile.
 	bool isFirstInStack() const;
 	void addUnjustifiedDead(const std::shared_ptr<Player> &attacked);
