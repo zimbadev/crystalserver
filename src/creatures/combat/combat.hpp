@@ -230,13 +230,23 @@ public:
 	static bool isProtected(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target);
 	// Open PvP expert modes (dove / white hand / yellow hand / red fist): who may attack whom.
 	static ReturnValue checkExpertPvpMode(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target);
+	// May a player picked by a chain spell or a weapon area be hit? Classic: only with secure mode off.
+	// Expert PvP: the same PvP mode rule as for a direct attack.
+	static bool mayHitPlayerInArea(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target);
 	static bool isOwnedFieldBystander(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &field);
 	// Open PvP (2014 rules): resolve a field's ownerId (a player GUID) to the owning player, falling
 	// back to a live summon's master. Single source of truth for field-owner lookup.
 	static std::shared_ptr<Player> resolveFieldOwnerPlayer(uint32_t ownerId);
-	// Open PvP (2014 rules): wall cast OUTSIDE a PvP situation = PvE wall — blocks only monsters,
-	// every player (including the caster) walks through it. Flagged at cast time by the rune script.
+	// Open PvP (2014 rules): wall cast OUTSIDE a PvP situation = PvE wall, it blocks monsters and its
+	// caster, every other player walks through it. Flagged at cast time by the rune script.
 	static bool isPveWall(const std::shared_ptr<Item> &item);
+	// Open PvP (2014 rules): may this player walk through this magic wall / wild growth? Never through
+	// his own; through a PvE wall or the wall of a player he is not in a PvP situation with.
+	static bool isWalkableWallFor(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &wall);
+	// Open PvP (2014 rules): a creature stands on the tile and every projectile blocker there is a
+	// player's magic wall / wild growth (players may stand on the walls of others). Such a tile does
+	// not shield the creature from attacks. False without expert PvP.
+	static bool isOccupiedOwnedWallTile(const std::shared_ptr<Tile> &tile);
 	static bool isPlayerCombat(const std::shared_ptr<Creature> &target);
 	static CombatType_t ConditionToDamageType(ConditionType_t type);
 	static ConditionType_t DamageToConditionType(CombatType_t type);

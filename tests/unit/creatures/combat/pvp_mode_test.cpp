@@ -35,6 +35,8 @@ suite<"combat"> pvpModeAllowsTest = [] {
 		{ "yellow hand allows self-defense", PVP_MODE_YELLOW_HAND, PvpFacts { .targetAttackedMe = true }, true },
 		{ "yellow hand defends an attacked ally", PVP_MODE_YELLOW_HAND, PvpFacts { .attackedAllyOfMe = true }, true },
 		{ "yellow hand attacks a skulled target", PVP_MODE_YELLOW_HAND, PvpFacts { .targetSkulled = true }, true },
+		{ "yellow hand spares a skulled party member", PVP_MODE_YELLOW_HAND, PvpFacts { .targetSkulled = true, .partner = true }, false },
+		{ "yellow hand spares a skulled guild mate", PVP_MODE_YELLOW_HAND, PvpFacts { .targetSkulled = true, .guildMate = true }, false },
 
 		// Red fist: attack everyone except own party/guild, even in a self-defense context.
 		{ "red fist attacks a neutral", PVP_MODE_RED_FIST, PvpFacts {}, true },

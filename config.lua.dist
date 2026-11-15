@@ -30,12 +30,15 @@ maintainModeMessage = ""
 -- NOTE: valid values for worldLocation are: "Europe", "North America", "South America" and "Oceania"
 worldId = 1
 worldType = "pvp"
+-- NOTE: expertPvp enables the Expert PvP rules (pvp modes, pvp situations, players walk through each other) on top of worldType.
+-- It only applies to "pvp" and "pvp-enforced" worlds (on "pvp-enforced" every player always fights with red fist),
+-- every other world type ignores it. With false every world keeps the classic rules.
+expertPvp = false
 worldLocation = "South America"
 
 -- Combat settings
 -- NOTE: removeBeginningWeaponAmmunition: spears, arrows, bolt have endless ammo (allows training for paladins)
 -- NOTE: refundManaOnBeginningWeapons: wand of vortex and snakebite refund mana used (allows training for mages)
-worldType = "expert-pvp"
 hotkeyAimbotEnabled = true
 protectionLevel = 7
 pzLocked = 60 * 1000

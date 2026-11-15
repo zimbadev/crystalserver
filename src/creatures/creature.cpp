@@ -507,6 +507,19 @@ void Creature::onDeath() {
 	bool mostDamageUnjustified = false;
 	const auto &lastHitCreature = g_game().getCreatureByID(lastHitCreatureId);
 	std::shared_ptr<Creature> lastHitCreatureMaster;
+
+	// Expert PvP: every player who attacked the victim within the PZ lock time gets the frag (with a share
+	// when there are many), collected before the attack marks are removed below. Classic worlds keep
+	// the last hitter rule.
+	const bool expertFrags = getPlayer() && g_game().isExpertPvp();
+	std::vector<std::shared_ptr<Player>> expertParticipants;
+	double expertFragWeight = 1.0;
+	if (expertFrags) {
+		expertParticipants = getPlayer()->getExpertPvpKillParticipants();
+		expertFragWeight = Player::getExpertPvpFragWeight(expertParticipants.size());
+	}
+
+	std::shared_ptr<Player> lastHitPlayer = nullptr;
 	if (lastHitCreature && getPlayer()) {
 		std::shared_ptr<Player> killerPlayer = nullptr;
 
@@ -521,11 +534,25 @@ void Creature::onDeath() {
 			 * @deprecated -- This is here to trigger the deprecated onKill events in lua
 			 */
 			lastHitCreature->deprecatedOnKilledCreature(getCreature(), true);
-			lastHitUnjustified = killerPlayer->onKilledPlayer(getPlayer(), true);
+			if (expertFrags) {
+				lastHitUnjustified = killerPlayer->onExpertPvpKilledPlayer(getPlayer(), true, expertFragWeight);
+			} else {
+				lastHitUnjustified = killerPlayer->onKilledPlayer(getPlayer(), true);
+			}
 			lastHitCreatureMaster = lastHitCreature->getMaster();
+			lastHitPlayer = killerPlayer;
 		}
 	} else {
 		lastHitCreatureMaster = nullptr;
+	}
+
+	if (expertFrags) {
+		for (const auto &participant : expertParticipants) {
+			if (participant != lastHitPlayer) {
+				participant->onExpertPvpKilledPlayer(getPlayer(), false, expertFragWeight);
+			}
+		}
+		getPlayer()->clearExpertPvpAggressors();
 	}
 
 	std::shared_ptr<Creature> mostDamageCreature = nullptr;
@@ -596,7 +623,7 @@ void Creature::onDeath() {
 				killerPlayer = killer->getMaster()->getPlayer();
 			}
 
-			if (killerPlayer) {
+			if (killerPlayer && !expertFrags) {
 				killerPlayer->onKilledPlayer(player, false);
 			}
 		}

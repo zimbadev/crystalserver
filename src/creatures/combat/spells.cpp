@@ -431,8 +431,9 @@ bool Spell::playerSpellCheck(const std::shared_ptr<Player> &player) const {
 	}
 
 	// Open PvP (2014 rules): a player hidden under another player in the tile stack
-	// cannot use aggressive area spells/runes — only the top ("first in stack") player can.
-	if (aggressive && range < 1 && g_game().isExpertPvp() && !player->isFirstInStack()) {
+	// cannot use aggressive area spells/runes, only the top ("first in stack") player can. Spells and
+	// runes that need a target are not area attacks; Combat::canDoCombat stops him starting PvP with them.
+	if (aggressive && !needTarget && range < 1 && g_game().isExpertPvp() && !player->isFirstInStack()) {
 		player->sendCancelMessage(RETURNVALUE_NOTPOSSIBLE);
 		g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
 		return false;
@@ -624,7 +625,18 @@ bool Spell::playerRuneSpellCheck(const std::shared_ptr<Player> &player, const Po
 		return false;
 	}
 
-	if (aggressive && needTarget && topVisibleCreature && player->hasSecureMode()) {
+	if (aggressive && needTarget && topVisibleCreature && g_game().isExpertPvp()) {
+		// Expert PvP: an aimed rune follows the same PvP mode rule as a direct attack, secure mode or not
+		const auto &targetPlayer = topVisibleCreature->getPlayer();
+		if (targetPlayer && targetPlayer != player) {
+			const ReturnValue modeRet = Combat::checkExpertPvpMode(player, targetPlayer);
+			if (modeRet != RETURNVALUE_NOERROR) {
+				player->sendCancelMessage(modeRet);
+				g_game().addMagicEffect(player->getPosition(), CONST_ME_POFF);
+				return false;
+			}
+		}
+	} else if (aggressive && needTarget && topVisibleCreature && player->hasSecureMode()) {
 		const auto &targetPlayer = topVisibleCreature->getPlayer();
 		if (targetPlayer && targetPlayer != player && player->getSkullClient(targetPlayer) == SKULL_NONE && !Combat::isInPvpZone(player, targetPlayer)) {
 			player->sendCancelMessage(RETURNVALUE_TURNSECUREMODETOATTACKUNMARKEDPLAYERS);

@@ -405,7 +405,8 @@ ReturnValue Combat::canTargetCreature(const std::shared_ptr<Player> &player, con
 		}
 
 		if (g_game().isExpertPvp()) {
-			// Open PvP: the expert PvP mode governs who may be targeted (supersedes secure mode)
+			// Open PvP: the expert PvP mode alone decides who may be targeted, secure mode does not
+			// (data/events/scripts/creature.lua skips its secure mode check too)
 			const ReturnValue modeRet = checkExpertPvpMode(player, target->getPlayer());
 			if (modeRet != RETURNVALUE_NOERROR) {
 				return modeRet;
@@ -419,7 +420,7 @@ ReturnValue Combat::canTargetCreature(const std::shared_ptr<Player> &player, con
 }
 
 ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &caster, const std::shared_ptr<Tile> &tile, bool aggressive) {
-	if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
+	if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE) && !isOccupiedOwnedWallTile(tile)) {
 		return RETURNVALUE_CANNOTTHROW;
 	}
 	if (aggressive && tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
@@ -489,8 +490,8 @@ bool pvpModeAllows(PvpMode_t mode, const PvpFacts &facts) {
 		return true;
 	}
 
-	// yellow hand: skulled players are fair game
-	if (mode == PVP_MODE_YELLOW_HAND && facts.targetSkulled) {
+	// yellow hand: skulled players are fair game, except our own party and guild members
+	if (mode == PVP_MODE_YELLOW_HAND && facts.targetSkulled && !facts.partner && !facts.guildMate) {
 		return true;
 	}
 
@@ -506,19 +507,28 @@ ReturnValue Combat::checkExpertPvpMode(const std::shared_ptr<Player> &attacker, 
 		return RETURNVALUE_NOERROR;
 	}
 
-	const PvpMode_t mode = attacker->getPvpMode();
+	const PvpMode_t mode = attacker->getEffectivePvpMode();
 
 	// gather the decision facts from the live players, then defer to the pure decision matrix. All of
 	// these accessors are side-effect-free reads, so evaluating them eagerly does not change behavior.
 	PvpFacts facts;
 	facts.targetAttackedMe = target->hasAttacked(attacker);
 	facts.inSituation = attacker->isInPvpSituationWith(target);
-	facts.targetSkulled = attacker->getSkullClient(target) != SKULL_NONE;
+	// the green skull only marks a party member, it is not a skull that makes the target fair game
+	const Skulls_t targetSkull = attacker->getSkullClient(target);
+	facts.targetSkulled = targetSkull != SKULL_NONE && targetSkull != SKULL_GREEN;
 	facts.attackedAllyOfMe = target->hasAttackedAllyOf(attacker);
 	facts.partner = attacker->isPartner(target);
 	facts.guildMate = attacker->isGuildMate(target);
 
 	return pvpModeAllows(mode, facts) ? RETURNVALUE_NOERROR : RETURNVALUE_YOUMAYNOTATTACKTHISPLAYER;
+}
+
+bool Combat::mayHitPlayerInArea(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target) {
+	if (!g_game().isExpertPvp()) {
+		return !attacker->hasSecureMode();
+	}
+	return checkExpertPvpMode(attacker, target) == RETURNVALUE_NOERROR;
 }
 
 std::shared_ptr<Player> Combat::resolveFieldOwnerPlayer(uint32_t ownerId) {
@@ -554,7 +564,45 @@ bool Combat::isOwnedFieldBystander(const std::shared_ptr<Player> &player, const 
 }
 
 bool Combat::isPveWall(const std::shared_ptr<Item> &item) {
-	return item && item->getCustomAttribute("pveWall") != nullptr;
+	return item && g_game().isExpertPvp() && item->getCustomAttribute("pveWall") != nullptr;
+}
+
+bool Combat::isWalkableWallFor(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &wall) {
+	if (!player || !wall || (wall->getID() != ITEM_MAGICWALL && wall->getID() != ITEM_WILDGROWTH)) {
+		return false;
+	}
+
+	// the caster never walks through his own wall
+	const auto ownerId = wall->getOwnerId();
+	if (ownerId != 0 && ownerId == player->getGUID()) {
+		return false;
+	}
+	return isPveWall(wall) || isOwnedFieldBystander(player, wall);
+}
+
+bool Combat::isOccupiedOwnedWallTile(const std::shared_ptr<Tile> &tile) {
+	if (!tile || !g_game().isExpertPvp() || !tile->getTopCreature()) {
+		return false;
+	}
+
+	const auto &ground = tile->getGround();
+	if (ground && Item::items[ground->getID()].blockProjectile) {
+		return false;
+	}
+
+	bool ownedWall = false;
+	if (const TileItemVector* items = tile->getItemList()) {
+		for (const auto &item : *items) {
+			if (!item || !Item::items[item->getID()].blockProjectile) {
+				continue;
+			}
+			if ((item->getID() != ITEM_MAGICWALL && item->getID() != ITEM_WILDGROWTH) || item->getOwnerId() == 0) {
+				return false;
+			}
+			ownedWall = true;
+		}
+	}
+	return ownedWall;
 }
 
 ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const std::shared_ptr<Creature> &target, bool aggressive) {
@@ -565,7 +613,7 @@ ReturnValue Combat::canDoCombat(const std::shared_ptr<Creature> &attacker, const
 	const auto &targetPlayer = target ? target->getPlayer() : nullptr;
 	if (target) {
 		const std::shared_ptr<Tile> &tile = target->getTile();
-		if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE)) {
+		if (tile->hasProperty(CONST_PROP_BLOCKPROJECTILE) && !isOccupiedOwnedWallTile(tile)) {
 			return RETURNVALUE_NOTENOUGHROOM;
 		}
 		if (targetPlayer && tile->hasFlag(TILESTATE_PROTECTIONZONE)) {
@@ -2022,7 +2070,14 @@ std::vector<std::pair<Position, std::vector<uint32_t>>> Combat::pickChainTargets
 			const auto &spectatorSummon = spectator->isSummon();
 
 			if (casterPlayer) {
-				if (casterPlayer->hasSecureMode()) {
+				if (g_game().isExpertPvp()) {
+					const auto &spectatorMaster = spectatorSummon && spectator->getMaster() ? spectator->getMaster()->getPlayer() : nullptr;
+					const auto &bouncePlayer = spectatorPlayer ? spectatorPlayer : spectatorMaster;
+					if (bouncePlayer && bouncePlayer != casterPlayer && !mayHitPlayerInArea(casterPlayer, bouncePlayer)) {
+						visited.insert(spectator->getID());
+						continue;
+					}
+				} else if (casterPlayer->hasSecureMode()) {
 					if (spectatorPlayer) {
 						visited.insert(spectator->getID());
 						continue;

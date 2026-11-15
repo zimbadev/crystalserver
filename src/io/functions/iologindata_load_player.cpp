@@ -436,9 +436,10 @@ void IOLoginDataLoad::loadPlayerKills(const std::shared_ptr<Player> &player, DBR
 	if ((result = db.storeQuery(query.str()))) {
 		do {
 			auto killTime = result->getNumber<time_t>("time");
-			// keep the full 30-day window: the month frag bar counts it and the orange skull
-			// (unavenged kills) lasts 7 days — the old FRAG_TIME (24h) gate dropped both on relog
-			if ((time(nullptr) - killTime) <= 30 * 24 * 60 * 60) {
+			// Expert PvP keeps the full 30-day window: the month frag bar counts it and the orange skull
+			// (unavenged kills) lasts 7 days, the old FRAG_TIME (24h) gate dropped both on relog
+			const auto keepSeconds = g_game().isExpertPvp() ? static_cast<int64_t>(30 * 24 * 60 * 60) : static_cast<int64_t>(g_configManager().getNumber(FRAG_TIME));
+			if ((time(nullptr) - killTime) <= keepSeconds) {
 				const double weight = std::clamp(static_cast<double>(result->getNumber<uint16_t>("weight")) / 100.0, 0.0, 1.0);
 				player->unjustifiedKills.emplace_back(result->getNumber<uint32_t>("target"), killTime, result->getNumber<bool>("unavenged"), weight);
 			}
