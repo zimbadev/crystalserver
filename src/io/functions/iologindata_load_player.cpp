@@ -575,7 +575,10 @@ void IOLoginDataLoad::loadPlayerInstantSpellList(const std::shared_ptr<Player> &
 	query << "SELECT `player_id`, `name` FROM `player_spells` WHERE `player_id` = " << player->getGUID();
 	if ((result = db.storeQuery(query.str()))) {
 		do {
-			player->learnedInstantSpellList.emplace(result->getString("name"));
+			// Match learnInstantSpell / hasLearnedInstantSpell (always lowercase).
+			// Mixed-case DB rows otherwise miss the set lookup and get re-learned,
+			// then save INSERT hits PRIMARY KEY (player_id, name) under CI collation.
+			player->learnedInstantSpellList.emplace(asLowerCaseString(result->getString("name")));
 		} while (result->next());
 	}
 }
