@@ -573,6 +573,9 @@ void DailyRewards::loadDailyReward(const std::shared_ptr<Player> &player, DailyR
 	}
 
 	const bool rewardTaken = isRewardTaken(player);
+	// The flag is otherwise only updated at login and on a claim, so it can be stale for players
+	// who stay online until the next reward is available.
+	player->setDailyReward(rewardTaken ? DAILY_REWARD_COLLECTED : DAILY_REWARD_NOTCOLLECTED);
 	uint32_t nextRewardTime = getNextRewardTime(player);
 	if (rewardTaken && nextRewardTime == 0) {
 		nextRewardTime = static_cast<uint32_t>(std::time(nullptr) + serverTimeThreshold);
