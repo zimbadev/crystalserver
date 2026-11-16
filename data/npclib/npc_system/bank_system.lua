@@ -336,11 +336,12 @@ function Npc:parseBank(message, npc, creature, npcHandler)
 		npcHandler:say("How many platinum coins would you like to get?", npc, creature)
 		npcHandler:setTopic(playerId, 14)
 	elseif npcHandler:getTopic(playerId) == 14 then
-		if getMoneyCount(message) < 1 then
+		local moneyCount = getMoneyCount(message)
+		if moneyCount < 1 or player:getItemCount(ITEM_GOLD_COIN) < moneyCount * 100 then
 			npcHandler:say("Sorry, you do not have enough gold coins.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		else
-			count[playerId] = getMoneyCount(message)
+			count[playerId] = moneyCount
 			npcHandler:say(string.format("So you would like me to change %d of your gold coins into %d platinum coins?", count[playerId] * 100, count[playerId]), npc, creature)
 			npcHandler:setTopic(playerId, 15)
 		end
@@ -371,11 +372,12 @@ function Npc:parseBank(message, npc, creature, npcHandler)
 			npcHandler:setTopic(playerId, 0)
 		end
 	elseif npcHandler:getTopic(playerId) == 17 then
-		if getMoneyCount(message) < 1 then
+		local moneyCount = getMoneyCount(message)
+		if moneyCount < 1 or player:getItemCount(ITEM_PLATINUM_COIN) < moneyCount then
 			npcHandler:say("Sorry, you do not have enough platinum coins.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		else
-			count[playerId] = getMoneyCount(message)
+			count[playerId] = moneyCount
 			npcHandler:say(string.format("So you would like me to change %d of your platinum coins into %d gold coins for you?", count[playerId] * 100, count[playerId]), npc, creature)
 			npcHandler:setTopic(playerId, 18)
 		end
@@ -392,11 +394,12 @@ function Npc:parseBank(message, npc, creature, npcHandler)
 		end
 		npcHandler:setTopic(playerId, 0)
 	elseif npcHandler:getTopic(playerId) == 19 then
-		if getMoneyCount(message) < 1 then
+		local moneyCount = getMoneyCount(message)
+		if moneyCount < 1 or player:getItemCount(ITEM_PLATINUM_COIN) < moneyCount * 100 then
 			npcHandler:say("Sorry, you do not have enough platinum coins.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		else
-			count[playerId] = getMoneyCount(message)
+			count[playerId] = moneyCount
 			npcHandler:say(string.format("So you would like me to change %d of your platinum coins into %d crystal coins for you?", count[playerId] * 100, count[playerId]), npc, creature)
 			npcHandler:setTopic(playerId, 20)
 		end
@@ -416,11 +419,12 @@ function Npc:parseBank(message, npc, creature, npcHandler)
 		npcHandler:say("How many crystal coins would you like to change into platinum?", npc, creature)
 		npcHandler:setTopic(playerId, 21)
 	elseif npcHandler:getTopic(playerId) == 21 then
-		if getMoneyCount(message) < 1 then
+		local moneyCount = getMoneyCount(message)
+		if moneyCount < 1 or player:getItemCount(ITEM_CRYSTAL_COIN) < moneyCount then
 			npcHandler:say("Sorry, you do not have enough crystal coins.", npc, creature)
 			npcHandler:setTopic(playerId, 0)
 		else
-			count[playerId] = getMoneyCount(message)
+			count[playerId] = moneyCount
 			npcHandler:say(string.format("So you would like me to change %d of your crystal coins into %d platinum coins for you?", count[playerId] * 100, count[playerId]), npc, creature)
 			npcHandler:setTopic(playerId, 22)
 		end

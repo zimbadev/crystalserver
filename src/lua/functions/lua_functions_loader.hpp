@@ -17,6 +17,8 @@
 
 #pragma once
 
+#include <limits>
+
 #include "declarations.hpp"
 #include "lua/scripts/luajit_sync.hpp"
 #include "game/movement/position.hpp"
@@ -83,6 +85,15 @@ public:
 				if (number < 0) {
 					g_logger().debug("[{}] overflow, setting to default unsigned value (0), called line: {}:{}, in {}", __FUNCTION__, location.line(), location.column(), location.function_name());
 					return T(0);
+				}
+
+				// Converting an out-of-range double to an unsigned integer is undefined
+				// behaviour (in practice it wraps, so 4294967300 becomes 4). Clamp it.
+				// Use >= because numeric_limits<T>::max() may round up to the next
+				// representable double for 64-bit types.
+				if (number >= static_cast<lua_Number>(std::numeric_limits<T>::max())) {
+					g_logger().debug("[{}] overflow, clamping to max unsigned value, called line: {}:{}, in {}", __FUNCTION__, location.line(), location.column(), location.function_name());
+					return std::numeric_limits<T>::max();
 				}
 			}
 			return static_cast<T>(number);
