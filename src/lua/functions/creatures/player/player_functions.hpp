@@ -124,6 +124,7 @@ class PlayerFunctions {
 	static int luaPlayerSetKills(lua_State* L);
 	static int luaPlayerSendCreatureSquare(lua_State* L);
 	static int luaPlayerHasActivePvpSituation(lua_State* L);
+	static int luaPlayerGetPvpMode(lua_State* L);
 	static int luaPlayerSendDiscoveryData(lua_State* L);
 	static int luaPlayerSendDiscoveryCurrentArea(lua_State* L);
 	static int luaPlayerSendDiscoveryExploring(lua_State* L);
