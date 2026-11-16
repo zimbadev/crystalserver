@@ -6,10 +6,18 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - "src/**"
+      - "CMakeLists.txt"
+      - "CMakePresets.json"
+      - "cmake/**"
+      - "vcpkg.json"
   merge_group:
   push:
     paths:
       - "src/**"
+      - "CMakeLists.txt"
+      - "CMakePresets.json"
+      - "cmake/**"
+      - "vcpkg.json"
     branches:
       - main
 env:

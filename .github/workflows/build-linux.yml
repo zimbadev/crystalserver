@@ -110,7 +110,7 @@ jobs:
     - uses: actions/cache/restore@v4
       with:
         path: .cache/downloads
-        key: downloads-v1-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
+        key: downloads-v1-${{ runner.os }}-${{ hashFiles('vcpkg.json', 'cmake/vcpkg-ports/**') }}
         restore-keys: downloads-v1-${{ runner.os }}-
       id: downloads
     - uses: actions/cache/restore@v4

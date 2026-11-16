@@ -183,6 +183,14 @@ enum class WheelSpellGrade_t : uint8_t {
 	MAX = 3 // This one is used only on LUA
 };
 
+/// CIP SpellDataModification (S 0x60) entry `mod` field.
+/// Classic wire is (u16 spellId, u8 mod, u32 value). CIP UI refreshes the spell
+/// list on any non-empty packet (`TSpellListDataModel::onSpellDataModificationsApplied`);
+/// Crystal emits wheel grades as mod=WHEEL_GRADE with value=WheelSpellGrade_t.
+enum class SpellDataModificationMod_t : uint8_t {
+	WHEEL_GRADE = 0,
+};
+
 enum class WheelSpellBoost_t : uint8_t {
 	MANA = 0,
 	COOLDOWN = 1,
@@ -286,13 +294,13 @@ struct SlotInfo {
 namespace WheelSpells {
 	struct Increase {
 		bool area = false;
-		int damage = 0;
-		int heal = 0;
+		float damage = 0;
+		float heal = 0;
 		int aditionalTarget = 0;
 		int damageReduction = 0;
 		int duration = 0;
-		int criticalDamage = 0;
-		int criticalChance = 0;
+		float criticalDamage = 0;
+		float criticalChance = 0;
 	};
 
 	struct Decrease {

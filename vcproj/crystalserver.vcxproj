@@ -34,6 +34,7 @@
     <ClInclude Include="..\src\creatures\npcs\npcs.hpp" />
     <ClInclude Include="..\src\creatures\npcs\spawns\spawn_npc.hpp" />
     <ClInclude Include="..\src\creatures\players\attached_effects\player_attached_effects.hpp" />
+    <ClInclude Include="..\src\creatures\players\daily_reward\daily_reward.hpp" />
     <ClInclude Include="..\src\creatures\players\grouping\familiars.hpp" />
     <ClInclude Include="..\src\creatures\players\grouping\groups.hpp" />
     <ClInclude Include="..\src\creatures\players\grouping\guild.hpp" />
@@ -258,6 +259,7 @@
     <ClCompile Include="..\src\creatures\npcs\spawns\spawn_npc.cpp" />
     <ClCompile Include="..\src\account\account.cpp" />
     <ClCompile Include="..\src\creatures\players\attached_effects\player_attached_effects.cpp" />
+    <ClCompile Include="..\src\creatures\players\daily_reward\daily_reward.cpp" />
     <ClCompile Include="..\src\creatures\players\grouping\familiars.cpp" />
     <ClCompile Include="..\src\creatures\players\grouping\groups.cpp" />
     <ClCompile Include="..\src\creatures\players\grouping\guild.cpp" />
@@ -418,6 +420,7 @@
     <ClCompile Include="..\src\server\network\message\outputmessage.cpp" />
     <ClCompile Include="..\src\server\network\protocol\protocol.cpp" />
     <ClCompile Include="..\src\server\network\protocol\protocolgame.cpp" />
+    <ClCompile Include="..\src\server\network\protocol\protocolgame_socials.cpp" />
     <ClCompile Include="..\src\server\network\protocol\protocollogin.cpp" />
     <ClCompile Include="..\src\server\network\protocol\protocolstatus.cpp" />
     <ClCompile Include="..\src\server\network\webhook\webhook.cpp" />

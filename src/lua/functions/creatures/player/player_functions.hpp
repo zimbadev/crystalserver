@@ -138,6 +138,10 @@ class PlayerFunctions {
 	static int luaPlayerGetRewardList(lua_State* L);
 
 	static int luaPlayerSetDailyReward(lua_State* L);
+	static int luaPlayerGetCollectionTokens(lua_State* L);
+	static int luaPlayerSetCollectionTokens(lua_State* L);
+	static int luaPlayerGetJokerTokens(lua_State* L);
+	static int luaPlayerSetJokerTokens(lua_State* L);
 
 	static int luaPlayerSendInventory(lua_State* L);
 	static int luaPlayerSendLootStats(lua_State* L);
@@ -278,6 +282,7 @@ class PlayerFunctions {
 	static int luaPlayerRemoveOutfitAddon(lua_State* L);
 	static int luaPlayerHasOutfit(lua_State* L);
 	static int luaPlayerSendOutfitWindow(lua_State* L);
+	static int luaPlayerSendHirelingNameChange(lua_State* L);
 
 	static int luaPlayerAddMount(lua_State* L);
 	static int luaPlayerRemoveMount(lua_State* L);

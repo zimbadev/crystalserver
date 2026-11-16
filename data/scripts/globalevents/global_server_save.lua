@@ -11,7 +11,7 @@ local function ServerSave()
 	end
 
 	-- Update daily reward next server save timestamp
-	UpdateDailyRewardGlobalStorage(DailyReward.storages.lastServerSave, os.time())
+	Game.updateDailyRewardLastServerSave()
 
 	-- Discovery donations: activate scheduled improved-respawn boosts for the next day
 	if DiscoverySystem and DiscoverySystem.onServerSave then

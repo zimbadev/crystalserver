@@ -25,6 +25,24 @@
 #include "kv/kv.hpp"
 #include "utils/tools.hpp"
 
+std::string Badge::getDescription() const {
+	switch (m_type) {
+		case CyclopediaBadge_t::ACCOUNT_AGE:
+			return fmt::format("Reach {} year(s) of account loyalty.", m_amount);
+		case CyclopediaBadge_t::LOYALTY:
+			return fmt::format("Earn {} loyalty points.", m_amount);
+		case CyclopediaBadge_t::ACCOUNT_ALL_LEVEL:
+			return fmt::format("Reach a combined level of {} with the characters on your account.", m_amount);
+		case CyclopediaBadge_t::ACCOUNT_ALL_VOCATIONS:
+			return fmt::format("Reach level {} with a character of each vocation on your account.", m_amount);
+		case CyclopediaBadge_t::TOURNAMENT_PARTICIPATION:
+			return fmt::format("Participate in {} tournament(s).", m_amount);
+		case CyclopediaBadge_t::TOURNAMENT_POINTS:
+			return fmt::format("Earn {} tournament points.", m_amount);
+	}
+	return {};
+}
+
 PlayerBadge::PlayerBadge(Player &player) :
 	m_player(player) { }
 
@@ -41,6 +59,22 @@ bool PlayerBadge::hasBadge(uint8_t id) const {
 	}
 
 	return false;
+}
+
+std::shared_ptr<KV> PlayerBadge::getVisibilityKV() const {
+	return g_kv().scoped("account")->scoped(std::to_string(m_player.getAccountId()))->scoped("badge-visibility");
+}
+
+bool PlayerBadge::isVisible(uint8_t id) const {
+	const auto value = getVisibilityKV()->get(std::to_string(id));
+	return value && value->get<bool>();
+}
+
+void PlayerBadge::setVisible(uint32_t id, bool visible) const {
+	if (id == 0 || id > 255 || !hasBadge(static_cast<uint8_t>(id))) {
+		return;
+	}
+	getVisibilityKV()->set(std::to_string(id), visible);
 }
 
 bool PlayerBadge::add(uint8_t id, uint32_t timestamp /* = 0*/) {
@@ -61,6 +95,8 @@ bool PlayerBadge::add(uint8_t id, uint32_t timestamp /* = 0*/) {
 }
 
 void PlayerBadge::checkAndUpdateNewBadges() {
+	loadUnlockedBadges();
+
 	for (const auto &badge : g_game().getBadges()) {
 		switch (badge.m_type) {
 			case CyclopediaBadge_t::ACCOUNT_AGE:
@@ -88,8 +124,6 @@ void PlayerBadge::checkAndUpdateNewBadges() {
 				break;
 		}
 	}
-
-	loadUnlockedBadges();
 }
 
 void PlayerBadge::loadUnlockedBadges() {
@@ -104,7 +138,9 @@ void PlayerBadge::loadUnlockedBadges() {
 
 		g_logger().debug("[{}] - Badge {} found for player {}.", __FUNCTION__, badge.m_name, m_player.getName());
 
-		m_badgesUnlocked.emplace_back(badge, getUnlockedKV()->get(badgeName)->getNumber());
+		if (const auto value = getUnlockedKV()->get(badgeName); value && !hasBadge(badge.m_id)) {
+			m_badgesUnlocked.emplace_back(badge, value->getNumber());
+		}
 	}
 }
 
@@ -117,11 +153,11 @@ const std::shared_ptr<KV> &PlayerBadge::getUnlockedKV() {
 }
 
 // Badge Calculate Functions
-bool PlayerBadge::accountAge(uint8_t amount) const {
+bool PlayerBadge::accountAge(uint16_t amount) const {
 	return std::floor(m_player.getLoyaltyPoints() / 365) >= amount;
 }
 
-bool PlayerBadge::loyalty(uint8_t amount) const {
+bool PlayerBadge::loyalty(uint16_t amount) const {
 	return m_player.getLoyaltyPoints() >= amount;
 }
 
@@ -156,15 +192,15 @@ std::vector<std::shared_ptr<Player>> PlayerBadge::getPlayersInfoByAccount(const 
 	return players;
 }
 
-bool PlayerBadge::accountAllLevel(uint8_t amount) const {
+bool PlayerBadge::accountAllLevel(uint16_t amount) const {
 	auto players = getPlayersInfoByAccount(m_player.getAccount());
-	uint16_t total = std::accumulate(players.begin(), players.end(), 0, [](uint16_t sum, const std::shared_ptr<Player> &player) {
+	const auto total = std::accumulate(players.begin(), players.end(), uint64_t { 0 }, [](uint64_t sum, const std::shared_ptr<Player> &player) {
 		return sum + player->getLevel();
 	});
 	return total >= amount;
 }
 
-bool PlayerBadge::accountAllVocations(uint8_t amount) const {
+bool PlayerBadge::accountAllVocations(uint16_t amount) const {
 	auto knight = false;
 	auto paladin = false;
 	auto druid = false;

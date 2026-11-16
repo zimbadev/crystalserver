@@ -3,6 +3,8 @@
 	<!-- GameStore -->
 	<module type="recvbyte" byte="232" script="gamestore/gamestore.lua"/>
 	<module type="recvbyte" byte="233" script="gamestore/gamestore.lua"/>
+	<!-- CIP SetHirelingName (C 0xEC) -->
+	<module type="recvbyte" byte="236" script="gamestore/gamestore.lua"/>
 	<module type="recvbyte" byte="239" script="gamestore/gamestore.lua"/>
 	<module type="recvbyte" byte="250" delay="600" script="gamestore/gamestore.lua"/>
 	<module type="recvbyte" byte="251" script="gamestore/gamestore.lua"/>
@@ -15,11 +17,6 @@
 
 	<!-- Cults of Tibia -->
 	<module type="recvbyte" byte="15" script="cults_of_tibia/death.lua" />
-
-	<!-- Daily Reward Wall -->
-	<module type="recvbyte" byte="216" script="daily_reward/daily_reward.lua" />
-	<module type="recvbyte" byte="217" script="daily_reward/daily_reward.lua" />
-	<module type="recvbyte" byte="218" script="daily_reward/daily_reward.lua" />
 
 	<!-- Hireling Outfit Helper -->
 	<module type="recvbyte" byte="210" script="hirelings/hireling_module.lua" />

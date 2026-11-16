@@ -28,6 +28,7 @@ target_sources(${PROJECT_NAME}_lib PRIVATE
     players/cyclopedia/player_badge.cpp
     players/cyclopedia/player_cyclopedia.cpp
     players/cyclopedia/player_title.cpp
+    players/daily_reward/daily_reward.cpp
     players/wheel/player_wheel.cpp
     players/wheel/wheel_gems.cpp
     players/vocations/vocation.cpp

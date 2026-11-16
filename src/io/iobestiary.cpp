@@ -488,13 +488,21 @@ void IOBestiary::addBestiaryKill(const std::shared_ptr<Player> &player, const st
 
 	player->addBestiaryKillCount(raceid, amount);
 
+	if (curCount == 0) {
+		ss << "You discovered the creature '" << mtype->name << "'.";
+		player->sendTextMessage(MESSAGE_STATUS, ss.str());
+		player->sendBestiaryEntryChanged(raceid);
+		player->sendScreenshotAndBannerProgressRace(raceid, 1, false);
+	}
+
 	uint8_t oldRank = getKillStatus(mtype, curCount);
 	uint8_t newRank = getKillStatus(mtype, curCount + amount);
 	if (oldRank != newRank) {
-		ss << "You unlocked details for the creature '" << mtype->name << "'";
-		player->sendTextMessage(MESSAGE_STATUS, ss.str());
+		std::ostringstream ssRank;
+		ssRank << "You unlocked details for the creature '" << mtype->name << "'";
+		player->sendTextMessage(MESSAGE_STATUS, ssRank.str());
 		player->sendBestiaryEntryChanged(raceid);
-		player->sendScreenshotAndBannerProgressRace(raceid, newRank, false);
+		player->sendScreenshotAndBannerProgressRace(raceid, 0, false);
 
 		if ((curCount + amount) >= mtype->info.bestiaryToUnlock) {
 			addCharmPoints(player, mtype->info.bestiaryCharmsPoints);

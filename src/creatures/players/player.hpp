@@ -376,6 +376,12 @@ public:
 	bool canSeeInvisibility() const override;
 
 	void setDailyReward(uint8_t reward);
+	uint8_t getDailyReward() const;
+
+	uint32_t getCollectionTokens() const;
+	void setCollectionTokens(uint32_t value);
+	uint32_t getJokerTokens() const;
+	void setJokerTokens(uint32_t value);
 
 	void removeList() override;
 	void addList() override;
@@ -384,6 +390,7 @@ public:
 	static uint64_t getExpForLevel(const uint32_t level);
 
 	uint16_t getStaminaMinutes() const;
+	void addStaminaMinutes(uint16_t amount);
 
 	void sendItemsPrice() const;
 
@@ -1134,6 +1141,8 @@ public:
 	void removeBakragoreIcon(const IconBakragore icon);
 	void sendClientCheck() const;
 	void sendGameNews() const;
+	/// CIP HirelingNameChange (S 0xDB); see ProtocolGame::sendHirelingNameChange.
+	void sendHirelingNameChange(uint32_t creatureId = 0, uint32_t objectId = 0) const;
 	void sendMagicEffect(const Position &pos, uint16_t type, SourceEffect_t source = SourceEffect_t::GLOBAL) const;
 	void removeMagicEffect(const Position &pos, uint16_t type) const;
 	void sendPing();
@@ -1412,6 +1421,11 @@ public:
 	bool canAutoWalk(const Position &toPosition, const std::function<void()> &function, uint32_t delay = 500);
 
 	void sendMessageDialog(const std::string &message) const;
+	void sendDailyRewardCollectionState(uint8_t state) const;
+	void sendDailyRewardCollectionResource(uint8_t resourceType, uint64_t value) const;
+	void sendDailyRewardBasic() const;
+	void sendOpenRewardWall(uint8_t shrine, uint8_t dayStreak, uint16_t jokerTokens, uint16_t streakLevel, uint32_t nextRewardTime, bool rewardTaken, bool testMode) const;
+	void sendDailyRewardHistory(uint32_t playerGuid) const;
 
 	// Account
 	bool setAccount(uint32_t accountId);

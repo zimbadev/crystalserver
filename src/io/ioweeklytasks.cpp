@@ -1186,7 +1186,7 @@ void IOWeeklyTasks::ensureWeeklyTaskCount(const std::shared_ptr<Player> &player)
 						validForDifficulty = (mtype->info.bestiaryStars <= 3);
 						break;
 					case 2:
-						validForDifficulty = (mtype->info.bestiaryStars >= 2 && mtype->info.bestiaryStars <= 5);
+						validForDifficulty = (mtype->info.bestiaryStars >= 3 && mtype->info.bestiaryStars <= 4);
 						break;
 					case 3:
 						validForDifficulty = (mtype->info.bestiaryStars >= 4);

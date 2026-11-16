@@ -34,6 +34,8 @@
 #include "server/network/protocol/protocolgame.hpp"
 #include "utils/tools.hpp"
 
+#include <cmath>
+
 static PlayerWheelGem emptyGem = {};
 
 const std::array<int32_t, COMBAT_COUNT> m_resistance = { 0 };
@@ -300,11 +302,13 @@ namespace {
 			auto size = std::ssize(spellTable.grade);
 			g_logger().debug("spell area stage {}, grade {}", stage, size);
 			if (spellTable.name == spellName && stage < static_cast<uint8_t>(size)) {
-				const auto &spellData = spellTable.grade[stage];
-				if (spellData.increase.area) {
-					g_logger().debug("[{}] spell with name {}, and stage {} has increase area", __FUNCTION__, spellName, stage);
+				// Area bonuses accumulate: higher stages keep the area from lower stages.
+				for (uint8_t grade = 1; grade <= stage; ++grade) {
+					if (spellTable.grade[grade].increase.area) {
+						g_logger().debug("[{}] spell with name {}, and stage {} has increase area", __FUNCTION__, spellName, stage);
 
-					return true;
+						return true;
+					}
 				}
 			}
 		}
@@ -1260,7 +1264,42 @@ void PlayerWheel::revealGem(WheelGemQuality_t quality) {
 		}
 	});
 
+	// CIP GemAtelierGemRevealed (S 0xC5): GemId = revealed-gem inventory index
+	// (TGemAtelierPageController selectGem / GEM_ATELIER_SELECT_GEM), not item type id.
+	if (m_player.client && !m_player.client->oldProtocol) {
+		const uint16_t revealedIndex = getGemIndex(gem.uuid);
+		if (revealedIndex != 0xFF) {
+			m_player.client->sendGemAtelierGemRevealed(revealedIndex);
+		}
+	}
+
 	sendOpenWheelWindow(m_player.getID());
+}
+
+void PlayerWheel::sendSpellDataModifications() const {
+	if (!m_player.client || m_player.client->oldProtocol || m_spellsSelected.empty()) {
+		return;
+	}
+
+	std::vector<std::tuple<uint16_t, uint8_t, uint32_t>> entries;
+	entries.reserve(m_spellsSelected.size());
+	for (const auto &[spellName, grade] : m_spellsSelected) {
+		if (grade == WheelSpellGrade_t::NONE) {
+			continue;
+		}
+		const auto &spell = g_spells().getInstantSpellByName(spellName);
+		if (!spell) {
+			continue;
+		}
+		entries.emplace_back(
+			spell->getSpellId(),
+			static_cast<uint8_t>(SpellDataModificationMod_t::WHEEL_GRADE),
+			static_cast<uint32_t>(grade)
+		);
+	}
+	if (!entries.empty()) {
+		m_player.client->sendSpellDataModification(entries);
+	}
 }
 
 PlayerWheelGem &PlayerWheel::getGem(uint16_t index) {
@@ -1411,7 +1450,7 @@ void PlayerWheel::addSpellBonus(const std::string &spellName, const WheelSpells:
 		m_spellsBonuses[spellName].decrease.manaCost += bonus.decrease.manaCost;
 		m_spellsBonuses[spellName].decrease.secondaryGroupCooldown += bonus.decrease.secondaryGroupCooldown;
 		m_spellsBonuses[spellName].increase.aditionalTarget += bonus.increase.aditionalTarget;
-		m_spellsBonuses[spellName].increase.area = bonus.increase.area;
+		m_spellsBonuses[spellName].increase.area = m_spellsBonuses[spellName].increase.area || bonus.increase.area;
 		m_spellsBonuses[spellName].increase.criticalChance += bonus.increase.criticalChance;
 		m_spellsBonuses[spellName].increase.criticalDamage += bonus.increase.criticalDamage;
 		m_spellsBonuses[spellName].increase.damage += bonus.increase.damage;
@@ -1440,15 +1479,15 @@ int32_t PlayerWheel::getSpellBonus(const std::string &spellName, WheelSpellBoost
 		case SECONDARY_GROUP_COOLDOWN:
 			return decrease.secondaryGroupCooldown;
 		case CRITICAL_CHANCE:
-			return increase.criticalChance;
+			return static_cast<int32_t>(std::lround(increase.criticalChance));
 		case CRITICAL_DAMAGE:
-			return increase.criticalDamage;
+			return static_cast<int32_t>(std::lround(increase.criticalDamage));
 		case DAMAGE:
-			return increase.damage;
+			return static_cast<int32_t>(std::lround(increase.damage));
 		case DAMAGE_REDUCTION:
 			return increase.damageReduction;
 		case HEAL:
-			return increase.heal;
+			return static_cast<int32_t>(std::lround(increase.heal));
 		case LIFE_LEECH:
 			return leech.life;
 		case MANA_LEECH:
@@ -2528,6 +2567,10 @@ void PlayerWheel::loadPlayerBonusData() {
 	registerPlayerBonusData();
 
 	printPlayerWheelMethodsBonusData(m_playerBonusData);
+
+	// After wheel bonus reload, refresh CIP spell UI for grades that alter
+	// area / targets / duration (S 0x60 SpellDataModification).
+	sendSpellDataModifications();
 }
 
 void PlayerWheel::printPlayerWheelMethodsBonusData(const PlayerWheelMethodsBonusData &bonusData) const {

@@ -230,7 +230,7 @@ void IOBountyTasks::fillMissingCreatures(const std::shared_ptr<Player> &player) 
 				validForDifficulty = (mtype->info.bestiaryStars <= 3);
 				break;
 			case BOUNTY_DIFFICULTY_EXPERT:
-				validForDifficulty = (mtype->info.bestiaryStars >= 2 && mtype->info.bestiaryStars <= 5);
+				validForDifficulty = (mtype->info.bestiaryStars >= 3 && mtype->info.bestiaryStars <= 4);
 				break;
 			case BOUNTY_DIFFICULTY_MASTER:
 				validForDifficulty = (mtype->info.bestiaryStars >= 4);
@@ -320,6 +320,8 @@ void IOBountyTasks::changeDifficulty(const std::shared_ptr<Player> &player, Boun
 	uint32_t minLevel = IOWeeklyTasks::getMinLevelForDifficulty(static_cast<uint8_t>(difficulty));
 	if (player->getLevel() < minLevel) {
 		g_logger().warn("[IOBountyTasks::changeDifficulty] - Player {} (level {}) tried to set difficulty {} (requires level {})", player->getName(), player->getLevel(), static_cast<int>(difficulty), minLevel);
+		player->sendCancelMessage(fmt::format("You need level {} or higher to select this difficulty.", minLevel));
+		player->sendBountyTaskData();
 		return;
 	}
 

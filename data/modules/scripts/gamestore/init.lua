@@ -255,6 +255,11 @@ function onRecvbyte(player, msg, byte)
 	end
 
 	if byte == GameStore.RecivedPackets.C_StoreEvent then
+		-- CIP StoreEvent (C 0xE9): single event-type byte; unused here.
+		msg:getByte()
+	elseif byte == GameStore.RecivedPackets.C_ParseHirelingName then
+		-- CIP SetHirelingName (C 0xEC): name for a pending HirelingNameChange (S 0xDB).
+		parseSetHirelingName(player:getId(), msg)
 	elseif byte == GameStore.RecivedPackets.C_TransferCoins then
 		parseTransferableCoins(player:getId(), msg)
 	elseif byte == GameStore.RecivedPackets.C_OpenStore then
@@ -820,6 +825,9 @@ function Player.canBuyOffer(self, offer)
 			if self:getHirelingsCount() <= 0 then
 				disabled = 1
 				disabledReason = "You need to have a hireling."
+			elseif #self:getHirelingsInLamp() == 0 then
+				disabled = 1
+				disabledReason = "Your hireling must be inside his/her lamp."
 			end
 		elseif offer.type == GameStore.OfferTypes.OFFER_TYPE_HIRELING_SEXCHANGE then
 			if self:getHirelingsCount() <= 0 then
@@ -1296,6 +1304,43 @@ function sendRequestPurchaseData(playerId, offerId, type)
 	msg:sendToPlayer(player)
 end
 
+-- CIP HirelingNameChange (S 0xDB) via C++ ProtocolGame::sendHirelingNameChange.
+-- Zeros open a store-style name prompt; the client answers with SetHirelingName (C 0xEC).
+function sendHirelingNameChange(playerId, creatureId, objectId)
+	local player = Player(playerId)
+	if not player then
+		return false
+	end
+	player:sendHirelingNameChange(creatureId or 0, objectId or 0)
+	return true
+end
+
+GameStore.pendingHirelingNameOffers = GameStore.pendingHirelingNameOffers or {}
+
+function parseSetHirelingName(playerId, msg)
+	local player = Player(playerId)
+	if not player then
+		return false
+	end
+
+	local hirelingName = msg:getString()
+	local offerId = GameStore.pendingHirelingNameOffers[playerId]
+	if not offerId then
+		return false
+	end
+
+	GameStore.pendingHirelingNameOffers[playerId] = nil
+	local offer = GameStore.getOfferById(offerId)
+	if not offer then
+		return false
+	end
+
+	if offer.type == GameStore.OfferTypes.OFFER_TYPE_HIRELING_NAMECHANGE then
+		return GameStore.processHirelingChangeNamePurchase(player, offer, GameStore.ClientOfferTypes.CLIENT_STORE_OFFER_NAMECHANGE, hirelingName)
+	end
+	return false
+end
+
 --==GameStoreFunctions==--
 GameStore.getCategoryByName = function(name)
 	for k, category in ipairs(GameStore.Categories) do
@@ -1614,9 +1659,19 @@ function GameStore.processItemPurchase(player, offerId, offerCount, movable, set
 	if not canReceive then
 		return error({ code = 0, message = errorMsg })
 	end
-
-	for t = 1, offerCount do
-		player:addItemStoreInbox(offerId, offerCount or 1, movable, setOwner)
+	local iType = ItemType(offerId)
+	if iType and iType:isStackable() then
+		local stackSize = iType:getStackSize()
+		local remaining = offerCount
+		while remaining > 0 do
+			local toAdd = math.min(remaining, stackSize)
+			player:addItemStoreInbox(offerId, toAdd, movable, setOwner)
+			remaining = remaining - toAdd
+		end
+	else
+		for t = 1, offerCount do
+			player:addItemStoreInbox(offerId, 1, movable, setOwner)
+		end
 	end
 end
 
@@ -1903,8 +1958,8 @@ function GameStore.processHirelingPurchase(player, offer, productType, hirelingN
 		if player:getHirelingsCount() >= GameStore.ItemLimit.HIRELING then
 			return error({ code = 1, message = "You cannot have more than " .. GameStore.ItemLimit.HIRELING .. " hirelings." })
 		end
-		-- TODO: Use the correct dialog (byte 0xDB) on client 1205+
-		-- for compatibility, request name using the change name dialog
+		-- New hireling needs name + sex: RequestPurchaseData type 3 opens HirelingConfigurationDialog.
+		-- (S 0xDB HirelingNameChange is name-only; used by the rename offer path.)
 		return addPlayerEvent(sendRequestPurchaseData, 250, player:getId(), offer.id, GameStore.ClientOfferTypes.CLIENT_STORE_OFFER_HIRELING)
 	end
 end
@@ -1923,7 +1978,7 @@ local function HandleHirelingNameChange(playerId, offer, newHirelingName)
 		end
 
 		if not hireling then
-			return playerInFunction:showInfoModal("Error", "Your must select a hireling.")
+			return playerInFunction:showInfoModal("Error", "You must select a hireling.")
 		end
 
 		if hireling.active > 0 then
@@ -1931,10 +1986,14 @@ local function HandleHirelingNameChange(playerId, offer, newHirelingName)
 		end
 
 		local oldName = hireling.name
-		hireling.name = data.newHirelingName
-
-		if not playerInFunction:makeCoinTransaction(data.offer, oldName .. " to " .. hireling.name) then
+		if not playerInFunction:makeCoinTransaction(data.offer, oldName .. " to " .. data.newHirelingName) then
 			return playerInFunction:showInfoModal("Error", "Transaction error")
+		end
+
+		hireling.name = data.newHirelingName
+		if not hireling:save() then
+			hireling.name = oldName
+			return playerInFunction:showInfoModal("Error", "There was an error saving your hireling name.")
 		end
 
 		local lamp = playerInFunction:findHirelingLamp(hireling:getId())
@@ -1943,12 +2002,23 @@ local function HandleHirelingNameChange(playerId, offer, newHirelingName)
 		end
 		logger.debug("{} has been renamed to {}", oldName, hireling.name)
 		sendUpdatedStoreBalances(playerIdInFunction)
+		addPlayerEvent(sendStorePurchaseSuccessful, 200, playerIdInFunction, string.format("You have purchased %s for %d coins.", data.offer.name, data.offer.price))
 	end
 
-	player:sendHirelingSelectionModal("Choose a Hireling", "Select a hireling below", functionCallback, { offer = offer, newHirelingName = newHirelingName })
+	local eligibleHirelings = player:getHirelingsInLamp()
+	if #eligibleHirelings == 0 then
+		return player:showInfoModal("Error", "Your hireling must be inside his/her lamp.")
+	end
+	player:sendHirelingSelectionModal("Choose a Hireling", "Select a hireling below", functionCallback, { offer = offer, newHirelingName = newHirelingName }, eligibleHirelings)
 end
 
 function GameStore.processHirelingChangeNamePurchase(player, offer, productType, newHirelingName)
+	-- Recheck on purchase and name submission, even if the store offer was enabled earlier.
+	if #player:getHirelingsInLamp() == 0 then
+		GameStore.pendingHirelingNameOffers[player:getId()] = nil
+		return queueSendStoreAlertToUser("Your hireling must be inside his/her lamp.", 250, player:getId(), GameStore.StoreErrors.STORE_ERROR_INFORMATION)
+	end
+
 	if player:getClient().version < 1200 then
 		return error({
 			code = 1,
@@ -1966,12 +2036,16 @@ function GameStore.processHirelingChangeNamePurchase(player, offer, productType,
 			return string.upper(a) .. b
 		end)
 
-		local message = "Close the store window to select which hireling should be renamed to " .. newHirelingName
 		local playerId = player:getId()
+		-- The client keeps the purchase dialog open until it receives this packet.
+		-- The actual charge and rename still happen only after the hireling is selected.
+		local message = "Close the store window to select which hireling should be renamed to " .. newHirelingName
 		addPlayerEvent(sendStorePurchaseSuccessful, 200, playerId, message)
 		addPlayerEvent(HandleHirelingNameChange, 550, playerId, offer, newHirelingName)
 	else
-		return addPlayerEvent(sendRequestPurchaseData, 250, player:getId(), offer.id, GameStore.ClientOfferTypes.CLIENT_STORE_OFFER_NAMECHANGE)
+		-- CIP HirelingNameChange (S 0xDB); do not reuse character-name RequestPurchaseData (type 1).
+		GameStore.pendingHirelingNameOffers[player:getId()] = offer.id
+		return addPlayerEvent(sendHirelingNameChange, 250, player:getId(), 0, 0)
 	end
 end
 

@@ -4,6 +4,7 @@ target_sources(${PROJECT_NAME}_lib PRIVATE
     network/message/outputmessage.cpp
     network/protocol/protocol.cpp
     network/protocol/protocolgame.cpp
+    network/protocol/protocolgame_socials.cpp
     network/protocol/protocollogin.cpp
     network/protocol/protocolstatus.cpp
     network/webhook/webhook.cpp

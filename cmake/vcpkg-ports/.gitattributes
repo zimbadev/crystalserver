@@ -1,0 +1,2 @@
+# Keep vcpkg patches byte exact on every platform (core.autocrlf would turn them into CRLF).
+*.patch -text

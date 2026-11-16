@@ -321,11 +321,16 @@ local function creatureSayCallback(npc, creature, type, message)
 			npcHandler:setTopic(playerId, 0)
 		elseif npcHandler:getTopic(playerId) == 6 then
 			if player:getItemCount(9041) > 0 and player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.Questline) == 54 then
+				local sideDecision = player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.SideDecision)
+				local addon = sideDecision == 1 and 1 or 2
+
 				player:setStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.Questline, 55)
 				npcHandler:say("Great! Here, take this yalaharian addon in a return.", npc, creature)
-				player:addOutfitAddon(325, player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.SideDecision) == 1 and 1 or 2)
-				player:addOutfitAddon(324, player:getStorageValue(Storage.Quest.U8_4.InServiceOfYalahar.SideDecision) == 1 and 1 or 2)
+				player:addOutfitAddon(325, addon)
+				player:addOutfitAddon(324, addon)
+				player:addAchievement(sideDecision == 1 and "Yalahari of Wisdom" or "Yalahari of Power")
 				player:getPosition():sendMagicEffect(CONST_ME_MAGIC_BLUE)
+				player:removeItem(9041, 1)
 				npcHandler:setTopic(playerId, 0)
 			else
 				npcHandler:say("Come back when you do.", npc, creature)

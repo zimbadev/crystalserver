@@ -43,8 +43,6 @@ static constexpr int32_t STORAGEVALUE_HAZARDCOUNT = 112550;
 // Wheel of destiny
 static constexpr int32_t STORAGEVALUE_GIFT_OF_LIFE_COOLDOWN_WOD = 43200;
 
-constexpr double SCALING_BASE = 10.0;
-
 static constexpr int32_t SWIMMING_OUTFIT = 267;
 
 // Reserved player storage key ranges;

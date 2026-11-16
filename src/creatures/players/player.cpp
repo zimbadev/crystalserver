@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "creatures/players/player.hpp"
+#include "creatures/players/daily_reward/daily_reward.hpp"
 
 #include "account/account.hpp"
 #include "config/configmanager.hpp"
@@ -1038,6 +1039,14 @@ void Player::updateInventoryImbuement() {
 }
 
 uint16_t Player::getLoyaltySkill(skills_t skill) const {
+	if (skill == SKILL_MAGLEVEL) {
+		const auto loyaltyMagicLevel = getLoyaltyMagicLevel();
+		return loyaltyMagicLevel > 65535 ? 65535 : static_cast<uint16_t>(loyaltyMagicLevel);
+	}
+	if (skill < SKILL_FIRST || skill > SKILL_LAST) {
+		return 0;
+	}
+
 	uint16_t level = getBaseSkill(skill);
 	absl::uint128 currReqTries = vocation->getReqSkillTries(skill, level);
 	absl::uint128 nextReqTries = vocation->getReqSkillTries(skill, level + 1);
@@ -1065,10 +1074,25 @@ uint16_t Player::getLoyaltySkill(skills_t skill) const {
 }
 
 uint16_t Player::getBaseSkill(uint8_t skill) const {
+	if (skill == SKILL_MAGLEVEL) {
+		const auto baseMagicLevel = getBaseMagicLevel();
+		return baseMagicLevel > 65535 ? 65535 : static_cast<uint16_t>(baseMagicLevel);
+	}
+	if (skill > SKILL_LAST) {
+		return 0;
+	}
+
 	return skills[skill].level;
 }
 
 double_t Player::getSkillPercent(skills_t skill) const {
+	if (skill == SKILL_MAGLEVEL) {
+		return getMagicLevelPercent();
+	}
+	if (skill < SKILL_FIRST || skill > SKILL_LAST) {
+		return 0;
+	}
+
 	return skills[skill].percent;
 }
 
@@ -2267,6 +2291,12 @@ void Player::removeBakragoreIcon(const IconBakragore icon) {
 void Player::sendClientCheck() const {
 	if (client) {
 		client->sendClientCheck();
+	}
+}
+
+void Player::sendHirelingNameChange(uint32_t creatureId, uint32_t objectId) const {
+	if (client) {
+		client->sendHirelingNameChange(creatureId, objectId);
 	}
 }
 
@@ -4560,6 +4590,26 @@ void Player::setDailyReward(uint8_t reward) {
 	this->isDailyReward = reward;
 }
 
+uint8_t Player::getDailyReward() const {
+	return isDailyReward;
+}
+
+uint32_t Player::getCollectionTokens() const {
+	return std::max<int32_t>(0, getStorageValue(g_dailyRewards().getStorages().collectionTokens));
+}
+
+void Player::setCollectionTokens(uint32_t value) {
+	addStorageValue(g_dailyRewards().getStorages().collectionTokens, static_cast<int32_t>(value));
+}
+
+uint32_t Player::getJokerTokens() const {
+	return std::max<int32_t>(0, getStorageValue(g_dailyRewards().getStorages().jokerTokens));
+}
+
+void Player::setJokerTokens(uint32_t value) {
+	addStorageValue(g_dailyRewards().getStorages().jokerTokens, static_cast<int32_t>(value));
+}
+
 void Player::removeList() {
 	g_game().removePlayer(static_self_cast<Player>());
 
@@ -4592,6 +4642,10 @@ uint64_t Player::getExpForLevel(const uint32_t level) {
 
 uint16_t Player::getStaminaMinutes() const {
 	return staminaMinutes;
+}
+
+void Player::addStaminaMinutes(uint16_t amount) {
+	staminaMinutes = std::min<uint16_t>(2520, static_cast<uint16_t>(staminaMinutes + amount));
 }
 
 void Player::sendItemsPrice() const {
@@ -6517,6 +6571,8 @@ void Player::onPlacedCreature() {
 		removePlayer(true);
 	}
 
+	g_dailyRewards().initPlayer(static_self_cast<Player>());
+
 	this->onChangeZone(this->getZoneType());
 
 	sendUnjustifiedPoints();
@@ -7747,6 +7803,17 @@ int32_t Player::getSkill(skills_t skilltype, SkillsId_t skillinfo) const {
 }
 
 uint16_t Player::getSkillLevel(skills_t skill) const {
+	// Magic level is stored separately from the skills array. SKILL_MAGLEVEL is
+	// intentionally greater than SKILL_LAST, so indexing skills/varSkills with it
+	// reads unrelated Player memory and can produce enormous proficiency damage.
+	if (skill == SKILL_MAGLEVEL) {
+		const auto magicLevel = getMagicLevel();
+		return magicLevel > 65535 ? 65535 : static_cast<uint16_t>(magicLevel);
+	}
+	if (skill < SKILL_FIRST || skill > SKILL_LAST) {
+		return 0;
+	}
+
 	auto skillLevel = getLoyaltySkill(skill);
 	skillLevel = std::max<int32_t>(0, skillLevel + varSkills[skill]);
 
@@ -11962,6 +12029,7 @@ void Player::onRemoveCreature(const std::shared_ptr<Creature> &creature, bool is
 	if (const auto &player = getPlayer(); player == creature) {
 		if (isLogout) {
 			onDeEquipInventory();
+			g_dailyRewards().stopPlayerBonuses(player->getID());
 
 			if (m_party) {
 				m_party->leaveParty(player, true);
@@ -12238,6 +12306,36 @@ bool Player::canAutoWalk(const Position &toPosition, const std::function<void()>
 void Player::sendMessageDialog(const std::string &message) const {
 	if (client) {
 		client->sendMessageDialog(message);
+	}
+}
+
+void Player::sendDailyRewardCollectionState(uint8_t state) const {
+	if (client) {
+		client->sendDailyRewardCollectionState(state);
+	}
+}
+
+void Player::sendDailyRewardCollectionResource(uint8_t resourceType, uint64_t value) const {
+	if (client) {
+		client->sendDailyRewardCollectionResource(resourceType, value);
+	}
+}
+
+void Player::sendDailyRewardBasic() const {
+	if (client) {
+		client->sendDailyRewardBasic();
+	}
+}
+
+void Player::sendOpenRewardWall(uint8_t shrine, uint8_t dayStreak, uint16_t jokerTokens, uint16_t streakLevel, uint32_t nextRewardTime, bool rewardTaken, bool testMode) const {
+	if (client) {
+		client->sendOpenRewardWall(shrine, dayStreak, jokerTokens, streakLevel, nextRewardTime, rewardTaken, testMode);
+	}
+}
+
+void Player::sendDailyRewardHistory(uint32_t playerGuid) const {
+	if (client) {
+		client->sendDailyRewardHistory(playerGuid);
 	}
 }
 
@@ -13602,8 +13700,8 @@ void Player::refineWeaponProficiencySlot(const uint16_t itemId, const uint8_t pr
 }
 
 void Player::maximiseWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
-	// TODO(15.25): official client charges 1 special tradeable item; not in data yet, so just set to max.
 	static constexpr uint8_t MAX_RANK = 10;
+	static constexpr uint32_t MAXIMISE_ORB_COST = 1;
 	auto it = weaponProficiencies.find(itemId);
 	if (it == weaponProficiencies.end()) {
 		sendTextMessage(MESSAGE_FAILURE, "You have no proficiency progress on this weapon.");
@@ -13632,9 +13730,14 @@ void Player::maximiseWeaponProficiencySlot(const uint16_t itemId, const uint8_t 
 		sendTextMessage(MESSAGE_FAILURE, "This perk is already at its maximum rank.");
 		return;
 	}
+	if (!removeItemCountById(ITEM_LUNAR_ASCENSION_ORB, MAXIMISE_ORB_COST, false)) {
+		sendTextMessage(MESSAGE_FAILURE, "You need a lunar ascension orb to maximise this perk.");
+		return;
+	}
 	slot->value = MAX_RANK;
 	applyEquippedWeaponProficiency(itemId);
 	sendWeaponProficiencyInfo(itemId);
+	sendResourceBalance(RESOURCE_LUNAR_ASCENSION_ORBS, getItemTypeCount(ITEM_LUNAR_ASCENSION_ORB));
 }
 
 void Player::clearWeaponProficiencySlot(const uint16_t itemId, const uint8_t proficiencyLevel, const uint8_t perkPosition) {
