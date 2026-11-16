@@ -20,7 +20,6 @@ suite<"combat"> pvpModeAllowsTest = [] {
 		// Dove: pacifist, only genuine self-defense is allowed.
 		{ "dove denies a neutral", PVP_MODE_DOVE, PvpFacts {}, false },
 		{ "dove allows when the target attacked me", PVP_MODE_DOVE, PvpFacts { .targetAttackedMe = true }, true },
-		{ "dove allows inside an existing pvp situation", PVP_MODE_DOVE, PvpFacts { .inSituation = true }, true },
 		{ "dove ignores an attacked ally", PVP_MODE_DOVE, PvpFacts { .attackedAllyOfMe = true }, false },
 		{ "dove ignores a skulled target", PVP_MODE_DOVE, PvpFacts { .targetSkulled = true }, false },
 

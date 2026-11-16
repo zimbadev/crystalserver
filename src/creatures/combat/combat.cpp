@@ -405,8 +405,8 @@ ReturnValue Combat::canTargetCreature(const std::shared_ptr<Player> &player, con
 		}
 
 		if (g_game().isExpertPvp()) {
-			// Open PvP: the expert PvP mode alone decides who may be targeted, secure mode does not
-			// (data/events/scripts/creature.lua skips its secure mode check too)
+			// Expert PvP: the PvP mode and the secure mode both apply (manual 3.5.2 and 3.5.3), see
+			// checkExpertPvpMode (data/events/scripts/creature.lua skips its own secure check)
 			const ReturnValue modeRet = checkExpertPvpMode(player, target->getPlayer());
 			if (modeRet != RETURNVALUE_NOERROR) {
 				return modeRet;
@@ -480,8 +480,9 @@ bool pvpModeAllows(PvpMode_t mode, const PvpFacts &facts) {
 		return !facts.partner && !facts.guildMate;
 	}
 
-	// every remaining mode allows self-defense: the target attacked us or we are already in a mutual PvP situation
-	if (facts.targetAttackedMe || facts.inSituation) {
+	// every remaining mode allows self-defense: only a target that was aggressive towards us (manual 3.5.2,
+	// dove mode). Being in a PvP situation that we started does not count.
+	if (facts.targetAttackedMe) {
 		return true;
 	}
 
@@ -503,17 +504,23 @@ ReturnValue Combat::checkExpertPvpMode(const std::shared_ptr<Player> &attacker, 
 		return RETURNVALUE_NOERROR;
 	}
 
-	if (!g_game().isExpertPvp() || Combat::isInPvpZone(attacker, target) || attacker->isInWar(target)) {
+	// the manual has no exception for guild wars: war enemies follow the PvP modes like everyone else
+	if (!g_game().isExpertPvp() || Combat::isInPvpZone(attacker, target)) {
 		return RETURNVALUE_NOERROR;
 	}
 
 	const PvpMode_t mode = attacker->getEffectivePvpMode();
 
+	// secure mode (manual 3.5.3): a player in secure mode cannot attack characters without a skull, in every
+	// PvP mode. Aggressors are marked automatically, so self-defense still works.
+	if (attacker->hasSecureMode() && attacker->getSkullClient(target) == SKULL_NONE) {
+		return RETURNVALUE_TURNSECUREMODETOATTACKUNMARKEDPLAYERS;
+	}
+
 	// gather the decision facts from the live players, then defer to the pure decision matrix. All of
 	// these accessors are side-effect-free reads, so evaluating them eagerly does not change behavior.
 	PvpFacts facts;
 	facts.targetAttackedMe = target->hasAttacked(attacker);
-	facts.inSituation = attacker->isInPvpSituationWith(target);
 	// the green skull only marks a party member, it is not a skull that makes the target fair game
 	const Skulls_t targetSkull = attacker->getSkullClient(target);
 	facts.targetSkulled = targetSkull != SKULL_NONE && targetSkull != SKULL_GREEN;
