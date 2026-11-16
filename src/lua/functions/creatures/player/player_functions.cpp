@@ -151,6 +151,7 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "setKills", PlayerFunctions::luaPlayerSetKills);
 	Lua::registerMethod(L, "Player", "sendCreatureSquare", PlayerFunctions::luaPlayerSendCreatureSquare);
 	Lua::registerMethod(L, "Player", "hasActivePvpSituation", PlayerFunctions::luaPlayerHasActivePvpSituation);
+	Lua::registerMethod(L, "Player", "getPvpMode", PlayerFunctions::luaPlayerGetPvpMode);
 
 	Lua::registerMethod(L, "Player", "getReward", PlayerFunctions::luaPlayerGetReward);
 	Lua::registerMethod(L, "Player", "removeReward", PlayerFunctions::luaPlayerRemoveReward);
@@ -1508,6 +1509,18 @@ int PlayerFunctions::luaPlayerHasActivePvpSituation(lua_State* L) {
 	}
 
 	Lua::pushBoolean(L, player->hasActivePvpSituation());
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetPvpMode(lua_State* L) {
+	// player:getPvpMode() -- the mode the expert PvP rules use (PVP_MODE_DOVE .. PVP_MODE_RED_FIST)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (!player) {
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_pushnumber(L, player->getEffectivePvpMode());
 	return 1;
 }
 

@@ -13,23 +13,28 @@ function onCreateMagicWall(creature, position)
 	end
 
 	local magicWall = Game.getWorldType() == WORLDTYPE_OPTIONAL and ITEM_MAGICWALL_SAFE or ITEM_MAGICWALL
-
-	local item = Game.createItem(magicWall, 1, position)
-	if item then
-		item:setDuration(16, 24)
-		item:setAttribute(ITEM_ATTRIBUTE_DESCRIPTION, string.format("Casted by: %s", creature:getName()))
-		if Game.isExpertPvp() then
-			-- Expert PvP: ownership decides who the wall blocks and who walks through.
-			-- Normalize summon casts to the master so the owner is always a stable player GUID.
-			local fieldOwner = creature:getMaster() or creature
-			item:setOwner(fieldOwner)
-			-- Cast outside a PvP situation -> PvE wall: blocks monsters and the caster, every other
-			-- player walks through it
-			if fieldOwner:isPlayer() and not fieldOwner:hasActivePvpSituation() then
-				item:setCustomAttribute("pveWall", true)
-			end
-		end
+	local owner = creature:getMaster() or creature
+	if Game.isExpertPvp() and owner:isPlayer() and owner:getPvpMode() ~= PVP_MODE_RED_FIST then
+		-- Expert PvP: only red fist makes the blue wall; any other mode makes the yellow one, which every
+		-- player, the caster included, walks through and which only blocks monsters.
+		magicWall = ITEM_MAGICWALL_SAFE
 	end
+
+	-- The owner goes on the item before it reaches the map, so every player in view is sent the
+	-- variant he should see.
+	local item = Game.createItem(magicWall, 1)
+	if not item then
+		return false
+	end
+	item:setAttribute(ITEM_ATTRIBUTE_DESCRIPTION, string.format("Casted by: %s", creature:getName()))
+	if Game.isExpertPvp() then
+		-- Summon casts are normalized to the master so the owner is always a stable player GUID.
+		item:setOwner(owner)
+	end
+	if tile:addItemEx(item, FLAG_NOLIMIT) ~= RETURNVALUE_NOERROR then
+		return false
+	end
+	item:setDuration(16, 24)
 end
 
 local combat = Combat()

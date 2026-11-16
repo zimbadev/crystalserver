@@ -558,13 +558,33 @@ bool Combat::isOwnedFieldBystander(const std::shared_ptr<Player> &player, const 
 		return false; // map/GM/monster fields concern everyone
 	}
 
-	// owner and everyone in a PvP situation with him are involved; the rest are bystanders
+	// the light fields and the yellow wall concern no player
+	if (isNonPvpFieldOrWall(field)) {
+		return true;
+	}
+
+	// dark fields and blue walls are only made in red fist: like red fist itself they concern every
+	// player except the caster's party and guild members (and the caster's own field harms him)
 	const auto &ownerPlayer = resolveFieldOwnerPlayer(ownerId);
-	return ownerPlayer && ownerPlayer != player && !ownerPlayer->isInPvpSituationWith(player);
+	return ownerPlayer && ownerPlayer != player && (ownerPlayer->isPartner(player) || ownerPlayer->isGuildMate(player));
 }
 
-bool Combat::isPveWall(const std::shared_ptr<Item> &item) {
-	return item && g_game().isExpertPvp() && item->getCustomAttribute("pveWall") != nullptr;
+bool Combat::isNonPvpFieldOrWall(const std::shared_ptr<Item> &item) {
+	if (!item || !g_game().isExpertPvp()) {
+		return false;
+	}
+	switch (item->getID()) {
+		case ITEM_FIREFIELD_NOPVP:
+		case ITEM_FIREFIELD_NOPVP_MEDIUM:
+		case ITEM_FIREFIELD_NOPVP_SMALL:
+		case ITEM_POISONFIELD_NOPVP:
+		case ITEM_ENERGYFIELD_NOPVP:
+		case ITEM_MAGICWALL_SAFE:
+		case ITEM_WILDGROWTH_SAFE:
+			return true;
+		default:
+			return false;
+	}
 }
 
 bool Combat::isWalkableWallFor(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &wall) {
@@ -577,7 +597,7 @@ bool Combat::isWalkableWallFor(const std::shared_ptr<Player> &player, const std:
 	if (ownerId != 0 && ownerId == player->getGUID()) {
 		return false;
 	}
-	return isPveWall(wall) || isOwnedFieldBystander(player, wall);
+	return isOwnedFieldBystander(player, wall);
 }
 
 bool Combat::isOccupiedOwnedWallTile(const std::shared_ptr<Tile> &tile) {
@@ -1357,7 +1377,10 @@ void Combat::combatTileEffects(const CreatureVector &spectators, const std::shar
 			}
 
 			if (casterPlayer) {
-				if (g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL || tile->hasFlag(TILESTATE_NOPVPZONE)) {
+				// Expert PvP: only red fist makes the PvP fields and walls (dark fields, blue wall); any other
+				// mode makes the no-PvP ones (light fields, yellow wall), the same for every viewer.
+				const bool expertNonPvp = g_game().isExpertPvp() && casterPlayer->getEffectivePvpMode() != PVP_MODE_RED_FIST;
+				if (expertNonPvp || g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL || tile->hasFlag(TILESTATE_NOPVPZONE)) {
 					if (itemId == ITEM_FIREFIELD_PVP_FULL) {
 						itemId = ITEM_FIREFIELD_NOPVP;
 					} else if (itemId == ITEM_POISONFIELD_PVP) {
@@ -2806,7 +2829,8 @@ void AreaCombat::setupExtArea(const std::list<uint32_t> &list, uint32_t rows) {
 void MagicField::onStepInField(const std::shared_ptr<Creature> &creature) {
 	// remove magic walls/wild growth
 	if ((!isBlocking() && g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL && id == ITEM_MAGICWALL_SAFE) || id == ITEM_WILDGROWTH_SAFE) {
-		if (!creature->isInGhostMode()) {
+		// Expert PvP: the yellow wall lasts its whole duration, players walk through it
+		if (!creature->isInGhostMode() && !g_game().isExpertPvp()) {
 			g_game().internalRemoveItem(static_self_cast<Item>(), 1);
 		}
 

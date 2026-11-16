@@ -777,15 +777,15 @@ ReturnValue Tile::queryAdd(int32_t, const std::shared_ptr<Thing> &thing, uint32_
 							}
 
 							if (findfield->getID() == ITEM_WILDGROWTH_SAFE || findfield->getID() == ITEM_MAGICWALL_SAFE) {
-								if (!creature->isInGhostMode()) {
+								// Expert PvP: the yellow wall is not used up by a player walking through it
+								if (!creature->isInGhostMode() && !g_game().isExpertPvp()) {
 									g_game().internalRemoveItem(findfield, 1);
 								}
 								return RETURNVALUE_NOERROR;
 							}
 
-							// Open PvP (2014 rules): a magic wall / wild growth blocks only its owner and
-							// players in a PvP situation with him — everyone else walks through while the
-							// wall stays up for those it does block.
+							// Expert PvP: a blue magic wall / wild growth (made in red fist) lets the
+							// caster's party and guild members through and blocks everyone else.
 							if (Combat::isWalkableWallFor(creature->getPlayer(), findfield)) {
 								return RETURNVALUE_NOERROR;
 							}
