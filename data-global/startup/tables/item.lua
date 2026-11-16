@@ -1882,26 +1882,79 @@ ItemAction = {
 			{ x = 32208, y = 32091, z = 13 },
 		},
 	},
+	-- The doors listed in the_dream_courts/actions_quest_doors.lua. Each block names the door it
+	-- stamps, so the floor under it keeps no action id and a missing door is reported at startup.
 	[23101] = {
-		itemId = false,
-		itemPos = {
-			{ x = 33088, y = 32388, z = 8 },
-			{ x = 32606, y = 32629, z = 9 },
-			{ x = 31983, y = 31960, z = 14 },
-			{ x = 33625, y = 32525, z = 14 },
-			{ x = 33657, y = 32551, z = 14 },
-			{ x = 33640, y = 32551, z = 14 },
-			{ x = 32671, y = 32652, z = 7 },
-			{ x = 32074, y = 31974, z = 14 },
-			{ x = 32091, y = 31970, z = 14 },
-			{ x = 31983, y = 32000, z = 14 },
-			{ x = 32051, y = 31998, z = 14 },
-			{ x = 32700, y = 32255, z = 9 },
-			{ x = 32700, y = 32244, z = 9 },
-			{ x = 32693, y = 32238, z = 8 },
-			{ x = 32700, y = 32275, z = 8 },
-			{ x = 32761, y = 32630, z = 7 },
-			{ x = 32719, y = 32264, z = 8 },
+		{
+			itemId = 1660,
+			itemPos = {
+				{ x = 33088, y = 32388, z = 8 },
+			},
+		},
+		{
+			itemId = 5287,
+			itemPos = {
+				{ x = 32606, y = 32629, z = 9 },
+			},
+		},
+		{
+			itemId = 1698,
+			itemPos = {
+				{ x = 32671, y = 32652, z = 7 },
+			},
+		},
+		{
+			itemId = 5131,
+			itemPos = {
+				{ x = 32700, y = 32244, z = 9 },
+				{ x = 32700, y = 32255, z = 9 },
+				{ x = 32700, y = 32275, z = 8 },
+				{ x = 33625, y = 32525, z = 14 },
+			},
+		},
+		{
+			itemId = 5122,
+			itemPos = {
+				{ x = 32719, y = 32264, z = 8 },
+				{ x = 33640, y = 32551, z = 14 },
+				{ x = 33657, y = 32551, z = 14 },
+			},
+		},
+		{
+			itemId = 20450,
+			itemPos = {
+				{ x = 32761, y = 32630, z = 7 },
+			},
+		},
+		{
+			itemId = 30033,
+			itemPos = {
+				{ x = 31983, y = 31960, z = 14 },
+			},
+		},
+		{
+			itemId = 30041,
+			itemPos = {
+				{ x = 31983, y = 32000, z = 14 },
+			},
+		},
+		{
+			itemId = 30047,
+			itemPos = {
+				{ x = 32051, y = 31998, z = 14 },
+			},
+		},
+		{
+			itemId = 30045,
+			itemPos = {
+				{ x = 32074, y = 31974, z = 14 },
+			},
+		},
+		{
+			itemId = 30037,
+			itemPos = {
+				{ x = 32091, y = 31970, z = 14 },
+			},
 		},
 	},
 	[23102] = {
