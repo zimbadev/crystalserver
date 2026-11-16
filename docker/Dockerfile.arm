@@ -18,7 +18,8 @@ RUN vcpkgCommitId=$(grep '.builtin-baseline' vcpkg.json | awk -F: '{print $2}' |
 	&& ./bootstrap-vcpkg.sh
 
 WORKDIR /opt/vcpkg
-COPY vcpkg.json /opt/vcpkg/
+COPY vcpkg.json vcpkg-configuration.json /opt/vcpkg/
+COPY cmake/vcpkg-ports /opt/vcpkg/cmake/vcpkg-ports
 RUN VCPKG_FORCE_SYSTEM_BINARIES=1 /opt/vcpkg/vcpkg --feature-flags=binarycaching,manifests,versions install
 
 # Stage 2: create build

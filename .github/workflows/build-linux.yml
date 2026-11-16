@@ -103,7 +103,7 @@ jobs:
       with:
         path: .cache/vcpkg
         key: deps-v1-${{ runner.os }}-${{ steps.identity.outputs.dependency-preset }}-${{ steps.identity.outputs.compiler }}-${{ hashFiles('vcpkg.json',
-          'CMakePresets.json', 'cmake/vcpkg-ports/**') }}
+          'vcpkg-configuration.json', 'CMakePresets.json', 'cmake/vcpkg-ports/**') }}
         restore-keys: |
           deps-v1-${{ runner.os }}-${{ steps.identity.outputs.dependency-preset }}-${{ steps.identity.outputs.compiler }}-
           deps-partial-v1-${{ runner.os }}-${{ steps.identity.outputs.dependency-preset }}-${{ steps.identity.outputs.compiler }}-
