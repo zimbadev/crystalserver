@@ -165,6 +165,9 @@ GlobalStorage = {
 	ExampleQuest = {
 		Example = 60000,
 	},
+	Quest = {
+		Inquisition = 65013,
+	},
 	KeysUpdate = 40000, -- Reserved storage from 40000 - 40000
 }
 
