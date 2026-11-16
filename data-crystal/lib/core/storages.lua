@@ -159,6 +159,7 @@ Storage = {
 	},
 
 	Imbuement = 30004,
+	FountainOfLife = 30016,
 }
 
 GlobalStorage = {
