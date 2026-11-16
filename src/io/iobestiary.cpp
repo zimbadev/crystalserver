@@ -58,8 +58,9 @@ void IOBestiary::parseCharmCarnage(const std::shared_ptr<Charm> &charm, const st
 }
 
 bool IOBestiary::parseOffensiveCharmCombat(const std::shared_ptr<Charm> &charm, const std::shared_ptr<Player> &player, const std::shared_ptr<Creature> &target, CombatDamage &charmDamage, CombatParams &charmParams) {
-	static double_t maxHealthLimit = 0.08; // 8% max health (max damage)
-	static uint8_t maxLevelsLimit = 2; // 2x level (max damage)
+	static constexpr double_t maxHealthLimit = 0.08; // 8% max health (max damage)
+	static constexpr uint8_t maxLevelsLimit = 2; // 2x level (max damage)
+	static constexpr uint8_t carnageMaxLevelsLimit = 6; // 6x level (max carnage damage)
 	static constexpr std::array<std::pair<int8_t, int8_t>, 4> offsets = { { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } } };
 
 	int32_t value = 0;
@@ -81,7 +82,6 @@ bool IOBestiary::parseOffensiveCharmCombat(const std::shared_ptr<Charm> &charm, 
 				return false;
 			}
 
-			maxLevelsLimit = 6;
 			value = target->getMaxHealth();
 
 			for (const auto &[dx, dy] : offsets) {
@@ -98,7 +98,7 @@ bool IOBestiary::parseOffensiveCharmCombat(const std::shared_ptr<Charm> &charm, 
 				if (topCreature && topCreature->getType() == CREATURETYPE_MONSTER) {
 					int32_t damage = std::min<int32_t>(
 						std::ceil(value * (charm->percent / 100.0)),
-						player->getLevel() * maxLevelsLimit
+						player->getLevel() * carnageMaxLevelsLimit
 					);
 					parseCharmCarnage(charm, player, topCreature, -damage);
 				}
