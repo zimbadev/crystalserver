@@ -136,6 +136,7 @@ public:
 
 private:
 	bool isRewardTaken(const std::shared_ptr<Player> &player) const;
+	void refreshStreak(const std::shared_ptr<Player> &player) const;
 	void pickedReward(const std::shared_ptr<Player> &player);
 	void processReward(const std::shared_ptr<Player> &player, DailyRewardSource_t source);
 	void loadPlayerBonuses(const std::shared_ptr<Player> &player);
