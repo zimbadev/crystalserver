@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.22...4.5 FATAL_ERROR)
 
 # *****************************************************************************
 # CMake Features
@@ -27,7 +27,7 @@ find_package(absl CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
 find_package(eventpp CONFIG REQUIRED)
 find_package(magic_enum CONFIG REQUIRED)
-find_package(Boost REQUIRED COMPONENTS locale)
+find_package(Boost CONFIG REQUIRED COMPONENTS locale)
 if(FEATURE_METRICS)
     find_package(opentelemetry-cpp CONFIG REQUIRED)
     find_package(prometheus-cpp CONFIG REQUIRED)
@@ -45,7 +45,7 @@ find_path(BOOST_DI_INCLUDE_DIRS "boost/di.hpp")
 # Sanity Checks
 # *****************************************************************************
 # === GCC Minimum Version ===
-if (CMAKE_COMPILER_IS_GNUCXX)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message("-- Compiler: GCC - Version: ${CMAKE_CXX_COMPILER_VERSION}")
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11)
         message(FATAL_ERROR "GCC version must be at least 11!")
@@ -70,6 +70,7 @@ option(ASAN_ENABLED "Build this target with AddressSanitizer" OFF)
 option(BUILD_STATIC_LIBRARY "Build using static libraries" OFF)
 option(SPEED_UP_BUILD_UNITY "Compile using build unity for speed up build" ON)
 option(USE_PRECOMPILED_HEADER "Compile using precompiled header" ON)
+option(OPTIONS_ENABLE_NATIVE_ARCH "Optimize release builds for the CPU of the build machine (-march=native, not portable)" OFF)
 
 # === TOGGLE_BIN_FOLDER ===
 if(TOGGLE_BIN_FOLDER)
@@ -134,6 +135,13 @@ if(USE_PRECOMPILED_HEADER)
     log_option_enabled("USE_PRECOMPILED_HEADER")
 else()
     log_option_disabled("USE_PRECOMPILED_HEADER")
+endif()
+
+# === OPTIONS_ENABLE_NATIVE_ARCH ===
+if(OPTIONS_ENABLE_NATIVE_ARCH)
+    log_option_enabled("OPTIONS_ENABLE_NATIVE_ARCH")
+else()
+    log_option_disabled("OPTIONS_ENABLE_NATIVE_ARCH")
 endif()
 
 # === IPO Configuration ===

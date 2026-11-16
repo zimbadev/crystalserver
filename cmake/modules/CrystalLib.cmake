@@ -38,7 +38,7 @@ target_compile_definitions(${PROJECT_NAME}_lib PUBLIC USE_PRECOMPILED_HEADERS)
 # *****************************************************************************
 # Build flags - need to be set before the links and sources
 # *****************************************************************************
-if (CMAKE_COMPILER_IS_GNUCXX)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${PROJECT_NAME}_lib PRIVATE -Wno-deprecated-declarations)
 endif()
 
@@ -143,7 +143,12 @@ endif()
 # === Optimization Flags ===
 if(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "Release")
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-        target_compile_options(${PROJECT_NAME}_lib PRIVATE -O3 -march=native)
+        target_compile_options(${PROJECT_NAME}_lib PRIVATE -O3)
+        # -march=native ties the binary to the CPU of the build machine (CI
+        # runners, Docker images). Keep it opt in for local builds only.
+        if(OPTIONS_ENABLE_NATIVE_ARCH)
+            target_compile_options(${PROJECT_NAME}_lib PRIVATE -march=native)
+        endif()
     elseif(MSVC)
         target_compile_options(${PROJECT_NAME}_lib PRIVATE /O2)
     endif()

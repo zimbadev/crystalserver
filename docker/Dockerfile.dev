@@ -21,6 +21,7 @@ RUN vcpkgCommitId=$(grep '.builtin-baseline' vcpkg.json | awk -F: '{print $2}' |
 
 WORKDIR /opt/vcpkg
 COPY vcpkg.json /opt/vcpkg/
+COPY cmake/vcpkg-ports /opt/vcpkg/cmake/vcpkg-ports
 RUN --mount=type=cache,target=/var/cache/vcpkg \
 	/opt/vcpkg/vcpkg --feature-flags=binarycaching,manifests,versions install
 

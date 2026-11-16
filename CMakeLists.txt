@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.22...4.5 FATAL_ERROR)
 
 # Keep MSVC debug information cacheable without losing the linked PDB.
 if(POLICY CMP0141)
