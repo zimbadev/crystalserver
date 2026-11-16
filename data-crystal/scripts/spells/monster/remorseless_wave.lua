@@ -16,7 +16,7 @@ combat:setArea(createCombatArea({
 	{ 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
 }))
 
-function spellCallback(param)
+local function remorselessWaveCallback(param)
 	local tile = Tile(Position(param.pos))
 	if tile then
 		local creatureTop = tile:getTopCreature()
@@ -35,7 +35,7 @@ function onTargetTile(cid, pos)
 	param.cid = cid
 	param.pos = pos
 	param.count = 0
-	spellCallback(param)
+	remorselessWaveCallback(param)
 end
 
 combat:setCallback(CALLBACK_PARAM_TARGETTILE, "onTargetTile")

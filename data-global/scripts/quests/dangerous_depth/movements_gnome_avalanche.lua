@@ -3,7 +3,7 @@ combat:setParameter(COMBAT_PARAM_TYPE, COMBAT_EARTHDAMAGE)
 combat:setParameter(COMBAT_PARAM_EFFECT, CONST_ME_STONES)
 combat:setArea(createCombatArea(AREA_CIRCLE6X6))
 
-function spellCallback(param)
+local function gnomeAvalancheCallback(param)
 	local tile = Tile(Position(param.pos))
 	if tile then
 		if tile:getTopCreature() then
@@ -17,7 +17,7 @@ function onTargetTile(cid, pos)
 	param.cid = cid
 	param.pos = pos
 	param.count = 0
-	spellCallback(param)
+	gnomeAvalancheCallback(param)
 end
 
 combat:setCallback(CALLBACK_PARAM_TARGETTILE, "onTargetTile")
