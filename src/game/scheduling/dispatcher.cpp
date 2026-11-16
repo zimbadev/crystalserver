@@ -74,6 +74,7 @@ void Dispatcher::executeParallelEvents(const uint8_t groupId) {
 	asyncWait(tasks.size(), [groupId, &tasks](size_t i) {
 		dispacherContext.type = DispatcherType::AsyncEvent;
 		dispacherContext.group = static_cast<TaskGroup>(groupId);
+		dispacherContext.taskName = tasks[i].getContext();
 		tasks[i].execute();
 
 		dispacherContext.reset();
@@ -221,7 +222,11 @@ void Dispatcher::addEvent(std::function<void(void)> &&f, std::string_view contex
 void Dispatcher::addWalkEvent(std::function<void(void)> &&f, uint32_t expiresAfterMs) {
 	const auto &thread = getThreadTask();
 	std::scoped_lock lock(thread->mutex);
-	thread->tasks[static_cast<uint8_t>(TaskGroup::Walk)].emplace_back(expiresAfterMs, std::move(f), this->context().taskName);
+	auto context = this->context().taskName;
+	if (context.empty()) {
+		context = "Game::walkEvent";
+	}
+	thread->tasks[static_cast<uint8_t>(TaskGroup::Walk)].emplace_back(expiresAfterMs, std::move(f), context);
 	notify();
 }
 
@@ -240,7 +245,11 @@ uint64_t Dispatcher::scheduleEvent(const std::shared_ptr<Task> &task) {
 void Dispatcher::asyncEvent(std::function<void(void)> &&f, TaskGroup group) {
 	const auto &thread = getThreadTask();
 	std::scoped_lock lock(thread->mutex);
-	thread->tasks[static_cast<uint8_t>(group)].emplace_back(0, std::move(f), dispacherContext.taskName);
+	auto context = dispacherContext.taskName;
+	if (context.empty()) {
+		context = "Dispatcher::asyncEvent";
+	}
+	thread->tasks[static_cast<uint8_t>(group)].emplace_back(0, std::move(f), context);
 	notify();
 }
 
