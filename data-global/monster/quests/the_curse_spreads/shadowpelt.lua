@@ -99,7 +99,7 @@ monster.loot = {
 	{ name = "fur armor", chance = 550 },
 	{ name = "stone skin amulet", chance = 15000 },
 	{ name = "wolf backpack", chance = 100 },
-	{ name = "silver token", chance = 2120 },	
+	{ name = "silver token", chance = 2120 },
 	{ name = "relic sword", chance = 550 },
 	{ name = "berserk potion", chance = 30000 },
 	{ name = "foxtail amulet", chance = 500 },

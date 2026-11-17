@@ -87,7 +87,7 @@ monster.loot = {
 	{ name = "beetroot", chance = 50000 },
 	{ name = "underworld rod", chance = 400 },
 	{ name = "wand of voodoo", chance = 400 },
-	{ name = "troll green", chance = 50000, },
+	{ name = "troll green", chance = 50000 },
 	{ name = "moonlight crystals", chance = 300, maxCount = 15 },
 	{ name = "ultimate mana potion", chance = 50000 },
 	{ name = "silver token", chance = 1720 },

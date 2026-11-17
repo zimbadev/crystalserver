@@ -89,12 +89,12 @@ monster.loot = {
 	{ name = "onyx chip", chance = 50000 },
 	{ name = "stone skin amulet", chance = 50000 },
 	{ name = "troll green", chance = 25000 },
-	{ name = "dreaded cleaver", chance = 400 },	
+	{ name = "dreaded cleaver", chance = 400 },
 	{ id = 7394, chance = 400 }, -- wolf trophy
 	{ name = "wolf backpack", chance = 100 },
 	{ name = "silver token", chance = 3520 },
 	{ name = "traditional sai", chance = 250 },
-	{ name = "moonlight crystals", chance = 600 },	
+	{ name = "moonlight crystals", chance = 600 },
 	{ name = "platinum amulet", chance = 800 },
 	{ name = "werewolf amulet", chance = 400 },
 	{ id = 3053, chance = 900 }, -- time ring

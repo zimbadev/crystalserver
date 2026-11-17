@@ -91,7 +91,7 @@ monster.loot = {
 	{ name = "fur armor", chance = 400 },
 	{ name = "dreaded cleaver", chance = 400 },
 	{ id = 22102, chance = 250 }, -- wereboar trophy
-	{ name = "silver token", chance = 1790 },	
+	{ name = "silver token", chance = 1790 },
 	{ name = "spiked squelcher", chance = 250 },
 	{ name = "fur boots", chance = 400 },
 	{ name = "wolf backpack", chance = 100 },
