@@ -10555,9 +10555,8 @@ void Game::playerCreateMarketOffer(uint32_t playerId, uint8_t type, uint16_t ite
 	}
 
 	uint64_t totalPrice = price * amount;
-	uint64_t totalFee = totalPrice * 0.02; // 2% fee
-	uint64_t maxFee = std::min<uint64_t>(1000000, totalFee); // Max fee is 1kk
-	uint64_t fee = std::clamp(totalFee, uint64_t(20), maxFee); // Limit between 20 and maxFee
+	// Market fee: 2.5% of the offer, at least 20 and at most 2,500,000 gold (live since October 2026)
+	uint64_t fee = std::clamp<uint64_t>(totalPrice * 25 / 1000, 20, 2500000);
 
 	if (type == MARKETACTION_SELL) {
 		if (fee > (player->getMoney() + player->getBankBalance())) {

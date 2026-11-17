@@ -702,6 +702,14 @@ public:
 	const Position &getSpellAimPosition() const {
 		return m_spellAimPosition;
 	}
+	// 15.33: aim mode of the last say packet, set per action button by the client
+	// (0 = facing direction, 1 = cursor tile, 2 = crosshair tile, 3 = towards the selected target).
+	void setSpellAimMode(uint8_t aimMode) {
+		m_spellAimMode = aimMode;
+	}
+	uint8_t getSpellAimMode() const {
+		return m_spellAimMode;
+	}
 
 	// Vocation Adjustment: Mana Buffer (Sorcerer/Druid) -- gates the 25% max-mana tax to once per 2s.
 	int64_t getManaBufferTaxTime() const {
@@ -1897,6 +1905,7 @@ private:
 	Position lastWalkthroughPosition;
 	Position m_spellAimPosition;
 	bool m_hasSpellAim = false;
+	uint8_t m_spellAimMode = 0;
 	int64_t m_manaBufferTaxTime = 0;
 	bool m_manaBufferSurvived = false; // transient: Mana Buffer absorbed a lethal hit this combatChangeHealth pass
 

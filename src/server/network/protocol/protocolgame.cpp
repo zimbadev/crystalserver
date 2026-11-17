@@ -2251,7 +2251,37 @@ void ProtocolGame::parseSay(NetworkMessage &msg) {
 	//   [x:u16 LE][y:u16 LE][z:u8][seq:u8]. parseSay historically ignored this tail.
 	// Stash the aimed tile so the cast (crossHairTarget spell) can land there.
 	const int32_t sayRemaining = static_cast<int32_t>(msg.getLength()) - (static_cast<int32_t>(msg.getBufferPosition()) - 7);
-	if (sayRemaining > 0) {
+	if (isWinter2026()) {
+		// 15.33: the aim mode is chosen per action button and replaces C2S 0xC8:
+		//   [aimMode:u8] (0 = facing direction, 1 = cursor tile, 2 = crosshair tile, 3 = towards the
+		//   selected target) and, only for aimMode 1 and 2, [x:u16 LE][y:u16 LE][z:u8]. No trailing byte.
+		uint8_t aimMode = 0;
+		bool hasAimPosition = false;
+		Position aimPos;
+		if (sayRemaining > 0) {
+			aimMode = msg.getByte();
+			if (aimMode > 3) {
+				aimMode = 0;
+			}
+			if (aimMode == 1 || aimMode == 2) {
+				if (msg.canRead(5)) {
+					aimPos.x = msg.get<uint16_t>();
+					aimPos.y = msg.get<uint16_t>();
+					aimPos.z = msg.getByte();
+					hasAimPosition = true;
+				} else {
+					aimMode = 0;
+				}
+			}
+		}
+
+		player->setSpellAimMode(aimMode);
+		if (hasAimPosition) {
+			player->setSpellAimPosition(aimPos);
+		} else {
+			player->clearSpellAimPosition();
+		}
+	} else if (sayRemaining > 0) {
 		const uint8_t aimMode = msg.getByte();
 		if (aimMode != 0 && sayRemaining >= 6) {
 			Position aimPos;
@@ -4531,8 +4561,16 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 			msg.add<uint16_t>(specializedMagicLevel);
 		}
 	}
+	const auto endPosition = msg.getBufferPosition();
 	msg.setBufferPosition(bufferPosition);
 	msg.addByte(total);
+	if (isWinter2026()) {
+		// 15.33: daily reward XP boost after the specialized magic level list (same pair as the end of 0xA0).
+		// The list count was back-patched above, so go back to the end of the list before appending.
+		msg.setBufferPosition(endPosition);
+		msg.add<uint16_t>(player->getDailyXpBoostPercent());
+		msg.add<uint16_t>(player->getDailyXpBoostTime());
+	}
 	writeToOutputBuffer(msg);
 }
 
@@ -5117,6 +5155,9 @@ void ProtocolGame::sendCyclopediaCharacterOffenceStats() {
 	msg.addByte(0x00); // 0x00 Here means 'no error'
 
 	addCyclopediaSkills(player, msg, SKILL_CRITICAL_HIT_CHANCE);
+	if (isWinter2026()) {
+		msg.addDouble(0.00); // 15.33: 7th critical hit chance value (event bonus), after the concoction bonus
+	}
 	addCyclopediaSkills(player, msg, SKILL_CRITICAL_HIT_DAMAGE);
 	addCyclopediaSkills(player, msg, SKILL_LIFE_LEECH_AMOUNT);
 	addCyclopediaSkills(player, msg, SKILL_MANA_LEECH_AMOUNT);
@@ -10605,6 +10646,17 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 		return;
 	}
 
+	auto action = static_cast<Stash_Actions_t>(msg.getByte());
+	if (action == STASH_ACTION_REQUEST_REOPEN && isWinter2026()) {
+		// 15.33: "28 04", no body. The client closed a window it had opened from the stash and wants the
+		// stash back (S2C 0x29). It follows another UI action, so it is not subject to the exhaust, and it
+		// gets no reply at all when the stash is not available.
+		if (player->isStashMenuAvailable()) {
+			sendOpenStash();
+		}
+		return;
+	}
+
 	if (!player->isStashMenuAvailable()) {
 		player->sendCancelMessage("You can't use supply stash right now.");
 		return;
@@ -10615,7 +10667,6 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 		return;
 	}
 
-	auto action = static_cast<Stash_Actions_t>(msg.getByte());
 	switch (action) {
 		case STASH_ACTION_STOW_ITEM: {
 			Position pos = msg.getPosition();
