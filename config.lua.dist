@@ -280,6 +280,8 @@ wheelSystemEnabled = true
 wheelPointsPerLevel = 1
 
 -- Gem Atelier
+-- NOTE: wheelAtelierRotate*Cost is the price of the domain switch, which only a 15.30 client can still request.
+-- Client 15.33 has Reshape instead, with fixed prices (gold and fragments per mod position).
 wheelAtelierRotateLesserCost = 125000
 wheelAtelierRotateRegularCost = 250000
 wheelAtelierRotateGreaterCost = 500000

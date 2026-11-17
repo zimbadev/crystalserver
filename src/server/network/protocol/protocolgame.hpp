@@ -423,7 +423,7 @@ private:
 	void sendHirelingNameChange(uint32_t creatureId = 0, uint32_t objectId = 0);
 	/// CIP SpellDataModification (S 0x60): u16 count + count×(u16 spellId, u8 mod, u32 value).
 	void sendSpellDataModification(const std::vector<std::tuple<uint16_t, uint8_t, uint32_t>> &entries);
-	/// CIP GemAtelierGemRevealed (S 0xC5): u32 gem id (atelier inventory index).
+	/// CIP GemAtelierGemRevealed (S 0xC5): gem id (atelier inventory index), u16 for 15.33 and u32 for 15.30.
 	void sendGemAtelierGemRevealed(uint16_t gemIndex);
 	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t soulsealsPoints = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);
 	void sendResourceBalance(Resource_t resourceType);
