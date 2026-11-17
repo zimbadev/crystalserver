@@ -1,7 +1,7 @@
 local crystalDuration = 5 * 60 -- 5 minutes
 
 local crystals = {
-	-- Warzone IV
+	-- Warzone VI
 	[57350] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneVI.MediumCrystal1,
 	[57351] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneVI.BigCrystal1,
 	[57352] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneVI.BigCrystal2,
@@ -11,9 +11,9 @@ local crystals = {
 
 	-- Warzone V
 	[57356] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneV.BigCrystal1,
-	[57357] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneIV.MediumCrystal1,
+	[57357] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneV.MediumCrystal1,
 	[57358] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneV.BigCrystal2,
-	[57359] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneIV.MediumCrystal2,
+	[57359] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneV.MediumCrystal2,
 	[57360] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneV.SmallCrystal1,
 	[57361] = Storage.Quest.U11_50.DangerousDepths.Crystals.WarzoneV.SmallCrystal2,
 
@@ -55,7 +55,7 @@ end
 local dangerousDepthWarzoneCrystals = Action()
 function dangerousDepthWarzoneCrystals.onUse(player, item, fromPosition, target, toPosition, isHotkey)
 	local crystalTimer = crystals[item:getActionId()]
-	if not crystalTimer or crystalTimer > os.time() then
+	if not crystalTimer or player:getStorageValue(crystalTimer) > os.time() then
 		return true
 	end
 
