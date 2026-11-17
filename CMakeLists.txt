@@ -44,6 +44,11 @@ if(NOT MSVC AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64|i[3-6]86)$"
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64 -mtune=generic -mno-avx -mno-sse4")
 endif()
 
+# No source here uses C++20 modules. The policy range above enables CMP0155 on CMake >= 3.28: every
+# file would get a module dependency scan and GCC would be called with -fmodules-ts, which ccache
+# refuses to cache ("unsupported compiler option"), so the compiler cache would store nothing.
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
 # *****************************************************************************
 # Include cmake tools
 # *****************************************************************************
