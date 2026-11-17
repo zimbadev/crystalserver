@@ -192,7 +192,6 @@ private:
 // function reads no globals and has no side effects.
 struct PvpFacts {
 	bool targetAttackedMe = false; // the target has attacked us (self-defense)
-	bool inSituation = false; // we are already in a mutual PvP situation with the target
 	bool targetSkulled = false; // the target carries a skull visible to us (yellow-hand fair game)
 	bool attackedAllyOfMe = false; // the target has attacked one of our party/guild members
 	bool partner = false; // the target is in our party
