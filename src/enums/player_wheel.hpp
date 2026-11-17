@@ -24,7 +24,7 @@
 enum class WheelGemAction_t : uint8_t {
 	Destroy,
 	Reveal,
-	SwitchDomain,
+	Reshape, // 15.30 clients still send this value to switch the gem domain
 	ToggleLock,
 	ImproveGrade
 };

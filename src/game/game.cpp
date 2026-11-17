@@ -11428,6 +11428,40 @@ void Game::playerWheelGemAction(uint32_t playerId, NetworkMessage &msg) {
 	}
 
 	const auto action = msg.getByte();
+
+	if (player->isWinter2026()) {
+		// 15.33: the gem index is a u16 (up to 600 revealed gems) and action 2 is Reshape
+		switch (static_cast<WheelGemAction_t>(action)) {
+			case WheelGemAction_t::Destroy:
+				player->wheel()->destroyGem(msg.get<uint16_t>());
+				break;
+			case WheelGemAction_t::Reveal:
+				player->wheel()->revealGem(static_cast<WheelGemQuality_t>(msg.getByte()));
+				break;
+			case WheelGemAction_t::Reshape: {
+				const auto gemIndex = msg.get<uint16_t>();
+				const auto modIndex = msg.getByte();
+				player->wheel()->reshapeGem(gemIndex, modIndex);
+				break;
+			}
+			case WheelGemAction_t::ToggleLock:
+				player->wheel()->toggleGemLock(msg.get<uint16_t>());
+				break;
+			case WheelGemAction_t::ImproveGrade: {
+				const auto fragmentType = msg.getByte();
+				const auto modId = msg.getByte();
+				player->wheel()->improveGemGrade(static_cast<WheelFragmentType_t>(fragmentType), modId);
+				break;
+			}
+			default:
+				g_logger().error("[{}] player {} is trying to do invalid action {} on wheel", __FUNCTION__, player->getName(), action);
+				break;
+		}
+		player->setNextExAction(OTSYS_TIME() + g_configManager().getNumber(UI_ACTIONS_DELAY_INTERVAL) - 10);
+		return;
+	}
+
+	// 15.30 layout: u8 param for every action, action 2 switches the gem domain
 	const auto param = msg.getByte();
 	uint8_t pos = 0;
 
@@ -11438,7 +11472,7 @@ void Game::playerWheelGemAction(uint32_t playerId, NetworkMessage &msg) {
 		case WheelGemAction_t::Reveal:
 			player->wheel()->revealGem(static_cast<WheelGemQuality_t>(param));
 			break;
-		case WheelGemAction_t::SwitchDomain:
+		case WheelGemAction_t::Reshape:
 			player->wheel()->switchGemDomain(param);
 			break;
 		case WheelGemAction_t::ToggleLock:

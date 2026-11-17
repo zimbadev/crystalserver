@@ -6163,7 +6163,12 @@ void ProtocolGame::sendGemAtelierGemRevealed(uint16_t gemIndex) {
 
 	NetworkMessage out;
 	out.addByte(0xC5);
-	out.add<uint32_t>(gemIndex);
+	if (isWinter2026()) {
+		// 15.33 reads the index of the revealed gem as u16
+		out.add<uint16_t>(gemIndex);
+	} else {
+		out.add<uint32_t>(gemIndex);
+	}
 	writeToOutputBuffer(out);
 }
 

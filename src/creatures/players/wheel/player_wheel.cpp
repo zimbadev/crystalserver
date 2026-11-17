@@ -284,6 +284,30 @@ const static std::vector<WheelGemSupremeModifier_t> modsSupremeMonkPosition = {
 	WheelGemSupremeModifier_t::Monk_RevelationMastery_Ascetic,
 };
 
+// Winter Update 2026: gem quality each vessel accepts. Vessels unlock in this order.
+const static std::array<WheelGemQuality_t, WHEEL_GEM_VESSEL_COUNT> wheelVesselQuality = {
+	WheelGemQuality_t::Lesser,
+	WheelGemQuality_t::Regular,
+	WheelGemQuality_t::Greater,
+	WheelGemQuality_t::Lesser,
+	WheelGemQuality_t::Greater,
+	WheelGemQuality_t::Regular,
+	WheelGemQuality_t::Greater,
+	WheelGemQuality_t::Greater,
+};
+
+// Winter Update 2026: slices with the Gem Vessel perk (see IOWheel::addGemVessel). Every full one unlocks a vessel.
+const static std::array<WheelSlots_t, WHEEL_GEM_VESSEL_COUNT> wheelGemVesselSlots = {
+	WheelSlots_t::SLOT_RED_TOP_150,
+	WheelSlots_t::SLOT_GREEN_BOTTOM_150,
+	WheelSlots_t::SLOT_RED_TOP_75,
+	WheelSlots_t::SLOT_GREEN_50,
+	WheelSlots_t::SLOT_PURPLE_50,
+	WheelSlots_t::SLOT_BLUE_BOTTOM_75,
+	WheelSlots_t::SLOT_PURPLE_TOP_150,
+	WheelSlots_t::SLOT_BLUE_BOTTOM_150,
+};
+
 // Using reference wrapper to avoid copying the vector to the map
 const static std::unordered_map<uint8_t, std::reference_wrapper<const std::vector<WheelGemSupremeModifier_t>>> modsSupremePositionByVocation = {
 	{ 1, std::cref(modsSupremeSorcererPosition) },
@@ -1171,16 +1195,137 @@ std::vector<PlayerWheelGem> PlayerWheel::getRevealedGems() const {
 
 std::vector<PlayerWheelGem> PlayerWheel::getActiveGems() const {
 	std::vector<PlayerWheelGem> activeGems;
-	for (const auto &affinity : magic_enum::enum_values<WheelGemAffinity_t>()) {
-		const auto &gem = m_activeGems[static_cast<uint8_t>(affinity)];
+	const uint8_t unlockedVessels = getUnlockedVesselCount();
+	for (uint8_t vessel = 0; vessel < WHEEL_GEM_VESSEL_COUNT && vessel < unlockedVessels; ++vessel) {
+		const int32_t index = findRevealedGemIndex(m_vesselGems[vessel]);
+		if (index < 0) {
+			continue;
+		}
 
-		if (!gem) {
+		const auto &gem = m_revealedGems[index];
+		if (gem.quality != wheelVesselQuality[vessel]) {
 			continue;
 		}
 
 		activeGems.emplace_back(gem);
 	}
 	return activeGems;
+}
+
+int32_t PlayerWheel::findRevealedGemIndex(const std::string &uuid) const {
+	if (uuid.empty()) {
+		return -1;
+	}
+
+	for (size_t i = 0; i < m_revealedGems.size(); ++i) {
+		if (m_revealedGems[i].uuid == uuid) {
+			return static_cast<int32_t>(i);
+		}
+	}
+	return -1;
+}
+
+bool PlayerWheel::isGemSocketed(const std::string &uuid) const {
+	if (uuid.empty()) {
+		return false;
+	}
+
+	return std::ranges::find(m_vesselGems, uuid) != m_vesselGems.end();
+}
+
+uint8_t PlayerWheel::getUnlockedVesselCount() const {
+	uint8_t count = 0;
+	for (const auto slot : wheelGemVesselSlots) {
+		const uint16_t points = getPointsBySlotType(slot);
+		if (points > 0 && points == getMaxPointsPerSlot(slot)) {
+			++count;
+		}
+	}
+	return count;
+}
+
+bool PlayerWheel::placeGemInFreeVessel(const PlayerWheelGem &gem, std::array<std::string, WHEEL_GEM_VESSEL_COUNT> &vessels) const {
+	const uint8_t unlockedVessels = getUnlockedVesselCount();
+	for (uint8_t vessel = 0; vessel < WHEEL_GEM_VESSEL_COUNT && vessel < unlockedVessels; ++vessel) {
+		if (vessels[vessel].empty() && wheelVesselQuality[vessel] == gem.quality) {
+			vessels[vessel] = gem.uuid;
+			return true;
+		}
+	}
+	return false;
+}
+
+void PlayerWheel::setVesselGems(const std::array<int32_t, WHEEL_GEM_VESSEL_COUNT> &gemIndexes) {
+	const uint8_t unlockedVessels = getUnlockedVesselCount();
+	std::array<std::string, WHEEL_GEM_VESSEL_COUNT> vessels;
+	for (uint8_t vessel = 0; vessel < WHEEL_GEM_VESSEL_COUNT; ++vessel) {
+		const int32_t index = gemIndexes[vessel];
+		if (index < 0) {
+			continue;
+		}
+
+		// Invalid entries leave the vessel empty, the client gets the result in the next wheel window
+		if (vessel >= unlockedVessels) {
+			g_logger().debug("[{}] Player {} sent a gem for the locked vessel {}", __FUNCTION__, m_player.getName(), vessel);
+			continue;
+		}
+		if (static_cast<size_t>(index) >= m_revealedGems.size()) {
+			g_logger().debug("[{}] Player {} sent the unknown gem {} for vessel {}", __FUNCTION__, m_player.getName(), index, vessel);
+			continue;
+		}
+
+		const auto &gem = m_revealedGems[index];
+		if (gem.quality != wheelVesselQuality[vessel]) {
+			g_logger().debug("[{}] Player {} sent gem {} with the wrong quality for vessel {}", __FUNCTION__, m_player.getName(), index, vessel);
+			continue;
+		}
+		if (std::ranges::find(vessels, gem.uuid) != vessels.end()) {
+			g_logger().debug("[{}] Player {} sent gem {} for more than one vessel", __FUNCTION__, m_player.getName(), index);
+			continue;
+		}
+
+		vessels[vessel] = gem.uuid;
+	}
+	m_vesselGems = vessels;
+}
+
+void PlayerWheel::setLegacyActiveGems(const std::vector<uint16_t> &gemIndexes) {
+	// Valid gems the client wants active, each one once
+	std::vector<std::string> requested;
+	for (const uint16_t index : gemIndexes) {
+		if (index >= m_revealedGems.size()) {
+			continue;
+		}
+
+		const auto &uuid = m_revealedGems[index].uuid;
+		if (std::ranges::find(requested, uuid) == requested.end()) {
+			requested.emplace_back(uuid);
+		}
+	}
+
+	const uint8_t unlockedVessels = getUnlockedVesselCount();
+	std::array<std::string, WHEEL_GEM_VESSEL_COUNT> vessels;
+	for (uint8_t vessel = 0; vessel < WHEEL_GEM_VESSEL_COUNT && vessel < unlockedVessels; ++vessel) {
+		const auto &uuid = m_vesselGems[vessel];
+		if (!uuid.empty() && std::ranges::find(requested, uuid) != requested.end()) {
+			vessels[vessel] = uuid;
+		}
+	}
+
+	for (const auto &uuid : requested) {
+		if (std::ranges::find(vessels, uuid) != vessels.end()) {
+			continue;
+		}
+
+		const int32_t index = findRevealedGemIndex(uuid);
+		if (index < 0) {
+			continue;
+		}
+		if (!placeGemInFreeVessel(m_revealedGems[index], vessels)) {
+			g_logger().debug("[{}] Player {} has no free unlocked vessel for gem {}", __FUNCTION__, m_player.getName(), index);
+		}
+	}
+	m_vesselGems = vessels;
 }
 
 uint64_t PlayerWheel::getGemRotateCost(WheelGemQuality_t quality) {
@@ -1267,9 +1412,9 @@ void PlayerWheel::revealGem(WheelGemQuality_t quality) {
 	// CIP GemAtelierGemRevealed (S 0xC5): GemId = revealed-gem inventory index
 	// (TGemAtelierPageController selectGem / GEM_ATELIER_SELECT_GEM), not item type id.
 	if (m_player.client && !m_player.client->oldProtocol) {
-		const uint16_t revealedIndex = getGemIndex(gem.uuid);
-		if (revealedIndex != 0xFF) {
-			m_player.client->sendGemAtelierGemRevealed(revealedIndex);
+		const int32_t revealedIndex = findRevealedGemIndex(gem.uuid);
+		if (revealedIndex >= 0) {
+			m_player.client->sendGemAtelierGemRevealed(static_cast<uint16_t>(revealedIndex));
 		}
 	}
 
@@ -1337,6 +1482,13 @@ void PlayerWheel::destroyGem(uint16_t index) {
 
 	if (gem.locked) {
 		g_logger().error("[{}] Player {} destroyed locked gem with index {}", std::source_location::current().function_name(), m_player.getName(), index);
+		return;
+	}
+
+	if (isGemSocketed(gem.uuid)) {
+		m_player.sendTextMessage(MESSAGE_FAILURE, "You cannot dismantle a gem that is in a vessel.");
+		// Send the wheel again so the client shows the gem it asked to dismantle
+		sendOpenWheelWindow(m_player.getID());
 		return;
 	}
 
@@ -1419,21 +1571,97 @@ void PlayerWheel::toggleGemLock(uint16_t index) {
 	sendOpenWheelWindow(m_player.getID());
 }
 
-void PlayerWheel::setActiveGem(WheelGemAffinity_t affinity, uint16_t index) {
+void PlayerWheel::reshapeGem(uint16_t index, uint8_t modIndex) {
 	auto &gem = getGem(index);
 	if (!gem) {
-		g_logger().error("[{}] Failed to load gem with index {}", __FUNCTION__, index);
 		return;
 	}
-	if (gem.affinity != affinity) {
-		g_logger().error("[{}] Gem with index {} has affinity {} but trying to set it to {}", __FUNCTION__, index, fmt::underlying(gem.affinity), fmt::underlying(affinity));
-		return;
-	}
-	m_activeGems[static_cast<uint8_t>(affinity)] = gem;
-}
 
-void PlayerWheel::removeActiveGem(WheelGemAffinity_t affinity) {
-	m_activeGems[static_cast<uint8_t>(affinity)] = emptyGem;
+	// Reshape is a premium feature (canOpenWheel) and only works inside a temple, like changing points (option 1)
+	if (!canOpenWheel() || !m_player.isPremium() || getOptions(m_player.getID()) != 1) {
+		m_player.sendTextMessage(MESSAGE_FAILURE, "You need to be inside a temple to reshape gems.");
+		return;
+	}
+
+	if (gem.locked) {
+		m_player.sendTextMessage(MESSAGE_FAILURE, "Before you can reshape the gem, you must unlock it.");
+		return;
+	}
+
+	// Price of the Winter Update 2026 per mod position: gold and fragments
+	uint64_t goldCost = 0;
+	uint16_t fragmentId = 0;
+	uint32_t fragmentCount = 0;
+	switch (modIndex) {
+		case 0:
+			goldCost = 125000;
+			fragmentId = ITEM_LESSER_FRAGMENT;
+			fragmentCount = 1;
+			break;
+		case 1:
+			if (gem.quality < WheelGemQuality_t::Regular) {
+				g_logger().error("[{}] Player {} tried to reshape the second basic mod of the lesser gem {}", __FUNCTION__, m_player.getName(), index);
+				return;
+			}
+			goldCost = 1000000;
+			fragmentId = ITEM_LESSER_FRAGMENT;
+			fragmentCount = 2;
+			break;
+		case 2:
+			if (gem.quality < WheelGemQuality_t::Greater) {
+				g_logger().error("[{}] Player {} tried to reshape the supreme mod of gem {}, which has none", __FUNCTION__, m_player.getName(), index);
+				return;
+			}
+			goldCost = 5000000;
+			fragmentId = ITEM_GREATER_FRAGMENT;
+			fragmentCount = 3;
+			break;
+		default:
+			g_logger().error("[{}] Player {} sent the invalid mod position {} for gem {}", __FUNCTION__, m_player.getName(), modIndex, index);
+			return;
+	}
+
+	const auto supremeModifiers = m_player.getVocation()->getSupremeGemModifiers();
+	if (modIndex == 2 && supremeModifiers.empty()) {
+		g_logger().error("[{}] No supreme modifiers for the vocation of player {}", __FUNCTION__, m_player.getName());
+		return;
+	}
+
+	if (!m_player.hasItemCountById(fragmentId, fragmentCount, true)) {
+		m_player.sendTextMessage(MESSAGE_FAILURE, "You do not have enough fragments to reshape this gem.");
+		return;
+	}
+
+	if (!g_game().removeMoney(m_player.getPlayer(), goldCost, 0, true)) {
+		m_player.sendTextMessage(MESSAGE_FAILURE, "You do not have enough gold to reshape this gem.");
+		return;
+	}
+
+	if (!m_player.removeItemCountById(fragmentId, fragmentCount, true)) {
+		g_logger().error("[{}] Failed to remove {} fragments with id {} from player {}", __FUNCTION__, fragmentCount, fragmentId, m_player.getName());
+		return;
+	}
+
+	// Only the chosen mod is rolled again, the two basic mods of a gem always stay different
+	if (modIndex == 0) {
+		auto modifier = wheelGemBasicSlot1Allowed[uniform_random(0, wheelGemBasicSlot1Allowed.size() - 1)];
+		while (gem.quality >= WheelGemQuality_t::Regular && modifier == gem.basicModifier2) {
+			modifier = wheelGemBasicSlot1Allowed[uniform_random(0, wheelGemBasicSlot1Allowed.size() - 1)];
+		}
+		gem.basicModifier1 = modifier;
+	} else if (modIndex == 1) {
+		gem.basicModifier2 = selectBasicModifier2(gem.basicModifier1);
+	} else {
+		gem.supremeModifier = supremeModifiers[uniform_random(0, supremeModifiers.size() - 1)];
+	}
+	g_logger().debug("[{}] {}", __FUNCTION__, gem.toString());
+
+	// A socketed gem changes the bonuses of the player
+	if (isGemSocketed(gem.uuid)) {
+		loadPlayerBonusData();
+	}
+
+	sendOpenWheelWindow(m_player.getID());
 }
 
 void PlayerWheel::addRevelationBonus(WheelGemAffinity_t affinity, uint16_t points) {
@@ -1498,28 +1726,55 @@ int32_t PlayerWheel::getSpellBonus(const std::string &spellName, WheelSpellBoost
 }
 
 void PlayerWheel::addGems(NetworkMessage &msg) const {
-	const auto activeGems = getActiveGems();
-	msg.addByte(activeGems.size());
-	g_logger().debug("[{}] Player {} has {} active gems", __FUNCTION__, m_player.getName(), activeGems.size());
-	for (const auto &gem : activeGems) {
-		auto index = getGemIndex(gem.uuid);
-		g_logger().debug("[{}] Adding active gem: {} with index {}", __FUNCTION__, gem.toString(), index);
-		msg.add<uint16_t>(getGemIndex(gem.uuid));
+	// 15.33 has no gem domain: vessel mask and no affinity byte per gem. 15.30 keeps its layout.
+	const bool isWinter = m_player.isWinter2026();
+
+	// Revealed gem index of every vessel, -1 when the vessel is empty
+	std::array<int32_t, WHEEL_GEM_VESSEL_COUNT> vesselIndexes;
+	vesselIndexes.fill(-1);
+	uint8_t socketedCount = 0;
+	uint8_t vesselMask = 0;
+	for (uint8_t vessel = 0; vessel < WHEEL_GEM_VESSEL_COUNT; ++vessel) {
+		const int32_t gemIndex = findRevealedGemIndex(m_vesselGems[vessel]);
+		if (gemIndex < 0) {
+			continue;
+		}
+
+		vesselIndexes[vessel] = gemIndex;
+		vesselMask |= static_cast<uint8_t>(0x80 >> vessel);
+		++socketedCount;
+	}
+	g_logger().debug("[{}] Player {} has {} socketed gems", __FUNCTION__, m_player.getName(), socketedCount);
+
+	if (isWinter) {
+		// u8 vessel mask (bit 0x80 >> i = vessel i), then one u16 gem index per set bit in vessel order
+		msg.addByte(vesselMask);
+	} else {
+		// 15.30: the socketed gems are the active gems
+		msg.addByte(socketedCount);
+	}
+	for (uint8_t vessel = 0; vessel < WHEEL_GEM_VESSEL_COUNT; ++vessel) {
+		if (vesselIndexes[vessel] >= 0) {
+			msg.add<uint16_t>(static_cast<uint16_t>(vesselIndexes[vessel]));
+		}
 	}
 
 	msg.add<uint16_t>(m_revealedGems.size());
 	uint16_t index = 0;
 	for (const auto &gem : m_revealedGems) {
 		g_logger().debug("[{}] Adding revealed gem: {}", __FUNCTION__, gem.toString());
+		const auto quality = std::min<uint8_t>(static_cast<uint8_t>(gem.quality), static_cast<uint8_t>(WheelGemQuality_t::Greater));
 		msg.add<uint16_t>(index++);
-		msg.addByte(gem.locked);
-		msg.addByte(static_cast<uint8_t>(gem.affinity));
-		msg.addByte(static_cast<uint8_t>(gem.quality));
+		msg.addByte(gem.locked ? 0x01 : 0x00);
+		if (!isWinter) {
+			msg.addByte(std::min<uint8_t>(static_cast<uint8_t>(gem.affinity), static_cast<uint8_t>(WheelGemAffinity_t::Purple)));
+		}
+		msg.addByte(quality);
 		msg.addByte(static_cast<uint8_t>(gem.basicModifier1));
-		if (gem.quality >= WheelGemQuality_t::Regular) {
+		if (quality >= static_cast<uint8_t>(WheelGemQuality_t::Regular)) {
 			msg.addByte(static_cast<uint8_t>(gem.basicModifier2));
 		}
-		if (gem.quality >= WheelGemQuality_t::Greater) {
+		if (quality >= static_cast<uint8_t>(WheelGemQuality_t::Greater)) {
 			msg.addByte(static_cast<uint8_t>(gem.supremeModifier));
 		}
 	}
@@ -1659,7 +1914,12 @@ void PlayerWheel::sendOpenWheelWindow(NetworkMessage &msg, uint32_t ownerId) {
 		msg.add<uint16_t>(getPointsBySlotType(slot));
 	}
 	addPromotionScrolls(msg);
-	msg.addByte(hasMonkQuest() ? 10 : 0); // The Way of The Monk Quest
+	// The Way of The Monk Quest. The client reads a flag: 15.33 gets 0/1, 15.30 keeps the value it always got.
+	if (m_player.isWinter2026()) {
+		msg.addByte(hasMonkQuest() ? 0x01 : 0x00);
+	} else {
+		msg.addByte(hasMonkQuest() ? 10 : 0);
+	}
 	msg.add<uint16_t>(getExtraPointsFromHuntingTaskShop());
 	addGems(msg);
 	addGradeModifiers(msg);
@@ -1799,15 +2059,33 @@ void PlayerWheel::saveSlotPointsOnPressSaveButton(NetworkMessage &msg) {
 		g_logger().error("[parseSaveWheel] Player '{}' tried to select a slot without the valid requirements", m_player.getName());
 	}
 
-	// Gem Vessels
-	for (const auto &affinity : magic_enum::enum_values<WheelGemAffinity_t>()) {
-		const bool hasGem = msg.getByte();
-		if (!hasGem) {
-			removeActiveGem(affinity);
-			continue;
+	// Gem Vessels, validated against the points that were just saved
+	if (m_player.isWinter2026()) {
+		// 15.33: u8 vessel mask (bit 0x80 >> i = vessel i), then one u16 gem index per set bit in vessel order
+		std::array<int32_t, WHEEL_GEM_VESSEL_COUNT> gemIndexes;
+		gemIndexes.fill(-1);
+		const uint8_t vesselMask = msg.getByte();
+		for (uint8_t vessel = 0; vessel < WHEEL_GEM_VESSEL_COUNT; ++vessel) {
+			if ((vesselMask & (0x80 >> vessel)) == 0) {
+				continue;
+			}
+			if (!msg.canRead(sizeof(uint16_t))) {
+				break;
+			}
+			gemIndexes[vessel] = msg.get<uint16_t>();
 		}
-		const auto gemIndex = msg.get<uint16_t>();
-		setActiveGem(affinity, gemIndex);
+		setVesselGems(gemIndexes);
+	} else {
+		// 15.30: one optional gem per domain (green, red, blue, purple). Domains are gone, the gems go to vessels.
+		std::vector<uint16_t> gemIndexes;
+		for (uint8_t domain = 0; domain < 4; ++domain) {
+			const bool hasGem = msg.getByte();
+			if (!hasGem) {
+				continue;
+			}
+			gemIndexes.emplace_back(msg.get<uint16_t>());
+		}
+		setLegacyActiveGems(gemIndexes);
 	}
 
 	// Player's bonus data is loaded, initialized, registered, and the function logs
@@ -1819,28 +2097,81 @@ void PlayerWheel::saveSlotPointsOnPressSaveButton(NetworkMessage &msg) {
 }
 
 void PlayerWheel::loadActiveGems() {
-	for (const auto &affinity : magic_enum::enum_values<WheelGemAffinity_t>()) {
-		std::string key(magic_enum::enum_name(affinity));
-		auto uuidKV = gemsKV()->scoped("active")->get(key);
+	// KV `gems.vessels.<0..7>` holds the uuid of the gem in each vessel
+	const auto vesselsKV = gemsKV()->scoped("vessels");
+	for (auto &uuid : m_vesselGems) {
+		uuid.clear();
+	}
+
+	for (uint8_t vessel = 0; vessel < WHEEL_GEM_VESSEL_COUNT; ++vessel) {
+		const auto uuidKV = vesselsKV->get(std::to_string(vessel));
 		if (!uuidKV.has_value()) {
 			continue;
 		}
 
-		auto uuid = uuidKV->get<StringType>();
-		if (uuid.empty()) {
+		const auto uuid = uuidKV->get<StringType>();
+		const int32_t index = findRevealedGemIndex(uuid);
+		if (index < 0 || m_revealedGems[index].quality != wheelVesselQuality[vessel] || isGemSocketed(uuid)) {
 			continue;
 		}
 
-		auto it = std::ranges::find_if(m_revealedGems, [&uuid](const auto &gem) {
-			return gem.uuid == uuid;
-		});
-
-		if (it == m_revealedGems.end()) {
-			continue;
-		}
-
-		m_activeGems[static_cast<uint8_t>(affinity)] = *it;
+		m_vesselGems[vessel] = uuid;
 	}
+
+	migrateLegacyActiveGems();
+}
+
+void PlayerWheel::migrateLegacyActiveGems() {
+	// Before the Winter Update 2026 one gem per domain was active (KV `gems.active.<Domain>`). Each of them
+	// goes to the first free unlocked vessel of its quality, a gem that does not fit stays revealed and inactive.
+	// The old keys are the migration marker: they are removed here together with the write of the vessel keys,
+	// so the KV store saves both or none. After an unclean stop the keys are still there and this runs again,
+	// which is safe because a gem that is already socketed is skipped and no vessel is ever cleared.
+	const auto activeKV = gemsKV()->scoped("active");
+	uint8_t migrated = 0;
+	uint8_t unplaced = 0;
+	for (const auto &affinity : magic_enum::enum_values<WheelGemAffinity_t>()) {
+		const std::string key(magic_enum::enum_name(affinity));
+		const auto uuidKV = activeKV->get(key);
+		if (!uuidKV.has_value()) {
+			continue;
+		}
+
+		const auto uuid = uuidKV->get<StringType>();
+		activeKV->remove(key);
+
+		const int32_t index = findRevealedGemIndex(uuid);
+		if (index < 0) {
+			continue;
+		}
+
+		++migrated;
+		if (isGemSocketed(uuid)) {
+			continue;
+		}
+		if (!placeGemInFreeVessel(m_revealedGems[index], m_vesselGems)) {
+			++unplaced;
+		}
+	}
+
+	if (migrated == 0) {
+		return;
+	}
+
+	saveActiveGems();
+	m_vesselMigrationNotice = true;
+	m_vesselMigrationUnplaced = unplaced;
+	g_logger().info("[{}] Player {}: {} active gems moved to gem vessels, {} did not fit an unlocked vessel", __FUNCTION__, m_player.getName(), migrated, unplaced);
+}
+
+void PlayerWheel::sendVesselMigrationNotice() {
+	m_vesselMigrationNotice = false;
+
+	std::string message = "The Gem Atelier has changed: gems no longer belong to a domain and are placed in gem vessels. Your active gems were moved to your unlocked vessels.";
+	if (m_vesselMigrationUnplaced > 0) {
+		message += fmt::format(" {} of them did not fit an unlocked vessel of the same quality and {} now inactive. Fill more Gem Vessel slices in the Wheel of Destiny to unlock vessels.", static_cast<uint32_t>(m_vesselMigrationUnplaced), m_vesselMigrationUnplaced == 1 ? "is" : "are");
+	}
+	m_player.sendTextMessage(MESSAGE_EVENT_ADVANCE, message);
 }
 
 void PlayerWheel::saveActiveGems() const {
@@ -1848,13 +2179,14 @@ void PlayerWheel::saveActiveGems() const {
 		return;
 	}
 
-	for (const auto &affinity : magic_enum::enum_values<WheelGemAffinity_t>()) {
-		const std::string key(magic_enum::enum_name(affinity));
-		const auto &gem = m_activeGems[static_cast<uint8_t>(affinity)];
-		if (gem) {
-			gemsKV()->scoped("active")->set(key, gem.uuid);
+	const auto vesselsKV = gemsKV()->scoped("vessels");
+	for (uint8_t vessel = 0; vessel < WHEEL_GEM_VESSEL_COUNT; ++vessel) {
+		const std::string key = std::to_string(vessel);
+		const auto &uuid = m_vesselGems[vessel];
+		if (!uuid.empty()) {
+			vesselsKV->set(key, uuid);
 		} else {
-			gemsKV()->scoped("active")->remove(key);
+			vesselsKV->remove(key);
 		}
 	}
 }
@@ -2582,6 +2914,7 @@ void PlayerWheel::loadPlayerBonusData() {
 	resetPlayerData();
 	// Initialize the relevant IOWheel data in the PlayerWheel
 	loadDedicationAndConvictionPerks();
+	applyFragmentWorkshopBonus();
 	loadRevelationPerks();
 
 	registerPlayerBonusData();
@@ -2591,6 +2924,25 @@ void PlayerWheel::loadPlayerBonusData() {
 	// After wheel bonus reload, refresh CIP spell UI for grades that alter
 	// area / targets / duration (S 0x60 SpellDataModification).
 	sendSpellDataModifications();
+}
+
+void PlayerWheel::applyFragmentWorkshopBonus() {
+	// Winter Update 2026: every grade step of a mod (I to IV, stored as 0 to 3) gives +5 health, mana and capacity
+	int32_t gradeSteps = 0;
+	for (const auto &modPosition : modsBasicPosition) {
+		gradeSteps += std::min<uint8_t>(m_basicGrades[static_cast<uint8_t>(modPosition)], 3);
+	}
+
+	const auto modsSupremeIt = modsSupremePositionByVocation.find(m_player.getVocation()->getBaseId());
+	if (modsSupremeIt != modsSupremePositionByVocation.end()) {
+		for (const auto &modPosition : modsSupremeIt->second.get()) {
+			gradeSteps += std::min<uint8_t>(m_supremeGrades[static_cast<uint8_t>(modPosition)], 3);
+		}
+	}
+
+	m_playerBonusData.stats.health += gradeSteps * 5;
+	m_playerBonusData.stats.mana += gradeSteps * 5;
+	m_playerBonusData.stats.capacity += gradeSteps * 5;
 }
 
 void PlayerWheel::printPlayerWheelMethodsBonusData(const PlayerWheelMethodsBonusData &bonusData) const {
@@ -2613,16 +2965,18 @@ void PlayerWheel::printPlayerWheelMethodsBonusData(const PlayerWheelMethodsBonus
 		g_logger().debug("  healing: {}", bonusData.stats.healing);
 	}
 
-	g_logger().debug("Vessel Resonance:");
-	for (size_t i = 0; i < bonusData.unlockedVesselResonances.size(); ++i) {
-		const auto count = bonusData.unlockedVesselResonances[i];
-		if (count == 0) {
+	g_logger().debug("Unlocked gem vessels: {}", getUnlockedVesselCount());
+
+	g_logger().debug("Revelation Mastery:");
+	for (size_t i = 0; i < bonusData.revelationMasteryPoints.size(); ++i) {
+		const auto points = bonusData.revelationMasteryPoints[i];
+		if (points == 0) {
 			continue;
 		}
 
 		const auto affinity = static_cast<WheelGemAffinity_t>(i);
 		std::string affinityName(magic_enum::enum_name(affinity));
-		g_logger().debug("  Affinity: {} count: {}", affinityName, bonusData.unlockedVesselResonances[i]);
+		g_logger().debug("  Domain: {} points: {}", affinityName, points);
 	}
 
 	g_logger().debug("Skills:");
@@ -2795,20 +3149,20 @@ void PlayerWheel::processActiveGems() {
 			continue;
 		}
 
-		auto count = m_playerBonusData.unlockedVesselResonances[static_cast<uint8_t>(affinity)];
-		if (count >= 1) {
+		// Vessel Resonance is gone: a gem in an unlocked vessel (getActiveGems) gives all of its mods
+		{
 			uint8_t grade = getGemGrade(WheelFragmentType_t::Lesser, static_cast<uint8_t>(basicModifier1));
 			std::string modifierName(magic_enum::enum_name(basicModifier1));
 			g_logger().debug("[{}] Adding basic modifier 1 {} to player {} from {} gem affinity {}", __FUNCTION__, modifierName, playerName, magic_enum::enum_name(quality), magic_enum::enum_name(affinity));
 			m_modifierContext->addStrategies(basicModifier1, grade);
 		}
-		if (count >= 2 && quality >= WheelGemQuality_t::Regular) {
+		if (quality >= WheelGemQuality_t::Regular) {
 			uint8_t grade = getGemGrade(WheelFragmentType_t::Lesser, static_cast<uint8_t>(basicModifier2));
 			std::string modifierName(magic_enum::enum_name(basicModifier2));
 			g_logger().debug("[{}] Adding basic modifier 2 {} to player {} from {} gem affinity {}", __FUNCTION__, modifierName, playerName, magic_enum::enum_name(quality), magic_enum::enum_name(affinity));
 			m_modifierContext->addStrategies(basicModifier2, grade);
 		}
-		if (count >= 3 && quality >= WheelGemQuality_t::Greater) {
+		if (quality >= WheelGemQuality_t::Greater) {
 			uint8_t grade = getGemGrade(WheelFragmentType_t::Greater, static_cast<uint8_t>(supremeModifier));
 			std::string modifierName(magic_enum::enum_name(supremeModifier));
 			g_logger().debug("[{}] Adding supreme modifier {} to player {} from {} gem affinity {}", __FUNCTION__, modifierName, playerName, magic_enum::enum_name(quality), magic_enum::enum_name(affinity));
@@ -3003,6 +3357,11 @@ WheelStageEnum_t PlayerWheel::getPlayerSliceStage(const std::string &color) cons
 			totalPoints += bonusRevelationPoints;
 			g_logger().debug("[{}] Player: {}, has affinity: {}, revelation points: {} total points: {}, relations: {}", __FUNCTION__, m_player.getName(), magic_enum::enum_name(affinity), bonusRevelationPoints, totalPoints, m_bonusRevelationPoints.size());
 		}
+	}
+
+	// Revelation Mastery: the full middle slice of the domain counts as extra promotion points
+	if (affinityNumber < m_playerBonusData.revelationMasteryPoints.size()) {
+		totalPoints += m_playerBonusData.revelationMasteryPoints[affinityNumber];
 	}
 
 	totalPoints += m_modsMaxGrade;
@@ -3424,6 +3783,11 @@ int32_t PlayerWheel::checkElementSensitiveReduction(CombatType_t type) const {
 }
 
 void PlayerWheel::onThink(bool force /* = false*/) {
+	// The migration runs while the player is loaded, the message waits until the player is in the game
+	if (m_vesselMigrationNotice && !force && m_player.client && m_player.getTile()) {
+		sendVesselMigrationNotice();
+	}
+
 	bool updateClient = false;
 	m_creaturesNearby = 0;
 	// Gift of life (Cooldown)

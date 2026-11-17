@@ -67,6 +67,9 @@ enum class WheelSlots_t : uint8_t {
 	SLOT_PURPLE_200 = 36,
 };
 
+// Winter Update 2026: gems are socketed in 8 vessels instead of one per domain
+inline constexpr uint8_t WHEEL_GEM_VESSEL_COUNT = 8;
+
 enum class WheelStageEnum_t {
 	NONE = 0,
 	ONE = 1,
@@ -216,8 +219,8 @@ struct PlayerWheelMethodsBonusData {
 		int damage = 0;
 		int healing = 0;
 	};
-	// value * 100. Example: 1% == 100
-	std::array<uint8_t, 4> unlockedVesselResonances = {};
+	// Promotion points from full Revelation Mastery slices, indexed by WheelGemAffinity_t (domain)
+	std::array<uint16_t, 4> revelationMasteryPoints = {};
 
 	// Raw value. Example: 1 == 1
 	struct Skills {
