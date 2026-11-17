@@ -1844,6 +1844,10 @@ void PlayerWheel::loadActiveGems() {
 }
 
 void PlayerWheel::saveActiveGems() const {
+	if (!m_loadedFromStorage) {
+		return;
+	}
+
 	for (const auto &affinity : magic_enum::enum_values<WheelGemAffinity_t>()) {
 		const std::string key(magic_enum::enum_name(affinity));
 		const auto &gem = m_activeGems[static_cast<uint8_t>(affinity)];
@@ -1884,6 +1888,10 @@ void PlayerWheel::loadRevealedGems() {
 }
 
 void PlayerWheel::saveRevealedGems() const {
+	if (!m_loadedFromStorage) {
+		return;
+	}
+
 	for (const auto &gem : m_destroyedGems) {
 		gem.remove(gemsKV());
 	}
@@ -1957,6 +1965,10 @@ void PlayerWheel::loadKVHuntingTaskShopExtraPoints() {
 }
 
 void PlayerWheel::saveKVHuntingTaskShopExtraPoints() const {
+	if (!m_loadedFromStorage) {
+		return;
+	}
+
 	const auto &pointsKv = m_player.kv()->scoped("wheel-of-destiny");
 	if (!pointsKv) {
 		return;
@@ -2019,6 +2031,10 @@ void PlayerWheel::saveKVModGrades() const {
  * Functions for load and save player database informations
  */
 void PlayerWheel::loadDBPlayerSlotPointsOnLogin() {
+	// First step of the wheel loading (IOLoginDataLoad::loadPlayerInitializeSystem). Players loaded without it
+	// (offline preload) hold no wheel data, saving them must not overwrite what is stored.
+	m_loadedFromStorage = true;
+
 	auto resultString = fmt::format("SELECT `slot` FROM `player_wheeldata` WHERE `player_id` = {}", m_player.getGUID());
 	const DBResult_ptr &result = g_database().storeQuery(resultString);
 	// Ignore if player not have nothing inserted in the table
@@ -2041,6 +2057,10 @@ void PlayerWheel::loadDBPlayerSlotPointsOnLogin() {
 }
 
 bool PlayerWheel::saveDBPlayerSlotPointsOnLogout() const {
+	if (!m_loadedFromStorage) {
+		return true;
+	}
+
 	DBInsert insertWheelData("INSERT INTO `player_wheeldata` (`player_id`, `slot`) VALUES ");
 	insertWheelData.upsert({ "slot" });
 	PropWriteStream stream;

@@ -493,4 +493,7 @@ private:
 	std::vector<PlayerWheelGem> m_destroyedGems;
 
 	float m_harmonySanctuary = 1.0f;
+
+	// True once the wheel data of the player was loaded (see loadDBPlayerSlotPointsOnLogin)
+	bool m_loadedFromStorage = false;
 };
