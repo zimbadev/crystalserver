@@ -1811,6 +1811,13 @@ void PlayerWheel::improveGemGrade(WheelFragmentType_t fragmentType, uint8_t pos)
 	uint8_t quantity = 0;
 	uint8_t grade = 0;
 
+	// pos comes from the client and indexes the grade arrays
+	const size_t gradeCount = fragmentType == WheelFragmentType_t::Lesser ? m_basicGrades.size() : m_supremeGrades.size();
+	if (pos >= gradeCount) {
+		g_logger().error("[{}] Player {} sent the invalid mod id {}", std::source_location::current().function_name(), m_player.getName(), pos);
+		return;
+	}
+
 	if (fragmentType == WheelFragmentType_t::Lesser) {
 		grade = m_basicGrades[pos];
 	} else {
