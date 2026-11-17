@@ -70,6 +70,8 @@ GameStore.ActionType = {
 GameStore.CoinType = {
 	Coin = 0,
 	Transferable = 1,
+	-- 15.33 (Winter Update 2026): character bound, 1 token is worth 1 Tibia Coin, cosmetic offers only
+	CosmeticToken = 3,
 }
 
 GameStore.Storages = {
@@ -123,6 +125,57 @@ function useOfferConfigure(type)
 	end
 
 	return types[type]
+end
+
+-- Winter Update 2026: Cosmetic Tokens pay for cosmetic offers only (outfits, mounts, house decorations,
+-- furniture, beds and hireling dresses).
+-- These offer types are cosmetic wherever they are sold.
+GameStore.CosmeticOfferTypes = {
+	[GameStore.OfferTypes.OFFER_TYPE_OUTFIT] = true,
+	[GameStore.OfferTypes.OFFER_TYPE_OUTFIT_ADDON] = true,
+	[GameStore.OfferTypes.OFFER_TYPE_MOUNT] = true,
+	[GameStore.OfferTypes.OFFER_TYPE_ITEM_BED] = true,
+	[GameStore.OfferTypes.OFFER_TYPE_HIRELING_OUTFIT] = true,
+}
+
+-- OFFER_TYPE_HOUSE is also used by casks, house upgrades (dummies, shrines, mailboxes) and the tournament
+-- offers, so it only counts as cosmetic inside these categories (lower case category names).
+GameStore.CosmeticHouseCategories = {
+	["decorations"] = true,
+	["furniture"] = true,
+	["beds"] = true,
+}
+
+-- Default of the per offer flag "cosmeticTokens" (set by the catalog loop at the end of gamestore.lua).
+-- An offer can override it in the catalog with cosmeticTokens = true / false.
+function GameStore.isCosmeticOffer(offer, category)
+	if not offer or not offer.type then
+		return false
+	end
+
+	if GameStore.CosmeticOfferTypes[offer.type] then
+		return true
+	end
+
+	if offer.type == GameStore.OfferTypes.OFFER_TYPE_HOUSE and category and type(category.name) == "string" then
+		return GameStore.CosmeticHouseCategories[category.name:lower()] == true
+	end
+
+	return false
+end
+
+-- True when this offer can be paid with Cosmetic Tokens (same price as in Tibia Coins).
+-- Offers priced in transferable coins only and free offers are left out.
+function GameStore.canPayWithCosmeticTokens(offer)
+	if not offer or offer.cosmeticTokens ~= true then
+		return false
+	end
+
+	if offer.coinType == GameStore.CoinType.Transferable then
+		return false
+	end
+
+	return type(offer.price) == "number" and offer.price > 0
 end
 
 GameStore.ClientOfferTypes = {
@@ -440,11 +493,21 @@ end
 
 function parseBuyStoreOffer(playerId, msg)
 	local player = Player(playerId)
+	if not player then
+		return false
+	end
+
 	local id = msg:getU32()
+	-- 15.33: [bool payWithCosmeticTokens] between the offer id and the product type (always present)
+	local payWithTokens = false
+	if player:getClient().winter2026 then
+		payWithTokens = msg:getByte() ~= 0
+	end
 	local offer = GameStore.getOfferById(id)
 	local productType = msg:getByte()
 	if not offer then
-		return false
+		-- the client keeps the purchase dialog locked until it gets an answer
+		return queueSendStoreAlertToUser("This offer is unavailable [0]", 350, playerId, GameStore.StoreErrors.STORE_ERROR_INFORMATION)
 	end
 
 	-- All guarding conditions under which the offer should not be processed must be included here
@@ -482,7 +545,15 @@ function parseBuyStoreOffer(playerId, msg)
 		offerPrice = 0
 	end
 	-- Check if offer can be honored
-	if offerPrice > 0 and not player:canPayForOffer(offerPrice, offerCoinType) then
+	if payWithTokens then
+		-- A token purchase is either paid with tokens or refused with a store error; it never falls back to coins.
+		if not GameStore.canPayWithCosmeticTokens(offer) then
+			return queueSendStoreAlertToUser("This offer cannot be bought with Cosmetic Tokens. Your purchase has been cancelled.", 250, playerId, GameStore.StoreErrors.STORE_ERROR_PURCHASE)
+		end
+		if player:getCosmeticTokens() < offerPrice then
+			return queueSendStoreAlertToUser("You don't have enough Cosmetic Tokens. Your purchase has been cancelled.", 250, playerId, GameStore.StoreErrors.STORE_ERROR_PURCHASE)
+		end
+	elseif offerPrice > 0 and not player:canPayForOffer(offerPrice, offerCoinType) then
 		return queueSendStoreAlertToUser("You don't have enough coins. Your purchase has been cancelled.", 250, playerId)
 	end
 
@@ -564,11 +635,15 @@ function parseBuyStoreOffer(playerId, msg)
 	end
 	local configure = useOfferConfigure(offer.type)
 	if configure ~= GameStore.ConfigureOffers.SHOW_CONFIGURE then
-		if not player:makeCoinTransaction(offer) then
+		if payWithTokens then
+			if not player:makeCosmeticTokenTransaction(offer) then
+				return queueSendStoreAlertToUser("Purchase transaction error", 350, playerId, GameStore.StoreErrors.STORE_ERROR_PURCHASE)
+			end
+		elseif not player:makeCoinTransaction(offer) then
 			return player:showInfoModal("Error", "Purchase transaction error")
 		end
 
-		local message = string.format("You have purchased %s for %d coins.", offer.name, offerPrice)
+		local message = string.format("You have purchased %s for %d %s.", offer.name, offerPrice, payWithTokens and "Cosmetic Tokens" or "coins")
 		sendUpdatedStoreBalances(playerId)
 		return addPlayerEvent(sendStorePurchaseSuccessful, 650, playerId, message)
 	end
@@ -901,9 +976,14 @@ function sendShowStoreOffers(playerId, category, redirectId)
 	if not category.offers then
 		msg:addU16(0) -- Disable reasons
 		msg:addU16(0) -- Offers
+		if not oldProtocol and category.name == "Search" then
+			msg:addByte(0) -- Too many search results (the client always reads it for "Search")
+		end
 		msg:sendToPlayer(player)
 		return
 	end
+
+	local winter2026 = player:getClient().winter2026
 
 	local disableReasons = {}
 	local offers = {}
@@ -1000,6 +1080,11 @@ function sendShowStoreOffers(playerId, category, redirectId)
 					end
 				else
 					msg:addByte(GameStore.States.STATE_NONE)
+				end
+
+				if winter2026 then
+					-- 15.33: trailing bool of every price option, 1 = also buyable with Cosmetic Tokens
+					msg:addByte(GameStore.canPayWithCosmeticTokens(off) and 1 or 0)
 				end
 			end
 
@@ -1180,6 +1265,7 @@ function sendStoreTransactionHistory(playerId, page, entriesPerPage)
 	end
 
 	local oldProtocol = player:getClient().version < 1200
+	local winter2026 = player:getClient().winter2026
 	local totalEntries = GameStore.retrieveHistoryTotalPages(player:getAccountId())
 	local totalPages = math.ceil(totalEntries / entriesPerPage)
 
@@ -1197,7 +1283,17 @@ function sendStoreTransactionHistory(playerId, page, entriesPerPage)
 		msg:addByte(entry.mode) -- 0 = normal, 1 = gift, 2 = refund
 		msg:add32(entry.amount)
 		if not oldProtocol then
-			msg:addByte(entry.type or 0x00) -- 0 = transferable tibia coin, 1 = normal tibia coin
+			local coinType = entry.type or 0x00
+			if winter2026 then
+				-- the 15.33 client accepts coin types 0..3 only
+				if coinType < 0 or coinType > GameStore.CoinType.CosmeticToken then
+					coinType = GameStore.CoinType.Coin
+				end
+			elseif coinType == GameStore.CoinType.CosmeticToken then
+				-- Cosmetic Tokens do not exist before 15.33: shown as a coin entry
+				coinType = GameStore.CoinType.Coin
+			end
+			msg:addByte(coinType) -- 0 = tibia coin, 1 = transferable tibia coin, 3 = cosmetic token (15.33)
 		end
 		msg:addString(entry.description, "sendStoreTransactionHistory - entry.description")
 		if not oldProtocol then
@@ -1291,7 +1387,7 @@ function sendUpdatedStoreBalances(playerId)
 	msg:sendToPlayer(player)
 end
 
-function sendRequestPurchaseData(playerId, offerId, type)
+function sendRequestPurchaseData(playerId, offerId, type, payWithTokens)
 	local player = Player(playerId)
 	if not player then
 		return false
@@ -1300,6 +1396,11 @@ function sendRequestPurchaseData(playerId, offerId, type)
 	local msg = NetworkMessage()
 	msg:addByte(GameStore.SendingPackets.S_RequestPurchaseData)
 	msg:addU32(offerId)
+	if player:getClient().winter2026 then
+		-- 15.33: bool "buy with Cosmetic Tokens". The offers that ask for purchase data (name change,
+		-- hireling) are not cosmetic, so every caller leaves it at 0.
+		msg:addByte(payWithTokens and 1 or 0)
+	end
 	msg:addByte(type)
 	msg:sendToPlayer(player)
 end
@@ -2276,6 +2377,32 @@ function Player.makeCoinTransaction(self, offer, desc)
 	return op
 end
 
+-- Pays a cosmetic offer with Cosmetic Tokens (15.33). Charges tokens only: when it returns false nothing was
+-- charged and the caller must refuse the purchase, never charge coins instead.
+-- The balance itself lives in the player (getCosmeticTokens / removeCosmeticTokens).
+function Player.makeCosmeticTokenTransaction(self, offer, desc)
+	if not GameStore.canPayWithCosmeticTokens(offer) then
+		return false
+	end
+
+	if desc then
+		desc = offer.name .. " (" .. desc .. ")"
+	else
+		desc = offer.name
+	end
+
+	if self:getCosmeticTokens() < offer.price then
+		return false
+	end
+
+	if self:removeCosmeticTokens(offer.price) ~= true then
+		return false
+	end
+
+	GameStore.insertHistory(self:getAccountId(), GameStore.HistoryTypes.HISTORY_TYPE_NONE, desc, offer.price * -1, GameStore.CoinType.CosmeticToken)
+	return true
+end
+
 -- Verifies if the player has enough resources to afford a store offer.
 -- When storeCombinedCoins is enabled, store purchases use transferable coins first, then regular coins.
 -- When storeCombinedCoins is disabled, only the configured storeCoinType is used (unless the offer requires transferable coins).
@@ -2354,6 +2481,7 @@ function sendHomePage(playerId)
 		return
 	end
 
+	local winter2026 = player:getClient().winter2026
 	local msg = NetworkMessage()
 	msg:addByte(GameStore.SendingPackets.S_StoreOffers)
 
@@ -2412,6 +2540,11 @@ function sendHomePage(playerId)
 				local daySub = offer.validUntil - os.date("*t").day
 				if daySub >= 0 then
 					msg:addByte(offer.state)
+					if winter2026 then
+						-- 15.33 reads the sale details of a home offer, like in a category page
+						msg:addU32(os.time() + daySub * 86400)
+						msg:addU32(offer.basePrice or offerPrice)
+					end
 				else
 					msg:addByte(GameStore.States.STATE_NONE)
 				end
@@ -2420,6 +2553,11 @@ function sendHomePage(playerId)
 			end
 		else
 			msg:addByte(GameStore.States.STATE_NONE)
+		end
+
+		if winter2026 then
+			-- 15.33: bool, 1 = also buyable with Cosmetic Tokens
+			msg:addByte(GameStore.canPayWithCosmeticTokens(offer) and 1 or 0)
 		end
 
 		local type = convertType(offer.type)
