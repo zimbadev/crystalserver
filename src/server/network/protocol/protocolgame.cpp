@@ -85,50 +85,52 @@
 // This "getIteration" function will allow us to get the total number of iterations that run within a specific map
 // Very useful to send the total amount in certain bytes in the ProtocolGame class
 namespace {
-	void writeDailyRewardDay(NetworkMessage &msg, const std::shared_ptr<Player> &player, uint8_t currentDay, DailyRewardAccountStatus_t accountStatus) {
-		const auto &rewards = g_dailyRewards().getRewards();
-		const auto rewardIt = rewards.find(currentDay);
-		if (rewardIt == rewards.end()) {
-			return;
-		}
-
-		const auto &dailyTable = rewardIt->second;
-		uint16_t itemsToPick = dailyTable.freeAccount;
-		if (accountStatus == DAILY_REWARD_STATUS_PREMIUM) {
-			itemsToPick = dailyTable.premiumAccount;
-		}
-
-		std::vector<uint16_t> rewardItems;
-		const uint8_t baseId = player->getVocation()->getBaseId();
-		if (const auto itemsIt = g_dailyRewards().getVocationItems().find(baseId); itemsIt != g_dailyRewards().getVocationItems().end()) {
-			rewardItems = itemsIt->second;
-		}
-		if (!dailyTable.items.empty()) {
-			rewardItems = dailyTable.items;
-		}
-
-		msg.addByte(static_cast<uint8_t>(dailyTable.systemType));
-		if (dailyTable.systemType == DAILY_REWARD_SYSTEM_TYPE_ONE) {
-			if (dailyTable.type == DAILY_REWARD_TYPE_ITEM) {
-				msg.addByte(static_cast<uint8_t>(itemsToPick));
-				msg.addByte(static_cast<uint8_t>(rewardItems.size()));
-				for (const uint16_t itemId : rewardItems) {
-					const ItemType &itemType = Item::items[itemId];
-					msg.add<uint16_t>(itemId);
-					msg.addString(fmt::format("{} {}", itemType.article, itemType.name));
-					msg.add<uint32_t>(static_cast<uint32_t>(itemType.weight));
+	// Payload of one reward entry of S2C 0xE4 (after its kind byte)
+	void writeDailyRewardEntry(NetworkMessage &msg, const DailyRewardEntry &entry, bool winter) {
+		switch (entry.kind) {
+			case DAILY_REWARD_KIND_ITEM:
+				msg.add<uint16_t>(entry.itemId);
+				msg.addString(entry.name);
+				msg.addByte(entry.count);
+				break;
+			case DAILY_REWARD_KIND_XP_BOOST:
+				msg.add<uint16_t>(entry.minutes);
+				if (winter) {
+					msg.add<uint16_t>(entry.percent);
 				}
-			}
-		} else if (dailyTable.systemType == DAILY_REWARD_SYSTEM_TYPE_TWO) {
-			if (dailyTable.type == DAILY_REWARD_TYPE_PREY_REROLL) {
-				msg.addByte(DAILY_REWARD_SYSTEM_SKIP);
-				msg.addByte(DAILY_REWARD_SYSTEM_TYPE_PREY_REROLL);
-				msg.addByte(static_cast<uint8_t>(itemsToPick));
-			} else if (dailyTable.type == DAILY_REWARD_TYPE_XP_BOOST) {
-				msg.addByte(DAILY_REWARD_SYSTEM_SKIP);
-				msg.addByte(DAILY_REWARD_SYSTEM_TYPE_XP_BOOST);
-				msg.add<uint16_t>(itemsToPick);
-			}
+				break;
+			case DAILY_REWARD_KIND_PREY_WILDCARDS:
+			case DAILY_REWARD_KIND_COSMETIC_TOKENS:
+			case DAILY_REWARD_KIND_BOUNTY_REROLL_TOKENS:
+			default:
+				msg.addByte(entry.count);
+				break;
+		}
+	}
+
+	// One reward object of S2C 0xE4 (the rewards of one day for a free or a Premium account)
+	// 15.33: u8 n, n x { u8 kind, payload }; a day without a reward is a single 00
+	// 15.30: u8 redeemMode (2 = fixed list), u8 n, n x { u8 kind, payload }; a day without a reward is 02 00
+	void writeDailyRewardDay(NetworkMessage &msg, uint8_t currentDay, DailyRewardAccountStatus_t accountStatus, bool winter) {
+		auto entries = g_dailyRewards().getRewardEntries(currentDay, accountStatus == DAILY_REWARD_STATUS_PREMIUM);
+
+		if (!winter) {
+			// A 15.30 client only knows items, prey wildcards and the XP boost
+			std::erase_if(entries, [](const DailyRewardEntry &entry) {
+				return entry.kind != DAILY_REWARD_KIND_ITEM && entry.kind != DAILY_REWARD_KIND_PREY_WILDCARDS && entry.kind != DAILY_REWARD_KIND_XP_BOOST;
+			});
+
+			// A day that only gives tokens is an empty fixed list for it
+			msg.addByte(static_cast<uint8_t>(DAILY_REWARD_SYSTEM_TYPE_TWO));
+		}
+
+		// The valid kinds end at 5, so the list can never get near the one byte count
+		const auto entryCount = static_cast<uint8_t>(std::min<size_t>(entries.size(), std::numeric_limits<uint8_t>::max()));
+		msg.addByte(entryCount);
+		for (uint8_t i = 0; i < entryCount; ++i) {
+			const auto &entry = entries[i];
+			msg.addByte(static_cast<uint8_t>(entry.kind));
+			writeDailyRewardEntry(msg, entry, winter);
 		}
 	}
 
@@ -3504,13 +3506,13 @@ void ProtocolGame::parseBountyTaskAction(NetworkMessage &msg) {
 	uint8_t option = msg.getByte();
 
 	// Client opcodes from TibiaTrace enum:
-	// 0 = BOUNTY_TASKS (open), 1 = WEEKLY_TASKS (open), 2 = TASK_CHANGE_DIFFICULTY (u8)
-	// 3 = REROLL_TASKS, 4 = CLAIM_DAILY, 5 = TASK_SELECTED (u8)
+	// 0 = BOUNTY_TASKS (open), 1 = WEEKLY_TASKS (open), 2 = TASK_CHANGE_DIFFICULTY (u8; 15.33: u8 + bool elite)
+	// 3 = REROLL_TASKS, 4 = CLAIM_DAILY (15.30 only, never sent by 15.33), 5 = TASK_SELECTED (u8)
 	// 6 = CLAIM_REWARD, 7 = BOUNTY_TALISMAN_UPGRADE (u8 pathIndex)
 	// 8 = DELIVERY_TASKS_DELIVER (u8 taskIndex)
 	// 9 = WEEKLY_TASKS_SELECT_DIFICULTY (u8)
 	// 10 = HUNTING_TASK_SHOP, 11 = HUNTING_TASK_SHOP_BUY_OFFER (u8 + u8)
-	// 12 = PREFERRED_LIST_UNLOCKED (u16), 13 = PREFERRED_LIST_PREFERRED_CLEAR (u16)
+	// 12 = PREFERRED_LIST_UNLOCKED (u16; 15.33: no body), 13 = PREFERRED_LIST_PREFERRED_CLEAR (u16)
 	// 14 = PREFERRED_LIST_UNWANTED_CLEAR (u16)
 	// 15 = PREFERRED_LIST_PREFERRED_ASSIGN (u16 slot + u16 raceId)
 	// 16 = PREFERRED_LIST_UNWANTED_ASSIGN (u16 slot + u16 raceId)
@@ -3531,10 +3533,13 @@ void ProtocolGame::parseBountyTaskAction(NetworkMessage &msg) {
 		}
 		case 2: {
 			uint8_t difficulty = msg.getByte();
+			// 15.33: the Elite setting of the board travels with the difficulty
+			const bool hasElite = isWinter2026();
+			const bool elite = hasElite && msg.getByte() != 0;
 			if (!g_configManager().getBoolean(BOUNTY_TASKS_ENABLED)) {
 				return;
 			}
-			g_game().playerBountyTaskChangeDifficulty(player->getID(), difficulty);
+			g_game().playerBountyTaskChangeDifficulty(player->getID(), difficulty, hasElite, elite);
 			break;
 		}
 		case 3: {
@@ -3545,7 +3550,9 @@ void ProtocolGame::parseBountyTaskAction(NetworkMessage &msg) {
 			break;
 		}
 		case 4: {
-			if (!g_configManager().getBoolean(BOUNTY_TASKS_ENABLED)) {
+			// The daily reroll claim is gone in 15.33 and that client never sends it; a 15.30 client
+			// gets a message and the board as answer (see IOBountyTasks::claimDailyReroll)
+			if (isWinter2026() || !g_configManager().getBoolean(BOUNTY_TASKS_ENABLED)) {
 				return;
 			}
 			g_game().playerBountyTaskClaimReroll(player->getID());
@@ -3607,7 +3614,8 @@ void ProtocolGame::parseBountyTaskAction(NetworkMessage &msg) {
 			break;
 		}
 		case 12: {
-			uint16_t slot = msg.get<uint16_t>();
+			// 15.33 sends no body, the server unlocks the next locked slot (a 15.30 client always sends 0)
+			uint16_t slot = isWinter2026() ? 0 : msg.get<uint16_t>();
 			if (!g_configManager().getBoolean(BOUNTY_TASKS_ENABLED)) {
 				return;
 			}
@@ -3760,6 +3768,13 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
 			break;
 		case RESOURCE_SOULSEALS_POINTS:
 			value = player->getSoulsealsPoints();
+			break;
+		// 15.33 only; the writer below drops both for older clients
+		case RESOURCE_BOUNTY_REROLL_TOKENS:
+			value = player->getRerollTasks();
+			break;
+		case RESOURCE_COSMETIC_TOKENS:
+			value = player->getCosmeticTokens();
 			break;
 		default:
 			return;
@@ -4818,8 +4833,7 @@ void ProtocolGame::sendCyclopediaCharacterStoreSummary() {
 	msg.addByte(CYCLOPEDIA_CHARACTERINFO_STORESUMMARY);
 	msg.addByte(0x00); // 0x00 Here means 'no error'
 	msg.add<uint32_t>(player->getXpBoostTime()); // Remaining Store Xp Boost Time
-	auto remaining = player->kv()->get("daily-reward-xp-boost");
-	msg.add<uint32_t>(remaining ? static_cast<uint32_t>(remaining->getNumber()) : 0); // Remaining Daily Reward Xp Boost Time
+	msg.add<uint32_t>(player->getDailyXpBoostTime()); // Remaining Daily Reward Xp Boost Time
 
 	auto cyclopediaSummary = player->cyclopedia()->getSummary();
 
@@ -6286,60 +6300,74 @@ void ProtocolGame::sendBountyTaskData(const BountyTaskData &bountyData) {
 		return;
 	}
 
+	const bool winter = isWinter2026();
+	// The dust of an Elite task is only granted to Premium accounts, so it is only shown to them
+	const bool showDust = player->isPremium();
+
 	sendResourceBalance(RESOURCE_BOUNTY_POINTS, player->getBountyPoints());
 	sendResourceBalance(RESOURCE_TASK_HUNTING, player->getTaskHuntingPoints());
 	sendResourceBalance(RESOURCE_SOULSEALS_POINTS, player->getSoulsealsPoints());
+	// 15.33: the reroll tokens left the board. The client takes them from this balance while it reads
+	// the board, so it has to be sent first. Both calls send nothing to a 15.30 client.
+	sendResourceBalance(RESOURCE_BOUNTY_REROLL_TOKENS, bountyData.rerollTasks);
+	sendResourceBalance(RESOURCE_COSMETIC_TOKENS, player->getCosmeticTokens());
 
 	NetworkMessage msg;
 	msg.addByte(0x5B);
 	msg.addByte(TASK_BOARD_BOUNTY);
 
-	if (bountyData.state == BOUNTY_STATE_ACTIVE) {
+	// 15.30: u8 idx, u16 raceId, u16 requiredKills, u32 rewardExp, u8 rewardBountyPoints, u16 currentKills, u8 claimType, u8 grade (0..2)
+	// 15.33: u8 idx, u16 raceId, u16 requiredKills, u32 rewardExp, u16 rewardBountyPoints, u16 currentKills, u8 claimType, u8 grade (0..3), bool isElite, u16 rewardDust
+	const auto writeTask = [&msg, winter, showDust](uint8_t index, uint16_t raceId, uint16_t requiredKills, uint32_t rewardExp, uint16_t rewardBountyPoints, uint16_t currentKills, uint8_t claimType, uint8_t grade, bool isElite, uint16_t rewardDust) {
+		msg.addByte(index);
+		msg.add<uint16_t>(raceId);
+		msg.add<uint16_t>(requiredKills);
+		msg.add<uint32_t>(rewardExp);
+		if (winter) {
+			msg.add<uint16_t>(rewardBountyPoints);
+		} else {
+			msg.addByte(static_cast<uint8_t>(std::min<uint16_t>(rewardBountyPoints, std::numeric_limits<uint8_t>::max())));
+		}
+		msg.add<uint16_t>(currentKills);
+		msg.addByte(std::min<uint8_t>(claimType, static_cast<uint8_t>(BOUNTY_CLAIM_REWARD_CLICKED)));
+		// Platinum does not exist for a 15.30 client, it is shown as Gold there
+		msg.addByte(std::min<uint8_t>(grade, static_cast<uint8_t>(winter ? BOUNTY_GRADE_PLATINUM : BOUNTY_GRADE_GOLD)));
+		if (winter) {
+			msg.addByte(isElite ? 0x01 : 0x00);
+			msg.add<uint16_t>(isElite && showDust ? rewardDust : 0);
+		}
+	};
+
+	if (bountyData.state == BOUNTY_STATE_ACTIVE || bountyData.state == BOUNTY_STATE_COMPLETED) {
+		const auto &task = bountyData.activeTask;
+		const auto claimType = bountyData.state == BOUNTY_STATE_COMPLETED ? BOUNTY_CLAIM_REWARD_CLICKED : BOUNTY_CLAIM_REWARD_NO_CLICK;
 		msg.addByte(1);
-		msg.addByte(bountyData.activeTask.taskIndex);
-		msg.add<uint16_t>(bountyData.activeTask.raceId);
-		msg.add<uint16_t>(bountyData.activeTask.requiredKills);
-		msg.add<uint32_t>(bountyData.activeTask.rewardExp);
-		msg.addByte(bountyData.activeTask.rewardBountyPoints);
-		msg.add<uint16_t>(bountyData.activeTask.currentKills);
-		msg.addByte(static_cast<uint8_t>(BOUNTY_CLAIM_REWARD_NO_CLICK));
-		msg.addByte(static_cast<uint8_t>(bountyData.activeTask.taskGrade));
-	} else if (bountyData.state == BOUNTY_STATE_COMPLETED) {
-		msg.addByte(1);
-		msg.addByte(bountyData.activeTask.taskIndex);
-		msg.add<uint16_t>(bountyData.activeTask.raceId);
-		msg.add<uint16_t>(bountyData.activeTask.requiredKills);
-		msg.add<uint32_t>(bountyData.activeTask.rewardExp);
-		msg.addByte(bountyData.activeTask.rewardBountyPoints);
-		msg.add<uint16_t>(bountyData.activeTask.currentKills);
-		msg.addByte(static_cast<uint8_t>(BOUNTY_CLAIM_REWARD_CLICKED));
-		msg.addByte(static_cast<uint8_t>(bountyData.activeTask.taskGrade));
+		writeTask(task.taskIndex, task.raceId, task.requiredKills, task.rewardExp, task.rewardBountyPoints, task.currentKills, static_cast<uint8_t>(claimType), static_cast<uint8_t>(task.taskGrade), task.isElite, task.rewardDust);
 	} else if (bountyData.state == BOUNTY_STATE_SELECTION && !bountyData.currentCreaturesList.empty()) {
 		msg.addByte(static_cast<uint8_t>(bountyData.currentCreaturesList.size()));
 		uint8_t index = 0;
 		for (const auto &creature : bountyData.currentCreaturesList) {
-			msg.addByte(index++);
-			msg.add<uint16_t>(creature.raceId);
-			msg.add<uint16_t>(creature.requiredKills);
-			msg.add<uint32_t>(creature.rewardExp);
-			msg.addByte(creature.rewardBountyPoints);
-			msg.add<uint16_t>(creature.currentKills);
-			msg.addByte(static_cast<uint8_t>(creature.claimRewardType));
-			msg.addByte(static_cast<uint8_t>(creature.taskGrade));
+			writeTask(index++, creature.raceId, creature.requiredKills, creature.rewardExp, creature.rewardBountyPoints, creature.currentKills, static_cast<uint8_t>(creature.claimRewardType), static_cast<uint8_t>(creature.taskGrade), creature.isElite, creature.rewardDust);
 		}
 	} else {
 		msg.addByte(0);
 	}
 
-	msg.addByte(bountyData.rerollTasks);
-	uint8_t rerollMode = static_cast<uint8_t>(BOUNTY_REROLL_TIMER_RUNNING);
-	if (bountyData.rerollTasks >= BOUNTY_MAX_REROLL_TASKS) {
-		rerollMode = static_cast<uint8_t>(BOUNTY_REROLL_LIMIT_REACHED);
-	} else if (bountyData.freeRerollTimeStamp <= OTSYS_TIME()) {
-		rerollMode = static_cast<uint8_t>(BOUNTY_REROLL_DAILY_CLAIMABLE);
+	if (winter) {
+		// 15.33 trailer: u8 selectedDifficulty, bool eliteEnabled
+		msg.addByte(std::min<uint8_t>(static_cast<uint8_t>(bountyData.selectedDifficulty), static_cast<uint8_t>(BOUNTY_DIFFICULTY_LAST)));
+		msg.addByte(bountyData.eliteEnabled ? 0x01 : 0x00);
+	} else {
+		// 15.30 trailer: u8 rerollTasks, u8 rerollMode, u8 selectedDifficulty
+		// Rerolls only cost tokens now and the daily claim is gone, so the claim is never reported as available
+		msg.addByte(bountyData.rerollTasks);
+		uint8_t rerollMode = static_cast<uint8_t>(BOUNTY_REROLL_TIMER_RUNNING);
+		if (bountyData.rerollTasks >= IOBountyTasks::getMaxRerollTokens()) {
+			rerollMode = static_cast<uint8_t>(BOUNTY_REROLL_LIMIT_REACHED);
+		}
+		msg.addByte(rerollMode);
+		msg.addByte(static_cast<uint8_t>(bountyData.selectedDifficulty));
 	}
-	msg.addByte(rerollMode);
-	msg.addByte(static_cast<uint8_t>(bountyData.selectedDifficulty));
 
 	for (uint8_t i = 0; i < TALISMAN_PATH_COUNT; ++i) {
 		const auto &tier = bountyData.talismanTiers[i];
@@ -7989,38 +8017,13 @@ void ProtocolGame::sendRestingStatus(uint8_t protection) {
 		return;
 	}
 
-	uint8_t dailyStreak = 0;
-	auto dailyRewardKV = player->kv()->scoped("daily-reward")->get("streak");
-	if (dailyRewardKV && dailyRewardKV.has_value()) {
-		dailyStreak = static_cast<uint8_t>(dailyRewardKV->getNumber());
-	}
-
-	msg.addByte(dailyStreak < 2 ? 0 : 1);
-	if (dailyStreak < 2) {
-		msg.addString("Resting Area (no active bonus)");
+	// 15.30: bool hasBonus + text. The bonuses no longer depend on the reward streak (Winter Update 2026):
+	// every account regenerates hit points and mana, Premium accounts twice as fast and also stamina and soul.
+	msg.addByte(0x01);
+	if (player->isPremium()) {
+		msg.addString("Active Resting Area Bonuses: \nDouble Hit Points Regeneration,\nDouble Mana Points Regeneration,\nStamina Points Regeneration,\nSoul Points Regeneration.");
 	} else {
-		std::ostringstream ss;
-		ss << "Active Resting Area Bonuses: ";
-		if (dailyStreak < DAILY_REWARD_DOUBLE_HP_REGENERATION) {
-			ss << "\nHit Points Regeneration";
-		} else {
-			ss << "\nDouble Hit Points Regeneration";
-		}
-		if (dailyStreak >= DAILY_REWARD_MP_REGENERATION) {
-			if (dailyStreak < DAILY_REWARD_DOUBLE_MP_REGENERATION) {
-				ss << ",\nMana Points Regeneration";
-			} else {
-				ss << ",\nDouble Mana Points Regeneration";
-			}
-		}
-		if (dailyStreak >= DAILY_REWARD_STAMINA_REGENERATION) {
-			ss << ",\nStamina Points Regeneration";
-		}
-		if (dailyStreak >= DAILY_REWARD_SOUL_REGENERATION) {
-			ss << ",\nSoul Points Regeneration";
-		}
-		ss << ".";
-		msg.addString(ss.str());
+		msg.addString("Active Resting Area Bonuses: \nHit Points Regeneration,\nMana Points Regeneration.");
 	}
 	writeToOutputBuffer(msg);
 }
@@ -9933,18 +9936,40 @@ void ProtocolGame::sendDailyRewardBasic() {
 		return;
 	}
 
+	const bool winter = isWinter2026();
+
 	NetworkMessage msg;
 	msg.addByte(0xE4);
 	msg.addByte(DailyRewards::REWARD_COUNT);
 	for (uint8_t currentDay = 1; currentDay <= DailyRewards::REWARD_COUNT; ++currentDay) {
-		writeDailyRewardDay(msg, player, currentDay, DAILY_REWARD_STATUS_FREE);
-		writeDailyRewardDay(msg, player, currentDay, DAILY_REWARD_STATUS_PREMIUM);
+		writeDailyRewardDay(msg, currentDay, DAILY_REWARD_STATUS_FREE, winter);
+		writeDailyRewardDay(msg, currentDay, DAILY_REWARD_STATUS_PREMIUM, winter);
 	}
 
+	if (winter) {
+		// 15.33: u8 n, n x u32 percent - the streak bonus per streak day (chance for double weapon
+		// proficiency experience: 1% per day up to 7%). No trailing byte.
+		msg.addByte(DailyRewards::MAX_STREAK_BONUS_CHANCE);
+		for (uint8_t day = 1; day <= DailyRewards::MAX_STREAK_BONUS_CHANCE; ++day) {
+			msg.add<uint32_t>(day);
+		}
+		writeToOutputBuffer(msg);
+		return;
+	}
+
+	// 15.30: u8 n, n x { string text, u8 day } - resting area bonus texts, then one byte.
+	// The count is the number of entries really written, so a text missing in the XML cannot desync.
 	constexpr uint8_t maxBonus = 7;
-	msg.addByte(maxBonus - 1);
+	const auto &strikeBonuses = g_dailyRewards().getStrikeBonuses();
+	uint8_t bonusCount = 0;
 	for (uint8_t day = 2; day <= maxBonus; ++day) {
-		const auto &strikeBonuses = g_dailyRewards().getStrikeBonuses();
+		if (strikeBonuses.contains(day)) {
+			++bonusCount;
+		}
+	}
+
+	msg.addByte(bonusCount);
+	for (uint8_t day = 2; day <= maxBonus; ++day) {
 		if (const auto bonusIt = strikeBonuses.find(day); bonusIt != strikeBonuses.end()) {
 			msg.addString(bonusIt->second.text);
 			msg.addByte(day);
