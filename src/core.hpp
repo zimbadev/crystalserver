@@ -19,7 +19,7 @@
 
 static constexpr auto SOFTWARE_NAME = "Crystal Server";
 static constexpr auto SOFTWARE_VERSION = "4.1.10";
-static constexpr auto GAME_UPDATE = "Summer Update 2026";
+static constexpr auto GAME_UPDATE = "Summer Update 2026 / Winter Update 2026";
 
 static constexpr auto AUTHENTICATOR_DIGITS = 6U;
 static constexpr auto AUTHENTICATOR_PERIOD = 30U;
@@ -27,6 +27,14 @@ static constexpr auto AUTHENTICATOR_PERIOD = 30U;
 // SERVER_MAJOR_VERSION is the actual full version of the server, including minor and patch numbers.
 // This is intended for internal use to identify the exact state of the server (release) software.
 static constexpr auto CLIENT_VERSION = 1530;
+
+// Winter Update 2026 test client (15.33). It is accepted next to CLIENT_VERSION: every message whose
+// layout changed in 15.33 branches on ProtocolGame::isWinter2026(), so 15.30 clients keep the old layout.
+static constexpr auto CLIENT_VERSION_WINTER = 1533;
+
+constexpr bool isSupportedClientVersion(int32_t clientVersion) {
+	return clientVersion == CLIENT_VERSION || clientVersion == CLIENT_VERSION_WINTER;
+}
 
 #define CLIENT_VERSION_UPPER (CLIENT_VERSION / 100)
 #define CLIENT_VERSION_LOWER (CLIENT_VERSION % 100)

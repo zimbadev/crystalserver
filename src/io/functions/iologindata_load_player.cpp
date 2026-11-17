@@ -1052,6 +1052,9 @@ void IOLoginDataLoad::loadPlayerInitializeSystem(const std::shared_ptr<Player> &
 	player->initializePrey();
 	player->initializeTaskHunting();
 
+	// Daily reward XP boost (player KV), separate from the store boost of the players table
+	player->loadDailyXpBoost();
+
 	loadPlayerBountyTasks(player, nullptr);
 	loadPlayerWeeklyTasks(player, nullptr);
 }
@@ -1071,11 +1074,16 @@ void IOLoginDataLoad::loadPlayerBountyTasks(const std::shared_ptr<Player> &playe
 	query << "SELECT * FROM `player_bounty_tasks` WHERE `player_id` = " << player->getGUID();
 	result = db.storeQuery(query.str());
 
+	auto &bountyData = player->getBountyTaskData();
+	// From here on the data of this player is known, so it may be saved again (see savePlayerBountyTasks)
+	bountyData.loaded = true;
+
 	if (!result) {
+		// No row yet: only the KV part (Elite setting, rarity growth) can exist
+		g_iobountytasks().loadExtraData(player);
 		return;
 	}
 
-	auto &bountyData = player->getBountyTaskData();
 	bountyData.state = static_cast<BountyTaskState_t>(result->getNumber<uint8_t>("state"));
 	bountyData.selectedDifficulty = static_cast<BountyTaskDifficulty_t>(result->getNumber<uint8_t>("difficulty"));
 	bountyData.bountyPoints = result->getNumber<uint32_t>("bounty_points");
@@ -1147,6 +1155,9 @@ void IOLoginDataLoad::loadPlayerBountyTasks(const std::shared_ptr<Player> &playe
 			}
 		}
 	}
+
+	// Winter Update 2026 values without a database column (Elite, dust, full point reward, rarity growth)
+	g_iobountytasks().loadExtraData(player);
 
 	// If state is SELECTION but creature list is empty, reset to NONE so they can be regenerated
 	if (bountyData.state == BOUNTY_STATE_SELECTION && bountyData.currentCreaturesList.empty()) {

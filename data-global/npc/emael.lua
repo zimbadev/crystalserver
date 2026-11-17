@@ -57,10 +57,42 @@ npcType.onCloseChannel = function(npc, creature)
 	npcHandler:onCloseChannel(npc, creature)
 end
 
+-- Winter Update 2026: proficiency catalysts can be traded up, keeping the total proficiency experience
+-- (20 lesser = 4 normal = 1 greater).
+local CATALYST_GREATER = 51589
+local catalystExchanges = {
+	-- topic = { itemId, amount needed for 1 greater proficiency catalyst, name }
+	[3] = { itemId = 54266, amount = 20, name = "lesser proficiency catalysts" },
+	[4] = { itemId = 51588, amount = 4, name = "proficiency catalysts" },
+}
+
 local function creatureSayCallback(npc, creature, type, message)
 	local player = Player(creature)
 	local playerId = player:getId()
-	if message == "podium" then
+	local catalystExchange = catalystExchanges[npcHandler:getTopic(playerId)]
+	if npcHandler:getTopic(playerId) == 2 and MsgContains(message, "lesser") then
+		npcHandler:say("Do you want to exchange 20 lesser proficiency catalysts for 1 greater proficiency catalyst?", npc, creature)
+		npcHandler:setTopic(playerId, 3)
+	elseif npcHandler:getTopic(playerId) == 2 and MsgContains(message, "normal") then
+		npcHandler:say("Do you want to exchange 4 proficiency catalysts for 1 greater proficiency catalyst?", npc, creature)
+		npcHandler:setTopic(playerId, 4)
+	elseif MsgContains(message, "catalyst") or MsgContains(message, "exchange") then
+		npcHandler:say("I can exchange 20 lesser proficiency catalysts or 4 proficiency catalysts for 1 greater proficiency catalyst. Which ones do you want to exchange, the {lesser} or the {normal} ones?", npc, creature)
+		npcHandler:setTopic(playerId, 2)
+	elseif catalystExchange and message == "yes" then
+		if player:getItemCount(catalystExchange.itemId) < catalystExchange.amount then
+			npcHandler:say("You don't have " .. catalystExchange.amount .. " " .. catalystExchange.name .. ".", npc, creature)
+		elseif player:removeItem(catalystExchange.itemId, catalystExchange.amount) then
+			player:addItem(CATALYST_GREATER, 1)
+			npcHandler:say("Here is your greater proficiency catalyst.", npc, creature)
+		else
+			npcHandler:say("You don't have " .. catalystExchange.amount .. " " .. catalystExchange.name .. ".", npc, creature)
+		end
+		npcHandler:setTopic(playerId, 0)
+	elseif catalystExchange and message == "no" then
+		npcHandler:say("Blessings on your hunts!", npc, creature)
+		npcHandler:setTopic(playerId, 0)
+	elseif message == "podium" then
 		npcHandler:say("Do you want to appropriately show off your boss trophies and buy an additional podium of vigour for 1000000 Gold?", npc, creature)
 		npcHandler:setTopic(playerId, 1)
 	elseif message == "yes" and npcHandler:getTopic(playerId) == 1 then
@@ -88,7 +120,7 @@ local function creatureSayCallback(npc, creature, type, message)
 	end
 end
 
-npcHandler:setMessage(MESSAGE_GREET, { "Hello! Ever asked yourself who killed all the monsters for the wall trophies? Yeah, that was me, Emael the Beasthunter! I am an expert in displaying trophies. ...", "So if you have at least some dangerous monster to show off I strongly advise you to aquire a {podium} of vigour." })
+npcHandler:setMessage(MESSAGE_GREET, { "Hello! Ever asked yourself who killed all the monsters for the wall trophies? Yeah, that was me, Emael the Beasthunter! I am an expert in displaying trophies. ...", "So if you have at least some dangerous monster to show off I strongly advise you to aquire a {podium} of vigour. I can also {exchange} proficiency catalysts for greater ones." })
 npcHandler:setMessage(MESSAGE_FAREWELL, "I wish you a good hunt. Goodbye!")
 npcHandler:setMessage(MESSAGE_WALKAWAY, "Good hunting!")
 

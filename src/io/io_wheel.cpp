@@ -26,6 +26,7 @@
 
 #define MITIGATION_INCREASE 0.075 // Vocation Adjustment: Dedication mitigation 0.03 -> 0.075 per promotion point
 #define MANA_LEECH_INCREASE 0.25
+#define REVELATION_MASTERY_POINTS 125 // Winter Update 2026: promotion points of a full Revelation Mastery slice
 #define LIFE_LEECH_INCREASE 0.75
 
 /**
@@ -413,9 +414,18 @@ void IOWheel::addSpellAugmented(const std::shared_ptr<Player> &player, PlayerWhe
 	}
 }
 
-void IOWheel::addVesselResonance(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, WheelGemAffinity_t affinity, uint16_t points) const {
+void IOWheel::addGemVessel(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, uint16_t points) const {
+	// The vessel itself is unlocked by PlayerWheel::getUnlockedVesselCount, which counts the full Gem Vessel slices
 	if (isMaxPointAddedToSlot(player, points, slotType)) {
-		bonusData.unlockedVesselResonances[static_cast<uint8_t>(affinity)]++;
+		bonusData.stats.damage += 1;
+		bonusData.stats.healing += 1;
+	}
+}
+
+void IOWheel::addRevelationMastery(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, WheelGemAffinity_t affinity, uint16_t points) const {
+	const auto domain = static_cast<uint8_t>(affinity);
+	if (domain < bonusData.revelationMasteryPoints.size() && isMaxPointAddedToSlot(player, points, slotType)) {
+		bonusData.revelationMasteryPoints[domain] += REVELATION_MASTERY_POINTS;
 	}
 }
 
@@ -506,14 +516,24 @@ void IOWheel::slotGreenTop150(const std::shared_ptr<Player> &player, uint16_t po
 
 // SLOT_GREEN_TOP_100 = 3
 void IOWheel::slotGreenTop100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
+	// Spell augment that was on SLOT_GREEN_MIDDLE_100 before the Winter Update 2026
 	if (isKnight(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_TOP_100, points, "Groundshaker");
 		bonusData.stats.health += 3 * points;
-	} else if (isPaladin(vocationCipId) || isMonk(vocationCipId)) {
+	} else if (isPaladin(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_TOP_100, points, "Strong Ethereal Spear");
+		bonusData.stats.health += 2 * points;
+	} else if (isMonk(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_TOP_100, points, "Mass Spirit Mend");
 		bonusData.stats.health += 2 * points;
 	} else {
+		if (isSorcerer(vocationCipId)) {
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_TOP_100, points, "Any_Special_Mage_Spell");
+		} else {
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_TOP_100, points, "Mass Healing");
+		}
 		bonusData.stats.health += 1 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_GREEN_TOP_100, WheelGemAffinity_t::Green, points);
 }
 
 // SLOT_RED_TOP_100 = 4
@@ -551,7 +571,7 @@ void IOWheel::slotRedTop150(const std::shared_ptr<Player> &player, uint16_t poin
 	} else {
 		bonusData.stats.health += 1 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_RED_TOP_150, WheelGemAffinity_t::Red, points);
+	addGemVessel(player, bonusData, WheelSlots_t::SLOT_RED_TOP_150, points);
 }
 
 // SLOT_RED_200 = 6
@@ -584,28 +604,19 @@ void IOWheel::slotRed200(const std::shared_ptr<Player> &player, uint16_t points,
 // SLOT_GREEN_BOTTOM_150 = 7
 void IOWheel::slotGreenBottom150(const std::shared_ptr<Player> &player, uint16_t points, uint8_t, PlayerWheelMethodsBonusData &bonusData) const {
 	bonusData.mitigation += MITIGATION_INCREASE * points;
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_150, WheelGemAffinity_t::Green, points);
+	addGemVessel(player, bonusData, WheelSlots_t::SLOT_GREEN_BOTTOM_150, points);
 }
 
 // SLOT_GREEN_MIDDLE_100 = 8
 void IOWheel::slotGreenMiddle100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Groundshaker");
 		bonusData.stats.health += 3 * points;
-	} else if (isPaladin(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Strong Ethereal Spear");
-		bonusData.stats.health += 2 * points;
-	} else if (isMonk(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Mass Spirit Mend");
+	} else if (isPaladin(vocationCipId) || isMonk(vocationCipId)) {
 		bonusData.stats.health += 2 * points;
 	} else {
-		if (isSorcerer(vocationCipId)) {
-			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Any_Special_Mage_Spell");
-		} else {
-			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, points, "Mass Healing");
-		}
 		bonusData.stats.health += 1 * points;
 	}
+	addRevelationMastery(player, bonusData, WheelSlots_t::SLOT_GREEN_MIDDLE_100, WheelGemAffinity_t::Green, points);
 }
 
 // SLOT_GREEN_TOP_75 = 9
@@ -633,28 +644,21 @@ void IOWheel::slotRedTop75(const std::shared_ptr<Player> &player, uint16_t point
 	} else {
 		bonusData.stats.capacity += 2 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_RED_TOP_75, WheelGemAffinity_t::Red, points);
+	addGemVessel(player, bonusData, WheelSlots_t::SLOT_RED_TOP_75, points);
 }
 
 // SLOT_RED_MIDDLE_100 = 11
 void IOWheel::slotRedMiddle100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	if (isKnight(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Shield Slam");
 		bonusData.stats.mana += 1 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Divine Dazzle");
 		bonusData.stats.mana += 3 * points;
 	} else if (isMonk(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Mystic Repulse");
 		bonusData.stats.mana += 2 * points;
 	} else {
-		if (isSorcerer(vocationCipId)) {
-			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Death Echo");
-		} else {
-			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, points, "Any_Forked_Spell");
-		}
 		bonusData.stats.mana += 6 * points;
 	}
+	addRevelationMastery(player, bonusData, WheelSlots_t::SLOT_RED_MIDDLE_100, WheelGemAffinity_t::Red, points);
 }
 
 // SLOT_RED_BOTTOM_150 = 12
@@ -727,7 +731,7 @@ void IOWheel::slotGreen50(const std::shared_ptr<Player> &player, uint16_t points
 	} else {
 		bonusData.stats.capacity += 2 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_GREEN_50, WheelGemAffinity_t::Green, points);
+	addGemVessel(player, bonusData, WheelSlots_t::SLOT_GREEN_50, points);
 }
 
 // SLOT_RED_50 = 16
@@ -762,22 +766,43 @@ void IOWheel::slotRedBottom75(const std::shared_ptr<Player> &player, uint16_t po
 
 // SLOT_RED_BOTTOM_100 = 18
 void IOWheel::slotRedBottom100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
+	// Spell augment that was on SLOT_RED_MIDDLE_100 before the Winter Update 2026
 	if (isKnight(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_BOTTOM_100, points, "Shield Slam");
 		bonusData.stats.mana += 1 * points;
 	} else if (isPaladin(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_BOTTOM_100, points, "Divine Dazzle");
 		bonusData.stats.mana += 3 * points;
 	} else if (isMonk(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_BOTTOM_100, points, "Mystic Repulse");
 		bonusData.stats.mana += 2 * points;
 	} else {
+		if (isSorcerer(vocationCipId)) {
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_BOTTOM_100, points, "Death Echo");
+		} else {
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_RED_BOTTOM_100, points, "Any_Forked_Spell");
+		}
 		bonusData.stats.mana += 6 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_RED_BOTTOM_100, WheelGemAffinity_t::Red, points);
 }
 
 // SLOT_BLUE_TOP_100 = 19
-void IOWheel::slotBlueTop100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t, PlayerWheelMethodsBonusData &bonusData) const {
+void IOWheel::slotBlueTop100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
 	bonusData.mitigation += MITIGATION_INCREASE * points;
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_BLUE_TOP_100, WheelGemAffinity_t::Blue, points);
+	// Spell augment that was on SLOT_BLUE_MIDDLE_100 before the Winter Update 2026
+	if (isKnight(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_TOP_100, points, "Shield Slam");
+	} else if (isPaladin(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_TOP_100, points, "Divine Dazzle");
+	} else if (isMonk(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_TOP_100, points, "Mystic Repulse");
+	} else {
+		if (isSorcerer(vocationCipId)) {
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_TOP_100, points, "Death Echo");
+		} else {
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_TOP_100, points, "Any_Forked_Spell");
+		}
+	}
 }
 
 // SLOT_BLUE_TOP_75 = 20
@@ -826,7 +851,7 @@ void IOWheel::slotPurple50(const std::shared_ptr<Player> &player, uint16_t point
 	} else {
 		bonusData.stats.health += 1 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_PURPLE_50, WheelGemAffinity_t::Purple, points);
+	addGemVessel(player, bonusData, WheelSlots_t::SLOT_PURPLE_50, points);
 }
 
 // SLOT_PURPLE_TOP_75 = 23
@@ -888,21 +913,9 @@ void IOWheel::slotBlueTop150(const std::shared_ptr<Player> &player, uint16_t poi
 }
 
 // SLOT_BLUE_MIDDLE_100 = 26
-void IOWheel::slotBlueMiddle100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
+void IOWheel::slotBlueMiddle100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t, PlayerWheelMethodsBonusData &bonusData) const {
 	bonusData.mitigation += MITIGATION_INCREASE * points;
-	if (isKnight(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Shield Slam");
-	} else if (isPaladin(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Divine Dazzle");
-	} else if (isMonk(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Mystic Repulse");
-	} else {
-		if (isSorcerer(vocationCipId)) {
-			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Death Echo");
-		} else {
-			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, points, "Any_Forked_Spell");
-		}
-	}
+	addRevelationMastery(player, bonusData, WheelSlots_t::SLOT_BLUE_MIDDLE_100, WheelGemAffinity_t::Blue, points);
 }
 
 // SLOT_BLUE_BOTTOM_75 = 27
@@ -914,7 +927,7 @@ void IOWheel::slotBlueBottom75(const std::shared_ptr<Player> &player, uint16_t p
 	} else {
 		bonusData.stats.health += 1 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_BLUE_BOTTOM_75, WheelGemAffinity_t::Blue, points);
+	addGemVessel(player, bonusData, WheelSlots_t::SLOT_BLUE_BOTTOM_75, points);
 }
 
 // SLOT_PURPLE_BOTTOM_75 = 28
@@ -927,23 +940,14 @@ void IOWheel::slotPurpleBottom75(const std::shared_ptr<Player> &player, uint16_t
 
 // SLOT_PURPLE_MIDDLE_100 = 29
 void IOWheel::slotPurpleMiddle100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
-	if (isKnight(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Intense Wound Cleansing");
+	if (isKnight(vocationCipId) || isMonk(vocationCipId)) {
 		bonusData.stats.capacity += 5 * points;
 	} else if (isPaladin(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Divine Barrage");
 		bonusData.stats.capacity += 4 * points;
-	} else if (isMonk(vocationCipId)) {
-		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Chained Penance");
-		bonusData.stats.capacity += 5 * points;
 	} else {
-		if (isSorcerer(vocationCipId)) {
-			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Energy Wave");
-		} else {
-			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, points, "Terra Wave");
-		}
 		bonusData.stats.capacity += 2 * points;
 	}
+	addRevelationMastery(player, bonusData, WheelSlots_t::SLOT_PURPLE_MIDDLE_100, WheelGemAffinity_t::Purple, points);
 }
 
 // SLOT_PURPLE_TOP_150 = 30
@@ -957,7 +961,7 @@ void IOWheel::slotPurpleTop150(const std::shared_ptr<Player> &player, uint16_t p
 	} else {
 		bonusData.stats.mana += 6 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_150, WheelGemAffinity_t::Purple, points);
+	addGemVessel(player, bonusData, WheelSlots_t::SLOT_PURPLE_TOP_150, points);
 }
 
 // SLOT_BLUE_200 = 31
@@ -994,7 +998,7 @@ void IOWheel::slotBlueBottom150(const std::shared_ptr<Player> &player, uint16_t 
 	} else {
 		bonusData.stats.capacity += 2 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_BLUE_BOTTOM_150, WheelGemAffinity_t::Blue, points);
+	addGemVessel(player, bonusData, WheelSlots_t::SLOT_BLUE_BOTTOM_150, points);
 }
 
 // SLOT_BLUE_BOTTOM_100 = 33
@@ -1014,14 +1018,24 @@ void IOWheel::slotBlueBottom100(const std::shared_ptr<Player> &player, uint16_t 
 
 // SLOT_PURPLE_BOTTOM_100 = 34
 void IOWheel::slotPurpleBottom100(const std::shared_ptr<Player> &player, uint16_t points, uint8_t vocationCipId, PlayerWheelMethodsBonusData &bonusData) const {
-	if (isKnight(vocationCipId) || isMonk(vocationCipId)) {
+	// Spell augment that was on SLOT_PURPLE_MIDDLE_100 before the Winter Update 2026
+	if (isKnight(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_BOTTOM_100, points, "Intense Wound Cleansing");
 		bonusData.stats.capacity += 5 * points;
 	} else if (isPaladin(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_BOTTOM_100, points, "Divine Barrage");
 		bonusData.stats.capacity += 4 * points;
+	} else if (isMonk(vocationCipId)) {
+		addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_BOTTOM_100, points, "Chained Penance");
+		bonusData.stats.capacity += 5 * points;
 	} else {
+		if (isSorcerer(vocationCipId)) {
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_BOTTOM_100, points, "Energy Wave");
+		} else {
+			addSpellAugmented(player, bonusData, WheelSlots_t::SLOT_PURPLE_BOTTOM_100, points, "Terra Wave");
+		}
 		bonusData.stats.capacity += 2 * points;
 	}
-	addVesselResonance(player, bonusData, WheelSlots_t::SLOT_PURPLE_BOTTOM_100, WheelGemAffinity_t::Purple, points);
 }
 
 // SLOT_PURPLE_BOTTOM_150 = 35

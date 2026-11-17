@@ -233,8 +233,21 @@ private:
 	uint8_t getGemGrade(WheelFragmentType_t quality, uint8_t pos) const;
 
 	std::vector<PlayerWheelGem> getRevealedGems() const;
+	/// Gems that give their mods: socketed in an unlocked vessel of their quality.
 	std::vector<PlayerWheelGem> getActiveGems() const;
 
+	/// Index of the gem in the revealed list, -1 when the uuid is empty or unknown.
+	int32_t findRevealedGemIndex(const std::string &uuid) const;
+	bool isGemSocketed(const std::string &uuid) const;
+	/// Puts the gem in the first free unlocked vessel of its quality. Returns false when there is none.
+	bool placeGemInFreeVessel(const PlayerWheelGem &gem, std::array<std::string, WHEEL_GEM_VESSEL_COUNT> &vessels) const;
+	/// One time move of the gems of the old `gems.active.<Domain>` keys into vessels.
+	void migrateLegacyActiveGems();
+	void sendVesselMigrationNotice();
+	/// Fragment Workshop: health, mana and capacity for every grade step of the mods.
+	void applyFragmentWorkshopBonus();
+
+	// Domain switch of the 15.30 Gem Atelier, only reachable with a 15.30 client
 	static uint64_t getGemRotateCost(WheelGemQuality_t quality);
 
 	static uint64_t getGemRevealCost(WheelGemQuality_t quality);
@@ -430,10 +443,29 @@ public:
 	/// Emit CIP SpellDataModification (S 0x60) for current wheel spell grades.
 	void sendSpellDataModifications() const;
 	void destroyGem(uint16_t index);
+	/// 15.30 Gem Atelier only: the domain has no effect on the vessels, it is kept for the old client layout.
 	void switchGemDomain(uint16_t index);
+	/**
+	 * @brief Reshape (Winter Update 2026): rerolls one mod of a revealed gem.
+	 * @param index Index of the gem in the revealed list.
+	 * @param modIndex 0 = first basic mod, 1 = second basic mod, 2 = supreme mod.
+	 */
+	void reshapeGem(uint16_t index, uint8_t modIndex);
 	void toggleGemLock(uint16_t index);
-	void setActiveGem(WheelGemAffinity_t affinity, uint16_t index);
-	void removeActiveGem(WheelGemAffinity_t affinity);
+	/// Number of unlocked gem vessels: one for every full Gem Vessel slice, vessels unlock in order 0..7.
+	uint8_t getUnlockedVesselCount() const;
+	/**
+	 * @brief Replaces the socketed gems (C2S 0x62 of a 15.33 client).
+	 * @param gemIndexes Revealed gem index per vessel, -1 for an empty vessel. Entries that are not valid
+	 * (unknown gem, wrong quality, gem used twice, locked vessel) leave the vessel empty.
+	 */
+	void setVesselGems(const std::array<int32_t, WHEEL_GEM_VESSEL_COUNT> &gemIndexes);
+	/**
+	 * @brief Replaces the socketed gems with the up to four gems a 15.30 client sends per domain.
+	 * @details Gems that are already socketed keep their vessel, the others go to the first free unlocked
+	 * vessel of their quality.
+	 */
+	void setLegacyActiveGems(const std::vector<uint16_t> &gemIndexes);
 	void addRevelationBonus(WheelGemAffinity_t affinity, uint16_t points);
 	void resetRevelationBonus();
 	void addSpellBonus(const std::string &spellName, const WheelSpells::Bonus &bonus);
@@ -488,9 +520,16 @@ private:
 	std::vector<PromotionScroll> m_unlockedScrolls;
 	uint16_t m_extraPointsFromHuntingTaskShop = 0;
 
-	std::array<PlayerWheelGem, 4> m_activeGems;
+	// uuid of the gem in each vessel, empty string for an empty vessel
+	std::array<std::string, WHEEL_GEM_VESSEL_COUNT> m_vesselGems;
+	// Set by the vessel migration, the message is sent on the next think with a client
+	bool m_vesselMigrationNotice = false;
+	uint8_t m_vesselMigrationUnplaced = 0;
 	std::vector<PlayerWheelGem> m_revealedGems;
 	std::vector<PlayerWheelGem> m_destroyedGems;
 
 	float m_harmonySanctuary = 1.0f;
+
+	// True once the wheel data of the player was loaded (see loadDBPlayerSlotPointsOnLogin)
+	bool m_loadedFromStorage = false;
 };

@@ -903,6 +903,18 @@ uint32_t Player::getProtocolVersion() const {
 	return client->getVersion();
 }
 
+uint32_t Player::getClientVersion() const {
+	if (!client) {
+		return 0;
+	}
+
+	return static_cast<uint32_t>(client->getClientVersion());
+}
+
+bool Player::isWinter2026() const {
+	return client && client->isWinter2026();
+}
+
 bool Player::hasSecureMode() const {
 	return secureMode;
 }
@@ -3289,6 +3301,38 @@ void Player::setXpBoostTime(uint16_t timeLeft) {
 
 uint16_t Player::getXpBoostTime() const {
 	return xpBoostTime;
+}
+
+uint16_t Player::getDailyXpBoostPercent() const {
+	return dailyXpBoostTime > 0 ? dailyXpBoostPercent : 0;
+}
+
+void Player::setDailyXpBoostPercent(uint16_t percent) {
+	dailyXpBoostPercent = percent;
+	kv()->scoped("daily-reward")->set("xp-boost-percent", ValueWrapper(static_cast<int>(percent)));
+}
+
+uint16_t Player::getDailyXpBoostTime() const {
+	return dailyXpBoostTime;
+}
+
+void Player::setDailyXpBoostTime(uint16_t timeLeft) {
+	dailyXpBoostTime = timeLeft;
+	kv()->scoped("daily-reward")->set("xp-boost-time", ValueWrapper(static_cast<int>(timeLeft)));
+}
+
+void Player::loadDailyXpBoost() {
+	const auto scope = kv()->scoped("daily-reward");
+
+	dailyXpBoostPercent = 0;
+	if (const auto percentKV = scope->get("xp-boost-percent")) {
+		dailyXpBoostPercent = static_cast<uint16_t>(std::clamp<int64_t>(static_cast<int64_t>(percentKV->getNumber()), 0, std::numeric_limits<uint16_t>::max()));
+	}
+
+	dailyXpBoostTime = 0;
+	if (const auto timeKV = scope->get("xp-boost-time")) {
+		dailyXpBoostTime = static_cast<uint16_t>(std::clamp<int64_t>(static_cast<int64_t>(timeKV->getNumber()), 0, std::numeric_limits<uint16_t>::max()));
+	}
 }
 
 int32_t Player::getIdleTime() const {
@@ -10018,7 +10062,11 @@ uint32_t Player::getBountyPoints() const {
 }
 
 void Player::addRerollTasks(uint32_t amount) {
-	bountyTaskData.rerollTasks = static_cast<uint8_t>(bountyTaskData.rerollTasks + amount);
+	// Tokens above the cap are lost; a balance that is already above it (older data) is kept
+	const uint32_t current = bountyTaskData.rerollTasks;
+	const uint32_t maxTokens = std::max<uint32_t>(IOBountyTasks::getMaxRerollTokens(), current);
+	const uint32_t wanted = amount > maxTokens - current ? maxTokens : current + amount;
+	bountyTaskData.rerollTasks = static_cast<uint8_t>(wanted);
 	sendBountyTaskData();
 	sendTaskBoardResourceBalance();
 }
@@ -10035,6 +10083,44 @@ void Player::removeRerollTasks(uint32_t amount) {
 
 uint32_t Player::getRerollTasks() const {
 	return bountyTaskData.rerollTasks;
+}
+
+/*******************************************************************************
+ * Cosmetic Tokens
+ ******************************************************************************/
+
+uint32_t Player::getCosmeticTokens() const {
+	const auto tokensKV = kv()->get("cosmetic-tokens");
+	if (!tokensKV) {
+		return 0;
+	}
+
+	return static_cast<uint32_t>(std::clamp<int64_t>(static_cast<int64_t>(tokensKV->getNumber()), 0, std::numeric_limits<int32_t>::max()));
+}
+
+void Player::setCosmeticTokens(uint32_t amount) {
+	// The KV stores an int, so the balance stops at the int32 maximum
+	const uint32_t tokens = std::min<uint32_t>(amount, static_cast<uint32_t>(std::numeric_limits<int32_t>::max()));
+	kv()->set("cosmetic-tokens", ValueWrapper(static_cast<int>(tokens)));
+	if (client) {
+		// only a 15.33 client knows this resource type, the writer drops it for older clients
+		client->sendResourceBalance(RESOURCE_COSMETIC_TOKENS, tokens);
+	}
+}
+
+void Player::addCosmeticTokens(uint32_t amount) {
+	const uint64_t tokens = static_cast<uint64_t>(getCosmeticTokens()) + amount;
+	setCosmeticTokens(static_cast<uint32_t>(std::min<uint64_t>(tokens, static_cast<uint64_t>(std::numeric_limits<int32_t>::max()))));
+}
+
+bool Player::removeCosmeticTokens(uint32_t amount) {
+	const uint32_t tokens = getCosmeticTokens();
+	if (tokens < amount) {
+		return false;
+	}
+
+	setCosmeticTokens(tokens - amount);
+	return true;
 }
 
 void Player::sendWeeklyTaskData() {
@@ -13086,6 +13172,15 @@ void Player::addWeaponProficiencyExperience(const std::shared_ptr<MonsterType> &
 	}
 
 	addProficiencyExperience = static_cast<uint32_t>(std::round(addProficiencyExperience * weaponProficiencyRate));
+
+	// Daily reward streak bonus: every streak day adds one percentage point of chance (up to 7)
+	// to gain +100% weapon proficiency experience
+	if (addProficiencyExperience > 0) {
+		const uint8_t streakBonusChance = g_dailyRewards().getStreakBonusChance(static_self_cast<Player>());
+		if (streakBonusChance > 0 && uniform_random(1, 100) <= streakBonusChance) {
+			addProficiencyExperience *= 2;
+		}
+	}
 
 	const auto &weapon = getWeapon(true);
 	if (!weapon) {
