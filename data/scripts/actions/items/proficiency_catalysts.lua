@@ -1,4 +1,6 @@
 local config = {
+	-- lesser proficiency catalyst: 20 of them are worth 1 greater one (Emael's exchange keeps the total experience)
+	[54266] = { gainWeaponProficiencyExperience = 5000 },
 	[51588] = { gainWeaponProficiencyExperience = 25000 },
 	[51589] = { gainWeaponProficiencyExperience = 100000 },
 }
@@ -30,5 +32,5 @@ function proficiencyCatalysts.onUse(player, item, fromPosition, target, toPositi
 	return false
 end
 
-proficiencyCatalysts:id(51588, 51589)
+proficiencyCatalysts:id(54266, 51588, 51589)
 proficiencyCatalysts:register()
