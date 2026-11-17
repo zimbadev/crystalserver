@@ -2249,7 +2249,37 @@ void ProtocolGame::parseSay(NetworkMessage &msg) {
 	//   [x:u16 LE][y:u16 LE][z:u8][seq:u8]. parseSay historically ignored this tail.
 	// Stash the aimed tile so the cast (crossHairTarget spell) can land there.
 	const int32_t sayRemaining = static_cast<int32_t>(msg.getLength()) - (static_cast<int32_t>(msg.getBufferPosition()) - 7);
-	if (sayRemaining > 0) {
+	if (isWinter2026()) {
+		// 15.33: the aim mode is chosen per action button and replaces C2S 0xC8:
+		//   [aimMode:u8] (0 = facing direction, 1 = cursor tile, 2 = crosshair tile, 3 = towards the
+		//   selected target) and, only for aimMode 1 and 2, [x:u16 LE][y:u16 LE][z:u8]. No trailing byte.
+		uint8_t aimMode = 0;
+		bool hasAimPosition = false;
+		Position aimPos;
+		if (sayRemaining > 0) {
+			aimMode = msg.getByte();
+			if (aimMode > 3) {
+				aimMode = 0;
+			}
+			if (aimMode == 1 || aimMode == 2) {
+				if (msg.canRead(5)) {
+					aimPos.x = msg.get<uint16_t>();
+					aimPos.y = msg.get<uint16_t>();
+					aimPos.z = msg.getByte();
+					hasAimPosition = true;
+				} else {
+					aimMode = 0;
+				}
+			}
+		}
+
+		player->setSpellAimMode(aimMode);
+		if (hasAimPosition) {
+			player->setSpellAimPosition(aimPos);
+		} else {
+			player->clearSpellAimPosition();
+		}
+	} else if (sayRemaining > 0) {
 		const uint8_t aimMode = msg.getByte();
 		if (aimMode != 0 && sayRemaining >= 6) {
 			Position aimPos;

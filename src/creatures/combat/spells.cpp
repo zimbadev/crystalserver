@@ -1235,7 +1235,30 @@ bool InstantSpell::playerCastInstant(const std::shared_ptr<Player> &player, std:
 	} else {
 		var.type = VARIANT_POSITION;
 
-		if (needDirection) { // bool to aim at target
+		if (needDirection && player->isWinter2026()) {
+			// 15.33: the aim mode comes with every cast (say packet tail), set per action button.
+			// 0 = facing direction, 1/2 = towards the aimed tile, 3 = towards the selected target.
+			// A diagonal offset resolves to west/east (getStraightDirectionTo).
+			Direction dir = player->getDirection();
+			const uint8_t aimMode = player->getSpellAimMode();
+			if (aimMode == 1 || aimMode == 2) {
+				if (to.x != 0) {
+					const Direction aimDir = getStraightDirectionTo(player->getPosition(), to);
+					if (aimDir != DIRECTION_NONE) {
+						dir = aimDir;
+					}
+				}
+			} else if (aimMode == 3) {
+				const std::shared_ptr<Creature> &target = player->getAttackedCreature();
+				if (target && !target->isRemoved() && target->getHealth() > 0) {
+					const Direction aimDir = getStraightDirectionTo(player->getPosition(), target->getPosition());
+					if (aimDir != DIRECTION_NONE) {
+						dir = aimDir;
+					}
+				}
+			}
+			var.pos = Spells::getCasterPosition(player, dir);
+		} else if (needDirection) { // 15.30: aim at target when enabled per spell (C2S 0xC8)
 			const std::shared_ptr<Creature> &target = player->getAttackedCreature();
 			if (target && !target->isRemoved() && target->getHealth() > 0) {
 				const auto it = player->spellActivedAimMap.find(getSpellId());
