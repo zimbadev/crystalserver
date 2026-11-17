@@ -4546,8 +4546,16 @@ void ProtocolGame::sendCyclopediaCharacterGeneralStats() {
 			msg.add<uint16_t>(specializedMagicLevel);
 		}
 	}
+	const auto endPosition = msg.getBufferPosition();
 	msg.setBufferPosition(bufferPosition);
 	msg.addByte(total);
+	if (isWinter2026()) {
+		// 15.33: daily reward XP boost after the specialized magic level list (same pair as the end of 0xA0).
+		// The list count was back-patched above, so go back to the end of the list before appending.
+		msg.setBufferPosition(endPosition);
+		msg.add<uint16_t>(player->getDailyXpBoostPercent());
+		msg.add<uint16_t>(player->getDailyXpBoostTime());
+	}
 	writeToOutputBuffer(msg);
 }
 
@@ -5133,6 +5141,9 @@ void ProtocolGame::sendCyclopediaCharacterOffenceStats() {
 	msg.addByte(0x00); // 0x00 Here means 'no error'
 
 	addCyclopediaSkills(player, msg, SKILL_CRITICAL_HIT_CHANCE);
+	if (isWinter2026()) {
+		msg.addDouble(0.00); // 15.33: 7th critical hit chance value (event bonus), after the concoction bonus
+	}
 	addCyclopediaSkills(player, msg, SKILL_CRITICAL_HIT_DAMAGE);
 	addCyclopediaSkills(player, msg, SKILL_LIFE_LEECH_AMOUNT);
 	addCyclopediaSkills(player, msg, SKILL_MANA_LEECH_AMOUNT);
