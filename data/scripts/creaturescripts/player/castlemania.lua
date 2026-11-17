@@ -9,8 +9,14 @@ function Castlemania.onLogin(player)
 		return true
 	end
 
-	local BB = Storage.Quest.U8_4.BloodBrothers
-	local VH = Storage.Quest.U8_2.VampireHunterQuest
+	-- This script lives in the core data folder, but the quests belong to data-global: a datapack
+	-- without these storages (data-crystal) must not fail every login here.
+	local quests = Storage and Storage.Quest
+	local BB = quests and quests.U8_4 and quests.U8_4.BloodBrothers
+	local VH = quests and quests.U8_2 and quests.U8_2.VampireHunterQuest
+	if not BB or not VH then
+		return true
+	end
 
 	if player:getStorageValue(BB.Mission10) < 1 then
 		return true
