@@ -145,7 +145,9 @@ enum Stash_Actions_t : uint8_t {
 	STASH_ACTION_STOW_ITEM = 0,
 	STASH_ACTION_STOW_CONTAINER = 1,
 	STASH_ACTION_STOW_STACK = 2,
-	STASH_ACTION_WITHDRAW = 3
+	STASH_ACTION_WITHDRAW = 3,
+	// 15.33: no body, sent when a Market / Manage Loot Containers window opened from the stash is closed
+	STASH_ACTION_REQUEST_REOPEN = 4
 };
 
 struct HighscoreCharacter {

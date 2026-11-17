@@ -10605,6 +10605,17 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 		return;
 	}
 
+	auto action = static_cast<Stash_Actions_t>(msg.getByte());
+	if (action == STASH_ACTION_REQUEST_REOPEN && isWinter2026()) {
+		// 15.33: "28 04", no body. The client closed a window it had opened from the stash and wants the
+		// stash back (S2C 0x29). It follows another UI action, so it is not subject to the exhaust, and it
+		// gets no reply at all when the stash is not available.
+		if (player->isStashMenuAvailable()) {
+			sendOpenStash();
+		}
+		return;
+	}
+
 	if (!player->isStashMenuAvailable()) {
 		player->sendCancelMessage("You can't use supply stash right now.");
 		return;
@@ -10615,7 +10626,6 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 		return;
 	}
 
-	auto action = static_cast<Stash_Actions_t>(msg.getByte());
 	switch (action) {
 		case STASH_ACTION_STOW_ITEM: {
 			Position pos = msg.getPosition();
