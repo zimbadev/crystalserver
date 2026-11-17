@@ -19,6 +19,7 @@
 
 #include <unordered_map>
 
+#include "core.hpp"
 #include "server/network/protocol/protocol.hpp"
 #include "creatures/creatures_definitions.hpp"
 #include "enums/disconnect_client.hpp"
