@@ -462,6 +462,10 @@ public:
 	bool isOldProtocol() const;
 
 	uint32_t getProtocolVersion() const;
+	// u32 client version of the login packet (1530 or 1533); 0 without a connection
+	uint32_t getClientVersion() const;
+	// True while a 15.33 (Winter Update 2026) client is connected
+	bool isWinter2026() const;
 
 	bool hasSecureMode() const;
 
@@ -1324,6 +1328,12 @@ public:
 
 	uint16_t getXpBoostTime() const;
 
+	// Daily reward XP boost (15.33). It is separate from the store boost above: both are added while active.
+	uint16_t getDailyXpBoostPercent() const;
+	void setDailyXpBoostPercent(uint16_t percent);
+	uint16_t getDailyXpBoostTime() const;
+	void setDailyXpBoostTime(uint16_t timeLeft);
+
 	int32_t getIdleTime() const;
 
 	void setTraining(bool value);
@@ -1982,6 +1992,8 @@ private:
 	uint16_t voucherXpBoost = 0;
 	uint16_t grindingXpBoost = 0;
 	uint16_t xpBoostPercent = 0;
+	uint16_t dailyXpBoostPercent = 0;
+	uint16_t dailyXpBoostTime = 0;
 	uint16_t staminaXpBoost = 100;
 	int16_t lastDepotId = -1;
 	StashItemList stashItems; // [ItemID] = amount

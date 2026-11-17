@@ -128,6 +128,15 @@ public:
 		return version;
 	}
 
+	int32_t getClientVersion() const {
+		return clientVersion;
+	}
+
+	// True for the 15.33 (Winter Update 2026) client. Use it for every layout that differs from 15.30.
+	bool isWinter2026() const {
+		return !oldProtocol && clientVersion >= CLIENT_VERSION_WINTER;
+	}
+
 private:
 	ProtocolGame_ptr getThis() {
 		return std::static_pointer_cast<ProtocolGame>(shared_from_this());
@@ -419,6 +428,9 @@ private:
 	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t soulsealsPoints = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);
 	void sendResourceBalance(Resource_t resourceType);
 	void sendResourceBalance(Resource_t resourceType, uint64_t value);
+	// Width of the value in S2C 0xEE: 4 bytes for these types, 8 bytes for the rest
+	bool isResourceBalanceU32(uint8_t resourceType) const;
+	uint8_t getDailyRewardStreakLength() const;
 	void sendSoulSealsWindow();
 
 	void sendBountyTaskData(const BountyTaskData &bountyData);

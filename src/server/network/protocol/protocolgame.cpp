@@ -1031,9 +1031,9 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage &msg) {
 		otclientV8 = msg.get<uint16_t>(); // 253, 260, 261, ...
 	}
 
-	if (!oldProtocol && clientVersion != CLIENT_VERSION) {
+	if (!oldProtocol && !isSupportedClientVersion(clientVersion)) {
 		ss.str(std::string());
-		ss << "Only clients with protocol " << CLIENT_VERSION_UPPER << "." << CLIENT_VERSION_LOWER;
+		ss << "Only clients with protocol " << CLIENT_VERSION_UPPER << "." << CLIENT_VERSION_LOWER << " or " << (CLIENT_VERSION_WINTER / 100) << "." << (CLIENT_VERSION_WINTER % 100);
 		if (g_configManager().getBoolean(OLD_PROTOCOL)) {
 			ss << " or 11.00";
 		}
@@ -6204,15 +6204,54 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType, uint64_t value) 
 		return;
 	}
 
+	const bool winterOnly = resourceType == RESOURCE_BOUNTY_REROLL_TOKENS || resourceType == RESOURCE_COSMETIC_TOKENS;
+	if (winterOnly && !isWinter2026()) {
+		// a 15.30 client does not know these types
+		return;
+	}
+
 	NetworkMessage msg;
 	msg.addByte(0xEE);
 	msg.addByte(resourceType);
-	if (resourceType == RESOURCE_BOUNTY_POINTS || resourceType == RESOURCE_SOULSEALS_POINTS) {
-		msg.add<uint32_t>(static_cast<uint32_t>(value));
+	if (isResourceBalanceU32(resourceType)) {
+		msg.add<uint32_t>(static_cast<uint32_t>(std::min<uint64_t>(value, std::numeric_limits<uint32_t>::max())));
 	} else {
 		msg.add<uint64_t>(value);
 	}
 	writeToOutputBuffer(msg);
+}
+
+bool ProtocolGame::isResourceBalanceU32(uint8_t resourceType) const {
+	switch (resourceType) {
+		case RESOURCE_CHARM:
+		case RESOURCE_MINOR_CHARM:
+		case RESOURCE_MAX_CHARM:
+		case RESOURCE_MAX_MINOR_CHARM:
+		case RESOURCE_BOUNTY_POINTS:
+		case RESOURCE_SOULSEALS_POINTS:
+			return true;
+		// the 15.33 client reads these as 4 bytes as well; 15.30 keeps the 8 byte value
+		case RESOURCE_NPC_TRADE_QUEST_FLAG_CURRENCY:
+		case RESOURCE_WHEEL_POINTS:
+		case RESOURCE_BOUNTY_REROLL_TOKENS:
+		case RESOURCE_COSMETIC_TOKENS:
+			return isWinter2026();
+		default:
+			return false;
+	}
+}
+
+uint8_t ProtocolGame::getDailyRewardStreakLength() const {
+	if (!player) {
+		return 0;
+	}
+
+	const auto streakKV = player->kv()->scoped("daily-reward")->get("streak");
+	if (!streakKV || !streakKV.has_value()) {
+		return 0;
+	}
+
+	return static_cast<uint8_t>(std::clamp<int64_t>(static_cast<int64_t>(streakKV->getNumber()), 0, std::numeric_limits<uint8_t>::max()));
 }
 
 void ProtocolGame::sendSoulSealsWindow() {
@@ -7937,7 +7976,13 @@ void ProtocolGame::sendRestingStatus(uint8_t protection) {
 
 	NetworkMessage msg;
 	msg.addByte(0xA9);
-	msg.addByte(protection); // 1 / 0
+	msg.addByte(protection ? 0x01 : 0x00); // in resting area
+
+	if (isWinter2026()) {
+		// 15.33: only the bool is left, the resting area bonuses no longer depend on the streak
+		writeToOutputBuffer(msg);
+		return;
+	}
 
 	uint8_t dailyStreak = 0;
 	auto dailyRewardKV = player->kv()->scoped("daily-reward")->get("streak");
@@ -8284,7 +8329,10 @@ void ProtocolGame::sendEnterWorld() {
 void ProtocolGame::sendFightModes() {
 	NetworkMessage msg;
 	msg.addByte(0xA7);
-	msg.addByte(player->fightMode);
+	if (!isWinter2026()) {
+		// 15.33 dropped the fight mode byte: [chase][secure][pvpMode]
+		msg.addByte(player->fightMode);
+	}
 	msg.addByte(player->chaseMode);
 	msg.addByte(player->secureMode);
 	msg.addByte(PVP_MODE_DOVE);
@@ -8367,6 +8415,11 @@ void ProtocolGame::sendAddCreature(const std::shared_ptr<Creature> &creature, co
 		if (exivaEnabled) {
 			sendExivaRestrictions(true);
 		}
+	}
+
+	if (isWinter2026()) {
+		// 15.33: daily reward streak length, the same value as the last u16 of 0xE2
+		msg.addByte(getDailyRewardStreakLength());
 	}
 
 	writeToOutputBuffer(msg);
@@ -9507,6 +9560,12 @@ void ProtocolGame::AddPlayerStats(NetworkMessage &msg) {
 		msg.add<uint32_t>(player->getManaShield()); // remaining mana shield
 		msg.add<uint32_t>(player->getMaxManaShield()); // total mana shield
 	}
+
+	if (isWinter2026()) {
+		// 15.33: the daily reward XP boost is separate from the store boost above
+		msg.add<uint16_t>(player->getDailyXpBoostPercent()); // percent, 0 while paused
+		msg.add<uint16_t>(player->getDailyXpBoostTime()); // remaining seconds
+	}
 }
 
 void ProtocolGame::AddPlayerSkills(NetworkMessage &msg) {
@@ -9992,7 +10051,11 @@ void ProtocolGame::sendDailyRewardCollectionResource(uint8_t resourceType, uint6
 	NetworkMessage msg;
 	msg.addByte(0xEE);
 	msg.addByte(resourceType);
-	msg.add<uint64_t>(value);
+	if (isResourceBalanceU32(resourceType)) {
+		msg.add<uint32_t>(static_cast<uint32_t>(std::min<uint64_t>(value, std::numeric_limits<uint32_t>::max())));
+	} else {
+		msg.add<uint64_t>(value);
+	}
 	writeToOutputBuffer(msg);
 }
 
@@ -10148,8 +10211,16 @@ void ProtocolGame::sendUpdateImpactTracker(CombatType_t type, int32_t amount) {
 		msg.add<uint32_t>(amount);
 	} else {
 		msg.addByte(ANALYZER_DAMAGE_DEALT);
-		msg.add<uint32_t>(amount);
-		msg.addByte(clientElement);
+		if (isWinter2026()) {
+			// 15.33: u32 physical part, u32 elemental part, u8 element of the elemental part
+			const bool isPhysical = clientElement == CIPBIA_ELEMENTAL_PHYSICAL;
+			msg.add<uint32_t>(isPhysical ? amount : 0);
+			msg.add<uint32_t>(isPhysical ? 0 : amount);
+			msg.addByte(clientElement);
+		} else {
+			msg.add<uint32_t>(amount);
+			msg.addByte(clientElement);
+		}
 	}
 	writeToOutputBuffer(msg);
 }

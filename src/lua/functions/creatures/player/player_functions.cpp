@@ -4069,9 +4069,13 @@ int PlayerFunctions::luaPlayerGetClient(lua_State* L) {
 	// player:getClient()
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
 	if (player) {
-		lua_createtable(L, 0, 2);
+		lua_createtable(L, 0, 4);
 		Lua::setField(L, "version", player->getProtocolVersion());
 		Lua::setField(L, "os", player->getOperatingSystem());
+		// 15.33: u32 client version (1530 / 1533) and a ready flag for the layouts that changed
+		Lua::setField(L, "clientVersion", player->getClientVersion());
+		lua_pushboolean(L, player->isWinter2026());
+		lua_setfield(L, -2, "winter2026");
 	} else {
 		lua_pushnil(L);
 	}

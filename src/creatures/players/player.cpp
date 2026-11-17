@@ -903,6 +903,18 @@ uint32_t Player::getProtocolVersion() const {
 	return client->getVersion();
 }
 
+uint32_t Player::getClientVersion() const {
+	if (!client) {
+		return 0;
+	}
+
+	return static_cast<uint32_t>(client->getClientVersion());
+}
+
+bool Player::isWinter2026() const {
+	return client && client->isWinter2026();
+}
+
 bool Player::hasSecureMode() const {
 	return secureMode;
 }
@@ -3289,6 +3301,22 @@ void Player::setXpBoostTime(uint16_t timeLeft) {
 
 uint16_t Player::getXpBoostTime() const {
 	return xpBoostTime;
+}
+
+uint16_t Player::getDailyXpBoostPercent() const {
+	return dailyXpBoostTime > 0 ? dailyXpBoostPercent : 0;
+}
+
+void Player::setDailyXpBoostPercent(uint16_t percent) {
+	dailyXpBoostPercent = percent;
+}
+
+uint16_t Player::getDailyXpBoostTime() const {
+	return dailyXpBoostTime;
+}
+
+void Player::setDailyXpBoostTime(uint16_t timeLeft) {
+	dailyXpBoostTime = timeLeft;
 }
 
 int32_t Player::getIdleTime() const {

@@ -80,6 +80,7 @@ enum Resource_t : uint8_t {
 	// CIP 15.30+: lunar ascension orbs (weapon proficiency "Maximise").
 	// Forge dust *cap* is carried in sendForgingData, not as resource 0x49.
 	RESOURCE_LUNAR_ASCENSION_ORBS = 0x49,
+	RESOURCE_WHEEL_POINTS = 0x50,
 	RESOURCE_LESSER_GEMS = 0x51,
 	RESOURCE_REGULAR_GEMS = 0x52,
 	RESOURCE_GREATER_GEMS = 0x53,
@@ -87,6 +88,9 @@ enum Resource_t : uint8_t {
 	RESOURCE_GREATER_FRAGMENT = 0x55,
 	RESOURCE_BOUNTY_POINTS = 0x56,
 	RESOURCE_SOULSEALS_POINTS = 0x57,
+	// 15.33 only. Never send these two to a 15.30 client.
+	RESOURCE_BOUNTY_REROLL_TOKENS = 0x58,
+	RESOURCE_COSMETIC_TOKENS = 0x59,
 	RESOURCE_COIN_NORMAL = 0x5A,
 	RESOURCE_COIN_TRANSFERRABLE = 0x5B
 };
