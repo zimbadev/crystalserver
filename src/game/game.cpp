@@ -10116,17 +10116,14 @@ void Game::playerWeeklyTaskDeliver(uint32_t playerId, uint8_t taskIndex) {
 	g_ioweeklytasks().deliverWeeklyTask(player, taskIndex);
 }
 
-void Game::playerBountyTaskChangeDifficulty(uint32_t playerId, uint8_t difficulty) {
+void Game::playerBountyTaskChangeDifficulty(uint32_t playerId, uint8_t difficulty, bool setElite /* = false */, bool elite /* = false */) {
 	const auto &player = getPlayerByID(playerId);
 	if (!player) {
 		return;
 	}
 
-	if (difficulty > BOUNTY_DIFFICULTY_LAST) {
-		return;
-	}
-
-	g_iobountytasks().changeDifficulty(player, static_cast<BountyTaskDifficulty_t>(difficulty));
+	// An invalid difficulty is rejected in changeDifficulty, which still answers with the board
+	g_iobountytasks().changeDifficulty(player, static_cast<BountyTaskDifficulty_t>(difficulty), setElite, elite);
 }
 
 void Game::playerBountyTaskClaimReroll(uint32_t playerId) {

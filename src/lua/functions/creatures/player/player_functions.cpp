@@ -101,6 +101,9 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "getRerollTasks", PlayerFunctions::luaPlayerGetRerollTasks);
 	Lua::registerMethod(L, "Player", "addRerollTasks", PlayerFunctions::luaPlayerAddRerollTasks);
 	Lua::registerMethod(L, "Player", "removeRerollTasks", PlayerFunctions::luaPlayerRemoveRerollTasks);
+	Lua::registerMethod(L, "Player", "getCosmeticTokens", PlayerFunctions::luaPlayerGetCosmeticTokens);
+	Lua::registerMethod(L, "Player", "addCosmeticTokens", PlayerFunctions::luaPlayerAddCosmeticTokens);
+	Lua::registerMethod(L, "Player", "removeCosmeticTokens", PlayerFunctions::luaPlayerRemoveCosmeticTokens);
 	Lua::registerMethod(L, "Player", "getSoulsealsPoints", PlayerFunctions::luaPlayerGetSoulsealsPoints);
 	Lua::registerMethod(L, "Player", "addSoulsealsPoints", PlayerFunctions::luaPlayerAddSoulsealsPoints);
 	Lua::registerMethod(L, "Player", "removeSoulsealsPoints", PlayerFunctions::luaPlayerRemoveSoulsealsPoints);
@@ -384,6 +387,10 @@ void PlayerFunctions::init(lua_State* L) {
 	Lua::registerMethod(L, "Player", "setStaminaXpBoost", PlayerFunctions::luaPlayerSetStaminaXpBoost);
 	Lua::registerMethod(L, "Player", "getXpBoostTime", PlayerFunctions::luaPlayerGetXpBoostTime);
 	Lua::registerMethod(L, "Player", "setXpBoostTime", PlayerFunctions::luaPlayerSetXpBoostTime);
+	Lua::registerMethod(L, "Player", "getDailyXpBoostPercent", PlayerFunctions::luaPlayerGetDailyXpBoostPercent);
+	Lua::registerMethod(L, "Player", "setDailyXpBoostPercent", PlayerFunctions::luaPlayerSetDailyXpBoostPercent);
+	Lua::registerMethod(L, "Player", "getDailyXpBoostTime", PlayerFunctions::luaPlayerGetDailyXpBoostTime);
+	Lua::registerMethod(L, "Player", "setDailyXpBoostTime", PlayerFunctions::luaPlayerSetDailyXpBoostTime);
 
 	Lua::registerMethod(L, "Player", "getIdleTime", PlayerFunctions::luaPlayerGetIdleTime);
 	Lua::registerMethod(L, "Player", "getFreeBackpackSlots", PlayerFunctions::luaPlayerGetFreeBackpackSlots);
@@ -1174,6 +1181,42 @@ int PlayerFunctions::luaPlayerRemoveRerollTasks(lua_State* L) {
 	if (const auto &player = Lua::getUserdataShared<Player>(L, 1)) {
 		player->removeRerollTasks(Lua::getNumber<uint32_t>(L, 2));
 		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetCosmeticTokens(lua_State* L) {
+	// player:getCosmeticTokens()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player == nullptr) {
+		Lua::reportErrorFunc(Lua::getErrorDesc(LUA_ERROR_PLAYER_NOT_FOUND));
+		lua_pushnil(L);
+		return 1;
+	}
+
+	lua_pushnumber(L, static_cast<lua_Number>(player->getCosmeticTokens()));
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerAddCosmeticTokens(lua_State* L) {
+	// player:addCosmeticTokens(amount)
+	if (const auto &player = Lua::getUserdataShared<Player>(L, 1)) {
+		const auto tokens = Lua::getNumber<uint32_t>(L, 2);
+		player->addCosmeticTokens(tokens);
+		lua_pushnumber(L, static_cast<lua_Number>(tokens));
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerRemoveCosmeticTokens(lua_State* L) {
+	// player:removeCosmeticTokens(amount)
+	// Returns false when the balance is too low (nothing is removed then)
+	if (const auto &player = Lua::getUserdataShared<Player>(L, 1)) {
+		Lua::pushBoolean(L, player->removeCosmeticTokens(Lua::getNumber<uint32_t>(L, 2)));
 	} else {
 		lua_pushnil(L);
 	}
@@ -4525,6 +4568,57 @@ int PlayerFunctions::luaPlayerGetXpBoostTime(lua_State* L) {
 	return 1;
 }
 
+int PlayerFunctions::luaPlayerGetDailyXpBoostPercent(lua_State* L) {
+	// player:getDailyXpBoostPercent()
+	// Percent of the daily reward XP boost, 0 when no boost time is left
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		lua_pushnumber(L, player->getDailyXpBoostPercent());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetDailyXpBoostPercent(lua_State* L) {
+	// player:setDailyXpBoostPercent(value)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		const uint16_t percent = Lua::getNumber<uint16_t>(L, 2);
+		player->setDailyXpBoostPercent(percent);
+		player->sendStats();
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerGetDailyXpBoostTime(lua_State* L) {
+	// player:getDailyXpBoostTime()
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		lua_pushnumber(L, player->getDailyXpBoostTime());
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
+int PlayerFunctions::luaPlayerSetDailyXpBoostTime(lua_State* L) {
+	// player:setDailyXpBoostTime(timeLeft)
+	const auto &player = Lua::getUserdataShared<Player>(L, 1);
+	if (player) {
+		const uint16_t timeLeft = Lua::getNumber<uint16_t>(L, 2);
+		player->setDailyXpBoostTime(timeLeft);
+		player->sendStats();
+		Lua::pushBoolean(L, true);
+	} else {
+		lua_pushnil(L);
+	}
+	return 1;
+}
+
 int PlayerFunctions::luaPlayerGetIdleTime(lua_State* L) {
 	// player:getIdleTime()
 	const auto &player = Lua::getUserdataShared<Player>(L, 1);
@@ -6326,7 +6420,7 @@ int PlayerFunctions::luaPlayerSetBountyActiveTask(lua_State* L) {
 		bountyData.activeTask.requiredKills = Lua::getNumber<uint16_t>(L, 3);
 		bountyData.activeTask.currentKills = Lua::getNumber<uint16_t>(L, 4, 0);
 		bountyData.activeTask.rewardExp = Lua::getNumber<uint32_t>(L, 5, 0);
-		bountyData.activeTask.rewardBountyPoints = Lua::getNumber<uint8_t>(L, 6, 0);
+		bountyData.activeTask.rewardBountyPoints = Lua::getNumber<uint16_t>(L, 6, 0);
 		bountyData.activeTask.taskGrade = static_cast<BountyTaskGrade_t>(Lua::getNumber<uint8_t>(L, 7, 0));
 		bountyData.activeTask.difficulty = static_cast<BountyTaskDifficulty_t>(Lua::getNumber<uint8_t>(L, 8, 0));
 		Lua::pushBoolean(L, true);
@@ -6359,7 +6453,7 @@ int PlayerFunctions::luaPlayerAddBountyCreature(lua_State* L) {
 		creature.requiredKills = Lua::getNumber<uint16_t>(L, 3);
 		creature.currentKills = Lua::getNumber<uint16_t>(L, 4, 0);
 		creature.rewardExp = Lua::getNumber<uint32_t>(L, 5, 0);
-		creature.rewardBountyPoints = Lua::getNumber<uint8_t>(L, 6, 0);
+		creature.rewardBountyPoints = Lua::getNumber<uint16_t>(L, 6, 0);
 		creature.claimRewardType = static_cast<BountyClaimRewardType_t>(Lua::getNumber<uint8_t>(L, 7, 0));
 		creature.taskGrade = static_cast<BountyTaskGrade_t>(Lua::getNumber<uint8_t>(L, 8, 0));
 		creature.taskIndex = static_cast<uint8_t>(bountyData.currentCreaturesList.size());

@@ -1336,22 +1336,21 @@ bool ConditionRegeneration::executeCondition(const std::shared_ptr<Creature> &cr
 	}
 
 	const auto &player = creature->getPlayer();
-	int32_t dailyStreak = 0;
-	if (player) {
-		auto optStreak = player->kv()->scoped("daily-reward")->get("streak");
-		if (optStreak) {
-			dailyStreak = static_cast<int32_t>(optStreak->getNumber());
-		}
-	}
+
+	// Resting area (protection zone) bonuses no longer depend on the daily reward streak (Winter Update 2026):
+	// every account regenerates hit points and mana there, Premium accounts twice as fast.
+	// Other creatures still do not regenerate inside a protection zone.
+	const bool restingAreaRegeneration = player != nullptr;
+	const bool restingAreaDoubleRegeneration = player && player->isPremium();
 
 	bool inProtectionZone = creature->getZoneType() == ZONE_PROTECTION;
-	if (!inProtectionZone || dailyStreak >= DAILY_REWARD_HP_REGENERATION) {
+	if (!inProtectionZone || restingAreaRegeneration) {
 		if (internalHealthTicks >= getHealthTicks(creature)) {
 			internalHealthTicks = 0;
 
 			int32_t realHealthGain = creature->getHealth();
-			if (inProtectionZone && dailyStreak >= DAILY_REWARD_DOUBLE_HP_REGENERATION) {
-				creature->changeHealth(healthGain * 2); // Double regen from daily reward
+			if (inProtectionZone && restingAreaDoubleRegeneration) {
+				creature->changeHealth(healthGain * 2); // Double regen in a resting area (Premium)
 			} else {
 				creature->changeHealth(healthGain);
 			}
@@ -1382,11 +1381,11 @@ bool ConditionRegeneration::executeCondition(const std::shared_ptr<Creature> &cr
 		}
 	}
 
-	if (creature->getZoneType() != ZONE_PROTECTION || dailyStreak >= DAILY_REWARD_MP_REGENERATION) {
+	if (!inProtectionZone || restingAreaRegeneration) {
 		if (internalManaTicks >= getManaTicks(creature)) {
 			internalManaTicks = 0;
-			if (creature->getZoneType() == ZONE_PROTECTION && dailyStreak >= DAILY_REWARD_DOUBLE_MP_REGENERATION) {
-				creature->changeMana(manaGain * 2); // Double regen from daily reward
+			if (inProtectionZone && restingAreaDoubleRegeneration) {
+				creature->changeMana(manaGain * 2); // Double regen in a resting area (Premium)
 			} else {
 				creature->changeMana(manaGain);
 			}

@@ -1333,6 +1333,8 @@ public:
 	void setDailyXpBoostPercent(uint16_t percent);
 	uint16_t getDailyXpBoostTime() const;
 	void setDailyXpBoostTime(uint16_t timeLeft);
+	// Reads the daily reward XP boost from the player KV (called while the player is loaded)
+	void loadDailyXpBoost();
 
 	int32_t getIdleTime() const;
 
@@ -1466,11 +1468,23 @@ public:
 	void removeBountyPoints(uint32_t amount);
 	uint32_t getBountyPoints() const;
 
+	// Bounty Reroll Tokens; addRerollTasks stops at the token cap (config bountyTasksMaxRerollTokens)
 	void addRerollTasks(uint32_t amount);
 	void removeRerollTasks(uint32_t amount);
 	uint32_t getRerollTasks() const;
 
 	bool isBountyTalismanEquipped() const;
+
+	/*******************************************************************************
+	 * Cosmetic Tokens (Winter Update 2026)
+	 * Character bound, kept in the player KV. Every change is sent to a 15.33 client
+	 * as resource balance RESOURCE_COSMETIC_TOKENS.
+	 ******************************************************************************/
+	uint32_t getCosmeticTokens() const;
+	void setCosmeticTokens(uint32_t amount);
+	void addCosmeticTokens(uint32_t amount);
+	// Returns false (and changes nothing) when the balance is too low
+	bool removeCosmeticTokens(uint32_t amount);
 
 	void sendTaskBoardResourceBalance() const;
 

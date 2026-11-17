@@ -19,6 +19,7 @@
 
 #include <cstdint>
 #include <map>
+#include <memory>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -26,22 +27,29 @@
 class NetworkMessage;
 class Player;
 
+// Reward type of a day in dailyrewards.xml
 enum DailyRewardType_t : uint8_t {
 	DAILY_REWARD_TYPE_ITEM = 1,
 	DAILY_REWARD_TYPE_STORAGE = 2,
 	DAILY_REWARD_TYPE_PREY_REROLL = 3,
 	DAILY_REWARD_TYPE_XP_BOOST = 4,
+	DAILY_REWARD_TYPE_COSMETIC_TOKENS = 5,
+	DAILY_REWARD_TYPE_BOUNTY_REROLL_TOKENS = 6,
 };
 
+// Redeem mode byte of a reward object in the 15.30 layout of S2C 0xE4 (the 15.33 layout has no such byte)
 enum DailyRewardSystemType_t : uint8_t {
-	DAILY_REWARD_SYSTEM_TYPE_ONE = 1,
-	DAILY_REWARD_SYSTEM_TYPE_TWO = 2,
+	DAILY_REWARD_SYSTEM_TYPE_ONE = 1, // pick items from a list (no longer used: the claim is one click)
+	DAILY_REWARD_SYSTEM_TYPE_TWO = 2, // fixed list
 };
 
-enum DailyRewardSystemSubType_t : uint8_t {
-	DAILY_REWARD_SYSTEM_SKIP = 1,
-	DAILY_REWARD_SYSTEM_TYPE_PREY_REROLL = 2,
-	DAILY_REWARD_SYSTEM_TYPE_XP_BOOST = 3,
+// Kind byte of one entry of a reward object in S2C 0xE4
+enum DailyRewardKind_t : uint8_t {
+	DAILY_REWARD_KIND_ITEM = 1, // u16 itemId, string name, u8 count
+	DAILY_REWARD_KIND_PREY_WILDCARDS = 2, // u8 count
+	DAILY_REWARD_KIND_XP_BOOST = 3, // 15.30: u16 minutes; 15.33: u16 minutes, u16 percent
+	DAILY_REWARD_KIND_COSMETIC_TOKENS = 4, // 15.33 only: u8 count
+	DAILY_REWARD_KIND_BOUNTY_REROLL_TOKENS = 5, // 15.33 only: u8 count
 };
 
 enum DailyRewardAccountStatus_t : uint8_t {
@@ -74,16 +82,33 @@ struct DailyRewardStrikeBonus {
 struct DailyRewardDayConfig {
 	uint8_t day = 0;
 	DailyRewardType_t type = DAILY_REWARD_TYPE_ITEM;
-	DailyRewardSystemType_t systemType = DAILY_REWARD_SYSTEM_TYPE_ONE;
+	// Amount for a free / Premium account: item count, prey wildcards, tokens or XP boost minutes
 	uint16_t freeAccount = 0;
 	uint16_t premiumAccount = 0;
+	// XP boost percent for a free / Premium account
+	uint16_t freePercent = 50;
+	uint16_t premiumPercent = 50;
 	uint16_t itemCharges = 0;
 	std::vector<uint16_t> items;
+};
+
+// One granted reward of a day, already resolved for the account status
+struct DailyRewardEntry {
+	DailyRewardKind_t kind = DAILY_REWARD_KIND_ITEM;
+	uint16_t itemId = 0; // item
+	uint16_t itemCharges = 0; // item
+	std::string name; // item
+	uint8_t count = 0; // item, prey wildcards, tokens
+	uint16_t minutes = 0; // XP boost
+	uint16_t percent = 0; // XP boost
 };
 
 class DailyRewards {
 public:
 	static constexpr uint8_t REWARD_COUNT = 7;
+	// Streak bonus: every streak day adds one percentage point of chance for double weapon
+	// proficiency experience, up to this value
+	static constexpr uint8_t MAX_STREAK_BONUS_CHANCE = 7;
 
 	DailyRewards() = default;
 
@@ -118,9 +143,12 @@ public:
 		return rewards;
 	}
 
-	const std::map<uint8_t, std::vector<uint16_t>> &getVocationItems() const {
-		return vocationItems;
-	}
+	// Rewards a claim of this day (1..REWARD_COUNT) gives, in the order they are shown.
+	// The Reroll Token every claim gives is the last entry.
+	std::vector<DailyRewardEntry> getRewardEntries(uint8_t day, bool premium) const;
+
+	// Chance in percent (0..MAX_STREAK_BONUS_CHANCE) for double weapon proficiency experience
+	uint8_t getStreakBonusChance(const std::shared_ptr<Player> &player) const;
 
 	const std::map<uint8_t, DailyRewardStrikeBonus> &getStrikeBonuses() const {
 		return strikeBonuses;
@@ -158,14 +186,13 @@ private:
 	bool loaded = false;
 	bool testMode = false;
 	uint32_t serverTimeThreshold = 86400;
+	// Bounty Reroll Tokens every claim gives on top of the reward of the day
+	uint8_t rerollTokensPerClaim = 1;
 
 	DailyRewardStorages storages;
 	std::map<uint8_t, DailyRewardStrikeBonus> strikeBonuses;
 	std::map<uint8_t, DailyRewardDayConfig> rewards;
-	std::map<uint8_t, std::vector<uint16_t>> vocationItems;
 	std::unordered_set<uint16_t> shrineItems;
-
-	std::map<std::string, std::vector<uint16_t>> itemGroups;
 
 	std::map<uint32_t, uint64_t> staminaEvents;
 	std::map<uint32_t, uint64_t> soulEvents;

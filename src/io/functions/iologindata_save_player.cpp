@@ -789,6 +789,11 @@ bool IOLoginDataSave::savePlayerBountyTasks(const std::shared_ptr<Player> &playe
 	Database &db = Database::getInstance();
 	const auto &bountyData = player->getBountyTaskData();
 
+	// A player that was loaded without the bounty data (offline load) must not overwrite the stored row
+	if (!bountyData.loaded) {
+		return true;
+	}
+
 	// Serialize list slots to blob
 	PropWriteStream propStream;
 	for (const auto &slot : bountyData.preferredLists) {
@@ -807,7 +812,8 @@ bool IOLoginDataSave::savePlayerBountyTasks(const std::shared_ptr<Player> &playe
 		creaturesStream.write<uint16_t>(creature.raceId);
 		creaturesStream.write<uint16_t>(creature.requiredKills);
 		creaturesStream.write<uint32_t>(creature.rewardExp);
-		creaturesStream.write<uint8_t>(creature.rewardBountyPoints);
+		// The blob layout is unchanged (one byte); Elite and dust of the offers are kept in the player KV
+		creaturesStream.write<uint8_t>(static_cast<uint8_t>(std::min<uint16_t>(creature.rewardBountyPoints, std::numeric_limits<uint8_t>::max())));
 		creaturesStream.write<uint16_t>(creature.currentKills);
 		creaturesStream.write<uint8_t>(static_cast<uint8_t>(creature.claimRewardType));
 		creaturesStream.write<uint8_t>(static_cast<uint8_t>(creature.taskGrade));
@@ -831,13 +837,14 @@ bool IOLoginDataSave::savePlayerBountyTasks(const std::shared_ptr<Player> &playe
 		  << static_cast<uint16_t>(bountyData.state) << ", "
 		  << static_cast<uint16_t>(bountyData.selectedDifficulty) << ", "
 		  << bountyData.bountyPoints << ", "
-		  << static_cast<uint16_t>(bountyData.rerollTasks) << ", "
+		  << std::min<uint16_t>(bountyData.rerollTasks, BOUNTY_MAX_COLUMN_REROLL_TOKENS) << ", "
 		  << bountyData.freeRerollTimeStamp << ", "
 		  << bountyData.activeTask.raceId << ", "
 		  << bountyData.activeTask.currentKills << ", "
 		  << bountyData.activeTask.requiredKills << ", "
 		  << bountyData.activeTask.rewardExp << ", "
-		  << static_cast<uint16_t>(bountyData.activeTask.rewardBountyPoints) << ", "
+		  // signed tinyint column: Platinum rewards above 127 are capped here, the full value is in the player KV
+		  << std::min<uint16_t>(bountyData.activeTask.rewardBountyPoints, BOUNTY_MAX_COLUMN_REWARD_POINTS) << ", "
 		  << static_cast<uint16_t>(bountyData.activeTask.taskGrade) << ", "
 		  << static_cast<uint16_t>(bountyData.activeTask.difficulty) << ", "
 		  << static_cast<uint16_t>(bountyData.talismanTiers[0].level) << ", "
