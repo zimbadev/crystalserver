@@ -76,26 +76,28 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "gold coin", chance = 13600000, maxCount = 100 },
-	{ name = "gold coin", chance = 13600000, maxCount = 100 },
-	{ name = "platinum coin", chance = 13600000, maxCount = 10 },
-	{ name = "brown mushroom", chance = 13600000, maxCount = 9 },
-	{ name = "onyx chip", chance = 13600000, maxCount = 9 },
-	{ name = "small enchanted amethyst", chance = 13600000, maxCount = 9 },
-	{ name = "beetroot", chance = 13600000, maxCount = 9 },
-	{ id = 238, chance = 13600000, maxCount = 9 }, -- great mana potion
-	{ name = "platinum amulet", chance = 13600000 },
-	{ id = 3098, chance = 13600000 }, -- ring of healing
-	{ name = "troll green", chance = 13600000, maxCount = 9 },
-	{ name = "ultimate mana potion", chance = 13600000, maxCount = 9 },
-	{ name = "werebadger claws", chance = 13600000, maxCount = 9 },
-	{ name = "werebadger skull", chance = 13600000, maxCount = 9 },
+	{ name = "gold coin", chance = 100000, maxCount = 64 },
+	{ name = "platinum coin", chance = 100000, maxCount = 7 },
+	{ name = "great mana potion", chance = 100000 },
+	{ name = "werebadger claws", chance = 100000 },
+	{ name = "werebadger skull", chance = 100000 },
+	{ name = "onyx chip", chance = 50000, maxCount = 2 },
+	{ name = "small enchanted amethyst", chance = 50000 },
 	{ name = "badger boots", chance = 400 },
+	{ name = "beetroot", chance = 50000 },
 	{ name = "underworld rod", chance = 400 },
 	{ name = "wand of voodoo", chance = 400 },
-	{ name = "foxtail amulet", chance = 100 },
+	{ name = "troll green", chance = 50000, },
+	{ name = "moonlight crystals", chance = 300, maxCount = 15 },
+	{ name = "ultimate mana potion", chance = 50000 },
 	{ name = "silver token", chance = 1720 },
+	{ id = 3098, chance = 15000 }, -- ring of healing
+	{ name = "platinum amulet", chance = 1000 },
+	{ id = 22101, chance = 5000 }, -- werebadger trophy
+	{ name = "werewolf amulet", chance = 800 },
+	{ name = "brown mushroom", chance = 75000 },
 	{ name = "wolf backpack", chance = 250 },
+	{ name = "foxtail amulet", chance = 500 },
 }
 
 monster.attacks = {
