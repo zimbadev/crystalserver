@@ -323,8 +323,11 @@ Item::Item(const uint16_t itemId, uint16_t itemCount /*= 0*/) :
 	id(itemId) {
 	const ItemType &it = items[id];
 	const auto itemCharges = it.charges;
-	if (it.isFluidContainer() || it.isSplash()) {
-		const auto fluidType = std::clamp<uint16_t>(itemCount, 1, FLUID_INK);
+	if (it.isFluidContainer()) {
+		const auto fluidType = std::clamp<uint16_t>(itemCount, FLUID_NONE, FLUID_INK);
+		setAttribute(ItemAttribute_t::FLUIDTYPE, fluidType);
+	} else if (it.isSplash()) {
+		const auto fluidType = std::clamp<uint16_t>(itemCount, FLUID_WATER, FLUID_INK);
 		setAttribute(ItemAttribute_t::FLUIDTYPE, fluidType);
 	} else if (it.stackable) {
 		if (itemCount != 0) {
