@@ -92,7 +92,7 @@ monster.loot = {
 }
 
 monster.attacks = {
-	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -450 },
+	{ name = "melee", interval = 2000, chance = 100, minDamage = 0, maxDamage = -400 },
 	-- poison
 	{ name = "condition", type = CONDITION_POISON, interval = 2000, chance = 20, minDamage = -800, maxDamage = -1000, radius = 7, effect = CONST_ME_YELLOW_RINGS, target = false },
 	{ name = "combat", interval = 2000, chance = 10, type = COMBAT_MANADRAIN, minDamage = -70, maxDamage = -100, radius = 5, effect = CONST_ME_MAGIC_RED, target = false },
@@ -111,13 +111,13 @@ monster.defenses = {
 
 monster.elements = {
 	{ type = COMBAT_PHYSICALDAMAGE, percent = 15 },
-	{ type = COMBAT_ENERGYDAMAGE, percent = 10 },
+	{ type = COMBAT_ENERGYDAMAGE, percent = -5 },
 	{ type = COMBAT_EARTHDAMAGE, percent = 100 },
 	{ type = COMBAT_FIREDAMAGE, percent = 35 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
-	{ type = COMBAT_ICEDAMAGE, percent = 20 },
+	{ type = COMBAT_ICEDAMAGE, percent = 5 },
 	{ type = COMBAT_HOLYDAMAGE, percent = -10 },
 	{ type = COMBAT_DEATHDAMAGE, percent = 55 },
 }

@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Wardragon")
 local monster = {}
 
 monster.description = "a wardragon"
-monster.experience = 5810
+monster.experience = 5340
 monster.outfit = {
 	lookType = 1708,
 	lookHead = 0,
@@ -106,13 +106,13 @@ monster.elements = {
 	{ type = COMBAT_PHYSICALDAMAGE, percent = 0 },
 	{ type = COMBAT_ENERGYDAMAGE, percent = -5 },
 	{ type = COMBAT_EARTHDAMAGE, percent = -10 },
-	{ type = COMBAT_FIREDAMAGE, percent = 0 },
+	{ type = COMBAT_FIREDAMAGE, percent = 40 },
 	{ type = COMBAT_LIFEDRAIN, percent = 0 },
 	{ type = COMBAT_MANADRAIN, percent = 0 },
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
 	{ type = COMBAT_ICEDAMAGE, percent = -10 },
 	{ type = COMBAT_HOLYDAMAGE, percent = -5 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 0 },
+	{ type = COMBAT_DEATHDAMAGE, percent = 15 },
 }
 
 monster.immunities = {

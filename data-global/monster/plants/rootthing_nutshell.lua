@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Rootthing Nutshell")
 local monster = {}
 
 monster.description = "a rootthing nutshell"
-monster.experience = 9200
+monster.experience = 9940
 monster.outfit = {
 	lookType = 1760,
 	lookHead = 0,

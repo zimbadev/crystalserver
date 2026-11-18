@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Cursed Ape")
 local monster = {}
 
 monster.description = "a cursed ape"
-monster.experience = 1860
+monster.experience = 2000
 monster.outfit = {
 	lookType = 1592,
 	lookHead = 0,
