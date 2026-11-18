@@ -13,7 +13,7 @@ function energyField.onStepIn(creature, item, position, fromPosition)
 		return true
 	end
 
-	if creature:isPlayer() or (creature:isMonster() and creature:getMaster() and creature:getMaster():isPlayer()) then
+	if creature:isMonster() and creature:getMaster() and creature:getMaster():isPlayer() then
 		position:sendMagicEffect(CONST_ME_POFF)
 		return true
 	end
