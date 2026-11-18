@@ -3793,8 +3793,8 @@ void ProtocolGame::sendResourceBalance(Resource_t resourceType) {
 }
 
 void ProtocolGame::parseSetClientOptions(NetworkMessage &msg) {
-	// CIP SetClientOptions (C 0x2E): u8 option, u8 enabled.
-	// CIP writes turn-towards as option 0; OTC/OTCR clients use option 1.
+	// SetClientOptions (C 0x2E): u8 option, u8 enabled.
+	// CIP gameclient writes turn-towards as option 0; OTClient/OTCR use option 1.
 	const uint8_t option = msg.getByte();
 	const bool enabled = msg.getByte() != 0;
 	const uint8_t turnTowardsOption = isOTCR ? 1 : 0;
