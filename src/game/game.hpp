@@ -154,6 +154,21 @@ public:
 		height = map.height;
 	}
 
+	// Open PvP (2014 rules): the full "Expert PvP" ruleset (character pass-through, situation boxes,
+	// first-in-stack initiate rule, expert client controls, field ownership) is gated on this.
+	// Enabled by the config option expertPvp and only on open PvP ("pvp") and hardcore PvP ("pvp-enforced") worlds,
+	// every other world type and expertPvp = false keep the classic rules.
+	bool isExpertPvp() const {
+		if (!expertPvp || !worlds().getCurrentWorld()) {
+			return false;
+		}
+		const auto type = worlds().getCurrentWorld()->type;
+		return type == WORLDTYPE_OPEN || type == WORLDTYPE_HARDCORE;
+	}
+	void setExpertPvp(bool enabled) {
+		expertPvp = enabled;
+	}
+
 	const std::map<uint32_t, std::unique_ptr<TeamFinder>> &getTeamFinderList() const {
 		return teamFinderMap;
 	}
@@ -428,7 +443,7 @@ public:
 	void playerSetAttackedCreature(uint32_t playerId, uint32_t creatureId);
 	void playerFollowCreature(uint32_t playerId, uint32_t creatureId);
 	void playerCancelAttackAndFollow(uint32_t playerId);
-	void playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode);
+	void playerSetFightModes(uint32_t playerId, FightMode_t fightMode, bool chaseMode, bool secureMode, PvpMode_t pvpMode = PVP_MODE_DOVE);
 	void playerLookAt(uint32_t playerId, uint16_t itemId, const Position &pos, uint8_t stackPos);
 	void playerLookInBattleList(uint32_t playerId, uint32_t creatureId);
 	void playerQuickLootCorpse(const std::shared_ptr<Player> &player, const std::shared_ptr<Container> &corpse, const Position &position);
@@ -747,6 +762,9 @@ public:
 
 	bool addInfluencedMonster(const std::shared_ptr<Monster> &monster);
 	void sendUpdateCreature(const std::shared_ptr<Creature> &creature);
+	// Open PvP (2014 rules): re-send situation-box marks for every player currently in a fight, so
+	// viewers recompute yellow/orange/brown after a party/guild membership change alters their alliances.
+	void refreshPvpSituationMarks();
 	std::shared_ptr<Item> wrapItem(const std::shared_ptr<Item> &item, const std::shared_ptr<House> &house);
 
 	void playerCheckActivity(const std::string &playerName, int interval);
@@ -973,6 +991,7 @@ private:
 	bool browseField = false;
 
 	GameState_t gameState = GAME_STATE_NORMAL;
+	bool expertPvp = false; // config expertPvp, see isExpertPvp()
 
 	LightState_t lightState = LIGHT_STATE_DAY;
 	LightState_t currentLightState = lightState;

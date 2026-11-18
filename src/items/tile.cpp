@@ -772,10 +772,21 @@ ReturnValue Tile::queryAdd(int32_t, const std::shared_ptr<Thing> &thing, uint32_
 				if (creature && creature->getPlayer()) {
 					if (const auto fieldList = getItemList()) {
 						for (const auto &findfield : *fieldList) {
-							if (findfield && (findfield->getID() == ITEM_WILDGROWTH_SAFE || findfield->getID() == ITEM_MAGICWALL_SAFE)) {
-								if (!creature->isInGhostMode()) {
+							if (!findfield) {
+								continue;
+							}
+
+							if (findfield->getID() == ITEM_WILDGROWTH_SAFE || findfield->getID() == ITEM_MAGICWALL_SAFE) {
+								// Expert PvP: the yellow wall is not used up by a player walking through it
+								if (!creature->isInGhostMode() && !g_game().isExpertPvp()) {
 									g_game().internalRemoveItem(findfield, 1);
 								}
+								return RETURNVALUE_NOERROR;
+							}
+
+							// Expert PvP: a blue magic wall / wild growth (made in red fist) lets the
+							// caster's party and guild members through and blocks everyone else.
+							if (Combat::isWalkableWallFor(creature->getPlayer(), findfield)) {
 								return RETURNVALUE_NOERROR;
 							}
 						}

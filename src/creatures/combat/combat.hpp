@@ -187,6 +187,20 @@ private:
 	bool hasExtArea = false;
 };
 
+// Open PvP expert modes: the pure allow/deny decision extracted from Combat::checkExpertPvpMode so it
+// can be unit-tested in isolation. Inputs are pre-gathered facts about the attacker/target pair; the
+// function reads no globals and has no side effects.
+struct PvpFacts {
+	bool targetAttackedMe = false; // the target has attacked us (self-defense)
+	bool targetSkulled = false; // the target carries a skull visible to us (yellow-hand fair game)
+	bool attackedAllyOfMe = false; // the target has attacked one of our party/guild members
+	bool partner = false; // the target is in our party
+	bool guildMate = false; // the target is in our guild
+};
+
+// Returns true if `mode` permits attacking a target described by `facts`. Pure decision matrix.
+bool pvpModeAllows(PvpMode_t mode, const PvpFacts &facts);
+
 class Combat {
 public:
 	Combat() = default;
@@ -213,6 +227,25 @@ public:
 
 	static bool isInPvpZone(const std::shared_ptr<Creature> &attacker, const std::shared_ptr<Creature> &target);
 	static bool isProtected(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target);
+	// Open PvP expert modes (dove / white hand / yellow hand / red fist): who may attack whom.
+	static ReturnValue checkExpertPvpMode(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target);
+	// May a player picked by a chain spell or a weapon area be hit? Classic: only with secure mode off.
+	// Expert PvP: the same PvP mode rule as for a direct attack.
+	static bool mayHitPlayerInArea(const std::shared_ptr<Player> &attacker, const std::shared_ptr<Player> &target);
+	static bool isOwnedFieldBystander(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &field);
+	// Open PvP (2014 rules): resolve a field's ownerId (a player GUID) to the owning player, falling
+	// back to a live summon's master. Single source of truth for field-owner lookup.
+	static std::shared_ptr<Player> resolveFieldOwnerPlayer(uint32_t ownerId);
+	// Expert PvP: the light fields and the yellow wall (what a caster outside red fist makes) concern
+	// no player, the caster included; they only harm and block monsters.
+	static bool isNonPvpFieldOrWall(const std::shared_ptr<Item> &item);
+	// Expert PvP: may this player walk through this blue magic wall / wild growth (made in red fist)?
+	// Never through his own; through the wall of a party or guild member.
+	static bool isWalkableWallFor(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &wall);
+	// Open PvP (2014 rules): a creature stands on the tile and every projectile blocker there is a
+	// player's magic wall / wild growth (players may stand on the walls of others). Such a tile does
+	// not shield the creature from attacks. False without expert PvP.
+	static bool isOccupiedOwnedWallTile(const std::shared_ptr<Tile> &tile);
 	static bool isPlayerCombat(const std::shared_ptr<Creature> &target);
 	static CombatType_t ConditionToDamageType(ConditionType_t type);
 	static ConditionType_t DamageToConditionType(CombatType_t type);

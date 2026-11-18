@@ -907,8 +907,34 @@ bool Player::hasSecureMode() const {
 	return secureMode;
 }
 
+PvpMode_t Player::getEffectivePvpMode() const {
+	if (g_game().isExpertPvp() && g_game().worlds().getCurrentWorld()->type == WORLDTYPE_HARDCORE) {
+		return PVP_MODE_RED_FIST;
+	}
+	return pvpMode;
+}
+
+PvpMode_t Player::getAllowedPvpMode(PvpMode_t requested) const {
+	if (!g_game().isExpertPvp()) {
+		return requested;
+	}
+
+	// hardcore PvP: always red fist
+	if (g_game().worlds().getCurrentWorld()->type == WORLDTYPE_HARDCORE) {
+		return PVP_MODE_RED_FIST;
+	}
+
+	// a black skull cannot select red fist: keep the previous mode, or dove
+	if (requested == PVP_MODE_RED_FIST && getSkull() == SKULL_BLACK) {
+		return pvpMode != PVP_MODE_RED_FIST ? pvpMode : PVP_MODE_DOVE;
+	}
+	return requested;
+}
+
 void Player::setParty(std::shared_ptr<Party> newParty) {
 	m_party = std::move(newParty);
+	// Open PvP (2014 rules): party membership affects the situation-box colors this player sees.
+	g_game().refreshPvpSituationMarks();
 }
 
 std::shared_ptr<Party> Player::getParty() const {
@@ -1436,6 +1462,13 @@ bool Player::canWalkthrough(const std::shared_ptr<Creature> &creature) {
 
 	if (player) {
 		const auto &playerTile = player->getTile();
+		// Open PvP (2014 rules): characters never block each other, so pass through freely, without
+		// the PZ/level restrictions or the double-step confirmation. canWalkthroughEx tells the client the same.
+		if (g_game().isExpertPvp()) {
+			const auto &expertTileGround = playerTile ? playerTile->getGround() : nullptr;
+			return expertTileGround && expertTileGround->hasWalkStack();
+		}
+
 		if (!playerTile || (!playerTile->hasFlag(TILESTATE_NOPVPZONE) && !playerTile->hasFlag(TILESTATE_PROTECTIONZONE) && player->getLevel() > static_cast<uint32_t>(g_configManager().getNumber(PROTECTION_LEVEL)) && g_game().worlds().getCurrentWorld()->type != WORLDTYPE_OPTIONAL)) {
 			return false;
 		}
@@ -1484,6 +1517,11 @@ bool Player::canWalkthroughEx(const std::shared_ptr<Creature> &creature) const {
 	const auto &npc = creature->getNpc();
 	if (player) {
 		const auto &playerTile = player->getTile();
+		// Open PvP (2014 rules): characters never block each other (same answer as canWalkthrough and Tile::queryAdd).
+		if (g_game().isExpertPvp()) {
+			const auto &playerTileGround = playerTile ? playerTile->getGround() : nullptr;
+			return g_configManager().getBoolean(WALK_THROUGH_PLAYERS) && playerTileGround && playerTileGround->hasWalkStack();
+		}
 		return playerTile && (playerTile->hasFlag(TILESTATE_NOPVPZONE) || playerTile->hasFlag(TILESTATE_PROTECTIONZONE) || player->getLevel() <= static_cast<uint32_t>(g_configManager().getNumber(PROTECTION_LEVEL)) || g_game().worlds().getCurrentWorld()->type == WORLDTYPE_OPTIONAL);
 	} else if (npc) {
 		const auto &tile = npc->getTile();
@@ -6448,12 +6486,42 @@ void Player::onAttackedCreature(const std::shared_ptr<Creature> &target) {
 
 	const auto &targetPlayer = target->getPlayer();
 	if (targetPlayer && !isPartner(targetPlayer) && !isGuildMate(targetPlayer)) {
+		// Open PvP: any aggressive act creates/refreshes a mutual PvP situation between the two
+		// players (drives field damage, magic wall blocking and the PvP situation boxes).
+		if (!Combat::isInPvpZone(static_self_cast<Player>(), targetPlayer)) {
+			addPvpSituationWith(targetPlayer);
+			targetPlayer->noteExpertPvpAggressor(static_self_cast<Player>());
+		}
+
 		if (!pzLocked && g_game().worlds().getCurrentWorld()->type == WORLDTYPE_HARDCORE) {
 			pzLocked = true;
 			sendIcons();
 		}
 
-		if (getSkull() == SKULL_NONE && getSkullClient(targetPlayer) == SKULL_YELLOW) {
+		const bool expertPvp = g_game().isExpertPvp();
+		const PvpMode_t expertMode = expertPvp ? getEffectivePvpMode() : PVP_MODE_DOVE;
+		const bool allyDefence = expertPvp && (expertMode == PVP_MODE_WHITE_HAND || expertMode == PVP_MODE_YELLOW_HAND)
+			&& !targetPlayer->hasAttacked(static_self_cast<Player>()) && targetPlayer->hasAttackedAllyOf(static_self_cast<Player>());
+		if (allyDefence) {
+			// Expert PvP: entering the orange situation to defend a party or guild member is justified. No
+			// white skull, and with White Hand no PZ lock either (Yellow Hand always PZ locks); the aggressor
+			// sees us with a yellow skull.
+			if (expertMode == PVP_MODE_YELLOW_HAND && !pzLocked) {
+				pzLocked = true;
+				sendIcons();
+			}
+			addAttacked(targetPlayer);
+			if (getSkull() == SKULL_NONE) {
+				targetPlayer->sendCreatureSkull(static_self_cast<Player>());
+			}
+		} else if (getSkull() == SKULL_NONE && (getSkullClient(targetPlayer) == SKULL_YELLOW || (expertPvp && targetPlayer->getSkull() != SKULL_NONE))) {
+			// Expert PvP: retaliating against our aggressor or attacking an already SKULLED player is
+			// justified, no white skull for us, but the attacked player sees us with a yellow skull
+			// ("obtained when attacking skulled players; visible only to the attacked player").
+			if (expertPvp && targetPlayer->getSkull() != SKULL_NONE && !pzLocked) {
+				pzLocked = true;
+				sendIcons();
+			}
 			addAttacked(targetPlayer);
 			targetPlayer->sendCreatureSkull(static_self_cast<Player>());
 		} else if (!targetPlayer->hasAttacked(static_self_cast<Player>())) {
@@ -6543,12 +6611,21 @@ void Player::onTargetCreatureGainHealth(const std::shared_ptr<Creature> &target,
 }
 
 bool Player::onKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit) {
+	return onKilledPlayerFrag(target, lastHit, false, 1.0);
+}
+
+bool Player::onExpertPvpKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit, double weight) {
+	return onKilledPlayerFrag(target, lastHit, true, weight);
+}
+
+bool Player::onKilledPlayerFrag(const std::shared_ptr<Player> &target, bool lastHit, bool expertParticipant, double weight) {
 	bool unjustified = false;
 	if (target->getZoneType() == ZONE_PVP) {
 		target->setDropLoot(false);
 		target->setSkillLoss(false);
 	} else if (!hasFlag(PlayerFlags_t::NotGainInFight) && !isPartner(target)) {
-		if (!Combat::isInPvpZone(getPlayer(), target) && hasAttacked(target) && !target->hasAttacked(getPlayer()) && !isGuildMate(target) && target != getPlayer()) {
+		// Expert PvP: a participant of the victim's last fight counts even after his attack mark expired
+		if (!Combat::isInPvpZone(getPlayer(), target) && (hasAttacked(target) || expertParticipant) && !target->hasAttacked(getPlayer()) && !isGuildMate(target) && target != getPlayer()) {
 			if (target->hasKilled(getPlayer())) {
 				for (auto &kill : target->unjustifiedKills) {
 					if (kill.target == getGUID() && kill.unavenged) {
@@ -6559,7 +6636,7 @@ bool Player::onKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit)
 				}
 			} else if (target->getSkull() == SKULL_NONE && !isInWar(target)) {
 				unjustified = true;
-				addUnjustifiedDead(target);
+				addUnjustifiedDead(target, weight);
 			}
 
 			if (lastHit && hasCondition(CONDITION_INFIGHT)) {
@@ -7149,25 +7226,31 @@ Skulls_t Player::getSkullClient(const std::shared_ptr<Creature> &creature) {
 	}
 
 	const auto &player = creature->getPlayer();
-	if (player && player->getSkull() == SKULL_NONE) {
-		if (player.get() == this) {
-			if (std::ranges::any_of(unjustifiedKills, [&](const auto &kill) {
-					return kill.unavenged && (getTimeNow() - kill.time) < g_configManager().getNumber(ORANGE_SKULL_DURATION) * 24 * 60 * 60;
-				})) {
-				return SKULL_ORANGE;
-			}
-		}
-
-		if (player->hasKilled(getPlayer())) {
+	if (player) {
+		// Expert PvP: an unjustified killer is marked ORANGE to his victim ("visible only between
+		// involved parties"), it overrides the killer's own white skull, but not red/black.
+		// Classic rules: only a killer without a skull is shown orange.
+		const auto maxOrangeSkull = g_game().isExpertPvp() ? SKULL_WHITE : SKULL_NONE;
+		if (player.get() != this && player->getSkull() <= maxOrangeSkull && player->hasKilled(getPlayer())) {
 			return SKULL_ORANGE;
 		}
 
-		if (player->hasAttacked(getPlayer())) {
-			return SKULL_YELLOW;
-		}
+		if (player->getSkull() == SKULL_NONE) {
+			if (player.get() == this) {
+				if (std::ranges::any_of(unjustifiedKills, [&](const auto &kill) {
+						return kill.unavenged && (getTimeNow() - kill.time) < g_configManager().getNumber(ORANGE_SKULL_DURATION) * 24 * 60 * 60;
+					})) {
+					return SKULL_ORANGE;
+				}
+			}
 
-		if (m_party && m_party == player->m_party) {
-			return SKULL_GREEN;
+			if (player->hasAttacked(getPlayer())) {
+				return SKULL_YELLOW;
+			}
+
+			if (m_party && m_party == player->m_party) {
+				return SKULL_GREEN;
+			}
 		}
 	}
 	return Creature::getSkullClient(creature);
@@ -7197,6 +7280,22 @@ void Player::addAttacked(const std::shared_ptr<Player> &attacked) {
 	attackedSet.emplace(attacked->guid);
 }
 
+bool Player::hasAttackedAllyOf(const std::shared_ptr<Player> &defender) const {
+	if (!defender) {
+		return false;
+	}
+
+	// an ally who attacked us first does not count: we only defended ourselves against him
+	const auto &self = std::const_pointer_cast<Player>(static_self_cast<Player>());
+	for (const auto attackedGuid : attackedSet) {
+		const auto &victim = g_game().getPlayerByGUID(attackedGuid);
+		if (victim && (defender->isPartner(victim) || defender->isGuildMate(victim)) && !victim->hasAttacked(self)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void Player::removeAttacked(const std::shared_ptr<Player> &attacked) {
 	if (!attacked || attacked == getPlayer()) {
 		return;
@@ -7209,29 +7308,264 @@ void Player::clearAttacked() {
 	attackedSet.clear();
 }
 
-void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked) {
+void Player::addPvpSituationWith(const std::shared_ptr<Player> &other) {
+	if (!g_game().isExpertPvp() || !other || other.get() == this || hasFlag(PlayerFlags_t::NotGainInFight) || other->hasFlag(PlayerFlags_t::NotGainInFight)) {
+		return;
+	}
+
+	const int64_t expiry = OTSYS_TIME() + g_configManager().getNumber(PZ_LOCKED);
+	pvpSituations[other->getGUID()] = expiry;
+	other->pvpSituations[getGUID()] = expiry;
+
+	// refresh the situation boxes right away (no-op unless the active-pair count changed)
+	updatePvpSituationMarks();
+	other->updatePvpSituationMarks();
+}
+
+bool Player::isInPvpSituationWith(const std::shared_ptr<Player> &other) const {
+	if (!other) {
+		return false;
+	}
+
+	const auto it = pvpSituations.find(other->getGUID());
+	return it != pvpSituations.end() && it->second > OTSYS_TIME();
+}
+
+bool Player::hasActivePvpSituation() const {
+	const int64_t now = OTSYS_TIME();
+	for (const auto &[guid, expiry] : pvpSituations) {
+		if (expiry > now) {
+			return true;
+		}
+	}
+	return false;
+}
+
+PvPBox_t Player::getPvpSituationMarkFor(const std::shared_ptr<Player> &viewer) const {
+	if (!g_game().isExpertPvp() || !viewer) {
+		return PvPBox_t::PVP_BOX_NONE;
+	}
+
+	const int64_t now = OTSYS_TIME();
+	bool anyActive = false;
+	bool viewerAlliedWithAdversary = false;
+	for (const auto &[guid, expiry] : pvpSituations) {
+		if (expiry <= now) {
+			continue;
+		}
+		anyActive = true;
+		if (viewer->getGUID() == guid) {
+			return PvPBox_t::PVP_BOX_YELLOW; // the viewer is my adversary
+		}
+		if (!viewerAlliedWithAdversary) {
+			if (const auto &adversary = g_game().getPlayerByGUID(guid)) {
+				if (viewer->isPartner(adversary) || viewer->isGuildMate(adversary)) {
+					viewerAlliedWithAdversary = true;
+				}
+			}
+		}
+	}
+
+	if (!anyActive) {
+		return PvPBox_t::PVP_BOX_NONE;
+	}
+	if (viewer.get() == this) {
+		return PvPBox_t::PVP_BOX_YELLOW; // own frame while flagged
+	}
+	return viewerAlliedWithAdversary ? PvPBox_t::PVP_BOX_ORANGE : PvPBox_t::PVP_BOX_BROWN;
+}
+
+void Player::updatePvpSituationMarks() {
+	if (!g_game().isExpertPvp()) {
+		return;
+	}
+
+	// refresh our creature block for all viewers whenever the set of active pairs changes
+	// (fight starts, a new adversary joins, situations expire), each viewer recomputes its color.
+	// Expired situations are dropped here.
+	size_t activePairs = 0;
+	const int64_t now = OTSYS_TIME();
+	for (auto it = pvpSituations.begin(); it != pvpSituations.end();) {
+		if (it->second > now) {
+			++activePairs;
+			++it;
+		} else {
+			pvpSituations.erase(it++);
+		}
+	}
+
+	if (activePairs != pvpActivePairs) {
+		pvpActivePairs = activePairs;
+		g_game().sendUpdateCreature(static_self_cast<Player>());
+		// fields and walls of the players we fight now affect us (or no longer do)
+		refreshPvpItemsInView();
+	}
+}
+
+void Player::refreshPvpItemsInView() {
+	if (!client || !g_game().isExpertPvp()) {
+		return;
+	}
+
+	const Position &center = getPosition();
+	int32_t minZ = 0;
+	int32_t maxZ = MAP_INIT_SURFACE_LAYER;
+	if (center.z > MAP_INIT_SURFACE_LAYER) {
+		minZ = std::max<int32_t>(center.z - MAP_LAYER_VIEW_LIMIT, 0);
+		maxZ = std::min<int32_t>(center.z + MAP_LAYER_VIEW_LIMIT, MAP_MAX_LAYERS - 1);
+	}
+
+	for (int32_t z = minZ; z <= maxZ; ++z) {
+		const int32_t offsetZ = center.z - z;
+		for (int32_t x = center.x - MAP_MAX_CLIENT_VIEW_PORT_X - 1 + offsetZ; x <= center.x + MAP_MAX_CLIENT_VIEW_PORT_X + 2 + offsetZ; ++x) {
+			for (int32_t y = center.y - MAP_MAX_CLIENT_VIEW_PORT_Y - 1 + offsetZ; y <= center.y + MAP_MAX_CLIENT_VIEW_PORT_Y + 2 + offsetZ; ++y) {
+				if (x < 0 || y < 0 || x > std::numeric_limits<uint16_t>::max() || y > std::numeric_limits<uint16_t>::max()) {
+					continue;
+				}
+				const Position pos(static_cast<uint16_t>(x), static_cast<uint16_t>(y), static_cast<uint8_t>(z));
+				const auto &tile = g_game().map.getTile(pos);
+				const TileItemVector* items = tile ? tile->getItemList() : nullptr;
+				if (!items) {
+					continue;
+				}
+				for (const auto &item : *items) {
+					// only the player-made walls and fields that ProtocolGame::AddItem shows per viewer
+					if (!item || item->getOwnerId() == 0) {
+						continue;
+					}
+					switch (item->getID()) {
+						case ITEM_MAGICWALL:
+						case ITEM_WILDGROWTH:
+						case ITEM_FIREFIELD_PVP_FULL:
+						case ITEM_FIREFIELD_PVP_MEDIUM:
+						case ITEM_FIREFIELD_PVP_SMALL:
+						case ITEM_POISONFIELD_PVP:
+						case ITEM_ENERGYFIELD_PVP:
+							sendUpdateTileItem(tile, pos, item);
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
+	}
+}
+
+std::vector<std::shared_ptr<Player>> Player::getExpertPvpKillParticipants() const {
+	std::vector<std::shared_ptr<Player>> participants;
+	if (!g_game().isExpertPvp()) {
+		return participants;
+	}
+
+	const int64_t timeNow = OTSYS_TIME();
+	const auto window = static_cast<int64_t>(g_configManager().getNumber(PZ_LOCKED));
+	const auto addParticipant = [&](const std::shared_ptr<Player> &participant) {
+		if (participant && participant.get() != this && std::ranges::find(participants, participant) == participants.end()) {
+			participants.emplace_back(participant);
+		}
+	};
+
+	// any aggressive act against us (damage, mana drain, paralyse, targeting) recorded in onAttackedCreature
+	for (const auto &[guid, lastAggression] : pvpAggressors) {
+		if (timeNow - lastAggression <= window) {
+			addParticipant(g_game().getPlayerByGUID(guid));
+		}
+	}
+
+	// damage, also from summons, which the master's onAttackedCreature does not see
+	for (const auto &[attackerId, damageInfo] : damageMap) {
+		const auto &[total, ticks] = damageInfo;
+		if (total == 0 || ticks == 0 || timeNow - ticks > window) {
+			continue;
+		}
+		const auto &attackerCreature = g_game().getCreatureByID(attackerId);
+		if (!attackerCreature) {
+			continue;
+		}
+		const auto &master = attackerCreature->getMaster() ? attackerCreature->getMaster() : attackerCreature;
+		addParticipant(master->getPlayer());
+	}
+	return participants;
+}
+
+double Player::getExpertPvpFragWeight(size_t participants) {
+	// "unfair fight": with 5 or fewer participants everyone gets the full frag, with more each one
+	// gets 5 divided by the number of participants.
+	constexpr size_t fullShare = 5;
+	if (participants <= fullShare) {
+		return 1.0;
+	}
+	return static_cast<double>(fullShare) / static_cast<double>(participants);
+}
+
+void Player::noteExpertPvpAggressor(const std::shared_ptr<Player> &aggressor) {
+	if (!g_game().isExpertPvp() || !aggressor || aggressor.get() == this) {
+		return;
+	}
+
+	const int64_t timeNow = OTSYS_TIME();
+	const auto window = static_cast<int64_t>(g_configManager().getNumber(PZ_LOCKED));
+	for (auto it = pvpAggressors.begin(); it != pvpAggressors.end();) {
+		if (timeNow - it->second > window) {
+			pvpAggressors.erase(it++);
+		} else {
+			++it;
+		}
+	}
+	pvpAggressors[aggressor->getGUID()] = timeNow;
+}
+
+void Player::clearExpertPvpAggressors() {
+	pvpAggressors.clear();
+}
+
+bool Player::isFirstInStack() const {
+	const auto &tile = getTile();
+	if (!tile) {
+		return true;
+	}
+
+	if (const CreatureVector* creatures = tile->getCreatures()) {
+		for (const auto &tileCreature : *creatures) {
+			if (const auto &tilePlayer = tileCreature->getPlayer()) {
+				// creatures are inserted at the front, so the first player found is the top one
+				return tilePlayer.get() == this;
+			}
+		}
+	}
+	return true;
+}
+
+void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked, double weight) {
 	if (hasFlag(PlayerFlags_t::NotGainInFight) || hasFlag(PlayerFlags_t::NotGainUnjustified) || attacked == getPlayer() || g_game().worlds().getCurrentWorld()->type == WORLDTYPE_HARDCORE) {
 		return;
 	}
 
 	sendTextMessage(MESSAGE_EVENT_ADVANCE, "Warning! The murder of " + attacked->getName() + " was not justified.");
 
-	unjustifiedKills.emplace_back(attacked->getGUID(), time(nullptr), true);
+	// Expert PvP: the frag share comes from Creature::onDeath (getExpertPvpFragWeight); classic worlds pass 1.0.
+	const bool expertPvp = g_game().isExpertPvp();
+	const double killWeight = expertPvp ? std::clamp(weight, 0.0, 1.0) : 1.0;
+	unjustifiedKills.emplace_back(attacked->getGUID(), time(nullptr), true, killWeight);
 
-	uint8_t dayKills = 0;
-	uint8_t weekKills = 0;
-	uint8_t monthKills = 0;
+	double dayKills = 0;
+	double weekKills = 0;
+	double monthKills = 0;
 
+	// Classic rules: every frag counts as a full frag and the day window is 4 hours.
+	const auto dayWindow = expertPvp ? 24 * 60 * 60 : 4 * 60 * 60;
 	for (const auto &kill : unjustifiedKills) {
 		const auto diff = time(nullptr) - kill.time;
-		if (diff <= 4 * 60 * 60) {
-			dayKills += 1;
+		const double weight = expertPvp ? kill.weight : 1.0;
+		if (diff <= dayWindow) {
+			dayKills += weight;
 		}
 		if (diff <= 7 * 24 * 60 * 60) {
-			weekKills += 1;
+			weekKills += weight;
 		}
 		if (diff <= 30 * 24 * 60 * 60) {
-			monthKills += 1;
+			monthKills += weight;
 		}
 	}
 
@@ -7240,6 +7574,8 @@ void Player::addUnjustifiedDead(const std::shared_ptr<Player> &attacked) {
 			setSkull(SKULL_BLACK);
 			// start black skull time
 			skullTicks = static_cast<int64_t>(g_configManager().getNumber(BLACK_SKULL_DURATION)) * 24 * 60 * 60;
+			// Open PvP: a black skull cannot stay in red fist
+			pvpMode = getAllowedPvpMode(pvpMode);
 		} else if (dayKills >= g_configManager().getNumber(DAY_KILLS_TO_RED) || weekKills >= g_configManager().getNumber(WEEK_KILLS_TO_RED) || monthKills >= g_configManager().getNumber(MONTH_KILLS_TO_RED)) {
 			setSkull(SKULL_RED);
 			// reset red skull time
@@ -7908,20 +8244,23 @@ void Player::sendUnjustifiedPoints() const {
 		double weekKills = 0;
 		double monthKills = 0;
 
+		const bool expertPvp = g_game().isExpertPvp();
 		for (const auto &kill : unjustifiedKills) {
 			const auto diff = time(nullptr) - kill.time;
+			const double weight = expertPvp ? kill.weight : 1.0;
 			if (diff <= 24 * 60 * 60) {
-				dayKills += 1;
+				dayKills += weight;
 			}
 			if (diff <= 7 * 24 * 60 * 60) {
-				weekKills += 1;
+				weekKills += weight;
 			}
 			if (diff <= 30 * 24 * 60 * 60) {
-				monthKills += 1;
+				monthKills += weight;
 			}
 		}
 
-		const bool isRed = getSkull() == SKULL_RED;
+		// Expert PvP: with a red or black skull the bars count towards the black skull thresholds
+		const bool isRed = getSkull() == SKULL_RED || (expertPvp && getSkull() == SKULL_BLACK);
 
 		auto dayMax = ((isRed ? 2 : 1) * g_configManager().getNumber(DAY_KILLS_TO_RED));
 		auto weekMax = ((isRed ? 2 : 1) * g_configManager().getNumber(WEEK_KILLS_TO_RED));
@@ -7931,7 +8270,11 @@ void Player::sendUnjustifiedPoints() const {
 		const uint8_t weekProgress = std::min(std::round(weekKills / weekMax * 100), 100.0);
 		const uint8_t monthProgress = std::min(std::round(monthKills / monthMax * 100), 100.0);
 		uint8_t skullDuration = 0;
-		if (skullTicks != 0) {
+		if (expertPvp && skullTicks > 0) {
+			// Expert PvP: skullTicks is in seconds, the client shows the days left and a started day counts as a day
+			constexpr int64_t secondsPerDay = 24 * 60 * 60;
+			skullDuration = static_cast<uint8_t>(std::min<int64_t>((skullTicks + secondsPerDay - 1) / secondsPerDay, std::numeric_limits<uint8_t>::max()));
+		} else if (skullTicks != 0) {
 			skullDuration = std::floor<uint8_t>(skullTicks / (24 * 60 * 60 * 1000));
 		}
 		client->sendUnjustifiedPoints(dayProgress, std::max(dayMax - dayKills, 0.0), weekProgress, std::max(weekMax - weekKills, 0.0), monthProgress, std::max(monthMax - monthKills, 0.0), skullDuration);
@@ -8664,6 +9007,8 @@ void Player::onThink(uint32_t interval) {
 	triggerTranscendence();
 	// Momentum (cooldown resets)
 	triggerMomentum();
+	// Open PvP situation boxes (1 Hz refresh + clear on expiry)
+	updatePvpSituationMarks();
 	const auto &playerTile = getTile();
 	const bool vipStaysOnline = isVip() && g_configManager().getBoolean(VIP_STAY_ONLINE);
 	idleTime += interval;
@@ -9237,15 +9582,17 @@ void Player::setGuild(const std::shared_ptr<Guild> &newGuild) {
 	guildRank = nullptr;
 
 	if (newGuild) {
-		const auto &rank = newGuild->getRankByLevel(1);
-		if (!rank) {
-			return;
+		// without a level 1 rank the player stays without a guild, but the refresh below still runs for the
+		// guild he may have just left
+		if (const auto &rank = newGuild->getRankByLevel(1)) {
+			guild = newGuild;
+			guildRank = rank;
+			newGuild->addMember(static_self_cast<Player>());
 		}
-
-		guild = newGuild;
-		guildRank = rank;
-		newGuild->addMember(static_self_cast<Player>());
 	}
+
+	// Open PvP (2014 rules): guild membership affects the situation-box colors this player sees.
+	g_game().refreshPvpSituationMarks();
 }
 
 [[nodiscard]] GuildRank_ptr Player::getGuildRank() const {
