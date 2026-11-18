@@ -1105,7 +1105,7 @@ public:
 	void sendGameNews() const;
 	/// CIP HirelingNameChange (S 0xDB); see ProtocolGame::sendHirelingNameChange.
 	void sendHirelingNameChange(uint32_t creatureId = 0, uint32_t objectId = 0) const;
-	/** Client option "always turn towards the direction of movement" (SetClientOptions 0x2E, option 1). */
+	/** Client option "always turn towards the direction of movement" (SetClientOptions 0x2E; CIP option 0 / OTCR option 1). */
 	void setTurnTowardsMoveDirection(bool enabled) {
 		turnTowardsMoveDirection = enabled;
 	}
