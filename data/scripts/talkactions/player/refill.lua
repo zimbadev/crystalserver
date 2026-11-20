@@ -12,6 +12,11 @@ local chargeItem = {
 	["alicorn ring"] = { noChargeID = 39182, ChargeID = 39180, cost = 5 },
 	["arcanomancer sigil"] = { noChargeID = 39185, ChargeID = 39183, cost = 5 },
 	["arboreal ring"] = { noChargeID = 39188, ChargeID = 39187, cost = 5 },
+	["flamingo amulet of valor"] = { noChargeID = 54510, ChargeID = 53197, cost = 5 },
+	["flamingo amulet of precision"] = { noChargeID = 54511, ChargeID = 53199, cost = 5 },
+	["flamingo amulet of destruction"] = { noChargeID = 54512, ChargeID = 53201, cost = 5 },
+	["flamingo amulet of nature"] = { noChargeID = 54513, ChargeID = 53203, cost = 5 },
+	["swan amulet of balance"] = { noChargeID = 54514, ChargeID = 53205, cost = 5 },
 }
 local silverTokenID = 22516
 
