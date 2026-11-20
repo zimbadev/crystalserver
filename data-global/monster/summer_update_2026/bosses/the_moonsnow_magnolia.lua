@@ -19,6 +19,12 @@ monster.bosstiary = {
 	bossRace = RARITY_ARCHFOE,
 }
 
+monster.events = {
+	"MoonsnowMagnoliaPrepareDeath",
+	"MoonsnowMagnoliaHealth",
+	"MoonsnowMagnoliaDeath",
+}
+
 monster.health = 52000
 monster.maxHealth = 52000
 monster.race = "blood"
@@ -72,8 +78,8 @@ monster.light = {
 monster.summon = {
 	maxSummons = 4,
 	summons = {
-		{ name = "Frost Flower Asura", chance = 10, interval = 4000, count = 2 },
-		{ name = "Midnight Asura", chance = 10, interval = 4000, count = 2 },
+		{ name = "True Frost Flower Asura", chance = 10, interval = 4000, count = 2 },
+		{ name = "True Midnight Asura", chance = 10, interval = 4000, count = 2 },
 	},
 }
 
@@ -153,7 +159,7 @@ monster.elements = {
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
 	{ type = COMBAT_ICEDAMAGE, percent = 0 },
 	{ type = COMBAT_HOLYDAMAGE, percent = 0 },
-	{ type = COMBAT_DEATHDAMAGE, percent = 0 },
+	{ type = COMBAT_DEATHDAMAGE, percent = -100 },
 }
 
 -- Oficial: "Imunidades: Paralisia, Invisibilidade".
