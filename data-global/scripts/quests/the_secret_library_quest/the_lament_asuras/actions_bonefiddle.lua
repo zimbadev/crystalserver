@@ -20,6 +20,22 @@ function actions_asura_bonefiddle.onUse(player, item, fromPosition, target, toPo
 		end
 	end
 	if item.itemid == 28493 then
+		-- Checagem na sala da Moonsnow Magnolia
+		if player:getPosition():isInRange(Position(33909, 32738, 9), Position(33950, 32773, 9)) then
+			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You play the haunting ballad on the bone fiddle.")
+			player:getPosition():sendMagicEffect(CONST_ME_SOUND_WHITE)
+
+			if MoonsnowMagnoliaFight and MoonsnowMagnoliaFight.active and MoonsnowMagnoliaFight.phase == 1 then
+				MoonsnowMagnoliaFight.lastFiddleTime = os.time()
+				local boss = Monster(MoonsnowMagnoliaFight.bossGuid)
+				if boss and not boss:isDead() then
+					boss:say("The old song... What is this? I strictly forbade anyone from playing it! ... Ah, the pain of remembering!", TALKTYPE_MONSTER_YELL)
+					boss:getPosition():sendMagicEffect(CONST_ME_SOUND_PURPLE)
+				end
+			end
+			return true
+		end
+
 		if player:getStorageValue(Storage.Quest.U11_80.TheSecretLibrary.Asuras.Questline) == 2 then
 			if player:getPosition():isInRange(Position(32807, 32762, 10), Position(32809, 32768, 10)) then
 				player:setStorageValue(Storage.Quest.U11_80.TheSecretLibrary.Asuras.Questline, 3)
