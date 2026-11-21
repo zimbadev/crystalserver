@@ -895,12 +895,16 @@ void Party::addPlayerHealing(const std::shared_ptr<Player> &player, uint64_t amo
 }
 
 void Party::switchAnalyzerPriceType() {
+	setAnalyzerPriceType(priceType == LEADER_PRICE ? MARKET_PRICE : LEADER_PRICE);
+}
+
+void Party::setAnalyzerPriceType(PartyAnalyzer_t type) {
 	const auto &leader = getLeader();
 	if (!leader) {
 		return;
 	}
 
-	priceType = priceType == LEADER_PRICE ? MARKET_PRICE : LEADER_PRICE;
+	priceType = type;
 	reloadPrices();
 	updateTrackerAnalyzer();
 }

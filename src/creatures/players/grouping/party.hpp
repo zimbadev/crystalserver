@@ -89,6 +89,7 @@ public:
 	void addPlayerDamage(const std::shared_ptr<Player> &player, uint64_t amount);
 	void addPlayerHealing(const std::shared_ptr<Player> &player, uint64_t amount);
 	void switchAnalyzerPriceType();
+	void setAnalyzerPriceType(PartyAnalyzer_t type);
 	void resetAnalyzer();
 	void reloadPrices() const;
 
