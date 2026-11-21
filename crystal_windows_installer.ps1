@@ -68,7 +68,7 @@ while ($lang -eq $null) {
                 Step2Inst2      = "  2. Run it."
                 Step2Inst3      = "  3. IMPORTANT: In the installer, choose 'Add CMake to the system PATH for all users'."
                 Step2Prompt     = "Press Enter when you have FINISHED installing CMake..."
-                Step3Title      = "--- STEP 3: Checking for Visual Studio 2022 ---"
+                Step3Title      = "--- STEP 3: Checking for Visual Studio 2026 ---"
                 Step3Inst1      = "  1. Download and run 'vs_community.exe'."
                 Step3Inst2      = "  2. The 'Visual Studio Installer' will open. Go to the 'Workloads' tab."
                 Step3Inst3      = "  3. IMPORTANT: Check the box for 'Desktop development with C++'."
@@ -124,7 +124,7 @@ while ($lang -eq $null) {
                 Step2Inst2      = "  2. Execute-o."
                 Step2Inst3      = "  3. IMPORTANTE: No instalador, escolha 'Add CMake to the system PATH for all users'."
                 Step2Prompt     = "Pressione Enter quando TERMINAR de instalar o CMake..."
-                Step3Title      = "--- PASSO 3: Verificando o Visual Studio 2022 ---"
+                Step3Title      = "--- PASSO 3: Verificando o Visual Studio 2026 ---"
                 Step3Inst1      = "  1. Baixe e execute 'vs_community.exe'."
                 Step3Inst2      = "  2. O 'Instalador do Visual Studio' será aberto. Vá para a aba 'Cargas de Trabalho' (Workloads)."
                 Step3Inst3      = "  3. IMPORTANTE: Marque a caixa 'Desenvolvimento para desktop com C++' ('Desktop development with C++')."
@@ -277,7 +277,7 @@ if ($null -eq (Get-Command cmake -ErrorAction SilentlyContinue)) {
     Write-Host "CMake $($lang.CheckFound)"
 }
 
-# --- Krok 3: Instalacja VISUAL STUDIO 2022 ---
+# --- Krok 3: Instalacja VISUAL STUDIO 2026 ---
 Write-Host ""
 Write-Host $lang.Step3Title -ForegroundColor Green
 $vsInstallerPath = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe"
@@ -390,7 +390,7 @@ try {
     Set-Location $BuildDir
 
     Write-Host $lang.Step7Config
-    cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_TOOLCHAIN_FILE="$($VcpkgToolchainFile)" -DWITH_MYSQL=OFF
+    cmake .. -G "Visual Studio 18 2026" -A x64 -DCMAKE_TOOLCHAIN_FILE="$($VcpkgToolchainFile)" -DWITH_MYSQL=OFF
     
     if ($LASTEXITCODE -ne 0) {
         throw "CMake configuration failed. Check the errors above."
