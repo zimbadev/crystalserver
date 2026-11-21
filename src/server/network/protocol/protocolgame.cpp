@@ -2268,11 +2268,22 @@ void ProtocolGame::parseSay(NetworkMessage &msg) {
 }
 
 void ProtocolGame::parseFightModes(NetworkMessage &msg) {
-	// uint8_t rawFightMode = msg.getByte(); // 1 - offensive, 2 - balanced, 3 - defensive -- FIGHT MODE DEPRECATED FROM 15.25
+	// 15.25+ (CIP gameclient and OTC with GameTacticsWithoutFightMode) omit fight mode.
+	// oldProtocol and OTC/OTCR below 15.25 still send it first.
+	FightMode_t fightMode = FIGHTMODE_ATTACK;
+	const bool withFightMode = oldProtocol || (isOTCR && clientVersion < 1525);
+	if (withFightMode) {
+		uint8_t rawFightMode = msg.getByte(); // 1 - offensive, 2 - balanced, 3 - defensive
+		if (rawFightMode == 2) {
+			fightMode = FIGHTMODE_BALANCED;
+		} else if (rawFightMode != 1) {
+			fightMode = FIGHTMODE_DEFENSE;
+		}
+	}
 	uint8_t rawChaseMode = msg.getByte(); // 0 - stand while fightning, 1 - chase opponent
 	uint8_t rawSecureMode = msg.getByte(); // 0 - can't attack unmarked, 1 - can attack unmarked
 
-	g_game().playerSetFightModes(player->getID(), FIGHTMODE_ATTACK, rawChaseMode != 0, rawSecureMode != 0);
+	g_game().playerSetFightModes(player->getID(), fightMode, rawChaseMode != 0, rawSecureMode != 0);
 }
 
 void ProtocolGame::parseAttack(NetworkMessage &msg) {
@@ -8284,7 +8295,11 @@ void ProtocolGame::sendEnterWorld() {
 void ProtocolGame::sendFightModes() {
 	NetworkMessage msg;
 	msg.addByte(0xA7);
-	msg.addByte(player->fightMode);
+	// Mirror parseFightModes: CIP gameclient 15.25+ and OTC 15.25+ omit fight mode.
+	const bool withFightMode = oldProtocol || (isOTCR && clientVersion < 1525);
+	if (withFightMode) {
+		msg.addByte(player->fightMode);
+	}
 	msg.addByte(player->chaseMode);
 	msg.addByte(player->secureMode);
 	msg.addByte(PVP_MODE_DOVE);
