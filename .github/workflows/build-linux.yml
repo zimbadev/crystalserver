@@ -160,7 +160,7 @@ jobs:
         key: ${{ steps.dependencies.outputs.cache-primary-key }}
     - name: Compile
       run: |
-        ./ci/RunBuildStage.ps1 -Name compile -FilePath cmake -CommandArguments @("--build","build/${{ matrix.preset }}","--parallel","$env:CMAKE_BUILD_PARALLEL_LEVEL")
+        ./ci/RunBuildStage.ps1 -Name compile -FilePath cmake -CommandArguments @("--build","build/${{ matrix.preset }}","--parallel","$env:CMAKE_BUILD_PARALLEL_LEVEL","--","-k","10")
       env:
         ACTIONS_RUNTIME_TOKEN: ''
         ACTIONS_RESULTS_URL: ''
@@ -204,6 +204,13 @@ jobs:
         python ./ci/SummarizeBuild.py $folder build/diagnostics/build-metrics.json
         if (Test-Path "$folder/.ninja_log") { Copy-Item "$folder/.ninja_log" build/diagnostics/ninja.log }
         exit 0
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
+    - name: Report problems as annotations
+      if: always()
+      shell: bash
+      run: python3 ci/ReportBuild.py --title "${{ matrix.preset }}" build/diagnostics/configure.log build/diagnostics/compile.log build/diagnostics/tests.log build/diagnostics/compiler-cache.txt
       env:
         ACTIONS_RUNTIME_TOKEN: ''
         ACTIONS_RESULTS_URL: ''
