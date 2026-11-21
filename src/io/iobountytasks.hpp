@@ -19,6 +19,8 @@
 
 #include "server/network/message/networkmessage.hpp"
 
+#include <map>
+
 class Player;
 class NetworkMessage;
 
@@ -52,7 +54,11 @@ enum BountyClaimRewardType_t : uint8_t {
 enum BountyTaskGrade_t : uint8_t {
 	BOUNTY_GRADE_NORMAL = 0,
 	BOUNTY_GRADE_SILVER = 1, // 2x rewards
-	BOUNTY_GRADE_GOLD = 2 // 4x rewards
+	BOUNTY_GRADE_GOLD = 2, // 4x rewards
+	BOUNTY_GRADE_PLATINUM = 3, // 8x rewards (Winter Update 2026)
+
+	BOUNTY_GRADE_FIRST = BOUNTY_GRADE_NORMAL,
+	BOUNTY_GRADE_LAST = BOUNTY_GRADE_PLATINUM
 };
 
 // Reroll mode for bounty tasks (claim daily reroll button state)
@@ -74,6 +80,9 @@ static constexpr uint8_t TALISMAN_PATH_COUNT = 4;
 static constexpr uint8_t BOUNTY_MAX_CREATURES = 3;
 static constexpr uint8_t BOUNTY_MAX_LIST_SLOTS = 5;
 static constexpr uint8_t BOUNTY_MAX_REROLL_TASKS = 10;
+// Highest values that still fit the signed tinyint columns `active_reward_points` and `reroll_tokens`
+static constexpr uint16_t BOUNTY_MAX_COLUMN_REWARD_POINTS = 127;
+static constexpr uint16_t BOUNTY_MAX_COLUMN_REROLL_TOKENS = 127;
 
 // Talisman tier data as sent in protocol
 struct BountyTalismanTier {
@@ -99,11 +108,13 @@ struct BountyCreatureEntry {
 	uint16_t raceId = 0;
 	uint16_t requiredKills = 0;
 	uint32_t rewardExp = 0;
-	uint8_t rewardBountyPoints = 0;
+	uint16_t rewardBountyPoints = 0;
 	uint16_t currentKills = 0;
 	BountyClaimRewardType_t claimRewardType = BOUNTY_CLAIM_SELECT_TASK;
 	BountyTaskGrade_t taskGrade = BOUNTY_GRADE_NORMAL;
 	uint8_t taskIndex = 0; // Position in the creature list (0-2)
+	bool isElite = false; // Elite task (Winter Update 2026)
+	uint16_t rewardDust = 0; // Forge dust reward of an Elite task (granted to Premium accounts only)
 };
 
 // Active bounty task (currently being hunted)
@@ -112,10 +123,19 @@ struct BountyTaskActive {
 	uint16_t requiredKills = 0;
 	uint16_t currentKills = 0;
 	uint32_t rewardExp = 0;
-	uint8_t rewardBountyPoints = 0;
+	uint16_t rewardBountyPoints = 0;
 	BountyTaskGrade_t taskGrade = BOUNTY_GRADE_NORMAL;
 	BountyTaskDifficulty_t difficulty = BOUNTY_DIFFICULTY_BEGINNER;
 	uint8_t taskIndex = 0; // Original creature list index when selected
+	bool isElite = false; // Elite task (Winter Update 2026)
+	uint16_t rewardDust = 0; // Forge dust reward of an Elite task (granted to Premium accounts only)
+};
+
+// Rarity growth of one creature (Winter Update 2026)
+// Every time the creature is offered but not chosen it gains one step of Silver/Gold/Platinum chance
+struct BountyRarityState {
+	uint16_t steps = 0; // Times the creature was offered and not chosen
+	bool rerolled = false; // The creature was part of a rerolled list at least once
 };
 
 // Player's complete bounty task data
@@ -146,7 +166,18 @@ public:
 	uint8_t rerollTasks = 0;
 
 	// Free reroll / daily claim timestamp (24hr cooldown)
+	// Obsolete since the Winter Update 2026 (rerolls only cost tokens); still loaded and saved
 	int64_t freeRerollTimeStamp = 0;
+
+	// Elite checkbox of the board: while set, all newly rolled tasks are Elite
+	bool eliteEnabled = false;
+
+	// Rarity growth per creature race id
+	std::map<uint16_t, BountyRarityState> rarityStates;
+
+	// Set once the data was read from the database, so a player that was loaded
+	// without it (offline load) does not overwrite the stored row with defaults
+	bool loaded = false;
 };
 
 class IOBountyTasks {
@@ -168,8 +199,8 @@ public:
 	// Player selects a task from the creature list
 	void selectTask(const std::shared_ptr<Player> &player, uint8_t taskIndex);
 
-	// Player changes difficulty
-	void changeDifficulty(const std::shared_ptr<Player> &player, BountyTaskDifficulty_t difficulty);
+	// Player changes difficulty; when setElite is true the Elite setting of the board is changed as well
+	void changeDifficulty(const std::shared_ptr<Player> &player, BountyTaskDifficulty_t difficulty, bool setElite = false, bool elite = false);
 
 	// Player requests a reroll of the creature list
 	void rerollCreatureList(const std::shared_ptr<Player> &player);
@@ -207,6 +238,22 @@ public:
 	// Get bounty points reward for difficulty
 	uint8_t getBountyPointsReward(BountyTaskDifficulty_t difficulty) const;
 
+	// Reward multiplier of a task grade (Normal 1, Silver 2, Gold 4, Platinum 8)
+	static uint8_t getGradeMultiplier(BountyTaskGrade_t grade);
+
+	// Forge dust reward of an Elite task for difficulty and grade
+	uint16_t getEliteDustReward(BountyTaskDifficulty_t difficulty, BountyTaskGrade_t grade) const;
+
+	// Maximum amount of reroll tokens a player can store
+	static uint8_t getMaxRerollTokens();
+
+	// True when the player has an active Elite task for this creature race
+	bool isEliteTaskCreature(const std::shared_ptr<Player> &player, uint16_t raceId) const;
+
+	// Load/save the Winter Update 2026 data that has no database column (player KV, scope "bounty-tasks")
+	void loadExtraData(const std::shared_ptr<Player> &player) const;
+	void saveExtraData(const std::shared_ptr<Player> &player) const;
+
 	// Get talisman upgrade cost for the next level
 	static uint16_t getTalismanUpgradeCost(uint8_t currentLevel);
 
@@ -222,6 +269,17 @@ public:
 	// Returns bonus in hundredths of a percent (e.g. 250 = 2.50%, 1500 = 15.00%)
 	// Returns 0 if no active task, creature doesn't match, or talisman path has no bonus
 	uint16_t getBountyTalismanBonus(const std::shared_ptr<Player> &player, uint16_t raceId, uint8_t pathIndex) const;
+
+private:
+	// Roll the grade of a newly offered creature from its rarity state
+	BountyTaskGrade_t rollTaskGrade(const BountyTaskData &bountyData, uint16_t raceId) const;
+
+	// Apply grade, Elite setting and the resulting rewards to a newly offered creature
+	void applyGradeAndElite(const BountyTaskData &bountyData, BountyCreatureEntry &creature, BountyTaskDifficulty_t difficulty) const;
+
+	// The current creature list is about to be discarded: raise the rarity of every creature that was not chosen
+	// chosenIndex < 0 means the list was rerolled
+	void growRarity(BountyTaskData &bountyData, int32_t chosenIndex) const;
 };
 
 constexpr auto g_iobountytasks = IOBountyTasks::getInstance;

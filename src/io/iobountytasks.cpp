@@ -22,7 +22,51 @@
 #include "creatures/players/player.hpp"
 #include "game/game.hpp"
 #include "io/ioweeklytasks.hpp"
+#include "kv/kv.hpp"
+#include "kv/value_wrapper.hpp"
 #include "lib/di/container.hpp"
+#include "utils/tools.hpp"
+
+#include <algorithm>
+#include <cmath>
+#include <cstdlib>
+#include <limits>
+
+namespace {
+	// Player KV scope of the bounty data that has no database column
+	constexpr auto BOUNTY_KV_SCOPE = "bounty-tasks";
+
+	// Config chances are percent values, the grade roll uses hundredths of a percent
+	int32_t getBountyGradeChance(float basePercent, float stepPercent, float maxPercent, uint16_t steps) {
+		const float chance = std::min(basePercent + stepPercent * static_cast<float>(steps), maxPercent);
+		return static_cast<int32_t>(std::lround(std::clamp(chance, 0.0f, 100.0f) * 100.0f));
+	}
+
+	int32_t getBountyKVNumber(const std::shared_ptr<KV> &scope, const std::string &key) {
+		const auto value = scope->get(key);
+		if (!value) {
+			return 0;
+		}
+		return static_cast<int32_t>(value->getNumber());
+	}
+
+	std::string getBountyKVString(const std::shared_ptr<KV> &scope, const std::string &key) {
+		const auto value = scope->get(key);
+		if (!value) {
+			return {};
+		}
+		return value->get<StringType>();
+	}
+
+	// "1,2,3" -> { 1, 2, 3 }
+	std::vector<uint32_t> parseBountyKVNumbers(const std::string &entry) {
+		std::vector<uint32_t> numbers;
+		for (const auto &field : explodeString(entry, ",")) {
+			numbers.push_back(static_cast<uint32_t>(std::strtoul(field.c_str(), nullptr, 10)));
+		}
+		return numbers;
+	}
+} // namespace
 
 IOBountyTasks &IOBountyTasks::getInstance() {
 	return inject<IOBountyTasks>();
@@ -64,6 +108,8 @@ void IOBountyTasks::generateCreatureList(const std::shared_ptr<Player> &player, 
 	const auto &bestiaryList = g_game().getBestiaryList();
 	if (bestiaryList.size() < 36) {
 		g_logger().error("[IOBountyTasks::generateCreatureList] - Bestiary size is less than 36, cannot generate bounty tasks.");
+		saveExtraData(player);
+		player->sendBountyTaskData();
 		return;
 	}
 
@@ -144,23 +190,15 @@ void IOBountyTasks::generateCreatureList(const std::shared_ptr<Player> &player, 
 		creature.claimRewardType = BOUNTY_CLAIM_SELECT_TASK;
 		creature.taskIndex = creaturesGenerated;
 
-		// Small chance for silver/gold tasks
-		int32_t silverGoldChance = uniform_random(1, 100);
-		if (silverGoldChance <= 2) {
-			creature.taskGrade = BOUNTY_GRADE_GOLD;
-			creature.rewardExp = static_cast<uint32_t>(creature.rewardExp * 4);
-			creature.rewardBountyPoints = static_cast<uint8_t>(std::min<uint16_t>(creature.rewardBountyPoints * 4, 255));
-		} else if (silverGoldChance <= 10) {
-			creature.taskGrade = BOUNTY_GRADE_SILVER;
-			creature.rewardExp = static_cast<uint32_t>(creature.rewardExp * 2);
-			creature.rewardBountyPoints = static_cast<uint8_t>(std::min<uint16_t>(creature.rewardBountyPoints * 2, 255));
-		}
+		// Grade (Silver/Gold/Platinum) from the rarity of the creature, Elite from the board setting
+		applyGradeAndElite(bountyData, creature, difficulty);
 
 		bountyData.currentCreaturesList.push_back(creature);
 		creaturesGenerated++;
 	}
 
 	bountyData.state = BOUNTY_STATE_SELECTION;
+	saveExtraData(player);
 	player->sendBountyTaskData();
 }
 
@@ -255,20 +293,13 @@ void IOBountyTasks::fillMissingCreatures(const std::shared_ptr<Player> &player) 
 		creature.claimRewardType = BOUNTY_CLAIM_SELECT_TASK;
 		creature.taskIndex = creaturesGenerated;
 
-		int32_t silverGoldChance = uniform_random(1, 100);
-		if (silverGoldChance <= 2) {
-			creature.taskGrade = BOUNTY_GRADE_GOLD;
-			creature.rewardExp = static_cast<uint32_t>(creature.rewardExp * 4);
-			creature.rewardBountyPoints = static_cast<uint8_t>(std::min<uint16_t>(creature.rewardBountyPoints * 4, 255));
-		} else if (silverGoldChance <= 10) {
-			creature.taskGrade = BOUNTY_GRADE_SILVER;
-			creature.rewardExp = static_cast<uint32_t>(creature.rewardExp * 2);
-			creature.rewardBountyPoints = static_cast<uint8_t>(std::min<uint16_t>(creature.rewardBountyPoints * 2, 255));
-		}
+		applyGradeAndElite(bountyData, creature, difficulty);
 
 		bountyData.currentCreaturesList.push_back(creature);
 		creaturesGenerated++;
 	}
+
+	saveExtraData(player);
 }
 
 void IOBountyTasks::selectTask(const std::shared_ptr<Player> &player, uint8_t taskIndex) {
@@ -298,20 +329,36 @@ void IOBountyTasks::selectTask(const std::shared_ptr<Player> &player, uint8_t ta
 	bountyData.activeTask.taskGrade = creature.taskGrade;
 	bountyData.activeTask.difficulty = bountyData.selectedDifficulty;
 	bountyData.activeTask.taskIndex = taskIndex;
+	bountyData.activeTask.isElite = creature.isElite;
+	bountyData.activeTask.rewardDust = creature.rewardDust;
+
+	// The creatures that were not chosen gain rarity, an improved chosen one is reset
+	growRarity(bountyData, taskIndex);
 
 	bountyData.state = BOUNTY_STATE_ACTIVE;
 	bountyData.currentCreaturesList.clear();
 
+	saveExtraData(player);
 	player->sendBountyTaskData();
 	player->refreshTaskIcons();
 }
 
-void IOBountyTasks::changeDifficulty(const std::shared_ptr<Player> &player, BountyTaskDifficulty_t difficulty) {
+void IOBountyTasks::changeDifficulty(const std::shared_ptr<Player> &player, BountyTaskDifficulty_t difficulty, bool setElite /* = false */, bool elite /* = false */) {
 	if (!player) {
 		return;
 	}
 
+	auto &bountyData = player->getBountyTaskData();
+
+	// The Elite setting travels with the difficulty (15.33) and applies to the next rolled tasks only
+	if (setElite) {
+		bountyData.eliteEnabled = elite;
+		saveExtraData(player);
+	}
+
+	// The client keeps the board busy until it gets a board, so every path below answers with one
 	if (difficulty > BOUNTY_DIFFICULTY_LAST) {
+		player->sendBountyTaskData();
 		return;
 	}
 
@@ -325,9 +372,9 @@ void IOBountyTasks::changeDifficulty(const std::shared_ptr<Player> &player, Boun
 		return;
 	}
 
-	auto &bountyData = player->getBountyTaskData();
 	bountyData.selectedDifficulty = difficulty;
-	// Only store the difficulty, creature list is regenerated on reroll (case 4)
+	// Only store the difficulty, creature list is regenerated on reroll (case 3)
+	player->sendBountyTaskData();
 }
 
 void IOBountyTasks::rerollCreatureList(const std::shared_ptr<Player> &player) {
@@ -337,19 +384,31 @@ void IOBountyTasks::rerollCreatureList(const std::shared_ptr<Player> &player) {
 
 	auto &bountyData = player->getBountyTaskData();
 
-	if (bountyData.rerollTasks <= 0 && bountyData.freeRerollTimeStamp > OTSYS_TIME()) {
+	// Winter Update 2026: rerolls only cost Reroll Tokens, the free reroll timer is gone
+	if (bountyData.rerollTasks == 0) {
 		player->sendMessageDialog("You don't have any reroll tokens available.");
 		player->sendBountyTaskData();
 		return;
 	}
 
-	if (bountyData.freeRerollTimeStamp <= OTSYS_TIME()) {
-		bountyData.freeRerollTimeStamp = OTSYS_TIME() + g_configManager().getNumber(BOUNTY_TASKS_FREE_REROLL_TIME) * 1000;
-	} else if (bountyData.rerollTasks > 0) {
-		bountyData.rerollTasks--;
+	bountyData.rerollTasks--;
+
+	// Every creature of the rerolled list gains rarity
+	if (bountyData.state == BOUNTY_STATE_SELECTION) {
+		growRarity(bountyData, -1);
+	}
+
+	// A reroll while a task is running gives it up (as before); forget it so its Elite modifiers and icons end
+	const bool hadTask = bountyData.state == BOUNTY_STATE_ACTIVE || bountyData.state == BOUNTY_STATE_COMPLETED;
+	if (hadTask) {
+		bountyData.activeTask = BountyTaskActive();
 	}
 
 	generateCreatureList(player, bountyData.selectedDifficulty);
+
+	if (hadTask) {
+		player->refreshTaskIcons();
+	}
 }
 
 void IOBountyTasks::claimDailyReroll(const std::shared_ptr<Player> &player) {
@@ -357,24 +416,9 @@ void IOBountyTasks::claimDailyReroll(const std::shared_ptr<Player> &player) {
 		return;
 	}
 
-	auto &bountyData = player->getBountyTaskData();
-
-	if (bountyData.rerollTasks >= BOUNTY_MAX_REROLL_TASKS) {
-		player->sendMessageDialog("You already have the maximum number of reroll tokens.");
-		player->sendBountyTaskData();
-		return;
-	}
-
-	if (bountyData.freeRerollTimeStamp > OTSYS_TIME()) {
-		player->sendMessageDialog("You cannot claim a daily reroll right now.");
-		player->sendBountyTaskData();
-		return;
-	}
-
-	bountyData.rerollTasks++;
-	bountyData.freeRerollTimeStamp = OTSYS_TIME() + g_configManager().getNumber(BOUNTY_TASKS_FREE_REROLL_TIME) * 1000;
-
-	player->sendTextMessage(MESSAGE_STATUS, "You have claimed a daily reroll token.");
+	// Winter Update 2026: the "Claim Daily" reroll is removed. Only a 15.30 client still sends this action;
+	// tell the player where tokens come from now and answer with the board.
+	player->sendTextMessage(MESSAGE_STATUS, "Reroll tokens are no longer claimed here. You receive one for every daily reward you claim and for every bounty task you complete.");
 	player->sendBountyTaskData();
 }
 
@@ -387,10 +431,12 @@ void IOBountyTasks::setPreferredMonster(const std::shared_ptr<Player> &player, u
 	initializeListSlots(bountyData);
 
 	if (slot >= bountyData.preferredLists.size()) {
+		player->sendBountyTaskData();
 		return;
 	}
 
 	if (bountyData.preferredLists[slot].activedList == 0) {
+		player->sendBountyTaskData();
 		return;
 	}
 
@@ -399,6 +445,7 @@ void IOBountyTasks::setPreferredMonster(const std::shared_ptr<Player> &player, u
 		const auto mtype = g_monsters().getMonsterTypeByRaceId(raceId);
 		if (!mtype) {
 			g_logger().warn("[IOBountyTasks::setPreferredMonster] - Player {} sent invalid raceId {}", player->getName(), raceId);
+			player->sendBountyTaskData();
 			return;
 		}
 	}
@@ -428,10 +475,12 @@ void IOBountyTasks::setUnwantedMonster(const std::shared_ptr<Player> &player, ui
 	initializeListSlots(bountyData);
 
 	if (slot >= bountyData.preferredLists.size()) {
+		player->sendBountyTaskData();
 		return;
 	}
 
 	if (bountyData.preferredLists[slot].activedList == 0) {
+		player->sendBountyTaskData();
 		return;
 	}
 
@@ -440,6 +489,7 @@ void IOBountyTasks::setUnwantedMonster(const std::shared_ptr<Player> &player, ui
 		const auto mtype = g_monsters().getMonsterTypeByRaceId(raceId);
 		if (!mtype) {
 			g_logger().warn("[IOBountyTasks::setUnwantedMonster] - Player {} sent invalid raceId {}", player->getName(), raceId);
+			player->sendBountyTaskData();
 			return;
 		}
 	}
@@ -468,7 +518,7 @@ void IOBountyTasks::unlockListSlot(const std::shared_ptr<Player> &player, uint8_
 	auto &bountyData = player->getBountyTaskData();
 	initializeListSlots(bountyData);
 
-	// Client always sends 0 - find the next locked slot to unlock
+	// A 15.30 client always sends 0 and a 15.33 client sends no slot at all - find the next locked slot to unlock
 	size_t slot = 0;
 	bool found = false;
 	for (size_t i = 0; i < bountyData.preferredLists.size(); ++i) {
@@ -480,6 +530,7 @@ void IOBountyTasks::unlockListSlot(const std::shared_ptr<Player> &player, uint8_
 	}
 
 	if (!found) {
+		player->sendBountyTaskData();
 		return;
 	}
 
@@ -547,19 +598,46 @@ void IOBountyTasks::claimTaskReward(const std::shared_ptr<Player> &player) {
 	}
 
 	// Grant rewards (apply config multipliers)
-	uint32_t expMultiplier = g_configManager().getNumber(BOUNTY_TASKS_EXP_MULTIPLIER);
-	uint32_t pointsMultiplier = g_configManager().getNumber(BOUNTY_TASKS_POINTS_MULTIPLIER);
-	uint32_t rerollMultiplier = g_configManager().getNumber(BOUNTY_TASKS_REROLL_MULTIPLIER);
+	// rewardExp and rewardBountyPoints already include the grade multiplier and the Elite experience bonus
+	const uint64_t expMultiplier = static_cast<uint64_t>(std::max<int32_t>(g_configManager().getNumber(BOUNTY_TASKS_EXP_MULTIPLIER), 1));
+	const uint64_t pointsMultiplier = static_cast<uint64_t>(std::max<int32_t>(g_configManager().getNumber(BOUNTY_TASKS_POINTS_MULTIPLIER), 1));
+	const uint32_t rerollMultiplier = static_cast<uint32_t>(std::max<int32_t>(g_configManager().getNumber(BOUNTY_TASKS_REROLL_MULTIPLIER), 1));
 
-	uint32_t rewardExp = bountyData.activeTask.rewardExp * std::max<uint32_t>(expMultiplier, 1);
-	uint16_t rewardPoints = std::min<uint16_t>(bountyData.activeTask.rewardBountyPoints * std::max<uint32_t>(pointsMultiplier, 1), 255);
-	uint8_t rerollTasksGain = static_cast<uint8_t>(std::max<uint32_t>(rerollMultiplier, 1));
+	const uint64_t rewardExp = std::min<uint64_t>(bountyData.activeTask.rewardExp * expMultiplier, std::numeric_limits<uint32_t>::max());
+	const uint32_t rewardPoints = static_cast<uint32_t>(std::min<uint64_t>(bountyData.activeTask.rewardBountyPoints * pointsMultiplier, std::numeric_limits<uint32_t>::max()));
+
+	// Every completed task gives a Reroll Token, up to the token cap
+	const uint32_t maxRerollTokens = getMaxRerollTokens();
+	const uint32_t rerollTokensBefore = bountyData.rerollTasks;
+	bountyData.rerollTasks = static_cast<uint8_t>(std::min<uint32_t>(rerollTokensBefore + rerollMultiplier, std::max<uint32_t>(maxRerollTokens, rerollTokensBefore)));
+	const uint32_t rerollTokensGained = bountyData.rerollTasks - rerollTokensBefore;
+
+	// Elite tasks also reward forge dust, for Premium accounts only
+	uint64_t rewardDust = 0;
+	if (bountyData.activeTask.isElite && bountyData.activeTask.rewardDust > 0 && player->isPremium()) {
+		rewardDust = bountyData.activeTask.rewardDust;
+		if (g_configManager().getBoolean(BOUNTY_TASKS_ELITE_DUST_RESPECTS_LIMIT)) {
+			const uint64_t dustLimit = player->getForgeDustLevel();
+			const uint64_t currentDust = player->getForgeDusts();
+			rewardDust = currentDust < dustLimit ? std::min<uint64_t>(rewardDust, dustLimit - currentDust) : 0;
+		}
+	}
 
 	player->addExperience(nullptr, rewardExp, true);
-	player->addBountyPoints(static_cast<uint8_t>(rewardPoints));
-	bountyData.rerollTasks += rerollTasksGain;
+	player->addBountyPoints(rewardPoints);
+	if (rewardDust > 0) {
+		player->addForgeDusts(rewardDust);
+	}
 
-	player->sendTextMessage(MESSAGE_STATUS, "You have claimed your bounty task reward! (+" + std::to_string(rewardExp) + " exp, +" + std::to_string(rewardPoints) + " bounty points)");
+	std::string rewardMessage = fmt::format("You have claimed your bounty task reward! (+{} exp, +{} bounty points", rewardExp, rewardPoints);
+	if (rewardDust > 0) {
+		rewardMessage += fmt::format(", +{} dust", rewardDust);
+	}
+	if (rerollTokensGained > 0) {
+		rewardMessage += fmt::format(", +{} reroll token{}", rerollTokensGained, rerollTokensGained != 1 ? "s" : "");
+	}
+	rewardMessage += ")";
+	player->sendTextMessage(MESSAGE_STATUS, rewardMessage);
 
 	// Reset and generate new creature list
 	bountyData.activeTask = BountyTaskActive();
@@ -569,7 +647,12 @@ void IOBountyTasks::claimTaskReward(const std::shared_ptr<Player> &player) {
 }
 
 void IOBountyTasks::upgradeTalisman(const std::shared_ptr<Player> &player, uint8_t pathIndex) {
-	if (!player || pathIndex >= TALISMAN_PATH_COUNT) {
+	if (!player) {
+		return;
+	}
+
+	if (pathIndex >= TALISMAN_PATH_COUNT) {
+		player->sendBountyTaskData();
 		return;
 	}
 
@@ -665,6 +748,204 @@ uint8_t IOBountyTasks::getBountyPointsReward(BountyTaskDifficulty_t difficulty) 
 		default:
 			return 3;
 	}
+}
+
+uint8_t IOBountyTasks::getGradeMultiplier(BountyTaskGrade_t grade) {
+	switch (grade) {
+		case BOUNTY_GRADE_SILVER:
+			return 2;
+		case BOUNTY_GRADE_GOLD:
+			return 4;
+		case BOUNTY_GRADE_PLATINUM:
+			return 8;
+		default:
+			return 1;
+	}
+}
+
+uint16_t IOBountyTasks::getEliteDustReward(BountyTaskDifficulty_t difficulty, BountyTaskGrade_t grade) const {
+	// Base value per difficulty (config), multiplied by the grade
+	int32_t baseDust = 0;
+	switch (difficulty) {
+		case BOUNTY_DIFFICULTY_BEGINNER:
+			baseDust = g_configManager().getNumber(BOUNTY_TASKS_ELITE_DUST_BEGINNER);
+			break;
+		case BOUNTY_DIFFICULTY_ADEPT:
+			baseDust = g_configManager().getNumber(BOUNTY_TASKS_ELITE_DUST_ADEPT);
+			break;
+		case BOUNTY_DIFFICULTY_EXPERT:
+			baseDust = g_configManager().getNumber(BOUNTY_TASKS_ELITE_DUST_EXPERT);
+			break;
+		case BOUNTY_DIFFICULTY_MASTER:
+			baseDust = g_configManager().getNumber(BOUNTY_TASKS_ELITE_DUST_MASTER);
+			break;
+		default:
+			break;
+	}
+
+	const int64_t dust = static_cast<int64_t>(std::max<int32_t>(baseDust, 0)) * getGradeMultiplier(grade);
+	return static_cast<uint16_t>(std::min<int64_t>(dust, std::numeric_limits<uint16_t>::max()));
+}
+
+uint8_t IOBountyTasks::getMaxRerollTokens() {
+	// `reroll_tokens` is a signed tinyint column
+	return static_cast<uint8_t>(std::clamp<int32_t>(g_configManager().getNumber(BOUNTY_TASKS_MAX_REROLL_TOKENS), 0, BOUNTY_MAX_COLUMN_REROLL_TOKENS));
+}
+
+bool IOBountyTasks::isEliteTaskCreature(const std::shared_ptr<Player> &player, uint16_t raceId) const {
+	if (!player) {
+		return false;
+	}
+
+	const auto &bountyData = player->getBountyTaskData();
+	return bountyData.state == BOUNTY_STATE_ACTIVE && bountyData.activeTask.isElite && bountyData.activeTask.raceId == raceId;
+}
+
+BountyTaskGrade_t IOBountyTasks::rollTaskGrade(const BountyTaskData &bountyData, uint16_t raceId) const {
+	uint16_t steps = 0;
+	bool rerolled = false;
+	if (const auto it = bountyData.rarityStates.find(raceId); it != bountyData.rarityStates.end()) {
+		steps = it->second.steps;
+		rerolled = it->second.rerolled;
+	}
+
+	const auto &config = g_configManager();
+	const int32_t silverChance = getBountyGradeChance(config.getFloat(BOUNTY_TASKS_SILVER_BASE_CHANCE), config.getFloat(BOUNTY_TASKS_SILVER_CHANCE_STEP), config.getFloat(BOUNTY_TASKS_SILVER_MAX_CHANCE), steps);
+	const int32_t goldChance = getBountyGradeChance(config.getFloat(BOUNTY_TASKS_GOLD_BASE_CHANCE), config.getFloat(BOUNTY_TASKS_GOLD_CHANCE_STEP), config.getFloat(BOUNTY_TASKS_GOLD_MAX_CHANCE), steps);
+	int32_t platinumChance = getBountyGradeChance(config.getFloat(BOUNTY_TASKS_PLATINUM_BASE_CHANCE), config.getFloat(BOUNTY_TASKS_PLATINUM_CHANCE_STEP), config.getFloat(BOUNTY_TASKS_PLATINUM_MAX_CHANCE), steps);
+	if (!rerolled && config.getBoolean(BOUNTY_TASKS_PLATINUM_REQUIRES_REROLL)) {
+		platinumChance = 0;
+	}
+
+	// One roll in hundredths of a percent, best grade first
+	const int32_t roll = uniform_random(1, 10000);
+	if (roll <= platinumChance) {
+		return BOUNTY_GRADE_PLATINUM;
+	}
+	if (roll <= platinumChance + goldChance) {
+		return BOUNTY_GRADE_GOLD;
+	}
+	if (roll <= platinumChance + goldChance + silverChance) {
+		return BOUNTY_GRADE_SILVER;
+	}
+	return BOUNTY_GRADE_NORMAL;
+}
+
+void IOBountyTasks::applyGradeAndElite(const BountyTaskData &bountyData, BountyCreatureEntry &creature, BountyTaskDifficulty_t difficulty) const {
+	creature.taskGrade = rollTaskGrade(bountyData, creature.raceId);
+	creature.isElite = bountyData.eliteEnabled;
+
+	// The grade multiplies experience, bounty points and Elite dust; Elite adds experience on top
+	const uint64_t gradeMultiplier = getGradeMultiplier(creature.taskGrade);
+	uint64_t rewardExp = creature.rewardExp * gradeMultiplier;
+	if (creature.isElite) {
+		const auto eliteExpPercent = static_cast<uint64_t>(std::max<int32_t>(g_configManager().getNumber(BOUNTY_TASKS_ELITE_EXP_PERCENT), 0));
+		rewardExp += rewardExp * eliteExpPercent / 100;
+		creature.rewardDust = getEliteDustReward(difficulty, creature.taskGrade);
+	} else {
+		creature.rewardDust = 0;
+	}
+
+	// `active_reward_exp` is a signed int column
+	creature.rewardExp = static_cast<uint32_t>(std::min<uint64_t>(rewardExp, std::numeric_limits<int32_t>::max()));
+	creature.rewardBountyPoints = static_cast<uint16_t>(std::min<uint64_t>(creature.rewardBountyPoints * gradeMultiplier, std::numeric_limits<uint16_t>::max()));
+}
+
+void IOBountyTasks::growRarity(BountyTaskData &bountyData, int32_t chosenIndex) const {
+	const bool rerolled = chosenIndex < 0;
+	int32_t index = 0;
+	for (const auto &creature : bountyData.currentCreaturesList) {
+		if (index++ == chosenIndex) {
+			// Choosing an improved task resets the chances of that creature
+			if (creature.taskGrade != BOUNTY_GRADE_NORMAL) {
+				bountyData.rarityStates.erase(creature.raceId);
+			}
+			continue;
+		}
+
+		auto &state = bountyData.rarityStates[creature.raceId];
+		if (state.steps < std::numeric_limits<uint16_t>::max()) {
+			++state.steps;
+		}
+		if (rerolled) {
+			state.rerolled = true;
+		}
+	}
+}
+
+void IOBountyTasks::loadExtraData(const std::shared_ptr<Player> &player) const {
+	if (!player) {
+		return;
+	}
+
+	auto &bountyData = player->getBountyTaskData();
+	const auto scope = player->kv()->scoped(BOUNTY_KV_SCOPE);
+
+	bountyData.eliteEnabled = getBountyKVNumber(scope, "elite-enabled") != 0;
+
+	// Active task: only when the KV values belong to the task of the database row
+	const bool hasActiveTask = bountyData.state == BOUNTY_STATE_ACTIVE || bountyData.state == BOUNTY_STATE_COMPLETED;
+	if (hasActiveTask && bountyData.activeTask.raceId != 0 && getBountyKVNumber(scope, "active-raceid") == bountyData.activeTask.raceId) {
+		bountyData.activeTask.isElite = getBountyKVNumber(scope, "active-elite") != 0;
+		bountyData.activeTask.rewardDust = static_cast<uint16_t>(std::clamp<int32_t>(getBountyKVNumber(scope, "active-dust"), 0, std::numeric_limits<uint16_t>::max()));
+		// The column only holds up to 127 points, the KV has the full value
+		const int32_t activePoints = getBountyKVNumber(scope, "active-points");
+		if (activePoints > bountyData.activeTask.rewardBountyPoints) {
+			bountyData.activeTask.rewardBountyPoints = static_cast<uint16_t>(std::min<int32_t>(activePoints, std::numeric_limits<uint16_t>::max()));
+		}
+	}
+
+	// Offered creatures: "raceId,isElite,rewardDust;" in list order
+	const auto offers = explodeString(getBountyKVString(scope, "offers"), ";");
+	for (size_t i = 0; i < bountyData.currentCreaturesList.size() && i < offers.size(); ++i) {
+		const auto fields = parseBountyKVNumbers(offers[i]);
+		auto &creature = bountyData.currentCreaturesList[i];
+		if (fields.size() < 3 || fields[0] != creature.raceId) {
+			continue;
+		}
+		creature.isElite = fields[1] != 0;
+		creature.rewardDust = static_cast<uint16_t>(std::min<uint32_t>(fields[2], std::numeric_limits<uint16_t>::max()));
+	}
+
+	// Rarity growth: "raceId,steps,rerolled;"
+	bountyData.rarityStates.clear();
+	for (const auto &entry : explodeString(getBountyKVString(scope, "rarity"), ";")) {
+		const auto fields = parseBountyKVNumbers(entry);
+		if (fields.size() < 3 || fields[0] == 0 || fields[0] > std::numeric_limits<uint16_t>::max()) {
+			continue;
+		}
+		BountyRarityState state;
+		state.steps = static_cast<uint16_t>(std::min<uint32_t>(fields[1], std::numeric_limits<uint16_t>::max()));
+		state.rerolled = fields[2] != 0;
+		bountyData.rarityStates[static_cast<uint16_t>(fields[0])] = state;
+	}
+}
+
+void IOBountyTasks::saveExtraData(const std::shared_ptr<Player> &player) const {
+	if (!player) {
+		return;
+	}
+
+	const auto &bountyData = player->getBountyTaskData();
+	const auto scope = player->kv()->scoped(BOUNTY_KV_SCOPE);
+
+	scope->set("elite-enabled", ValueWrapper(static_cast<int>(bountyData.eliteEnabled ? 1 : 0)));
+	scope->set("active-raceid", ValueWrapper(static_cast<int>(bountyData.activeTask.raceId)));
+	scope->set("active-elite", ValueWrapper(static_cast<int>(bountyData.activeTask.isElite ? 1 : 0)));
+	scope->set("active-dust", ValueWrapper(static_cast<int>(bountyData.activeTask.rewardDust)));
+	scope->set("active-points", ValueWrapper(static_cast<int>(bountyData.activeTask.rewardBountyPoints)));
+
+	std::string offers;
+	for (const auto &creature : bountyData.currentCreaturesList) {
+		offers += fmt::format("{},{},{};", creature.raceId, creature.isElite ? 1 : 0, creature.rewardDust);
+	}
+	scope->set("offers", ValueWrapper(offers));
+
+	std::string rarity;
+	for (const auto &[raceId, state] : bountyData.rarityStates) {
+		rarity += fmt::format("{},{},{};", raceId, state.steps, state.rerolled ? 1 : 0);
+	}
+	scope->set("rarity", ValueWrapper(rarity));
 }
 
 uint16_t IOBountyTasks::getTalismanUpgradeCost(uint8_t currentLevel) {

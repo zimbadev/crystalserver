@@ -72,12 +72,12 @@ local itemsTable = {
 		{ itemName = "wand of vortex", clientId = 3074, buy = 500 },
 	},
 	["exercise weapons"] = {
-		{ itemName = "durable exercise rod", clientId = 35283, buy = 1250000, count = 1800 },
-		{ itemName = "durable exercise wand", clientId = 35284, buy = 1250000, count = 1800 },
-		{ itemName = "exercise rod", clientId = 28556, buy = 347222, count = 500 },
-		{ itemName = "exercise wand", clientId = 28557, buy = 347222, count = 500 },
-		{ itemName = "lasting exercise rod", clientId = 35289, buy = 10000000, count = 14400 },
-		{ itemName = "lasting exercise wand", clientId = 35290, buy = 10000000, count = 14400 },
+		{ itemName = "durable exercise rod", clientId = 35283, buy = 1562500, count = 1800 },
+		{ itemName = "durable exercise wand", clientId = 35284, buy = 1562500, count = 1800 },
+		{ itemName = "exercise rod", clientId = 28556, buy = 434028, count = 500 },
+		{ itemName = "exercise wand", clientId = 28557, buy = 434028, count = 500 },
+		{ itemName = "lasting exercise rod", clientId = 35289, buy = 12500000, count = 14400 },
+		{ itemName = "lasting exercise wand", clientId = 35290, buy = 12500000, count = 14400 },
 	},
 	["others"] = {
 		{ itemName = "spellwand", clientId = 651, sell = 299 },

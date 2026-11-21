@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dailyrewards testMode="false" serverTimeThreshold="86400">
+<!--
+	Daily rewards, Winter Update 2026 rules (they apply to every client version):
+	- one click claim, every day has a fixed reward (no item picking)
+	- rerollTokensPerClaim: Bounty Reroll Tokens every claim gives on top of the reward of the day
+	  (the bounty board cap, config bountyTasksMaxRerollTokens, still applies)
+
+	<reward day="1..7" type="..." freeAccount="N" premiumAccount="N" />
+	type            freeAccount / premiumAccount
+	item            count of every <item> child (itemCharges="N" sets the charges of non stackable items)
+	preyReroll      Prey Wildcards
+	xpBoost         minutes; the percent is freePercent / premiumPercent (default 50)
+	cosmeticTokens  Cosmetic Tokens
+	bountyRerollTokens  Bounty Reroll Tokens (in addition to rerollTokensPerClaim)
+
+	The daily XP boost is separate from the Store XP boost: both are added while active and a new
+	daily boost replaces what is left of the old one.
+-->
+<dailyrewards testMode="false" serverTimeThreshold="86400" rerollTokensPerClaim="1">
 	<storages>
 		<storage name="currentDayStreak" key="14897" />
 		<storage name="nextRewardTime" key="14899" />
@@ -12,6 +29,13 @@
 		<storage name="avoidDoubleJoker" key="13414" />
 	</storages>
 
+	<!--
+		Only shown to 15.30 clients (resting area panel of the reward wall). Since the Winter Update 2026 the
+		resting area bonuses no longer depend on the streak: Premium accounts get hit point, mana, stamina and
+		soul regeneration with doubled hit point and mana regeneration, free accounts get hit point and mana
+		regeneration. The streak now gives a chance (1% per streak day, up to 7%) for double weapon
+		proficiency experience.
+	-->
 	<strikeBonuses>
 		<bonus day="1" text="No bonus for first day" />
 		<bonus day="2" text="Allow Hit Point Regeneration" />
@@ -22,99 +46,19 @@
 		<bonus day="7" text="Soul Points Regeneration" />
 	</strikeBonuses>
 
-	<itemGroups>
-		<!-- Shared by every vocation that fights: identical rune pool for all of them. -->
-		<group name="commonRunes">
-			<item name="animate dead rune" />
-			<item name="avalanche rune" />
-			<item name="chameleon rune" />
-			<item name="cure poison rune" />
-			<item name="disintegrate rune" />
-			<item name="energy bomb rune" />
-			<item name="energy field rune" />
-			<item name="explosion rune" />
-			<item name="fire bomb rune" />
-			<item name="fire field rune" />
-			<item name="fire wall rune" />
-			<item name="fireball rune" />
-			<item name="great fireball rune" />
-			<item name="icicle rune" />
-			<item name="intense healing rune" />
-			<item name="magic wall rune" />
-			<item name="poison bomb rune" />
-			<item name="poison wall rune" />
-			<item name="soulfire rune" />
-			<item name="stone shower rune" />
-			<item name="sudden death rune" />
-			<item name="thunderstorm rune" />
-		</group>
-
-		<group name="basicPotions">
-			<item name="health potion" />
-			<item name="mana potion" />
-		</group>
-
-		<group name="sorcererPotions">
-			<item name="health potion" />
-			<item name="mana potion" />
-			<item name="strong mana potion" />
-			<item name="great mana potion" />
-			<item name="ultimate mana potion" />
-		</group>
-
-		<group name="paladinPotions">
-			<item name="health potion" />
-			<item name="strong health potion" />
-			<item name="mana potion" />
-			<item name="strong mana potion" />
-			<item name="great spirit potion" />
-			<item name="ultimate spirit potion" />
-		</group>
-
-		<group name="knightPotions">
-			<item name="health potion" />
-			<item name="strong health potion" />
-			<item name="great health potion" />
-			<item name="ultimate health potion" />
-			<item name="supreme health potion" />
-			<item name="mana potion" />
-		</group>
-	</itemGroups>
-
-	<vocationItems>
-		<!-- None -->
-		<vocation id="0" groups="basicPotions" />
-		<!-- Sorcerer -->
-		<vocation id="1" groups="sorcererPotions,commonRunes" />
-		<!-- Druid (same potions as Sorcerer plus wild growth rune) -->
-		<vocation id="2" groups="sorcererPotions,commonRunes">
-			<item name="wild growth rune" />
-		</vocation>
-		<!-- Paladin -->
-		<vocation id="3" groups="paladinPotions,commonRunes" />
-		<!-- Knight -->
-		<vocation id="4" groups="knightPotions,commonRunes" />
-		<!-- Monk (same pool as Paladin) -->
-		<vocation id="5" groups="paladinPotions,commonRunes" />
-	</vocationItems>
-
 	<rewards>
-		<reward day="1" type="item" systemType="one" freeAccount="5" premiumAccount="10" />
-		<reward day="2" type="item" systemType="one" freeAccount="5" premiumAccount="10" />
-		<reward day="3" type="preyReroll" systemType="two" freeAccount="1" premiumAccount="2" />
-		<reward day="4" type="item" systemType="one" freeAccount="10" premiumAccount="20" />
-		<reward day="5" type="preyReroll" systemType="two" freeAccount="1" premiumAccount="2" />
-		<reward day="6" type="item" systemType="one" freeAccount="1" premiumAccount="2" itemCharges="50">
-			<item name="training sword" />
-			<item name="training axe" />
-			<item name="training club" />
-			<item name="training bow" />
-			<item name="training rod" />
-			<item name="training wand" />
-			<item name="training shield" />
-			<item name="training wraps" />
-		</reward>
-		<reward day="7" type="xpBoost" systemType="two" freeAccount="10" premiumAccount="30" />
+		<reward day="1" type="cosmeticTokens" freeAccount="2" premiumAccount="4" />
+		<reward day="2" type="preyReroll" freeAccount="1" premiumAccount="2" />
+		<!--
+			Day 3 is one temporary temple teleport scroll for free and Premium accounts. Its item id and
+			lifetime are not known yet, so no item is configured and the day only gives the Reroll Token.
+			Add the item once it is known: <item id="..." /> or <item name="..." />
+		-->
+		<reward day="3" type="item" freeAccount="1" premiumAccount="1" />
+		<reward day="4" type="xpBoost" freeAccount="30" premiumAccount="30" freePercent="10" premiumPercent="25" />
+		<reward day="5" type="cosmeticTokens" freeAccount="3" premiumAccount="6" />
+		<reward day="6" type="preyReroll" freeAccount="1" premiumAccount="2" />
+		<reward day="7" type="xpBoost" freeAccount="30" premiumAccount="30" freePercent="20" premiumPercent="50" />
 	</rewards>
 
 	<shrines>

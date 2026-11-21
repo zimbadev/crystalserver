@@ -135,13 +135,23 @@ local function useStamina(player, isStaminaEnabled)
 	end
 end
 
+-- Counts the store XP boost and the daily reward XP boost down while the player gains experience.
+-- The two boosts are separate (Winter Update 2026): each has its own time and percent.
+local function consumeXpBoostMinutes(minutes, consumed)
+	if minutes <= consumed then
+		return 0
+	end
+	return minutes - consumed
+end
+
 local function useStaminaXpBoost(player)
 	if not player then
 		return false
 	end
 
 	local xpBoostMinutes = player:getXpBoostTime() / 60
-	if xpBoostMinutes == 0 then
+	local dailyXpBoostMinutes = player:getDailyXpBoostTime() / 60
+	if xpBoostMinutes == 0 and dailyXpBoostMinutes == 0 then
 		return
 	end
 
@@ -156,30 +166,26 @@ local function useStaminaXpBoost(player)
 		return
 	end
 
-	local xpBoostLeftMinutesByDailyReward = player:kv():get("daily-reward-xp-boost") or 0
+	local consumed = 1
 	if timePassed > 60 then
-		if xpBoostMinutes > 2 then
-			xpBoostMinutes = xpBoostMinutes - 2
-			if xpBoostLeftMinutesByDailyReward > 2 then
-				player:kv():set("daily-reward-xp-boost", xpBoostLeftMinutesByDailyReward - 2)
-			end
-		else
-			xpBoostMinutes = 0
-			player:kv():remove("daily-reward-xp-boost")
+		consumed = 2
+	end
+	_G.NextUseXpStamina[playerId] = currentTime + consumed * 60
+
+	if xpBoostMinutes > 0 then
+		xpBoostMinutes = consumeXpBoostMinutes(xpBoostMinutes, consumed)
+		player:setXpBoostTime(xpBoostMinutes * 60)
+		if xpBoostMinutes <= 0 then
+			player:setXpBoostPercent(0)
 		end
-		_G.NextUseXpStamina[playerId] = currentTime + 120
-	else
-		xpBoostMinutes = xpBoostMinutes - 1
-		if xpBoostLeftMinutesByDailyReward > 0 then
-			player:kv():set("daily-reward-xp-boost", xpBoostLeftMinutesByDailyReward - 1)
-		end
-		_G.NextUseXpStamina[playerId] = currentTime + 60
 	end
 
-	player:setXpBoostTime(xpBoostMinutes * 60)
-
-	if xpBoostMinutes <= 0 then
-		player:setXpBoostPercent(0)
+	if dailyXpBoostMinutes > 0 then
+		dailyXpBoostMinutes = consumeXpBoostMinutes(dailyXpBoostMinutes, consumed)
+		player:setDailyXpBoostTime(dailyXpBoostMinutes * 60)
+		if dailyXpBoostMinutes <= 0 then
+			player:setDailyXpBoostPercent(0)
+		end
 	end
 end
 
@@ -493,12 +499,14 @@ function Player:onGainExperience(target, exp, rawExp)
 		self:addCondition(soulCondition)
 	end
 
-	-- Apply XP Boost (Store or Daily Reward)
+	-- Apply XP Boost (Store and Daily Reward are separate boosts and are added while both are active)
 	useStaminaXpBoost(self)
 
 	local xpBoostTimeLeft = self:getXpBoostTime()
 	local hasXpBoost = xpBoostTimeLeft > 0
 	local xpBoostPercent = hasXpBoost and self:getXpBoostPercent() or 0
+	-- getDailyXpBoostPercent is 0 when no daily boost time is left
+	xpBoostPercent = xpBoostPercent + self:getDailyXpBoostPercent()
 
 	-- Stamina Bonus
 	local staminaBonusXp = 1

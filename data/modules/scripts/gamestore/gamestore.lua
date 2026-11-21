@@ -6944,6 +6944,11 @@ for k, category in ipairs(GameStore.Categories) do
 					offer.coinType = GameStore.CoinType.Coin
 				end
 			end
+			-- 15.33: which offers accept Cosmetic Tokens (see GameStore.isCosmeticOffer in init.lua).
+			-- Set cosmeticTokens = true / false on an offer above to override the default.
+			if offer.cosmeticTokens == nil then
+				offer.cosmeticTokens = GameStore.isCosmeticOffer(offer, category)
+			end
 		end
 	end
 end

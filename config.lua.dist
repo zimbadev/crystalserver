@@ -169,13 +169,50 @@ taskHuntingBonusRerollPrice = 1
 taskHuntingFreeRerollTime = 20 * 60 * 60
 
 -- Bounty Tasks system
--- NOTE: bountyTasksFreeRerollTime: Time in seconds that players will have to wait to get a free bounty tasks reroll.
+-- NOTE: bountyTasksRerollMultiplier: Reroll Tokens gained for every completed task.
+-- NOTE: bountyTasksFreeRerollTime: obsolete since the Winter Update 2026 (rerolls only cost Reroll Tokens), the key is no longer used.
+-- NOTE: bountyTasksMaxRerollTokens: Reroll Tokens a player can store; tokens gained above the limit are lost (max 127).
 bountyTasksEnabled = true
 bountyTasksExpMultiplier = 1
 bountyTasksPointsMultiplier = 1
 bountyTasksRerollMultiplier = 1
 bountyTasksKillMultiplier = 1
 bountyTasksFreeRerollTime = 20 * 60 * 60
+bountyTasksMaxRerollTokens = 10
+
+-- Bounty Tasks: Elite tasks (Winter Update 2026)
+-- NOTE: bountyTasksEliteDamageDealtPercent: extra damage (percent) the task creature deals to the task owner.
+-- NOTE: bountyTasksEliteDamageTakenPercent: damage reduction (percent) of the task creature against the task owner.
+-- NOTE: bountyTasksEliteExpPercent: extra experience (percent) of the task reward.
+-- NOTE: bountyTasksEliteDust*: forge dust base per difficulty, multiplied by the grade (x1/x2/x4/x8), Premium only.
+-- Beginner, Adept and Master are derived from the published examples; the Expert base is not published yet,
+-- 35 is a placeholder between Adept and Master.
+-- NOTE: bountyTasksEliteDustRespectsLimit: true = the dust reward stops at the player's dust limit like every other dust source.
+bountyTasksEliteDamageDealtPercent = 100
+bountyTasksEliteDamageTakenPercent = 50
+bountyTasksEliteExpPercent = 100
+bountyTasksEliteDustBeginner = 5
+bountyTasksEliteDustAdept = 15
+bountyTasksEliteDustExpert = 35
+bountyTasksEliteDustMaster = 70
+bountyTasksEliteDustRespectsLimit = true
+
+-- Bounty Tasks: task grades (Silver x2, Gold x4, Platinum x8 rewards)
+-- All values are chances in percent. A creature that is offered but not chosen (another task selected or the
+-- list rerolled) gains one step; choosing an improved task resets that creature.
+-- NOTE: only the caps (75 / 20 / 5) are official. Base chances and steps are not published: the Silver and Gold
+-- bases are the values this server used before, the steps are conservative placeholders.
+-- NOTE: bountyTasksPlatinumRequiresReroll: Platinum can only appear for a creature that was rerolled at least once (unconfirmed).
+bountyTasksSilverBaseChance = 8.0
+bountyTasksSilverChanceStep = 1.0
+bountyTasksSilverMaxChance = 75.0
+bountyTasksGoldBaseChance = 2.0
+bountyTasksGoldChanceStep = 0.25
+bountyTasksGoldMaxChance = 20.0
+bountyTasksPlatinumBaseChance = 0.0
+bountyTasksPlatinumChanceStep = 0.05
+bountyTasksPlatinumMaxChance = 5.0
+bountyTasksPlatinumRequiresReroll = true
 
 -- Wweekly Tasks system
 -- Day of week for weekly tasks reset (monday, tuesday, wednesday, thursday, friday, saturday, sunday)
@@ -280,6 +317,8 @@ wheelSystemEnabled = true
 wheelPointsPerLevel = 1
 
 -- Gem Atelier
+-- NOTE: wheelAtelierRotate*Cost is the price of the domain switch, which only a 15.30 client can still request.
+-- Client 15.33 has Reshape instead, with fixed prices (gold and fragments per mod position).
 wheelAtelierRotateLesserCost = 125000
 wheelAtelierRotateRegularCost = 250000
 wheelAtelierRotateGreaterCost = 500000
