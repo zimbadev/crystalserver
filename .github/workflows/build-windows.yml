@@ -191,6 +191,13 @@ jobs:
       with:
         path: .cache/sccache
         key: ${{ steps.compiler.outputs.cache-primary-key }}
+    - name: Report problems as annotations
+      if: always()
+      shell: bash
+      run: python ci/ReportBuild.py --title "${{ matrix.preset }}" build/diagnostics/configure.log build/diagnostics/compile.log build/diagnostics/tests.log
+      env:
+        ACTIONS_RUNTIME_TOKEN: ''
+        ACTIONS_RESULTS_URL: ''
     - uses: actions/upload-artifact@v4
       if: always()
       with:

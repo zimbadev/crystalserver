@@ -204,11 +204,16 @@ std::shared_ptr<Tile> MapCache::getOrCreateTileFromCache(const std::shared_ptr<F
 		tile = std::make_shared<DynamicTile>(pos);
 	}
 
+	// Tiles are created lazily, also from async pathfinding (WalkParallel). Decay::decayMap is a
+	// plain std::map owned by the dispatcher, so startDecaying() must run there (safeCall),
+	// otherwise the tree gets corrupted (SEGV in erase / infinite loop in operator[]).
+	std::vector<std::shared_ptr<Item>> itemsToDecay;
+
 	if (cachedTile->ground != nullptr) {
 		const auto &groundItem = createItem(cachedTile->ground, pos);
 		tile->internalAddThing(groundItem);
 		if (groundItem && groundItem->canDecay()) {
-			groundItem->startDecaying();
+			itemsToDecay.emplace_back(groundItem);
 		}
 	}
 
@@ -216,8 +221,16 @@ std::shared_ptr<Tile> MapCache::getOrCreateTileFromCache(const std::shared_ptr<F
 		const auto &tileItem = createItem(BasicItemd, pos);
 		tile->internalAddThing(tileItem);
 		if (tileItem && tileItem->canDecay()) {
-			tileItem->startDecaying();
+			itemsToDecay.emplace_back(tileItem);
 		}
+	}
+
+	if (!itemsToDecay.empty()) {
+		tile->safeCall([movedItemsToDecay = std::move(itemsToDecay)]() {
+			for (const auto &item : movedItemsToDecay) {
+				item->startDecaying();
+			}
+		});
 	}
 
 	tile->setFlag(static_cast<TileFlags_t>(cachedTile->flags));

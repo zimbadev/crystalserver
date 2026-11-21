@@ -55,11 +55,11 @@ npcHandler:addModule(FocusModule:new(), npcConfig.name, true, true, true)
 npcConfig.shop = {
 	{ itemName = "baking tray", clientId = 3464, buy = 20 },
 	{ itemName = "bottle", clientId = 2875, buy = 3 },
-	{ itemName = "bucket", clientId = 7142, buy = 4 },
+	{ itemName = "bucket", clientId = 2873, buy = 4 },
 	{ itemName = "cleaver", clientId = 3471, buy = 15 },
 	{ itemName = "cup", clientId = 2881, buy = 2 },
 	{ itemName = "fork", clientId = 3467, buy = 10 },
-	{ itemName = "jug", clientId = 7243, buy = 10 },
+	{ itemName = "jug", clientId = 2882, buy = 10 },
 	{ itemName = "kitchen knife", clientId = 3469, buy = 10 },
 	{ itemName = "mug", clientId = 2880, buy = 4 },
 	{ itemName = "oven spatula", clientId = 3472, buy = 12 },

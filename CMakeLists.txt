@@ -44,6 +44,11 @@ if(NOT MSVC AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64|amd64|i[3-6]86)$"
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=x86-64 -mtune=generic -mno-avx -mno-sse4")
 endif()
 
+# No source here uses C++20 modules. The policy range above enables CMP0155 on CMake >= 3.28: every
+# file would get a module dependency scan and GCC would be called with -fmodules-ts, which ccache
+# refuses to cache ("unsupported compiler option"), so the compiler cache would store nothing.
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
+
 # *****************************************************************************
 # Include cmake tools
 # *****************************************************************************
@@ -69,10 +74,12 @@ else ()
 endif ()
 
 # === CCACHE ===
-if(OPTIONS_ENABLE_CCACHE)
+# A launcher given from outside (environment or -D) wins, so CI can pick its own cache tool.
+if(OPTIONS_ENABLE_CCACHE AND NOT CMAKE_CXX_COMPILER_LAUNCHER)
     find_program(CCACHE ccache)
     if(CCACHE)
         log_option_enabled("ccache")
+        set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
         set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
     else()
         log_option_disabled("ccache")
@@ -90,6 +97,9 @@ if(OPTIONS_ENABLE_SCCACHE)
         log_option_disabled("sccache")
     endif()
 endif()
+
+# === Linker, parallelism and low-memory mode ===
+include(BuildTuning)
 
 option(ENABLE_TEST_LTO "Link tests against the production LTO library" ON)
 option(BUILD_TESTS "Build tests" OFF) # By default, tests will not be built

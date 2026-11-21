@@ -6473,8 +6473,8 @@ void ProtocolGame::sendSaleItemList(const std::vector<ShopBlock> &shopVector, co
 		if (search != inventoryMap.end()) {
 			customCurrencyValue += static_cast<uint64_t>(search->second);
 		}
-		// CIP: non-gold NPC currency is 0x3C (0x02 is guild bank gold).
-		sendResourceBalance(oldProtocol ? RESOURCE_INVENTORY_MONEY : RESOURCE_NPC_TRADE_QUEST_FLAG_CURRENCY, customCurrencyValue);
+		// CIP: non-gold NPC currency.
+		sendResourceBalance(oldProtocol ? RESOURCE_INVENTORY_MONEY : RESOURCE_INVENTORY_CURRENCY_CUSTOM, customCurrencyValue);
 	}
 
 	NetworkMessage msg;
