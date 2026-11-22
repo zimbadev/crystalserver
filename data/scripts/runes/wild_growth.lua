@@ -13,12 +13,28 @@ function onCreateWildGrowth(creature, position)
 	end
 
 	local wildGrowth = Game.getWorldType() == WORLDTYPE_OPTIONAL and ITEM_WILDGROWTH_SAFE or ITEM_WILDGROWTH
-
-	local item = Game.createItem(wildGrowth, 1, position)
-	if item then
-		item:setDuration(30)
-		item:setAttribute(ITEM_ATTRIBUTE_DESCRIPTION, string.format("Casted by: %s", creature:getName()))
+	local owner = creature:getMaster() or creature
+	if Game.isExpertPvp() and owner:isPlayer() and owner:getPvpMode() ~= PVP_MODE_RED_FIST then
+		-- Expert PvP: only red fist makes the blue growth; any other mode makes the yellow one, which every
+		-- player, the caster included, walks through and which only blocks monsters.
+		wildGrowth = ITEM_WILDGROWTH_SAFE
 	end
+
+	-- The owner goes on the item before it reaches the map, so every player in view is sent the
+	-- variant he should see.
+	local item = Game.createItem(wildGrowth, 1)
+	if not item then
+		return false
+	end
+	item:setAttribute(ITEM_ATTRIBUTE_DESCRIPTION, string.format("Casted by: %s", creature:getName()))
+	if Game.isExpertPvp() then
+		-- Summon casts are normalized to the master so the owner is always a stable player GUID.
+		item:setOwner(owner)
+	end
+	if tile:addItemEx(item, FLAG_NOLIMIT) ~= RETURNVALUE_NOERROR then
+		return false
+	end
+	item:setDuration(30)
 end
 
 local combat = Combat()

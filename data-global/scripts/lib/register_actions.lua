@@ -869,6 +869,11 @@ function onUseMachete(player, item, fromPosition, target, toPosition, isHotkey)
 	end
 
 	if table.contains(wildGrowth, target.itemid) then
+		-- Expert PvP: a rune-cast wild growth can only be cut by its caster
+		if Game.isExpertPvp() and target:hasOwner() and not target:isOwner(player) then
+			player:sendCancelMessage(RETURNVALUE_NOTPOSSIBLE)
+			return true
+		end
 		toPosition:sendMagicEffect(CONST_ME_POFF)
 		target:remove()
 		return true

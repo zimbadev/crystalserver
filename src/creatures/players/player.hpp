@@ -829,10 +829,23 @@ public:
 	void setChaseMode(bool mode);
 	void setFightMode(FightMode_t mode);
 	void setSecureMode(bool mode);
+	// Open PvP expert mode (dove / white hand / yellow hand / red fist), sent by the 15.25 client in 0xA0.
+	void setPvpMode(PvpMode_t mode) {
+		pvpMode = mode;
+	}
+	PvpMode_t getPvpMode() const {
+		return pvpMode;
+	}
+	// Expert PvP: the mode the rules use. Hardcore PvP worlds always fight with red fist.
+	PvpMode_t getEffectivePvpMode() const;
+	// Expert PvP: the mode the server accepts for a requested one. Hardcore PvP always uses red fist, a black
+	// skull cannot select red fist and keeps the previous mode (or dove). Returns the request unchanged without expert PvP.
+	PvpMode_t getAllowedPvpMode(PvpMode_t requested) const;
 
 	Faction_t getFaction() const override;
 
 	void setFaction(Faction_t factionId);
+
 	// combat functions
 	bool setAttackedCreature(const std::shared_ptr<Creature> &creature) override;
 	bool isImmune(CombatType_t type) const override;
@@ -929,6 +942,14 @@ public:
 	void onAttackedCreatureDrainHealth(const std::shared_ptr<Creature> &target, int32_t points) override;
 	void onTargetCreatureGainHealth(const std::shared_ptr<Creature> &target, int32_t points) override;
 	bool onKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit) override;
+	// Expert PvP: frag for one participant of the victim's last fight (see getExpertPvpKillParticipants).
+	bool onExpertPvpKilledPlayer(const std::shared_ptr<Player> &target, bool lastHit, double weight);
+	// Expert PvP: every online player who attacked us within the PZ lock time.
+	std::vector<std::shared_ptr<Player>> getExpertPvpKillParticipants() const;
+	// Expert PvP: frag share of each participant (full up to 5, then 5 divided by the count).
+	static double getExpertPvpFragWeight(size_t participants);
+	void noteExpertPvpAggressor(const std::shared_ptr<Player> &aggressor);
+	void clearExpertPvpAggressors();
 	bool onKilledMonster(const std::shared_ptr<Monster> &target) override;
 	void onGainExperience(uint64_t gainExp, const std::shared_ptr<Creature> &target) override;
 	void onGainSharedExperience(uint64_t gainExp, const std::shared_ptr<Creature> &target);
@@ -948,10 +969,27 @@ public:
 	void setSkullTicks(int64_t ticks);
 
 	bool hasAttacked(const std::shared_ptr<Player> &attacked) const;
+	// Open PvP (white hand): has this player attacked any party/guild member of `defender`?
+	bool hasAttackedAllyOf(const std::shared_ptr<Player> &defender) const;
 	void addAttacked(const std::shared_ptr<Player> &attacked);
 	void removeAttacked(const std::shared_ptr<Player> &attacked);
 	void clearAttacked();
-	void addUnjustifiedDead(const std::shared_ptr<Player> &attacked);
+	// Open PvP: mutual "PvP situation" between two players, refreshed on every aggressive act.
+	void addPvpSituationWith(const std::shared_ptr<Player> &other);
+	bool isInPvpSituationWith(const std::shared_ptr<Player> &other) const;
+	bool hasActivePvpSituation() const;
+	// Open PvP situation boxes: the persistent creature-mark byte this player renders with for
+	// `viewer` (yellow = participant, orange = fights viewer's party/guild mate, brown = fights
+	// somebody else, 0xFF = none). Sent in the creature description; refreshed on state changes.
+	PvPBox_t getPvpSituationMarkFor(const std::shared_ptr<Player> &viewer) const;
+	// 1 Hz: re-send our creature block to viewers whenever the set of active situations changes.
+	void updatePvpSituationMarks();
+	// Open PvP: re-send to this player's client every player-made field and wall in view, so the
+	// per-viewer item id (ProtocolGame::AddItem) follows a change of whom they affect.
+	void refreshPvpItemsInView();
+	// Open PvP: true when no other player is stacked on top of us on our tile.
+	bool isFirstInStack() const;
+	void addUnjustifiedDead(const std::shared_ptr<Player> &attacked, double weight = 1.0);
 	void sendCreatureEmblem(const std::shared_ptr<Creature> &creature) const;
 	void sendCreatureSkull(const std::shared_ptr<Creature> &creature) const;
 	void checkSkullTicks(int64_t ticks);
@@ -1820,6 +1858,13 @@ private:
 	void addBosstiaryKill(const std::shared_ptr<MonsterType> &mType);
 
 	phmap::flat_hash_set<uint32_t> attackedSet {};
+	// Open PvP: pairwise "PvP situation" state (guid -> expiry, OTSYS_TIME ms). Mutual aggression
+	// puts both players in a situation; fields/magic walls/boxes key off it. Runtime-only.
+	phmap::flat_hash_map<uint32_t, int64_t> pvpSituations {};
+	// Expert PvP: aggressor GUID -> time of the last aggressive act against us (frag participants)
+	phmap::flat_hash_map<uint32_t, int64_t> pvpAggressors {};
+	bool onKilledPlayerFrag(const std::shared_ptr<Player> &target, bool lastHit, bool expertParticipant, double weight);
+	size_t pvpActivePairs = 0; // last broadcast count of active situations (box refresh detection)
 
 	// Discovery System: last DiscoveryData pushed by the Lua logic (answer for C2S 0x92 requests)
 	std::vector<std::tuple<uint16_t, uint8_t, uint8_t>> discoveryMains;
@@ -2021,6 +2066,7 @@ private:
 	BlockType_t lastAttackBlockType = BLOCK_NONE;
 	TradeState_t tradeState = TRADE_NONE;
 	FightMode_t fightMode = FIGHTMODE_ATTACK;
+	PvpMode_t pvpMode = PVP_MODE_DOVE;
 	Faction_t faction = FACTION_PLAYER;
 	QuickLootFilter_t quickLootFilter {};
 	PlayerPronoun_t pronoun = PLAYERPRONOUN_THEY;

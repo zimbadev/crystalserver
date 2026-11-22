@@ -114,6 +114,7 @@ bool ConfigManager::load() {
 	loadBoolConfig(L, ENABLE_SUPPORT_OUTFIT, "enableSupportOutfit", true);
 	loadBoolConfig(L, EXIVA_RESTRICTIONS_ONLY_OPTIONAL_WORLDS, "exivaRestrictionsOnlyOptionalWorlds", true);
 	loadBoolConfig(L, EXPERIENCE_FROM_PLAYERS, "experienceByKillingPlayers", false);
+	loadBoolConfig(L, EXPERT_PVP, "expertPvp", false);
 	loadBoolConfig(L, FREE_PREMIUM, "freePremium", false);
 	loadBoolConfig(L, GLOBAL_SERVER_SAVE_CLEAN_MAP, "globalServerSaveCleanMap", false);
 	loadBoolConfig(L, GLOBAL_SERVER_SAVE_CLOSE, "globalServerSaveClose", false);

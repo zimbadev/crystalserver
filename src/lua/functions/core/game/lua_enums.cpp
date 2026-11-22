@@ -1115,6 +1115,11 @@ void LuaEnums::initSkullEnums(lua_State* L) {
 	registerEnum(L, SKULL_RED);
 	registerEnum(L, SKULL_BLACK);
 	registerEnum(L, SKULL_ORANGE);
+
+	registerEnum(L, PVP_MODE_DOVE);
+	registerEnum(L, PVP_MODE_WHITE_HAND);
+	registerEnum(L, PVP_MODE_YELLOW_HAND);
+	registerEnum(L, PVP_MODE_RED_FIST);
 }
 
 void LuaEnums::initTalkTypeEnums(lua_State* L) {

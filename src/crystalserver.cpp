@@ -175,6 +175,8 @@ void CrystalServer::loadThisWorld() {
 		);
 	}
 
+	// Expert PvP is a config option on top of the world type, isExpertPvp() limits it to the world types it applies to
+	g_game().setExpertPvp(g_configManager().getBoolean(EXPERT_PVP));
 	const auto location = Worlds::getWorldLocationByKey(world->locationName);
 	if (location == Location_t::None) {
 		throw FailedToInitializeCrystalServer(
@@ -183,7 +185,7 @@ void CrystalServer::loadThisWorld() {
 	}
 
 	g_game().worlds().setCurrentWorld(world);
-	logger.info("World ID: {}, Name: {}, Type: {}, Location: {}, Port {}", world->id, world->name, g_game().getWorldTypeNames().at(world->type), world->locationName, world->port);
+	logger.info("World ID: {}, Name: {}, Type: {}, Location: {}, Port {}{}", world->id, world->name, g_game().getWorldTypeNames().at(world->type), world->locationName, world->port, g_game().isExpertPvp() ? " (Expert PvP)" : "");
 }
 
 void CrystalServer::loadMaps() const {
