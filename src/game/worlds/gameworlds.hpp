@@ -54,16 +54,18 @@ public:
 	void load();
 	void reload();
 
-	[[nodiscard]] std::shared_ptr<World> getWorldConfigsById(uint8_t id) const;
-	void setCurrentWorld(const std::shared_ptr<World> &world);
-	[[nodiscard]] const std::shared_ptr<World> &getCurrentWorld() const;
-	[[nodiscard]] static WorldType_t getWorldTypeIdByKey(const std::string &key);
-	[[nodiscard]] static Location_t getWorldLocationByKey(const std::string &key);
-	[[nodiscard]] const std::vector<std::shared_ptr<World>> &getWorlds() const noexcept {
+	[[nodiscard]] const std::vector<std::shared_ptr<World>> &getWorlds() const {
 		return worlds;
 	}
+	[[nodiscard]] std::shared_ptr<World> getWorldConfigsById(uint8_t id) const;
+
+	void setCurrentWorld(const std::shared_ptr<World> &world);
+	const std::shared_ptr<World> &getCurrentWorld() const;
+
+	[[nodiscard]] static WorldType_t getWorldTypeIdByKey(const std::string &key);
+	[[nodiscard]] static Location_t getWorldLocationByKey(const std::string &key);
 
 private:
 	std::vector<std::shared_ptr<World>> worlds;
-	std::shared_ptr<World> m_currentWorld = std::make_shared<World>();
+	std::shared_ptr<World> m_currentWorld;
 };

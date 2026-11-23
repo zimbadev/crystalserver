@@ -54,6 +54,7 @@
 #include "io/ioprey.hpp"
 #include "io/iobountytasks.hpp"
 #include "io/ioweeklytasks.hpp"
+#include "io/iomapserialize.hpp"
 #include "items/bed.hpp"
 #include "items/containers/inbox/inbox.hpp"
 #include "items/containers/rewards/reward.hpp"
@@ -12201,44 +12202,88 @@ const std::unique_ptr<AttachedEffects> &Game::getAttachedEffects() const {
 }
 
 void Game::transferHouseItemsToDepot() {
-	if (!g_configManager().getBoolean(TOGGLE_HOUSE_TRANSFER_ON_SERVER_RESTART)) {
-		return;
-	}
-
-	if (!transferHouseItemsToPlayer.empty()) {
+	const bool hasPendingTransfers = !transferHouseItemsToPlayer.empty();
+	if (hasPendingTransfers) {
 		g_logger().info("Initializing house transfer items");
 	}
 
-	uint16_t transferSuccess = 0;
-	for (const auto &[houseId, playerGuid] : transferHouseItemsToPlayer) {
+	std::vector<uint32_t> transferredHouses;
+	for (const auto &[houseId, transfer] : transferHouseItemsToPlayer) {
 		auto house = map.houses.getHouse(houseId);
-		if (house) {
-			auto offlinePlayer = std::make_shared<Player>(nullptr);
-			if (!IOLoginData::loadPlayerById(offlinePlayer, playerGuid)) {
-				continue;
-			}
+		if (!house) {
+			continue;
+		}
 
-			if (!offlinePlayer) {
-				continue;
-			}
+		const uint32_t recipientGuid = transfer.previousOwnerGuid != 0 ? transfer.previousOwnerGuid : transfer.newOwnerGuid;
+		if (recipientGuid == 0) {
+			g_logger().error("Cannot transfer items from house {}: no owner or destination is available; transfer remains pending.", houseId);
+			continue;
+		}
 
-			g_logger().info("Tranfering items to the inbox from player '{}'", offlinePlayer->getName());
-			if (house->tryTransferOwnership(offlinePlayer, true)) {
-				transferSuccess++;
-				house->setNewOwnerGuid(-1, true);
-				house->setState(CyclopediaHouseState::Available);
-			}
+		auto offlinePlayer = std::make_shared<Player>(nullptr);
+		if (!IOLoginData::loadPlayerById(offlinePlayer, recipientGuid)) {
+			continue;
+		}
+
+		g_logger().info("Transferring items from house {} for player '{}'", houseId, offlinePlayer->getName());
+		if (house->tryTransferOwnership(offlinePlayer, true)) {
+			transferredHouses.push_back(houseId);
 		}
 	}
+
+	if (hasPendingTransfers && !IOMapSerialize::saveHouseItems()) {
+		g_logger().error("Failed to persist house items after transfer attempts; house ownership changes were deferred.");
+		return;
+	}
+
+	uint16_t transferSuccess = 0;
+	for (const uint32_t houseId : transferredHouses) {
+		const auto transferIt = transferHouseItemsToPlayer.find(houseId);
+		auto house = map.houses.getHouse(houseId);
+		if (transferIt == transferHouseItemsToPlayer.end() || !house) {
+			continue;
+		}
+
+		const auto transfer = transferIt->second;
+		if (house->getOwner() != transfer.newOwnerGuid) {
+			house->setOwner(transfer.newOwnerGuid);
+		}
+		if (house->getOwner() != transfer.newOwnerGuid) {
+			g_logger().error("Could not finalize ownership for house {}; its transfer remains pending.", houseId);
+			continue;
+		}
+
+		if (!house->setNewOwnerGuid(-1, true)) {
+			g_logger().error("Could not clear the pending owner for house {}; its transfer remains pending.", houseId);
+			continue;
+		}
+
+		if (transfer.compensation > 0 && transfer.compensationOwnerGuid != 0) {
+			IOLoginData::increaseBankBalance(transfer.compensationOwnerGuid, transfer.compensation);
+		}
+
+		house->setBidder(0);
+		house->setBidderName("");
+		house->setHighestBid(0);
+		house->setInternalBid(0);
+		house->setBidHolderLimit(0);
+		house->setBidEndDate(0);
+		house->setTransferStatus(false);
+		house->setState(CyclopediaHouseState::Available);
+		transferHouseItemsToPlayer.erase(transferIt);
+		transferSuccess++;
+	}
+
 	if (transferSuccess > 0) {
-		g_logger().info("Finished house transfer items from '{}' players", transferSuccess);
-		transferHouseItemsToPlayer.clear();
-		Map::save();
+		g_logger().info("Finished house item transfers for '{}' houses", transferSuccess);
+	}
+	if (hasPendingTransfers && !Map::save()) {
+		g_logger().error("Failed to save house information after transferring house items.");
 	}
 }
 
-void Game::setTransferPlayerHouseItems(uint32_t houseId, uint32_t playerId) {
-	transferHouseItemsToPlayer[houseId] = playerId;
+void Game::setTransferPlayerHouseItems(uint32_t houseId, uint32_t playerId, uint32_t newOwnerId, uint32_t compensationOwnerId /* = 0 */, uint64_t compensation /* = 0 */) {
+	transferHouseItemsToPlayer[houseId] = { playerId, newOwnerId, compensationOwnerId, compensation };
 }
 
 ReturnValue Game::beforeCreatureZoneChange(const std::shared_ptr<Creature> &creature, const std::unordered_set<std::shared_ptr<Zone>> &fromZones, const std::unordered_set<std::shared_ptr<Zone>> &toZones, bool force /* = false*/) const {

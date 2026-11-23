@@ -100,7 +100,7 @@ void ProtocolStatus::sendStatusString() {
 	serverinfo.append_attribute("ip") = currentWorld->ip.c_str();
 	serverinfo.append_attribute("servername") = currentWorld->name.c_str();
 
-	serverinfo.append_attribute("port") = std::to_string(g_configManager().getNumber(LOGIN_PORT)).c_str();
+	serverinfo.append_attribute("port") = std::to_string(currentWorld->port).c_str();
 	serverinfo.append_attribute("location") = currentWorld->locationName.c_str();
 	serverinfo.append_attribute("url") = g_configManager().getString(URL).c_str();
 	serverinfo.append_attribute("server") = SOFTWARE_NAME;
@@ -179,7 +179,7 @@ void ProtocolStatus::sendInfo(uint16_t requestedInfo, const std::string &charact
 		output->addByte(0x10);
 		output->addString(currentWorld->name);
 		output->addString(currentWorld->ip);
-		output->addString(std::to_string(g_configManager().getNumber(LOGIN_PORT)));
+		output->addString(std::to_string(currentWorld->port));
 	}
 
 	if (requestedInfo & REQUEST_OWNER_SERVER_INFO) {

@@ -18,12 +18,25 @@
 #include "pch.hpp"
 
 #include "game/worlds/gameworlds.hpp"
-#include "io/iologindata.hpp"
+#include "config/configmanager.hpp"
 #include "utils/tools.hpp"
 
 void Worlds::load() {
-	IOLoginData::createFirstWorld();
-	worlds = IOLoginData::loadWorlds();
+	const uint8_t id = static_cast<uint8_t>(g_configManager().getNumber(WORLD_ID));
+	const std::string name = g_configManager().getString(SERVER_NAME);
+	const WorldType_t type = Worlds::getWorldTypeIdByKey(g_configManager().getString(WORLD_TYPE));
+	const std::string motd = g_configManager().getString(SERVER_MOTD);
+	const std::string locationName = g_configManager().getString(WORLD_LOCATION);
+	const Location_t location = Worlds::getWorldLocationByKey(locationName);
+	const std::string ip = g_configManager().getString(IP);
+	const uint16_t port = static_cast<uint16_t>(g_configManager().getNumber(GAME_PORT));
+	const uint32_t portStatus = static_cast<uint32_t>(g_configManager().getNumber(STATUS_PORT));
+
+	auto world = std::make_shared<World>(id, name, type, motd, locationName, location, ip, port, portStatus, 0);
+	worlds.push_back(world);
+	m_currentWorld = world;
+
+	g_logger().info("World loaded from config: [{}] {} ({})", id, name, g_configManager().getString(WORLD_TYPE));
 }
 
 void Worlds::reload() {

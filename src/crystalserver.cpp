@@ -87,17 +87,17 @@ int CrystalServer::run() {
 				g_metrics().init(metricsOptions);
 #endif
 				rsa.start();
+				g_game().worlds().load();
 				initializeDatabase();
 				loadModules();
-				g_game().worlds().load();
 				loadThisWorld();
 				loadMaps();
 
 				logger.info("Initializing gamestate...");
 				g_game().setGameState(GAME_STATE_INIT);
 
-				setupHousesRent();
 				g_game().transferHouseItemsToDepot();
+				setupHousesRent();
 
 				IOMarket::checkExpiredOffers();
 				IOMarket::checkWebOrders();

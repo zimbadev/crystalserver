@@ -17,7 +17,6 @@
 
 #include "io/iomapserialize.hpp"
 
-#include "config/configmanager.hpp"
 #include "io/iologindata.hpp"
 #include "game/game.hpp"
 #include "items/bed.hpp"
@@ -56,16 +55,6 @@ void IOMapSerialize::loadHouseItems(Map* map) {
 		}
 
 		while (item_count--) {
-			if (auto houseTile = std::dynamic_pointer_cast<HouseTile>(tile)) {
-				const auto &house = houseTile->getHouse();
-				auto isTransferOnRestart = g_configManager().getBoolean(TOGGLE_HOUSE_TRANSFER_ON_SERVER_RESTART);
-				if (!isTransferOnRestart && house->getOwner() == 0) {
-					g_logger().trace("Skipping load item from house id: {}, position: {}, house does not have owner", house->getId(), house->getEntryPosition().toString());
-					house->clearHouseInfo(false);
-					continue;
-				}
-			}
-
 			loadItem(propStream, tile, true);
 		}
 	} while (result->next());
@@ -283,7 +272,7 @@ void IOMapSerialize::saveTile(PropWriteStream &stream, const std::shared_ptr<Til
 bool IOMapSerialize::loadHouseInfo() {
 	Database &db = Database::getInstance();
 
-	DBResult_ptr result = db.storeQuery(fmt::format("SELECT `id`, `owner`, `new_owner`, `bidder`, `bidder_name`, `highest_bid`, `internal_bid`, `bid_end_date`, `state`, `transfer_status` FROM `houses` WHERE `world_id` = {}", g_game().worlds().getCurrentWorld()->id));
+	DBResult_ptr result = db.storeQuery(fmt::format("SELECT `id`, `owner`, `paid`, `warnings`, `last_rent_warning`, `new_owner`, `bidder`, `bidder_name`, `highest_bid`, `internal_bid`, `bid_end_date`, `state`, `transfer_status` FROM `houses` WHERE `world_id` = {}", g_game().worlds().getCurrentWorld()->id));
 	if (!result) {
 		return false;
 	}
@@ -296,6 +285,9 @@ bool IOMapSerialize::loadHouseInfo() {
 		}
 
 		auto owner = result->getNumber<uint32_t>("owner");
+		const time_t paidUntil = result->getNumber<uint32_t>("paid");
+		const uint32_t rentWarnings = result->getNumber<uint32_t>("warnings");
+		const time_t lastRentWarning = result->getNumber<uint32_t>("last_rent_warning");
 		auto newOwner = result->getNumber<int32_t>("new_owner");
 		uint32_t bidder = result->getNumber<uint32_t>("bidder");
 		std::string bidderName = result->getString("bidder_name");
@@ -307,16 +299,13 @@ bool IOMapSerialize::loadHouseInfo() {
 		const auto timeNow = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
 		// Transfer house owner
-		auto isTransferOnRestart = g_configManager().getBoolean(TOGGLE_HOUSE_TRANSFER_ON_SERVER_RESTART);
-		if (isTransferOnRestart && newOwner >= 0) {
-			g_game().setTransferPlayerHouseItems(houseId, owner);
-			if (newOwner == 0) {
-				g_logger().debug("Removing house id '{}' owner", houseId);
-				house->setOwner(0);
-			} else {
-				g_logger().debug("Setting house id '{}' owner to player GUID '{}'", houseId, newOwner);
-				house->setOwner(newOwner);
-			}
+		if (newOwner >= 0) {
+			g_game().setTransferPlayerHouseItems(houseId, owner, static_cast<uint32_t>(newOwner));
+			house->setOwner(owner, false);
+			house->setState(state);
+			house->setPaidUntil(paidUntil);
+			house->setPayRentWarnings(rentWarnings);
+			house->setLastRentWarning(lastRentWarning);
 		} else if (state == CyclopediaHouseState::Available && timeNow > bidEndDate && bidder > 0) {
 			g_logger().debug("[BID] - Setting house id '{}' owner to player GUID '{}'", houseId, bidder);
 			if (highestBid < internalBid) {
@@ -332,25 +321,35 @@ bool IOMapSerialize::loadHouseInfo() {
 		} else if (state == CyclopediaHouseState::Transfer && timeNow > bidEndDate && bidder > 0) {
 			g_logger().debug("[TRANSFER] - Removing house id '{}' from owner GUID '{}' and transfering to new owner GUID '{}'", houseId, owner, bidder);
 			if (transferStatus) {
-				g_game().setTransferPlayerHouseItems(houseId, owner);
-				house->setOwner(bidder);
-				IOLoginData::increaseBankBalance(owner, internalBid);
+				g_game().setTransferPlayerHouseItems(houseId, owner, bidder, owner, internalBid);
+				house->setOwner(owner, false);
+				house->setState(state);
+				house->setPaidUntil(paidUntil);
+				house->setPayRentWarnings(rentWarnings);
+				house->setLastRentWarning(lastRentWarning);
 			} else {
 				house->setOwner(owner);
+				bidder = 0;
+				bidderName = "";
+				highestBid = 0;
+				internalBid = 0;
+				bidEndDate = 0;
+				transferStatus = false;
 			}
-			bidder = 0;
-			bidderName = "";
-			internalBid = 0;
-			bidEndDate = 0;
-			transferStatus = false;
 		} else if (state == CyclopediaHouseState::MoveOut && timeNow > bidEndDate) {
 			g_logger().debug("[MOVE OUT] - Removing house id '{}' owner", houseId);
-			g_game().setTransferPlayerHouseItems(houseId, owner);
-			house->setOwner(0);
-			bidEndDate = 0;
+			g_game().setTransferPlayerHouseItems(houseId, owner, 0);
+			house->setOwner(owner, false);
+			house->setState(state);
+			house->setPaidUntil(paidUntil);
+			house->setPayRentWarnings(rentWarnings);
+			house->setLastRentWarning(lastRentWarning);
 		} else {
 			house->setOwner(owner, false);
 			house->setState(state);
+			house->setPaidUntil(paidUntil);
+			house->setPayRentWarnings(rentWarnings);
+			house->setLastRentWarning(lastRentWarning);
 		}
 		house->setBidder(bidder);
 		house->setBidderName(bidderName);
@@ -392,12 +391,12 @@ bool IOMapSerialize::SaveHouseInfoGuard() {
 	const auto worldId = static_cast<int>(g_game().worlds().getCurrentWorld()->id);
 
 	std::ostringstream query;
-	DBInsert houseUpdate("INSERT INTO `houses` (`id`, `owner`, `paid`, `warnings`, `name`, `town_id`, `rent`, `size`, `beds`, `bidder`, `bidder_name`, `highest_bid`, `internal_bid`, `bid_end_date`, `state`, `transfer_status`, `world_id`) VALUES ");
-	houseUpdate.upsert({ "owner", "paid", "warnings", "name", "town_id", "rent", "size", "beds", "bidder", "bidder_name", "highest_bid", "internal_bid", "bid_end_date", "state", "transfer_status" });
+	DBInsert houseUpdate("INSERT INTO `houses` (`id`, `owner`, `paid`, `warnings`, `last_rent_warning`, `name`, `town_id`, `rent`, `size`, `beds`, `bidder`, `bidder_name`, `highest_bid`, `internal_bid`, `bid_end_date`, `state`, `transfer_status`, `world_id`) VALUES ");
+	houseUpdate.upsert({ "owner", "paid", "warnings", "last_rent_warning", "name", "town_id", "rent", "size", "beds", "bidder", "bidder_name", "highest_bid", "internal_bid", "bid_end_date", "state", "transfer_status" });
 
 	for (const auto &[key, house] : g_game().map.houses.getHouses()) {
 		auto stateValue = magic_enum::enum_integer(house->getState());
-		std::string values = fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}", house->getId(), house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(), db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getSize(), house->getBedCount(), house->getBidder(), db.escapeString(house->getBidderName()), house->getHighestBid(), house->getInternalBid(), house->getBidEndDate(), std::to_string(stateValue), (house->getTransferStatus() ? 1 : 0), worldId);
+		std::string values = fmt::format("{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}", house->getId(), house->getOwner(), house->getPaidUntil(), house->getPayRentWarnings(), house->getLastRentWarning(), db.escapeString(house->getName()), house->getTownId(), house->getRent(), house->getSize(), house->getBedCount(), house->getBidder(), db.escapeString(house->getBidderName()), house->getHighestBid(), house->getInternalBid(), house->getBidEndDate(), std::to_string(stateValue), (house->getTransferStatus() ? 1 : 0), worldId);
 
 		if (!houseUpdate.addRow(values)) {
 			return false;

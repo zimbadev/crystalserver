@@ -529,6 +529,7 @@ CREATE TABLE IF NOT EXISTS `houses` (
     `new_owner` int(11) NOT NULL DEFAULT '-1',
     `paid` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `warnings` int(11) NOT NULL DEFAULT '0',
+    `last_rent_warning` int(10) UNSIGNED NOT NULL DEFAULT '0',
     `name` varchar(255) NOT NULL,
     `rent` int(11) NOT NULL DEFAULT '0',
     `town_id` int(11) NOT NULL DEFAULT '0',

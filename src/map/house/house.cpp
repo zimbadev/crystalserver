@@ -37,20 +37,34 @@ void House::addTile(const std::shared_ptr<HouseTile> &tile) {
 	updateDoorDescription();
 }
 
-void House::setNewOwnerGuid(int32_t newOwnerGuid, bool serverStartup) {
+bool House::setNewOwnerGuid(int32_t newOwnerGuid, bool serverStartup) {
+	if (newOwnerGuid < 0) {
+		std::string query = fmt::format("UPDATE `houses` SET `new_owner` = -1 WHERE `id` = {} AND `world_id` = {}", id, g_game().worlds().getCurrentWorld()->id);
+		Database &db = Database::getInstance();
+		if (!db.executeQuery(query)) {
+			g_logger().error("Failed to clear pending house owner for house {}.", id);
+			return false;
+		}
+		return true;
+	}
+
 	auto isTransferOnRestart = g_configManager().getBoolean(TOGGLE_HOUSE_TRANSFER_ON_SERVER_RESTART);
 	if (!isTransferOnRestart) {
 		setOwner(newOwnerGuid, true);
-		return;
+		return owner == static_cast<uint32_t>(newOwnerGuid);
 	}
 
 	std::string query = fmt::format("UPDATE `houses` SET `new_owner` = {} WHERE `id` = {} AND `world_id` = {}", newOwnerGuid, id, g_game().worlds().getCurrentWorld()->id);
 
 	Database &db = Database::getInstance();
-	db.executeQuery(query);
+	if (!db.executeQuery(query)) {
+		g_logger().error("Failed to set pending owner {} for house {}.", newOwnerGuid, id);
+		return false;
+	}
 	if (!serverStartup) {
 		setNewOwnership();
 	}
+	return true;
 }
 
 void House::clearHouseInfo(bool preventOwnerDeletion) {
@@ -82,6 +96,10 @@ bool House::tryTransferOwnership(const std::shared_ptr<Player> &player, bool ser
 	} else {
 		transferSuccess = transferToDepot();
 	}
+	if (!transferSuccess) {
+		g_logger().error("[{}] Failed to transfer items from house {}. Ownership was not changed.", __FUNCTION__, id);
+		return false;
+	}
 
 	for (const auto &tile : houseTiles) {
 		if (const CreatureVector* creatures = tile->getCreatures()) {
@@ -99,26 +117,30 @@ bool House::tryTransferOwnership(const std::shared_ptr<Player> &player, bool ser
 
 void House::setOwner(uint32_t guid, bool updateDatabase /* = true*/, const std::shared_ptr<Player> &player /* = nullptr*/) {
 	const auto worldId = g_game().worlds().getCurrentWorld()->id;
-
-	if (updateDatabase && owner != guid) {
-		Database &db = Database::getInstance();
-
-		const std::string query = fmt::format(
-			"UPDATE `houses` SET `owner` = {}, `new_owner` = -1, `paid` = 0, `bidder` = 0, `bidder_name` = '', `highest_bid` = 0, `internal_bid` = 0, `bid_end_date` = 0, `state` = {} WHERE `id` = {} AND `world_id` = {}",
-			guid, guid > 0 ? 2 : 0, id, worldId
-		);
-		db.executeQuery(query);
-	}
+	const uint32_t previousOwner = owner;
 
 	if (isLoaded && owner == guid) {
 		return;
 	}
 
-	isLoaded = true;
-
-	if (owner != 0) {
-		tryTransferOwnership(player, false);
+	if (owner != 0 && !tryTransferOwnership(player, false)) {
+		return;
 	}
+
+	if (updateDatabase && previousOwner != guid) {
+		Database &db = Database::getInstance();
+
+		const std::string query = fmt::format(
+			"UPDATE `houses` SET `owner` = {}, `new_owner` = -1, `paid` = 0, `warnings` = 0, `last_rent_warning` = 0, `bidder` = 0, `bidder_name` = '', `highest_bid` = 0, `internal_bid` = 0, `bid_end_date` = 0, `state` = {} WHERE `id` = {} AND `world_id` = {}",
+			guid, guid > 0 ? 2 : 0, id, worldId
+		);
+		if (!db.executeQuery(query)) {
+			g_logger().error("Failed to update owner {} for house {}.", guid, id);
+			return;
+		}
+	}
+
+	isLoaded = true;
 
 	if (guid != 0) {
 		std::string strRentPeriod = asLowerCaseString(g_configManager().getString(HOUSE_RENT_PERIOD));
@@ -141,6 +163,7 @@ void House::setOwner(uint32_t guid, bool updateDatabase /* = true*/, const std::
 	}
 
 	rentWarnings = 0;
+	lastRentWarning = 0;
 
 	if (guid != 0) {
 		Database &db = Database::getInstance();
@@ -287,28 +310,28 @@ bool House::transferToDepot() const {
 
 	const auto &player = g_game().getPlayerByGUID(owner);
 	if (player) {
-		transferToDepot(player);
+		return transferToDepot(player);
 	} else {
 		const auto tmpPlayer = std::make_shared<Player>(nullptr);
 		if (!IOLoginData::loadPlayerById(tmpPlayer, owner)) {
 			return false;
 		}
 
-		transferToDepot(tmpPlayer);
+		return transferToDepot(tmpPlayer);
 	}
-	return true;
 }
 
 bool House::transferToDepot(const std::shared_ptr<Player> &player) const {
 	if (townId == 0 || !player) {
 		return false;
 	}
+	bool transferSuccess = true;
 	for (const auto &tile : houseTiles) {
 		if (!transferToDepot(player, tile)) {
-			return false;
+			transferSuccess = false;
 		}
 	}
-	return true;
+	return transferSuccess;
 }
 
 bool House::transferToDepot(const std::shared_ptr<Player> &player, const std::shared_ptr<HouseTile> &tile) const {
@@ -334,6 +357,7 @@ bool House::transferToDepot(const std::shared_ptr<Player> &player, const std::sh
 	}
 
 	std::unordered_set<std::shared_ptr<Player>> playersToSave = { player };
+	bool transferSuccess = true;
 
 	for (const auto &item : moveItemList) {
 		std::shared_ptr<Player> targetPlayer = player;
@@ -345,17 +369,22 @@ bool House::transferToDepot(const std::shared_ptr<Player> &player, const std::sh
 				playersToSave.insert(targetPlayer);
 			} else {
 				g_logger().warn("[{}] owner of item '{}' (GUID: {}) not found, skipping transfer", __FUNCTION__, item->getName(), item->getOwnerId());
+				transferSuccess = false;
 				continue;
 			}
 		}
 
-		g_game().internalMoveItem(item->getParent(), targetPlayer->getInbox(), INDEX_WHEREEVER, item, item->getItemCount(), nullptr, FLAG_NOLIMIT);
+		const ReturnValue result = g_game().internalMoveItem(item->getParent(), targetPlayer->getInbox(), INDEX_WHEREEVER, item, item->getItemCount(), nullptr, FLAG_NOLIMIT);
+		if (result != RETURNVALUE_NOERROR) {
+			g_logger().error("[{}] Failed to move item '{}' from house {} to player '{}'s inbox: {}", __FUNCTION__, item->getName(), id, targetPlayer->getName(), getReturnMessage(result));
+			transferSuccess = false;
+		}
 	}
 	for (const auto &playerToSave : playersToSave) {
 		g_saveManager().savePlayer(playerToSave);
 	}
 
-	return true;
+	return transferSuccess;
 }
 
 bool House::hasItemOnTile() const {
@@ -945,9 +974,7 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 
 		const auto &player = g_game().getPlayerByGUID(ownerId, true);
 		if (!player) {
-			// Player doesn't exist, reset house owner
-			house->tryTransferOwnership(nullptr, true);
-			house->setState(CyclopediaHouseState::Available);
+			g_logger().error("Cannot process house {} rent: owner {} could not be loaded; keeping house ownership and items.", house->getId(), ownerId);
 			continue;
 		}
 
@@ -962,7 +989,9 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 			} else if (!vipKeep && !activityKeep) {
 				g_logger().info("Player {} has not logged in for {} days, so the house will be reset.", player->getName(), daysToReset);
 				house->setOwner(0, true, player);
-				house->setState(CyclopediaHouseState::Available);
+				if (house->getOwner() == 0) {
+					house->setState(CyclopediaHouseState::Available);
+				}
 				g_saveManager().savePlayer(player);
 				continue;
 			}
@@ -996,9 +1025,17 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 			}
 
 			house->setPaidUntil(paidUntil);
+			house->setPayRentWarnings(0);
+			house->setLastRentWarning(0);
 		} else {
-			if (house->getPayRentWarnings() < 7) {
-				const int32_t daysLeft = 7 - house->getPayRentWarnings();
+			const uint32_t warnings = house->getPayRentWarnings();
+			const time_t lastWarning = house->getLastRentWarning();
+			constexpr time_t warningInterval = 24 * 60 * 60;
+			if (warnings < 7) {
+				if (warnings > 0 && lastWarning != 0 && currentTime < lastWarning + warningInterval) {
+					continue;
+				}
+				const int32_t daysLeft = 7 - warnings;
 
 				const std::shared_ptr<Item> &letter = Item::CreateItem(ITEM_LETTER_STAMPED);
 				std::string period;
@@ -1028,11 +1065,25 @@ void Houses::payHouses(RentPeriod_t rentPeriod) const {
 				ss << "Warning! \nThe " << period << " rent of " << house->getRent() << " gold for your house \"" << house->getName() << "\" is payable. Have it within " << daysLeft << " days or you will lose this house.";
 				letter->setAttribute(ItemAttribute_t::TEXT, ss.str());
 				const auto &playerInbox = player->getInbox();
-				g_game().internalAddItem(playerInbox, letter, INDEX_WHEREEVER, FLAG_NOLIMIT);
-				house->setPayRentWarnings(house->getPayRentWarnings() + 1);
+				const ReturnValue result = g_game().internalAddItem(playerInbox, letter, INDEX_WHEREEVER, FLAG_NOLIMIT);
+				if (result != RETURNVALUE_NOERROR) {
+					g_logger().error("Failed to deliver rent warning to player '{}' for house {}: {}", player->getName(), house->getId(), getReturnMessage(result));
+					continue;
+				}
+				house->setPayRentWarnings(warnings + 1);
+				house->setLastRentWarning(currentTime);
 			} else {
+				if (lastWarning == 0) {
+					house->setLastRentWarning(currentTime);
+					continue;
+				}
+				if (currentTime < lastWarning + warningInterval) {
+					continue;
+				}
 				house->setOwner(0, true, player);
-				house->setState(CyclopediaHouseState::Available);
+				if (house->getOwner() == 0) {
+					house->setState(CyclopediaHouseState::Available);
+				}
 			}
 		}
 

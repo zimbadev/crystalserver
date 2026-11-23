@@ -155,7 +155,7 @@ public:
 	 * @note The guid "-1" represents the default value and will not execute any actions.
 	 * @note The actual transfer of ownership will occur upon server restart if `serverStartup` is set to false.
 	 */
-	void setNewOwnerGuid(int32_t newOwnerGuid, bool serverStartup);
+	bool setNewOwnerGuid(int32_t newOwnerGuid, bool serverStartup);
 	void clearHouseInfo(bool preventOwnerDeletion);
 	bool tryTransferOwnership(const std::shared_ptr<Player> &player, bool serverStartup);
 	void setOwner(uint32_t guid, bool updateDatabase = true, const std::shared_ptr<Player> &player = nullptr);
@@ -188,6 +188,13 @@ public:
 	}
 	uint32_t getPayRentWarnings() const {
 		return rentWarnings;
+	}
+
+	void setLastRentWarning(time_t warning) {
+		lastRentWarning = warning;
+	}
+	time_t getLastRentWarning() const {
+		return lastRentWarning;
 	}
 
 	void setTownId(uint32_t newTownId) {
@@ -354,6 +361,7 @@ private:
 	std::shared_ptr<HouseTransferItem> transferItem = nullptr;
 
 	time_t paidUntil = 0;
+	time_t lastRentWarning = 0;
 
 	uint32_t id;
 	uint32_t owner = 0;

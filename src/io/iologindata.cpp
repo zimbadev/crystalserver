@@ -30,6 +30,8 @@
 #include "enums/account_type.hpp"
 #include "enums/account_errors.hpp"
 
+#include <limits>
+
 bool IOLoginData::gameWorldAuthentication(const std::string &accountDescriptor, const std::string &password, std::string &characterName, uint32_t &accountId, bool oldProtocol, const uint32_t ip) {
 	Account account(accountDescriptor);
 	account.setProtocolCompat(oldProtocol);
@@ -491,7 +493,7 @@ void IOLoginData::createFirstWorld() {
 		const auto &location = g_configManager().getString(WORLD_LOCATION);
 		const auto &ip = g_configManager().getString(IP);
 		const auto &port = g_configManager().getNumber(GAME_PORT);
-		const auto &portStatus = fmt::format("9{}", port);
+		const auto portStatus = g_configManager().getNumber(STATUS_PORT);
 
 		std::string query = fmt::format(
 			"INSERT INTO `worlds` (`name`, `type`, `motd`, `location`, `ip`, `port`, `port_status`, `creation`) VALUES ({}, {}, {}, {}, {}, {}, {}, {})",
@@ -513,8 +515,25 @@ std::vector<std::shared_ptr<World>> IOLoginData::loadWorlds() {
 	if (const auto &result = Database::getInstance().storeQuery("SELECT `id`, `name`, `type`, `motd`, `location`, `ip`, `port`, `port_status`, `creation` FROM `worlds`")) {
 		entries.reserve(result->countResults());
 		do {
+			const uint32_t worldId = result->getNumber<uint32_t>("id");
+			if (worldId < 1 || worldId > std::numeric_limits<uint8_t>::max()) {
+				g_logger().error("Skipping database world with ID {}: supported world IDs are 1-255.", worldId);
+				continue;
+			}
+
+			uint32_t portStatus = result->getNumber<uint32_t>("port_status");
+			if (portStatus < 1 || portStatus > std::numeric_limits<uint16_t>::max()) {
+				const int32_t configuredStatusPort = g_configManager().getNumber(STATUS_PORT);
+				if (configuredStatusPort < 1 || configuredStatusPort > std::numeric_limits<uint16_t>::max()) {
+					g_logger().error("World {} has invalid status port {}, and statusProtocolPort is also invalid.", worldId, portStatus);
+					continue;
+				}
+				g_logger().warn("World {} has invalid status port {}; using configured port {}.", worldId, portStatus, configuredStatusPort);
+				portStatus = static_cast<uint32_t>(configuredStatusPort);
+			}
+
 			entries.emplace_back(std::make_shared<World>(
-				result->getNumber<uint8_t>("id"),
+				static_cast<uint8_t>(worldId),
 				result->getString("name"),
 				Worlds::getWorldTypeIdByKey(result->getString("type")),
 				result->getString("motd"),
@@ -522,7 +541,7 @@ std::vector<std::shared_ptr<World>> IOLoginData::loadWorlds() {
 				Worlds::getWorldLocationByKey(result->getString("location")),
 				result->getString("ip"),
 				result->getNumber<uint16_t>("port"),
-				result->getNumber<uint32_t>("port_status"),
+				portStatus,
 				result->getNumber<uint16_t>("creation")
 			));
 		} while (result->next());

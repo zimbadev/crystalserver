@@ -786,7 +786,7 @@ public:
 	std::unique_ptr<AttachedEffects> &getAttachedEffects();
 	const std::unique_ptr<AttachedEffects> &getAttachedEffects() const;
 
-	void setTransferPlayerHouseItems(uint32_t houseId, uint32_t playerId);
+	void setTransferPlayerHouseItems(uint32_t houseId, uint32_t playerId, uint32_t newOwnerId, uint32_t compensationOwnerId = 0, uint64_t compensation = 0);
 	void transferHouseItemsToDepot();
 
 	const std::unordered_map<uint8_t, std::string> &getHighscoreCategoriesName() const;
@@ -951,7 +951,13 @@ private:
 
 	std::map<uint32_t, std::unique_ptr<TeamFinder>> teamFinderMap; // [leaderGUID] = TeamFinder*
 
-	std::map<uint32_t, uint32_t> transferHouseItemsToPlayer;
+	struct HouseItemTransfer {
+		uint32_t previousOwnerGuid;
+		uint32_t newOwnerGuid;
+		uint32_t compensationOwnerGuid;
+		uint64_t compensation;
+	};
+	std::map<uint32_t, HouseItemTransfer> transferHouseItemsToPlayer;
 
 	// list of items that are in trading state, mapped to the player
 	std::map<std::shared_ptr<Item>, uint32_t> tradeItems;
@@ -1051,7 +1057,6 @@ private:
 	std::string generateHighscoreQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation, const std::string &selectedWorld);
 	std::string generateHighscoreOrGetCachedQueryForEntries(const std::string &categoryName, const std::string &worldName, uint32_t page, uint8_t entriesPerPage, uint32_t vocation);
 	std::string generateHighscoreOrGetCachedQueryForOurRank(const std::string &categoryName, uint8_t entriesPerPage, uint32_t playerGUID, uint32_t vocation);
-
 	bool hasPartyMembersNearby(const std::shared_ptr<Player> &player);
 	void projectMonkVirtueAura(const std::shared_ptr<Player> &monk);
 	bool isPlayerNoBoxed(const std::shared_ptr<Player> &player);
