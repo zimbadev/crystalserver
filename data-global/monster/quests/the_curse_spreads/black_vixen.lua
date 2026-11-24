@@ -77,31 +77,32 @@ monster.voices = {
 }
 
 monster.loot = {
-	{ name = "gold coin", chance = 13600000, maxCount = 100 },
-	{ name = "gold coin", chance = 13600000, maxCount = 100 },
-	{ name = "platinum coin", chance = 13600000, maxCount = 10 },
-	{ name = "assassin star", chance = 13600000, maxCount = 9 },
-	{ name = "black pearl", chance = 13600000, maxCount = 2 },
-	{ id = 238, chance = 13600000, maxCount = 2 }, -- great mana potion
-	{ name = "great spirit potion", chance = 13600000, maxCount = 2 },
-	{ name = "small enchanted emerald", chance = 13600000, maxCount = 2 },
-	{ name = "ultimate mana potion", chance = 13600000, maxCount = 2 },
-	{ name = "ultimate spirit potion", chance = 13600000, maxCount = 2 },
-	{ name = "fox paw", chance = 13600000, maxCount = 2 },
-	{ name = "moonlight rod", chance = 13600000 },
-	{ id = 3049, chance = 13600000 }, -- stealth ring
-	{ name = "werefox tail", chance = 13600000 },
+	{ name = "gold coin", chance = 50000, maxCount = 21 },
+	{ name = "platinum coin", chance = 100000, maxCount = 3 },
+	{ name = "assassin star", chance = 100000, maxCount = 8 },
+	{ name = "werefox tail", chance = 100000 },
+	{ name = "small enchanted emerald", chance = 100000 },
+	{ name = "great mana potion", chance = 100000, maxCount = 2 },
+	{ name = "fox paw", chance = 100000 },
+	{ name = "sai", chance = 250 },
+	{ name = "black pearl", chance = 50000, maxCount = 2 },
+	{ name = "great spirit potion", chance = 50000, maxCount = 2 },
+	{ name = "ultimate spirit potion", chance = 25000, maxCount = 2 },
+	{ name = "ultimate mana potion", chance = 25000, maxCount = 2 },
+	{ id = 3049, chance = 75000 }, -- stealth ring
+	{ name = "traditional sai", chance = 250 },
 	{ name = "green gem", chance = 400 },
+	{ id = 27706, chance = 250 }, -- werefox trophy
+	{ name = "moonlight rod", chance = 25000 },
+	{ name = "moonlight crystals", chance = 600 },
 	{ name = "troll green", chance = 400 },
 	{ name = "werewolf amulet", chance = 400 },
 	{ name = "composite hornbow", chance = 250 },
-	{ name = "traditional sai", chance = 250 },
 	{ name = "silver token", chance = 1540 },
-	{ id = 27706, chance = 250 }, -- werefox trophy
 	{ name = "foxtail", chance = 100 },
 	{ name = "wolf backpack", chance = 100 },
-	{ name = "foxtail amulet", chance = 100 },
-	{ name = "silver token", chance = 100 },
+	{ name = "platinum amulet", chance = 250 },
+	{ name = "foxtail amulet", chance = 500 },
 }
 
 monster.attacks = {
