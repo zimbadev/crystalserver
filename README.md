@@ -18,9 +18,9 @@ It is based on [The Forgotten Server](https://github.com/otland/forgottenserver)
 This project was created a long time ago to distribute a stable and safe distro for those who want to have a Tibia otserv.
 
 To connect to the server and to take a stable experience, you can
-use the [Game Client](https://github.com/zimbadev/gameclient/releases) or [mehah's OTCLient](https://github.com/mehah/otclient).
+use the [Game Client](https://github.com/zimbadev/gameclient/releases) or [Crystal OTCLient](https://github.com/zimbadev/CrystalOTC).
 
-If you want edit the map, use the [Remere's Map Editor](https://github.com/zimbadev/rme-crystalserver/releases).
+If you want edit the map, use the [Crystal Remere's Map Editor](https://github.com/zimbadev/rme-crystalserver).
 
 You are subject to our code of conduct, read
 at [this link](https://github.com/zimbadev/crystalserver/blob/main/CODE_OF_CONDUCT.md).
