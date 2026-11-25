@@ -1,90 +1,87 @@
-local timetochange = 60 --in seconds
-local time = os.time()
-
 local healthMultiplier = configManager.getFloat(configKeys.RATE_BOSS_HEALTH)
+if not healthMultiplier or healthMultiplier <= 0 then
+	healthMultiplier = 1.0
+end
 
---base urmahlullu have 515000/515000 hp, next form 400000/515000,
--- next form 300000/515000, next form 200000/515000, and last 100000/515000
+local stages = {
+	{ name = "Urmahlullu the Immaculate", threshold = 400000, nextName = "Wildness of Urmahlullu" },
+	{ name = "Wildness of Urmahlullu", threshold = 300000, nextName = "Urmahlullu the Tamed" },
+	{ name = "Urmahlullu the Tamed", threshold = 200000, nextName = "Wisdom of Urmahlullu" },
+	{ name = "Wisdom of Urmahlullu", threshold = 100000, nextName = "Urmahlullu the Weakened" },
+	{ name = "Urmahlullu the Weakened", threshold = 0, nextName = nil },
+}
+
+local stageByName = {}
+for i, stage in ipairs(stages) do
+	stageByName[stage.name] = {
+		index = i,
+		threshold = stage.threshold * healthMultiplier,
+		nextName = stage.nextName,
+	}
+end
+
+local changingStages = {}
 
 local urmahlulluChanges = CreatureEvent("UrmahlulluChanges")
 
-local stages = {
-	{ name = "Urmahlullu the Immaculate", health = 515000 * healthMultiplier },
-	{ name = "Wildness of Urmahlullu", health = 400000 * healthMultiplier },
-	{ name = "Urmahlullu the Tamed", health = 300000 * healthMultiplier },
-	{ name = "Wisdom of Urmahlullu", health = 200000 * healthMultiplier },
-	{ name = "Urmahlullu the Weakened", health = 100000 * healthMultiplier },
-}
-
-local changeEvent = nil
-local revertEvent = nil
-
-local function revert(cid, name)
-	local creature = Creature(cid, name)
-	if not creature then
-		return
-	end
-
-	if creature:getName() == name then
-		return
-	end
-
-	local position = creature:getPosition()
-	creature:remove()
-	local monster = Game.createMonster(name, position, true, true)
-	if not monster then
-		return
-	end
-	if name ~= stages[5].name then
-		changeEvent = nil
-		revertEvent = addEvent(revert, timetochange * 1000, creature:getId(), stages[1].name)
-	else
-		changeEvent = nil
-		revertEvent = nil
-	end
-end
-
-local function changeStage(cid, stage)
-	changeEvent = nil
-	local creature = Creature(cid)
-	if not creature then
-		return
-	end
-
-	local position = creature:getPosition()
-	local previousName = creature:getName()
-	creature:remove()
-	local newCreature = Game.createMonster(stage, position, true, true)
-	if not newCreature then
-		return
-	end
-	revertEvent = addEvent(revert, timetochange * 1000, newCreature:getId(), previousName)
-end
-
-function urmahlulluChanges.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType)
-	if not creature then
-		return primaryDamage, primaryType, secondaryDamage, secondaryType
-	end
-	local name = creature:getName()
-	local nextStageIndex = 1
-	for i, stage in ipairs(stages) do
-		if stage.name == name then
-			nextStageIndex = i + 1
-			break
-		end
-	end
-
-	if nextStageIndex > #stages then
+function urmahlulluChanges.onHealthChange(creature, attacker, primaryDamage, primaryType, secondaryDamage, secondaryType, origin)
+	if not creature or not creature:isMonster() then
 		return primaryDamage, primaryType, secondaryDamage, secondaryType
 	end
 
-	local stage = stages[nextStageIndex]
-	if creature:getHealth() <= stage.health and not changeEvent then
-		if revertEvent then
-			stopEvent(revertEvent)
-		end
-		revertEvent = nil
-		changeEvent = addEvent(changeStage, SCHEDULER_MIN_TICKS, creature:getId(), stage.name)
+	local stageInfo = stageByName[creature:getName()]
+	if not stageInfo or not stageInfo.nextName then
+		return primaryDamage, primaryType, secondaryDamage, secondaryType
+	end
+
+	local bossId = creature:getId()
+
+	-- Proteção contra múltiplos hits concorrentes durante a transição
+	if changingStages[bossId] then
+		return 0, primaryType, 0, secondaryType
+	end
+
+	local totalDamage = primaryDamage + secondaryDamage
+	local currentHealth = creature:getHealth()
+	local resultingHealth = currentHealth - totalDamage
+
+	if resultingHealth <= stageInfo.threshold then
+		changingStages[bossId] = true
+
+		local nextStageName = stageInfo.nextName
+		local attackerId = attacker and attacker:getId() or nil
+		local targetHealth = math.max(1, resultingHealth)
+
+		addEvent(function(cid, nextName, newHealth, atkId)
+			changingStages[cid] = nil
+
+			local oldBoss = Monster(cid)
+			if not oldBoss then
+				return
+			end
+
+			local spawnPos = oldBoss:getPosition()
+			oldBoss:remove()
+
+			local newBoss = Game.createMonster(nextName, spawnPos, true, true)
+			if not newBoss then
+				return
+			end
+
+			newBoss:setHealth(newHealth)
+			spawnPos:sendMagicEffect(CONST_ME_MAGIC_RED)
+			spawnPos:sendMagicEffect(CONST_ME_POFF)
+			newBoss:say("You think you can defeat me?! Feel my true power!", TALKTYPE_MONSTER_YELL)
+
+			if atkId then
+				local target = Creature(atkId)
+				if target then
+					newBoss:setTarget(target)
+				end
+			end
+		end, 100, bossId, nextStageName, targetHealth, attackerId)
+
+		return 0, primaryType, 0, secondaryType
 	end
 
 	return primaryDamage, primaryType, secondaryDamage, secondaryType
