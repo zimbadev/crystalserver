@@ -1,7 +1,7 @@
 local feature = TalkAction("!autoloot")
 
 local validValues = {
-	-- "all",
+	"all",
 	"on",
 	"off",
 }
