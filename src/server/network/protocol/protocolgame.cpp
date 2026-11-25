@@ -3097,7 +3097,12 @@ void ProtocolGame::parsePartyAnalyzerAction(NetworkMessage &msg) const {
 	if (action == PARTYANALYZERACTION_RESET) {
 		party->resetAnalyzer();
 	} else if (action == PARTYANALYZERACTION_PRICETYPE) {
-		party->switchAnalyzerPriceType();
+		// CIP names the loot type (0 market, 1 leader); a message without it switches.
+		if (msg.canRead(1)) {
+			party->setAnalyzerPriceType(msg.getByte() != 0 ? LEADER_PRICE : MARKET_PRICE);
+		} else {
+			party->switchAnalyzerPriceType();
+		}
 	} else if (action == PARTYANALYZERACTION_PRICEVALUE) {
 		const auto size = msg.get<uint16_t>();
 		// each entry is u16 itemId + u64 price; reject counts the payload cannot hold
