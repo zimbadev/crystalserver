@@ -928,12 +928,35 @@ void Combat::CombatHealthFunc(const std::shared_ptr<Creature> &caster, const std
 		damage = applyWeaponProficiencyDamage(attackerPlayer, item, targetMonster, damage);
 	}
 
+	// Elite bounty task: the task creature takes less damage from the task owner (and the owner's summons)
+	if (targetMonster && caster && damage.primary.type != COMBAT_HEALING) {
+		std::shared_ptr<Player> eliteTaskOwner = attackerPlayer;
+		if (!eliteTaskOwner) {
+			if (const auto &casterMaster = caster->getMaster()) {
+				eliteTaskOwner = casterMaster->getPlayer();
+			}
+		}
+
+		if (eliteTaskOwner && g_iobountytasks().isEliteTaskCreature(eliteTaskOwner, targetMonster->getRaceId())) {
+			const int64_t damageTakenReduction = std::clamp<int32_t>(g_configManager().getNumber(BOUNTY_TASKS_ELITE_DAMAGE_TAKEN_PERCENT), 0, 100);
+			damage.primary.value -= static_cast<int32_t>(damage.primary.value * damageTakenReduction / 100);
+			damage.secondary.value -= static_cast<int32_t>(damage.secondary.value * damageTakenReduction / 100);
+		}
+	}
+
 	// Monster attacking player
 	if (attackerMonster && targetPlayer) {
 		const auto &slot = targetPlayer->getPreyWithMonster(attackerMonster->getRaceId());
 		if (slot && slot->isOccupied() && slot->bonus == PreyBonus_Defense && slot->bonusTimeLeft > 0) {
 			damage.primary.value -= static_cast<int32_t>(std::ceil((damage.primary.value * slot->bonusPercentage) / 100));
 			damage.secondary.value -= static_cast<int32_t>(std::ceil((damage.secondary.value * slot->bonusPercentage) / 100));
+		}
+
+		// Elite bounty task: the task creature deals more damage to the task owner
+		if (damage.primary.type != COMBAT_HEALING && g_iobountytasks().isEliteTaskCreature(targetPlayer, attackerMonster->getRaceId())) {
+			const int64_t damageDealtBonus = std::max<int32_t>(g_configManager().getNumber(BOUNTY_TASKS_ELITE_DAMAGE_DEALT_PERCENT), 0);
+			damage.primary.value += static_cast<int32_t>(damage.primary.value * damageDealtBonus / 100);
+			damage.secondary.value += static_cast<int32_t>(damage.secondary.value * damageDealtBonus / 100);
 		}
 	}
 

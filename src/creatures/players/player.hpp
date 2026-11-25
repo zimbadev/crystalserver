@@ -462,6 +462,10 @@ public:
 	bool isOldProtocol() const;
 
 	uint32_t getProtocolVersion() const;
+	// u32 client version of the login packet (1530 or 1533); 0 without a connection
+	uint32_t getClientVersion() const;
+	// True while a 15.33 (Winter Update 2026) client is connected
+	bool isWinter2026() const;
 
 	bool hasSecureMode() const;
 
@@ -697,6 +701,14 @@ public:
 	}
 	const Position &getSpellAimPosition() const {
 		return m_spellAimPosition;
+	}
+	// 15.33: aim mode of the last say packet, set per action button by the client
+	// (0 = facing direction, 1 = cursor tile, 2 = crosshair tile, 3 = towards the selected target).
+	void setSpellAimMode(uint8_t aimMode) {
+		m_spellAimMode = aimMode;
+	}
+	uint8_t getSpellAimMode() const {
+		return m_spellAimMode;
 	}
 
 	// Vocation Adjustment: Mana Buffer (Sorcerer/Druid) -- gates the 25% max-mana tax to once per 2s.
@@ -1324,6 +1336,14 @@ public:
 
 	uint16_t getXpBoostTime() const;
 
+	// Daily reward XP boost (15.33). It is separate from the store boost above: both are added while active.
+	uint16_t getDailyXpBoostPercent() const;
+	void setDailyXpBoostPercent(uint16_t percent);
+	uint16_t getDailyXpBoostTime() const;
+	void setDailyXpBoostTime(uint16_t timeLeft);
+	// Reads the daily reward XP boost from the player KV (called while the player is loaded)
+	void loadDailyXpBoost();
+
 	int32_t getIdleTime() const;
 
 	void setTraining(bool value);
@@ -1456,11 +1476,23 @@ public:
 	void removeBountyPoints(uint32_t amount);
 	uint32_t getBountyPoints() const;
 
+	// Bounty Reroll Tokens; addRerollTasks stops at the token cap (config bountyTasksMaxRerollTokens)
 	void addRerollTasks(uint32_t amount);
 	void removeRerollTasks(uint32_t amount);
 	uint32_t getRerollTasks() const;
 
 	bool isBountyTalismanEquipped() const;
+
+	/*******************************************************************************
+	 * Cosmetic Tokens (Winter Update 2026)
+	 * Character bound, kept in the player KV. Every change is sent to a 15.33 client
+	 * as resource balance RESOURCE_COSMETIC_TOKENS.
+	 ******************************************************************************/
+	uint32_t getCosmeticTokens() const;
+	void setCosmeticTokens(uint32_t amount);
+	void addCosmeticTokens(uint32_t amount);
+	// Returns false (and changes nothing) when the balance is too low
+	bool removeCosmeticTokens(uint32_t amount);
 
 	void sendTaskBoardResourceBalance() const;
 
@@ -1873,6 +1905,7 @@ private:
 	Position lastWalkthroughPosition;
 	Position m_spellAimPosition;
 	bool m_hasSpellAim = false;
+	uint8_t m_spellAimMode = 0;
 	int64_t m_manaBufferTaxTime = 0;
 	bool m_manaBufferSurvived = false; // transient: Mana Buffer absorbed a lethal hit this combatChangeHealth pass
 
@@ -1982,6 +2015,8 @@ private:
 	uint16_t voucherXpBoost = 0;
 	uint16_t grindingXpBoost = 0;
 	uint16_t xpBoostPercent = 0;
+	uint16_t dailyXpBoostPercent = 0;
+	uint16_t dailyXpBoostTime = 0;
 	uint16_t staminaXpBoost = 100;
 	int16_t lastDepotId = -1;
 	StashItemList stashItems; // [ItemID] = amount

@@ -76,6 +76,9 @@ class PlayerFunctions {
 	static int luaPlayerGetRerollTasks(lua_State* L);
 	static int luaPlayerAddRerollTasks(lua_State* L);
 	static int luaPlayerRemoveRerollTasks(lua_State* L);
+	static int luaPlayerGetCosmeticTokens(lua_State* L);
+	static int luaPlayerAddCosmeticTokens(lua_State* L);
+	static int luaPlayerRemoveCosmeticTokens(lua_State* L);
 	static int luaPlayerGetSoulsealsPoints(lua_State* L);
 	static int luaPlayerAddSoulsealsPoints(lua_State* L);
 	static int luaPlayerRemoveSoulsealsPoints(lua_State* L);
@@ -369,6 +372,10 @@ class PlayerFunctions {
 	static int luaPlayerSetStaminaXpBoost(lua_State* L);
 	static int luaPlayerGetXpBoostTime(lua_State* L);
 	static int luaPlayerSetXpBoostTime(lua_State* L);
+	static int luaPlayerGetDailyXpBoostPercent(lua_State* L);
+	static int luaPlayerSetDailyXpBoostPercent(lua_State* L);
+	static int luaPlayerGetDailyXpBoostTime(lua_State* L);
+	static int luaPlayerSetDailyXpBoostTime(lua_State* L);
 
 	static int luaPlayerGetIdleTime(lua_State* L);
 	static int luaPlayerGetFreeBackpackSlots(lua_State* L);

@@ -33,6 +33,7 @@
 #include <algorithm>
 #include <array>
 #include <ctime>
+#include <limits>
 #include <optional>
 #include <string_view>
 #include <unordered_map>
@@ -43,21 +44,13 @@ namespace {
 		DailyRewardType_t type;
 	};
 
-	constexpr std::array<RewardTypeMapping, 4> REWARD_TYPE_TABLE { {
+	constexpr std::array<RewardTypeMapping, 6> REWARD_TYPE_TABLE { {
 		{ "item", DAILY_REWARD_TYPE_ITEM },
 		{ "storage", DAILY_REWARD_TYPE_STORAGE },
 		{ "preyReroll", DAILY_REWARD_TYPE_PREY_REROLL },
 		{ "xpBoost", DAILY_REWARD_TYPE_XP_BOOST },
-	} };
-
-	struct SystemTypeMapping {
-		std::string_view name;
-		DailyRewardSystemType_t type;
-	};
-
-	constexpr std::array<SystemTypeMapping, 2> SYSTEM_TYPE_TABLE { {
-		{ "one", DAILY_REWARD_SYSTEM_TYPE_ONE },
-		{ "two", DAILY_REWARD_SYSTEM_TYPE_TWO },
+		{ "cosmeticTokens", DAILY_REWARD_TYPE_COSMETIC_TOKENS },
+		{ "bountyRerollTokens", DAILY_REWARD_TYPE_BOUNTY_REROLL_TOKENS },
 	} };
 
 	std::optional<DailyRewardType_t> parseRewardType(const std::string &value) {
@@ -68,12 +61,14 @@ namespace {
 		return it->type;
 	}
 
-	std::optional<DailyRewardSystemType_t> parseSystemType(const std::string &value) {
-		const auto it = std::ranges::find(SYSTEM_TYPE_TABLE, value, &SystemTypeMapping::name);
-		if (it == SYSTEM_TYPE_TABLE.end()) {
-			return std::nullopt;
-		}
-		return it->type;
+	// Premium rewards and resting area bonuses also count for VIP accounts
+	bool hasDailyRewardPremium(const std::shared_ptr<Player> &player) {
+		return (g_configManager().getBoolean(VIP_SYSTEM_ENABLED) && player->isVip()) || player->isPremium();
+	}
+
+	// Counts of a reward object are one byte on the wire
+	uint8_t toDailyRewardCount(uint32_t amount) {
+		return static_cast<uint8_t>(std::min<uint32_t>(amount, std::numeric_limits<uint8_t>::max()));
 	}
 
 	// storage field parsing
@@ -134,13 +129,12 @@ bool DailyRewards::loadFromXml(bool /*reloading*/) {
 
 	testMode = root.attribute("testMode").as_bool(false);
 	serverTimeThreshold = root.attribute("serverTimeThreshold").as_uint(86400);
+	rerollTokensPerClaim = toDailyRewardCount(root.attribute("rerollTokensPerClaim").as_uint(1));
 
 	storages = DailyRewardStorages {};
 	strikeBonuses.clear();
 	rewards.clear();
-	vocationItems.clear();
 	shrineItems.clear();
-	itemGroups.clear();
 
 	// storages
 	{
@@ -198,64 +192,8 @@ bool DailyRewards::loadFromXml(bool /*reloading*/) {
 		strikeBonuses.emplace(day, std::move(bonus));
 	}
 
-	// itemGroups
-	for (const auto &groupNode : root.child("itemGroups").children("group")) {
-		const std::string groupName = groupNode.attribute("name").as_string();
-		if (groupName.empty()) {
-			g_logger().error("[DailyRewards::loadFromXml] <group> node is missing the 'name' attribute, skipping.");
-			continue;
-		}
-		if (itemGroups.contains(groupName)) {
-			g_logger().error("[DailyRewards::loadFromXml] Duplicate item group '{}', ignoring duplicate entry.", groupName);
-			continue;
-		}
-
-		std::vector<uint16_t> items;
-		for (const auto &itemNode : groupNode.children("item")) {
-			if (const uint16_t itemId = resolveItemId(itemNode); itemId != 0) {
-				items.emplace_back(itemId);
-			}
-		}
-		itemGroups.emplace(groupName, std::move(items));
-	}
-
-	// vocationItems
-	for (const auto &vocationNode : root.child("vocationItems").children("vocation")) {
-		const uint8_t vocationId = static_cast<uint8_t>(vocationNode.attribute("id").as_uint());
-		if (vocationItems.contains(vocationId)) {
-			g_logger().error("[DailyRewards::loadFromXml] Duplicate vocationItems entry for vocation id '{}', ignoring duplicate.", vocationId);
-			continue;
-		}
-
-		std::vector<uint16_t> items;
-		std::unordered_set<uint16_t> seenItems;
-
-		const std::string groupsAttr = vocationNode.attribute("groups").as_string();
-		for (const std::string &groupName : explodeString(groupsAttr, ",")) {
-			const auto groupIt = itemGroups.find(groupName);
-			if (groupIt == itemGroups.end()) {
-				g_logger().error(
-					"[DailyRewards::loadFromXml] Vocation '{}' references unknown item group '{}', ignoring.",
-					vocationId, groupName
-				);
-				continue;
-			}
-			for (const uint16_t itemId : groupIt->second) {
-				if (seenItems.insert(itemId).second) {
-					items.emplace_back(itemId);
-				}
-			}
-		}
-
-		// vocations can still declare extra items inline, on top of any referenced groups.
-		for (const auto &itemNode : vocationNode.children("item")) {
-			if (const uint16_t itemId = resolveItemId(itemNode); itemId != 0 && seenItems.insert(itemId).second) {
-				items.emplace_back(itemId);
-			}
-		}
-
-		vocationItems.emplace(vocationId, std::move(items));
-	}
+	// The <itemGroups> and <vocationItems> nodes of older files are ignored: since the Winter Update 2026
+	// the claim is one click and every day has a fixed reward.
 
 	// rewards
 	for (const auto &rewardNode : root.child("rewards").children("reward")) {
@@ -276,24 +214,21 @@ bool DailyRewards::loadFromXml(bool /*reloading*/) {
 			continue;
 		}
 
-		const std::string systemValue = rewardNode.attribute("systemType").as_string("one");
-		const auto parsedSystemType = parseSystemType(systemValue);
-		if (!parsedSystemType) {
-			g_logger().error("[DailyRewards::loadFromXml] Reward day '{}' has unknown systemType '{}', skipping.", day, systemValue);
-			continue;
-		}
-
 		DailyRewardDayConfig reward;
 		reward.day = day;
 		reward.type = *parsedType;
-		reward.systemType = *parsedSystemType;
 		reward.freeAccount = static_cast<uint16_t>(rewardNode.attribute("freeAccount").as_uint());
 		reward.premiumAccount = static_cast<uint16_t>(rewardNode.attribute("premiumAccount").as_uint());
+		reward.freePercent = static_cast<uint16_t>(rewardNode.attribute("freePercent").as_uint(50));
+		reward.premiumPercent = static_cast<uint16_t>(rewardNode.attribute("premiumPercent").as_uint(50));
 		reward.itemCharges = static_cast<uint16_t>(rewardNode.attribute("itemCharges").as_uint());
 		for (const auto &itemNode : rewardNode.children("item")) {
 			if (const uint16_t itemId = resolveItemId(itemNode); itemId != 0) {
 				reward.items.emplace_back(itemId);
 			}
+		}
+		if (reward.type == DAILY_REWARD_TYPE_ITEM && reward.items.empty()) {
+			g_logger().warn("[DailyRewards::loadFromXml] Reward day '{}' has type 'item' but no <item>: this day only gives the reroll tokens of every claim.", day);
 		}
 		rewards.emplace(day, std::move(reward));
 	}
@@ -311,6 +246,92 @@ bool DailyRewards::loadFromXml(bool /*reloading*/) {
 
 bool DailyRewards::isShrineItem(uint16_t itemId) const {
 	return shrineItems.contains(itemId);
+}
+
+std::vector<DailyRewardEntry> DailyRewards::getRewardEntries(uint8_t day, bool premium) const {
+	std::vector<DailyRewardEntry> entries;
+
+	if (const auto rewardIt = rewards.find(day); rewardIt != rewards.end()) {
+		const auto &dailyTable = rewardIt->second;
+		const uint16_t amount = premium ? dailyTable.premiumAccount : dailyTable.freeAccount;
+
+		switch (dailyTable.type) {
+			case DAILY_REWARD_TYPE_ITEM: {
+				for (const uint16_t itemId : dailyTable.items) {
+					if (amount == 0) {
+						break;
+					}
+					const ItemType &itemType = Item::items[itemId];
+					DailyRewardEntry entry;
+					entry.kind = DAILY_REWARD_KIND_ITEM;
+					entry.itemId = itemId;
+					entry.itemCharges = dailyTable.itemCharges;
+					entry.name = itemType.article.empty() ? itemType.name : fmt::format("{} {}", itemType.article, itemType.name);
+					entry.count = toDailyRewardCount(amount);
+					entries.emplace_back(std::move(entry));
+				}
+				break;
+			}
+			case DAILY_REWARD_TYPE_PREY_REROLL: {
+				if (amount > 0) {
+					DailyRewardEntry entry;
+					entry.kind = DAILY_REWARD_KIND_PREY_WILDCARDS;
+					entry.count = toDailyRewardCount(amount);
+					entries.emplace_back(std::move(entry));
+				}
+				break;
+			}
+			case DAILY_REWARD_TYPE_XP_BOOST: {
+				const uint16_t percent = premium ? dailyTable.premiumPercent : dailyTable.freePercent;
+				if (amount > 0 && percent > 0) {
+					DailyRewardEntry entry;
+					entry.kind = DAILY_REWARD_KIND_XP_BOOST;
+					entry.minutes = amount;
+					entry.percent = percent;
+					entries.emplace_back(std::move(entry));
+				}
+				break;
+			}
+			case DAILY_REWARD_TYPE_COSMETIC_TOKENS: {
+				if (amount > 0) {
+					DailyRewardEntry entry;
+					entry.kind = DAILY_REWARD_KIND_COSMETIC_TOKENS;
+					entry.count = toDailyRewardCount(amount);
+					entries.emplace_back(std::move(entry));
+				}
+				break;
+			}
+			case DAILY_REWARD_TYPE_BOUNTY_REROLL_TOKENS: {
+				if (amount > 0) {
+					DailyRewardEntry entry;
+					entry.kind = DAILY_REWARD_KIND_BOUNTY_REROLL_TOKENS;
+					entry.count = toDailyRewardCount(amount);
+					entries.emplace_back(std::move(entry));
+				}
+				break;
+			}
+			default:
+				break;
+		}
+	}
+
+	// Every claim also gives Bounty Reroll Tokens
+	if (rerollTokensPerClaim > 0) {
+		DailyRewardEntry entry;
+		entry.kind = DAILY_REWARD_KIND_BOUNTY_REROLL_TOKENS;
+		entry.count = rerollTokensPerClaim;
+		entries.emplace_back(std::move(entry));
+	}
+
+	return entries;
+}
+
+uint8_t DailyRewards::getStreakBonusChance(const std::shared_ptr<Player> &player) const {
+	if (!player) {
+		return 0;
+	}
+
+	return static_cast<uint8_t>(std::min<uint32_t>(getStreakLevel(player), MAX_STREAK_BONUS_CHANCE));
 }
 
 uint32_t DailyRewards::getCollectionTokens(const std::shared_ptr<Player> &player) const {
@@ -441,7 +462,8 @@ void DailyRewards::scheduleStaminaRegen(uint32_t playerId, uint32_t delayMs) {
 			}
 
 			g_dailyRewards().refreshStreak(player);
-			if (g_dailyRewards().getStreakLevel(player) < DAILY_REWARD_STAMINA_REGENERATION) {
+			// Resting area bonus of Premium accounts
+			if (!hasDailyRewardPremium(player)) {
 				g_dailyRewards().stopPlayerBonuses(playerId);
 				return;
 			}
@@ -482,16 +504,14 @@ void DailyRewards::scheduleSoulRegen(uint32_t playerId, uint32_t delayMs) {
 			}
 
 			g_dailyRewards().refreshStreak(player);
-			if (g_dailyRewards().getStreakLevel(player) < DAILY_REWARD_SOUL_REGENERATION) {
+			// Resting area bonus of Premium accounts
+			if (!hasDailyRewardPremium(player)) {
 				g_dailyRewards().stopPlayerBonuses(playerId);
 				return;
 			}
 
 			if (player->getZoneType() == ZONE_PROTECTION) {
-				uint8_t maxSoul = 100;
-				if ((g_configManager().getBoolean(VIP_SYSTEM_ENABLED) && player->isVip()) || player->isPremium()) {
-					maxSoul = 200;
-				}
+				const uint8_t maxSoul = 200;
 				if (player->getSoul() < maxSoul) {
 					player->changeSoul(1);
 					player->sendTextMessage(MESSAGE_FAILURE, "One soul point has been restored.");
@@ -517,24 +537,22 @@ void DailyRewards::stopPlayerBonuses(uint32_t playerId) {
 
 void DailyRewards::loadPlayerBonuses(const std::shared_ptr<Player> &player) {
 	refreshStreak(player);
-
-	const uint32_t streakLevel = getStreakLevel(player);
-	if (streakLevel >= DAILY_REWARD_STAMINA_REGENERATION) {
-		uint32_t delay = 3 * 60 * 1000;
-		if (player->getStaminaMinutes() > 2340 && player->getStaminaMinutes() <= 2520) {
-			delay = 6 * 60 * 1000;
-		}
-		scheduleStaminaRegen(player->getID(), delay);
-	} else {
-		// The streak may have expired while the player stayed online, so the
-		// events scheduled with the old value must not keep running.
+	// Winter Update 2026: the resting area bonuses no longer depend on the reward streak.
+	// Premium: hit point, mana, stamina and soul regeneration, with doubled hit point and mana regeneration.
+	// Free: hit point and mana regeneration (both handled in ConditionRegeneration::executeCondition).
+	if (!hasDailyRewardPremium(player)) {
 		stopPlayerBonuses(player->getID());
+		return;
 	}
 
-	if (streakLevel >= DAILY_REWARD_SOUL_REGENERATION) {
-		const uint32_t delay = player->getVocation()->getSoulGainTicks();
-		scheduleSoulRegen(player->getID(), delay);
+	uint32_t staminaDelay = 3 * 60 * 1000;
+	if (player->getStaminaMinutes() > 2340 && player->getStaminaMinutes() <= 2520) {
+		staminaDelay = 6 * 60 * 1000;
 	}
+	scheduleStaminaRegen(player->getID(), staminaDelay);
+
+	const uint32_t soulDelay = player->getVocation()->getSoulGainTicks();
+	scheduleSoulRegen(player->getID(), soulDelay);
 }
 
 void DailyRewards::refreshStreak(const std::shared_ptr<Player> &player) const {
@@ -617,6 +635,9 @@ void DailyRewards::loadDailyReward(const std::shared_ptr<Player> &player, DailyR
 	const uint8_t shrineFlag = source == DAILY_REWARD_FROM_SHRINE ? 1 : 0;
 	player->sendDailyRewardCollectionResource(0x15, getJokerTokens(player));
 	player->sendDailyRewardCollectionResource(0x14, getCollectionTokens(player));
+	// 15.33: the reward wall shows both token balances (nothing is sent to an older client)
+	player->sendResourceBalance(RESOURCE_BOUNTY_REROLL_TOKENS, player->getRerollTasks());
+	player->sendResourceBalance(RESOURCE_COSMETIC_TOKENS, player->getCosmeticTokens());
 	player->sendDailyRewardBasic();
 	player->sendOpenRewardWall(
 		shrineFlag,
@@ -666,162 +687,117 @@ void DailyRewards::playerSelectReward(const std::shared_ptr<Player> &player, Net
 		return;
 	}
 
+	// C2S 0xDA: u8 source (0 = reward shrine, otherwise instant access), u8 n, n x { u16 itemId, u8 count }.
+	// Since the Winter Update 2026 the claim is one click: every day has a fixed reward, so the item
+	// picks an older client may still send are not read.
+	const uint8_t target = msg.getByte();
+	const DailyRewardSource_t source = target == 0 ? DAILY_REWARD_FROM_SHRINE : DAILY_REWARD_FROM_PANEL;
+
+	// The client keeps its claim pending until the reward wall (S2C 0xE2) arrives again,
+	// so a refused claim is answered with the wall as well
 	refreshStreak(player);
 
 	if (isRewardTaken(player) && !testMode) {
 		player->sendMessageDialog("You have already collected your daily reward.");
+		loadDailyReward(player, source);
 		return;
 	}
 
-	const uint8_t target = msg.getByte();
+	const bool premium = hasDailyRewardPremium(player);
+	const uint8_t rewardDay = getDayStreak(player) + 1;
+	const auto entries = getRewardEntries(rewardDay, premium);
+
+	// Check everything that can fail before anything is taken or given
+	uint32_t inboxSlots = 0;
+	for (const auto &entry : entries) {
+		if (entry.kind != DAILY_REWARD_KIND_ITEM) {
+			continue;
+		}
+		inboxSlots += Item::items[entry.itemId].stackable ? 1 : entry.count;
+	}
+
+	const auto &inbox = player->getStoreInbox();
+	if (inboxSlots > 0 && (!inbox || inbox->size() + inboxSlots > inbox->capacity())) {
+		player->sendMessageDialog("You do not have enough space in your store inbox.");
+		loadDailyReward(player, source);
+		return;
+	}
+
 	if (target != 0) {
 		if (getCollectionTokens(player) < 1) {
 			player->sendMessageDialog("You do not have enough collection tokens to proceed.");
+			loadDailyReward(player, source);
 			return;
 		}
 		setCollectionTokens(player, static_cast<int32_t>(getCollectionTokens(player) - 1));
 	}
 
-	const uint8_t rewardIndex = getDayStreak(player) + 1;
-	const auto rewardIt = rewards.find(rewardIndex);
-	if (rewardIt == rewards.end()) {
-		player->sendMessageDialog("Something went wrong and we cannot process this request.");
-		return;
-	}
-
-	const auto &dailyTable = rewardIt->second;
-	uint16_t rewardCount = dailyTable.freeAccount;
-	if ((g_configManager().getBoolean(VIP_SYSTEM_ENABLED) && player->isVip()) || player->isPremium()) {
-		rewardCount = dailyTable.premiumAccount;
-	}
-
-	std::string dailyRewardMessage;
-	if (dailyTable.type == DAILY_REWARD_TYPE_ITEM) {
-		std::vector<uint16_t> possibleItems;
-		const uint8_t baseId = player->getVocation()->getBaseId();
-		if (const auto itemsIt = vocationItems.find(baseId); itemsIt != vocationItems.end()) {
-			possibleItems = itemsIt->second;
+	std::string description;
+	const auto describe = [&description](const std::string &text) {
+		if (!description.empty()) {
+			description += ", ";
 		}
-		if (!dailyTable.items.empty()) {
-			possibleItems = dailyTable.items;
-		}
+		description += text;
+	};
 
-		struct SelectedItem {
-			uint16_t itemId = 0;
-			uint8_t count = 0;
-		};
-		std::vector<SelectedItem> selectedItems;
-		const uint8_t columnsPicked = msg.getByte();
-		uint32_t orderedCounter = 0;
-		uint32_t totalCounter = 0;
-
-		for (uint8_t i = 0; i < columnsPicked; ++i) {
-			const uint16_t itemId = msg.get<uint16_t>();
-			const uint8_t count = msg.getByte();
-			if (count == 0) {
-				continue;
-			}
-			orderedCounter += count;
-			if (std::ranges::find(possibleItems, itemId) != possibleItems.end()) {
-				selectedItems.push_back({ itemId, count });
-				totalCounter += count;
-			}
-		}
-
-		if (selectedItems.empty() || totalCounter == 0) {
-			player->sendMessageDialog("You must select at least one item.");
-			return;
-		}
-
-		if (totalCounter > rewardCount) {
-			g_logger().error(
-				"[DailyRewards::playerSelectReward] Player '{}' tried to collect {} items but only {} are allowed for this reward, rejecting.",
-				player->getName(),
-				totalCounter,
-				rewardCount
-			);
-			player->sendMessageDialog("You cannot collect more items than the daily reward allows.");
-			return;
-		}
-		if (totalCounter != orderedCounter) {
-			g_logger().error("[DailyRewards::playerSelectReward] Player '{}' tried to collect invalid daily reward items, rejecting.", player->getName());
-			return;
-		}
-
-		const auto &inbox = player->getStoreInbox();
-		if (!inbox || inbox->size() + selectedItems.size() > inbox->capacity()) {
-			player->sendMessageDialog("You do not have enough space in your store inbox.");
-			return;
-		}
-
-		std::string description;
-		for (size_t index = 0; index < selectedItems.size(); ++index) {
-			const auto &selected = selectedItems[index];
-			const ItemType &itemType = Item::items[selected.itemId];
-			if (dailyTable.itemCharges > 0) {
-				if (!itemType.stackable) {
-					for (uint8_t chargeIndex = 0; chargeIndex < selected.count; ++chargeIndex) {
-						const auto &inboxItem = Item::CreateItem(selected.itemId, 1);
-						if (!inboxItem) {
-							continue;
-						}
-						inboxItem->setAttribute(ItemAttribute_t::STORE, static_cast<int64_t>(std::time(nullptr)));
-						inboxItem->setAttribute(ItemAttribute_t::CHARGES, dailyTable.itemCharges);
-						inbox->addItemBack(inboxItem);
-					}
-				} else {
-					const auto &inboxItem = Item::CreateItem(selected.itemId, selected.count);
-					if (inboxItem) {
-						inboxItem->setAttribute(ItemAttribute_t::STORE, static_cast<int64_t>(std::time(nullptr)));
-						inbox->addItemBack(inboxItem);
-					}
-				}
-			} else if (itemType.stackable) {
-				const auto &inboxItem = Item::CreateItem(selected.itemId, selected.count);
-				if (inboxItem) {
-					inboxItem->setAttribute(ItemAttribute_t::STORE, static_cast<int64_t>(std::time(nullptr)));
-					inbox->addItemBack(inboxItem);
-				}
-			} else {
-				for (uint8_t itemIndex = 0; itemIndex < selected.count; ++itemIndex) {
-					const auto &inboxItem = Item::CreateItem(selected.itemId, 1);
+	for (const auto &entry : entries) {
+		switch (entry.kind) {
+			case DAILY_REWARD_KIND_ITEM: {
+				const ItemType &itemType = Item::items[entry.itemId];
+				// Stackable items are one stack, everything else is created one by one
+				const uint8_t stacks = itemType.stackable ? 1 : entry.count;
+				const uint16_t stackCount = itemType.stackable ? entry.count : 1;
+				for (uint8_t stackIndex = 0; stackIndex < stacks; ++stackIndex) {
+					const auto &inboxItem = Item::CreateItem(entry.itemId, stackCount);
 					if (!inboxItem) {
 						continue;
 					}
 					inboxItem->setAttribute(ItemAttribute_t::STORE, static_cast<int64_t>(std::time(nullptr)));
+					if (entry.itemCharges > 0 && !itemType.stackable) {
+						inboxItem->setAttribute(ItemAttribute_t::CHARGES, entry.itemCharges);
+					}
 					inbox->addItemBack(inboxItem);
 				}
+				describe(fmt::format("{}x {}", entry.count, itemType.name));
+				break;
 			}
-
-			description += fmt::format("{}x {}", selected.count, itemType.name);
-			if (index + 1 < selectedItems.size()) {
-				description += ", ";
-			} else {
-				description += ".";
+			case DAILY_REWARD_KIND_PREY_WILDCARDS: {
+				player->addPreyCards(entry.count);
+				describe(fmt::format("{}x Prey Wildcard", entry.count));
+				break;
 			}
+			case DAILY_REWARD_KIND_XP_BOOST: {
+				// The daily reward XP boost is separate from the store XP boost (both are added while
+				// active); a new daily boost replaces what is left of the old one
+				const uint32_t seconds = std::min<uint32_t>(static_cast<uint32_t>(entry.minutes) * 60, std::numeric_limits<uint16_t>::max());
+				player->setDailyXpBoostPercent(entry.percent);
+				player->setDailyXpBoostTime(static_cast<uint16_t>(seconds));
+				player->sendStats();
+				describe(fmt::format("{}% XP boost for {} minutes", entry.percent, entry.minutes));
+				break;
+			}
+			case DAILY_REWARD_KIND_COSMETIC_TOKENS: {
+				player->addCosmeticTokens(entry.count);
+				describe(fmt::format("{}x Cosmetic Token", entry.count));
+				break;
+			}
+			case DAILY_REWARD_KIND_BOUNTY_REROLL_TOKENS: {
+				// Stops at the token cap of the bounty board
+				player->addRerollTasks(entry.count);
+				describe(fmt::format("{}x Bounty Reroll Token", entry.count));
+				break;
+			}
+			default:
+				break;
 		}
-		dailyRewardMessage = "Picked items: " + description;
-	} else if (dailyTable.type == DAILY_REWARD_TYPE_XP_BOOST) {
-		uint16_t rewardCountReviewed = rewardCount;
-		const auto xpBoostLeftMinutes = player->kv()->get("daily-reward-xp-boost");
-		if (xpBoostLeftMinutes && xpBoostLeftMinutes.has_value()) {
-			const auto left = static_cast<uint16_t>(xpBoostLeftMinutes->getNumber());
-			if (left > 0) {
-				rewardCountReviewed = rewardCountReviewed > left ? rewardCountReviewed - left : 0;
-			}
-		}
-
-		player->setXpBoostTime(player->getXpBoostTime() + (rewardCountReviewed * 60));
-		player->kv()->set("daily-reward-xp-boost", ValueWrapper(static_cast<int>(rewardCount)));
-		player->setXpBoostPercent(50);
-		dailyRewardMessage = fmt::format("Picked reward: XP Bonus for {} minutes.", rewardCount);
-	} else if (dailyTable.type == DAILY_REWARD_TYPE_PREY_REROLL) {
-		player->addPreyCards(rewardCount);
-		dailyRewardMessage = fmt::format("Picked reward: {}x Prey bonus reroll(s).", rewardCount);
 	}
 
-	if (!dailyRewardMessage.empty()) {
-		insertHistory(player->getGUID(), getDayStreak(player), fmt::format("Claimed reward no. {}. {}", getDayStreak(player) + 1, dailyRewardMessage));
-		processReward(player, target == 0 ? DAILY_REWARD_FROM_SHRINE : DAILY_REWARD_FROM_PANEL);
+	if (description.empty()) {
+		description = "nothing";
 	}
+
+	const std::string dailyRewardMessage = fmt::format("Claimed reward no. {}. Received: {}.", rewardDay, description);
+	player->sendTextMessage(MESSAGE_EVENT_ADVANCE, dailyRewardMessage);
+	insertHistory(player->getGUID(), getDayStreak(player), dailyRewardMessage);
+	processReward(player, source);
 }

@@ -19,6 +19,7 @@
 
 #include <unordered_map>
 
+#include "core.hpp"
 #include "server/network/protocol/protocol.hpp"
 #include "creatures/creatures_definitions.hpp"
 #include "enums/disconnect_client.hpp"
@@ -126,6 +127,15 @@ public:
 
 	uint16_t getVersion() const {
 		return version;
+	}
+
+	int32_t getClientVersion() const {
+		return clientVersion;
+	}
+
+	// True for the 15.33 (Winter Update 2026) client. Use it for every layout that differs from 15.30.
+	bool isWinter2026() const {
+		return !oldProtocol && clientVersion >= CLIENT_VERSION_WINTER;
 	}
 
 private:
@@ -414,11 +424,14 @@ private:
 	void sendHirelingNameChange(uint32_t creatureId = 0, uint32_t objectId = 0);
 	/// CIP SpellDataModification (S 0x60): u16 count + count×(u16 spellId, u8 mod, u32 value).
 	void sendSpellDataModification(const std::vector<std::tuple<uint16_t, uint8_t, uint32_t>> &entries);
-	/// CIP GemAtelierGemRevealed (S 0xC5): u32 gem id (atelier inventory index).
+	/// CIP GemAtelierGemRevealed (S 0xC5): gem id (atelier inventory index), u16 for 15.33 and u32 for 15.30.
 	void sendGemAtelierGemRevealed(uint16_t gemIndex);
 	void sendResourcesBalance(uint64_t money = 0, uint64_t bank = 0, uint64_t preyCards = 0, uint64_t taskHunting = 0, uint64_t soulsealsPoints = 0, uint64_t forgeDust = 0, uint64_t forgeSliver = 0, uint64_t forgeCores = 0);
 	void sendResourceBalance(Resource_t resourceType);
 	void sendResourceBalance(Resource_t resourceType, uint64_t value);
+	// Width of the value in S2C 0xEE: 4 bytes for these types, 8 bytes for the rest
+	bool isResourceBalanceU32(uint8_t resourceType) const;
+	uint8_t getDailyRewardStreakLength() const;
 	void sendSoulSealsWindow();
 
 	void sendBountyTaskData(const BountyTaskData &bountyData);

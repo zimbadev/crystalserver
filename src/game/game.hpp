@@ -303,7 +303,7 @@ public:
 	void playerOpenBountyTask(uint32_t playerId);
 	void playerOpenWeeklyTask(uint32_t playerId);
 	void playerOpenHuntingTaskShop(uint32_t playerId);
-	void playerBountyTaskChangeDifficulty(uint32_t playerId, uint8_t difficulty);
+	void playerBountyTaskChangeDifficulty(uint32_t playerId, uint8_t difficulty, bool setElite = false, bool elite = false);
 	void playerBountyTaskClaimReroll(uint32_t playerId);
 	void playerBountyTaskReroll(uint32_t playerId);
 	void playerBountyTaskSelectTask(uint32_t playerId, uint8_t taskIndex);

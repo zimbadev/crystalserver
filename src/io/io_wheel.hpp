@@ -302,13 +302,24 @@ private:
 	void addSpellAugmented(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, uint16_t points, const std::string &spellName) const;
 
 	/**
-	 * @brief Unlock a vessel resonance if the number of points is equal to the player's points in the specified slot type.
-	 * @param player The player to receive the vessel resonance.
+	 * @brief Gem Vessel perk (Winter Update 2026, replaces Vessel Resonance): a full slice gives +1 damage and +1 healing.
+	 * @details The full slice also unlocks one more gem vessel, see PlayerWheel::getUnlockedVesselCount.
+	 * @param player The player that owns the wheel.
 	 * @param bonusData The bonus data to update.
 	 * @param slotType The slot type to check the points against.
-	 * @param points The number of points required to add the vessel resonance.
+	 * @param points The number of points in the slot.
 	 */
-	void addVesselResonance(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, WheelGemAffinity_t affinity, uint16_t points) const;
+	void addGemVessel(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, uint16_t points) const;
+
+	/**
+	 * @brief Revelation Mastery perk (Winter Update 2026): a full slice gives 125 promotion points for the Revelation perk of its domain.
+	 * @param player The player that owns the wheel.
+	 * @param bonusData The bonus data to update.
+	 * @param slotType The slot type to check the points against.
+	 * @param affinity The domain of the slice.
+	 * @param points The number of points in the slot.
+	 */
+	void addRevelationMastery(const std::shared_ptr<Player> &player, PlayerWheelMethodsBonusData &bonusData, WheelSlots_t slotType, WheelGemAffinity_t affinity, uint16_t points) const;
 
 	/**
 	 * @brief Initialize the wheel map functions.
