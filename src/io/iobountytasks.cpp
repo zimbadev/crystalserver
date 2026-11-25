@@ -100,7 +100,7 @@ void IOBountyTasks::generateCreatureList(const std::shared_ptr<Player> &player, 
 		}
 
 		const auto mtype = g_monsters().getMonsterTypeByRaceId(raceId);
-		if (!mtype || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
+		if (!mtype || mtype->isBoss() || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
 			continue;
 		}
 
@@ -217,7 +217,7 @@ void IOBountyTasks::fillMissingCreatures(const std::shared_ptr<Player> &player) 
 		}
 
 		const auto mtype = g_monsters().getMonsterTypeByRaceId(raceId);
-		if (!mtype || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
+		if (!mtype || mtype->isBoss() || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
 			continue;
 		}
 

@@ -117,7 +117,7 @@ void PreySlot::reloadMonsterGrid(std::vector<uint16_t> blackList, uint32_t level
 
 		blackList.push_back(raceId);
 		const auto mtype = g_monsters().getMonsterTypeByRaceId(raceId);
-		if (!mtype || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
+		if (!mtype || mtype->isBoss() || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
 			continue;
 		} else if (stageOne != 0 && mtype->info.bestiaryStars <= 1) {
 			raceIdList.push_back(raceId);
@@ -198,7 +198,7 @@ void TaskHuntingSlot::reloadMonsterGrid(std::vector<uint16_t> blackList, uint32_
 
 		blackList.push_back(raceId);
 		const auto mtype = g_monsters().getMonsterTypeByRaceId(raceId);
-		if (!mtype || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
+		if (!mtype || mtype->isBoss() || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
 			continue;
 		} else if (stageOne != 0 && mtype->info.bestiaryStars <= 1) {
 			raceIdList.push_back(raceId);

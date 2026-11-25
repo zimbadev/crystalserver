@@ -140,7 +140,7 @@ void IOWeeklyTasks::generateWeeklyTasks(const std::shared_ptr<Player> &player, u
 
 		blackList.push_back(raceId);
 		const auto mtype = g_monsters().getMonsterTypeByRaceId(raceId);
-		if (!mtype || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
+		if (!mtype || mtype->isBoss() || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
 			continue;
 		}
 
@@ -1173,7 +1173,7 @@ void IOWeeklyTasks::ensureWeeklyTaskCount(const std::shared_ptr<Player> &player)
 
 				blackList.push_back(raceId);
 				const auto mtype = g_monsters().getMonsterTypeByRaceId(raceId);
-				if (!mtype || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
+				if (!mtype || mtype->isBoss() || mtype->info.experience == 0 || !mtype->info.isPreyable || mtype->info.isPreyExclusive) {
 					continue;
 				}
 

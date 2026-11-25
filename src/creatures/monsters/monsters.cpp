@@ -340,7 +340,7 @@ float MonsterType::getDefenseMultiplier() const {
 }
 
 bool MonsterType::isBoss() const {
-	return !info.bosstiaryClass.empty();
+	return !info.bosstiaryClass.empty() || info.bosstiaryRace != BosstiaryRarity_t::BOSS_INVALID || info.isRewardBoss;
 }
 
 Monsters &Monsters::getInstance() {
