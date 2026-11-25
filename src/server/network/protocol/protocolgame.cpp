@@ -994,12 +994,8 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage &msg) {
 		password = sessionKey.substr(pos + 1);
 	}
 
-	if (!oldProtocol && operatingSystem == CLIENTOS_NEW_LINUX) {
-		// TODO: check what new info for linux is send
-		msg.getString();
-		msg.getString();
-	}
-
+	// CipSoft's login block is the same on every OS: no extra Linux strings
+	// follow the session key (CLIENTOS_NEW_LINUX included).
 	std::string characterName = msg.getString();
 
 	const auto &onlinePlayer = g_game().getPlayerByName(characterName);
