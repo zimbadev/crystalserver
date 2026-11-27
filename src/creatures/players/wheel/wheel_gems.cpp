@@ -260,7 +260,6 @@ void WheelModifierContext::addStrategies(WheelGemSupremeModifier_t modifier, uin
 			break;
 		case WheelGemSupremeModifier_t::General_RevelationMastery_GiftOfLife:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Green, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Green, 150 * gradeMultiplier);
 			break;
 
 		case WheelGemSupremeModifier_t::SorcererDruid_UltimateHealing:
@@ -270,54 +269,42 @@ void WheelModifierContext::addStrategies(WheelGemSupremeModifier_t modifier, uin
 
 		case WheelGemSupremeModifier_t::Knight_RevelationMastery_ExecutionersThrow:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Red, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Red, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Knight_RevelationMastery_AvatarOfSteel:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Purple, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Purple, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Knight_RevelationMastery_CombatMastery:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Blue, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Blue, 150 * gradeMultiplier);
 			break;
 
 		case WheelGemSupremeModifier_t::Paladin_RevelationMastery_DivineGrenade:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Red, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Red, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Paladin_RevelationMastery_AvatarOfLight:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Purple, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Purple, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Paladin_RevelationMastery_DivineEmpowerment:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Blue, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Blue, 150 * gradeMultiplier);
 			break;
 
 		case WheelGemSupremeModifier_t::Druid_RevelationMastery_BlessingOfTheGrove:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Red, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Red, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Druid_RevelationMastery_AvatarOfNature:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Purple, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Purple, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Druid_RevelationMastery_TwinBursts:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Blue, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Blue, 150 * gradeMultiplier);
 			break;
 
 		case WheelGemSupremeModifier_t::Sorcerer_RevelationMastery_BeamMastery:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Red, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Red, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Sorcerer_RevelationMastery_AvatarOfStorm:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Purple, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Purple, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Sorcerer_RevelationMastery_DrainBody:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Blue, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Blue, 150 * gradeMultiplier);
 			break;
 
 		case WheelGemSupremeModifier_t::Knight_AvatarOfSteel_Cooldown:
@@ -632,15 +619,12 @@ void WheelModifierContext::addStrategies(WheelGemSupremeModifier_t modifier, uin
 			break;
 		case WheelGemSupremeModifier_t::Monk_RevelationMastery_AvatarOfBalance:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Purple, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Purple, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Monk_RevelationMastery_SpiritualOutburst:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Red, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Red, 150 * gradeMultiplier);
 			break;
 		case WheelGemSupremeModifier_t::Monk_RevelationMastery_Ascetic:
 			m_strategies.emplace_back(std::make_unique<GemModifierRevelationStrategy>(m_wheel, WheelGemAffinity_t::Blue, 150 * gradeMultiplier));
-			m_wheel.addRevelationBonus(WheelGemAffinity_t::Blue, 150 * gradeMultiplier);
 			break;
 
 		default:
