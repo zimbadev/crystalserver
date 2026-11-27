@@ -100,6 +100,9 @@ public:
 	 */
 	void loadDBPlayerSlotPointsOnLogin();
 	bool saveDBPlayerSlotPointsOnLogout() const;
+	bool isDataLoaded() const {
+		return m_dataLoaded;
+	}
 
 	/*
 	 * Functions for manipulate the client bytes
@@ -493,4 +496,6 @@ private:
 	std::vector<PlayerWheelGem> m_destroyedGems;
 
 	float m_harmonySanctuary = 1.0f;
+
+	bool m_dataLoaded = false;
 };

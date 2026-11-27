@@ -1556,6 +1556,12 @@ void PlayerWheel::improveGemGrade(WheelFragmentType_t fragmentType, uint8_t pos)
 	uint8_t quantity = 0;
 	uint8_t grade = 0;
 
+	const size_t gradesSize = fragmentType == WheelFragmentType_t::Lesser ? m_basicGrades.size() : m_supremeGrades.size();
+	if (pos >= gradesSize) {
+		g_logger().warn("[{}] Player {} sent invalid gem modifier position {} (fragment type {})", __FUNCTION__, m_player.getName(), pos, static_cast<uint8_t>(fragmentType));
+		return;
+	}
+
 	if (fragmentType == WheelFragmentType_t::Lesser) {
 		grade = m_basicGrades[pos];
 	} else {
@@ -2019,6 +2025,7 @@ void PlayerWheel::saveKVModGrades() const {
  * Functions for load and save player database informations
  */
 void PlayerWheel::loadDBPlayerSlotPointsOnLogin() {
+	m_dataLoaded = true;
 	auto resultString = fmt::format("SELECT `slot` FROM `player_wheeldata` WHERE `player_id` = {}", m_player.getGUID());
 	const DBResult_ptr &result = g_database().storeQuery(resultString);
 	// Ignore if player not have nothing inserted in the table
