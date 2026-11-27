@@ -1659,7 +1659,7 @@ void PlayerWheel::sendOpenWheelWindow(NetworkMessage &msg, uint32_t ownerId) {
 		msg.add<uint16_t>(getPointsBySlotType(slot));
 	}
 	addPromotionScrolls(msg);
-	msg.addByte(hasMonkQuest() ? 10 : 0); // The Way of The Monk Quest
+	msg.addByte(hasMonkQuest() ? 1 : 0); // The Way of The Monk Quest
 	msg.add<uint16_t>(getExtraPointsFromHuntingTaskShop());
 	addGems(msg);
 	addGradeModifiers(msg);
@@ -4037,7 +4037,9 @@ void PlayerWheel::setGiftOfCooldown(int32_t value, bool isOnThink) {
 void PlayerWheel::decreaseGiftOfCooldown(int32_t value) {
 	const int32_t cooldown = getGiftOfCooldown() - value;
 	if (cooldown <= 0) {
+		setGiftOfCooldown(0, true);
 		setOnThinkTimer(WheelOnThink_t::GIFT_OF_LIFE, OTSYS_TIME() + 3600000);
+		sendGiftOfLifeCooldown();
 		return;
 	}
 	setOnThinkTimer(WheelOnThink_t::GIFT_OF_LIFE, OTSYS_TIME() + (value * 1000));
