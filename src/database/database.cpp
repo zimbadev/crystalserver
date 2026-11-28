@@ -554,13 +554,18 @@ DBInsert::DBInsert(std::string insertQuery) :
 }
 
 bool DBInsert::addRow(std::string_view row) {
-	const size_t rowLength = row.length();
-	length += rowLength;
+	// Count the row plus the surrounding ',(' and ')'. The extra byte on the
+	// first row is harmless and keeps the accounting simple.
+	const size_t rowLength = row.length() + 3;
 	auto max_packet_size = Database::getInstance().getMaxPacketSize();
 
-	if (length > max_packet_size && !execute()) {
+	// Flush the pending rows before adding a row that would cross the limit.
+	// execute() clears the buffer on success, so rows are never sent twice.
+	if (!values.empty() && length + rowLength > max_packet_size && !execute()) {
 		return false;
 	}
+
+	length += rowLength;
 
 	if (values.empty()) {
 		values.reserve(rowLength + 2);
@@ -633,5 +638,9 @@ bool DBInsert::execute() {
 		}
 	}
 
+	// Rows were sent; start a fresh batch so a later flush or execute() does not
+	// insert them again.
+	values.clear();
+	length = this->query.length();
 	return true;
 }
