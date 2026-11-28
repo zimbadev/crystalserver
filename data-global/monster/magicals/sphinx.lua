@@ -2,7 +2,7 @@ local mType = Game.createMonsterType("Sphinx")
 local monster = {}
 
 monster.description = "a sphinx"
-monster.experience = 7500
+monster.experience = 6980
 monster.outfit = {
 	lookType = 1188,
 	lookHead = 0,
@@ -111,7 +111,7 @@ monster.elements = {
 	{ type = COMBAT_DROWNDAMAGE, percent = 0 },
 	{ type = COMBAT_ICEDAMAGE, percent = -15 },
 	{ type = COMBAT_HOLYDAMAGE, percent = 15 },
-	{ type = COMBAT_DEATHDAMAGE, percent = -20 },
+	{ type = COMBAT_DEATHDAMAGE, percent = -12 },
 }
 
 monster.immunities = {
