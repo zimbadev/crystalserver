@@ -3422,13 +3422,15 @@ void Game::playerQuickLootCorpse(const std::shared_ptr<Player> &player, const st
 
 std::shared_ptr<Container> Game::findManagedContainer(const std::shared_ptr<Player> &player, bool &fallbackConsumed, ObjectCategory_t category, bool isLootContainer) {
 	auto lootContainer = player->getManagedContainer(category, isLootContainer);
-	if (!lootContainer && player->quickLootFallbackToMainContainer && !fallbackConsumed) {
+	if (!lootContainer && (player->quickLootFallbackToMainContainer || !isLootContainer) && !fallbackConsumed) {
 		auto fallbackItem = player->getInventoryItem(CONST_SLOT_BACKPACK);
 		auto mainBackpack = fallbackItem ? fallbackItem->getContainer() : nullptr;
 
 		if (mainBackpack) {
-			player->refreshManagedContainer(OBJECTCATEGORY_DEFAULT, mainBackpack, isLootContainer);
-			player->sendInventoryItem(CONST_SLOT_BACKPACK, player->getInventoryItem(CONST_SLOT_BACKPACK));
+			if (isLootContainer) {
+				player->refreshManagedContainer(OBJECTCATEGORY_DEFAULT, mainBackpack, isLootContainer);
+				player->sendInventoryItem(CONST_SLOT_BACKPACK, player->getInventoryItem(CONST_SLOT_BACKPACK));
+			}
 			lootContainer = mainBackpack;
 			fallbackConsumed = true;
 		}
@@ -3542,7 +3544,7 @@ ReturnValue Game::internalCollectManagedItems(const std::shared_ptr<Player> &pla
 		}
 	}
 
-	if (!player->quickLootListItemIds.empty()) {
+	if (isLootContainer && !player->quickLootListItemIds.empty()) {
 		uint16_t itemId = item->getID();
 		bool isInList = std::ranges::find(player->quickLootListItemIds, itemId) != player->quickLootListItemIds.end();
 		if (player->quickLootFilter == QuickLootFilter_t::QUICKLOOTFILTER_ACCEPTEDLOOT && !isInList) {
@@ -3811,10 +3813,38 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 		const auto &lootPouch = player->getLootPouch();
 		equipItem = searchForItem(lootPouch, it.id, hasTier, tier);
 	}
+	if (!equipItem && it.transformEquipTo != 0) {
+		equipItem = searchForItem(backpack, it.transformEquipTo, hasTier, tier);
+		if (!equipItem) {
+			equipItem = searchForItem(player->getLootPouch(), it.transformEquipTo, hasTier, tier);
+		}
+	}
+	if (!equipItem && it.transformDeEquipTo != 0) {
+		equipItem = searchForItem(backpack, it.transformDeEquipTo, hasTier, tier);
+		if (!equipItem) {
+			equipItem = searchForItem(player->getLootPouch(), it.transformDeEquipTo, hasTier, tier);
+		}
+	}
 	ReturnValue ret = RETURNVALUE_NOERROR;
 
-	if (slotItem && slotItem->getID() == it.id && (!hasTier || slotItem->getTier() == tier) && !equipItem) {
+	bool isSameSlotItem = false;
+	if (slotItem) {
+		if (slotItem->getID() == it.id) {
+			isSameSlotItem = true;
+		} else if (it.transformEquipTo != 0 && slotItem->getID() == it.transformEquipTo) {
+			isSameSlotItem = true;
+		} else if (it.transformDeEquipTo != 0 && slotItem->getID() == it.transformDeEquipTo) {
+			isSameSlotItem = true;
+		} else if (!it.name.empty() && slotItem->getName() == it.name) {
+			isSameSlotItem = true;
+		}
+	}
+
+	if (slotItem && isSameSlotItem && (!hasTier || slotItem->getTier() == tier)) {
 		ret = internalCollectManagedItems(player, slotItem, getObjectCategory(slotItem), false);
+		if (ret != RETURNVALUE_NOERROR) {
+			ret = internalMoveItem(slotItem->getParent(), player, INDEX_WHEREEVER, slotItem, slotItem->getItemCount(), nullptr);
+		}
 	} else if (equipItem) {
 		// Shield slot item
 		const auto &rightItem = player->getInventoryItem(CONST_SLOT_RIGHT);
@@ -3836,6 +3866,13 @@ void Game::playerEquipItem(uint32_t playerId, uint16_t itemId, bool hasTier /* =
 				&& !rightItem->isQuiver()
 			) {
 				ret = internalCollectManagedItems(player, rightItem, getObjectCategory(rightItem), false);
+				if (ret != RETURNVALUE_NOERROR) {
+					ret = internalMoveItem(rightItem->getParent(), player, INDEX_WHEREEVER, rightItem, rightItem->getItemCount(), nullptr);
+				}
+				if (ret != RETURNVALUE_NOERROR) {
+					player->sendCancelMessage(ret);
+					return;
+				}
 			}
 
 			// Check if trying to equip a shield while a two-handed weapon is equipped in the left slot
