@@ -562,6 +562,10 @@ void Game::loadBoostedCreature() {
 		std::vector<MonsterRace> m_monsters;
 		for (const auto &[raceId, _name] : BestiaryList) {
 			if (raceId != oldRace) {
+				const auto mType = g_monsters().getMonsterType(_name);
+				if (!mType || mType->isBoss() || mType->info.experience == 0 || !mType->info.isForgeCreature) {
+					continue;
+				}
 				m_monsters.emplace_back(raceId, _name);
 			}
 		}
