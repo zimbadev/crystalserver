@@ -10653,6 +10653,55 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 		}
 	}
 
+	// Validate against the same rules sendOpenForge uses to build the fusion lists.
+	{
+		const auto &firstType = Item::items[firstItemId];
+		const auto &secondType = Item::items[secondItemId];
+		const uint8_t classification = firstType.upgradeClassification;
+		const auto maxConfigTier = g_configManager().getNumber(FORGE_MAX_ITEM_TIER);
+		const auto maxTier = classification == 4 ? maxConfigTier : classification;
+
+		const auto handSlot = [](uint16_t slotPosition) -> uint16_t {
+			return (slotPosition & SLOTP_TWO_HAND) != 0 ? SLOTP_HAND : slotPosition;
+		};
+
+		bool valid = classification != 0 && tier < maxTier;
+		if (valid && convergence) {
+			valid = classification == 4 && secondType.upgradeClassification == 4 && handSlot(firstType.slotPosition) == handSlot(secondType.slotPosition);
+		} else if (valid) {
+			valid = firstItemId == secondItemId;
+		}
+
+		if (valid) {
+			const auto* itemClassification = g_game().getItemsClassification(classification, false);
+			valid = itemClassification && itemClassification->tiers.contains(static_cast<uint8_t>(tier + 1));
+		}
+
+		// Both items must exist before anything is removed, so a crafted request cannot destroy items.
+		if (valid) {
+			uint32_t firstCount = 0;
+			uint32_t secondCount = 0;
+			for (const auto &item : getAllInventoryItems(true)) {
+				if (item->hasImbuements() || item->getTier() != tier) {
+					continue;
+				}
+				if (item->getID() == firstItemId) {
+					firstCount++;
+				}
+				if (item->getID() == secondItemId) {
+					secondCount++;
+				}
+			}
+			valid = firstCount >= 1 && secondCount >= 1 && (firstItemId != secondItemId || firstCount >= 2);
+		}
+
+		if (!valid) {
+			g_logger().warn("[{}] Player {} sent an invalid fusion (items {} and {}, tier {}, convergence {})", __FUNCTION__, getName(), firstItemId, secondItemId, tier, convergence);
+			sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+			return;
+		}
+	}
+
 	ForgeHistory history;
 	history.actionType = actionType;
 	history.tier = tier;
@@ -10781,7 +10830,7 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 					if (!itemClassification->tiers.contains(firstForgedItem->getTier())) {
 						g_logger().error("[{}] Failed to find tier {} for item {} in classification {}", __FUNCTION__, firstForgedItem->getTier(), firstForgedItem->getClassification(), itemClassification->id);
 						sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-						break;
+						return;
 					}
 					cost = itemClassification->tiers.at(firstForgedItem->getTier()).regularPrice;
 					break;
@@ -10854,7 +10903,7 @@ void Player::forgeFuseItems(ForgeAction_t actionType, uint16_t firstItemId, uint
 				if (!itemClassification->tiers.contains(firstForgingItem->getTier() + 1)) {
 					g_logger().error("[{}] Failed to find tier {} for item {} in classification {}", __FUNCTION__, firstForgingItem->getTier() + 1, firstForgingItem->getClassification(), itemClassification->id);
 					sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-					break;
+					return;
 				}
 				cost = itemClassification->tiers.at(firstForgingItem->getTier() + 1).regularPrice;
 				break;
@@ -10900,6 +10949,40 @@ void Player::forgeTransferItemTier(ForgeAction_t actionType, uint16_t donorItemI
 		return;
 	}
 
+	// A regular transfer lowers the tier by one, so the donor needs at least tier 2 (convergence keeps the tier).
+	if (tier < (convergence ? 1 : 2)) {
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
+	}
+
+	// Same rules as the transfer lists built in sendOpenForge; the receiver must also
+	// exist in the inventory before the donor is removed.
+	{
+		const auto &donorType = Item::items[donorItemId];
+		const auto &receiveType = Item::items[receiveItemId];
+		const uint8_t classification = donorType.upgradeClassification;
+		const auto maxConfigTier = g_configManager().getNumber(FORGE_MAX_ITEM_TIER);
+		const auto maxTier = classification == 4 ? maxConfigTier : classification;
+		const auto resultTier = convergence ? tier : tier - 1;
+		const auto handSlot = [](uint16_t slotPosition) -> uint16_t {
+			return (slotPosition & SLOTP_TWO_HAND) != 0 ? SLOTP_HAND : slotPosition;
+		};
+
+		bool valid = classification != 0 && receiveType.upgradeClassification == classification && resultTier <= maxTier;
+		if (valid && convergence) {
+			valid = classification == 4;
+		} else if (valid) {
+			valid = handSlot(donorType.slotPosition) == handSlot(receiveType.slotPosition);
+		}
+		if (valid && !getForgeItemFromId(receiveItemId, 0)) {
+			valid = false;
+		}
+		if (!valid) {
+			sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+			return;
+		}
+	}
+
 	ForgeHistory history;
 	history.actionType = actionType;
 	history.tier = tier;
@@ -10913,6 +10996,7 @@ void Player::forgeTransferItemTier(ForgeAction_t actionType, uint16_t donorItemI
 	}
 	uint8_t coresAmount = 0;
 	uint64_t cost = 0;
+	bool priceFound = false;
 	for (const auto &itemClassification : g_game().getItemsClassifications()) {
 		if (itemClassification->id != donorItem->getClassification()) {
 			continue;
@@ -10920,13 +11004,23 @@ void Player::forgeTransferItemTier(ForgeAction_t actionType, uint16_t donorItemI
 		if (!itemClassification->tiers.contains(donorItem->getTier())) {
 			g_logger().error("[{}] Failed to find tier {} for item {} in classification {}", __FUNCTION__, donorItem->getTier(), donorItem->getClassification(), itemClassification->id);
 			sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
-			break;
+			return;
 		}
 		const uint8_t toTier = convergence ? donorItem->getTier() : donorItem->getTier() - 1;
-		auto tierPriecs = itemClassification->tiers.at(toTier);
+		const auto tierIt = itemClassification->tiers.find(toTier);
+		if (tierIt == itemClassification->tiers.end()) {
+			sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+			return;
+		}
+		const auto &tierPriecs = tierIt->second;
 		cost = convergence ? tierPriecs.convergenceTransferPrice : tierPriecs.regularPrice;
 		coresAmount = tierPriecs.corePrice;
+		priceFound = true;
 		break;
+	}
+	if (!priceFound) {
+		sendForgeError(RETURNVALUE_CONTACTADMINISTRATOR);
+		return;
 	}
 	if (coresAmount > 0) {
 		const auto &[sliverCountAvail, coreCountAvail] = getForgeSliversAndCores();
