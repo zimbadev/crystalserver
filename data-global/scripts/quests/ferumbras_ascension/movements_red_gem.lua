@@ -33,15 +33,6 @@ local function revertBasin(position)
 	basinFour:transform(11497)
 end
 
-function revertStorages()
-	player:setStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.Active, 0)
-	player:setStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.First, 0)
-	player:setStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.Second, 0)
-	player:setStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.Third, 0)
-	player:setStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.Four, 0)
-	player:setStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.Done, 0)
-end
-
 local redGem = MoveEvent()
 
 function redGem.onStepIn(creature, item, position, fromPosition)
@@ -72,11 +63,13 @@ function redGem.onStepIn(creature, item, position, fromPosition)
 		leverThird:setActionId(53820 + player:getStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.Third))
 		leverFour:setActionId(53824)
 	end
-	player:setStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.Active, 1)
+	-- the token ties the 1 h reset below to this attempt only
+	local token = os.time()
+	player:setStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.Active, token)
 	item:transform(8648)
 	addEvent(activeBasin, 1 * 1000, position)
 	addEvent(revertBasin, 60 * 60 * 1000, position)
-	addEvent(revertStorages, 60 * 60 * 1000)
+	addEvent(FerumbrasAscensionRevertElements, 60 * 60 * 1000, player:getId(), token)
 	addEvent(revertItem, 60 * 60 * 1000, position, 8648, item.itemid)
 	return true
 end

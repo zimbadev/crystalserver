@@ -13,7 +13,7 @@ function ferumbrasAscendantLevelFour.onUse(player, item, fromPosition, target, t
 					spec:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
 				end
 			end
-			revertStorages()
+			FerumbrasAscensionRevertElements(player:getId())
 			return true
 		end
 		if player:getStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Elements.Done) >= 4 then
