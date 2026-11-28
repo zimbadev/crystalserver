@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `server_config` (
         ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ('db_version', '68', 1), ('motd_hash', '', 1), ('motd_num', '0', 1), ('players_record', '0', 1);
+INSERT INTO `server_config` (`config`, `value`, `world_id`) VALUES ('db_version', '69', 1), ('motd_hash', '', 1), ('motd_num', '0', 1), ('players_record', '0', 1);
 
 -- Table structure `accounts`
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -537,8 +537,8 @@ CREATE TABLE IF NOT EXISTS `houses` (
     `beds` int(11) NOT NULL DEFAULT '0',
     `bidder` int(11) NOT NULL DEFAULT '0',
     `bidder_name` varchar(255) NOT NULL DEFAULT '',
-    `highest_bid` int(11) NOT NULL DEFAULT '0',
-    `internal_bid` int(11) NOT NULL DEFAULT '0',
+    `highest_bid` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
+    `internal_bid` bigint(20) UNSIGNED NOT NULL DEFAULT '0',
     `bid_end_date` int(11) NOT NULL DEFAULT '0',
     `state` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
     `transfer_status` tinyint(1) DEFAULT '0',
