@@ -420,7 +420,7 @@ function forgottenKnowledgePlant.onUse(player, item, fromPosition, target, toPos
 		target:transform(23816)
 		target:getPosition():sendMagicEffect(CONST_ME_SMALLPLANTS)
 		player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "You planted some seeds into the soil.")
-		addEvent(revertItem, 10 * 60 * 1000, target:getPosition(), 26484, 26482)
+		addEvent(revertItem, 10 * 60 * 1000, target:getPosition(), 23816, 23814)
 		item:remove(1)
 		return true
 	elseif item.itemid == 23810 then
@@ -428,7 +428,7 @@ function forgottenKnowledgePlant.onUse(player, item, fromPosition, target, toPos
 			target:transform(23815)
 			target:getPosition():sendMagicEffect(CONST_ME_SMALLPLANTS)
 			player:sendTextMessage(MESSAGE_EVENT_ADVANCE, "The birch grows as you pour the sparkling water from the phial over it.")
-			addEvent(revertItem, 10 * 60 * 1000, target:getPosition(), 26483, 26482)
+			addEvent(revertItem, 10 * 60 * 1000, target:getPosition(), 23815, 23814)
 			if player:getStorageValue(Storage.Quest.U11_02.ForgottenKnowledge.PlantCounter) < 0 then
 				player:setStorageValue(Storage.Quest.U11_02.ForgottenKnowledge.PlantCounter, 0)
 			end
