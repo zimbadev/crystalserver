@@ -7383,24 +7383,23 @@ void ProtocolGame::sendForgeResult(ForgeAction_t actionType, uint16_t leftItemId
 }
 
 void ProtocolGame::sendForgeHistory(uint8_t page) {
-	page = page + 1;
+	constexpr size_t entriesPerPage = 9;
 	auto historyVector = player->getForgeHistory();
-	auto historyVectorLen = historyVector.size();
+	const size_t historyVectorLen = historyVector.size();
 
-	uint16_t currentPage = 1;
-	uint16_t lastPage = 1;
-	uint16_t pageFirstEntry = 0;
-	uint16_t pageLastEntry = 0;
+	size_t currentPage = 1;
+	size_t lastPage = 1;
 
 	std::vector<ForgeHistory> historyPerPage;
 	if (historyVectorLen > 0) {
-		lastPage = std::clamp<uint16_t>(std::floor((historyVectorLen - 1) / 9) + 1, 0, std::numeric_limits<uint16_t>::max());
-		currentPage = (lastPage < page) ? lastPage : page;
+		lastPage = std::min<size_t>((historyVectorLen - 1) / entriesPerPage + 1, std::numeric_limits<uint16_t>::max());
+		// The client page is 0-based; clamp to 1..lastPage
+		currentPage = std::clamp<size_t>(static_cast<size_t>(page) + 1, 1, lastPage);
 
-		pageFirstEntry = std::clamp<uint16_t>(historyVectorLen - (currentPage - 1) * 9, 0, std::numeric_limits<uint16_t>::max());
-		pageLastEntry = historyVectorLen > currentPage * 9 ? std::clamp<uint16_t>(historyVectorLen - currentPage * 9, 0, std::numeric_limits<uint16_t>::max()) : 0;
+		const size_t pageFirstEntry = historyVectorLen - (currentPage - 1) * entriesPerPage;
+		const size_t pageLastEntry = historyVectorLen > currentPage * entriesPerPage ? historyVectorLen - currentPage * entriesPerPage : 0;
 
-		for (uint16_t entry = pageFirstEntry; entry > pageLastEntry; --entry) {
+		for (size_t entry = pageFirstEntry; entry > pageLastEntry; --entry) {
 			historyPerPage.emplace_back(historyVector[entry - 1]);
 		}
 	}
@@ -7408,8 +7407,8 @@ void ProtocolGame::sendForgeHistory(uint8_t page) {
 	auto historyPageToSend = historyPerPage.size();
 	NetworkMessage msg;
 	msg.addByte(0x88);
-	msg.add<uint16_t>(currentPage - 1); // Current page
-	msg.add<uint16_t>(lastPage); // Last page
+	msg.add<uint16_t>(static_cast<uint16_t>(currentPage - 1)); // Current page
+	msg.add<uint16_t>(static_cast<uint16_t>(lastPage)); // Last page
 	msg.addByte(static_cast<uint8_t>(historyPageToSend)); // History to send
 
 	if (historyPageToSend > 0) {
