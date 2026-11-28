@@ -285,10 +285,10 @@ public:
 	// Guild management functions
 	void disbandGuild(uint32_t guildId);
 	void invitePlayerToGuild(uint32_t guildId, const std::string &playerName);
-	void removePlayerFromGuild(uint32_t guildId, const std::string &playerName);
-	void promotePlayer(uint32_t guildId, const std::string &playerName);
-	void demotePlayer(uint32_t guildId, const std::string &playerName);
-	void passLeadership(uint32_t guildId, const std::string &newLeaderName);
+	bool removePlayerFromGuild(uint32_t guildId, const std::string &playerName);
+	bool promotePlayer(uint32_t guildId, const std::string &playerName);
+	bool demotePlayer(uint32_t guildId, const std::string &playerName);
+	bool passLeadership(uint32_t guildId, const std::string &newLeaderName);
 	void setPlayerGuildNick(uint32_t guildId, const std::string &playerName, const std::string &nick);
 	void setRankName(uint32_t guildId, uint8_t rankLevel, const std::string &newName);
 	uint32_t createGuild(const std::string &guildName, const std::string &leaderName);

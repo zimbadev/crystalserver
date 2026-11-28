@@ -34,6 +34,7 @@ public:
 	static bool disbandGuild(uint32_t guildId);
 	static bool invitePlayerToGuild(uint32_t guildId, const std::string &playerName);
 	static bool removePlayerFromGuild(uint32_t guildId, const std::string &playerName);
+	static uint32_t getPlayerRankId(uint32_t guildId, uint32_t playerGuid);
 	static bool promotePlayer(uint32_t guildId, const std::string &playerName);
 	static bool demotePlayer(uint32_t guildId, const std::string &playerName);
 	static bool passLeadership(uint32_t guildId, const std::string &newLeaderName);

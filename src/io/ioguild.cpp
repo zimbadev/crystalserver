@@ -19,6 +19,7 @@
 
 #include "database/database.hpp"
 #include "creatures/players/grouping/guild.hpp"
+#include "utils/utils_definitions.hpp"
 
 std::shared_ptr<Guild> IOGuild::loadGuild(uint32_t guildId) {
 	Database &db = Database::getInstance();
@@ -172,6 +173,14 @@ bool IOGuild::removePlayerFromGuild(uint32_t guildId, const std::string &playerN
 	return db.executeQuery(query2.str());
 }
 
+uint32_t IOGuild::getPlayerRankId(uint32_t guildId, uint32_t playerGuid) {
+	Database &db = Database::getInstance();
+	std::ostringstream query;
+	query << "SELECT `rank_id` FROM `guild_membership` WHERE `player_id` = " << playerGuid << " AND `guild_id` = " << guildId;
+	DBResult_ptr result = db.storeQuery(query.str());
+	return result ? result->getNumber<uint32_t>("rank_id") : 0;
+}
+
 bool IOGuild::promotePlayer(uint32_t guildId, const std::string &playerName) {
 	Database &db = Database::getInstance();
 
@@ -191,6 +200,9 @@ bool IOGuild::promotePlayer(uint32_t guildId, const std::string &playerName) {
 	}
 
 	uint8_t currentLevel = rankResult->getNumber<uint8_t>("level");
+	if (currentLevel + 1 >= GUILDLEVEL_LEADER) {
+		return false;
+	}
 	std::ostringstream query3;
 	query3 << "SELECT `id` FROM `guild_ranks` WHERE `guild_id` = " << guildId << " AND `level` = " << (currentLevel + 1) << " LIMIT 1";
 	DBResult_ptr nextRankResult = db.storeQuery(query3.str());

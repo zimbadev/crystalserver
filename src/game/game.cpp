@@ -9590,36 +9590,80 @@ void Game::invitePlayerToGuild(uint32_t guildId, const std::string &playerName) 
 	IOGuild::invitePlayerToGuild(guildId, playerName);
 }
 
-void Game::removePlayerFromGuild(uint32_t guildId, const std::string &playerName) {
-	if (guildId == 0 || playerName.empty()) {
-		return;
-	}
+namespace {
+	void syncOnlineGuildRank(const std::shared_ptr<Player> &player, uint32_t guildId) {
+		if (!player) {
+			return;
+		}
 
-	IOGuild::removePlayerFromGuild(guildId, playerName);
+		const auto &guild = player->getGuild();
+		if (!guild || guild->getId() != guildId) {
+			return;
+		}
+
+		const auto &rank = guild->getRankById(IOGuild::getPlayerRankId(guildId, player->getGUID()));
+		if (rank) {
+			player->setGuildRank(rank);
+		}
+	}
 }
 
-void Game::promotePlayer(uint32_t guildId, const std::string &playerName) {
+bool Game::removePlayerFromGuild(uint32_t guildId, const std::string &playerName) {
 	if (guildId == 0 || playerName.empty()) {
-		return;
+		return false;
 	}
 
-	IOGuild::promotePlayer(guildId, playerName);
-}
-
-void Game::demotePlayer(uint32_t guildId, const std::string &playerName) {
-	if (guildId == 0 || playerName.empty()) {
-		return;
+	if (!IOGuild::removePlayerFromGuild(guildId, playerName)) {
+		return false;
 	}
 
-	IOGuild::demotePlayer(guildId, playerName);
+	if (const auto &player = getPlayerByName(playerName); player && player->getGuild() && player->getGuild()->getId() == guildId) {
+		player->setGuild(nullptr);
+	}
+	return true;
 }
 
-void Game::passLeadership(uint32_t guildId, const std::string &newLeaderName) {
+bool Game::promotePlayer(uint32_t guildId, const std::string &playerName) {
+	if (guildId == 0 || playerName.empty()) {
+		return false;
+	}
+
+	if (!IOGuild::promotePlayer(guildId, playerName)) {
+		return false;
+	}
+
+	syncOnlineGuildRank(getPlayerByName(playerName), guildId);
+	return true;
+}
+
+bool Game::demotePlayer(uint32_t guildId, const std::string &playerName) {
+	if (guildId == 0 || playerName.empty()) {
+		return false;
+	}
+
+	if (!IOGuild::demotePlayer(guildId, playerName)) {
+		return false;
+	}
+
+	syncOnlineGuildRank(getPlayerByName(playerName), guildId);
+	return true;
+}
+
+bool Game::passLeadership(uint32_t guildId, const std::string &newLeaderName) {
 	if (guildId == 0 || newLeaderName.empty()) {
-		return;
+		return false;
 	}
 
-	IOGuild::passLeadership(guildId, newLeaderName);
+	if (!IOGuild::passLeadership(guildId, newLeaderName)) {
+		return false;
+	}
+
+	if (const auto &guild = getGuild(guildId)) {
+		for (const auto &member : guild->getMembersOnline()) {
+			syncOnlineGuildRank(member, guildId);
+		}
+	}
+	return true;
 }
 
 void Game::setPlayerGuildNick(uint32_t guildId, const std::string &playerName, const std::string &nick) {
