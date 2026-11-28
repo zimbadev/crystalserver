@@ -4,10 +4,10 @@ local config = {
 	bossPos = Position(33929, 32754, 9),
 
 	-- Portais de entrada e saída
-	entrancePos = Position(33901, 32718, 9),      -- Portal fora (na ante-sala)
-	playerSpawnPos = Position(33929, 32763, 9),   -- Entrada dentro da arena (2 sqm ao norte do portal de saída)
-	exitPortalPos = Position(33929, 32765, 9),    -- Portal de saída dentro da arena
-	playerExitPos = Position(33901, 32716, 9),    -- Posição de saída fora (2 sqm ao norte do portal externo)
+	entrancePos = Position(33901, 32718, 9), -- Portal fora (na ante-sala)
+	playerSpawnPos = Position(33929, 32763, 9), -- Entrada dentro da arena (2 sqm ao norte do portal de saída)
+	exitPortalPos = Position(33929, 32765, 9), -- Portal de saída dentro da arena
+	playerExitPos = Position(33901, 32716, 9), -- Posição de saída fora (2 sqm ao norte do portal externo)
 
 	-- Limites da arena
 	roomCenter = Position(33929, 32754, 9),
@@ -34,7 +34,7 @@ local config = {
 	},
 
 	fightDuration = 10 * 60, -- 10 minutos
-	cooldownHours = 20,      -- 20 horas
+	cooldownHours = 20, -- 20 horas
 }
 
 -- Estado global da luta ativa
