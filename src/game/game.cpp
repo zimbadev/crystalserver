@@ -12547,6 +12547,12 @@ void Game::playerCyclopediaHouseBid(uint32_t playerId, uint32_t houseId, uint64_
 		return;
 	}
 
+	// Only houses without an owner are auctioned.
+	if (house->getState() != CyclopediaHouseState::Available) {
+		player->sendHouseAuctionMessage(houseId, HouseAuctionType::Bid, enumToValue(BidErrorMessage::Internal));
+		return;
+	}
+
 	const auto accountHouseCount = g_game().map.houses.getHouseCountByAccount(player->getAccountId());
 	const auto maxHousesLimit = g_configManager().getNumber(MAX_HOUSES_LIMIT);
 	if (accountHouseCount >= maxHousesLimit) {
@@ -12562,6 +12568,7 @@ void Game::playerCyclopediaHouseBid(uint32_t playerId, uint32_t houseId, uint64_
 	auto ret = player->canBidHouse(houseId);
 	if (ret != BidErrorMessage::NoError) {
 		player->sendHouseAuctionMessage(houseId, HouseAuctionType::Bid, enumToValue(ret));
+		return;
 	}
 
 	ret = BidErrorMessage::NotEnoughMoney;
@@ -12587,6 +12594,12 @@ void Game::playerCyclopediaHouseBid(uint32_t playerId, uint32_t houseId, uint64_
 		house->setInternalBid(bidValue);
 		house->setBidHolderLimit(bidValue);
 	} else if (bidValue <= house->getInternalBid()) {
+		// Nothing is charged here, but the bid raises the price of the current bidder:
+		// it must beat the current price and the player must be able to pay it.
+		if (bidValue <= house->getHighestBid() || player->getBankBalance() < house->getRent() + bidValue) {
+			player->sendHouseAuctionMessage(houseId, HouseAuctionType::Bid, enumToValue(ret));
+			return;
+		}
 		house->setHighestBid(bidValue);
 		retSuccess = BidSuccessMessage::LowerBid;
 	} else {

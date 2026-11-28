@@ -299,8 +299,8 @@ bool IOMapSerialize::loadHouseInfo() {
 		auto newOwner = result->getNumber<int32_t>("new_owner");
 		uint32_t bidder = result->getNumber<uint32_t>("bidder");
 		std::string bidderName = result->getString("bidder_name");
-		uint32_t highestBid = result->getNumber<uint32_t>("highest_bid");
-		uint32_t internalBid = result->getNumber<uint32_t>("internal_bid");
+		uint64_t highestBid = result->getNumber<uint64_t>("highest_bid");
+		uint64_t internalBid = result->getNumber<uint64_t>("internal_bid");
 		uint32_t bidEndDate = result->getNumber<uint32_t>("bid_end_date");
 		auto state = static_cast<CyclopediaHouseState>(result->getNumber<uint16_t>("state"));
 		auto transferStatus = result->getNumber<bool>("transfer_status");
@@ -320,7 +320,7 @@ bool IOMapSerialize::loadHouseInfo() {
 		} else if (state == CyclopediaHouseState::Available && timeNow > bidEndDate && bidder > 0) {
 			g_logger().debug("[BID] - Setting house id '{}' owner to player GUID '{}'", houseId, bidder);
 			if (highestBid < internalBid) {
-				uint32_t diff = internalBid - highestBid;
+				uint64_t diff = internalBid - highestBid;
 				IOLoginData::increaseBankBalance(bidder, diff);
 			}
 			house->setOwner(bidder);
