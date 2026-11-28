@@ -11,7 +11,7 @@ function gloothHorror.onDeath(creature, corpse, killer, mostDamageKiller, unjust
 	for i = 1, #config do
 		if name == config[i].name then
 			for j = 1, 2 do
-				local spawnMonster = Game.createMonster(config[i].monster, targetMonster:getPosition(), true, true)
+				local spawnMonster = Game.createMonster(config[i].monster, creature:getPosition(), true, true)
 				if spawnMonster then
 					spawnMonster:getPosition():sendMagicEffect(CONST_ME_TELEPORT)
 				end
