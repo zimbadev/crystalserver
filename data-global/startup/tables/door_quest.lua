@@ -544,6 +544,11 @@ QuestDoorAction = {
 			{ x = 33307, y = 32291, z = 7 },
 		},
 	},
+	-- The thieves guild door (Mission 06 "Fishnapping": Theodore Loveless' room, Liberty Bay)
+	[Storage.Quest.U8_2.TheThievesGuildQuest.Mission04] = {
+		itemId = false,
+		itemPos = { { x = 32359, y = 32787, z = 6 } },
+	},
 	[Storage.Quest.U8_2.TheThievesGuildQuest.Mission05] = {
 		itemId = false,
 		itemPos = { { x = 32550, y = 32652, z = 10 } },
