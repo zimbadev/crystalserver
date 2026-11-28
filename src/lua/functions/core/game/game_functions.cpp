@@ -1231,8 +1231,7 @@ int GameFunctions::luaGameRemovePlayerFromGuild(lua_State* L) {
 	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
 	const std::string playerName = Lua::getString(L, 2);
 
-	g_game().removePlayerFromGuild(guildId, playerName);
-	Lua::pushBoolean(L, true);
+	Lua::pushBoolean(L, g_game().removePlayerFromGuild(guildId, playerName));
 	return 1;
 }
 
@@ -1241,8 +1240,7 @@ int GameFunctions::luaGamePromotePlayer(lua_State* L) {
 	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
 	const std::string playerName = Lua::getString(L, 2);
 
-	g_game().promotePlayer(guildId, playerName);
-	Lua::pushBoolean(L, true);
+	Lua::pushBoolean(L, g_game().promotePlayer(guildId, playerName));
 	return 1;
 }
 
@@ -1251,8 +1249,7 @@ int GameFunctions::luaGameDemotePlayer(lua_State* L) {
 	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
 	const std::string playerName = Lua::getString(L, 2);
 
-	g_game().demotePlayer(guildId, playerName);
-	Lua::pushBoolean(L, true);
+	Lua::pushBoolean(L, g_game().demotePlayer(guildId, playerName));
 	return 1;
 }
 
@@ -1261,8 +1258,7 @@ int GameFunctions::luaGamePassLeadership(lua_State* L) {
 	uint32_t guildId = Lua::getNumber<uint32_t>(L, 1);
 	const std::string newLeaderName = Lua::getString(L, 2);
 
-	g_game().passLeadership(guildId, newLeaderName);
-	Lua::pushBoolean(L, true);
+	Lua::pushBoolean(L, g_game().passLeadership(guildId, newLeaderName));
 	return 1;
 }
 

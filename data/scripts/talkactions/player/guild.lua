@@ -184,7 +184,10 @@ function leave.onSay(player, words, param)
 
 	local guildId = guild:getId()
 	local playerName = player:getName()
-	Game.removePlayerFromGuild(guildId, playerName)
+	if not Game.removePlayerFromGuild(guildId, playerName) then
+		player:sendCancelMessage("You could not leave the guild.")
+		return true
+	end
 	player:sendTextMessage(MESSAGE_STATUS, "You have left the guild.")
 	return true
 end
@@ -243,7 +246,10 @@ function kick.onSay(player, words, param)
 	end
 
 	local guildId = guild:getId()
-	Game.removePlayerFromGuild(guildId, param)
+	if not Game.removePlayerFromGuild(guildId, param) then
+		player:sendCancelMessage("Could not remove the player from the guild.")
+		return true
+	end
 	player:sendChannelMessage("", "Player " .. param .. " has been removed from the guild.", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 	targetPlayer:sendTextMessage(MESSAGE_STATUS, "You have been removed from the guild.")
 	return true
@@ -303,8 +309,16 @@ function promote.onSay(player, words, param)
 		return true
 	end
 
+	if targetPlayer:getGuildLevel() + 1 >= GUILDLEVEL_LEADER then
+		player:sendCancelMessage("A guild leader can only be changed with !passleader.")
+		return true
+	end
+
 	local guildId = guild:getId()
-	Game.promotePlayer(guildId, param)
+	if not Game.promotePlayer(guildId, param) then
+		player:sendCancelMessage("Could not promote the player.")
+		return true
+	end
 	player:sendChannelMessage("", "Player " .. param .. " has been promoted.", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 	targetPlayer:sendTextMessage(MESSAGE_STATUS, "You have been promoted in the guild.")
 	return true
@@ -370,7 +384,10 @@ function demote.onSay(player, words, param)
 	end
 
 	local guildId = guild:getId()
-	Game.demotePlayer(guildId, param)
+	if not Game.demotePlayer(guildId, param) then
+		player:sendCancelMessage("Could not demote the player.")
+		return true
+	end
 	player:sendChannelMessage("", "Player " .. param .. " has been demoted.", TALKTYPE_CHANNEL_R1, CHANNEL_GUILD)
 	targetPlayer:sendTextMessage(MESSAGE_STATUS, "You have been demoted in the guild.")
 	return true
