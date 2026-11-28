@@ -31,17 +31,10 @@
 		<attribute key="primarytype" value="natural tiles" />
 	</item>
 	<item id="105" article="a" name="poison field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
 		<attribute key="decayTo" value="0" />
 		<attribute key="duration" value="248" />
-		<attribute key="field" value="poison">
-			<attribute key="ticks" value="5000" />
-			<attribute key="start" value="5" />
-			<attribute key="damage" value="100" />
-		</attribute>
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="106" name="grass" />
 	<item id="107" article="a" name="special flask">
@@ -4251,107 +4244,52 @@
 		<attribute key="primarytype" value="utilities" />
 	</item>
 	<item id="2118" article="a" name="fire field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="fire">
-			<attribute key="ticks" value="10000" />
-			<attribute key="count" value="7" />
-			<attribute key="damage" value="20" />
-		</attribute>
-		<attribute key="duration" value="200" />
+		<attribute key="field" value="fire" />
+		<attribute key="duration" value="120" />
 		<attribute key="decayTo" value="2119" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2119" article="a" name="fire field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="fire">
-			<attribute key="ticks" value="10000" />
-			<attribute key="count" value="7" />
-			<attribute key="damage" value="10" />
-		</attribute>
-		<attribute key="duration" value="148" />
+		<attribute key="field" value="fire" />
+		<attribute key="duration" value="120" />
 		<attribute key="decayTo" value="2120" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2120" article="a" name="fire field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
 		<attribute key="field" value="fire" />
-		<attribute key="duration" value="98" />
+		<attribute key="duration" value="120" />
 		<attribute key="decayTo" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2121" article="a" name="poison field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="poison">
-			<attribute key="ticks" value="5000" />
-			<attribute key="start" value="5" />
-			<attribute key="damage" value="100" />
-		</attribute>
-		<attribute key="replaceable" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2122" article="an" name="energy field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="energy">
-			<attribute key="ticks" value="10000" />
-			<attribute key="damage" value="25" />
-		</attribute>
 		<attribute key="duration" value="98" />
 		<attribute key="decayTo" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2123" article="a" name="fire field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="fire">
-			<attribute key="ticks" value="10000" />
-			<attribute key="count" value="7" />
-			<attribute key="damage" value="10" />
-		</attribute>
-		<attribute key="replaceable" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2124" article="a" name="fire field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="fire">
-			<attribute key="ticks" value="10000" />
-			<attribute key="count" value="7" />
-			<attribute key="damage" value="10" />
-		</attribute>
-		<attribute key="replaceable" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2125" article="a" name="fire field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
 		<attribute key="field" value="fire" />
-		<attribute key="replaceable" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2126" article="an" name="energy field">
+		<attribute key="primarytype" value="fields" />
 		<attribute key="type" value="magicfield" />
-		<attribute key="field" value="energy">
-			<attribute key="ticks" value="5000" />
-			<attribute key="damage" value="100" />
-			<attribute key="start" value="5" />
-		</attribute>
-		<attribute key="replaceable" value="0" />
-		<attribute key="script" value="moveevent">
-			<attribute key="eventType" value="stepin" />
-		</attribute>
 	</item>
 	<item id="2127" article="a" name="poison gas" editorsuffix="(Slime Corpse)">
 		<attribute key="primarytype" value="fields" />

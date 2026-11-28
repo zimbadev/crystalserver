@@ -18,9 +18,11 @@ function poisonField.onStepIn(creature, item, position, fromPosition)
 		return true
 	end
 
-	if creature:isPlayer() or (creature:isMonster() and creature:getMaster() and creature:getMaster():isPlayer()) then
-		position:sendMagicEffect(CONST_ME_POFF)
-		return true
+	if item:getId() == 2134 then
+		if not creature:isMonster() or creature:getMaster() then
+			position:sendMagicEffect(CONST_ME_POFF)
+			return true
+		end
 	end
 
 	doTargetCombatHealth(0, creature, COMBAT_EARTHDAMAGE, -10, -10, CONST_ME_POISON)
@@ -30,5 +32,5 @@ function poisonField.onStepIn(creature, item, position, fromPosition)
 end
 
 poisonField:type("stepin")
-poisonField:id(2134)
+poisonField:id(2134, 105, 2121)
 poisonField:register()

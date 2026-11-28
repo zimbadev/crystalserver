@@ -879,7 +879,8 @@ ReturnValue Tile::checkNpcCanWalkIntoTile() const {
 }
 
 bool Tile::hasHarmfulField() const {
-	return hasFlag(TILESTATE_MAGICFIELD) && getFieldItem() && !getFieldItem()->isBlocking() && getFieldItem()->getDamage() > 0;
+	const auto &field = getFieldItem();
+	return hasFlag(TILESTATE_MAGICFIELD) && field && !field->isBlocking() && field->getCombatType() != COMBAT_NONE;
 }
 
 ReturnValue Tile::queryMaxCount(int32_t, const std::shared_ptr<Thing> &, uint32_t count, uint32_t &maxQueryCount, uint32_t) {
