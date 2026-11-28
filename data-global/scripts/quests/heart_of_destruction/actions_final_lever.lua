@@ -222,6 +222,21 @@ local function changeArea()
 	end
 end
 
+-- Ends the polarity shift loop of an attempt that ran out of time and
+-- releases the players from the boss rooms.
+local function stopPolarityShift()
+	stopEvent(areaDevourer4)
+	areaDevourer4 = nil
+	for _, online in ipairs(Game.getPlayers()) do
+		if online:getStorageValue(14334) >= 1 or online:getStorageValue(14335) >= 1 or online:getStorageValue(14336) >= 1 then
+			online:setStorageValue(14334, -1)
+			online:setStorageValue(14335, -1)
+			online:setStorageValue(14336, -1)
+			online:unregisterEvent("DevourerStorage")
+		end
+	end
+end
+
 local function clearHunger()
 	local upConer = { x = 32233, y = 31360, z = 14 } -- upLeftCorner
 	local downConer = { x = 32256, y = 31384, z = 14 } -- downRightCorner
@@ -249,6 +264,7 @@ local function clearHunger()
 		end
 	end
 	stopEvent(areaDevourer1)
+	stopPolarityShift()
 end
 
 local function clearDestruction()
@@ -278,6 +294,7 @@ local function clearDestruction()
 		end
 	end
 	stopEvent(areaDevourer2)
+	stopPolarityShift()
 end
 
 local function clearRage()
@@ -307,6 +324,7 @@ local function clearRage()
 		end
 	end
 	stopEvent(areaDevourer3)
+	stopPolarityShift()
 end
 
 function clearDevourer()
