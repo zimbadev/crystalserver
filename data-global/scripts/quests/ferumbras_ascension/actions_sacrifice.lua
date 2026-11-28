@@ -7,7 +7,7 @@ local fount = {
 
 local ferumbrasAscendantSacrifice = Action()
 function ferumbrasAscendantSacrifice.onUse(player, item, fromPosition, target, toPosition, isHotkey)
-	if not target.actionid == 53805 or Tile(Position(33415, 32379, 12)):getItemById(22163) or player:getStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Fount) >= 4 then
+	if target.actionid ~= 53805 or Tile(Position(33415, 32379, 12)):getItemById(22163) or player:getStorageValue(Storage.Quest.U10_90.FerumbrasAscension.Fount) >= 4 then
 		return false
 	end
 	if item.itemid == 22158 then
@@ -39,8 +39,10 @@ function ferumbrasAscendantSacrifice.onUse(player, item, fromPosition, target, t
 		for i = 1, #fount do
 			local fount = fount[i]
 			local founts = Tile(fount.pos):getItemById(fount.revert)
-			founts:transform(fount.transformid)
-			founts:setActionId(100)
+			if founts then
+				founts:transform(fount.transformid)
+				founts:setActionId(100)
+			end
 		end
 		local statue = Tile(Position(33415, 32379, 12)):getItemById(22163)
 		if statue then
