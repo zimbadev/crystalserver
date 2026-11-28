@@ -10668,12 +10668,13 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 		return;
 	}
 
-	if (!player->canDoExAction()) {
+	auto action = static_cast<Stash_Actions_t>(msg.getByte());
+	// Reopening only sends the stash again: it changes nothing, so it is not exhausted.
+	if (action != STASH_ACTION_REOPEN && !player->canDoExAction()) {
 		player->sendCancelMessage("You need to wait to do this again.");
 		return;
 	}
 
-	auto action = static_cast<Stash_Actions_t>(msg.getByte());
 	switch (action) {
 		case STASH_ACTION_STOW_ITEM: {
 			Position pos = msg.getPosition();
@@ -10702,6 +10703,12 @@ void ProtocolGame::parseStashWithdraw(NetworkMessage &msg) {
 			auto count = msg.get<uint32_t>();
 			uint8_t stackpos = msg.getByte();
 			g_game().playerStashWithdraw(player->getID(), itemId, count, stackpos);
+			break;
+		}
+		case STASH_ACTION_REOPEN: {
+			// The client asks for the stash again after the market or the
+			// loot container dialog it made way for closed.
+			player->sendOpenStash();
 			break;
 		}
 		default:
