@@ -1,0 +1,22 @@
+{
+  "$comment": "Overlay of the vcpkg baseline mpir port (56bb2411) applying upstream fix microsoft/vcpkg#53593: toolset v145 (VS 2026) must build with build.vc15, not the VS2015-era build.vc14",
+  "name": "mpir",
+  "version": "3.0.0",
+  "port-version": 12,
+  "description": "Multiple Precision Integers and Rationals",
+  "homepage": "https://github.com/wbhart/mpir",
+  "license": null,
+  "supports": "!(uwp | arm)",
+  "dependencies": [
+    {
+      "name": "vcpkg-make",
+      "host": true,
+      "platform": "!windows | mingw"
+    },
+    {
+      "name": "vcpkg-msbuild",
+      "host": true,
+      "platform": "windows & !mingw"
+    }
+  ]
+}
