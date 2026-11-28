@@ -17,6 +17,8 @@
 
 #include "items/decay/decay.hpp"
 
+#include <limits>
+
 #include "creatures/players/player.hpp"
 #include "game/game.hpp"
 #include "game/scheduling/dispatcher.hpp"
@@ -36,16 +38,12 @@ void Decay::startDecay(const std::shared_ptr<Item> &item, int32_t duration) {
 	}
 
 	int64_t timestamp = OTSYS_TIME() + static_cast<int64_t>(duration);
-	if (decayMap.empty()) {
+	if (decayMap.empty() || timestamp < decayMap.begin()->first) {
+		// Only one checkDecay chain may exist; replace the pending one.
+		g_dispatcher().stopEvent(eventId);
 		eventId = g_dispatcher().scheduleEvent(
 			std::max<int32_t>(SCHEDULER_MINTICKS, duration), [this] { checkDecay(); }, "Decay::checkDecay"
 		);
-	} else {
-		if (timestamp < decayMap.begin()->first) {
-			eventId = g_dispatcher().scheduleEvent(
-				std::max<int32_t>(SCHEDULER_MINTICKS, duration), [this] { checkDecay(); }, "Decay::checkDecay"
-			);
-		}
 	}
 
 	// item->incrementReferenceCounter();
@@ -119,9 +117,12 @@ void Decay::checkDecay() {
 		}
 	}
 
-	if (it != end) {
+	if (!decayMap.empty()) {
+		// Items decayed above may already have scheduled an event through startDecay.
+		g_dispatcher().stopEvent(eventId);
+		const int64_t delay = std::max<int64_t>(SCHEDULER_MINTICKS, decayMap.begin()->first - OTSYS_TIME());
 		eventId = g_dispatcher().scheduleEvent(
-			std::max<int32_t>(SCHEDULER_MINTICKS, static_cast<int32_t>(it->first - timestamp)), [this] { checkDecay(); }, "Decay::checkDecay"
+			static_cast<int32_t>(std::min<int64_t>(delay, std::numeric_limits<int32_t>::max())), [this] { checkDecay(); }, "Decay::checkDecay"
 		);
 	}
 }
