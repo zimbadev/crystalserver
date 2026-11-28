@@ -867,3 +867,44 @@ function Player.saveLoginLog(self)
 	logger.info("Player {} logged in (IP: {} | Protocol: {} | Level: {} | Vocation: {})", playerName, ipAddress, protocolVersion, playerLevel, playerVocation)
 	return true
 end
+
+-- Floor switches: idle id -> pressed id. The map stores some switches already
+-- pressed (e.g. Thais depot), so step-in handlers must accept both states.
+SWITCH_TILES_PRESS = { [419] = 420, [431] = 430, [452] = 453, [563] = 564, [549] = 562, [10145] = 10146 }
+SWITCH_TILES_RELEASE = {}
+for idle, pressed in pairs(SWITCH_TILES_PRESS) do
+	SWITCH_TILES_RELEASE[pressed] = idle
+end
+
+local function tileHasSwitch(tile)
+	local ground = tile:getGround()
+	if ground and (SWITCH_TILES_PRESS[ground:getId()] or SWITCH_TILES_RELEASE[ground:getId()]) then
+		return true
+	end
+	for idle, pressed in pairs(SWITCH_TILES_PRESS) do
+		if tile:getItemById(idle) or tile:getItemById(pressed) then
+			return true
+		end
+	end
+	return false
+end
+
+-- CipSoft: stow / market / depot search are offered only while standing on a
+-- depot switch in a protection zone next to a locker.
+function Player.isAtDepotSwitch(self)
+	local position = self:getPosition()
+	local tile = Tile(position)
+	if not tile or not tile:hasFlag(TILESTATE_PROTECTIONZONE) or not tileHasSwitch(tile) then
+		return false
+	end
+	for _, direction in ipairs(DIRECTIONS_TABLE) do
+		local next = Position(position)
+		next:getNextPosition(direction)
+		local nextTile = Tile(next)
+		if nextTile and nextTile:getItemByType(ITEM_TYPE_DEPOT) then
+			return true
+		end
+	end
+	return false
+end
+

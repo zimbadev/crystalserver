@@ -825,6 +825,7 @@ void ProtocolGame::login(const std::string &name, uint32_t accountId, OperatingS
 		g_ioweeklytasks().checkWeeklyRewardsOnLogin(player);
 
 		acceptPackets = true;
+		g_callbacks().executeCallback(EventCallback_t::playerOnClientReady, &EventCallback::playerOnClientReady, player);
 	} else {
 		if (eventConnect != 0 || !g_configManager().getBoolean(REPLACE_KICK_ON_LOGIN)) {
 			// Already trying to connect
@@ -884,6 +885,7 @@ void ProtocolGame::connect(const std::string &playerName, OperatingSystem_t oper
 	player->lastLoginSaved = std::max<time_t>(time(nullptr), player->lastLoginSaved + 1);
 	player->resetIdleTime();
 	acceptPackets = true;
+	g_callbacks().executeCallback(EventCallback_t::playerOnClientReady, &EventCallback::playerOnClientReady, player);
 }
 
 void ProtocolGame::logout(bool displayEffect, bool forced) {

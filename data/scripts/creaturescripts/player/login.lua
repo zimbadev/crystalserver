@@ -182,9 +182,6 @@ function playerLoginGlobal.onLogin(player)
 		onMovementRemoveProtection(playerId, player:getPosition(), 10)
 	end
 
-	-- fix stash
-	player:setSpecialContainersAvailable(true, true, true)
-
 	-- login log
 	player:saveLoginLog()
 

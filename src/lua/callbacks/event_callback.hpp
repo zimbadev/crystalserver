@@ -164,6 +164,8 @@ public:
 	bool playerOnRotateItem(const std::shared_ptr<Player> &player, const std::shared_ptr<Item> &item, const Position &position) const;
 	void playerOnWalk(const std::shared_ptr<Player> &player, const Direction &dir) const;
 	void playerOnThink(std::shared_ptr<Player> player, uint32_t interval) const;
+	/** The client finished entering the world (fresh login or reattach). */
+	void playerOnClientReady(const std::shared_ptr<Player> &player) const;
 	bool playerOnSoulSealsFight(const std::shared_ptr<Player> &player, const std::string &monsterName) const;
 
 	// Monster

@@ -1195,6 +1195,14 @@ void EventCallback::playerOnThink(std::shared_ptr<Player> player, uint32_t inter
 }
 
 // Monster
+
+void EventCallback::playerOnClientReady(const std::shared_ptr<Player> &player) const {
+	call(__FUNCTION__, false, [&](lua_State* L) {
+		pushPlayer(L, player);
+		return 1;
+	});
+}
+
 void EventCallback::monsterOnDropLoot(const std::shared_ptr<Monster> &monster, const std::shared_ptr<Container> &corpse) const {
 	if (!LuaScriptInterface::reserveScriptEnv()) {
 		g_logger().error("[EventCallback::monsterOnDropLoot - "
