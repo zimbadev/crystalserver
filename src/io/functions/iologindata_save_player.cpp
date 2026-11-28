@@ -176,7 +176,9 @@ bool IOLoginDataSave::savePlayerFirst(const std::shared_ptr<Player> &player) {
 		player->changeHealth(1);
 	}
 
-	savePlayerExivaRestrictions(player);
+	if (player->wheel()->isDataLoaded()) {
+		savePlayerExivaRestrictions(player);
+	}
 
 	Database &db = Database::getInstance();
 
