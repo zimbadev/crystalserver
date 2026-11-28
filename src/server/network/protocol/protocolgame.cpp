@@ -3347,8 +3347,16 @@ void ProtocolGame::sendBestiaryCharms() {
 
 	msg.addByte(availableCharmSlots);
 
+	// The races charms can go to (stage two of the bestiary), each as the
+	// CipSoft client reads it: u16 race; bool only minor charms (the bestiary
+	// is not completed, so no major charm); bool one charm assigned, then u8
+	// which (0 a major charm, 2 a minor charm). Races holding both are left out.
 	auto finishedMonstersSet = g_iobestiary().getBestiaryStageTwo(player);
-	std::unordered_map<uint16_t, uint8_t> charmsAssigned;
+	struct AssignedCharms {
+		bool major = false;
+		bool minor = false;
+	};
+	std::unordered_map<uint16_t, AssignedCharms> charmsAssigned;
 	for (charmRune_t charmRune : usedCharms) {
 		const auto &tmpCharm = g_iobestiary().getBestiaryCharm(charmRune);
 		if (!tmpCharm) {
@@ -3356,18 +3364,42 @@ void ProtocolGame::sendBestiaryCharms() {
 		}
 
 		uint16_t tmpRaceId = player->getRaceIdByCharmsArray(tmpCharm->id);
-		charmsAssigned[tmpRaceId]++;
+		auto &assigned = charmsAssigned[tmpRaceId];
+		if (tmpCharm->category == CHARM_MINOR) {
+			assigned.minor = true;
+		} else {
+			assigned.major = true;
+		}
 	}
 
-	for (const auto &[raceId, amount] : charmsAssigned) {
-		if (amount >= 2) {
+	for (const auto &[raceId, assigned] : charmsAssigned) {
+		if (assigned.major && assigned.minor) {
 			std::erase(finishedMonstersSet, raceId);
 		}
 	}
 
+	const auto &bestiaryList = g_game().getBestiaryList();
 	msg.add<uint16_t>(finishedMonstersSet.size());
 	for (uint16_t tmpRaceId : finishedMonstersSet) {
-		msg.add<uint32_t>(tmpRaceId);
+		if (isOTCR) {
+			msg.add<uint32_t>(tmpRaceId);
+			continue;
+		}
+		msg.add<uint16_t>(tmpRaceId);
+		bool onlyMinor = true;
+		if (const auto it = bestiaryList.find(tmpRaceId); it != bestiaryList.end()) {
+			if (const auto &mtype = g_monsters().getMonsterType(it->second)) {
+				onlyMinor = player->getBestiaryKillCount(tmpRaceId) < mtype->info.bestiaryToUnlock;
+			}
+		}
+		msg.addByte(onlyMinor ? 0x01 : 0x00);
+		const auto assignedIt = charmsAssigned.find(tmpRaceId);
+		if (assignedIt != charmsAssigned.end() && (assignedIt->second.major || assignedIt->second.minor)) {
+			msg.addByte(0x01);
+			msg.addByte(assignedIt->second.minor ? 0x02 : 0x00);
+		} else {
+			msg.addByte(0x00);
+		}
 	}
 
 	writeToOutputBuffer(msg);
