@@ -28,6 +28,7 @@
 #include "items/containers/inbox/inbox.hpp"
 #include "items/containers/rewards/reward.hpp"
 #include "creatures/players/player.hpp"
+#include "creatures/players/wheel/player_wheel.hpp"
 #include "io/iobountytasks.hpp"
 #include "io/ioweeklytasks.hpp"
 #include "kv/kv.hpp"
