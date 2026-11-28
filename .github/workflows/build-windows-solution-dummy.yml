@@ -15,10 +15,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022]
+        os: [windows-2025]
         buildtype: [Debug]
         include:
-          - os: windows-2022
+          - os: windows-2025
             triplet: x64-windows
             packages: >
               sccache

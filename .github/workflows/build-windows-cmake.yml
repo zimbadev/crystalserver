@@ -39,10 +39,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-2022]
+        os: [windows-2025]
         buildtype: [windows-release]
         include:
-          - os: windows-2022
+          - os: windows-2025
             triplet: x64-windows-static
             packages: >
               sccache
