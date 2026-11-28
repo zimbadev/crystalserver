@@ -255,6 +255,22 @@ namespace InternalGame {
 
 		return static_cast<T>(value);
 	}
+
+	void syncOnlineGuildRank(const std::shared_ptr<Player> &player, uint32_t guildId) {
+		if (!player) {
+			return;
+		}
+
+		const auto &guild = player->getGuild();
+		if (!guild || guild->getId() != guildId) {
+			return;
+		}
+
+		const auto &rank = guild->getRankById(IOGuild::getPlayerRankId(guildId, player->getGUID()));
+		if (rank) {
+			player->setGuildRank(rank);
+		}
+	}
 } // Namespace InternalGame
 
 Game::Game() {
@@ -9590,24 +9606,6 @@ void Game::invitePlayerToGuild(uint32_t guildId, const std::string &playerName) 
 	IOGuild::invitePlayerToGuild(guildId, playerName);
 }
 
-namespace {
-	void syncOnlineGuildRank(const std::shared_ptr<Player> &player, uint32_t guildId) {
-		if (!player) {
-			return;
-		}
-
-		const auto &guild = player->getGuild();
-		if (!guild || guild->getId() != guildId) {
-			return;
-		}
-
-		const auto &rank = guild->getRankById(IOGuild::getPlayerRankId(guildId, player->getGUID()));
-		if (rank) {
-			player->setGuildRank(rank);
-		}
-	}
-}
-
 bool Game::removePlayerFromGuild(uint32_t guildId, const std::string &playerName) {
 	if (guildId == 0 || playerName.empty()) {
 		return false;
@@ -9632,7 +9630,7 @@ bool Game::promotePlayer(uint32_t guildId, const std::string &playerName) {
 		return false;
 	}
 
-	syncOnlineGuildRank(getPlayerByName(playerName), guildId);
+	InternalGame::syncOnlineGuildRank(getPlayerByName(playerName), guildId);
 	return true;
 }
 
@@ -9645,7 +9643,7 @@ bool Game::demotePlayer(uint32_t guildId, const std::string &playerName) {
 		return false;
 	}
 
-	syncOnlineGuildRank(getPlayerByName(playerName), guildId);
+	InternalGame::syncOnlineGuildRank(getPlayerByName(playerName), guildId);
 	return true;
 }
 
@@ -9660,7 +9658,7 @@ bool Game::passLeadership(uint32_t guildId, const std::string &newLeaderName) {
 
 	if (const auto &guild = getGuild(guildId)) {
 		for (const auto &member : guild->getMembersOnline()) {
-			syncOnlineGuildRank(member, guildId);
+			InternalGame::syncOnlineGuildRank(member, guildId);
 		}
 	}
 	return true;
